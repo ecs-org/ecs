@@ -1,0 +1,24 @@
+<html>
+<head>
+  <title>{% block head_title %}{% if SITE_NAME %}{{ SITE_NAME }} - {% endif %} {% block title_inner %}{% endblock %}{% endblock %}</title>
+  <style type="text/css">
+    body {
+      background: #333;
+      color: black;
+    }
+    #page {
+      margin: 0.5em;
+      border: 1px dashed #ccc;
+      background: white;
+    }
+    {% block cssextra %}{% endblock %}
+  </style>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+  <script type="text/javascript">{% block jsheadextra %}{% endblock %}</script>
+</head>
+<body>
+  <div id="page">
+{% block body %}Lorem ipsum etc.{% endblock %}
+  </div>
+  <script type="text/javascript">{% block jsfootextra %}{% endblock %}</script>
+</body>

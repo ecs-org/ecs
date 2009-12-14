@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load feedback %}
+{% block body %}
+<h1>{{ mockup.id }} - {{ mockup.description }}</h1>
+
+{% feedback_form mockup %}
+
+{% endblock %}
