@@ -1,6 +1,0 @@
-{% for comment in comment_list %}
-    <div class="comment" id="comment-{{ comment.id }}">
-      <div class="comment-summary">{{ comment.summary }}{% if comment.user_name %} &ndash; {{ comment.user_name }}{% endif %}</div>
-      <div class="comment-body">{{ comment.comment }}</div>
-    </div>
-{% endfor %}
