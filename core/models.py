@@ -30,6 +30,7 @@ class Checklist(models.Model):
     pass
 
 class SubmissionSet(models.Model):
+    submission = models.ForeignKey("Submission")
     documents = models.ManyToManyField(Document)
     submissionform = models.ForeignKey(SubmissionForm)
 
