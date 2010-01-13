@@ -11,14 +11,16 @@ class Workflow(models.Model):
     pass
 
 class Document(models.Model):
-    #  Verkettete Liste für verschiedene Versionen
-    uuid_doc_instanz
-    uuid_semantische_instanz
-    SELECT * FROM documents WHERE semantik=123;
-    pass
+    uuid_document = model.SlugField(max_length=32)
+    # file path is derived from the uuid_document_revision
+    uuid_document_revision = model.SlugField(max_length=32)
+
+    def open(self, mode):
+        """returns a binary file object for reading/writing of the document depending upon mode"""
+        assert False, "not yet implemented"
 
 class SubmissionForm(models.Model):
-     Name, Type, Bla, Blu  = Daten des Einreich formulares
+    # ecsName, Type, Bla, Blu  = Daten des Einreich formulares
     pass
 
 class NotificationForm(models.Model):
