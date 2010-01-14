@@ -57,11 +57,14 @@ class SubmissionForm(models.Model):
     invoice_fax = models.CharField(max_length=30)
     invoice_email = models.EmailField()
     invoice_uid = models.CharField(max_length=30) # 24? need to check
-    invoice_uid_verified_level1 = models.DateTime(null=True) # can be done via EU API
-    invoice_uid_verified_level2 = models.DateTime(null=True) # can be done manually via Tax Authority, local.
+    invoice_uid_verified_level1 = models.DateTimeField(null=True) # can be done via EU API
+    invoice_uid_verified_level2 = models.DateTimeField(null=True) # can be done manually via Tax Authority, local.
     
+    # page 2:
 
-    
+    for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", "2_1_3", "2_1_4",
+              "2_1_4_1", "2_1_4_2", "2_1_4_3", "2_1_5", "2_1_6", "2_1_7"):
+        exec "project_type_%s = models.BooleanField()" % i
 
 class Amendment(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
