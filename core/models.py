@@ -117,12 +117,17 @@ class SubmissionForm(models.Model):
     insurance_contract_number = models.CharField(max_length=60)
     insurance_validity = models.CharField(max_length=60)
 
+    # page 5
+    
+    additional_therapy_info = models.TextField()
+
+
+
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
     
     type = models.CharField(max_length=30)    
     count = models.IntegerField(null=True)
-    dosage = models.CharField(max_length=30)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
 
@@ -131,7 +136,6 @@ class DiagnosticsApplied(models.Model):
     
     type = models.CharField(max_length=30)    
     count = models.IntegerField(null=True)
-    dosage = models.CharField(max_length=30)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
 
