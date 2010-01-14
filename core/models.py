@@ -76,6 +76,15 @@ class SubmissionForm(models.Model):
     medtech_reference_substance = models.CharField(max_length=80)
 
     clinical_phase = models.CharField(max_length=10)
+    already_voted = models.BooleanField()
+    
+    subject_count = models.IntegerField()
+    subject_minage = models.IntegerField()
+    subject_maxage = models.IntegerField()
+    subject_noncompetents = models.BooleanField()
+    subject_males = models.BooleanField()    
+    subject_females = models.BooleanField()
+
     
 
 class ParticipatingCenter(models.Model):
@@ -87,7 +96,6 @@ class ParticipatingCenter(models.Model):
     zip_code = models.CharField(max_length=10)
     city = models.CharField(max_length=40)
     country = models.CharField(max_length=4)
-
     
 class Amendment(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
