@@ -224,6 +224,15 @@ class Investigator(models.Model):
     specialist = models.CharField(max_length=80)
     certified = models.BooleanField()
 
+class InvestigatorEmployee(models.Model):
+    submission = models.ForeignKey(Investigator)
+
+    sex = models.CharField(max_length=1, choices=["m", "f", "?"])
+    title = models.CharField(max_length=40)
+    surname = models.CharField(max_length=40)
+    firstname = models.CharField(max_length=40)
+    organisation = models.CharField(max_length=80)
+
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
     
