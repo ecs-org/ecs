@@ -86,6 +86,7 @@ class ParticipatingCenter(models.Model):
     address_2 = models.CharField(max_length=60)
     zip_code = models.CharField(max_length=10)
     city = models.CharField(max_length=40)
+    country = models.CharField(max_length=4)
 
     
 class Amendment(models.Model):
