@@ -35,7 +35,11 @@ class InvolvedCommissionsForSubmission(models.Model):
     main = models.BooleanField()
 
 class SubmissionForm(models.Model):
-    pass
+    project_title = models.CharField(max_length=120)
+    protocol_number = models.CharField(max_length=40)
+    date_of_protocol = models.DateField()
+    eudract_number = models.CharField(max_length=40)
+    isrctn_number = models.CharField(max_length=40)
 
 class NotificationForm(models.Model):
     pass
