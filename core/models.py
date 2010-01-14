@@ -193,12 +193,23 @@ class SubmissionForm(models.Model):
     submitter_organisation = models.CharField(max_length=80)
     submitter_jobtitle = models.CharField(max_length=80)
     submitter_is_coordinator = models.BooleanField()
-    submitter_is_mainauditor = models.BooleanField()
+    submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
     submitter_is_authorized_by_sponsor = models.BooleanField()
 
     submitter_sign_date = models.DateField()
 
+    # page 11
+
+    investigator_name = models.CharField(max_length=80)
+    investigator_organisation = models.CharField(max_length=80)
+    investigator_phone = models.CharField(max_length=30)
+    investigator_mobile = models.CharField(max_length=30)
+    investigator_fax = models.CharField(max_length=30)
+    investigator_email = models.EmailField()
+    investigator_jus_practicandi = models.BooleanField()
+    investigator_specialist = models.CharField(max_length=80)
+    investigator_certified = models.BooleanField()
 
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
