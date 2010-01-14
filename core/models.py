@@ -102,6 +102,12 @@ class SubmissionForm(models.Model):
     substance_p_c_t_final_report = models.BooleanField()
 
 
+class NonTestedUsedDrugs(models.Model):
+    submission = models.ForeignKey(SubmissionForm)
+
+    generic_name = models.CharField(max_length=40)
+    preparation_form = models.CharField(max_length=40)
+    dosage = models.CharField(max_length=40)
 
 class ParticipatingCenter(models.Model):
     submission = models.ForeignKey(SubmissionForm)
