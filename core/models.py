@@ -84,8 +84,24 @@ class SubmissionForm(models.Model):
     subject_noncompetents = models.BooleanField()
     subject_males = models.BooleanField()    
     subject_females = models.BooleanField()
+    subject_childbearing = models.BooleanField()
+    subject_duration = models.CharField(max_length=20)
+    subject_duration_active = models.CharField(max_length=20)
+    subject_duration_controls = models.CharField(max_length=20)
+    subject_planned_total_duration = models.CharField(max_length=20)
 
-    
+    # page 3:
+
+    substance_registered_in_countries = models.CharField(max_length=300) # comma seperated 2 letter codes.
+    substance_preexisting_clinical_tries = models.BooleanField()
+    substance_p_c_t_countries = models.CharField(max_length=300) # comma seperated 2 letter codes.
+    substance_p_c_t_phase = models.CharField(max_length=10)
+    substance_p_c_t_period = models.CharField(max_length=40)
+    substance_p_c_t_application_type = models.CharField(max_length=40)
+    substance_p_c_t_gcp_rules = models.BooleanField()
+    substance_p_c_t_final_report = models.BooleanField()
+
+
 
 class ParticipatingCenter(models.Model):
     submission = models.ForeignKey(SubmissionForm)
