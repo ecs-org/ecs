@@ -121,7 +121,33 @@ class SubmissionForm(models.Model):
     
     additional_therapy_info = models.TextField()
 
+    # page 6
 
+    german_project_title = models.CharField(max_length=120)
+    german_summary = models.CharField(max_length=120)
+    german_preclinical_results = models.CharField(max_length=120)
+    german_primary_hypothesis = models.CharField(max_length=120)
+    german_inclusion_exclusion_crit = models.CharField(max_length=120)
+    german_ethical_info = models.CharField(max_length=120)
+    german_protected_subjects_info = models.CharField(max_length=120)
+    german_recruitment_info = models.CharField(max_length=120)
+    german_consent_info = models.CharField(max_length=120)
+    german_risks_info = models.CharField(max_length=120)
+    german_benefits_info = models.CharField(max_length=120)
+    german_relationship_info = models.CharField(max_length=120)
+    german_concurrent_study_info = models.CharField(max_length=120)
+    german_sideeffects_info = models.CharField(max_length=120)
+
+    # page 7
+    
+    german_statistical_info = models.CharField(max_length=120)
+    german_dataprotection_info = models.CharField(max_length=120)
+    german_aftercare_info = models.CharField(max_length=120)
+    german_payment_info = models.CharField(max_length=120)
+    german_abort_info = models.CharField(max_length=120)
+    german_dataaccess_info = models.CharField(max_length=120)
+    german_financing_info = models.CharField(max_length=120)
+    german_additional_info = models.CharField(max_length=120)
 
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
