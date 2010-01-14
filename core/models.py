@@ -40,6 +40,28 @@ class SubmissionForm(models.Model):
     date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40)
     isrctn_number = models.CharField(max_length=40)
+    sponsor_name = models.CharField(max_length=80)
+    sponsor_address1 = models.CharField(max_length=60)
+    sponsor_address2 = models.CharField(max_length=60)
+    sponsor_zip_code = models.CharField(max_length=10)
+    sponsor_city = models.CharField(max_length=40)
+    sponsor_phone = models.CharField(max_length=30)
+    sponsor_fax = models.CharField(max_length=30)
+    sponsor_email = models.EmailField()
+    invoice_name = models.CharField(max_length=80)
+    invoice_address1 = models.CharField(max_length=60)
+    invoice_address2 = models.CharField(max_length=60)
+    invoice_zip_code = models.CharField(max_length=10)
+    invoice_city = models.CharField(max_length=40)
+    invoice_phone = models.CharField(max_length=30)
+    invoice_fax = models.CharField(max_length=30)
+    invoice_email = models.EmailField()
+    invoice_uid = models.CharField(max_length=30) # 24? need to check
+    invoice_uid_verified_level1 = models.DateTime(null=True) # can be done via EU API
+    invoice_uid_verified_level2 = models.DateTime(null=True) # can be done manually via Tax Authority, local.
+    
+
+    
 
 class Amendment(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
