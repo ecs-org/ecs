@@ -116,7 +116,15 @@ class SubmissionForm(models.Model):
     insurance_phone = models.CharField(max_length=30)
     insurance_contract_number = models.CharField(max_length=60)
     insurance_validity = models.CharField(max_length=60)
+
+class TherapiesApplied(models.Model):
+    submission = models.ForeignKey(SubmissionForm)
     
+    type = models.CharField(max_length=30)    
+    count = models.IntegerField(null=True)
+    dosage = models.CharField(max_length=30)
+    period = models.CharField(max_length=30)
+    total = models.CharField(max_length=30)
 
 class NonTestedUsedDrugs(models.Model):
     submission = models.ForeignKey(SubmissionForm)
