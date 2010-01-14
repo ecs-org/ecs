@@ -15,11 +15,19 @@ class Document(models.Model):
     # file path is derived from the uuid_document_revision
     uuid_document_revision = models.SlugField(max_length=32)
 
+    version = models.CharField(max_length=20)
+    date = models.DateTimeField()
+
+    # this document is only being refered to, but it does not exist physically in the system:
+    absent = models.Boolean()
+
     # FileField might be enough, OTOH we'll have really many files.
     # So a more clever way of storage might be useful.
     def open(self, mode):
         """returns a binary file object for reading/writing of the document depending upon mode"""
         assert False, "not yet implemented"
+
+
 
 class EthicsCommission(models.Model):
     name = models.CharField(max_length=60)
@@ -178,6 +186,19 @@ class SubmissionForm(models.Model):
     study_plan_dataprotection_reason = models.CharField(max_length=120)
     study_plan_dataprotection_dvr = models.CharField(max_length=12)
     study_plan_dataprotection_anonalgoritm = models.CharField(max_length=12)
+
+    # page 9
+    
+    submitter_name = models.CharField(max_length=80)
+    submitter_organisation = models.CharField(max_length=80)
+    submitter_jobtitle = models.CharField(max_length=80)
+    submitter_is_coordinator = models.BooleanField()
+    submitter_is_mainauditor = models.BooleanField()
+    submitter_is_sponsor = models.BooleanField()
+    submitter_is_authorized_by_sponsor = models.BooleanField()
+
+    submitter_sign_date = models.DateField()
+
 
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
