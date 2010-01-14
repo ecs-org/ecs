@@ -101,6 +101,22 @@ class SubmissionForm(models.Model):
     substance_p_c_t_gcp_rules = models.BooleanField()
     substance_p_c_t_final_report = models.BooleanField()
 
+    medtech_product_name = models.CharField(max_length=80)
+    medtech_manufacturer = models.CharField(max_length=80)
+    medtech_certified_for_exact_indications = models.BooleanField()
+    medtech_certified_for_other_indications = models.BooleanField()
+    medtech_ce_symbol = models.BooleanField()
+    medtech_manual_included = models.BooleanField()
+    medtech_technical_safety_regulations = models.CharField(max_length=120)
+    medtech_technical_safety_regulations = models.CharField(max_length=120)
+    medtech_departure_from_regulations = models.CharField(max_length=120)
+
+    insurance_name = models.CharField(max_length=60)
+    insurance_address_1 = models.CharField(max_length=80)
+    insurance_phone = models.CharField(max_length=30)
+    insurance_contract_number = models.CharField(max_length=60)
+    insurance_validity = models.CharField(max_length=60)
+    
 
 class NonTestedUsedDrugs(models.Model):
     submission = models.ForeignKey(SubmissionForm)
