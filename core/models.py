@@ -62,9 +62,18 @@ class SubmissionForm(models.Model):
     
     # page 2:
 
-    for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", "2_1_3", "2_1_4",
-              "2_1_4_1", "2_1_4_2", "2_1_4_3", "2_1_5", "2_1_6", "2_1_7"):
+    for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", 
+              "2_1_3", "2_1_4", "2_1_4_1", "2_1_4_2", 
+              "2_1_4_3", "2_1_5", "2_1_6", "2_1_7", 
+              "2_1_8", "2_1_9"):
         exec "project_type_%s = models.BooleanField()" % i
+    
+    specialism = models.CharField(max_length=80) # choices???
+    pharma_checked_substance = models.CharField(max_length=80)
+    pharma_reference_substance = models.CharField(max_length=80)
+    
+    medtech_checked_product = models.CharField(max_length=80)
+    medtech_reference_substance = models.CharField(max_length=80)
 
 class Amendment(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
