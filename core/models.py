@@ -149,6 +149,36 @@ class SubmissionForm(models.Model):
     german_financing_info = models.CharField(max_length=120)
     german_additional_info = models.CharField(max_length=120)
 
+    # page 8
+
+    for i in range(1, 15):
+        exec "study_plan_8_1_%d = models.BooleanField()" % i
+
+    for i in range(15, 22):
+        exec "study_plan_8_1_%d = models.CharField(max_length=80)" % i
+
+    study_plan_alpha = models.CharField(max_length=40)
+    study_plan_power = models.CharField(max_length=40)
+    study_plan_statalgorithm = models.CharField(max_length=40)
+    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=40)
+    study_plan_dropout_ratio = models.CharField(max_length=40)
+
+    study_plan_8_3_1 = models.BooleanField()
+    study_plan_8_3_2 = models.BooleanField()
+    study_plan_abort_crit = models.CharField(max_length=40)
+    study_plan_planned_statalgorithm = models.CharField(max_length=40)
+
+    study_plan_dataquality_checking = models.TextField()
+    study_plan_datamanagement = models.TextField()
+
+    study_plan_biometric_planning = models.CharField(max_length=120)
+    study_plan_statistics_implementation = models.CharField(max_length=120)
+
+    # either anonalgorith or reason or dvr may be set.
+    study_plan_dataprotection_reason = models.CharField(max_length=120)
+    study_plan_dataprotection_dvr = models.CharField(max_length=12)
+    study_plan_dataprotection_anonalgoritm = models.CharField(max_length=12)
+
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
     
