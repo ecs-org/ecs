@@ -75,6 +75,19 @@ class SubmissionForm(models.Model):
     medtech_checked_product = models.CharField(max_length=80)
     medtech_reference_substance = models.CharField(max_length=80)
 
+    clinical_phase = models.CharField(max_length=10)
+    
+
+class ParticipatingCenter(models.Model):
+    submission = models.ForeignKey(SubmissionForm)
+    
+    name = models.CharField(max_length=60)
+    address_1 = models.CharField(max_length=60)
+    address_2 = models.CharField(max_length=60)
+    zip_code = models.CharField(max_length=10)
+    city = models.CharField(max_length=40)
+
+    
 class Amendment(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
     order = models.IntegerField()
