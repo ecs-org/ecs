@@ -211,6 +211,19 @@ class SubmissionForm(models.Model):
     investigator_specialist = models.CharField(max_length=80)
     investigator_certified = models.BooleanField()
 
+class Investigator(models.Model):
+    submission = models.ForeignKey(SubmissionForm)
+
+    name = models.CharField(max_length=80)
+    organisation = models.CharField(max_length=80)
+    phone = models.CharField(max_length=30)
+    mobile = models.CharField(max_length=30)
+    fax = models.CharField(max_length=30)
+    email = models.EmailField()
+    jus_practicandi = models.BooleanField()
+    specialist = models.CharField(max_length=80)
+    certified = models.BooleanField()
+
 class TherapiesApplied(models.Model):
     submission = models.ForeignKey(SubmissionForm)
     
