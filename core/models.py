@@ -41,6 +41,12 @@ class SubmissionForm(models.Model):
     eudract_number = models.CharField(max_length=40)
     isrctn_number = models.CharField(max_length=40)
 
+class Amendment(models.Model):
+    submissionform = models.ForeignKey(SubmissionForm)
+    order = models.IntegerField()
+    number = models.CharField(max_length=40)
+    date = models.DateField()
+
 class NotificationForm(models.Model):
     pass
 
