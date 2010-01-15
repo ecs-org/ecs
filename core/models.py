@@ -223,6 +223,8 @@ class Investigator(models.Model):
     jus_practicandi = models.BooleanField()
     specialist = models.CharField(max_length=80)
     certified = models.BooleanField()
+    subject_count = models.IntegerField()
+    sign_date = models.DateField()
 
 class InvestigatorEmployee(models.Model):
     submission = models.ForeignKey(Investigator)
