@@ -19,7 +19,7 @@ class Document(models.Model):
     date = models.DateTimeField()
 
     # this document is only being refered to, but it does not exist physically in the system:
-    absent = models.Boolean()
+    absent = models.BooleanField()
 
     # FileField might be enough, OTOH we'll have really many files.
     # So a more clever way of storage might be useful.
@@ -229,7 +229,7 @@ class Investigator(models.Model):
 class InvestigatorEmployee(models.Model):
     submission = models.ForeignKey(Investigator)
 
-    sex = models.CharField(max_length=1, choices=["m", "f", "?"])
+    sex = models.CharField(max_length=1, choices=[("m", "male"), ("f", "female"), ("?", "")])
     title = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
