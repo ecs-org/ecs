@@ -41,7 +41,7 @@ class InvolvedCommissionsForSubmission(models.Model):
     submission = models.ForeignKey("SubmissionForm")
     # is this the main commission?
     main = models.BooleanField()
-    examiner_name = models.CharField(max_length=120)
+    examiner_name = models.CharField(max_length=120, default="")
 
 class SubmissionForm(models.Model):
     project_title = models.CharField(max_length=120)

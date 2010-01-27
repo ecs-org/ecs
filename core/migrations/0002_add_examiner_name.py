@@ -81,7 +81,7 @@ class Migration:
         },
         'core.involvedcommissionsforsubmission': {
             'commission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.EthicsCommission']"}),
-            'examiner_name': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'examiner_name': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '120'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'main': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
