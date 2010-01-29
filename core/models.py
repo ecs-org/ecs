@@ -277,7 +277,33 @@ class Amendment(models.Model):
     date = models.DateField()
 
 class NotificationForm(models.Model):
-    pass
+    notification = models.ForeignKey("Notification")
+    submission_form = models.ForeignKey("SubmissionForm")
+    investigator = models.ForeignKey(Investigator, null=True)
+    investigator.__doc__ = "set this if this notification is " \
+        "specific to a given investigator"
+    commission = models.ForeignKey("InvolvedCommissionsForSubmission")
+    yearly_report = models.BooleanField()
+    final_report = models.BooleanField()
+    # The following should be probably deductible from the submission form
+    # and all other tables but currently we are missing those:
+    date_of_vote = models.DateField()
+    ek_number = models.CharField(max_length=40)
+    
+    reason_for_not_started = models.TextField(null=True)
+    recruited_subjects = models.IntegerField(null=True)
+    finished_subjects = models.IntegerField(null=True)
+    aborted_subjects = models.IntegerField(null=True)
+    SAE_count = models.IntegerField(null=True)
+    SUSAR_count = models.IntegerField(null=True)
+    runs_till = models.DateField(null=True)
+    finished_on = models.DateField(null=True)
+    aborted_on = models.DateField(null=True)
+    
+    comments = models.TextField()
+    
+    extension_of_vote = models.BooleanField()
+    signed_on = models.DateField()
 
 class Checklist(models.Model):
     pass
