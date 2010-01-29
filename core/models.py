@@ -353,7 +353,7 @@ class NotificationAnswer(models.Model):
  
 class Notification(models.Model):
     submission = models.ForeignKey(Submission)
-    notificationset = models.ForeignKey(NotificationSet)
+    notificationset = models.ForeignKey(NotificationSet, related_name="parent")
     answer = models.ForeignKey(NotificationAnswer)
     workflow = models.ForeignKey(Workflow)
 
