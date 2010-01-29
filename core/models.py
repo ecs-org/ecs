@@ -287,7 +287,7 @@ class Amendment(models.Model):
 class NotificationForm(models.Model):
     # some of these NULLs are obviously wrong, but at least with sqlite
     # south insists on them.
-    notification = models.ForeignKey("Notification", null=True)
+    notification = models.ForeignKey("Notification", null=True, related_name="form")
     submission_form = models.ForeignKey("SubmissionForm", null=True)
     investigator = models.ForeignKey(Investigator, null=True)
     investigator.__doc__ = "set this if this notification is " \
