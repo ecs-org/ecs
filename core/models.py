@@ -277,18 +277,20 @@ class Amendment(models.Model):
     date = models.DateField()
 
 class NotificationForm(models.Model):
-    notification = models.ForeignKey("Notification")
-    submission_form = models.ForeignKey("SubmissionForm")
+    # some of these NULLs are obviously wrong, but at least with sqlite
+    # south insists on them.
+    notification = models.ForeignKey("Notification", null=True)
+    submission_form = models.ForeignKey("SubmissionForm", null=True)
     investigator = models.ForeignKey(Investigator, null=True)
     investigator.__doc__ = "set this if this notification is " \
         "specific to a given investigator"
-    commission = models.ForeignKey("InvolvedCommissionsForSubmission")
-    yearly_report = models.BooleanField()
-    final_report = models.BooleanField()
+    commission = models.ForeignKey("InvolvedCommissionsForSubmission", null=True)
+    yearly_report = models.BooleanField(default=False)
+    final_report = models.BooleanField(default=False)
     # The following should be probably deductible from the submission form
     # and all other tables but currently we are missing those:
-    date_of_vote = models.DateField()
-    ek_number = models.CharField(max_length=40)
+    date_of_vote = models.DateField(null=True)
+    ek_number = models.CharField(max_length=40, default="")
     
     reason_for_not_started = models.TextField(null=True)
     recruited_subjects = models.IntegerField(null=True)
@@ -300,10 +302,10 @@ class NotificationForm(models.Model):
     finished_on = models.DateField(null=True)
     aborted_on = models.DateField(null=True)
     
-    comments = models.TextField()
+    comments = models.TextField(default="")
     
-    extension_of_vote = models.BooleanField()
-    signed_on = models.DateField()
+    extension_of_vote = models.BooleanField(default=False)
+    signed_on = models.DateField(null=True)
 
 class Checklist(models.Model):
     pass
