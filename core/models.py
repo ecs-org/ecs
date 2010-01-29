@@ -43,6 +43,14 @@ class InvolvedCommissionsForSubmission(models.Model):
     main = models.BooleanField()
     examiner_name = models.CharField(max_length=120, default="")
 
+class InvolvedCommissionsForNotification(models.Model):
+    commission = models.ForeignKey(EthicsCommission)
+    submission = models.ForeignKey("NotificationForm")
+    # is this the main commission?
+    main = models.BooleanField()
+    examiner_name = models.CharField(max_length=120, default="")
+
+
 class SubmissionForm(models.Model):
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40)
@@ -284,9 +292,11 @@ class NotificationForm(models.Model):
     investigator = models.ForeignKey(Investigator, null=True)
     investigator.__doc__ = "set this if this notification is " \
         "specific to a given investigator"
-    commission = models.ForeignKey("InvolvedCommissionsForSubmission", null=True)
     yearly_report = models.BooleanField(default=False)
     final_report = models.BooleanField(default=False)
+    amendment_report = models.BooleanField(default=False)
+    SAE_report = models.BooleanField(default=False)
+    SUSAR_report = models.BooleanField(default=False)
     # The following should be probably deductible from the submission form
     # and all other tables but currently we are missing those:
     date_of_vote = models.DateField(null=True)
@@ -316,6 +326,7 @@ class SubmissionSet(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
 
 class NotificationSet(models.Model):
+    notification = models.ForeignKey("Notification", related_name="sets")
     documents = models.ManyToManyField(Document)
     notificationform = models.ForeignKey(NotificationForm)
 
