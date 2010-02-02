@@ -180,7 +180,7 @@ class Migration:
         'core.notificationset': {
             'documents': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Document']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'notification': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sets'", 'to': "orm['core.Notification']"}),
+            'notification': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sets'", 'null':'True', 'to': "orm['core.Notification']"}),
             'notificationform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.NotificationForm']"})
         },
         'core.participatingcenter': {

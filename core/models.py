@@ -326,7 +326,7 @@ class SubmissionSet(models.Model):
     submissionform = models.ForeignKey(SubmissionForm)
 
 class NotificationSet(models.Model):
-    notification = models.ForeignKey("Notification", related_name="sets")
+    notification = models.ForeignKey("Notification", related_name="sets", null=True)
     documents = models.ManyToManyField(Document)
     notificationform = models.ForeignKey(NotificationForm)
 
