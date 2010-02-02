@@ -343,9 +343,9 @@ class SubmissionReview(models.Model):
     workflow = models.ForeignKey(Workflow)
 
 class Submission(models.Model):
-    submissionreview = models.ForeignKey(SubmissionReview)
-    vote = models.ForeignKey(Vote)
-    workflow = models.ForeignKey(Workflow)
+    submissionreview = models.ForeignKey(SubmissionReview, null=True)
+    vote = models.ForeignKey(Vote, null=True)
+    workflow = models.ForeignKey(Workflow, null=True)
 
 
 class NotificationAnswer(models.Model):
