@@ -85,6 +85,11 @@ class Migration:
             medtech_technical_safety_regulations="",
             medtech_technical_safety_regulations="",
             medtech_departure_from_regulations="",
+            insurance_name="Zürich Veresicherungs-Aktiengesellschaft",
+            insurance_address_1="Schwarzenbergplatz 15",
+            insurance_phone="50125",
+            insurance_contract_number="WF-07218230-8",
+            insurance_validity="01.10.2005 bis 01.10.2006",
             )
         sform.save()
         set.submissionform = sform
