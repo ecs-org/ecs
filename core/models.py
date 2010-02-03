@@ -164,6 +164,14 @@ class SubmissionForm(models.Model):
     german_abort_info = models.CharField(max_length=120)
     german_dataaccess_info = models.CharField(max_length=120)
     german_financing_info = models.CharField(max_length=120)
+#     @form_meta(tab=7, paper="7.20")
+#     def form_meta(**kw):
+#         def func(f):
+#             for k, v in kw.items():
+#                 setattr(f, k, v)
+#             return f
+#         return func
+            
     german_additional_info = models.CharField(max_length=120)
 
     # page 8
@@ -206,10 +214,11 @@ class SubmissionForm(models.Model):
     submitter_is_sponsor = models.BooleanField()
     submitter_is_authorized_by_sponsor = models.BooleanField()
 
+    # needs to be nullable.
     submitter_sign_date = models.DateField()
 
     # page 11
-
+    # wrong class???
     investigator_name = models.CharField(max_length=80)
     investigator_organisation = models.CharField(max_length=80)
     investigator_phone = models.CharField(max_length=30)
