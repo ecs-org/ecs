@@ -29,6 +29,12 @@ class Migration:
             invoice_name="",
             invoice_address1="",
             invoice_address2="",
+            invoice_zip_code="",
+            invoice_city="",
+            invoice_phone="",
+            invoice_fax="",
+            invoice_email="",
+            invoice_uid="",
             )
         sform.save()
         set.submissionform = sform
