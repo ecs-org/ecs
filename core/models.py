@@ -177,10 +177,10 @@ class SubmissionForm(models.Model):
     # page 8
 
     for i in range(1, 15):
-        exec "study_plan_8_1_%d = models.BooleanField()" % i
+        exec "study_plan_8_1_%d = models.BooleanField(default=False)" % i
 
-    for i in range(15, 22):
-        exec "study_plan_8_1_%d = models.CharField(max_length=80)" % i
+    for i in range(15, 23):
+        exec "study_plan_8_1_%d = models.CharField(max_length=80, default='')" % i
 
     study_plan_alpha = models.CharField(max_length=40)
     study_plan_power = models.CharField(max_length=40)
