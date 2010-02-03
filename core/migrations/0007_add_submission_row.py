@@ -75,6 +75,16 @@ class Migration:
             substance_p_c_t_application_type="IV in children",
             substance_p_c_t_gcp_rules=True,
             substance_p_c_t_final_report=True,
+
+            medtech_product_name="",
+            medtech_manufacturer="",
+            medtech_certified_for_exact_indications=False,
+            medtech_certified_for_other_indications=False,
+            medtech_ce_symbol=False,
+            medtech_manual_included=False,
+            medtech_technical_safety_regulations="",
+            medtech_technical_safety_regulations="",
+            medtech_departure_from_regulations="",
             )
         sform.save()
         set.submissionform = sform
