@@ -74,6 +74,7 @@ class Migration:
                                                vote=None,
                                                workflow=None):
             for s in o.sets.all():
+                s.submissionform.delete()
                 s.delete()
             o.delete()
     
