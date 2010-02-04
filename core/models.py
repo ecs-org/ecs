@@ -78,7 +78,7 @@ class SubmissionForm(models.Model):
     invoice_uid = models.CharField(max_length=30, null=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True) # can be done via EU API
     invoice_uid_verified_level2 = models.DateTimeField(null=True) # can be done manually via Tax Authority, local.
-    # invoice_uid_verified_level2 should also have a field who handled the level2 verification.
+    # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
     
     # page 2:
 
@@ -89,8 +89,8 @@ class SubmissionForm(models.Model):
         exec "project_type_%s = models.BooleanField()" % i
     
     specialism = models.CharField(max_length=80) # choices???
-    pharma_checked_substance = models.CharField(max_length=80)
-    pharma_reference_substance = models.CharField(max_length=80)
+    pharma_checked_substance = models.TextField(null=True)
+    pharma_reference_substance = models.TextField(null=True)
     
     medtech_checked_product = models.CharField(max_length=80)
     medtech_reference_substance = models.CharField(max_length=80)
