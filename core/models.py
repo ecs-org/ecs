@@ -53,11 +53,11 @@ class InvolvedCommissionsForNotification(models.Model):
 
 class SubmissionForm(models.Model):
     project_title = models.CharField(max_length=120)
-    protocol_number = models.CharField(max_length=40)
+    protocol_number = models.CharField(max_length=40, null=True)
     date_of_protocol = models.DateField()
-    eudract_number = models.CharField(max_length=40)
-    isrctn_number = models.CharField(max_length=40)
-    sponsor_name = models.CharField(max_length=80)
+    eudract_number = models.CharField(max_length=40, null=True)
+    isrctn_number = models.CharField(max_length=40, null=True)
+    sponsor_name = models.CharField(max_length=80, null=True)
     sponsor_contactname = models.CharField(max_length=80, null=True)
     sponsor_address1 = models.CharField(max_length=60, null=True)
     sponsor_address2 = models.CharField(max_length=60, null=True)
