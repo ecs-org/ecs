@@ -88,12 +88,12 @@ class SubmissionForm(models.Model):
               "2_1_8", "2_1_9"):
         exec "project_type_%s = models.BooleanField()" % i
     
-    specialism = models.CharField(max_length=80) # choices???
+    specialism = models.TextField(null=True) # choices???
     pharma_checked_substance = models.TextField(null=True)
     pharma_reference_substance = models.TextField(null=True)
     
-    medtech_checked_product = models.CharField(max_length=80)
-    medtech_reference_substance = models.CharField(max_length=80)
+    medtech_checked_product = models.TextField(null=True)
+    medtech_reference_substance = models.TextField(null=True)
 
     clinical_phase = models.CharField(max_length=10)
     already_voted = models.BooleanField()
@@ -112,30 +112,30 @@ class SubmissionForm(models.Model):
 
     # page 3:
 
-    substance_registered_in_countries = models.CharField(max_length=300) # comma seperated 2 letter codes.
-    substance_preexisting_clinical_tries = models.BooleanField()
-    substance_p_c_t_countries = models.CharField(max_length=300) # comma seperated 2 letter codes.
-    substance_p_c_t_phase = models.CharField(max_length=10)
-    substance_p_c_t_period = models.CharField(max_length=40)
-    substance_p_c_t_application_type = models.CharField(max_length=40)
-    substance_p_c_t_gcp_rules = models.BooleanField()
-    substance_p_c_t_final_report = models.BooleanField()
+    substance_registered_in_countries = models.CharField(max_length=300, null=True) # comma seperated 2 letter codes.
+    substance_preexisting_clinical_tries = models.NullBooleanField()
+    substance_p_c_t_countries = models.CharField(max_length=300, null=True) # comma seperated 2 letter codes.
+    substance_p_c_t_phase = models.CharField(max_length=10, null=True)
+    substance_p_c_t_period = models.CharField(max_length=40, null=True)
+    substance_p_c_t_application_type = models.CharField(max_length=40, null=True)
+    substance_p_c_t_gcp_rules = models.NullBooleanField()
+    substance_p_c_t_final_report = models.NullBooleanField()
 
-    medtech_product_name = models.CharField(max_length=80)
-    medtech_manufacturer = models.CharField(max_length=80)
-    medtech_certified_for_exact_indications = models.BooleanField()
-    medtech_certified_for_other_indications = models.BooleanField()
-    medtech_ce_symbol = models.BooleanField()
-    medtech_manual_included = models.BooleanField()
-    medtech_technical_safety_regulations = models.CharField(max_length=120)
-    medtech_technical_safety_regulations = models.CharField(max_length=120)
-    medtech_departure_from_regulations = models.CharField(max_length=120)
+    medtech_product_name = models.CharField(max_length=80, null=True)
+    medtech_manufacturer = models.CharField(max_length=80, null=True)
+    medtech_certified_for_exact_indications = models.NullBooleanField()
+    medtech_certified_for_other_indications = models.NullBooleanField()
+    medtech_ce_symbol = models.NullBooleanField()
+    medtech_manual_included = models.NullBooleanField()
+    medtech_technical_safety_regulations = models.TextField(null=True)
+    medtech_technical_safety_regulations = models.TextField(null=True)
+    medtech_departure_from_regulations = models.TextField(null=True)
 
-    insurance_name = models.CharField(max_length=60)
-    insurance_address_1 = models.CharField(max_length=80)
-    insurance_phone = models.CharField(max_length=30)
-    insurance_contract_number = models.CharField(max_length=60)
-    insurance_validity = models.CharField(max_length=60)
+    insurance_name = models.CharField(max_length=60, null=True)
+    insurance_address_1 = models.CharField(max_length=80, null=True)
+    insurance_phone = models.CharField(max_length=30, null=True)
+    insurance_contract_number = models.CharField(max_length=60, null=True)
+    insurance_validity = models.CharField(max_length=60, null=True)
 
     # page 5
     
