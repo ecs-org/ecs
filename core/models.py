@@ -143,20 +143,20 @@ class SubmissionForm(models.Model):
 
     # page 6
 
-    german_project_title = models.CharField(max_length=120)
-    german_summary = models.CharField(max_length=120)
-    german_preclinical_results = models.CharField(max_length=120)
-    german_primary_hypothesis = models.CharField(max_length=120)
-    german_inclusion_exclusion_crit = models.CharField(max_length=120)
-    german_ethical_info = models.CharField(max_length=120)
-    german_protected_subjects_info = models.CharField(max_length=120)
-    german_recruitment_info = models.CharField(max_length=120)
-    german_consent_info = models.CharField(max_length=120)
-    german_risks_info = models.CharField(max_length=120)
-    german_benefits_info = models.CharField(max_length=120)
-    german_relationship_info = models.CharField(max_length=120)
-    german_concurrent_study_info = models.CharField(max_length=120)
-    german_sideeffects_info = models.CharField(max_length=120)
+    german_project_title = models.TextField(null=True)
+    german_summary = models.TextField(null=True)
+    german_preclinical_results = models.TextField(null=True)
+    german_primary_hypothesis = models.TextField(null=True)
+    german_inclusion_exclusion_crit = models.TextField(null=True)
+    german_ethical_info = models.TextField(null=True)
+    german_protected_subjects_info = models.TextField(null=True)
+    german_recruitment_info = models.TextField(null=True)
+    german_consent_info = models.TextField(null=True)
+    german_risks_info = models.TextField(null=True)
+    german_benefits_info = models.TextField(null=True)
+    german_relationship_info = models.TextField(null=True)
+    german_concurrent_study_info = models.TextField(null=True)
+    german_sideeffects_info = models.TextField(null=True)
 
     # page 7
     
