@@ -159,24 +159,24 @@ class SubmissionForm(models.Model):
     german_sideeffects_info = models.TextField(null=True)
 
     # page 7
-    
-    german_statistical_info = models.CharField(max_length=120)
-    german_dataprotection_info = models.CharField(max_length=120)
-    german_aftercare_info = models.CharField(max_length=120)
-    german_payment_info = models.CharField(max_length=120)
-    german_abort_info = models.CharField(max_length=120)
-    german_dataaccess_info = models.CharField(max_length=120)
-    german_financing_info = models.CharField(max_length=120)
-#     @form_meta(tab=7, paper="7.20")
-#     def form_meta(**kw):
-#         def func(f):
-#             for k, v in kw.items():
-#                 setattr(f, k, v)
-#             return f
-#         return func
+    german_statistical_info = models.TextField(null=True)
+    german_dataprotection_info = models.TextField(null=True)
+    german_aftercare_info = models.TextField(null=True)
+    german_payment_info = models.TextField(null=True)
+    german_abort_info = models.TextField(null=True)
+    german_dataaccess_info = models.TextField(null=True)
+    german_financing_info = models.TextField(null=True)
+    #     @form_meta(tab=7, paper="7.20")
+    #     def form_meta(**kw):
+    #         def func(f):
+    #             for k, v in kw.items():
+    #                 setattr(f, k, v)
+    #             return f
+    #         return func
             
-    german_additional_info = models.CharField(max_length=120)
+    german_additional_info = models.TextField(null=True)
 
+    
     # page 8
 
     for i in range(1, 15):
