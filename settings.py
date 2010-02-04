@@ -1,7 +1,10 @@
 # Django settings for ecs project.
 
+import os.path, platform
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+PROJECT_DIR = os.path.dirname(__file__)
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -9,12 +12,20 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = '/tmp/ecs.db'             # Or path to database file if using sqlite3.
+DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = os.path.join(PROJECT_DIR, 'ecs.db')  # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+if platform.node() == "ecsdev.ep3.at":
+    DATABASE_ENGINE = 'postgresql_psycopg2'
+    DATABASE_NAME = 'testecs'
+    DATABASE_USER = 'testecs'
+    DATABASE_PASSWORD = 'dhuiEioj8'
+    DATABASE_HOST = '127.0.0.1'
+    DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -48,7 +59,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'qhfv@)o@#xm!f9ua#7@+0&7lj95)shng7!jvbkpz1brzlq&tcn'
+SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
