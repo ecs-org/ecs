@@ -78,6 +78,7 @@ class SubmissionForm(models.Model):
     invoice_uid = models.CharField(max_length=30, null=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True) # can be done via EU API
     invoice_uid_verified_level2 = models.DateTimeField(null=True) # can be done manually via Tax Authority, local.
+    # invoice_uid_verified_level2 should also have a field who handled the level2 verification.
     
     # page 2:
 
