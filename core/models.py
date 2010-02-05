@@ -116,7 +116,7 @@ class SubmissionForm(models.Model):
     substance_preexisting_clinical_tries = models.NullBooleanField()
     substance_p_c_t_countries = models.CharField(max_length=300, null=True) # comma seperated 2 letter codes.
     substance_p_c_t_phase = models.CharField(max_length=10, null=True)
-    substance_p_c_t_period = models.CharField(max_length=40, null=True)
+    substance_p_c_t_period = models.TextField(null=True)
     substance_p_c_t_application_type = models.CharField(max_length=40, null=True)
     substance_p_c_t_gcp_rules = models.NullBooleanField()
     substance_p_c_t_final_report = models.NullBooleanField()
@@ -205,7 +205,7 @@ class SubmissionForm(models.Model):
     # either anonalgorith or reason or dvr may be set.
     study_plan_dataprotection_reason = models.CharField(max_length=120)
     study_plan_dataprotection_dvr = models.CharField(max_length=12)
-    study_plan_dataprotection_anonalgoritm = models.CharField(max_length=12)
+    study_plan_dataprotection_anonalgoritm = models.TextField(null=True)
 
     # page 9
     
