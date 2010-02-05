@@ -102,3 +102,5 @@ INSTALLED_APPS = (
     'south',
     'core',
 )
+
+FILESTORE = "/tmp/ecs-store"
