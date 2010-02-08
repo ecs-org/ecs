@@ -79,19 +79,20 @@ div#box {
   padding: 1em;
   border-bottom: 1px solid silver;
 }
+div#box a {
+  display: inline;
+  vertical-align: middle;
+}
+div#box img {
+  display: inline;
+  vertical-align: middle;
+  border: none;
+}
 div#boxuser {
   text-align: center;
 }
 div#boxoptions {
   text-align: center;
-}
-div#boxoptions a {
-  display: inline;
-  vertical-align: middle;
-}
-div#boxoptions img {
-  display: inline;
-  vertical-align: middle;
 }
 
 
