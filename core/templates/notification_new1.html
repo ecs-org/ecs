@@ -33,12 +33,12 @@
   <ol id="selectable1">
     <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL_CORE }}images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
     <li class="ui-widget-content"><img src="{{ MEDIA_URL_CORE }}images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
-  {% if notifications %}
-  {% for notification in notifications %}
-    <li class="ui-widget-content">{{ notification.id }}</li>
+  {% if submissions %}
+  {% for submission in submissions %}
+    <li class="ui-widget-content">{{ submission.id }}</li>
   {% endfor %}
   {% else %}
-    <li class="ui-widget-content">&nbsp;&nbsp;&nbsp;(No notifications found)</li>
+    <li class="ui-widget-content">&nbsp;&nbsp;&nbsp;(No submissions found)</li>
   {% endif %}
   </ol>
 </div>
