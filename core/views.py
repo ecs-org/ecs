@@ -10,36 +10,42 @@ from django.shortcuts import render_to_response
 
 import settings
 
-def index(request):
-    t = loader.get_template('index.html')
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
-    c = RequestContext(request, d)
-    return HttpResponse(t.render(c))
-
-def submission(request, id=''):
-    t = loader.get_template('submission.html')
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
-    c = RequestContext(request, d)
-    return HttpResponse(t.render(c))
-
-def notification_new1(request):
-    t = loader.get_template('notification_new1.html')
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
-    c = RequestContext(request, d)
-    return HttpResponse(t.render(c))
-
-def notification_new2(request):
-    t = loader.get_template('notification_new2.html')
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
-    c = RequestContext(request, d)
-    return HttpResponse(t.render(c))
-
-def notification_new3(request):
-    t = loader.get_template('notification_new3.html')
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
-    c = RequestContext(request, d)
-    return HttpResponse(t.render(c))
+from core.models import NotificationForm
 
 
 def demo(request):
     return render_to_response('demo-django.html')
+
+
+def prepare(request, pagename):
+    t = loader.get_template(pagename)
+    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
+    c = RequestContext(request, d)
+    return (t, d, c)
+
+def index(request):
+    (t, d, c) = prepare(request, 'index.html')
+    return HttpResponse(t.render(c))
+
+def submission(request, id=''):
+    (t, d, c) = prepare(request, 'submission.html')
+    return HttpResponse(t.render(c))
+
+def notification_new1(request):
+    (t, d, c) = prepare(request, 'notification_new1.html')
+    return HttpResponse(t.render(c))
+
+def notification_new2(request):
+    (t, d, c) = prepare(request, 'notification_new2.html')
+    return HttpResponse(t.render(c))
+
+def notification_new3(request):
+    (t, d, c) = prepare(request, 'notification_new3.html')
+    return HttpResponse(t.render(c))
+
+def notification_new4(request):
+    (t, d, c) = prepare(request, 'index.html')
+    notificationform = NotificationForm()
+    notificationform.save()        
+    return HttpResponse(t.render(c))
+
