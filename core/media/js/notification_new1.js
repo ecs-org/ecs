@@ -7,6 +7,9 @@ $(function() {
   $("#tabs").tabs({ disabled: [1, 2], selected: 0 });
 });
 
+/*
+ * list
+ */
 $(function() {
   $("#selectable1").selectable();
   $("#selectable2").selectable();
