@@ -4,6 +4,10 @@
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
+{% block js %}
+<script type="text/javascript" src="{{ MEDIA_URL }}js/notification_new3.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="head">
   <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
@@ -56,7 +60,7 @@
 
 <div id="n3s4">
   <h2>Version vom:</h2>
-  (Datumsfeld) (Datepicker)
+  <input id="datepicker" type="text">
 </div>
 
 <div id="n3s5">
