@@ -21,7 +21,8 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     DBPWD_DICT = {}
-    assert getpass.getuser() in DBPWD_DICT
+    user=getpass.getuser()
+    assert user in DBPWD_DICT, " ".join(("did not find",user,"in DBPWD_DICT"))
 
     DATABASE_ENGINE = 'postgresql_psycopg2'
     DATABASE_HOST = '127.0.0.1'
