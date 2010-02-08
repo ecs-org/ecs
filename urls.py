@@ -28,8 +28,8 @@ urlpatterns = patterns(
     '',
     # Example:
     # (r'^ecs/', include('ecs.foo.urls')),
-    (r'^core/$', 'ecs.core.views.index'),
-    (r'^demo','ecs.core.views.demo'),
+    url(r'^core/', include('core.urls')),
+    url(r'^demo','ecs.core.views.demo'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

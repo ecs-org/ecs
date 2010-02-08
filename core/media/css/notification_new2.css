@@ -1,0 +1,33 @@
+/* 
+ * notification_new2.css 
+ */
+
+
+.ui-tabs .ui-tabs-hide .ui-tabs-panel {
+  display: none;
+  padding: 0px;
+}
+.ui-tabs-nav {
+  height: 3em;
+  display: block;
+  padding: 0px;
+}
+div#tabs {
+  height: 3em;
+  border: none;
+  padding: 0px;
+}
+
+
+div#n2s1 {
+  padding: 1em 2em;
+  border: 1px dashed silver;
+}
+div#n2s2 {
+  padding: 1em 2em;
+  border: 1px dashed silver;
+}
+div#n2s3 {
+  padding: 1em 2em;
+  border: 1px dashed silver;
+}
