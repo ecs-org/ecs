@@ -19,7 +19,7 @@ def demo(request):
 
 def prepare(request, pagename):
     t = loader.get_template(pagename)
-    d = dict(MEDIA_URL_CORE=settings.MEDIA_URL_CORE)
+    d = dict(MEDIA_URL=settings.MEDIA_URL)
     c = RequestContext(request, d)
     return (t, d, c)
 

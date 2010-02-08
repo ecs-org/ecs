@@ -5,10 +5,10 @@
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
 {% block css %}
-  <link rel="stylesheet" href="{{ MEDIA_URL_CORE }}css/notification_new1.css" media="screen"/>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new1.css" media="screen"/>
 {% endblock %}
 {% block js %}
-  <script type="text/javascript" src="{{ MEDIA_URL_CORE }}js/notification_new1.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}core/js/notification_new1.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -31,8 +31,8 @@
 <div id="n1s1">
   <h2>(1) Auswahl der betreffenden Studie(n)</h2>
   <ol id="selectable1">
-    <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL_CORE }}images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
-    <li class="ui-widget-content"><img src="{{ MEDIA_URL_CORE }}images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
+    <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL }}core/images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
+    <li class="ui-widget-content"><img src="{{ MEDIA_URL }}core/images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
   {% if submissions %}
   {% for submission in submissions %}
     <li class="ui-widget-content">{{ submission.id }}</li>
