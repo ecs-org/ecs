@@ -1,0 +1,47 @@
+/* 
+ * notification_new3.css 
+ */
+
+
+.ui-tabs .ui-tabs-hide .ui-tabs-panel {
+  display: none;
+  padding: 0px;
+}
+.ui-tabs-nav {
+  height: 3em;
+  display: block;
+  padding: 0px;
+}
+div#tabs {
+  height: 3em;
+  border: none;
+  padding: 0px;
+}
+
+
+div#n3s1 {
+  float: left;
+  padding: 1em 2em;
+  border: 1px dashed silver;
+}
+div#n3s2 {
+  padding: 1em 2em;
+  margin-left: 35em;
+  border: 1px dashed silver;
+}
+div#n3s3 {
+  padding: 1em 2em;
+  margin-left: 35em;
+  border: 1px dashed silver;
+}
+div#n3s4 {
+  padding: 1em 2em;
+  margin-left: 35em;
+  border: 1px dashed silver;
+}
+div#n3s5 {
+  padding: 1em 2em;
+  margin-left: 35em;
+  border: 1px dashed silver;
+}
+

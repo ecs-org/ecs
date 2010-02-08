@@ -7,6 +7,7 @@
   <body>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/core.css" media="screen"/>
+  {% block css %}{% endblock %}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/core.js"></script>
@@ -25,23 +26,23 @@
       </div>
       <div id="box">
         <div id="boxuser">
-          <a href="/core/profile/"><img src="{{ MEDIA_URL }}images/icon-user.png" alt="user icon"/></a>
+          <a href=""><img src="{{ MEDIA_URL }}images/icon-user.png" alt="user icon"/></a>
           Eingeloggt als Fr. Huber
         </div>
         <div id="boxoptions">
-          <a href="/core/profile/">Profil</a> |
-          <a href="/core/logout/">Logout</a> |
-          <a href="/core/search/"><img src="{{ MEDIA_URL }}images/icon-search.png" alt="search icon"/></a> |
-          <a href="/core/help/"><img src="{{ MEDIA_URL }}images/icon-help.png" alt="help icon"/></a>
+          <a href="">Profil</a> |
+          <a href="">Logout</a> |
+          <a href=""><img src="{{ MEDIA_URL }}images/icon-search.png" alt="search icon"/></a> |
+          <a href=""><img src="{{ MEDIA_URL }}images/icon-help.png" alt="help icon"/></a>
         </div>
       </div>
       <ul>
         <li><a href="/core/">&Uuml;bersicht</a></li>
         <li><a href="/core/">Studien</a></li>
-        <li><a href="/core/notification/">Studien Meldungen</a></li>
-        <li><a href="/core/notification/">--offene Meldungen</a></li>
+        <li><a href="/core/">Studien Meldungen</a></li>
+        <li><a href="/core/">--offene Meldungen</a></li>
         <li><a href="/core/notification/new/">--neue Meldung</a></li>
-        <li><a href="/core/notification/">--vergangene Meldungen</a></li>
+        <li><a href="/core/">--vergangene Meldungen</a></li>
         <li><a href="/core/">Konversationen</a></li>
         <li><a href="/core/">zuletzt bearbeitet</a></li>
         <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>

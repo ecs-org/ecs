@@ -4,43 +4,54 @@
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}css/notification_new1.css" media="screen"/>
+{% endblock %}
+{% block js %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/notification_new1.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="head">
   <h1>Neue Meldung zur laufenden Studie(n)</h1>
 
-  <table>
-    <tr>
-    <th>Studien und Meldungsart</th>
-    <td>Meldung</td>
-    <td>Unterlagen</td>
-    </tr>
-  </table>
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Studien und Meldungsart</a></li>
+      <li><a href="#tabs-2">Meldung</a></li>
+      <li><a href="#tabs-3">Unterlagen</a></li>
+    </ul>
+    <div id="tabs-1"></div>
+    <div id="tabs-2"></div>
+    <div id="tabs-3"></div>
+  </div>
+
 </div>
 
 <div id="n1s1">
   <h2>(1) Auswahl der betreffenden Studie(n)</h2>
-  <table>
-    <tr><td><img src="{{ MEDIA_URL }}images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</td></tr>
-    <tr><td><img src="{{ MEDIA_URL }}images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></tr>
+  <ol id="selectable1">
+    <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL }}images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
+    <li class="ui-widget-content"><img src="{{ MEDIA_URL }}images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
   {% if notifications %}
   {% for notification in notifications %}
-    <tr><td>{{ notification.id }}</td></tr>
+    <li class="ui-widget-content">{{ notification.id }}</li>
   {% endfor %}
   {% else %}
-    <tr><td>(No notifications found)</td></tr>
+    <li class="ui-widget-content">&nbsp;&nbsp;&nbsp;(No notifications found)</li>
   {% endif %}
-  </table>
+  </ol>
 </div>
 
 <div id="n1s2">
   <h2>(2) Meldungstyp</h2>
-  <table>
-    <tr><td>sonstige</td></tr>
-    <tr><td>Informationsmeldung</td></tr>
-    <tr><td>Protokoll&auml;nderung</td></tr>
-    <tr><td>Nebenwirkungsmeldung</td></tr>
-    <tr><td>Verl&auml;ngerung des Votums</td></tr>
-  </table>
+  <ol id="selectable2">
+    <li class="ui-widget-content ui-selected">sonstige</li>
+    <li class="ui-widget-content">Informationsmeldung</li>
+    <li class="ui-widget-content">Protokoll&auml;nderung</li>
+    <li class="ui-widget-content">Nebenwirkungsmeldung</li>
+    <li class="ui-widget-content">Verl&auml;ngerung des Votums</li>
+  </ol>
 </div>
 
 <div id="n1s3">

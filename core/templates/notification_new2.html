@@ -4,6 +4,13 @@
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}css/notification_new2.css" media="screen"/>
+{% endblock %}
+{% block js %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/notification_new2.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="head">
   <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
@@ -12,13 +19,17 @@
      and safety of two dose levels of the human monoclonal antibody MT201 administered
      intravenously to patients with some medical issue (MT201-202)</p>
 
-  <table>
-    <tr>
-    <td>Studien und Meldungsart</td>
-    <th>Meldung</th>
-    <td>Unterlagen</td>
-    </tr>
-  </table>
+  <div id="tabs">
+    <ul>
+      <li><a href="#tabs-1">Studien und Meldungsart</a></li>
+      <li><a href="#tabs-2">Meldung</a></li>
+      <li><a href="#tabs-3">Unterlagen</a></li>
+    </ul>
+    <div id="tabs-1"></div>
+    <div id="tabs-2"></div>
+    <div id="tabs-3"></div>
+  </div>
+
 </div>
 
 <div id="n2s1">
