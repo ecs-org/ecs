@@ -46,7 +46,7 @@ div#sidebar {
   font-size: 0.91em;
   float: left; width: 22em;
   margin: 0; padding: 0;
-  border: 1px dashed silver;
+  border: 1px solid silver;
 }
 div#sidebar li {
   list-style: none;
@@ -68,6 +68,30 @@ div#sidebar a:hover {
 }
 div#sidebar a:active {
   color: white; background-color: gray;
+}
+
+div#logo {
+  text-align: center;
+  padding: 1em;
+  border-bottom: 1px solid silver;
+}
+div#box {
+  padding: 1em;
+  border-bottom: 1px solid silver;
+}
+div#boxuser {
+  text-align: center;
+}
+div#boxoptions {
+  text-align: center;
+}
+div#boxoptions a {
+  display: inline;
+  vertical-align: middle;
+}
+div#boxoptions img {
+  display: inline;
+  vertical-align: middle;
 }
 
 
@@ -116,60 +140,50 @@ div#n1s1 {
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 div#n1s2 {
   float: left;
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 div#n1s3 {
   float: left;
   padding: 1em 2em;
   border: 1px dashed silver;
 }
 
-
 div#n2s1 {
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 div#n2s2 {
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 div#n2s3 {
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 
 div#n3s1 {
   float: left;
   padding: 1em 2em;
   border: 1px dashed silver;
 }
-
 div#n3s2 {
   padding: 1em 2em;
   margin-left: 35em;
   border: 1px dashed silver;
 }
-
 div#n3s3 {
   padding: 1em 2em;
   margin-left: 35em;
   border: 1px dashed silver;
 }
-
 div#n3s4 {
   padding: 1em 2em;
   margin-left: 35em;
   border: 1px dashed silver;
 }
-
 div#n3s5 {
   padding: 1em 2em;
   margin-left: 35em;
