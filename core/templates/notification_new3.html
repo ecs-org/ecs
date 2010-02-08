@@ -1,0 +1,49 @@
+{# notification.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block content %}
+<div id="head">
+  <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+
+  <p>A randomized, open-label, multicenter phase II study to investigate the efficiency
+     and safety of two dose levels of the human monoclonal antibody MT201 administered
+     intravenously to patients with some medical issue (MT201-202)</p>
+
+  <table>
+    <tr>
+    <td>Studien und Meldungsart</td>
+    <td>Meldung</td>
+    <th>Unterlagen</th>
+    </tr>
+  </table>
+</div>
+
+<div id="n3s1">
+  <h2>F&uuml;r diese Meldung bereits eingereichte Unterlagen:</h2>
+  (Liste)
+</div>
+
+<div id="n3s2">
+  <h2>Speichere neue Unterlage:</h2>
+  (Liste)
+</div>
+
+<div id="n3s3">
+  <h2>Bezeichnung der Unterlage:</h2>
+  (Textfeld)
+</div>
+
+<div id="n3s4">
+  <h2>Version vom:</h2>
+  (Datumsfeld) (Datepicker)
+</div>
+
+<div id="n3s5">
+  <h2>Beenden</h2>
+  <a href="">Jetzt hochladen!</a>
+</div>
+
+{% endblock %}

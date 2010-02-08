@@ -1,0 +1,51 @@
+{# notification.html #}
+
+{% extends 'base.html' %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block content %}
+<div id="head">
+  <h1>Neue Meldung zur laufenden Studie(n)</h1>
+
+  <table>
+    <tr>
+    <th>Studien und Meldungsart</th>
+    <td>Meldung</td>
+    <td>Unterlagen</td>
+    </tr>
+  </table>
+</div>
+
+<div id="n1s1">
+  <h2>(1) Auswahl der betreffenden Studie(n)</h2>
+  <table>
+    <tr><td><img src="{{ MEDIA_URL }}images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</td></tr>
+    <tr><td><img src="{{ MEDIA_URL }}images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></tr>
+  {% if notifications %}
+  {% for notification in notifications %}
+    <tr><td>{{ notification.id }}</td></tr>
+  {% endfor %}
+  {% else %}
+    <tr><td>(No notifications found)</td></tr>
+  {% endif %}
+  </table>
+</div>
+
+<div id="n1s2">
+  <h2>(2) Meldungstyp</h2>
+  <table>
+    <tr><td>sonstige</td></tr>
+    <tr><td>Informationsmeldung</td></tr>
+    <tr><td>Protokoll&auml;nderung</td></tr>
+    <tr><td>Nebenwirkungsmeldung</td></tr>
+    <tr><td>Verl&auml;ngerung des Votums</td></tr>
+  </table>
+</div>
+
+<div id="n1s3">
+  <h2>(3) Meldung</h2>
+  <a href="../new2/">Gehe zur Meldung</a>
+</div>
+
+{% endblock %}

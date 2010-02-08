@@ -20,8 +20,21 @@ def submission(request, id=''):
     c = RequestContext(request, d)
     return HttpResponse(t.render(c))
 
-def notification(request, id=''):
-    t = loader.get_template('notification.html')
+
+def notification_new1(request):
+    t = loader.get_template('notification_new1.html')
+    d = dict(MEDIA_URL=settings.MEDIA_URL)
+    c = RequestContext(request, d)
+    return HttpResponse(t.render(c))
+
+def notification_new2(request):
+    t = loader.get_template('notification_new2.html')
+    d = dict(MEDIA_URL=settings.MEDIA_URL)
+    c = RequestContext(request, d)
+    return HttpResponse(t.render(c))
+
+def notification_new3(request):
+    t = loader.get_template('notification_new3.html')
     d = dict(MEDIA_URL=settings.MEDIA_URL)
     c = RequestContext(request, d)
     return HttpResponse(t.render(c))

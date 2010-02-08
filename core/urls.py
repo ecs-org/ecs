@@ -13,5 +13,7 @@ urlpatterns = patterns(
     url(r'^$', 'ecs.core.views.index'),
     url(r'^media/(?P<path>.*)$', 'django.views.static.serve', dict(document_root=settings.MEDIA_ROOT)),
     url(r'^submission/', 'ecs.core.views.submission'),
-    url(r'^notification/', 'ecs.core.views.notification'),
+    url(r'^notification/new/',  'ecs.core.views.notification_new1'),
+    url(r'^notification/new2/', 'ecs.core.views.notification_new2'),
+    url(r'^notification/new3/', 'ecs.core.views.notification_new3'),
 )
