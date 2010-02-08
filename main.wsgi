@@ -1,7 +1,14 @@
 #!/usr/bin/env python
-import os,sys,site
-
 """
+Main WSGI Script
+================
+
+Currently does a lot of magic, but works.
+
+WSGI Debug Helper
+-----------------
+if you have serious problems, comment out the rest of the script and run the code below instead, for debugging
+
 import cStringIO
 import os
 def application(environ, start_response):
@@ -22,6 +29,8 @@ def application(environ, start_response):
     output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     return [output.getvalue()]
 """
+
+import os,sys,site
 
 # Remember original sys.path.
 prev_sys_path = list(sys.path)

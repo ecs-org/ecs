@@ -20,17 +20,16 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 
 if platform.node() == "ecsdev.ep3.at":
     import getpass
+    user = getpass.getuser()
     DBPWD_DICT = {}
-    user=getpass.getuser()
     assert user in DBPWD_DICT, " ".join(("did not find",user,"in DBPWD_DICT"))
 
     DATABASE_ENGINE = 'postgresql_psycopg2'
     DATABASE_HOST = '127.0.0.1'
     DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
-    DATABASE_NAME = getpass.getuser()
-    DATABASE_USER = getpass.getuser()
-    DATABASE_PASSWORD = DBPWD_DICT[getpass.getuser()]
-
+    DATABASE_NAME = user
+    DATABASE_USER = user
+    DATABASE_PASSWORD = DBPWD_DICT[user]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -94,6 +93,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django_extensions',
+
+    'django.contrib.databrowse',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+
     'south',
     'core',
 )
