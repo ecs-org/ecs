@@ -5,12 +5,12 @@
   </head>
 
   <body>
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/core.css" media="screen"/>
+    <link rel="stylesheet" href="{{ MEDIA_URL_CORE }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
+    <link rel="stylesheet" href="{{ MEDIA_URL_CORE }}css/core.css" media="screen"/>
   {% block css %}{% endblock %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/core.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL_CORE }}js/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL_CORE }}js/jquery-ui-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL_CORE }}js/core.js"></script>
   {% block js %}{% endblock %}
 
     <div id="header">
@@ -22,18 +22,18 @@
     <div id="sidebar">
     {% block sidebar %}
       <div id="logo">
-        <img src="{{ MEDIA_URL }}images/schild.png" width="70%" alt="ECS"/>
+        <img src="{{ MEDIA_URL_CORE }}images/schild.png" width="70%" alt="ECS"/>
       </div>
       <div id="box">
         <div id="boxuser">
-          <a href=""><img src="{{ MEDIA_URL }}images/icon-user.png" alt="user icon"/></a>
+          <a href=""><img src="{{ MEDIA_URL_CORE }}images/icon-user.png" alt="user icon"/></a>
           Eingeloggt als Fr. Huber
         </div>
         <div id="boxoptions">
           <a href="">Profil</a> |
           <a href="">Logout</a> |
-          <a href=""><img src="{{ MEDIA_URL }}images/icon-search.png" alt="search icon"/></a> |
-          <a href=""><img src="{{ MEDIA_URL }}images/icon-help.png" alt="help icon"/></a>
+          <a href=""><img src="{{ MEDIA_URL_CORE }}images/icon-search.png" alt="search icon"/></a> |
+          <a href=""><img src="{{ MEDIA_URL_CORE }}images/icon-help.png" alt="help icon"/></a>
         </div>
       </div>
       <ul>
