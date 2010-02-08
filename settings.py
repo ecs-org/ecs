@@ -9,7 +9,6 @@ PROJECT_DIR = os.path.dirname(__file__)
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
 )
-
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -20,12 +19,17 @@ DATABASE_HOST = ''             # Set to empty string for localhost. Not used wit
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 if platform.node() == "ecsdev.ep3.at":
+    import getpass
+    DBPWD_DICT = {}
+    assert getpass.getuser() in DBPWD_DICT
+
     DATABASE_ENGINE = 'postgresql_psycopg2'
-    DATABASE_NAME = 'testecs'
-    DATABASE_USER = 'testecs'
-    DATABASE_PASSWORD = 'dhuiEioj8'
     DATABASE_HOST = '127.0.0.1'
     DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
+    DATABASE_NAME = getpass.getuser()
+    DATABASE_USER = getpass.getuser()
+    DATABASE_PASSWORD = DBPWD_DICT[getpass.getuser()]
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -36,7 +40,7 @@ TIME_ZONE = 'Europe/Vienna'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'de-AT'
 
 SITE_ID = 1
 
@@ -46,12 +50,12 @@ USE_I18N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/static/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -77,6 +81,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'ecs.urls'
 
 TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR, 'templates')
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.

@@ -1,0 +1,126 @@
+<!--Force IE6 into quirks mode with this comment tag-->
+
+{% block htmltype %}
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% endblock %}
+
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		
+		{% block htmlmeta %} {# Additional META tags should follow here #}
+		{% endblock %}
+		
+		<title>{% block htmltitle %}Title{% endblock %}</title>
+	
+		<link rel="stylesheet" type="text/css" href="/static/style.css" />
+		
+		{% block htmlcss %} {# additional css #}	
+		{% endblock %} 
+		
+		{% block jshead %} {# enqueue javasript #}
+		{% endblock %} 
+		
+	</head>
+
+	<body>
+		{# here should be include "header.html" #}
+		<div id="header">
+						
+		{% block header %}
+			
+    		<div id="headertitle">
+			
+			{% block headertitle %}
+			
+			{% endblock %}
+			
+			</div>
+			
+			<div id="headernav">
+			
+			{% block headernav %}
+			   headernav
+			{% endblock %}
+			
+			</div>
+		
+		{% endblock %}
+		
+		</div>
+
+
+		{# here should be include "sidebar.html" #}
+							
+		<div id="sidebar">
+			
+			<div class="innertube">
+			
+			{% block sidebar %}
+				
+	
+				<div id="logo">
+					
+				{% block logo %}
+					
+				{% endblock %}
+					
+				</div>
+				
+				<div id="account">
+				
+				{% block account %}
+					
+				{% endblock %}
+					
+				</div>
+				
+				<div id="usertoolbar">
+				
+				{% block usertoolbar %}
+				
+				{% endblock %}
+					
+				</div>
+				
+				<div id="usermenu">
+				
+				{% block usermenu %}
+					
+				{% endblock %}
+					
+				</div>
+			
+		
+			{% endblock %} {# sidebar #}	
+
+			</div>
+			
+		</div>
+
+		
+		<div id="content">			
+				
+			<div class="innertube">
+										
+			{% block content %}
+				
+			{% endblock %} {# content #}	
+				
+			</div>
+						
+		</div>
+
+		<div id="footer">
+
+			{% block jsbottom %} {# enqueue additional javasript #}
+			
+			{% endblock %} 
+					
+		</div>
+		
+    </body>
+
+</html>

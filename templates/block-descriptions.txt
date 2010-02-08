@@ -1,0 +1,32 @@
+demo-html.html  : The original html page
+demo-django.html: Should produce the same like demo-html.html but
+   is produced via extending base.html as django template 
+
+== base.html ==
+[main template]
+  defines 
+ * htmltype [doctype]
+ * htmltitle [title of actual] 
+ * htmlmeta [additional meta informations]
+ * htmlcss [additional css]
+ * jshead [javascript laoded in header]
+ * jsbottom [javascript loaded in footer]
+ * content [the main working place]
+    
+== should be in header.html ==
+[top area]
+  defines 
+ * header [top area including headertitle and headernav]
+   * headertitle [title and description of respective content]
+   * headernav [individual navigation related to contentt]
+
+
+== should be in sidebar.html ==
+ [holds the main user options]
+  defines 
+  
+ * sidebar [includes logo, account, usertoolbar, usermenu]
+   * logo [static logo - link back to main screen?]
+   * account [user account information like profile, logging status]
+   * usertoolbar [available tools only for interaction with content]
+   * usermenu [generating available main-navigation for user]

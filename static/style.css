@@ -1,0 +1,127 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/*
+	structure
+*/
+
+body {
+	background: white;
+	overflow: hidden;
+	height: 100%; 
+	max-height: 100%; 
+}
+* html body { /*IE6 hack*/
+	padding: 0 250px 0 0; /*Set value to (0 WidthOfFrameDiv 0 0)*/
+}
+.innertube {
+	margin: 0 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+}
+#header {
+	position: fixed;
+	right: 250px;
+	padding: 20px;
+	z-index: 101;
+}
+#headertitle {
+	
+}
+#headernav {
+	margin: 20px 0;
+}
+#content {
+	position: absolute;
+	top: 200px;
+	right: 250px;
+	bottom: 0;
+	margin-top: 20px;
+	overflow: auto; 
+	background: #fff;
+	overflow: auto;
+}
+#content {
+    height: expression(document.body.clientHeight - (100 + 120 + (2 * 5)) + "px");
+    width: expression(document.body.clientWidth - (150 + 90 + (2 * 5)) + "px");
+}
+/* mysterious -5px required to compensate for the scrollbar's presence - or something. other values may be necessary in different situations */
+
+#sidebar {
+	position: absolute;
+	top: 0;
+	bottom: 0; 
+	right: 0;
+	width: 250px; /*Width of frame div*/
+	height: 100%;
+	overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
+	color: #333;
+}
+
+#logo, #account, #usertoolbar, #usermenu {
+	width: 230px;
+	padding: 10px;
+	border-bottom: 1px solid #666;
+}
+#logo {
+	height: 100px;
+	background: #ccc;
+}
+#account {
+	background: #999;
+	min-height: 100px;
+}
+#usertoolbar {
+	background: #ccc;
+	min-height: 130px;
+}
+#usermenu {
+	background: #f9ce75;
+	min-height: 300px;
+}
+
+
+/*
+	content-specific
+*/
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+#headertitle h1 {
+	font-size: 1.2em;
+	margin-bottom: 5px;
+}
+#content h2 {
+	margin-bottom: 20px;
+}
+#content p {
+	margin-bottom: 20px;
+}
+
+/*
+	sidebar
+*/
+
+#sidebar ul {
+	list-style-type: none;
+}
+#sidebar li ul {
+	margin: 0 0 10px 15px;
+}
+#sidebar li {
+	line-height: 16pt;
+}
+
+
+/*
+	topnav
+*/
+
+#headernav li {
+	display: inline;
+	padding: 5px;
+	line-height: 35px;
+	border: 1px solid #ccc;
+}
