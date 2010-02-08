@@ -1,13 +1,16 @@
 {# core.html #}
 {% extends base.html %}
 
+  {% block htmlcss %}
     <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
     <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/core.css" media="screen"/>
-  {% block css %}{% endblock %}
+  {% endblock %}
+
+  {% block jshead %}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/core.js"></script>
-  {% block js %}{% endblock %}
+  {% endblock %}
 
     <div id="header">
     {% block header %}
