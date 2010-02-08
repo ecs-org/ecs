@@ -147,27 +147,32 @@ div#n2s3 {
 
 
 div#n3s1 {
+  float: left;
   padding: 1em 2em;
   border: 1px dashed silver;
 }
 
 div#n3s2 {
   padding: 1em 2em;
+  margin-left: 35em;
   border: 1px dashed silver;
 }
 
 div#n3s3 {
   padding: 1em 2em;
+  margin-left: 35em;
   border: 1px dashed silver;
 }
 
 div#n3s4 {
   padding: 1em 2em;
+  margin-left: 35em;
   border: 1px dashed silver;
 }
 
 div#n3s5 {
   padding: 1em 2em;
+  margin-left: 35em;
   border: 1px dashed silver;
 }
 
