@@ -23,10 +23,21 @@ class Document(models.Model):
 
     # FileField might be enough, OTOH we'll have really many files.
     # So a more clever way of storage might be useful.
+    def _filename(self):
+        import settings, os
+        
+        dirs = list(self.uuid_document_revision)[0:6] + [self.uuid_document_revision]
+        filename = os.path.join(settings.FILESTORE, *dirs)
+        dirname = os.path.dirname(filename)
+        try:
+            os.makedirs(dirname)
+        except os.error:
+            pass                
+        return filename
+
     def open(self, mode):
         """returns a binary file object for reading/writing of the document depending upon mode"""
-        assert False, "not yet implemented"
-
+        return open(self._filename(), mode)
 
 
 class EthicsCommission(models.Model):
@@ -337,11 +348,6 @@ class SubmissionSet(models.Model):
     documents = models.ManyToManyField(Document)
     submissionform = models.ForeignKey(SubmissionForm)
 
-class NotificationSet(models.Model):
-    notification = models.ForeignKey("Notification", related_name="sets", null=True)
-    documents = models.ManyToManyField(Document)
-    notificationform = models.ForeignKey(NotificationForm)
-
 class VoteReview(models.Model):   
     workflow = models.ForeignKey(Workflow)
 
@@ -364,10 +370,10 @@ class NotificationAnswer(models.Model):
     workflow = models.ForeignKey(Workflow)
  
 class Notification(models.Model):
-    submission = models.ForeignKey(Submission)
-    notificationset = models.ForeignKey(NotificationSet, related_name="parent")
-    answer = models.ForeignKey(NotificationAnswer)
-    workflow = models.ForeignKey(Workflow)
+    submission = models.ForeignKey(Submission, null=True)
+    documents = models.ManyToManyField(Document)
+    answer = models.ForeignKey(NotificationAnswer, null=True)
+    workflow = models.ForeignKey(Workflow, null=True)
 
 class Meeting(models.Model):
     submissions = models.ManyToManyField(Submission)

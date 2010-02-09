@@ -21,10 +21,12 @@ body {
 }
 .innertube {
 	margin: 0 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+	float: left;
 }
 #header {
 	position: fixed;
 	right: 250px;
+	left: 0;
 	padding: 20px;
 	z-index: 101;
 }
@@ -32,17 +34,27 @@ body {
 	
 }
 #headernav {
-	margin: 20px 0;
+	position: absolute;
+	top: 140px;
+}
+.headerline {
+    position: absolute;
+    top: 180px;
+    left: 0;
+    right: 260px;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
 }
 #content {
 	position: absolute;
 	top: 200px;
 	right: 250px;
 	bottom: 0;
+	left: 0;
 	margin-top: 20px;
-	overflow: auto; 
 	background: #fff;
-	overflow: auto;
+	overflow-x: hidden;
+    overflow-y: auto;
 }
 #content {
     height: expression(document.body.clientHeight - (100 + 120 + (2 * 5)) + "px");
@@ -67,19 +79,19 @@ body {
 	border-bottom: 1px solid #666;
 }
 #logo {
-	height: 100px;
-	background: #ccc;
+	height: 53px;
+	background: #fff;
 }
 #account {
-	background: #999;
-	min-height: 100px;
+	background: #ccc;
+	min-height: 80px;
 }
 #usertoolbar {
-	background: #ccc;
-	min-height: 130px;
+	background: #c0c0c0;
+	min-height: 100px;
 }
 #usermenu {
-	background: #f9ce75;
+	background: #ccc;
 	min-height: 300px;
 }
 
@@ -96,11 +108,23 @@ body {
 	margin-bottom: 5px;
 }
 #content h2 {
+	font-size: 1em;
 	margin-bottom: 20px;
 }
 #content p {
 	margin-bottom: 20px;
 }
+#content form {
+	float: left;
+}
+#content ul {
+	margin-left: 20px;
+}
+input, textarea, select {
+	border: 1px solid #666;
+	margin-bottom: 20px;
+}
+
 
 /*
 	sidebar
@@ -109,7 +133,7 @@ body {
 #sidebar ul {
 	list-style-type: none;
 }
-#sidebar li ul {
+#sidebar li ul, #sidebar ul ul {
 	margin: 0 0 10px 15px;
 }
 #sidebar li {
@@ -126,4 +150,16 @@ body {
 	padding: 5px;
 	line-height: 35px;
 	border: 1px solid #ccc;
+}
+
+/*
+	notifications
+*/
+
+.notification {
+	float: left;
+	margin: 0 30px 20px 0;
+}
+.notification-submit {
+    clear: both;
 }
