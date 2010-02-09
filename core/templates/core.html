@@ -1,69 +1,69 @@
+{#############}
 {# core.html #}
-{% extends base.html %}
+{#############}
 
-  {% block htmlcss %}
-    <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
-    <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/core.css" media="screen"/>
-  {% endblock %}
+{% extends 'base.html' %}
 
-  {% block jshead %}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/core.js"></script>
-  {% endblock %}
+{# (no htmltype block) #}
+{# (no htmlmeta block) #}
 
-    <div id="header">
-    {% block header %}
-      Ethics Commitee System
-    {% endblock %}
-    </div>
+{% block  htmltitle %}ECS core{% endblock %}
 
-    <div id="sidebar">
-    {% block sidebar %}
-      <div id="logo">
-        <img src="{{ MEDIA_URL }}core/images/schild.png" width="70%" alt="ECS"/>
-      </div>
-      <div id="box">
-        <div id="boxuser">
-          <a href=""><img src="{{ MEDIA_URL }}core/images/icon-user.png" alt="user icon"/></a>
-          Eingeloggt als Fr. Huber
-        </div>
-        <div id="boxoptions">
-          <a href="">Profil</a> |
-          <a href="">Logout</a> |
-          <a href=""><img src="{{ MEDIA_URL }}core/images/icon-search.png" alt="search icon"/></a> |
-          <a href=""><img src="{{ MEDIA_URL }}core/images/icon-help.png" alt="help icon"/></a>
-        </div>
-      </div>
-      <ul>
-        <li><a href="/core/">&Uuml;bersicht</a></li>
-        <li><a href="/core/">Studien</a></li>
-        <li><a href="/core/">Studien Meldungen</a></li>
-        <li><a href="/core/">--offene Meldungen</a></li>
-        <li><a href="/core/notification/new/">--neue Meldung</a></li>
-        <li><a href="/core/">--vergangene Meldungen</a></li>
-        <li><a href="/core/">Konversationen</a></li>
-        <li><a href="/core/">zuletzt bearbeitet</a></li>
-        <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>
-      </ul>  
-    {% endblock %}
-    </div>
+{% block htmlcss %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/core.css" media="screen"/>
+{% endblock %}
 
-    <div id="content">
-    {% block content %}
-    {% endblock %}
-    </div>
+{% block jshead %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}core/js/core.js"></script>
+{% endblock %}
 
-    <div id="footer">
-    {% block footer %}
-      <address>
-        &copy; 2009-2010 Ethik-Kommission der Medizinischen Universit&auml;t Wien und des
-        Allgemeinen Krankenhauses der Stadt Wien,
-        <a href="mailto:office@ep3.at">ECS-Development</a>
-      </address>
-    {% endblock %}
-    </div>
+{# testing base.html.. #}
+{% block header %}(header){% endblock %}
+{% block headertitle %}(headertitle){% endblock %}
+{% block headernav %} (headernav){% endblock %}
 
-  </body>
-</html>
+{# using the sidebar block.. #}
+{% block logo %}
+  <img src="{{ MEDIA_URL }}core/images/schild.png" width="70%" alt="ECS"/>
+{% endblock %}
 
+{% block account %}
+  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-user.png" alt="user icon"/></a>
+  Eingeloggt als Fr. Huber
+{% endblock %}
+
+{% block usertoolbar %}
+  <a href="">Profil</a> |
+  <a href="">Logout</a> |
+  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-search.png" alt="search icon"/></a> |
+  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-help.png" alt="help icon"/></a>
+{% endblock %}
+
+{% block usermenu %}
+  <ul>
+    <li><a href="/core/">&Uuml;bersicht</a></li>
+    <li><a href="/core/">Studien</a></li>
+    <li><a href="/core/">Studien Meldungen</a></li>
+    <li><a href="/core/">--offene Meldungen</a></li>
+    <li><a href="/core/notification/new/">--neue Meldung</a></li>
+    <li><a href="/core/">--vergangene Meldungen</a></li>
+    <li><a href="/core/">Konversationen</a></li>
+    <li><a href="/core/">zuletzt bearbeitet</a></li>
+    <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>
+  </ul>  
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{# TODO bock was intended for js, we add some markup .. #}
+{% block jsbottom %}
+  <address>
+    &copy; 2009-2010 Ethik-Kommission der Medizinischen Universit&auml;t Wien und des
+    Allgemeinen Krankenhauses der Stadt Wien,
+    <a href="mailto:office@ep3.at">ECS-Development</a>
+  </address>
+{% endblock %}
