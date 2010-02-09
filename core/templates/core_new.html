@@ -1,0 +1,148 @@
+<!--Force IE6 into quirks mode with this comment tag-->
+
+{% block htmltype %}
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% endblock %}
+
+<html>
+	<head>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		
+		{% block htmlmeta %} {# Additional META tags should follow here #}
+		{% endblock %}
+		
+		<title>{% block htmltitle %}Title{% endblock %}</title>
+	
+		<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+		
+		{% block htmlcss %} {# additional css #}	
+		{% endblock %} 
+		
+		{% block jshead %} {# enqueue javasript #}
+	    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
+	    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
+	    <script type="text/javascript" src="{{ MEDIA_URL }}js/core.js"></script>
+		{% endblock %} 
+		
+	</head>
+
+	<body>
+		{# here should be include "header.html" #}
+		<div id="header">
+						
+		{% block header %}
+			
+    		<div id="headertitle">
+			
+			{% block headertitle %}
+			
+			{% endblock %}
+			
+			</div>
+			
+			<div id="headernav">
+			
+			{% block headernav %}
+			   headernav
+			{% endblock %}
+			
+			</div>
+		
+		{% endblock %}
+		
+		</div>
+
+
+		{# here should be include "sidebar.html" #}
+							
+		<div id="sidebar">
+			
+			<div class="innertube">
+			
+			{% block sidebar %}
+				
+	
+				<div id="logo">
+					
+				{% block logo %}
+					
+				<img src="{{ MEDIA_URL }}/images/logo.png" alt="Meduni Wien"/>
+				
+				{% endblock %}
+					
+				</div>
+				
+				<div id="account">
+				
+				{% block account %}
+				
+					<p>eingeloggt als Max Mustermann</p>
+					<p>Profil | Logout</p>
+					
+				{% endblock %}
+					
+				</div>
+				
+				<div id="usertoolbar">
+				
+				{% block usertoolbar %}
+				
+					Toolbar 
+					
+				{% endblock %}
+					
+				</div>
+				
+				<div id="usermenu">
+				
+				{% block usermenu %}
+			      <ul>
+			        <li><a href="/core/">&Uuml;bersicht</a></li>
+			        <li><a href="/core/">Studien</a></li>
+			        <li><a href="/core/">Studien Meldungen</a></li>
+						<ul>
+					        <li><a href="/core/">offene Meldungen</a></li>
+					        <li><a href="/core/notification/new/">neue Meldung</a></li>
+					        <li><a href="/core/">vergangene Meldungen</a></li>
+						</ul>
+			        <li><a href="/core/">Konversationen</a></li>
+			        <li><a href="/core/">zuletzt bearbeitet</a></li>
+			        <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>
+			      </ul> 
+				{% endblock %}
+					
+				</div>
+			
+		
+			{% endblock %} {# sidebar #}	
+
+			</div>
+			
+		</div>
+
+		
+		<div id="content">			
+				
+			<div class="innertube">
+										
+			{% block content %}
+				
+			{% endblock %} {# content #}	
+				
+			</div>
+						
+		</div>
+
+		<div id="footer">
+
+			{% block jsbottom %} {# enqueue additional javasript #}
+			
+			{% endblock %} 
+					
+		</div>
+		
+    </body>
+
+</html>

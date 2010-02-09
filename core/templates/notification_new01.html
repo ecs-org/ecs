@@ -1,0 +1,55 @@
+{# notification.html #}
+
+{% extends 'core_new.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new.css" media="screen"/>
+{% endblock %}
+
+{% block headertitle %}
+	<h1>Neue Meldung zur laufenden Studie(n)</h1>
+{% endblock %}
+
+{% block headernav %}
+    <ul>
+      <li><a href="../new">Studien und Meldungsart</a></li>
+      <li><a href="../new2">Meldung</a></li>
+      <li><a href="../new3">Unterlagen</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+	<form action="" method="" accept-charset="utf-8">
+		<div class="notification">
+			<h2>Auswahl der betreffenden Studie(n)</h2>
+			<ul>
+				<li>letzt aktive Einreichung (EK-343/2009)</li>
+			  {% if submissions %}
+			  {% for submission in submissions %}
+			    <li><input type="checkbox" value="{{ submission.id }}" /></li>
+			  {% endfor %}
+			  {% else %}
+			    <li>(keine)</li>
+			  {% endif %}
+			</ul>
+		</div>
+		<div class="notification">
+			<h2>Meldungstyp</h2>
+			<select>
+				<option>Informationsmeldung</option>
+				<option>Protokoll&auml;nderung</option>
+				<option>Nebenwirkungsmeldung</option>
+				<option>Verl&auml;ngerung des Votums</option>
+				<option>sonstige</option>
+			</select>
+
+		</div>
+		<div class="notification">
+			<a href="../new2/">weiter zur Meldung</a>
+		</div>
+	</form>	
+	
+{% endblock %}

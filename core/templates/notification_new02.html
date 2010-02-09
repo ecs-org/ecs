@@ -1,0 +1,47 @@
+{# notification.html #}
+
+{% extends 'core_new.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new.css" media="screen"/>
+{% endblock %}
+
+{% block headertitle %}
+  <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+
+  <p>A randomized, open-label, multicenter phase II study to investigate the efficiency
+     and safety of two dose levels of the human monoclonal antibody MT201 administered
+     intravenously to patients with some medical issue (MT201-202)</p>
+{% endblock %}
+
+{% block headernav %}
+    <ul>
+      <li><a href="../new">Studien und Meldungsart</a></li>
+      <li><a href="../new2">Meldung</a></li>
+      <li><a href="../new3">Unterlagen</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+
+	<form action="" method="" accept-charset="utf-8">
+		<div class="notification">
+		  <h2>Protokollnummer (falls vorhanden):</h2>
+		
+		  (Protokoll-Nr.) <input type="text" tabindex="3" size="28" value="" id="" name="">
+		</div>
+		
+		<div class="notification">
+		  <h2>Begr&uuml;ndung / Stellungnahme:</h2>
+		  <textarea cols="50" rows="10"></textarea>
+
+		</div>
+		
+		<div class="notification-submit">
+		  <a href="../new3/">Weiter zu den Unterlagen</a>
+		</div>
+	</form>	
+	
+{% endblock %}
