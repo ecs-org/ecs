@@ -26,7 +26,7 @@
 
 {% block content %}
 
-	<form action="" method="" accept-charset="utf-8">
+	<form action="" method="post" enctype="multipart/form-data">
 		
 		<div class="notification">
 			
@@ -47,11 +47,8 @@
 			</ul>
 			
 		</div>
-		
 		<div class="notification">
-			
 			<h2>Speichere neue Unterlage:</h2
-			
 			<select>
 				<option>Patienteninformation</option>
 				<option>Covering Letter</option>
@@ -63,21 +60,16 @@
 				<option>Conflict of Interest</option>
 				<option>Sonstige</option>
 			</select>
-			
 			<h2>Bezeichnung der Unterlage:</h2>
-			
-			<textarea rows="10" cols="40"></textarea>
-			
+			    <input type="text" size="40">
 			<h2>Version vom:</h2>
-			
-			<input id="datepicker" type="text">
-			
+			    <input id="datepicker" type="text">
+            <h2>Datei hochladen</h2>
+                <input name="fileupload" type="file" size="20" maxlength="100000" accept="text/*">
 		</div>
 			
 		<div class="notification-submit">
-			
-		  <a href="#">Hochladen</a>
-		  
+            <input type="submit" value="Diese Meldung abschlie&szlig;en">
 		</div>
 		
 	</form>	
