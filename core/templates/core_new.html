@@ -8,7 +8,7 @@
 <html>
 	<head>
 
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		
 		{% block htmlmeta %} {# Additional META tags should follow here #}
 		{% endblock %}
@@ -98,19 +98,22 @@
 				<div id="usermenu">
 				
 				{% block usermenu %}
+				
 			      <ul>
 			        <li><a href="/core/">&Uuml;bersicht</a></li>
 			        <li><a href="/core/">Studien</a></li>
-			        <li><a href="/core/">Studien Meldungen</a></li>
+			        <li><a href="/core/">Studien Meldungen</a>
 						<ul>
 					        <li><a href="/core/">offene Meldungen</a></li>
 					        <li><a href="/core/notification/new/">neue Meldung</a></li>
 					        <li><a href="/core/">vergangene Meldungen</a></li>
 						</ul>
+					</li>
 			        <li><a href="/core/">Konversationen</a></li>
 			        <li><a href="/core/">zuletzt bearbeitet</a></li>
 			        <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>
-			      </ul> 
+			      </ul>
+				  
 				{% endblock %}
 					
 				</div>
