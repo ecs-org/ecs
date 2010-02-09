@@ -8,14 +8,14 @@ from ecs.core.models import Workflow, Document, EthicsCommission,\
     InvolvedCommissionsForSubmission, InvolvedCommissionsForNotification,\
     SubmissionForm,Investigator,InvestigatorEmployee,TherapiesApplied,\
     DiagnosticsApplied,NonTestedUsedDrugs,ParticipatingCenter,Amendment,\
-    NotificationForm,Checklist,SubmissionSet,NotificationSet,VoteReview,\
+    NotificationForm,Checklist,SubmissionSet,VoteReview,\
     Vote,SubmissionReview,Submission,NotificationAnswer,Notification,Meeting,\
     User 
 for m in ("Workflow", "Document", "EthicsCommission", 
     "InvolvedCommissionsForSubmission","InvolvedCommissionsForNotification",
     "SubmissionForm","Investigator","InvestigatorEmployee","TherapiesApplied",
     "DiagnosticsApplied","NonTestedUsedDrugs","ParticipatingCenter","Amendment",
-    "NotificationForm","Checklist","SubmissionSet","NotificationSet",
+    "NotificationForm","Checklist","SubmissionSet",
     "VoteReview","Vote","SubmissionReview","Submission","NotificationAnswer",
     "Notification","Meeting","User"):
     exec "databrowse.site.register(%s)" % m

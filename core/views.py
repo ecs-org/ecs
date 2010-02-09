@@ -32,16 +32,19 @@ def submission(request, id=''):
     return HttpResponse(t.render(c))
 
 def notification_new1(request):
-    (t, d, c) = prepare(request, 'notification_new1.html')
+    (t, d, c) = prepare(request, 'notification_new01.html')
     return HttpResponse(t.render(c))
 
 def notification_new2(request):
-    (t, d, c) = prepare(request, 'notification_new2.html')
+    (t, d, c) = prepare(request, 'notification_new02.html')
     return HttpResponse(t.render(c))
 
 def notification_new3(request):
-    (t, d, c) = prepare(request, 'notification_new3.html')
+    (t, d, c) = prepare(request, 'notification_new03.html')
     return HttpResponse(t.render(c))
+
+def create_new_notification(request):
+    return "Hello World!"
 
 def notification_new4(request):
     (t, d, c) = prepare(request, 'index.html')
