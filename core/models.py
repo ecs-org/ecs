@@ -348,11 +348,6 @@ class SubmissionSet(models.Model):
     documents = models.ManyToManyField(Document)
     submissionform = models.ForeignKey(SubmissionForm)
 
-class NotificationSet(models.Model):
-    notification = models.ForeignKey("Notification", related_name="sets", null=True)
-    documents = models.ManyToManyField(Document)
-    notificationform = models.ForeignKey(NotificationForm)
-
 class VoteReview(models.Model):   
     workflow = models.ForeignKey(Workflow)
 
@@ -375,10 +370,10 @@ class NotificationAnswer(models.Model):
     workflow = models.ForeignKey(Workflow)
  
 class Notification(models.Model):
-    submission = models.ForeignKey(Submission)
-    notificationset = models.ForeignKey(NotificationSet, related_name="parent")
-    answer = models.ForeignKey(NotificationAnswer)
-    workflow = models.ForeignKey(Workflow)
+    submission = models.ForeignKey(Submission, null=True)
+    documents = models.ManyToManyField(Document)
+    answer = models.ForeignKey(NotificationAnswer, null=True)
+    workflow = models.ForeignKey(Workflow, null=True)
 
 class Meeting(models.Model):
     submissions = models.ManyToManyField(Submission)
