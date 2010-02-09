@@ -4,14 +4,14 @@
  * tabs
  */
 $(function() {
-  $("#tabs").tabs({ disabled: [1, 2], selected: 0 });
+  $("#ecs-core-tabs").tabs({ disabled: [1, 2], selected: 0 });
 });
 
 /*
  * list
  */
 $(function() {
-  $("#selectable1").selectable();
-  $("#selectable2").selectable();
+  $("#ecs-core-selectable1").selectable();
+  $("#ecs-core-selectable2").selectable();
 });
 

@@ -1,8 +1,10 @@
+/* TODO the following def had to be disabled, as it effects too much markup (e.g. renders input fields invisible)
 * {
 	margin: 0;
 	padding: 0;
 	border: 0;
 }
+*/
 
 /*
 	structure

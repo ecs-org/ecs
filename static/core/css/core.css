@@ -1,3 +1,33 @@
 /* 
  * core.css 
  */
+
+/* jQuery ui tabs widget */
+
+.ui-tabs .ui-tabs-hide .ui-tabs-panel {
+  display: none;
+  padding: 0px;
+}
+.ui-tabs-nav {
+  height: 3em;
+  display: block;
+  padding: 0px;
+}
+
+div#ecs-core-tabs {
+  height: 3em;
+  border: none;
+  padding: 0px;
+}
+
+
+/* jQuery ui selectables (generalized list views) */
+#ecs-core-selectable1 .ui-selecting { background: #FECA40; }
+#ecs-core-selectable1 .ui-selected { background: #F39814; color: white; }
+#ecs-core-selectable1 { list-style-type: none; margin: 0; padding: 0; }
+#ecs-core-selectable1 li { margin: 3px; padding: 0.4em; height: 18px; }
+
+#ecs-core-selectable2 .ui-selecting { background: #FECA40; }
+#ecs-core-selectable2 .ui-selected { background: #F39814; color: white; }
+#ecs-core-selectable2 { list-style-type: none; margin: 0; padding: 0; }
+#ecs-core-selectable2 li { margin: 3px; padding: 0.4em; height: 18px; }

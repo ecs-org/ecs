@@ -4,5 +4,5 @@
  * tabs
  */
 $(function() {
-  $("#tabs").tabs({ disabled: [0, 2], selected: 1 });
+  $("#ecs-core-tabs").tabs({ disabled: [0, 2], selected: 1 });
 });

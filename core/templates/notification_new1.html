@@ -1,62 +1,58 @@
-{# notification.html #}
+{# notification_new1.html #}
 
 {% extends 'core.html' %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
-{% block css %}
-  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new1.css" media="screen"/>
-{% endblock %}
-{% block js %}
+{% block jshead2 %}
   <script type="text/javascript" src="{{ MEDIA_URL }}core/js/notification_new1.js"></script>
 {% endblock %}
 
 {% block content %}
-<div id="head">
-  <h1>Neue Meldung zur laufenden Studie(n)</h1>
 
-  <div id="tabs">
-    <ul>
-      <li><a href="#tabs-1">Studien und Meldungsart</a></li>
-      <li><a href="#tabs-2">Meldung</a></li>
-      <li><a href="#tabs-3">Unterlagen</a></li>
-    </ul>
-    <div id="tabs-1"></div>
-    <div id="tabs-2"></div>
-    <div id="tabs-3"></div>
-  </div>
+<h1>Neue Meldung zur laufenden Studie(n)</h1>
 
+<div id="ecs-core-tabs">
+  <ul>
+    <li><a href="#ecs-core-tabs-1">Studien und Meldungsart</a></li>
+    <li><a href="#ecs-core-tabs-2">Meldung</a></li>
+    <li><a href="#ecs-core-tabs-3">Unterlagen</a></li>
+  </ul>
+  <div id="ecs-core-tabs-1"></div>
+  <div id="ecs-core-tabs-2"></div>
+  <div id="ecs-core-tabs-3"></div>
 </div>
 
-<div id="n1s1">
-  <h2>(1) Auswahl der betreffenden Studie(n)</h2>
-  <ol id="selectable1">
-    <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL }}core/images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
-    <li class="ui-widget-content"><img src="{{ MEDIA_URL }}core/images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
-  {% if submissions %}
-  {% for submission in submissions %}
-    <li class="ui-widget-content">{{ submission.id }}</li>
-  {% endfor %}
-  {% else %}
-    <li class="ui-widget-content">&nbsp;&nbsp;&nbsp;(keine)</li>
-  {% endif %}
-  </ol>
-</div>
 
-<div id="n1s2">
-  <h2>(2) Meldungstyp</h2>
-  <ol id="selectable2">
-    <li class="ui-widget-content ui-selected">sonstige</li>
-    <li class="ui-widget-content">Informationsmeldung</li>
-    <li class="ui-widget-content">Protokoll&auml;nderung</li>
-    <li class="ui-widget-content">Nebenwirkungsmeldung</li>
-    <li class="ui-widget-content">Verl&auml;ngerung des Votums</li>
-  </ol>
-</div>
+<form action="../new2">
 
-<div id="n1s3">
-  <h2>(3) Meldung</h2>
-  <a href="../new2/">Gehe zur Meldung</a>
-</div>
+    <h2>(1) Auswahl der betreffenden Studie(n)</h2>
+    <ol id="ecs-core-selectable1">
+      <li class="ui-widget-content ui-selected"><img src="{{ MEDIA_URL }}core/images/icon-doc.png" alt="doc icon "/> letzt aktive Einreichung (EK-343/2009)</li>
+      <li class="ui-widget-content"><img src="{{ MEDIA_URL }}core/images/icon-folder.png" alt="folder icon"/> aktive von mir eingereichte</td></li>
+    {% if submissions %}
+    {% for submission in submissions %}
+      <li class="ui-widget-content">{{ submission.id }}</li>
+    {% endfor %}
+    {% else %}
+      <li class="ui-widget-content">&nbsp;&nbsp;&nbsp;(keine)</li>
+    {% endif %}
+    </ol>
+
+
+    <h2>(2) Meldungstyp</h2>
+    <ol id="ecs-core-selectable2">
+      <li class="ui-widget-content ui-selected">sonstige</li>
+      <li class="ui-widget-content">Informationsmeldung</li>
+      <li class="ui-widget-content">Protokoll&auml;nderung</li>
+      <li class="ui-widget-content">Nebenwirkungsmeldung</li>
+      <li class="ui-widget-content">Verl&auml;ngerung des Votums</li>
+    </ol>
+
+
+    <h2>(3) Meldung</h2>
+    <input type="submit" value="Gehe zur Meldung">
+
+</form>
 
 {% endblock %}

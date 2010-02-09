@@ -7,7 +7,7 @@
 {# (no htmltype block) #}
 {# (no htmlmeta block) #}
 
-{% block  htmltitle %}ECS core{% endblock %}
+{% block htmltitle %}ECS core{% endblock %}
 
 {% block htmlcss %}
   <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
@@ -18,6 +18,7 @@
   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}core/js/core.js"></script>
+  {% block jshead2 %}{% endblock %}
 {% endblock %}
 
 {# testing base.html.. #}

@@ -1,52 +1,46 @@
-{# notification.html #}
+{# notification_new2.html #}
 
 {% extends 'core.html' %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
-{% block css %}
-  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new2.css" media="screen"/>
-{% endblock %}
-{% block js %}
+{% block jshead2 %}
   <script type="text/javascript" src="{{ MEDIA_URL }}core/js/notification_new2.js"></script>
 {% endblock %}
 
 {% block content %}
-<div id="head">
-  <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
 
-  <p>A randomized, open-label, multicenter phase II study to investigate the efficiency
-     and safety of two dose levels of the human monoclonal antibody MT201 administered
-     intravenously to patients with some medical issue (MT201-202)</p>
+<h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
 
-  <div id="tabs">
-    <ul>
-      <li><a href="#tabs-1">Studien und Meldungsart</a></li>
-      <li><a href="#tabs-2">Meldung</a></li>
-      <li><a href="#tabs-3">Unterlagen</a></li>
-    </ul>
-    <div id="tabs-1"></div>
-    <div id="tabs-2"></div>
-    <div id="tabs-3"></div>
-  </div>
+<p>A randomized, open-label, multicenter phase II study to investigate the efficiency
+   and safety of two dose levels of the human monoclonal antibody MT201 administered
+   intravenously to patients with some medical issue (MT201-202)</p>
 
+<div id="ecs-core-tabs">
+  <ul>
+    <li><a href="#ecs-core-tabs-1">Studien und Meldungsart</a></li>
+    <li><a href="#ecs-core-tabs-2">Meldung</a></li>
+    <li><a href="#ecs-core-tabs-3">Unterlagen</a></li>
+  </ul>
+  <div id="ecs-core-tabs-1"></div>
+  <div id="ecs-core-tabs-2"></div>
+  <div id="ecs-core-tabs-3"></div>
 </div>
 
-<div id="n2s1">
+
+<form action="../new3">
+
   <h2>Protokollnummer (falls vorhanden):</h2>
+  <input name="protocolnumber" type="text" size="20" maxlength="300">
 
-  (Protokoll-Nr.)
-</div>
 
-<div id="n2s2">
   <h2>Begr&uuml;ndung / Stellungnahme:</h2>
+  <textarea name="statement" cols="80" rows="10"></textarea>
 
-  (Editor)
-</div>
 
-<div id="n2s3">
   <h2>Unterlagen</h2>
-  <a href="../new3/">Gehe zu den Unterlagen</a>
-</div>
+  <input type="submit" value="Gehe zu den Unterlagen"a>
+
+</form>
 
 {% endblock %}
