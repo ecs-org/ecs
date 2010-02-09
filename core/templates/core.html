@@ -21,7 +21,11 @@
 {% endblock %}
 
 {# testing base.html.. #}
-{% block header %}(header){% endblock %}
+{% block header %}
+  &copy; 2009-2010 Ethik-Kommission der Medizinischen Universit&auml;t Wien und des
+  Allgemeinen Krankenhauses der Stadt Wien, 
+  <a href="mailto:office@ep3.at">ECS-Development</a>
+{% endblock %}
 {% block headertitle %}(headertitle){% endblock %}
 {% block headernav %} (headernav){% endblock %}
 
@@ -59,11 +63,5 @@
 {% block content %}
 {% endblock %}
 
-{# TODO bock was intended for js, we add some markup .. #}
 {% block jsbottom %}
-  <address>
-    &copy; 2009-2010 Ethik-Kommission der Medizinischen Universit&auml;t Wien und des
-    Allgemeinen Krankenhauses der Stadt Wien,
-    <a href="mailto:office@ep3.at">ECS-Development</a>
-  </address>
 {% endblock %}
