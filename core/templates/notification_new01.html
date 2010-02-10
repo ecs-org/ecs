@@ -1,4 +1,4 @@
-{# notification.html #}
+{# notification_new01.html #}
 
 {% extends 'core_new.html' %}
 
@@ -9,46 +9,47 @@
 {% endblock %}
 
 {% block headertitle %}
-	<h1>Neue Meldung zur laufenden Studie(n)</h1>
+  <h1>Neue Meldung zur laufenden Studie(n)</h1>
 {% endblock %}
 
 {% block headernav %}
-    <ul>
-      <li><a href="../new">Studien und Meldungsart</a></li>
-      <li><a href="../new2">Meldung</a></li>
-      <li><a href="../new3">Unterlagen</a></li>
-    </ul>
+  <ul>
+    <li><a href="../new">Studien und Meldungsart</a></li>
+    <li><a href="../new2">Meldung</a></li>
+    <li><a href="../new3">Unterlagen</a></li>
+  </ul>
 {% endblock %}
 
 {% block content %}
+  <form action="" method="POST">
 
-	<form action="" method="post">
-		<div class="notification">
-			<h2>Auswahl der betreffenden Studie(n)</h2>
-			<ul>
-				<li>letzt aktive Einreichung (EK-343/2009)</li>
-			  {% if submissions %}
-			  {% for submission in submissions %}
-			    <li><input type="checkbox" value="{{ submission.id }}" /></li>
-			  {% endfor %}
-			  {% else %}
-			    <li>(keine)</li>
-			  {% endif %}
-			</ul>
-		</div>
-		<div class="notification">
-			<h2>Meldungstyp</h2>
-			<select>
-				<option>Informationsmeldung</option>
-				<option>Protokoll&auml;nderung</option>
-				<option>Nebenwirkungsmeldung</option>
-				<option>Verl&auml;ngerung des Votums</option>
-				<option>sonstige</option>
-			</select>
-    		<div class="notification-submit">
-                <input type="submit" value="weiter">
-    		</div>
-		</div>
-	</form>	
-	
+    <div class="notification">
+      <h2>Auswahl der betreffenden Studie(n)</h2>
+      <ul>
+        <li>letzt aktive Einreichung (EK-343/2009)</li>
+      {% if submissions %}
+      {% for submission in submissions %}
+        <li><input type="checkbox" value="{{ submission.id }}" /></li>
+      {% endfor %}
+      {% else %}
+        <li>(keine)</li>
+      {% endif %}
+      </ul>
+    </div>
+
+    <div class="notification">
+      <h2>Meldungstyp</h2>
+      <select name="notificationtype" size="1">
+        <option value="0">Informationsmeldung</option>
+        <option value="1">Protokoll&auml;nderung</option>
+        <option value="2">Nebenwirkungsmeldung</option>
+        <option value="3">Verl&auml;ngerung des Votums</option>
+        <option value="4">sonstige</option>
+      </select>
+      <div class="notification-submit">
+        <input type="submit" value="weiter">
+      </div>
+    </div>
+
+  </form> 
 {% endblock %}
