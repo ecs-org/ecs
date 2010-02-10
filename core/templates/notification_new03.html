@@ -40,6 +40,14 @@
         <li>Sonstige Unterlagen
           <ul>
             <li><em>"Begleitbrief"</em></li>
+          {# first iteration: stash docs here, later group listing into doctypes #}
+          {% if docs %}
+            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }} [type: {{ doc.doctype }}]</li>
+          {% for doc in docs %}
+          {% endfor %}
+          {% else %}
+            <li>(keine)</li>
+          {% endif %}
           </ul>
         </li>
       </ul>
@@ -47,7 +55,7 @@
 
     <div class="notification">
       <h2>Speichere neue Unterlage:</h2>
-      <select>
+      <select name="doctype" size="1">
         <option value="0">Patienteninformation</option>
         <option value="1">Covering Letter</option>
         <option value="2">Versicherungsbest&auml;tigung</option>

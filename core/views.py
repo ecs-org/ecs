@@ -41,6 +41,9 @@ def notification_new1(request):
     if request.method == 'POST' and request.POST.has_key('notificationtype'):
         # process
         # TODO validate input
+        submission = request.POST['submission']
+        notificationtype = request.POST['notificationtype']
+        # TODO seems to be GET only
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new2'))
     else:
         # get last active submission
@@ -85,12 +88,29 @@ def notification_new2(request):
         c = RequestContext(request, d)
         return HttpResponse(t.render(c))
 
-    return HttpResponse(t.render(c))
-
 def notification_new3(request):
-    (t, d, c) = prepare(request, 'notification_new03.html')
-    return HttpResponse(t.render(c))
+    # added to request:
+    #   doctype -> [0..8]
+    #   description -> string
+    #   versiondate -> date
+    #   fileupload -> file
+    if request.method == 'POST' and request.POST.has_key('doctype'):
+        # process
+        # TODO validate input (or not)
+        # TODO slam all what we have collected so far into the DB
+        return HttpResponseRedirect(reverse('ecs.core.views.index'))
+    else:
+        # get existing docs
+        form_docs = []
+        # render template
+        pagename = 'notification_new03.html'
+        t = loader.get_template(pagename)
+        d = dict(MEDIA_URL = settings.MEDIA_URL,
+                 docs = form_docs)
+        c = RequestContext(request, d)
+        return HttpResponse(t.render(c))
+
 
 def create_new_notification(request):
-    return "Hello World!"
+    return HttpResponse("Hello World!")
 
