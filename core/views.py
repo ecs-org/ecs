@@ -41,7 +41,12 @@ def notification_new1(request):
     if request.method == 'POST' and request.POST.has_key('notificationtype'):
         # process
         # TODO validate input
-        submission = request.POST['submission']
+        if request.POST.has_key('submission'):
+            submission = request.POST['submission']
+        else:
+            # no submission selected
+            # TODO clarify where to check and what to do
+            return HttpResponseRedirect(reverse('ecs.core.views.notification_new1'))            
         notificationtype = request.POST['notificationtype']
         # TODO seems to be GET only
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new2'))
