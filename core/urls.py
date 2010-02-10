@@ -15,5 +15,4 @@ urlpatterns = patterns(
     url(r'^notification/new/',  'ecs.core.views.notification_new1'),
     url(r'^notification/new2/', 'ecs.core.views.notification_new2'),
     url(r'^notification/new3/', 'ecs.core.views.notification_new3'),
-    url(r'^notification/new4/', 'ecs.core.views.notification_new4'),
 )

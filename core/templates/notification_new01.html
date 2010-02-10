@@ -21,15 +21,15 @@
 {% endblock %}
 
 {% block content %}
-  <form action="" method="POST">
+  <form action="" method="post">
 
     <div class="notification">
       <h2>Auswahl der betreffenden Studie(n)</h2>
       <ul>
-        <li>letzt aktive Einreichung (EK-343/2009)</li>
+        <li><input type="checkbox" name="submission" value="{{ last_active_submission.id }}" />letzt aktive Einreichung ({{ last_active_submission.code }})</li>
       {% if submissions %}
       {% for submission in submissions %}
-        <li><input type="checkbox" value="{{ submission.id }}" /></li>
+        <li><input type="checkbox" name="submission" value="{{ submission.id }}" />{{ submission.code }}</li>
       {% endfor %}
       {% else %}
         <li>(keine)</li>
