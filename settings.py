@@ -80,6 +80,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 # debug toolbar config:
+DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
 ROOT_URLCONF = 'ecs.urls'
