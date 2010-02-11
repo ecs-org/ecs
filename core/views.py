@@ -25,7 +25,7 @@ def prepare(request, pagename):
 def file_uuid(doc_file):
     """returns md5 digest of a given file as uuid"""
     import hashlib
-    s = doc_file.read()  # TODO optimize for large files!
+    s = doc_file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
     m = hashlib.md5()
     m.update(s)
     return m.hexdigest()
@@ -122,7 +122,7 @@ def notification_new3(request):
             if fileupload.size == 0:
                 return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
             uuid = file_uuid(fileupload)
-            uuid_revision = 'whatever'  # TODO explain this field
+            uuid_revision = uuid   # TODO explain this field
             description = request.POST['description']  # TODO harmonize IDs Form, DB
             versiondate = request.POST['versiondate']
             document = Document(uuid_document = uuid, 
@@ -130,6 +130,11 @@ def notification_new3(request):
                                 version = description,
                                 date = versiondate,
                                 absent = False)
+            fileupload.seek(0)  # rewind because of prior hashing
+            dest = document.open('w')
+            s = fileupload.read()
+            dest.write(s)
+            dest.close()
             document.save()
         return HttpResponseRedirect(reverse('ecs.core.views.index'))
     else:
