@@ -11,18 +11,30 @@ from django.shortcuts import render_to_response
 
 import settings
 
-from core.models import Submission, NotificationForm
+from core.models import Document, Submission, NotificationForm
 
 
-def demo(request):
-    return render_to_response('demo-django.html')
-
+## helpers
 
 def prepare(request, pagename):
     t = loader.get_template(pagename)
     d = dict(MEDIA_URL=settings.MEDIA_URL)
     c = RequestContext(request, d)
     return (t, d, c)
+
+def file_uuid(doc_file):
+    """returns md5 digest of a given file as uuid"""
+    import hashlib
+    s = doc_file.read()  # TODO optimize for large files!
+    m = hashlib.md5()
+    m.update(s)
+    return m.hexdigest()
+
+
+## views
+
+def demo(request):
+    return render_to_response('demo-django.html')
 
 def index(request):
     (t, d, c) = prepare(request, 'index.html')
@@ -103,6 +115,22 @@ def notification_new3(request):
         # process
         # TODO validate input (or not)
         # TODO slam all what we have collected so far into the DB
+
+        # store uploaded file (if supplied)
+        if request.FILES['fileupload']:
+            fileupload = request.FILES['fileupload']
+            if fileupload.size == 0:
+                return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
+            uuid = file_uuid(fileupload)
+            uuid_revision = 'whatever'  # TODO explain this field
+            description = request.POST['description']  # TODO harmonize IDs Form, DB
+            versiondate = request.POST['versiondate']
+            document = Document(uuid_document = uuid, 
+                                uuid_document_revision = uuid_revision,
+                                version = description,
+                                date = versiondate,
+                                absent = False)
+            document.save()
         return HttpResponseRedirect(reverse('ecs.core.views.index'))
     else:
         # get existing docs
