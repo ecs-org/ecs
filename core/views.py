@@ -214,7 +214,7 @@ def notification_new3(request):
     else:
         submissions = request.session['submissions']
         notificationtype = request.session['notificationtype']
-        return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
+        ## return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
 
         # get existing docs
         form_docs = []
