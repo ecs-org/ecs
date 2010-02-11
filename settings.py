@@ -76,7 +76,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+# debug toolbar config:
+INTERNAL_IPS = ('127.0.0.1','78.46.72.166')
 
 ROOT_URLCONF = 'ecs.urls'
 
@@ -97,10 +101,11 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'debug_toolbar',
 
     'south',
     'django_nose',
     'core',
 )
 
-FILESTORE = "/tmp/ecs-store"
+FILESTORE = os.path.join(PROJECT_DIR, '../ecs-store')
