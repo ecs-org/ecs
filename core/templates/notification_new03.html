@@ -43,7 +43,7 @@
           {# first iteration: stash docs here, later group listing into doctypes #}
           {% if docs %}
           {% for doc in docs %}
-            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }} [type: {{ doc.doctype }}]</li>
+            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }}</li>
           {% endfor %}
           {% else %}
             <li>(keine)</li>
