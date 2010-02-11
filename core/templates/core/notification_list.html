@@ -1,0 +1,30 @@
+{# notification_new01.html #}
+
+{% extends 'core_new.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new.css" media="screen"/>
+{% endblock %}
+
+{% block headertitle %}
+<h1>Meldungen zur laufenden Studie(n)</h1>
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+
+{% block content %}
+{% if object_list %}
+    <ul>
+    {% for object in object_list %}
+        <li>{{ object }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No notifications are available.</p>
+{% endif %}
+
+{% endblock %}
