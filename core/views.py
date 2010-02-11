@@ -49,7 +49,7 @@ def submission(request, id=''):
 def notification_new1(request):
     # added to request:
     #   submission -> set of submission.id
-    #   notificationtype -> [0..4]  
+    #   notificationtype -> ['0'..'4']  
     if request.method == 'POST' and request.POST.has_key('notificationtype'):
         # process
         post_data = request.POST.copy()
@@ -63,6 +63,8 @@ def notification_new1(request):
             return HttpResponse('Es wurde keine Einreichung ausgew&auml;hlt!')
         notificationtype = post_data['notificationtype']
         request.session['notificationtype'] = notificationtype
+        # TODO reconstruction of the user choice for notificationtype from the request data
+
         # TODO seems to be GET only
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new2'))
     else:
@@ -98,23 +100,30 @@ def notification_new2(request):
     else:
         submissions = request.session['submissions']
         notificationtype = request.session['notificationtype']
-        return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
-        # get protocol number
-        protocolnumber = 'P12345'  # TODO get this from submission
-        # get statement
-        statement = ''  # TODO clarify 
-        # render template
-        pagename = 'notification_new02.html'
-        t = loader.get_template(pagename)
-        d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
-                 protocolnumber = protocolnumber,
-                 statement = statement)
-        c = RequestContext(request, d)
-        return HttpResponse(t.render(c))
+
+        if notificationtype == '1':
+            #
+            #  amendment
+            #
+
+            # get protocol number
+            protocolnumber = 'P12345'  # TODO get this from submission
+            # get statement
+            statement = ''  # TODO clarify 
+            # render template
+            pagename = 'notification_new02.html'
+            t = loader.get_template(pagename)
+            d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
+                     protocolnumber = protocolnumber,
+                     statement = statement)
+            c = RequestContext(request, d)
+            return HttpResponse(t.render(c))
+        else:
+            return HttpResponse('Wir bitten um Entschuldigung, der Meldungstyp ' + notificationtype + ' wird noch nicht unterst&uuml;tzt!')
 
 def notification_new3(request):
     # added to request:
-    #   doctype -> [0..8]
+    #   doctype -> ['0'..'8']
     #   description -> string
     #   versiondate -> date
     #   fileupload -> file
@@ -203,6 +212,10 @@ def notification_new3(request):
                              
         return HttpResponseRedirect(reverse('ecs.core.views.index'))
     else:
+        submissions = request.session['submissions']
+        notificationtype = request.session['notificationtype']
+        return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
+
         # get existing docs
         form_docs = []
         for document in Document.objects.all():
