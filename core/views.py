@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 
 import settings
 
-from core.models import Document, Submission, NotificationForm
+from core.models import Document, Notification, NotificationForm
 
 
 ## helpers
@@ -112,15 +112,20 @@ def notification_new3(request):
     #   versiondate -> date
     #   fileupload -> file
     if request.method == 'POST' and request.POST.has_key('doctype'):
-        # process
+        # process the form submission
+
         # TODO validate input (or not)
-        # TODO slam all what we have collected so far into the DB
+
+        #
+        #  handle file upload
+        #
 
         # store uploaded file (if supplied)
         if request.FILES['fileupload']:
             fileupload = request.FILES['fileupload']
             if fileupload.size == 0:
                 return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
+            # gather DB document
             uuid = file_uuid(fileupload)
             uuid_revision = uuid   # TODO explain this field
             description = request.POST['description']  # TODO harmonize IDs Form, DB
@@ -130,12 +135,63 @@ def notification_new3(request):
                                 version = description,
                                 date = versiondate,
                                 absent = False)
-            fileupload.seek(0)  # rewind because of prior hashing
-            dest = document.open('w')
+            # store the received file upload into the file storage
+            fileupload.seek(0)  # rewind file because of prior uuid hashing
+            dest = document.open('w')  # get file object from file storage
             s = fileupload.read()
             dest.write(s)
-            dest.close()
+            dest.close()  # file storage done
+            # store DB record
             document.save()
+
+        # 
+        #  handle notification
+        #
+
+        # gather
+
+        notification = Notification(
+            submission = None,
+            #documents =
+            answer = None,
+            workflow = None)
+        notification.save()
+
+        # TODO determine from notificationtype
+        yearly_report = False
+        final_report = False
+        amendment_report = True
+        SAE_report = False
+        SUSAR_report = False
+
+        notification_form = NotificationForm(
+            notification = notification,
+            submission_form = None,
+            investigator = None,
+            #
+            yearly_report = yearly_report,
+            final_report = final_report,
+            amendment_report = amendment_report,
+            SAE_report = SAE_report,
+            SUSAR_report = SUSAR_report,
+            #
+            date_of_vote = None,
+            ek_number = 'EK1',
+            #
+            reason_for_not_started = None,
+            recruited_subjects = None,
+            finished_subjects = None,
+            aborted_subjects = None,
+            SAE_count = None,
+            SUSAR_count = None,
+            runs_till = None,
+            finished_on = None,
+            aborted_on = None,
+            comments = 'kein Kommentar',
+            extension_of_vote = False,
+            signed_on = None)
+        notification_form.save()
+                             
         return HttpResponseRedirect(reverse('ecs.core.views.index'))
     else:
         # get existing docs
