@@ -8,11 +8,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext, loader
 from django.shortcuts import render_to_response
+from django.views.generic.list_detail import object_list
 
 import settings
 
-from core.models import Document, Notification, NotificationForm, Submission
-
+from core.models import NotificationForm, Submission, Notification
 
 ## helpers
 
@@ -133,8 +133,6 @@ def notification_new3(request):
         post_files = request.FILES.copy()
 
         # TODO validate input (or not)
-
-<<<<<<< local
         #
         #  handle file upload
         #
@@ -235,11 +233,11 @@ def notification_new3(request):
 
 
 def create_new_notification(request):
-=======
-def submissiondetail(request, submissionid):
->>>>>>> other
     return HttpResponse("Hello World!")
-<<<<<<< local
 
-=======
->>>>>>> other
+def submissiondetail(request, submissionid):
+    submission = Submission.objects.get(id=int(submissionid))
+    notifications = Notification.objects.filter(submission=submission)
+    if submission:
+        return object_list(request, queryset=notifications)
+    return HttpResponse("BOOM")
