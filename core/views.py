@@ -134,6 +134,7 @@ def notification_new3(request):
 
         # TODO validate input (or not)
 
+<<<<<<< local
         #
         #  handle file upload
         #
@@ -234,5 +235,11 @@ def notification_new3(request):
 
 
 def create_new_notification(request):
+=======
+def submissiondetail(request, submissionid):
+>>>>>>> other
     return HttpResponse("Hello World!")
+<<<<<<< local
 
+=======
+>>>>>>> other

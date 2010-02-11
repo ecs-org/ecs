@@ -4,21 +4,19 @@ import settings
 
 # setup databrowse for debugging
 from django.contrib import databrowse
-from ecs.core.models import Workflow, Document, EthicsCommission,\
-    InvolvedCommissionsForSubmission, InvolvedCommissionsForNotification,\
-    SubmissionForm,Investigator,InvestigatorEmployee,TherapiesApplied,\
-    DiagnosticsApplied,NonTestedUsedDrugs,ParticipatingCenter,Amendment,\
-    NotificationForm,Checklist,SubmissionSet,VoteReview,\
-    Vote,SubmissionReview,Submission,NotificationAnswer,Notification,Meeting,\
-    User
+from core import models
 for m in ("Workflow", "Document", "EthicsCommission", 
-    "InvolvedCommissionsForSubmission","InvolvedCommissionsForNotification",
-    "SubmissionForm","Investigator","InvestigatorEmployee","TherapiesApplied",
-    "DiagnosticsApplied","NonTestedUsedDrugs","ParticipatingCenter","Amendment",
-    "NotificationForm","Checklist","SubmissionSet",
-    "VoteReview","Vote","SubmissionReview","Submission","NotificationAnswer",
-    "Notification","Meeting","User"):
-    exec "databrowse.site.register(%s)" % m
+          "InvolvedCommissionsForSubmission",
+          "InvolvedCommissionsForNotification",
+          "SubmissionForm","Investigator","InvestigatorEmployee",
+          "TherapiesApplied",
+          "DiagnosticsApplied", "NonTestedUsedDrugs", "ParticipatingCenter",
+          "Amendment",
+          "NotificationForm", "Checklist", "SubmissionSet",
+          "VoteReview", "Vote", "SubmissionReview", "Submission", 
+          "NotificationAnswer",
+          "Notification", "Meeting", "User"):
+    databrowse.site.register(getattr(models, m))
 
 # enable the admin:
 from django.contrib import admin
