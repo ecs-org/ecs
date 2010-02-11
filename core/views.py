@@ -178,43 +178,42 @@ def notification_new3(request):
         # process the form submission
         post_data = request.POST.copy()
 
-        # TODO validate input (or not)
-
-        #
-        #  handle file upload
-        #
-
-        # store uploaded file (if supplied)
-        if request.FILES['fileupload']:
-            fileupload = request.FILES['fileupload']
-            if fileupload.size == 0:
-                return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
-            # gather DB document
-            uuid = file_uuid(fileupload)
-            uuid_revision = uuid   # TODO explain this field
-            description = post_data['description']  # TODO harmonize IDs Form, DB
-            versiondate = post_data['versiondate']
-            document = Document(uuid_document = uuid, 
-                                uuid_document_revision = uuid_revision,
-                                version = description,
-                                date = versiondate,
-                                absent = False)
-            # store the received file upload into the file storage
-            fileupload.seek(0)  # rewind file because of prior uuid hashing
-            dest = document.open('w')  # get file object from file storage
-            s = fileupload.read()
-            dest.write(s)
-            dest.close()  # file storage done
-            # store DB record
-            document.save()
-            # add document to notification form's notification
-            notification_form_id = request.session['notification_form_id']
-            notification_form = NotificationForm.objects.get(id = notification_form_id)
-            notification = notification_form.notification
-            notification.documents.add(document)
-            notification.save()
-                             
-        return HttpResponseRedirect(reverse('ecs.core.views.index'))
+        if post_data.has_key('finish'):
+            return HttpResponseRedirect(reverse('ecs.core.views.index'))
+        else:
+            # store uploaded file (if supplied)
+            if request.FILES.has_key('fileupload'):
+                fileupload = request.FILES['fileupload']
+                if fileupload.size == 0:
+                    return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
+                # gather DB document
+                uuid = file_uuid(fileupload)
+                uuid_revision = uuid   # TODO explain this field
+                description = post_data['description']  # TODO harmonize IDs Form, DB
+                versiondate = post_data['versiondate']
+                document = Document(
+                    uuid_document = uuid, 
+                    uuid_document_revision = uuid_revision,
+                    version = description,
+                    date = versiondate,
+                    absent = False)
+                # store the received file upload into the file storage
+                fileupload.seek(0)  # rewind file because of prior uuid hashing
+                dest = document.open('w')  # get file object from file storage
+                s = fileupload.read()
+                dest.write(s)
+                dest.close()  # file storage done
+                # store DB record
+                document.save()
+                # add document to notification form's notification
+                notification_form_id = request.session['notification_form_id']
+                notification_form = NotificationForm.objects.get(id = notification_form_id)
+                notification = notification_form.notification
+                notification.documents.add(document)
+                notification.save()
+            else:
+                return HttpResponse('Es wurde keine Datei hochgeladen!')
+        return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
     else:
         #submissions = request.session['submissions']
         #notificationtype = request.session['notificationtype']
