@@ -69,7 +69,7 @@ def notification_new1(request):
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new2'))
     else:
         # get last active submission
-        id = 42  # TODO get last active submission from DB
+        id = 1  # TODO get last active submission from DB
         code = 'EK-343/2009'
         form_last_active_submission = {'id': id, 'code': code}
         # get this user's active submissions
