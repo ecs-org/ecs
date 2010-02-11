@@ -95,93 +95,30 @@ def notification_new2(request):
     if request.method == 'POST' and request.POST.has_key('protocolnumber'):
         # process
         post_data = request.POST.copy()
-        # TODO validate input (or not)
-        return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
-    else:
+        protocolnumber = post_data['protocolnumber']  # TODO can't store it, possibly no input field
+        statement = post_data['statement']
+        #
         submissions = request.session['submissions']
         notificationtype = request.session['notificationtype']
-
-        if notificationtype == '1':
-            #
-            #  amendment
-            #
-
-            # get protocol number
-            protocolnumber = 'P12345'  # TODO get this from submission
-            # get statement
-            statement = ''  # TODO clarify 
-            # render template
-            pagename = 'notification_new02.html'
-            t = loader.get_template(pagename)
-            d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
-                     protocolnumber = protocolnumber,
-                     statement = statement)
-            c = RequestContext(request, d)
-            return HttpResponse(t.render(c))
-        else:
-            return HttpResponse('Wir bitten um Entschuldigung, der Meldungstyp ' + notificationtype + ' wird noch nicht unterst&uuml;tzt!')
-
-def notification_new3(request):
-    # added to request:
-    #   doctype -> ['0'..'8']
-    #   description -> string
-    #   versiondate -> date
-    #   fileupload -> file
-    if request.method == 'POST' and request.POST.has_key('doctype'):
-        # process the form submission
-        post_data = request.POST.copy()
-        post_files = request.FILES.copy()
-
-        # TODO validate input (or not)
-
-        #
-        #  handle file upload
-        #
-
-        # store uploaded file (if supplied)
-        if post_files['fileupload']:
-            fileupload = post_files['fileupload']
-            if fileupload.size == 0:
-                return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
-            # gather DB document
-            uuid = file_uuid(fileupload)
-            uuid_revision = uuid   # TODO explain this field
-            description = post_data['description']  # TODO harmonize IDs Form, DB
-            versiondate = post_data['versiondate']
-            document = Document(uuid_document = uuid, 
-                                uuid_document_revision = uuid_revision,
-                                version = description,
-                                date = versiondate,
-                                absent = False)
-            # store the received file upload into the file storage
-            fileupload.seek(0)  # rewind file because of prior uuid hashing
-            dest = document.open('w')  # get file object from file storage
-            s = fileupload.read()
-            dest.write(s)
-            dest.close()  # file storage done
-            # store DB record
-            document.save()
-
-        # 
-        #  handle notification
-        #
-
-        # gather
-
+        # fetch submission
+        submission_id = submissions[-1]  # TODO handle only last choice for now, the DB model can only hold one submission
+        submission = Submission.objects.get(id = submission_id)
+        # create notification
         notification = Notification(
-            submission = None,
-            #documents =
+            submission = submission,
+            # documents intentionally left empty
             answer = None,
             workflow = None)
         notification.save()
-
-        # TODO determine from notificationtype
+        # create notification form
         yearly_report = False
         final_report = False
-        amendment_report = True
+        amendment_report = False
         SAE_report = False
         SUSAR_report = False
-
+        if notificationtype == 1:
+            amendment_report = True
+        #
         notification_form = NotificationForm(
             notification = notification,
             submission_form = None,
@@ -205,16 +142,83 @@ def notification_new3(request):
             runs_till = None,
             finished_on = None,
             aborted_on = None,
-            comments = 'kein Kommentar',
+            comments = statement,
             extension_of_vote = False,
             signed_on = None)
         notification_form.save()
-                             
-        return HttpResponseRedirect(reverse('ecs.core.views.index'))
+        request.session['notification_form_id'] = notification_form.id
+        return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
     else:
         submissions = request.session['submissions']
         notificationtype = request.session['notificationtype']
-        ## return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
+        if notificationtype == '1':
+            #
+            #  amendment
+            #
+            protocolnumber = 'P12345'  # TODO get this from submission
+            statement = ''  # TODO clarify 
+            # render template
+            pagename = 'notification_new02.html'
+            t = loader.get_template(pagename)
+            d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
+                     protocolnumber = protocolnumber,
+                     statement = statement)
+            c = RequestContext(request, d)
+            return HttpResponse(t.render(c))
+        else:
+            return HttpResponse('Wir bitten um Entschuldigung, der Meldungstyp ' + notificationtype + ' wird noch nicht unterst&uuml;tzt!')
+
+def notification_new3(request):
+    # added to request:
+    #   doctype -> ['0'..'8']
+    #   description -> string
+    #   versiondate -> date
+    #   fileupload -> file
+    if request.method == 'POST' and request.POST.has_key('doctype'):
+        # process the form submission
+        post_data = request.POST.copy()
+
+        # TODO validate input (or not)
+
+        #
+        #  handle file upload
+        #
+
+        # store uploaded file (if supplied)
+        if request.FILES['fileupload']:
+            fileupload = request.FILES['fileupload']
+            if fileupload.size == 0:
+                return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
+            # gather DB document
+            uuid = file_uuid(fileupload)
+            uuid_revision = uuid   # TODO explain this field
+            description = post_data['description']  # TODO harmonize IDs Form, DB
+            versiondate = post_data['versiondate']
+            document = Document(uuid_document = uuid, 
+                                uuid_document_revision = uuid_revision,
+                                version = description,
+                                date = versiondate,
+                                absent = False)
+            # store the received file upload into the file storage
+            fileupload.seek(0)  # rewind file because of prior uuid hashing
+            dest = document.open('w')  # get file object from file storage
+            s = fileupload.read()
+            dest.write(s)
+            dest.close()  # file storage done
+            # store DB record
+            document.save()
+            # add document to notification form's notification
+            notification_form_id = request.session['notification_form_id']
+            notification_form = NotificationForm.objects.get(id = notification_form_id)
+            notification = notification_form.notification
+            notification.documents.add(document)
+            notification.save()
+                             
+        return HttpResponseRedirect(reverse('ecs.core.views.index'))
+    else:
+        #submissions = request.session['submissions']
+        #notificationtype = request.session['notificationtype']
+        #return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
 
         # get existing docs
         form_docs = []
