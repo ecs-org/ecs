@@ -140,6 +140,12 @@ def notification_new3(request):
     else:
         # get existing docs
         form_docs = []
+        for document in Document.objects.all():
+            doctype = '(missing)'  # TODO this field seems missing
+            form_docs.append({'uuid': document.uuid_document,
+                              'description': document.version,
+                              'versiondate': document.date,
+                              'doctype': doctype})
         # render template
         pagename = 'notification_new03.html'
         t = loader.get_template(pagename)

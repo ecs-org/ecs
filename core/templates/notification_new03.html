@@ -42,8 +42,8 @@
             <li><em>"Begleitbrief"</em></li>
           {# first iteration: stash docs here, later group listing into doctypes #}
           {% if docs %}
-            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }} [type: {{ doc.doctype }}]</li>
           {% for doc in docs %}
+            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }} [type: {{ doc.doctype }}]</li>
           {% endfor %}
           {% else %}
             <li>(keine)</li>
@@ -76,6 +76,7 @@
       <h2>Datei hochladen</h2>
       <input type="file" name="fileupload" size="20" maxlength="100000" accept="text/*">
       <div class="notification-submit">
+        {# TODO need two inputs, one for doc upload (if we want to upload more than one doc, one to finish the notification submission process #}
         <input type="submit" value="Diese Meldung abschlie&szlig;en">
       </div>
     </div>
