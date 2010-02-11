@@ -11,7 +11,7 @@ from django.shortcuts import render_to_response
 
 import settings
 
-from core.models import Document, Notification, NotificationForm
+from core.models import Document, Notification, NotificationForm, Submission
 
 
 ## helpers
@@ -52,19 +52,22 @@ def notification_new1(request):
     #   notificationtype -> [0..4]  
     if request.method == 'POST' and request.POST.has_key('notificationtype'):
         # process
+        post_data = request.POST.copy()
         # TODO validate input
-        if request.POST.has_key('submission'):
-            submission = request.POST['submission']
+        if post_data.has_key('submission'):
+            submissions = post_data.getlist('submission')
+            request.session['submissions'] = submissions  # save in session
         else:
             # no submission selected
             # TODO clarify where to check and what to do
-            return HttpResponseRedirect(reverse('ecs.core.views.notification_new1'))            
-        notificationtype = request.POST['notificationtype']
+            return HttpResponse('Es wurde keine Einreichung ausgew&auml;hlt!')
+        notificationtype = post_data['notificationtype']
+        request.session['notificationtype'] = notificationtype
         # TODO seems to be GET only
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new2'))
     else:
         # get last active submission
-        id = 1  # TODO get last active submission from DB
+        id = 42  # TODO get last active submission from DB
         code = 'EK-343/2009'
         form_last_active_submission = {'id': id, 'code': code}
         # get this user's active submissions
@@ -89,9 +92,13 @@ def notification_new2(request):
     #   statement -> string (html)
     if request.method == 'POST' and request.POST.has_key('protocolnumber'):
         # process
+        post_data = request.POST.copy()
         # TODO validate input (or not)
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
     else:
+        submissions = request.session['submissions']
+        notificationtype = request.session['notificationtype']
+        return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
         # get protocol number
         protocolnumber = 'P12345'  # TODO get this from submission
         # get statement
@@ -113,6 +120,8 @@ def notification_new3(request):
     #   fileupload -> file
     if request.method == 'POST' and request.POST.has_key('doctype'):
         # process the form submission
+        post_data = request.POST.copy()
+        post_files = request.FILES.copy()
 
         # TODO validate input (or not)
 
@@ -121,15 +130,15 @@ def notification_new3(request):
         #
 
         # store uploaded file (if supplied)
-        if request.FILES['fileupload']:
-            fileupload = request.FILES['fileupload']
+        if post_files['fileupload']:
+            fileupload = post_files['fileupload']
             if fileupload.size == 0:
                 return HttpResponse('Die Datei ' + fileupload.name + ' ist leer!')
             # gather DB document
             uuid = file_uuid(fileupload)
             uuid_revision = uuid   # TODO explain this field
-            description = request.POST['description']  # TODO harmonize IDs Form, DB
-            versiondate = request.POST['versiondate']
+            description = post_data['description']  # TODO harmonize IDs Form, DB
+            versiondate = post_data['versiondate']
             document = Document(uuid_document = uuid, 
                                 uuid_document_revision = uuid_revision,
                                 version = description,
