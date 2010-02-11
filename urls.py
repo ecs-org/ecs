@@ -10,14 +10,14 @@ from ecs.core.models import Workflow, Document, EthicsCommission,\
     DiagnosticsApplied,NonTestedUsedDrugs,ParticipatingCenter,Amendment,\
     NotificationForm,Checklist,SubmissionSet,VoteReview,\
     Vote,SubmissionReview,Submission,NotificationAnswer,Notification,Meeting,\
-    User 
+    User, core_document
 for m in ("Workflow", "Document", "EthicsCommission", 
     "InvolvedCommissionsForSubmission","InvolvedCommissionsForNotification",
     "SubmissionForm","Investigator","InvestigatorEmployee","TherapiesApplied",
     "DiagnosticsApplied","NonTestedUsedDrugs","ParticipatingCenter","Amendment",
     "NotificationForm","Checklist","SubmissionSet",
     "VoteReview","Vote","SubmissionReview","Submission","NotificationAnswer",
-    "Notification","Meeting","User"):
+    "Notification","Meeting","User", "core_document"):
     exec "databrowse.site.register(%s)" % m
 
 # enable the admin:
