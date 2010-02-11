@@ -109,4 +109,6 @@ INSTALLED_APPS = (
     'core',
 )
 
-FILESTORE = os.path.join(PROJECT_DIR, '../ecs-store')
+# filestore is now in root dir (one below source)
+FILESTORE = os.path.join(PROJECT_DIR, '..", "..", "ecs-store')
+
