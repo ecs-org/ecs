@@ -12,7 +12,7 @@ from django.views.generic.list_detail import object_list
 
 import settings
 
-from core.models import NotificationForm, Submission, Notification
+from core.models import Document, Notification, NotificationForm, Submission
 
 ## helpers
 
@@ -133,6 +133,7 @@ def notification_new3(request):
         post_files = request.FILES.copy()
 
         # TODO validate input (or not)
+
         #
         #  handle file upload
         #
