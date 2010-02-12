@@ -215,13 +215,12 @@ def notification_new3(request):
                 return HttpResponse('Es wurde keine Datei hochgeladen!')
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
     else:
-        #submissions = request.session['submissions']
-        #notificationtype = request.session['notificationtype']
-        #return HttpResponse('submissions = ' + repr(submissions) + ', notificationtype = ' + notificationtype)
-
         # get existing docs
+        notification_form_id = request.session['notification_form_id']
+        notification_form = NotificationForm.objects.get(id = notification_form_id)
+        notification = notification_form.notification
         form_docs = []
-        for document in Document.objects.all():
+        for document in notification.documents.all():
             doctype = '(missing)'  # TODO this field seems missing
             form_docs.append({'uuid': document.uuid_document,
                               'description': document.version,
