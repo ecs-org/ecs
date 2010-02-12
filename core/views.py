@@ -116,7 +116,7 @@ def notification_new2(request):
         amendment_report = False
         SAE_report = False
         SUSAR_report = False
-        if notificationtype == 1:
+        if notificationtype == '1':
             amendment_report = True
         #
         notification_form = NotificationForm(
