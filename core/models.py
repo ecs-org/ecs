@@ -308,7 +308,7 @@ class Amendment(models.Model):
     date = models.DateField()
 
 class NotificationForm(models.Model):
-    def __str__(self):
+    def _get_typ(self):
         typ = "???"
         if self.yearly_report:
             typ = "Jahresbericht"
@@ -319,9 +319,13 @@ class NotificationForm(models.Model):
         elif self.SAE_report:
             typ = "SAE Bericht"
         elif self.SUSAR_report:
-            return "SUSAR Bericht"
+            typ = "SUSAR Bericht"
+        return typ
+
+    typ = property(_get_typ)
+    def __str__(self):
         prot = self.notification.submission.sets.get().submissionform.protocol_number
-        return " ".join((typ, prot, "vom", self.signed_on or ""))
+        return " ".join((self.typ, prot, "vom", self.signed_on or ""))
     # some of these NULLs are obviously wrong, but at least with sqlite
     # south insists on them.
     notification = models.ForeignKey("Notification", null=True, related_name="form")
