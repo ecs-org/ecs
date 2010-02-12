@@ -33,7 +33,11 @@
       {# first iteration: stash docs here, later group listing into doctypes #}
       {% if docs %}
       {% for doc in docs %}
+      {% if doc.description %}
         <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }}</li>
+      {% else %}
+        <li>Dokument vom {{ doc.versiondate }}</li>
+      {% endif %}
       {% endfor %}
       {% else %}
         <li>(keine Unterlagen)</li>
