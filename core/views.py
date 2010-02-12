@@ -179,7 +179,7 @@ def notification_new3(request):
         post_data = request.POST.copy()
 
         if post_data.has_key('finish'):
-            return HttpResponseRedirect(reverse('ecs.core.views.index'))
+            return HttpResponseRedirect('/core/submission/1/')
         else:
             # store uploaded file (if supplied)
             if request.FILES.has_key('fileupload'):
