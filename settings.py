@@ -18,9 +18,8 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-DEFAULT_CHARSET = "utf-8"
-FILE_CHARSET = "utf-8"
 
+# use postgres if on host ecsdev.ep3.at depending username
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
@@ -44,6 +43,10 @@ TIME_ZONE = 'Europe/Vienna'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'de-AT'
+
+# this should be default, but to be sure
+DEFAULT_CHARSET = "utf-8"
+FILE_CHARSET = "utf-8"
 
 SITE_ID = 1
 
@@ -79,10 +82,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 # debug toolbar config:
+# middleware on bottom:
+#    'debug_toolbar.middleware.DebugToolbarMiddleware',
+# application anyware:
+#    'debug_toolbar',
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
@@ -105,7 +111,6 @@ INSTALLED_APPS = (
     'django.contrib.databrowse',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'debug_toolbar',
 
     'south',
     'django_nose',
@@ -113,5 +118,5 @@ INSTALLED_APPS = (
 )
 
 # filestore is now in root dir (one below source)
-FILESTORE = os.path.join(PROJECT_DIR, '..", "..", "ecs-store')
+FILESTORE = os.path.join(PROJECT_DIR, "..", "..", "ecs-store")
 
