@@ -18,6 +18,8 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+DEFAULT_CHARSET = "utf-8"
+
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
