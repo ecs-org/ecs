@@ -30,26 +30,14 @@
     <div class="notification">
       <h2>F&uuml;r diese Meldung bereits eingereichte Unterlagen:</h2>
       <ul>
-        <li>&Auml;nderungen zur bestehenden Studie</li>
-        <li>Patienteninformation
-          <ul>
-            <li>Neue Version <em>"Information f&uuml;r Jugendliche"</em></li>
-            <li>&Auml;nderungen <em>"Information f&uuml;r Jugendliche"</em></li>
-          </ul>
-        </li>
-        <li>Sonstige Unterlagen
-          <ul>
-            <li><em>"Begleitbrief"</em></li>
-          {# first iteration: stash docs here, later group listing into doctypes #}
-          {% if docs %}
-          {% for doc in docs %}
-            <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }}</li>
-          {% endfor %}
-          {% else %}
-            <li>(keine)</li>
-          {% endif %}
-          </ul>
-        </li>
+      {# first iteration: stash docs here, later group listing into doctypes #}
+      {% if docs %}
+      {% for doc in docs %}
+        <li><em>"{{ doc.description }}"</em> vom {{ doc.versiondate }}</li>
+      {% endfor %}
+      {% else %}
+        <li>(keine Unterlagen)</li>
+      {% endif %}
       </ul>
     </div>
 
