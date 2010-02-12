@@ -34,27 +34,8 @@
 <tr><th>Kommentare</th><td>{{ object.form.comments }}</td></tr>
 <tr><th>Antrag auf Verlaengerung</th><td>{{ object.form.extension_of_vote }}</td></tr>
 <tr><th>Unterzeichnet am</th><td>{{ object.form.signed_on }}</td></tr>
-
 </table>
 
-<!--
-reason_for_not_started = models.TextField(null=True)
-    recruited_subjects = models.IntegerField(null=True)
-    finished_subjects = models.IntegerField(null=True)
-    aborted_subjects = models.IntegerField(null=True)
-    SAE_count = models.IntegerField(null=True)
-    SUSAR_count = models.IntegerField(null=True)
-    runs_till = models.DateField(null=True)
-    finished_on = models.DateField(null=True)
-    aborted_on = models.DateField(null=True)
-    
-    comments = models.TextField(default="")
-    
-    extension_of_vote = models.BooleanField(default=False)
-    signed_on = models.DateField(null=True)
--->
-
-{{ object.form.get }}
 {% else %}
     <p>No notification???</p>
 {% endif %}
