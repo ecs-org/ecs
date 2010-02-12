@@ -23,28 +23,19 @@
 <tr><th>Protokoll Nr.</th><td>{{ object.submission.sets.get.submissionform.protocol_number }}</td></tr>
 <tr><th>Pr&uuml;fer</th><td>{{ object.form.investigator }}</td></tr>
 <tr><th>Grund warum noch nicht begonnen</th><td>{{ object.form.reason_for_not_started }}</td></tr>
-<tr><th>Angeworbene Versuchspersonen:</th><td>{{ object.form.recruited_subjects }}</td></tr>
-
+<tr><th>Angeworbene Versuchspersonen</th><td>{{ object.form.recruited_subjects }}</td></tr>
+<tr><th>Beendete Versuchspersonen</th><td>{{ object.form.finished_subjects }}</td></tr>
+<tr><th>Abgebrochene Versuchspersonen</th><td>{{ object.form.aborted_subjects }}</td></tr>
+<tr><th>SAE Zahl</th><td>{{ object.form.SAE_count }}</td></tr>
+<tr><th>SUSAR Zahl</th><td>{{ object.form.SUSAR_count }}</td></tr>
+<tr><th>Laeuft bis</th><td>{{ object.form.runs_till }}</td></tr>
+<tr><th>Beendet am</th><td>{{ object.form.finished_on }}</td></tr>
+<tr><th>Abgebrochen am</th><td>{{ object.form.aborted_on }}</td></tr>
+<tr><th>Kommentare</th><td>{{ object.form.comments }}</td></tr>
+<tr><th>Antrag auf Verlaengerung</th><td>{{ object.form.extension_of_vote }}</td></tr>
+<tr><th>Unterzeichnet am</th><td>{{ object.form.signed_on }}</td></tr>
 </table>
 
-<!--
-reason_for_not_started = models.TextField(null=True)
-    recruited_subjects = models.IntegerField(null=True)
-    finished_subjects = models.IntegerField(null=True)
-    aborted_subjects = models.IntegerField(null=True)
-    SAE_count = models.IntegerField(null=True)
-    SUSAR_count = models.IntegerField(null=True)
-    runs_till = models.DateField(null=True)
-    finished_on = models.DateField(null=True)
-    aborted_on = models.DateField(null=True)
-    
-    comments = models.TextField(default="")
-    
-    extension_of_vote = models.BooleanField(default=False)
-    signed_on = models.DateField(null=True)
--->
-
-{{ object.form.get }}
 {% else %}
     <p>No notification???</p>
 {% endif %}
