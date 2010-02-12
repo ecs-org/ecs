@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% block headertitle %}
+{% ifequal notificationtype 'n1' %}
   <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+{% else %}{% ifequal notificationtype 'n2' %}
+  <h1>Meldung einer mutmasslichen unerwarteten schwerwiegenden Nebenwirkung (SUSAR) zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+{% endifequal %}{% endifequal %}
 
   <p>A randomized, open-label, multicenter phase II study to investigate the efficiency
      and safety of two dose levels of the human monoclonal antibody MT201 administered

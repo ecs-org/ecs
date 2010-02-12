@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% block headertitle %}
+{% ifequal notificationtype 'n1' %}
   <h1>Neue Protokoll&auml;nderung zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+{% else %}{% ifequal notificationtype 'n2' %}
+  <h1>Meldung einer mutmasslichen unerwarteten schwerwiegenden Nebenwirkung (SUSAR) zur laufenden Studie (EK-343/2009): HR-NBL-1/SIOPEN</h1>
+{% endifequal %}{% endifequal %}
 
   <p>A randomized, open-label, multicenter phase II study to investigate the efficiency
      and safety of two dose levels of the human monoclonal antibody MT201 administered
@@ -48,15 +52,15 @@
     <div class="notification">
       <h2>Speichere neue Unterlage:</h2>
       <select name="doctype" size="1">
-        <option value="0">Patienteninformation</option>
-        <option value="1">Covering Letter</option>
-        <option value="2">Versicherungsbest&auml;tigung</option>
-        <option value="3">Investigator's Brochure</option>
-        <option value="4">CRF</option>
-        <option value="5">Principal Investigator's Curriculum Vit&aelig;</option>
-        <option value="6">Unterlagen gem&auml;&szlig; EU-Direktive 2001-20-EG</option>
-        <option value="7">Conflict of Interest</option>
-        <option value="8">Sonstige</option>
+        <option value="d0">Patienteninformation</option>
+        <option value="d1">Covering Letter</option>
+        <option value="d2">Versicherungsbest&auml;tigung</option>
+        <option value="d3">Investigator's Brochure</option>
+        <option value="d4">CRF</option>
+        <option value="d5">Principal Investigator's Curriculum Vit&aelig;</option>
+        <option value="d6">Unterlagen gem&auml;&szlig; EU-Direktive 2001-20-EG</option>
+        <option value="d7">Conflict of Interest</option>
+        <option value="d8">Sonstige</option>
       </select>
 
       <h2>Bezeichnung der Unterlage:</h2>
