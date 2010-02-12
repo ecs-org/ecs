@@ -315,7 +315,7 @@ class NotificationForm(models.Model):
         elif self.final_report:
             typ = "Abschlussbericht"
         elif self.amendment_report:
-            typ = u"Ergänzungsreport"
+            typ = "Ergaenzungsreport"
         elif self.SAE_report:
             typ = "SAE Bericht"
         elif self.SUSAR_report:
@@ -325,7 +325,7 @@ class NotificationForm(models.Model):
     typ = property(_get_typ)
     def __str__(self):
         prot = self.notification.submission.sets.get().submissionform.protocol_number
-        return " ".join((self.typ, prot, "vom", self.signed_on or ""))
+        return u" ".join((self.typ, "EK-343/2009", prot, "vom", self.signed_on or "12.02.2010"))
     # some of these NULLs are obviously wrong, but at least with sqlite
     # south insists on them.
     notification = models.ForeignKey("Notification", null=True, related_name="form")
