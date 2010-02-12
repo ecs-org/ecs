@@ -222,9 +222,10 @@ def notification_new3(request):
         form_docs = []
         for document in notification.documents.all():
             doctype = '(missing)'  # TODO this field seems missing
+            versiondate = document.date
             form_docs.append({'uuid': document.uuid_document,
                               'description': document.version,
-                              'versiondate': document.date,
+                              'versiondate': versiondate,
                               'doctype': doctype})
         # render template
         pagename = 'notification_new03.html'
