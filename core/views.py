@@ -49,7 +49,7 @@ def submission(request, id=''):
 def notification_new1(request):
     # added to request:
     #   submission -> set of submission.id
-    #   notificationtype -> ['0'..'4']  
+    #   notificationtype -> ['n0'..'n4']  
     if request.method == 'POST' and request.POST.has_key('notificationtype'):
         # process
         post_data = request.POST.copy()
@@ -116,8 +116,10 @@ def notification_new2(request):
         amendment_report = False
         SAE_report = False
         SUSAR_report = False
-        if notificationtype == '1':
+        if notificationtype == 'n1':
             amendment_report = True
+        elif notificationtype == 'n2':
+            SUSAR_report = True
         #
         notification_form = NotificationForm(
             notification = notification,
@@ -151,7 +153,7 @@ def notification_new2(request):
     else:
         submissions = request.session['submissions']
         notificationtype = request.session['notificationtype']
-        if notificationtype == '1':
+        if notificationtype == 'n1':
             #
             #  amendment
             #
@@ -161,6 +163,22 @@ def notification_new2(request):
             pagename = 'notification_new02.html'
             t = loader.get_template(pagename)
             d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
+                     notificationtype = notificationtype,
+                     protocolnumber = protocolnumber,
+                     statement = statement)
+            c = RequestContext(request, d)
+            return HttpResponse(t.render(c))
+        elif notificationtype == 'n2':
+            #
+            #  SUSAR
+            #
+            protocolnumber = 'P67890'  # TODO get this from submission
+            statement = ''  # TODO clarify 
+            # render template
+            pagename = 'notification_new02.html'
+            t = loader.get_template(pagename)
+            d = dict(MEDIA_URL = settings.MEDIA_URL,  # TODO put back prior request vars into request
+                     notificationtype = notificationtype,
                      protocolnumber = protocolnumber,
                      statement = statement)
             c = RequestContext(request, d)
@@ -170,7 +188,7 @@ def notification_new2(request):
 
 def notification_new3(request):
     # added to request:
-    #   doctype -> ['0'..'8']
+    #   doctype -> ['d0'..'d8']
     #   description -> string
     #   versiondate -> date
     #   fileupload -> file
@@ -215,6 +233,7 @@ def notification_new3(request):
                 return HttpResponse('Es wurde keine Datei hochgeladen!')
         return HttpResponseRedirect(reverse('ecs.core.views.notification_new3'))
     else:
+        notificationtype = request.session['notificationtype']
         # get existing docs
         notification_form_id = request.session['notification_form_id']
         notification_form = NotificationForm.objects.get(id = notification_form_id)
@@ -231,6 +250,7 @@ def notification_new3(request):
         pagename = 'notification_new03.html'
         t = loader.get_template(pagename)
         d = dict(MEDIA_URL = settings.MEDIA_URL,
+                 notificationtype = notificationtype,
                  docs = form_docs)
         c = RequestContext(request, d)
         return HttpResponse(t.render(c))
