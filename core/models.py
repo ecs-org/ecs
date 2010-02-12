@@ -308,6 +308,20 @@ class Amendment(models.Model):
     date = models.DateField()
 
 class NotificationForm(models.Model):
+    def __str__(self):
+        typ = "???"
+        if self.yearly_report:
+            typ = "Jahresbericht"
+        elif self.final_report:
+            typ = "Abschlussbericht"
+        elif self.amendment_report:
+            typ = u"Ergänzungsreport"
+        elif self.SAE_report:
+            typ = "SAE Bericht"
+        elif self.SUSAR_report:
+            return "SUSAR Bericht"
+        prot = self.notification.submission.sets.get().submissionform.protocol_number
+        return " ".join((typ, prot, "vom", self.signed_on or ""))
     # some of these NULLs are obviously wrong, but at least with sqlite
     # south insists on them.
     notification = models.ForeignKey("Notification", null=True, related_name="form")
@@ -370,6 +384,8 @@ class NotificationAnswer(models.Model):
     workflow = models.ForeignKey(Workflow)
  
 class Notification(models.Model):
+    def __str__(self):
+        return str(self.form.get())
     submission = models.ForeignKey(Submission, null=True)
     documents = models.ManyToManyField(Document)
     answer = models.ForeignKey(NotificationAnswer, null=True)

@@ -18,7 +18,12 @@
 
 {% block content %}
 {% if object %}
-{{ object }}
+<table>
+<tr><th>Submission</th><td>{{ object.submission.sets.get.submissionform.project_title }}</td></tr>
+<tr><th>Protokoll Nr.</th><td>{{ object.submission.sets.get.submissionform.protocol_number }}</td></tr>
+<tr><th>Pr&uuml;fer</th><td>{{ object.form.investigator }}</td></tr>
+</table>
+{{ object.form.get }}
 {% else %}
     <p>No notification???</p>
 {% endif %}
