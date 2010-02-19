@@ -65,6 +65,7 @@ class InvolvedCommissionsForNotification(models.Model):
 class SubmissionForm(models.Model):
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40, null=True)
+    commissions = models.ManyToManyField(EthicsCommission, through=InvolvedCommissionsForSubmission)
     date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40, null=True)
     isrctn_number = models.CharField(max_length=40, null=True)
