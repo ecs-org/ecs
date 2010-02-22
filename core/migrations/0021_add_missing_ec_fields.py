@@ -84,10 +84,10 @@ class Migration:
             'city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'contactname': ('django.db.models.fields.CharField', [], {'max_length': '120', 'null': 'True'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True'}),
-            'fax': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'fax': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
         },
