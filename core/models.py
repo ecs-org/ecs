@@ -46,6 +46,12 @@ class EthicsCommission(models.Model):
     address_2 = models.CharField(max_length=60)
     zip_code = models.CharField(max_length=10)
     city = models.CharField(max_length=40)
+    contactname = models.CharField(max_length=120, null=True)
+    chairperson = models.CharField(max_length=120, null=True)
+    email = models.EmailField(null=True)
+    url = models.URLField(null=True)
+    phone = models.CharField(max_length=30, null=True)
+    fax = models.CharField(max_length=30, null=True)
 
 class InvolvedCommissionsForSubmission(models.Model):
     commission = models.ForeignKey(EthicsCommission)
@@ -57,6 +63,7 @@ class InvolvedCommissionsForSubmission(models.Model):
 class InvolvedCommissionsForNotification(models.Model):
     commission = models.ForeignKey(EthicsCommission)
     submission = models.ForeignKey("NotificationForm")
+
     # is this the main commission?
     main = models.BooleanField()
     examiner_name = models.CharField(max_length=120, default="")
