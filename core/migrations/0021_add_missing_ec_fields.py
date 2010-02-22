@@ -26,6 +26,7 @@ class Migration:
         # Adding field 'EthicsCommission.phone'
         db.add_column('core_ethicscommission', 'phone', orm['core.ethicscommission:phone'])
         
+        db.alter_column('core_ethicscommission', 'name', orm['core.ethicscommission:name'])
     
     
     def backwards(self, orm):
@@ -86,7 +87,7 @@ class Migration:
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True'}),
             'fax': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
