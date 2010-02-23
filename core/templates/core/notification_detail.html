@@ -15,9 +15,9 @@
 {% block headernav %}
 {% endblock %}
 
-
 {% block content %}
 {% if object %}
+<a href="{% url ecs.core.views.notification_pdf notification_pk=object.pk %}">Download PDF</a>
 <table>
 <tr><th>Submission</th><td>{{ object.submission.sets.get.submissionform.project_title }}</td></tr>
 <tr><th>Protokoll Nr.</th><td>{{ object.submission.sets.get.submissionform.protocol_number }}</td></tr>

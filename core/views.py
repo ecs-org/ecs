@@ -6,13 +6,14 @@ Views for ecs.
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response
+from django.template import RequestContext, Context, loader, Template
+from django.shortcuts import render_to_response, get_object_or_404
 from django.views.generic.list_detail import object_list
 
 import settings
 
-from core.models import Document, Notification, NotificationForm, Submission
+from ecs.core.models import Document, Notification, NotificationForm, Submission
+from ecs.utils.htmldoc import htmldoc
 
 ## helpers
 
@@ -258,6 +259,16 @@ def notification_new3(request):
 
 def create_new_notification(request):
     return HttpResponse("Hello World!")
+    
+def notification_pdf(request, notification_pk=None):
+	notification = get_object_or_404(NotificationForm, pk=notification_pk)
+	html = Template("<html><body>Notification; pk={{ notification.pk }}</body></html>").render(Context({
+		'notification': notification,
+	}))
+	pdf = htmldoc(html, webpage=True)
+	response = HttpResponse(pdf, content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
+	return response
 
 def submissiondetail(request, submissionid):
     submission = Submission.objects.get(id=int(submissionid))
