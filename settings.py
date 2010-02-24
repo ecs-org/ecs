@@ -116,6 +116,7 @@ INSTALLED_APPS = (
     'utils',
     'south',
     'django_nose',
+    'reversion',
 )
 
 # filestore is now in root dir (one below source)
