@@ -3,6 +3,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+import reversion
 
 # metaclassen:
 #  master control programm model:
@@ -426,3 +427,27 @@ class Annotation(models.Model):
     pass
 """
 
+
+reversion.register(Amendment)
+reversion.register(Checklist)
+reversion.register(DiagnosticsApplied)
+reversion.register(Document)
+reversion.register(EthicsCommission)
+reversion.register(Meeting)
+reversion.register(ParticipatingCenter)
+reversion.register(Submission)
+reversion.register(SubmissionForm)
+reversion.register(SubmissionReview)
+reversion.register(NonTestedUsedDrugs)
+reversion.register(Notification)
+reversion.register(NotificationAnswer)
+reversion.register(NotificationForm)
+reversion.register(SubmissionSet)
+reversion.register(Investigator)
+reversion.register(InvestigatorEmployee)
+reversion.register(InvolvedCommissionsForNotification)
+reversion.register(InvolvedCommissionsForSubmission)
+reversion.register(TherapiesApplied)
+reversion.register(Vote)
+reversion.register(VoteReview)
+reversion.register(Workflow)
