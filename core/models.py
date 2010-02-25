@@ -360,8 +360,7 @@ class BaseNotificationForm(models.Model):
     signed_on = models.DateField(null=True, blank=True)
     
     def __unicode__(self):
-        prot = self.notification.submission.sets.get().submissionform.protocol_number
-        return u" ".join((self.typ, "EK-343/2009", prot, "vom", self.signed_on or "12.02.2010"))
+        return u"%s %s vom %s" % (self.type, self.ek_number, self.signed_on)
 
 
 class ExtendedNotificationForm(BaseNotificationForm):
