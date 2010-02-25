@@ -12,8 +12,8 @@ class Migration:
             u'Versicherungsbestätigung', 
             u"Investigator's Brochure", 
             u"CRF",
-            u"Principal Investigator's Curriculum Vitæ",
-            u"Unterlagen gemäß EU-Direktive 2001-20-EG",
+            u"PI's Curriculum Vitæ",
+            u"U. gemäß EU-Direktive 2001-20-EG",
             u"Conflict of Interest",
         )
         for name in doctypes:
