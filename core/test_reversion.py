@@ -25,3 +25,17 @@ class TestReversion:
         version_list = Version.objects.get_for_object(self.d1)
         assert len(version_list) == 1
         assert version_list[0].object_repr == 'Document object'
+
+    def test_new_version(self):
+        with reversion.revision:
+            self.d1.version = "version2"
+            self.d1.save()
+            reversion.revision.comment = "Well, usually our models are write once, but for this we need to change it"
+        
+        version_list = Version.objects.get_for_object(self.d1)
+        assert len(version_list) == 2
+        assert version_list[0].object_repr == 'Document object'
+        assert version_list[1].revision.comment.startswith("Well")
+        assert version_list[0].revision.comment.startswith("Init")
+
+
