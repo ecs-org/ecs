@@ -123,4 +123,4 @@ INSTALLED_APPS = (
 
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
-
+TEST_RUNNER = 'django_nose.run_tests'
