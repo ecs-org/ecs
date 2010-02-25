@@ -1,0 +1,22 @@
+{# notification_new1.html #}
+
+{% extends 'core.html' %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block jshead2 %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}core/js/notification_new1.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Neuer {{ notification_type.name }}</h1>
+
+<form action="" method="post">
+<table>
+	{{ form }}
+</table>
+<input type="submit" value="Speichern">
+</form>
+
+{% endblock %}

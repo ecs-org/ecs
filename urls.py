@@ -12,7 +12,7 @@ for m in ("Workflow", "Document", "EthicsCommission",
           "TherapiesApplied",
           "DiagnosticsApplied", "NonTestedUsedDrugs", "ParticipatingCenter",
           "Amendment",
-          "NotificationForm", "Checklist", "SubmissionSet",
+          "BaseNotificationForm", "ExtendedNotificationForm", "Checklist", "SubmissionSet",
           "VoteReview", "Vote", "SubmissionReview", "Submission", 
           "NotificationAnswer",
           "Notification", "Meeting", "User"):

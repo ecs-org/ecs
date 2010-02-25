@@ -13,11 +13,12 @@ urlpatterns = patterns(
     # Example:
     # (r'^ecs/', include('ecs.foo.urls')),
     url(r'^$', 'ecs.core.views.index'),
-    url(r'^notification/new/',  'ecs.core.views.notification_new1'),
-    url(r'^notification/new2/', 'ecs.core.views.notification_new2'),
-    url(r'^notification/new3/', 'ecs.core.views.notification_new3'),
+    url(r'^notification/new/$', 'ecs.core.views.select_notification_creation_type'),
+    url(r'^notification/new/(?P<notification_type_pk>\d+)/$', 'ecs.core.views.create_notification'),
+    url(r'^notification/(?P<notification_pk>\d+)/upload-document/$', 'ecs.core.views.upload_document_for_notification'),
+    url(r'^notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
+    url(r'^document/(?P<document_pk>\d)/download/$', 'ecs.core.views.download_document'),
     url(r'^submission/(?P<submissionid>\d+)/$', 'core.views.submissiondetail'),
-    url(r'^submission/\d+/notification/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', dict(queryset=Notification.objects.all())), 
-    url(r'^submission/\d+/notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
+    url(r'^submission/\d+/notification/(?P<object_id>\d+)/$', 'django.views.generic.list_detail.object_detail', dict(queryset=Notification.objects.all()), name='view_notification'), 
     url(r'^submission/', 'ecs.core.views.submission'),
 )

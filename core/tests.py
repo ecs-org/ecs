@@ -9,7 +9,7 @@ Replace these with more appropriate tests for your application.
 
 from django.test import TestCase
 from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, InvolvedCommissionsForSubmission
-from core.models import NotificationForm, Notification
+from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
 import datetime
 
 class SimpleTest(TestCase):
@@ -357,8 +357,6 @@ class NotificationFormTest(TestCase):
     def test_creation(self):
         notif = Notification(submission=self.submission)
         notif.save()
-        nform = NotificationForm(notification=notif, submission_form=self.submission_form,
-                                 yearly_report=True, comments="we need longer to torture our victims! Really.",
-                                 extension_of_vote=True)
+        nform = BaseNotificationForm(notification=notif, submission_form=self.submission_form, comments="we need longer to torture our victims! Really.")
         nform.save()
         

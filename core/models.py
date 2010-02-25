@@ -1,9 +1,13 @@
-# -*- coding: utf-8 -*- 
-
+# -*- coding: utf-8 -*-
+import os
 
 from django.db import models
 from django.contrib.auth.models import User
-import reversion
+from django.utils.importlib import import_module
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.utils._os import safe_join
+from django.utils.encoding import smart_str
 
 # metaclassen:
 #  master control programm model:
@@ -11,34 +15,36 @@ import reversion
 class Workflow(models.Model):
     pass
 
+class DocumentType(models.Model):
+    name = models.CharField(max_length=40)
+    
+    def __unicode__(self):
+        return self.name
+
+def upload_document_to(instance=None, filename=None):
+    dirs = list(instance.uuid_document_revision[:6]) + [instance.uuid_document_revision]
+    return os.path.join(settings.FILESTORE, *dirs)
+    
+class DocumentFileStorage(FileSystemStorage):
+    def path(self, name):
+        # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
+        return smart_str(os.path.normpath(name))
+
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=32)
-    # file path is derived from the uuid_document_revision
     uuid_document_revision = models.SlugField(max_length=32)
+    # file path is derived from the uuid_document_revision
+    # FIXME: `file` should not be nullable
+    file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
+    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
+    mimetype = models.CharField(max_length=100, default='application/pdf')
 
     version = models.CharField(max_length=20)
     date = models.DateTimeField()
 
     # this document is only being refered to, but it does not exist physically in the system:
     absent = models.BooleanField()
-
-    # FileField might be enough, OTOH we'll have really many files.
-    # So a more clever way of storage might be useful.
-    def _filename(self):
-        import settings, os
-        
-        dirs = list(self.uuid_document_revision)[0:6] + [self.uuid_document_revision]
-        filename = os.path.join(settings.FILESTORE, *dirs)
-        dirname = os.path.dirname(filename)
-        try:
-            os.makedirs(dirname)
-        except os.error:
-            pass                
-        return filename
-
-    def open(self, mode):
-        """returns a binary file object for reading/writing of the document depending upon mode"""
-        return open(self._filename(), mode)
 
 
 class EthicsCommission(models.Model):
@@ -53,6 +59,10 @@ class EthicsCommission(models.Model):
     url = models.URLField(null=True)
     phone = models.CharField(max_length=30, null=True)
     fax = models.CharField(max_length=30, null=True)
+    
+    def __unicode__(self):
+        return self.name
+    
 
 class InvolvedCommissionsForSubmission(models.Model):
     commission = models.ForeignKey(EthicsCommission)
@@ -63,7 +73,7 @@ class InvolvedCommissionsForSubmission(models.Model):
 
 class InvolvedCommissionsForNotification(models.Model):
     commission = models.ForeignKey(EthicsCommission)
-    submission = models.ForeignKey("NotificationForm")
+    submission = models.ForeignKey("BaseNotificationForm")
 
     # is this the main commission?
     main = models.BooleanField()
@@ -316,56 +326,56 @@ class Amendment(models.Model):
     number = models.CharField(max_length=40)
     date = models.DateField()
 
-class NotificationForm(models.Model):
-    def _get_typ(self):
-        typ = "???"
-        if self.yearly_report:
-            typ = "Jahresbericht"
-        elif self.final_report:
-            typ = "Abschlussbericht"
-        elif self.amendment_report:
-            typ = "Ergaenzungsreport"
-        elif self.SAE_report:
-            typ = "SAE Bericht"
-        elif self.SUSAR_report:
-            typ = "SUSAR Bericht"
-        return typ
+class NotificationType(models.Model):
+    name = models.CharField(max_length=40, unique=True)
+    form = models.CharField(max_length=80, default='ecs.core.forms.BaseNotificationForm')
+    model = models.CharField(max_length=80, default='ecs.core.models.BaseNotificationForm')
+    
+    @property
+    def form_cls(self):
+        if not hasattr(self, '_form_cls'):
+            module, cls_name = self.form.rsplit('.', 1)
+            self._form_cls = getattr(import_module(module), cls_name)
+        return self._form_cls
+    
+    def __unicode__(self):
+        return self.name
 
-    typ = property(_get_typ)
-    def __str__(self):
-        prot = self.notification.submission.sets.get().submissionform.protocol_number
-        return u" ".join((self.typ, "EK-343/2009", prot, "vom", self.signed_on or "12.02.2010"))
-    # some of these NULLs are obviously wrong, but at least with sqlite
-    # south insists on them.
-    notification = models.ForeignKey("Notification", null=True, related_name="form")
-    submission_form = models.ForeignKey("SubmissionForm", null=True)
-    investigator = models.ForeignKey(Investigator, null=True)
-    investigator.__doc__ = "set this if this notification is " \
-        "specific to a given investigator"
-    yearly_report = models.BooleanField(default=False)
-    final_report = models.BooleanField(default=False)
-    amendment_report = models.BooleanField(default=False)
-    SAE_report = models.BooleanField(default=False)
-    SUSAR_report = models.BooleanField(default=False)
+
+class BaseNotificationForm(models.Model):
+    # FIXME: some of these nullable FKs are obviously wrong, but at least with sqlite south insists on them.
+    submission_forms = models.ManyToManyField(SubmissionForm)
+    notification = models.ForeignKey("Notification", null=True, related_name="forms")
+    type = models.ForeignKey(NotificationType, null=True, related_name='notification_forms')    
+    investigator = models.ForeignKey(Investigator, null=True, blank=True)
+    investigator.__doc__ = "set this if this notification is specific to a given investigator"
+    ethics_commissions = models.ManyToManyField(EthicsCommission, through=InvolvedCommissionsForNotification, related_name='notification_forms')
+
     # The following should be probably deductible from the submission form
     # and all other tables but currently we are missing those:
-    date_of_vote = models.DateField(null=True)
-    ek_number = models.CharField(max_length=40, default="")
+    date_of_vote = models.DateField(null=True, blank=True)
+    ek_number = models.CharField(max_length=40, default="", blank=True)
     
-    reason_for_not_started = models.TextField(null=True)
-    recruited_subjects = models.IntegerField(null=True)
-    finished_subjects = models.IntegerField(null=True)
-    aborted_subjects = models.IntegerField(null=True)
-    SAE_count = models.IntegerField(null=True)
-    SUSAR_count = models.IntegerField(null=True)
-    runs_till = models.DateField(null=True)
-    finished_on = models.DateField(null=True)
-    aborted_on = models.DateField(null=True)
+    comments = models.TextField(default="", blank=True)
+    signed_on = models.DateField(null=True, blank=True)
     
-    comments = models.TextField(default="")
-    
-    extension_of_vote = models.BooleanField(default=False)
-    signed_on = models.DateField(null=True)
+    def __unicode__(self):
+        prot = self.notification.submission.sets.get().submissionform.protocol_number
+        return u" ".join((self.typ, "EK-343/2009", prot, "vom", self.signed_on or "12.02.2010"))
+
+
+class ExtendedNotificationForm(BaseNotificationForm):
+    reason_for_not_started = models.TextField(null=True, blank=True)
+    recruited_subjects = models.IntegerField(null=True, blank=True)
+    finished_subjects = models.IntegerField(null=True, blank=True)
+    aborted_subjects = models.IntegerField(null=True, blank=True)
+    SAE_count = models.IntegerField(null=True, blank=True)
+    SUSAR_count = models.IntegerField(null=True, blank=True)
+    runs_till = models.DateField(null=True, blank=True)
+    finished_on = models.DateField(null=True, blank=True)
+    aborted_on = models.DateField(null=True, blank=True)
+    extension_of_vote = models.BooleanField(default=False, blank=True)
+
 
 class Checklist(models.Model):
     pass
@@ -427,27 +437,3 @@ class Annotation(models.Model):
     pass
 """
 
-
-reversion.register(Amendment)
-reversion.register(Checklist)
-reversion.register(DiagnosticsApplied)
-reversion.register(Document)
-reversion.register(EthicsCommission)
-reversion.register(Meeting)
-reversion.register(ParticipatingCenter)
-reversion.register(Submission)
-reversion.register(SubmissionForm)
-reversion.register(SubmissionReview)
-reversion.register(NonTestedUsedDrugs)
-reversion.register(Notification)
-reversion.register(NotificationAnswer)
-reversion.register(NotificationForm)
-reversion.register(SubmissionSet)
-reversion.register(Investigator)
-reversion.register(InvestigatorEmployee)
-reversion.register(InvolvedCommissionsForNotification)
-reversion.register(InvolvedCommissionsForSubmission)
-reversion.register(TherapiesApplied)
-reversion.register(Vote)
-reversion.register(VoteReview)
-reversion.register(Workflow)
