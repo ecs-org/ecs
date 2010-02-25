@@ -38,4 +38,6 @@ class TestReversion:
         assert version_list[1].revision.comment.startswith("Well")
         assert version_list[0].revision.comment.startswith("Init")
 
-
+        #from reversion.helpers import generate_patch
+        #patch = generate_patch(version_list[0], version_list[1], "content")
+        
