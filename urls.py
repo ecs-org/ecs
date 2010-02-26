@@ -26,9 +26,8 @@ urlpatterns = patterns(
     '',
     # Example:
     # (r'^ecs/', include('ecs.foo.urls')),
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/core/submission/1/'}),
+    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/core/'}),
     (r'^welcome', 'django.views.generic.simple.redirect_to', {'url': '/core/submission/1/'}),
-    (r'^core/$', 'django.views.generic.simple.redirect_to', {'url': '/core/submission/1/'}),
 
     url(r'^core/', include('core.urls')),
     url(r'^demo','ecs.core.views.demo'),

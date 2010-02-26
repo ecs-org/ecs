@@ -51,6 +51,12 @@ def download_document(request, document_pk=None):
     
 
 # notification form
+def view_notification(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    return render(request, 'notifications/view.html', {
+        'notification': notification,
+    })
+
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
         'notification_types': NotificationType.objects.order_by('name')
@@ -65,7 +71,7 @@ def create_notification(request, notification_type_pk=None):
             notification_form.type = notification_type
             notification_form.notification = Notification.objects.create()
             notification_form.save()
-            return HttpResponseRedirect(reverse('view_notification', kwargs={'object_id': notification_form.notification.pk}))
+            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification_form.notification.pk}))
     else:
         form = notification_type.form_cls()
     return render(request, 'notifications/create.html', {
@@ -87,7 +93,7 @@ def upload_document_for_notification(request, notification_pk=None):
             document.file.seek(0)
             document.save()
             notification.documents.add(document)
-            return HttpResponseRedirect(reverse('view_notification', kwargs={'object_id': notification.pk}))
+            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
     else:
         form = DocumentUploadForm()
     return render(request, 'notifications/upload_document.html', {

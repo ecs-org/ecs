@@ -406,14 +406,15 @@ class NotificationAnswer(models.Model):
     workflow = models.ForeignKey(Workflow)
  
 class Notification(models.Model):
+    id = models.AutoField(primary_key=True)
     submission = models.ForeignKey(Submission, null=True)
     documents = models.ManyToManyField(Document)
     answer = models.ForeignKey(NotificationAnswer, null=True)
     workflow = models.ForeignKey(Workflow, null=True)
     
     def __unicode__(self):
-        return unicode(self.forms.get())
-    
+        return unicode(self.forms.all()[0])
+
 
 class Meeting(models.Model):
     submissions = models.ManyToManyField(Submission)
