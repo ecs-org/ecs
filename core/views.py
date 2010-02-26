@@ -12,7 +12,7 @@ from django.views.generic.list_detail import object_list
 
 import settings
 
-from ecs.core.models import Document, Notification, BaseNotificationForm, NotificationType, Submission
+from ecs.core.models import Document, Notification, BaseNotificationForm, NotificationType, Submission, InvolvedCommissionsForNotification
 from ecs.core.forms import DocumentUploadForm
 from ecs.utils.htmldoc import htmldoc
 
@@ -71,6 +71,9 @@ def create_notification(request, notification_type_pk=None):
             notification_form.type = notification_type
             notification_form.notification = Notification.objects.create()
             notification_form.save()
+            for ethics_commission in form.cleaned_data['ethics_commissions']:
+                InvolvedCommissionsForNotification.objects.create(commission=ethics_commission, submission=notification_form, main=False)
+            notification_form.submission_forms = form.cleaned_data['submission_forms']
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification_form.notification.pk}))
     else:
         form = notification_type.form_cls()
@@ -105,10 +108,13 @@ def upload_document_for_notification(request, notification_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
-    html = Template("<html><body>Notification; pk={{ notification.pk }}</body></html>").render(Context({
+    template_names = ['notifications/htmldoc/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
+    tpl = loader.select_template(template_names)
+    html = tpl.render(Context({
         'notification': notification,
+        'url': request.build_absolute_uri(),
     }))
-    pdf = htmldoc(html, webpage=True)
+    pdf = htmldoc(html.encode('ISO-8859-1'), webpage=True)
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
     return response

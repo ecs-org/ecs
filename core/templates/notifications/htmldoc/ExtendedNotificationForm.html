@@ -1,0 +1,50 @@
+{% extends "notifications/htmldoc/base.html" %}
+{% block details %}
+{{ block.super }}
+<dl>
+    <dt>Wurde die Studie begonnen?</dt>
+    <dd>
+        {% if notification.reason_for_not_started %}
+            Nein. Begründung: {{ notification.reason_for_not_started }}
+        {% else %}
+            Ja
+        {% endif %}
+    </dd>
+    <dt>Zahl der rekrutierten Patient/inn/en / Proband/inn/en</dt>
+    <dd>
+        {{ notification.extendednotificationform.recruited_subjects }}
+    </dd>
+    <dt>Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben</dt>
+    <dd>
+        {{ notification.extendednotificationform.finished_subjects }}
+    </dd>
+    <dt>Zahl der Studienabbrüche</dt>
+    <dd>
+        {{ notification.extendednotificationform.aborted_subjects }}
+    </dd>
+    <dt>Zahl der SAEs</dt>
+    <dd>
+        {{ notification.extendednotificationform.SAE_count }}
+    </dd>
+    <dt>Zahl der SUSARs</dt>
+    <dd>
+        {{ notification.extendednotificationform.SUSAR_count }}
+    </dd>
+    <dt>läuft noch bis voraussichtlich</dt>
+    <dd>
+        {{ notification.extendednotificationform.runs_till }}
+    </dd>
+    <dt>planmäßig abgeschlossen am</dt>
+    <dd>
+        {{ notification.extendednotificationform.finished_on }}
+    </dd>
+    <dt>abgebrochen am</dt>
+    <dd>
+        {{ notification.extendednotificationform.aborted_on }}
+    </dd>
+    <dt>Ich beantrage die Verlängerung der Gültigkeit des Votums./dt>
+    <dd>
+        {{ notification.extendednotificationform.extension_of_vote|yesno:"Ja,Nein" }}
+    </dd>
+</dl>
+{% endblock %}
