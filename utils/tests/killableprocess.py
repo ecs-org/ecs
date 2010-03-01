@@ -1,3 +1,5 @@
+import subprocess
+
 from django.test import TestCase
 from django.conf.urls.defaults import patterns, url
 from django.http import HttpResponse
@@ -5,7 +7,7 @@ from django.http import HttpResponse
 from ecs.utils import killableprocess
 
 def timeout_view(request):
-    popen = killableprocess.Popen('top')
+    popen = killableprocess.Popen('top', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     retcode = popen.wait(timeout=1)
     return HttpResponse(popen.stdout.read())
 
