@@ -8,7 +8,7 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, InvolvedCommissionsForSubmission
+from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, InvolvedCommissionsForNotification, InvolvedCommissionsForSubmission, NotificationType
 from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
 import datetime
 
@@ -354,9 +354,22 @@ class NotificationFormTest(TestCase):
         self.submission = sub
         self.submission_form = sform
 
-    def test_creation(self):
+    def test_notification_creation(self):
+        some_notification_type = NotificationType.objects.create(name='Test')
+        some_date = datetime.date(2010, 3, 1)
+
         notif = Notification(submission=self.submission)
         notif.save()
-        nform = BaseNotificationForm(notification=notif, submission_form=self.submission_form, comments="we need longer to torture our victims! Really.")
+        nform = BaseNotificationForm(notification=notif, type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date)
         nform.save()
+        nform.submission_forms = [self.submission_form]
+        
+        extended_form = ExtendedNotificationForm(notification=notif, type=some_notification_type, comments="foo", signed_on=some_date,
+            SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
+            reason_for_not_started='bar', runs_till=some_date, finished_on=some_date, aborted_on=some_date, extension_of_vote=True,
+        )
+        extended_form.save()
+        ecs = EthicsCommission.objects.all()[:3]
+        for ec in ecs:
+            InvolvedCommissionsForNotification.objects.create(commission=ec, submission=extended_form, main=False)
         
