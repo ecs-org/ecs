@@ -1,0 +1,28 @@
+{# notification_new01.html #}
+
+{% extends 'core_new.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/notification_new.css" media="screen"/>
+{% endblock %}
+
+{% block headertitle %}
+<h1>Liste aller Meldungen</h1>
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+{% block content %}
+
+{% if notifications %}
+<ul>
+    {% for notification in notifications %}
+        <li><a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

@@ -19,6 +19,7 @@ urlpatterns = patterns(
     url(r'^notification/(?P<notification_pk>\d+)/$', 'ecs.core.views.view_notification'),
     url(r'^notification/(?P<notification_pk>\d+)/upload-document/$', 'ecs.core.views.upload_document_for_notification'),
     url(r'^notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
+    url(r'^notifications/$', 'ecs.core.views.notification_list'),
 
     url(r'^document/(?P<document_pk>\d)/download/$', 'ecs.core.views.download_document'),
 

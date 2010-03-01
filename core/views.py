@@ -51,6 +51,11 @@ def download_document(request, document_pk=None):
     
 
 # notification form
+def notification_list(request):
+    return render(request, 'notifications/list.html', {
+        'notifications': Notification.objects.all(),
+    })
+
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return render(request, 'notifications/view.html', {
