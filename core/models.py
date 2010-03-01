@@ -16,7 +16,7 @@ class Workflow(models.Model):
     pass
 
 class DocumentType(models.Model):
-    name = models.CharField(max_length=40)
+    name = models.CharField(max_length=100)
     
     def __unicode__(self):
         return self.name
@@ -40,7 +40,7 @@ class Document(models.Model):
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
 
-    version = models.CharField(max_length=20)
+    version = models.CharField(max_length=250)
     date = models.DateTimeField()
 
     # this document is only being refered to, but it does not exist physically in the system:
