@@ -31,6 +31,8 @@ urlpatterns = patterns(
 
     url(r'^core/', include('core.urls')),
     url(r'^demo','ecs.core.views.demo'),
+    
+    url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
