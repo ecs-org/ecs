@@ -6,59 +6,71 @@
     <!-- FOOTER LEFT "Version: {% now "d.m.Y H:i:s" %} - URL: {{ url }}" -->
     <!-- FOOTER RIGHT "Seite $PAGE/$PAGES" -->
     {% block head %}
-    <h1>{{ notification.type.name }}</h1>
+        <h1>{{ notification.type.name }}</h1>
     {% endblock %}
+
     {% block ethic_commissions %}
-    {% if notification.ethics_commissions.all %}
-        <table border="1">
-            <tr>
-                <th align="left">Ethik-Kommission</th>
-                <th align="left">EK-Nummer</th>
-                <th align="left">Datum des Votums</th>
-                <th align="left">Prüfer</th>
-            </tr>
-            {% for ec in notification.ethics_commissions.all %}
-            <tr>
-                <td>{{ ec.name }}</td>
-                <td></td>
-                <td></td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
+        {% if notification.ethics_commissions.all %}
+            <table border="1">
+                <tr>
+                    <th align="left">Ethik-Kommission</th>
+                    <th align="left">EK-Nummer</th>
+                    <th align="left">Datum des Votums</th>
+                    <th align="left">Prüfer</th>
+                </tr>
+                {% for ec in notification.ethics_commissions.all %}
+                <tr>
+                    <td>{{ ec.name }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
     {% endblock %}
     {% block details %}
-    <h2>Angaben zum Forschungsprojekt</h2>
-    <dl>
-        <dt>Projekttitel</dt>
-        <dd>
-            {% for submission in notification.submission_forms.all %}
-                {{ submission.project_title }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </dd>
-        <dt>Protokollnummer</dt>
-        <dd>
-            <i>nicht vorhanden</i>
-        </dd>
-        <dt>Begründung/Stellungnahme/Mitteilung</dt>
-        <dd>
-            {{ notification.comments|default:'<i>nicht vorhanden</i>' }}
-        </dd>
-        <dt>Unterschrieben am</dt>
-        <dd>
-            {{ notification.signed_on|default:'<i>keine Angabe</i>' }}
-        </dd>
-    </dl>
+        <h2>Angaben zum Forschungsprojekt</h2>
+        <table>
+            {% block main_table %}
+            <tr>
+                <th align="right">Projekttitel</th>
+                <td>
+                    {% for submission in notification.submission_forms.all %}
+                        {{ submission.project_title }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th align="right">Protokollnummer</th>
+                <td>
+                    <i>nicht vorhanden</i>
+                </td>
+            </tr>
+            <tr>
+                <th align="right">Begründung/Stellungnahme/Mitteilung</th>
+                <td>
+                    {{ notification.comments|default:'<i>nicht vorhanden</i>' }}
+                </td>
+            </tr>
+            {% endblock %}
+        </table>
     {% endblock %}
+
     {% block documents %}
-    <h2>Anlagen</h2>
-    {% if notification.notification.documents.all %}
-    <ol>
-        {% for doc in notification.notification.documents.all %}
-            <li>{{ doc.file }}</li>
-        {% endfor %}
-    </ol>
-    {% endif %}
+        <h2>Anlagen</h2>
+        {% if notification.notification.documents.all %}
+        <ol>
+            {% for doc in notification.notification.documents.all %}
+                <li>{{ doc.file }}</li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+    {% endblock %}
+
+    {% block signature %}
+        <p>
+            Unterschrieben am: {{ notification.signed_on|default:'<i>keine Angabe</i>' }}
+        </p>
     {% endblock %}
 </body>
 </html>
