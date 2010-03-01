@@ -9,7 +9,7 @@ from ecs.utils import killableprocess
 def timeout_view(request):
     popen = killableprocess.Popen('top', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     retcode = popen.wait(timeout=1)
-    return HttpResponse(popen.stdout.read())
+    return HttpResponse(retcode)
 
 urlpatterns = patterns('',
     url(r'^test/$', timeout_view),
