@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import reversion
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -35,7 +36,6 @@ class Document(models.Model):
     uuid_document = models.SlugField(max_length=32)
     uuid_document_revision = models.SlugField(max_length=32)
     # file path is derived from the uuid_document_revision
-    # FIXME: `file` should not be nullable
     file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
@@ -439,3 +439,27 @@ class Annotation(models.Model):
     pass
 """
 
+reversion.register(Amendment) 
+reversion.register(Checklist) 
+reversion.register(DiagnosticsApplied) 
+reversion.register(Document) 
+reversion.register(EthicsCommission) 
+reversion.register(Meeting) 
+reversion.register(ParticipatingCenter) 
+reversion.register(Submission) 
+reversion.register(SubmissionForm) 
+reversion.register(SubmissionReview) 
+reversion.register(NonTestedUsedDrugs) 
+reversion.register(Notification) 
+reversion.register(NotificationAnswer) 
+reversion.register(BaseNotificationForm) 
+reversion.register(ExtendedNotificationForm) 
+reversion.register(SubmissionSet) 
+reversion.register(Investigator) 
+reversion.register(InvestigatorEmployee) 
+reversion.register(InvolvedCommissionsForNotification) 
+reversion.register(InvolvedCommissionsForSubmission) 
+reversion.register(TherapiesApplied) 
+reversion.register(Vote) 
+reversion.register(VoteReview) 
+reversion.register(Workflow)
