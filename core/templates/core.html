@@ -30,29 +30,103 @@
 
 {# using the sidebar block.. #}
 {% block logo %}
-  <img src="{{ MEDIA_URL }}core/images/schild.png" width="70%" alt="ECS"/>
+  <img src="{{ MEDIA_URL }}core/images/logo.png" width="70%" alt="ECS"/>
 {% endblock %}
 
 {% block account %}
-  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-user.png" alt="user icon"/></a>
+  <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user icon"/></a>
   Eingeloggt als Fr. Huber
 {% endblock %}
 
 {% block usertoolbar %}
   <a href="">Profil</a> |
-  <a href="">Logout</a> |
-  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-search.png" alt="search icon"/></a> |
-  <a href=""><img src="{{ MEDIA_URL }}core/images/icon-help.png" alt="help icon"/></a>
+  <a href="">Logout</a>
+  <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search icon"/></a>
+  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help icon"/></a>
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/comment.png" /> Feedback</a></p>
 {% endblock %}
 
 {% block usermenu %}
   <ul>
     <li><a href="/core/">&Uuml;bersicht</a></li>
     <li><a href="/core/">Studien</a></li>
-    <li><a href="/core/">Studien Meldungen</a></li>
-    <li><a href="/core/">--offene Meldungen</a></li>
-    <li><a href="/core/notification/new/">--neue Meldung</a></li>
-    <li><a href="{% url ecs.core.views.notification_list %}">--vergangene Meldungen</a></li>
+    <li><a href="/core/">Studien Meldungen</a>
+    <ul>
+      <li><a href="/core/">offene Meldungen</a></li>
+      <li><a href="/core/notification/new/">neue Meldung</a></li>
+      <li><a href="/core/">vergangene Meldungen</a></li>
+    </ul>
+    </li>
+    <li><a href="/core/">Konversationen</a></li>
+    <li><a href="/core/">zuletzt bearbeitet</a></li>
+    <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>
+  </ul>  
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block jsbottom %}
+{% endblock %}
+{# core.html #}
+
+{% extends 'base.html' %}
+
+{# (no htmltype block) #}
+{# (no htmlmeta block) #}
+
+{% block htmltitle %}ECS core{% endblock %}
+
+{% block htmlcss %}
+  <link rel="stylesheet" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="{{ MEDIA_URL }}core/css/core.css" media="screen"/>
+{% endblock %}
+
+{% block jshead %}
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}core/js/core.js"></script>
+  {% block jshead2 %}{% endblock %}
+{% endblock %}
+
+{# testing base.html.. #}
+{% block header %}
+  &copy; 2009-2010 Ethik-Kommission der Medizinischen Universit&auml;t Wien und des
+  Allgemeinen Krankenhauses der Stadt Wien, 
+  <a href="mailto:office@ep3.at">ECS-Development</a>
+{% endblock %}
+{% block headertitle %}(headertitle){% endblock %}
+{% block headernav %} (headernav){% endblock %}
+
+{# using the sidebar block.. #}
+{% block logo %}
+  <img src="{{ MEDIA_URL }}core/images/logo.png" width="70%" alt="ECS"/>
+{% endblock %}
+
+{% block account %}
+  <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user icon"/></a>
+  Eingeloggt als Fr. Huber
+{% endblock %}
+
+{% block usertoolbar %}
+  <a href="">Profil</a> |
+  <a href="">Logout</a>
+  <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search icon"/></a>
+  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help icon"/></a>
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/comment.png" /> Feedback</a></p>
+{% endblock %}
+
+{% block usermenu %}
+  <ul>
+    <li><a href="/core/">&Uuml;bersicht</a></li>
+    <li><a href="/core/">Studien</a></li>
+    <li><a href="/core/">Studien Meldungen</a>
+    <ul>
+      <li><a href="/core/">offene Meldungen</a></li>
+      <li><a href="/core/notification/new/">neue Meldung</a></li>
+      <li><a href="/core/">vergangene Meldungen</a></li>
+    </ul>
+    </li>
     <li><a href="/core/">Konversationen</a></li>
     <li><a href="/core/">zuletzt bearbeitet</a></li>
     <li><a href="/core/">vorgemerkte T&auml;tigkeiten</a></li>

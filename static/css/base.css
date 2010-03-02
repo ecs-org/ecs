@@ -1,165 +1,183 @@
-/* TODO the following def had to be disabled, as it effects too much markup (e.g. renders input fields invisible)
+/* margin and padding to zero, because of ecaxt aligning tags */
 * {
-	margin: 0;
-	padding: 0;
-	border: 0;
+  margin: 0;
+  padding: 0;
 }
-*/
+
 
 /*
-	structure
+  structure
 */
 
 body {
-	background: white;
-	overflow: hidden;
-	height: 100%; 
-	max-height: 100%; 
+  background: white;
+  overflow: hidden;
+  height: 100%; 
+  max-height: 100%; 
 }
 * html body { /*IE6 hack*/
-	padding: 0 250px 0 0; /*Set value to (0 WidthOfFrameDiv 0 0)*/
+  padding: 0 250px 0 0; /*Set value to (0 WidthOfFrameDiv 0 0)*/
 }
 .innertube {
-	margin: 0 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
-	float: left;
+  margin: 0 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
+  float: left;
 }
 #header {
-	position: fixed;
-	right: 250px;
-	left: 0;
-	padding: 20px;
-	z-index: 101;
+  position: fixed;
+  right: 250px;
+  left: 0;
+  padding: 20px;
+  z-index: 101;
 }
 #headertitle {
-	
+  
 }
 #headernav {
-	position: absolute;
-	top: 140px;
+  position: absolute;
+  top: 140px;
 }
 .headerline {
-    position: absolute;
-    top: 180px;
-    left: 0;
-    right: 260px;
-    width: 100%;
-    border-bottom: 1px solid #ccc;
+  position: absolute;
+  top: 180px;
+  left: 0;
+  right: 260px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
 }
 #content {
-	position: absolute;
-	top: 200px;
-	right: 250px;
-	bottom: 0;
-	left: 0;
-	margin-top: 20px;
-	background: #fff;
-	overflow-x: hidden;
+  position: absolute;
+  top: 200px;
+  right: 250px;
+  bottom: 0;
+  left: 0;
+  margin-top: 20px;
+  background: #fff;
+  overflow-x: hidden;
     overflow-y: auto;
 }
 #content {
-    height: expression(document.body.clientHeight - (100 + 120 + (2 * 5)) + "px");
-    width: expression(document.body.clientWidth - (150 + 90 + (2 * 5)) + "px");
+  height: expression(document.body.clientHeight - (100 + 120 + (2 * 5)) + "px");
+  width: expression(document.body.clientWidth - (150 + 90 + (2 * 5)) + "px");
 }
 /* mysterious -5px required to compensate for the scrollbar's presence - or something. other values may be necessary in different situations */
 
 #sidebar {
-	position: absolute;
-	top: 0;
-	bottom: 0; 
-	right: 0;
-	width: 250px; /*Width of frame div*/
-	height: 100%;
-	overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
-	color: #333;
+  position: absolute;
+  top: 0;
+  bottom: 0; 
+  right: 0;
+  width: 250px; /*Width of frame div*/
+  height: 100%;
+  overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
+  color: #333;
 }
 
 #logo, #account, #usertoolbar, #usermenu {
-	width: 230px;
-	padding: 10px;
-	border-bottom: 1px solid #666;
+  width: 230px;
+  padding: 10px;
+  border-bottom: 1px solid #666;
 }
 #logo {
-	height: 53px;
-	background: #fff;
+  height: 53px;
+  background: #fff;
 }
 #account {
-	background: #ccc;
-	min-height: 80px;
+  background: #ccc;
+  min-height: 80px;
 }
 #usertoolbar {
-	background: #c0c0c0;
-	min-height: 100px;
+  background: #c0c0c0;
+  min-height: 100px;
 }
 #usermenu {
-	background: #ccc;
-	min-height: 300px;
+  background: #ccc;
+  min-height: 300px;
 }
 
 
 /*
-	content-specific
+  content-specific
 */
 
 body {
-	font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 #headertitle h1 {
-	font-size: 1.2em;
-	margin-bottom: 5px;
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+#content h1 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
 }
 #content h2 {
-	font-size: 1em;
-	margin-bottom: 20px;
+  font-size: 1em;
+  margin-bottom: 20px;
 }
 #content p {
-	margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 #content form {
-	float: left;
+  float: left;
 }
 #content ul {
-	margin-left: 20px;
+  margin: 0 0 20px 20px;
 }
 input, textarea, select {
-	border: 1px solid #666;
-	margin-bottom: 20px;
+  border: 1px solid #666;
+  margin-bottom: 20px;
 }
 
 
 /*
-	sidebar
+  sidebar
 */
 
 #sidebar ul {
-	list-style-type: none;
-}
-#sidebar li ul, #sidebar ul ul {
-	margin: 0 0 10px 15px;
+  list-style-type: none;
 }
 #sidebar li {
-	line-height: 16pt;
+  line-height: 16pt;
+}
+#sidebar li li {
+  margin-left: 15px;
+}
+#sidebar img {
+  border: none;
+}
+#sidebar p {
+  margin: 10px 0;
 }
 
-
 /*
-	topnav
+  topnav
 */
 
 #headernav li {
-	display: inline;
-	padding: 5px;
-	line-height: 35px;
-	border: 1px solid #ccc;
+  display: inline;
+  padding: 5px;
+  line-height: 35px;
+  border: 1px solid #ccc;
+}
+
+
+/*
+  general links
+*/
+
+#sidebar a, #sidebr a img {
+  text-decoration: none;
+  border: none !important;
 }
 
 /*
-	notifications
+  notifications
 */
 
 .notification {
-	float: left;
-	margin: 0 30px 20px 0;
+  float: left;
+  margin: 0 30px 20px 0;
 }
 .notification-submit {
-    clear: both;
+  clear: both;
 }
