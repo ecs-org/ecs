@@ -382,17 +382,12 @@ class ExtendedNotificationForm(BaseNotificationForm):
 class Checklist(models.Model):
     pass
 
-class SubmissionSet(models.Model):
-    submission = models.ForeignKey("Submission", related_name="sets")
-    documents = models.ManyToManyField(Document)
-    submissionform = models.ForeignKey(SubmissionForm)
-
 class VoteReview(models.Model):   
     workflow = models.ForeignKey(Workflow)
 
 class Vote(models.Model):
     votereview = models.ForeignKey(VoteReview)
-    submissionset = models.ForeignKey(SubmissionSet)
+    submissionform = models.ForeignKey(SubmissionForm, null=True)
     checklists = models.ManyToManyField(Checklist)
     workflow = models.ForeignKey(Workflow)
 
@@ -457,7 +452,6 @@ reversion.register(Notification)
 reversion.register(NotificationAnswer) 
 reversion.register(BaseNotificationForm) 
 reversion.register(ExtendedNotificationForm) 
-reversion.register(SubmissionSet) 
 reversion.register(Investigator) 
 reversion.register(InvestigatorEmployee) 
 reversion.register(InvolvedCommissionsForNotification) 

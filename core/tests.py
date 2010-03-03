@@ -8,7 +8,7 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, InvolvedCommissionsForNotification, InvolvedCommissionsForSubmission, NotificationType
+from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, InvolvedCommissionsForSubmission, NotificationType
 from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
 import datetime
 
