@@ -81,7 +81,7 @@ class InvolvedCommissionsForNotification(models.Model):
 
 
 class SubmissionForm(models.Model):
-    submission = models.ForeignKey("Submission", related_name="forms", null=True) # nullable is needed for migration
+    submission = models.ForeignKey("Submission", related_name="forms")
     documents = models.ManyToManyField(Document)
 
     project_title = models.CharField(max_length=120)
