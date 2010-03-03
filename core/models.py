@@ -246,6 +246,7 @@ class SubmissionForm(models.Model):
     investigator_certified = models.BooleanField()
 
 class Investigator(models.Model):
+    # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm, related_name='investigators')
     ethics_commission = models.ForeignKey(EthicsCommission, null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
@@ -263,6 +264,7 @@ class Investigator(models.Model):
     sign_date = models.DateField()
 
 class InvestigatorEmployee(models.Model):
+    # FIXME: rename to `investigator`
     submission = models.ForeignKey(Investigator)
 
     sex = models.CharField(max_length=1, choices=[("m", "male"), ("f", "female"), ("?", "")])
@@ -272,6 +274,7 @@ class InvestigatorEmployee(models.Model):
     organisation = models.CharField(max_length=80)
 
 class TherapiesApplied(models.Model):
+    # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm)
     
     type = models.CharField(max_length=30)    
@@ -280,6 +283,7 @@ class TherapiesApplied(models.Model):
     total = models.CharField(max_length=30)
 
 class DiagnosticsApplied(models.Model):
+    # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm)
     
     type = models.CharField(max_length=30)    
@@ -289,6 +293,7 @@ class DiagnosticsApplied(models.Model):
 
 
 class NonTestedUsedDrugs(models.Model):
+    # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm)
 
     generic_name = models.CharField(max_length=40)
@@ -296,6 +301,7 @@ class NonTestedUsedDrugs(models.Model):
     dosage = models.CharField(max_length=40)
 
 class ParticipatingCenter(models.Model):
+    # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm)
     
     name = models.CharField(max_length=60)
@@ -306,6 +312,7 @@ class ParticipatingCenter(models.Model):
     country = models.CharField(max_length=4)
     
 class Amendment(models.Model):
+    # FIXME: rename to `submission_form`
     submissionform = models.ForeignKey(SubmissionForm)
     order = models.IntegerField()
     number = models.CharField(max_length=40)
@@ -326,12 +333,12 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.name
 
-
+# FIME: rename to `BaseNotification`
 class BaseNotificationForm(models.Model):
-    type = models.ForeignKey(NotificationType, null=True, related_name='notification_forms')    
-    investigators = models.ManyToManyField(Investigator, related_name='notification_forms')
-    submission_forms = models.ManyToManyField(SubmissionForm)    
-    investigator = models.ForeignKey(Investigator, null=True, blank=True)
+    type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
+    investigators = models.ManyToManyField(Investigator, related_name='notifications')
+    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications')
+    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications')
     documents = models.ManyToManyField(Document)
 
     comments = models.TextField(default="", blank=True)
@@ -340,7 +347,7 @@ class BaseNotificationForm(models.Model):
     def __unicode__(self):
         return u"%s vom %s" % (self.type, self.signed_on)
 
-
+# FIME: rename to something meaningfull, or at least `ExtendedNotification`
 class ExtendedNotificationForm(BaseNotificationForm):
     reason_for_not_started = models.TextField(null=True, blank=True)
     recruited_subjects = models.IntegerField(null=True, blank=True)
