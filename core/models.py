@@ -64,13 +64,6 @@ class EthicsCommission(models.Model):
         return self.name
     
 
-class InvolvedCommissionsForSubmission(models.Model):
-    commission = models.ForeignKey(EthicsCommission)
-    submission = models.ForeignKey("SubmissionForm")
-    # is this the main commission?
-    main = models.BooleanField()
-    examiner_name = models.CharField(max_length=120, default="")
-
 class InvolvedCommissionsForNotification(models.Model):
     commission = models.ForeignKey(EthicsCommission)
     submission = models.ForeignKey("BaseNotificationForm")
@@ -86,7 +79,11 @@ class SubmissionForm(models.Model):
 
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40, null=True)
-    commissions = models.ManyToManyField(EthicsCommission, through=InvolvedCommissionsForSubmission)
+    def _get_commissions(self):
+        ecs = [(x.main_investigator, x.commission) for x in self.investigator_set.all()]
+        ecs.sort(reverse=True)
+        return [x[1] for x in ecs]
+    commissions = property(_get_commissions)
     date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40, null=True)
     isrctn_number = models.CharField(max_length=40, null=True)
@@ -458,7 +455,6 @@ reversion.register(ExtendedNotificationForm)
 reversion.register(Investigator) 
 reversion.register(InvestigatorEmployee) 
 reversion.register(InvolvedCommissionsForNotification) 
-reversion.register(InvolvedCommissionsForSubmission) 
 reversion.register(TherapiesApplied) 
 reversion.register(Vote) 
 reversion.register(VoteReview) 

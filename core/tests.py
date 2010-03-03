@@ -8,7 +8,7 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, InvolvedCommissionsForSubmission, NotificationType, Investigator
+from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, NotificationType, Investigator
 from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
 import datetime
 
@@ -170,8 +170,6 @@ class SubmissionFormTest(TestCase):
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
-        involved_com = InvolvedCommissionsForSubmission(commission=ek1, submission=sform, main=True, examiner_name="Univ. Doz. Dr. Ruth Ladenstein")
-        involved_com.save()
 
 class NotificationFormTest(TestCase):
     def setUp(self):
@@ -364,6 +362,7 @@ class NotificationFormTest(TestCase):
             reason_for_not_started='bar', runs_till=some_date, finished_on=some_date, aborted_on=some_date, extension_of_vote=True,
         )
         extended_form.save()
-        ecs = EthicsCommission.objects.all()[:3]
-        for ec in ecs:
-            InvolvedCommissionsForNotification.objects.create(commission=ec, submission=extended_form, main=False)
+        assert len(self.submission_form.commissions) > 0
+        for notmain, ec in enumerate(self.submission_form.commissions):
+            InvolvedCommissionsForNotification.objects.create(commission=ec, submission=extended_form, main=not(notmain))
+
