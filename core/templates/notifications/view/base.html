@@ -1,0 +1,65 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+<h1>Meldungen zur laufenden Studie(n)</h1>
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+{% block content %}
+<ul>
+    <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification_form.pk %}">Download PDF</a></li>
+    <li><a href="{% url ecs.core.views.upload_document_for_notification notification_pk=notification_form.pk %}">Upload Document</a></li>
+</ul>  
+<table>
+    {% block table_rows %}
+<tr>
+    <th>Submission</th>
+    <td>
+        <ul>
+            {% for submission_form in notification_form.submission_forms.all %}
+               <li>{{ submission_form.project_title }}</li>
+            {% endfor %}
+        </ul>
+    </td>
+</tr>
+<tr>
+    <th>Ethik-Komissionen/Prüfer</th>
+    <td>
+        <ul>
+        {% for investigator in notification_form.investigators.all %}
+            <li>{{ investigator.ethics_commission.name }}: {{ investigator.name }}</li>
+        {% endfor %}
+        </ul>
+    </td>
+</tr>
+<tr>
+    <th>Protokoll Nr.</th>
+    <td>
+        {% for submission_form in notification_form.submission_forms.all %}
+            {{ submission_form.protocol_number }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </td>
+</tr>
+<tr>
+    <th>Pr&uuml;fer</th>
+    <td>{{ notification_form.investigator|default:'<i>Keine Angabe</i>' }}</td>
+</tr>
+<tr>
+    <th>Kommentare</th>
+    <td>{{ notification_form.comments }}</td>
+</tr>
+<tr>
+    <th>Unterzeichnet am</th>
+    <td>{{ notification_form.signed_on|default:'<i>Keine Angabe</i>' }}</td>
+</tr>
+{% endblock %}
+</table>
+
+<h2>Für diese Meldung bereits eingereichte Unterlagen:</h2>
+{% include "documents/compact_list.html" %}
+
+{% endblock %}

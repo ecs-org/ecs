@@ -8,25 +8,24 @@
     {% block head %}
         <h1>{{ notification.type.name }}</h1>
     {% endblock %}
-
+    
     {% block ethic_commissions %}
-        {% if notification.ethics_commissions.all %}
-            <table border="1">
-                <tr>
-                    <th align="left">Ethik-Kommission</th>
-                    <th align="left">EK-Nummer</th>
-                    <th align="left">Datum des Votums</th>
-                    <th align="left">Prüfer</th>
-                </tr>
-                {% for ec in notification.ethics_commissions.all %}
-                <tr>
-                    <td>{{ ec.name }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                {% endfor %}
-            </table>
-        {% endif %}
+        <table border="1">
+            <tr>
+                <th align="left">Ethik-Kommission</th>
+                <th align="left">EK-Nummer</th>
+                <th align="left">Datum des Votums</th>
+                <th align="left">Prüfer</th>
+            </tr>
+            {% for investigator in notification.investigators.all %}
+            <tr>
+                <td>{{ investigator.ethics_commission.name }}</td>
+                <td>{{ investigator.submission.submission.ec_number }}</td>
+                <td>{{ investigator.submission.date_of_protocol }}{# FIXME: use date_of_vote instead of date_of_protocol #}</td>
+                <td>{{ investigator.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
     {% endblock %}
     {% block details %}
         <h2>Angaben zum Forschungsprojekt</h2>
@@ -58,9 +57,9 @@
 
     {% block documents %}
         <h2>Anlagen</h2>
-        {% if notification.notification.documents.all %}
+        {% if notification.documents.all %}
         <ol>
-            {% for doc in notification.notification.documents.all %}
+            {% for doc in notification.documents.all %}
                 <li>{{ doc.file }}</li>
             {% endfor %}
         </ol>

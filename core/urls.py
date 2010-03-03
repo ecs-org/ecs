@@ -6,8 +6,6 @@ import settings
 # from django.contrib import admin
 # admin.autodiscover()
 
-from core.models import Notification
-
 urlpatterns = patterns(
     '',
     # Example:

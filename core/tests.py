@@ -8,8 +8,8 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, InvolvedCommissionsForNotification, InvolvedCommissionsForSubmission, NotificationType
-from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
+from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, Investigator
+from core.models import BaseNotificationForm, ExtendedNotificationForm, NotificationType
 import datetime
 
 class SimpleTest(TestCase):
@@ -184,10 +184,9 @@ class SubmissionFormTest(TestCase):
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
-        involved_com = InvolvedCommissionsForSubmission(commission=ek1, submission=sform, main=True, examiner_name="Univ. Doz. Dr. Ruth Ladenstein")
+        Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
         set.submissionform = sform
         set.save()
-        involved_com.save()
 
 class NotificationFormTest(TestCase):
     def setUp(self):
@@ -347,10 +346,9 @@ class NotificationFormTest(TestCase):
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
-        involved_com = InvolvedCommissionsForSubmission(commission=ek1, submission=sform, main=True, examiner_name="Univ. Doz. Dr. Ruth Ladenstein")
+        Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
         set.submissionform = sform
         set.save()
-        involved_com.save()
         self.submission = sub
         self.submission_form = sform
 
@@ -358,18 +356,14 @@ class NotificationFormTest(TestCase):
         some_notification_type = NotificationType.objects.create(name='Test')
         some_date = datetime.date(2010, 3, 1)
 
-        notif = Notification(submission=self.submission)
-        notif.save()
-        nform = BaseNotificationForm(notification=notif, type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date)
+        nform = BaseNotificationForm(type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date)
         nform.save()
         nform.submission_forms = [self.submission_form]
         
-        extended_form = ExtendedNotificationForm(notification=notif, type=some_notification_type, comments="foo", signed_on=some_date,
+        extended_form = ExtendedNotificationForm(type=some_notification_type, comments="foo", signed_on=some_date,
             SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
             reason_for_not_started='bar', runs_till=some_date, finished_on=some_date, aborted_on=some_date, extension_of_vote=True,
         )
         extended_form.save()
-        ecs = EthicsCommission.objects.all()[:3]
-        for ec in ecs:
-            InvolvedCommissionsForNotification.objects.create(commission=ec, submission=extended_form, main=False)
+        extended_form.investigators = self.submission_form.investigators.all()
         

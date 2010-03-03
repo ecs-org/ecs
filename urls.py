@@ -6,16 +6,14 @@ import settings
 from django.contrib import databrowse
 from core import models
 for m in ("Workflow", "Document", "EthicsCommission", 
-          "InvolvedCommissionsForSubmission",
-          "InvolvedCommissionsForNotification",
-          "SubmissionForm","Investigator","InvestigatorEmployee",
+          "SubmissionForm", "Investigator","InvestigatorEmployee",
           "TherapiesApplied",
           "DiagnosticsApplied", "NonTestedUsedDrugs", "ParticipatingCenter",
           "Amendment",
           "BaseNotificationForm", "ExtendedNotificationForm", "Checklist", "SubmissionSet",
           "VoteReview", "Vote", "SubmissionReview", "Submission", 
           "NotificationAnswer",
-          "Notification", "Meeting", "User"):
+          "Meeting", "User"):
     databrowse.site.register(getattr(models, m))
 
 # enable the admin:

@@ -1,26 +1,52 @@
-{# notification_new1.html #}
-
 {% extends 'core.html' %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
-{% block jshead2 %}
-  <script type="text/javascript" src="{{ MEDIA_URL }}core/js/notification_new1.js"></script>
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
 {% block content %}
-{% if documents %}
-<ul> 
-    {% for doc in documents %}
-        <li><a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">{{ doc.version }}; {{ doc.file.name }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
+{% include "documents/compact_list.html" %}
 <form action="" method="post" enctype="multipart/form-data">
-<table>
-	{{ form }}
-</table>
+    <div class="field">
+        {{ form.file.label_tag }}
+        {{ form.file }}
+        {% if form.file.errors %}
+        <div class="errors">
+            {{ form.file.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.doctype.label_tag }}
+        {{ form.doctype }}
+        {% if form.doctype.errors %}
+        <div class="errors">
+            {{ form.doctype.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.version.label_tag }}
+        {{ form.version }}
+        {% if form.version.errors %}
+        <div class="errors">
+            {{ form.version.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field datefield">
+        {{ form.date.label_tag }}
+        {{ form.date }}
+        {% if form.date.errors %}
+        <div class="errors">
+            {{ form.date.errors }}
+        </div>
+        {% endif %}
+    </div>
+    
 <input type="submit" value="Upload" />
 </form>
 

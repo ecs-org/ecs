@@ -1,0 +1,86 @@
+{# notification_new1.html #}
+
+{% extends 'core.html' %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Neuer {{ notification_type.name }}</h1>
+
+<form action="" method="post">
+    {{ form.errors }}
+    {% block fields %}
+    <div class="field">
+        {{ form.investigators.label_tag }}
+        {{ form.investigators }}
+        {% if form.investigators.errors %}
+        <div class="errors">
+            {{ form.investigators.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.investigator.label_tag }}
+        {{ form.investigator }}
+        {% if form.investigator.errors %}
+        <div class="errors">
+            {{ form.investigator.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field datefield">
+        {{ form.date_of_vote.label_tag }}
+        {{ form.date_of_vote }}
+        {% if form.date_of_vote.errors %}
+        <div class="errors">
+            {{ form.date_of_vote.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.ek_number.label_tag }}
+        {{ form.ek_number }}
+        {% if form.ek_number.errors %}
+        <div class="errors">
+            {{ form.ek_number.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.comments.label_tag }}
+        {{ form.comments }}
+        {% if form.comments.errors %}
+        <div class="errors">
+            {{ form.comments.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field datefield">
+        {{ form.signed_on.label_tag }}
+        {{ form.signed_on }}
+        {% if form.signed_on.errors %}
+        <div class="errors">
+            {{ form.signed_on.errors }}
+        </div>
+        {% endif %}
+    </div>
+    <div class="field">
+        {{ form.submission_forms.label_tag }}
+        {{ form.submission_forms }}
+        {% if form.submission_forms.errors %}
+        <div class="errors">
+            {{ form.submission_forms.errors }}
+        </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+    <input type="submit" value="Speichern" />
+</form>
+
+{% endblock %}

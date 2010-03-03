@@ -9,16 +9,19 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext, Context, loader, Template
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.generic.list_detail import object_list
+from django.forms.models import inlineformset_factory
 
 import settings
 
-from ecs.core.models import Document, Notification, BaseNotificationForm, NotificationType, Submission, InvolvedCommissionsForNotification
+from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission
 from ecs.core.forms import DocumentUploadForm
 from ecs.utils.htmldoc import htmldoc
 
 ## helpers
 
 def render(request, template, context):
+    if isinstance(template, (tuple, list)):
+        template = loader.select_template(template)
     if not isinstance(template, Template):
         template = loader.get_template(template)
     return HttpResponse(template.render(RequestContext(request, context)))
@@ -48,18 +51,19 @@ def download_document(request, document_pk=None):
     response = HttpResponse(doc.file, content_type=doc.mimetype)
     response['Content-Disposition'] = 'attachment;filename=document_%s.pdf' % doc.pk
     return response
-    
 
 # notification form
 def notification_list(request):
     return render(request, 'notifications/list.html', {
-        'notifications': Notification.objects.all(),
+        'notifications': BaseNotificationForm.objects.all(),
     })
 
 def view_notification(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
-    return render(request, 'notifications/view.html', {
-        'notification': notification,
+    notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
+    template_names = ['notifications/view/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
+    return render(request, template_names, {
+        'documents': notification.documents.order_by('doctype__name', '-date'),
+        'notification_form': notification,
     })
 
 def select_notification_creation_type(request):
@@ -72,25 +76,25 @@ def create_notification(request, notification_type_pk=None):
     if request.method == 'POST':
         form = notification_type.form_cls(request.POST)
         if form.is_valid():
-            notification_form = form.save(commit=False)
-            notification_form.type = notification_type
-            notification_form.notification = Notification.objects.create()
-            notification_form.save()
-            for ethics_commission in form.cleaned_data['ethics_commissions']:
-                InvolvedCommissionsForNotification.objects.create(commission=ethics_commission, submission=notification_form, main=False)
-            notification_form.submission_forms = form.cleaned_data['submission_forms']
-            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification_form.notification.pk}))
+            notification = form.save(commit=False)
+            notification.type = notification_type
+            notification.save()
+            notification.submission_forms = form.cleaned_data['submission_forms']
+            notification.investigators = form.cleaned_data['investigators']
+            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
     else:
         form = notification_type.form_cls()
-    return render(request, 'notifications/create.html', {
+
+    template_names = ['notifications/creation/%s.html' % name for name in (form.__class__.__name__, 'base')]
+    return render(request, template_names, {
         'notification_type': notification_type,
         'form': form,
     })
 
 
 def upload_document_for_notification(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
-    documents = notification.documents.all()
+    notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
+    documents = notification.documents.order_by('doctype__name', '-date')
     if request.method == 'POST':
         form = DocumentUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -104,6 +108,7 @@ def upload_document_for_notification(request, notification_pk=None):
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
     else:
         form = DocumentUploadForm()
+
     return render(request, 'notifications/upload_document.html', {
         'notification': notification,
         'documents': documents,
@@ -117,6 +122,7 @@ def notification_pdf(request, notification_pk=None):
     tpl = loader.select_template(template_names)
     html = tpl.render(Context({
         'notification': notification,
+        'investigators': notification.investigators.order_by('ethics_commission__name', 'name'),
         'url': request.build_absolute_uri(),
     }))
     pdf = htmldoc(html.encode('ISO-8859-1'), webpage=True)

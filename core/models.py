@@ -62,28 +62,11 @@ class EthicsCommission(models.Model):
     
     def __unicode__(self):
         return self.name
-    
-
-class InvolvedCommissionsForSubmission(models.Model):
-    commission = models.ForeignKey(EthicsCommission)
-    submission = models.ForeignKey("SubmissionForm")
-    # is this the main commission?
-    main = models.BooleanField()
-    examiner_name = models.CharField(max_length=120, default="")
-
-class InvolvedCommissionsForNotification(models.Model):
-    commission = models.ForeignKey(EthicsCommission)
-    submission = models.ForeignKey("BaseNotificationForm")
-
-    # is this the main commission?
-    main = models.BooleanField()
-    examiner_name = models.CharField(max_length=120, default="")
-
 
 class SubmissionForm(models.Model):
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40, null=True)
-    commissions = models.ManyToManyField(EthicsCommission, through=InvolvedCommissionsForSubmission)
+    ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
     date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40, null=True)
     isrctn_number = models.CharField(max_length=40, null=True)
@@ -263,17 +246,19 @@ class SubmissionForm(models.Model):
     investigator_certified = models.BooleanField()
 
 class Investigator(models.Model):
-    submission = models.ForeignKey(SubmissionForm)
+    submission = models.ForeignKey(SubmissionForm, related_name='investigators')
+    ethics_commission = models.ForeignKey(EthicsCommission, null=True, related_name='investigators')
+    main = models.BooleanField(default=False, blank=True)
 
     name = models.CharField(max_length=80)
-    organisation = models.CharField(max_length=80)
-    phone = models.CharField(max_length=30)
-    mobile = models.CharField(max_length=30)
-    fax = models.CharField(max_length=30)
-    email = models.EmailField()
-    jus_practicandi = models.BooleanField()
-    specialist = models.CharField(max_length=80)
-    certified = models.BooleanField()
+    organisation = models.CharField(max_length=80, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
+    mobile = models.CharField(max_length=30, blank=True)
+    fax = models.CharField(max_length=30, blank=True)
+    email = models.EmailField(blank=True)
+    jus_practicandi = models.BooleanField(default=False, blank=True)
+    specialist = models.CharField(max_length=80, blank=True)
+    certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
     sign_date = models.DateField()
 
@@ -343,24 +328,17 @@ class NotificationType(models.Model):
 
 
 class BaseNotificationForm(models.Model):
-    # FIXME: some of these nullable FKs are obviously wrong, but at least with sqlite south insists on them.
-    submission_forms = models.ManyToManyField(SubmissionForm)
-    notification = models.ForeignKey("Notification", null=True, related_name="forms")
     type = models.ForeignKey(NotificationType, null=True, related_name='notification_forms')    
+    investigators = models.ManyToManyField(Investigator, related_name='notification_forms')
+    submission_forms = models.ManyToManyField(SubmissionForm)    
     investigator = models.ForeignKey(Investigator, null=True, blank=True)
-    investigator.__doc__ = "set this if this notification is specific to a given investigator"
-    ethics_commissions = models.ManyToManyField(EthicsCommission, through=InvolvedCommissionsForNotification, related_name='notification_forms')
+    documents = models.ManyToManyField(Document)
 
-    # The following should be probably deductible from the submission form
-    # and all other tables but currently we are missing those:
-    date_of_vote = models.DateField(null=True, blank=True)
-    ek_number = models.CharField(max_length=40, default="", blank=True)
-    
     comments = models.TextField(default="", blank=True)
     signed_on = models.DateField(null=True, blank=True)
     
     def __unicode__(self):
-        return u"%s %s vom %s" % (self.type, self.ek_number, self.signed_on)
+        return u"%s vom %s" % (self.type, self.signed_on)
 
 
 class ExtendedNotificationForm(BaseNotificationForm):
@@ -397,25 +375,14 @@ class SubmissionReview(models.Model):
     workflow = models.ForeignKey(Workflow)
 
 class Submission(models.Model):
+    ec_number = models.CharField(max_length=50, null=True, blank=True)
     submissionreview = models.ForeignKey(SubmissionReview, null=True)
     vote = models.ForeignKey(Vote, null=True)
     workflow = models.ForeignKey(Workflow, null=True)
 
-
 class NotificationAnswer(models.Model):
     workflow = models.ForeignKey(Workflow)
  
-class Notification(models.Model):
-    id = models.AutoField(primary_key=True)
-    submission = models.ForeignKey(Submission, null=True)
-    documents = models.ManyToManyField(Document)
-    answer = models.ForeignKey(NotificationAnswer, null=True)
-    workflow = models.ForeignKey(Workflow, null=True)
-    
-    def __unicode__(self):
-        return unicode(self.forms.all()[0])
-
-
 class Meeting(models.Model):
     submissions = models.ManyToManyField(Submission)
 """
@@ -439,27 +406,27 @@ class Annotation(models.Model):
     pass
 """
 
-reversion.register(Amendment) 
-reversion.register(Checklist) 
-reversion.register(DiagnosticsApplied) 
-reversion.register(Document) 
-reversion.register(EthicsCommission) 
-reversion.register(Meeting) 
-reversion.register(ParticipatingCenter) 
-reversion.register(Submission) 
-reversion.register(SubmissionForm) 
-reversion.register(SubmissionReview) 
-reversion.register(NonTestedUsedDrugs) 
-reversion.register(Notification) 
-reversion.register(NotificationAnswer) 
-reversion.register(BaseNotificationForm) 
-reversion.register(ExtendedNotificationForm) 
-reversion.register(SubmissionSet) 
-reversion.register(Investigator) 
-reversion.register(InvestigatorEmployee) 
-reversion.register(InvolvedCommissionsForNotification) 
-reversion.register(InvolvedCommissionsForSubmission) 
-reversion.register(TherapiesApplied) 
-reversion.register(Vote) 
-reversion.register(VoteReview) 
-reversion.register(Workflow)
+# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
+if not reversion.is_registered(Amendment):
+    reversion.register(Amendment) 
+    reversion.register(Checklist) 
+    reversion.register(DiagnosticsApplied) 
+    reversion.register(Document) 
+    reversion.register(EthicsCommission) 
+    reversion.register(Meeting) 
+    reversion.register(ParticipatingCenter) 
+    reversion.register(Submission) 
+    reversion.register(SubmissionForm) 
+    reversion.register(SubmissionReview) 
+    reversion.register(NonTestedUsedDrugs) 
+    reversion.register(NotificationAnswer) 
+    reversion.register(BaseNotificationForm) 
+    reversion.register(ExtendedNotificationForm) 
+    reversion.register(SubmissionSet) 
+    reversion.register(Investigator) 
+    reversion.register(InvestigatorEmployee) 
+    reversion.register(TherapiesApplied) 
+    reversion.register(Vote) 
+    reversion.register(VoteReview) 
+    reversion.register(Workflow)
+                                             
