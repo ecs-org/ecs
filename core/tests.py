@@ -30,8 +30,8 @@ class SubmissionFormTest(TestCase):
     def test_creation(self):
         sub = Submission()
         sub.save()
-        set = SubmissionSet(submission=sub)
         sform = SubmissionForm(
+            submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
             protocol_number="HR-NBL-1",
             date_of_protocol=datetime.date(2002,2,2),
@@ -185,16 +185,14 @@ class SubmissionFormTest(TestCase):
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
         involved_com = InvolvedCommissionsForSubmission(commission=ek1, submission=sform, main=True, examiner_name="Univ. Doz. Dr. Ruth Ladenstein")
-        set.submissionform = sform
-        set.save()
         involved_com.save()
 
 class NotificationFormTest(TestCase):
     def setUp(self):
         sub = Submission()
         sub.save()
-        set = SubmissionSet(submission=sub)
         sform = SubmissionForm(
+            submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
             protocol_number="HR-NBL-1",
             date_of_protocol=datetime.date(2002,2,2),
@@ -348,8 +346,6 @@ class NotificationFormTest(TestCase):
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
         involved_com = InvolvedCommissionsForSubmission(commission=ek1, submission=sform, main=True, examiner_name="Univ. Doz. Dr. Ruth Ladenstein")
-        set.submissionform = sform
-        set.save()
         involved_com.save()
         self.submission = sub
         self.submission_form = sform
