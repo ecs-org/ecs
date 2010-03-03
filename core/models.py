@@ -266,6 +266,9 @@ class SubmissionForm(models.Model):
     investigator_certified = models.BooleanField()
 
 class Investigator(models.Model):
+    commission = models.ForeignKey(EthicsCommission, null=True)
+    main_investigator = models.BooleanField(default=False)
+
     submission = models.ForeignKey(SubmissionForm)
 
     name = models.CharField(max_length=80)
