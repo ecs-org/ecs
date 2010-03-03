@@ -25,6 +25,12 @@ def render(request, template, context):
     if not isinstance(template, Template):
         template = loader.get_template(template)
     return HttpResponse(template.render(RequestContext(request, context)))
+    
+def redirect_to_next_url(request, default_url=None):
+    next = request.REQUEST.get('next')
+    if not next or '//' in next:
+        next = default_url or '/'
+    return HttpResponseRedirect(next)
 
 def file_uuid(doc_file):
     """returns md5 digest of a given file as uuid"""
@@ -51,6 +57,12 @@ def download_document(request, document_pk=None):
     response = HttpResponse(doc.file, content_type=doc.mimetype)
     response['Content-Disposition'] = 'attachment;filename=document_%s.pdf' % doc.pk
     return response
+    
+def delete_document(request, document_pk=None):
+    doc = get_object_or_404(Document, pk=document_pk)
+    doc.deleted = True
+    doc.save()
+    return redirect_to_next_url(request)
 
 # notification form
 def notification_list(request):
@@ -62,7 +74,7 @@ def view_notification(request, notification_pk=None):
     notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
     template_names = ['notifications/view/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     return render(request, template_names, {
-        'documents': notification.documents.order_by('doctype__name', '-date'),
+        'documents': notification.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         'notification_form': notification,
     })
 
@@ -94,7 +106,7 @@ def create_notification(request, notification_type_pk=None):
 
 def upload_document_for_notification(request, notification_pk=None):
     notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
-    documents = notification.documents.order_by('doctype__name', '-date')
+    documents = notification.documents.filter(deleted=False).order_by('doctype__name', '-date')
     if request.method == 'POST':
         form = DocumentUploadForm(request.POST, request.FILES)
         if form.is_valid():

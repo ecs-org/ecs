@@ -51,4 +51,4 @@ class DocumentUploadForm(forms.ModelForm):
     
     class Meta:
         model = Document
-        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'absent')
+        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')

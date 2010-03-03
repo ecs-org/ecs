@@ -42,10 +42,7 @@ class Document(models.Model):
 
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
-
-    # this document is only being refered to, but it does not exist physically in the system:
-    absent = models.BooleanField()
-
+    deleted = models.BooleanField(default=False, blank=True)
 
 class EthicsCommission(models.Model):
     name = models.CharField(max_length=60)

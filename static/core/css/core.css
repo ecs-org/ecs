@@ -49,7 +49,7 @@ form > .field > .errors{
 	margin-left: 21em;
 }
 
-/**/
+/* documents */
 .doclist{
 	border: 1px solid #666666;
 }
@@ -61,7 +61,7 @@ form > .field > .errors{
 	padding-left: 24px;
 }
 
-.doclist a{
+.doclist div{
 	display: block;
 	margin-left: 2em;
 	padding-left: 24px;

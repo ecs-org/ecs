@@ -2,7 +2,10 @@
 {% if documents %}
     {% for doc in documents %}
         {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
-        <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">{{ doc.version }}; {{ doc.file.name }}</a>
+        <div>
+            <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">{{ doc.version }}; {{ doc.file.name }}</a>
+            <a href="{% url ecs.core.views.delete_document document_pk=doc.pk %}?next={{ request.get_full_path }}">delete</a>
+        </div>
     {% endfor %}
 {% else %}
     <p>Noch keine Unterlagen</p>
