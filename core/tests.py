@@ -14,6 +14,11 @@ from core.models import Submission, SubmissionForm, EthicsCommission, Investigat
 from core.models import BaseNotificationForm, ExtendedNotificationForm, NotificationType
 import datetime
 
+def test_import():
+    "test if the urls module and the views are importable"
+    import urls
+    import views
+
 class SubmissionFormTest(TestCase):
     def test_creation(self):
         sub = Submission()
@@ -332,23 +337,6 @@ class NotificationFormTest(TestCase):
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
-# <<<<<<< local
-#         investigator = Investigator(commission=ek1, submission=sform,
-#                                     main_investigator=True,
-#                                     name="Univ. Doz. Dr. Ruth Ladenstone",
-#                                     organisation="Sankt Anna Kinderspital",
-#                                     phone="",
-#                                     mobile="",
-#                                     fax="",
-#                                     email="",
-#                                     jus_practicandi=True,
-#                                     specialist="the right one for this; REALLY",
-#                                     certified=True,
-#                                     subject_count=50,
-#                                     sign_date=datetime.date.today())
-#         investigator.save()
-#         self.investigator = investigator
-#=======
         self.investigator = Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
         self.submission = sub
         self.submission_form = sform
