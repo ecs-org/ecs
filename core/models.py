@@ -61,6 +61,9 @@ class EthicsCommission(models.Model):
         return self.name
 
 class SubmissionForm(models.Model):
+    submission = models.ForeignKey("Submission", related_name="forms")
+    documents = models.ManyToManyField(Document)
+
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40, null=True)
     ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
@@ -361,17 +364,12 @@ class ExtendedNotificationForm(BaseNotificationForm):
 class Checklist(models.Model):
     pass
 
-class SubmissionSet(models.Model):
-    submission = models.ForeignKey("Submission", related_name="sets")
-    documents = models.ManyToManyField(Document)
-    submissionform = models.ForeignKey(SubmissionForm)
-
 class VoteReview(models.Model):   
     workflow = models.ForeignKey(Workflow)
 
 class Vote(models.Model):
     votereview = models.ForeignKey(VoteReview)
-    submissionset = models.ForeignKey(SubmissionSet)
+    submissionform = models.ForeignKey(SubmissionForm, null=True)
     checklists = models.ManyToManyField(Checklist)
     workflow = models.ForeignKey(Workflow)
 
@@ -426,11 +424,9 @@ if not reversion.is_registered(Amendment):
     reversion.register(NotificationAnswer) 
     reversion.register(BaseNotificationForm) 
     reversion.register(ExtendedNotificationForm) 
-    reversion.register(SubmissionSet) 
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
     reversion.register(TherapiesApplied) 
     reversion.register(Vote) 
     reversion.register(VoteReview) 
     reversion.register(Workflow)
-                                             
