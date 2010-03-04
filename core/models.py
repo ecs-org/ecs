@@ -335,30 +335,31 @@ class NotificationType(models.Model):
 
 # FIME: rename to `BaseNotification`
 class BaseNotificationForm(models.Model):
-    type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
-    investigators = models.ManyToManyField(Investigator, related_name='notifications')
-    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications')
-    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications')
-    documents = models.ManyToManyField(Document)
+    type = models.ForeignKey(NotificationType, null=True, related_name='notifications', verbose_name=u'Typ')
+    investigators = models.ManyToManyField(Investigator, related_name='notifications', verbose_name=u'Ethik-Komissionen / Prüfer')
+    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications', verbose_name=u'Studien')
+    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications', verbose_name=r'Prüfer')
+    documents = models.ManyToManyField(Document, verbose_name=u'Unterlagen')
 
-    comments = models.TextField(default="", blank=True)
-    signed_on = models.DateField(null=True, blank=True)
+    comments = models.TextField(default="", blank=True, verbose_name=u'Kommentare')
+    signed_on = models.DateField(null=True, blank=True, verbose_name=u'Unterschrieben am')
     
     def __unicode__(self):
         return u"%s vom %s" % (self.type, self.signed_on)
 
 # FIME: rename to something meaningfull, or at least `ExtendedNotification`
 class ExtendedNotificationForm(BaseNotificationForm):
-    reason_for_not_started = models.TextField(null=True, blank=True)
-    recruited_subjects = models.IntegerField(null=True, blank=True)
-    finished_subjects = models.IntegerField(null=True, blank=True)
-    aborted_subjects = models.IntegerField(null=True, blank=True)
-    SAE_count = models.IntegerField(null=True, blank=True)
-    SUSAR_count = models.IntegerField(null=True, blank=True)
-    runs_till = models.DateField(null=True, blank=True)
-    finished_on = models.DateField(null=True, blank=True)
-    aborted_on = models.DateField(null=True, blank=True)
-    extension_of_vote = models.BooleanField(default=False, blank=True)
+    reason_for_not_started = models.TextField(null=True, blank=True, verbose_name=u'Grund warum noch nicht begonnen')
+    recruited_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en')
+    finished_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben')
+    aborted_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der Studienabbrüche')
+    SAE_count = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der SAEs') # FIXME: change to PositiveIntegerField(default=0, null=False)
+    SUSAR_count = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der SUSARs') # FIXME: change to PositiveIntegerField(default=0, null=False)
+    # FIXME: use a single date and a study_state field instead of three DateFields:
+    runs_till = models.DateField(null=True, blank=True, verbose_name=u'Studie läuft noch bis voraussichtlich')
+    finished_on = models.DateField(null=True, blank=True, verbose_name=u'Studie planmäßig abgeschlossen am')
+    aborted_on = models.DateField(null=True, blank=True, verbose_name=u'Studie abgebrochen am')
+    extension_of_vote = models.BooleanField(default=False, blank=True, verbose_name=u'Ich beantrage die Verlängerung der Gültigkeit des Votums')
 
 
 class Checklist(models.Model):
