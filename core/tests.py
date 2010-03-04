@@ -18,6 +18,12 @@ def test_import():
     "test if the urls module and the views are importable"
     import urls
     import views
+    import models
+    
+class BasicTest(TestCase):
+    def test_index(self):
+        response = self.client.get('/core/')
+        self.failUnlessEqual(response.status_code, 200)
 
 class SubmissionFormTest(TestCase):
     def test_creation(self):
