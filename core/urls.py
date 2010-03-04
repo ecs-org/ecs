@@ -22,6 +22,6 @@ urlpatterns = patterns(
     url(r'^document/(?P<document_pk>\d)/download/$', 'ecs.core.views.download_document'),
     url(r'^document/(?P<document_pk>\d)/delete/$', 'ecs.core.views.delete_document'),
 
-    url(r'^submission/(?P<submissionid>\d+)/$', 'core.views.submissiondetail'),
-    url(r'^submission/', 'ecs.core.views.submission'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
+    url(r'^submission_form/new/$', 'ecs.core.views.create_submission_form'),
 )

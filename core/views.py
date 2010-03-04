@@ -1,8 +1,4 @@
-# ecs core views
-
-"""
-Views for ecs.
-"""
+# -*- coding: utf-8 -*-
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -14,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission
-from ecs.core.forms import DocumentUploadForm
+from ecs.core.forms import DocumentUploadForm, SubmissionFormForm
 from ecs.utils.htmldoc import htmldoc
 
 ## helpers
@@ -48,9 +44,6 @@ def demo(request):
 def index(request):
     return render(request, 'index.html', {})
 
-def submission(request, id=''):
-    return render(request, 'submission.html', {})
-    
 # documents
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
@@ -64,7 +57,7 @@ def delete_document(request, document_pk=None):
     doc.save()
     return redirect_to_next_url(request)
 
-# notification form
+# notifications
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': BaseNotificationForm.objects.all(),
@@ -141,10 +134,72 @@ def notification_pdf(request, notification_pk=None):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
     return response
+    
+# submissions
 
-def submissiondetail(request, submissionid):
-    submission = Submission.objects.get(id=int(submissionid))
-    notifications = Notification.objects.filter(submission=submission)
-    if submission:
-        return object_list(request, queryset=notifications)
-    return HttpResponse("BOOM")
+SUBMISSION_FORM_TABS = (
+    (u'Allgemeines', [
+        'project_title', 'protocol_number', 'date_of_protocol', 'eudract_number', 'isrctn_number',
+        'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+        'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
+        'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
+        'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
+        'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
+    ]),
+    (u'Eckdaten', [
+        'specialism', 'pharma_checked_substance', 'pharma_reference_substance', 
+        'medtech_checked_product', 'medtech_reference_substance', 'clinical_phase', 'already_voted',
+        'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
+        'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
+    ]),
+    (u'AMG-Daten', [
+        'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
+        'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
+        'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
+        'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
+        'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
+    ]),
+    (u'Versicherung', [
+        'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
+    ]),
+    (u'Therapie', [
+        'additional_therapy_info'
+    ]),
+    (u'Kurzfassung', [
+        'german_project_title', 'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
+        'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
+        'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
+        'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 'german_abort_info', 'german_dataaccess_info',
+        'german_financing_info', 'german_additional_info',
+    ]),
+    (u'Biometrie', [
+        'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
+        'study_plan_8_3_1', 'study_plan_8_3_2', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 
+        'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason',
+        'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
+    ]),
+    (u'Unterlagen', []),
+    (u'Prüfer', []),
+)
+
+def create_submission_form(request):
+    if request.method == 'POST':
+        form = SubmissionFormForm(request.POST)
+        if form.is_valid():
+            submission_form = form.save(commit=False)
+            from random import randint
+            submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
+            submission_form.submission = submission
+            submission_form.save()
+    else:
+        form = SubmissionFormForm()
+    return render(request, 'submissions/form.html', {
+        'form': form,
+        'tabs': SUBMISSION_FORM_TABS,
+    })
+
+def view_submission_form(request, submission_form_pk=None):
+    submission = get_object_or_404(SubmissionForm, pk=submission_pk)
+    return render(request, 'submissions/view.html', {
+        'submission': submission,
+    })

@@ -32,20 +32,25 @@ div#ecs-core-tabs {
 #ecs-core-selectable2 { list-style-type: none; margin: 0; padding: 0; }
 #ecs-core-selectable2 li { margin: 3px; padding: 0.4em; height: 18px; }
 
-form > .field{
+.ui-tabs .ui-tabs-nav li a{
+	/* FIXME: this is a hack */
+	font-size: 12px;
+}
+
+form .field{
 	clear: both;
 }
 
-form > .field > label{
+form .field > label{
 	width: 20em;
 	padding-right: 1em;
 	text-align: right;
 	float: left;
 }
-form > .field > label:after{
+form .field > label:after{
 	content: ":";
 }
-form > .field > .errors{
+form .field > .errors{
 	margin-left: 21em;
 }
 

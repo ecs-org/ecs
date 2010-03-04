@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory
 
-from ecs.core.models import Document, Investigator
+from ecs.core.models import Document, Investigator, SubmissionForm
 from ecs.core.models import BaseNotificationForm as BaseNotification
 from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
 
@@ -52,3 +52,8 @@ class DocumentUploadForm(forms.ModelForm):
     class Meta:
         model = Document
         exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')
+        
+class SubmissionFormForm(forms.ModelForm):
+    class Meta:
+        model = SubmissionForm
+        exclude = ('submission', 'documents', 'ethics_commissions')
