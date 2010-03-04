@@ -63,13 +63,15 @@ class EthicsCommission(models.Model):
 class SubmissionForm(models.Model):
     submission = models.ForeignKey("Submission", related_name="forms")
     documents = models.ManyToManyField(Document)
+    ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
 
     project_title = models.CharField(max_length=120)
     protocol_number = models.CharField(max_length=40, null=True)
-    ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
     date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40, null=True)
     isrctn_number = models.CharField(max_length=40, null=True)
+
+    # 1.5
     sponsor_name = models.CharField(max_length=80, null=True)
     sponsor_contactname = models.CharField(max_length=80, null=True)
     sponsor_address1 = models.CharField(max_length=60, null=True)
@@ -79,82 +81,104 @@ class SubmissionForm(models.Model):
     sponsor_phone = models.CharField(max_length=30, null=True)
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
-    invoice_name = models.CharField(max_length=80, null=True)
-    invoice_contactname = models.CharField(max_length=80, null=True)
-    invoice_address1 = models.CharField(max_length=60, null=True)
-    invoice_address2 = models.CharField(max_length=60, null=True)
-    invoice_zip_code = models.CharField(max_length=10, null=True)
-    invoice_city = models.CharField(max_length=40, null=True)
-    invoice_phone = models.CharField(max_length=30, null=True)
-    invoice_fax = models.CharField(max_length=30, null=True)
-    invoice_email = models.EmailField(null=True)
-    invoice_uid = models.CharField(max_length=30, null=True) # 24? need to check
-    invoice_uid_verified_level1 = models.DateTimeField(null=True) # can be done via EU API
-    invoice_uid_verified_level2 = models.DateTimeField(null=True) # can be done manually via Tax Authority, local.
+
+    invoice_name = models.CharField(max_length=80, null=True, blank=True)
+    invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
+    invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
+    invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
+    invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
+    invoice_city = models.CharField(max_length=40, null=True, blank=True)
+    invoice_phone = models.CharField(max_length=30, null=True, blank=True)
+    invoice_fax = models.CharField(max_length=30, null=True, blank=True)
+    invoice_email = models.EmailField(null=True, blank=True)
+    invoice_uid = models.CharField(max_length=30, null=True, blank=True) # 24? need to check
+    invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
+    invoice_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
     # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
     
-    # page 2:
-
+    # 2.1
+    # FIXME: 2.1.7 (Sonstiges) needs a TextField
     for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", 
               "2_1_3", "2_1_4", "2_1_4_1", "2_1_4_2", 
               "2_1_4_3", "2_1_5", "2_1_6", "2_1_7", 
               "2_1_8", "2_1_9"):
         exec "project_type_%s = models.BooleanField()" % i
     
-    specialism = models.TextField(null=True) # choices???
+    # 2.2
+    # FIXME: use fixed set of choices ?
+    specialism = models.TextField(null=True)
+
+    # 2.3
     pharma_checked_substance = models.TextField(null=True, blank=True, verbose_name=u'Prüfsubstanz(en)')
     pharma_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzsubstanz')
     
+    # 2.4
     medtech_checked_product = models.TextField(null=True, blank=True, verbose_name=u'Prüfprodukt(e)')
     medtech_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzprodukt')
 
+    # 2.5
     clinical_phase = models.CharField(max_length=10, verbose_name=u'Klinische Phase')
+    
+    # 2.6 + 2.7 (via ParticipatingCenter)
+    
+    # 2.8
     already_voted = models.BooleanField(verbose_name=u'Liegen bereits Voten anderer Ethikkommissionen vor?')
     
+    # 2.9
     subject_count = models.IntegerField(verbose_name=u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt')
+
+    # 2.10
     subject_minage = models.IntegerField(verbose_name=u'Mindestalter')
     subject_maxage = models.IntegerField(verbose_name=u'Höchstalter')
     subject_noncompetents = models.BooleanField(verbose_name=u'Sind auch nicht persönlich Einwilligungsfähige einschließbar?')
     subject_males = models.BooleanField()    
     subject_females = models.BooleanField()
     subject_childbearing = models.BooleanField()
+    
+    # 2.11
     subject_duration = models.CharField(max_length=20)
     subject_duration_active = models.CharField(max_length=20)
     subject_duration_controls = models.CharField(max_length=20)
+
+    # 2.12
     subject_planned_total_duration = models.CharField(max_length=20)
 
-    # page 3:
-
-    substance_registered_in_countries = models.CharField(max_length=300, null=True) # comma seperated 2 letter codes.
-    substance_preexisting_clinical_tries = models.NullBooleanField()
-    substance_p_c_t_countries = models.CharField(max_length=300, null=True) # comma seperated 2 letter codes.
-    substance_p_c_t_phase = models.CharField(max_length=10, null=True)
-    substance_p_c_t_period = models.TextField(null=True)
-    substance_p_c_t_application_type = models.CharField(max_length=40, null=True)
-    substance_p_c_t_gcp_rules = models.NullBooleanField()
-    substance_p_c_t_final_report = models.NullBooleanField()
-
-    medtech_product_name = models.CharField(max_length=80, null=True)
-    medtech_manufacturer = models.CharField(max_length=80, null=True)
-    medtech_certified_for_exact_indications = models.NullBooleanField()
-    medtech_certified_for_other_indications = models.NullBooleanField()
-    medtech_ce_symbol = models.NullBooleanField()
-    medtech_manual_included = models.NullBooleanField()
-    medtech_technical_safety_regulations = models.TextField(null=True)
-    medtech_departure_from_regulations = models.TextField(null=True)
-
-    insurance_name = models.CharField(max_length=60, null=True)
-    insurance_address_1 = models.CharField(max_length=80, null=True)
-    insurance_phone = models.CharField(max_length=30, null=True)
-    insurance_contract_number = models.CharField(max_length=60, null=True)
-    insurance_validity = models.CharField(max_length=60, null=True)
-
-    # page 5
+    # 3a
+    substance_registered_in_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
+    substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
+    substance_p_c_t_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
+    substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
+    substance_p_c_t_period = models.TextField(null=True, blank=True)
+    substance_p_c_t_application_type = models.CharField(max_length=40, null=True, blank=True)
+    substance_p_c_t_gcp_rules = models.NullBooleanField(blank=True)
+    substance_p_c_t_final_report = models.NullBooleanField(blank=True)
     
+    # 3b (via NonTestedUsedDrugs)
+    
+    # 4.x
+    medtech_product_name = models.CharField(max_length=80, null=True, blank=True)
+    medtech_manufacturer = models.CharField(max_length=80, null=True, blank=True)
+    medtech_certified_for_exact_indications = models.NullBooleanField(blank=True)
+    medtech_certified_for_other_indications = models.NullBooleanField(blank=True)
+    medtech_ce_symbol = models.NullBooleanField(blank=True)
+    medtech_manual_included = models.NullBooleanField(blank=True)
+    medtech_technical_safety_regulations = models.TextField(null=True, blank=True)
+    medtech_departure_from_regulations = models.TextField(null=True, blank=True)
+    
+    # 5.x
+    insurance_name = models.CharField(max_length=60, null=True, blank=True)
+    insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
+    insurance_phone = models.CharField(max_length=30, null=True, blank=True)
+    insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
+    insurance_validity = models.CharField(max_length=60, null=True, blank=True)
+    
+    # 6.1 + 6.2 (via TherapiesApplied/DiagnosticsApplied)
+    # FIXME: use a single related model
+
+    # 6.3
     additional_therapy_info = models.TextField()
 
-    # page 6
-
+    # 7.x
     german_project_title = models.TextField(null=True)
     german_summary = models.TextField(null=True)
     german_preclinical_results = models.TextField(null=True)
@@ -169,50 +193,49 @@ class SubmissionForm(models.Model):
     german_relationship_info = models.TextField(null=True)
     german_concurrent_study_info = models.TextField(null=True)
     german_sideeffects_info = models.TextField(null=True)
-
-    # page 7
-    german_statistical_info = models.TextField(null=True)
-    german_dataprotection_info = models.TextField(null=True)
+    german_statistical_info = models.TextField(null=True, blank=True)
+    german_dataprotection_info = models.TextField(null=True, blank=True)
     german_aftercare_info = models.TextField(null=True)
     german_payment_info = models.TextField(null=True)
     german_abort_info = models.TextField(null=True)
     german_dataaccess_info = models.TextField(null=True)
     german_financing_info = models.TextField(null=True)
-    german_additional_info = models.TextField(null=True)
-
+    german_additional_info = models.TextField(null=True, blank=True)
     
-    # page 8
-
+    # 8.1
     for i in range(1, 15):
         exec "study_plan_8_1_%d = models.BooleanField(default=False)" % i
 
     for i in range(15, 23):
         exec "study_plan_8_1_%d = models.TextField(default='', null=True)" % i
 
+    # 8.2
     study_plan_alpha = models.CharField(max_length=40)
     study_plan_power = models.CharField(max_length=40)
     study_plan_statalgorithm = models.CharField(max_length=40)
     study_plan_multiple_test_correction_algorithm = models.CharField(max_length=40)
     study_plan_dropout_ratio = models.CharField(max_length=40)
-
+    
+    # 8.3
     study_plan_8_3_1 = models.BooleanField()
     study_plan_8_3_2 = models.BooleanField()
     study_plan_abort_crit = models.CharField(max_length=40)
     study_plan_planned_statalgorithm = models.CharField(max_length=40)
 
+    # 8.4
     study_plan_dataquality_checking = models.TextField()
     study_plan_datamanagement = models.TextField()
 
+    # 8.5
     study_plan_biometric_planning = models.CharField(max_length=120)
     study_plan_statistics_implementation = models.CharField(max_length=120)
 
-    # either anonalgorith or reason or dvr may be set.
-    study_plan_dataprotection_reason = models.CharField(max_length=120)
-    study_plan_dataprotection_dvr = models.CharField(max_length=12)
-    study_plan_dataprotection_anonalgoritm = models.TextField(null=True)
-
-    # page 9
+    # 8.6 (either anonalgorith or reason or dvr may be set.)
+    study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
+    study_plan_dataprotection_dvr = models.CharField(max_length=12, blank=True)
+    study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
+    # 9.x
     submitter_name = models.CharField(max_length=80)
     submitter_organisation = models.CharField(max_length=80)
     submitter_jobtitle = models.CharField(max_length=80)
@@ -220,11 +243,9 @@ class SubmissionForm(models.Model):
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
     submitter_is_authorized_by_sponsor = models.BooleanField()
-
-    # needs to be nullable.
+    # FIXME: needs to be nullable.
     submitter_sign_date = models.DateField()
 
-    # page 11
     # wrong class???
     investigator_name = models.CharField(max_length=80)
     investigator_organisation = models.CharField(max_length=80)
