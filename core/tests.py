@@ -8,30 +8,18 @@ Replace these with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from core.models import Submission, SubmissionForm, SubmissionSet, EthicsCommission, Investigator
+#from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, NotificationType, Investigator
+#from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
+from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from core.models import BaseNotificationForm, ExtendedNotificationForm, NotificationType
 import datetime
-
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
-
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
 
 class SubmissionFormTest(TestCase):
     def test_creation(self):
         sub = Submission()
         sub.save()
-        set = SubmissionSet(submission=sub)
         sform = SubmissionForm(
+            submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
             protocol_number="HR-NBL-1",
             date_of_protocol=datetime.date(2002,2,2),
@@ -185,15 +173,13 @@ class SubmissionFormTest(TestCase):
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
         Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
-        set.submissionform = sform
-        set.save()
 
 class NotificationFormTest(TestCase):
     def setUp(self):
         sub = Submission()
         sub.save()
-        set = SubmissionSet(submission=sub)
         sform = SubmissionForm(
+            submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
             protocol_number="HR-NBL-1",
             date_of_protocol=datetime.date(2002,2,2),
@@ -346,9 +332,24 @@ class NotificationFormTest(TestCase):
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
-        Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
-        set.submissionform = sform
-        set.save()
+# <<<<<<< local
+#         investigator = Investigator(commission=ek1, submission=sform,
+#                                     main_investigator=True,
+#                                     name="Univ. Doz. Dr. Ruth Ladenstone",
+#                                     organisation="Sankt Anna Kinderspital",
+#                                     phone="",
+#                                     mobile="",
+#                                     fax="",
+#                                     email="",
+#                                     jus_practicandi=True,
+#                                     specialist="the right one for this; REALLY",
+#                                     certified=True,
+#                                     subject_count=50,
+#                                     sign_date=datetime.date.today())
+#         investigator.save()
+#         self.investigator = investigator
+#=======
+        self.investigator = Investigator.objects.create(submission=sform, main=True, name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1, sign_date=datetime.date(2010,1,1))
         self.submission = sub
         self.submission_form = sform
 
@@ -356,7 +357,7 @@ class NotificationFormTest(TestCase):
         some_notification_type = NotificationType.objects.create(name='Test')
         some_date = datetime.date(2010, 3, 1)
 
-        nform = BaseNotificationForm(type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date)
+        nform = BaseNotificationForm(type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date, investigator=self.investigator)
         nform.save()
         nform.submission_forms = [self.submission_form]
         
@@ -366,4 +367,4 @@ class NotificationFormTest(TestCase):
         )
         extended_form.save()
         extended_form.investigators = self.submission_form.investigators.all()
-        
+
