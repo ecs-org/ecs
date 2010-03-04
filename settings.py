@@ -32,6 +32,11 @@ if platform.node() == "ecsdev.ep3.at":
     DATABASE_NAME = user
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
+else:
+    try:
+        from local_settings import *
+    except ImportError:
+        pass
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
