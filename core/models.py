@@ -102,19 +102,19 @@ class SubmissionForm(models.Model):
         exec "project_type_%s = models.BooleanField()" % i
     
     specialism = models.TextField(null=True) # choices???
-    pharma_checked_substance = models.TextField(null=True)
-    pharma_reference_substance = models.TextField(null=True)
+    pharma_checked_substance = models.TextField(null=True, blank=True, verbose_name=u'Prüfsubstanz(en)')
+    pharma_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzsubstanz')
     
-    medtech_checked_product = models.TextField(null=True)
-    medtech_reference_substance = models.TextField(null=True)
+    medtech_checked_product = models.TextField(null=True, blank=True, verbose_name=u'Prüfprodukt(e)')
+    medtech_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzprodukt')
 
-    clinical_phase = models.CharField(max_length=10)
-    already_voted = models.BooleanField()
+    clinical_phase = models.CharField(max_length=10, verbose_name=u'Klinische Phase')
+    already_voted = models.BooleanField(verbose_name=u'Liegen bereits Voten anderer Ethikkommissionen vor?')
     
-    subject_count = models.IntegerField()
-    subject_minage = models.IntegerField()
-    subject_maxage = models.IntegerField()
-    subject_noncompetents = models.BooleanField()
+    subject_count = models.IntegerField(verbose_name=u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt')
+    subject_minage = models.IntegerField(verbose_name=u'Mindestalter')
+    subject_maxage = models.IntegerField(verbose_name=u'Höchstalter')
+    subject_noncompetents = models.BooleanField(verbose_name=u'Sind auch nicht persönlich Einwilligungsfähige einschließbar?')
     subject_males = models.BooleanField()    
     subject_females = models.BooleanField()
     subject_childbearing = models.BooleanField()
@@ -140,7 +140,6 @@ class SubmissionForm(models.Model):
     medtech_certified_for_other_indications = models.NullBooleanField()
     medtech_ce_symbol = models.NullBooleanField()
     medtech_manual_included = models.NullBooleanField()
-    medtech_technical_safety_regulations = models.TextField(null=True)
     medtech_technical_safety_regulations = models.TextField(null=True)
     medtech_departure_from_regulations = models.TextField(null=True)
 
@@ -179,14 +178,6 @@ class SubmissionForm(models.Model):
     german_abort_info = models.TextField(null=True)
     german_dataaccess_info = models.TextField(null=True)
     german_financing_info = models.TextField(null=True)
-    #     @form_meta(tab=7, paper="7.20")
-    #     def form_meta(**kw):
-    #         def func(f):
-    #             for k, v in kw.items():
-    #                 setattr(f, k, v)
-    #             return f
-    #         return func
-            
     german_additional_info = models.TextField(null=True)
 
     
