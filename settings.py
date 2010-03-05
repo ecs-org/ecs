@@ -126,6 +126,7 @@ INSTALLED_APPS = (
 
     'core',
     'utils',
+    'docstash',
     'south',
     'django_nose',
     'reversion',
