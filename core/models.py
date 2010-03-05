@@ -172,7 +172,7 @@ class SubmissionForm(models.Model):
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
     insurance_validity = models.CharField(max_length=60, null=True, blank=True)
     
-    # 6.1 + 6.2 (via TherapiesApplied/DiagnosticsApplied)
+    # 6.1 + 6.2 (via Measure)
     # FIXME: use a single related model
 
     # 6.3
@@ -276,6 +276,7 @@ class Investigator(models.Model):
     subject_count = models.IntegerField()
     sign_date = models.DateField()
 
+
 class InvestigatorEmployee(models.Model):
     # FIXME: rename to `investigator`
     submission = models.ForeignKey(Investigator)
@@ -285,19 +286,10 @@ class InvestigatorEmployee(models.Model):
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
-
-class TherapiesApplied(models.Model):
-    # FIXME: rename to `submission_form`
-    submission = models.ForeignKey(SubmissionForm)
     
-    type = models.CharField(max_length=30)    
-    count = models.IntegerField(null=True)
-    period = models.CharField(max_length=30)
-    total = models.CharField(max_length=30)
 
-class DiagnosticsApplied(models.Model):
-    # FIXME: rename to `submission_form`
-    submission = models.ForeignKey(SubmissionForm)
+class Measure(models.Model):
+    submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
     type = models.CharField(max_length=30)    
     count = models.IntegerField(null=True)
@@ -426,7 +418,7 @@ class Annotation(models.Model):
 if not reversion.is_registered(Amendment):
     reversion.register(Amendment) 
     reversion.register(Checklist) 
-    reversion.register(DiagnosticsApplied) 
+    reversion.register(Measure) 
     reversion.register(Document) 
     reversion.register(EthicsCommission) 
     reversion.register(Meeting) 
@@ -440,7 +432,6 @@ if not reversion.is_registered(Amendment):
     reversion.register(ExtendedNotificationForm) 
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
-    reversion.register(TherapiesApplied) 
     reversion.register(Vote) 
     reversion.register(VoteReview) 
     reversion.register(Workflow)
