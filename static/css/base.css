@@ -34,11 +34,11 @@ body {
 }
 #headernav {
   position: absolute;
-  top: 140px;
+  top: 40px;
 }
 .headerline {
   position: absolute;
-  top: 180px;
+  top: 80px;
   left: 0;
   right: 260px;
   width: 100%;
@@ -46,7 +46,7 @@ body {
 }
 #content {
   position: absolute;
-  top: 200px;
+  top: 100px;
   right: 250px;
   bottom: 0;
   left: 0;
