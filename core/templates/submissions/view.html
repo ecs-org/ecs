@@ -1,0 +1,18 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</h1>
+    
+    {% for field_number, label, field_name in paper_form_fields %}
+        {% if field_number and field_name %}
+            <div>{{ field_number }} {{ label }}: {{ submission_form|getattr:field_name }}</div>
+        {% endif %}
+    {% endfor %}
+    
+{% endblock %}

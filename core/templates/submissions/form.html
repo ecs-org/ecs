@@ -10,24 +10,31 @@
     <form action="" method="post">
         <div id="tabs">
             <ul>
-            {% for tab, fields in tabs %}
+            {% for tab, fieldsets in tabs %}
                 <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
             {% endfor %}
             </ul>
-            {% for tab, fields in tabs %}
+            {% for tab, fieldsets in tabs %}
                 <div id="tabs-{{ forloop.counter }}">
-                    {% for field_name in fields %}
-                        {% with form|getitem:field_name as field %}
-                            <div class="field">
-                                {{ field.label_tag }}
-                                {{ field }}
-                                {% if field.errors %}
-                                <div class="errors">
-                                    {{ field.errors }}
-                                </div>
-                                {% endif %}
-                            </div>
-                        {% endwith %}
+                    {% for legend, fields in fieldsets %}
+                        <fieldset>
+                            {% if legend %}
+                                <legend>{{ legend }}</legend>
+                            {% endif %}
+                            {% for field_name in fields %}
+                                {% with form|getitem:field_name as field %}
+                                    <div class="field">
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        {% if field.errors %}
+                                        <div class="errors">
+                                            {{ field.errors }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                {% endwith %}
+                            {% endfor %}
+                        </fieldset>
                     {% endfor %}
                 </div>
             {% endfor %}

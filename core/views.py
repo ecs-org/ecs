@@ -9,9 +9,10 @@ from django.forms.models import inlineformset_factory
 
 import settings
 
-from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission
+from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
 from ecs.core.forms import DocumentUploadForm, SubmissionFormForm
 from ecs.utils.htmldoc import htmldoc
+from ecs.core import paper_forms
 
 ## helpers
 
@@ -139,51 +140,71 @@ def notification_pdf(request, notification_pk=None):
 
 SUBMISSION_FORM_TABS = (
     (u'Eckdaten', [
-        'project_title', 'eudract_number', 
-        'specialism', 'pharma_checked_substance', 'pharma_reference_substance', 
-        'medtech_checked_product', 'medtech_reference_substance', 'clinical_phase', 'already_voted',
-        'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
-        'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',        
+        (u'Titel', ['project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted',]),
+        (u'Art des Projekts', ['project_type_2_1_%s' % i for i in range(1, 10)]),
+        (u'Zentren im Ausland', []),
+        (u'Arzneimittelstudie', ['pharma_checked_substance', 'pharma_reference_substance']),
+        (u'Medizinproduktestudie', ['medtech_checked_product', 'medtech_reference_substance']),
+        (u'Prüfungsteilnehmer', [
+            'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
+            'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
+        ]),
     ]),
     (u'Sponsor', [
-        'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
-        'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
-        'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
-        'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
-        'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
+        (u'Sponsor', [
+            'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+            'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
+        ]),
+        (u'Rechnungsempfänger', [
+            'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
+            'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
+            'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
+        ]),
     ]),
     (u'AMG', [
-        'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
-        'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
-        'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
+        (None, [
+            'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
+            'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
+            'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
+        ]),
     ]),
     (u'MPG', [
-        'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
-        'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
+        (None, [
+            'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
+            'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
+        ]),
     ]),
     (u'Versicherung', [
-        'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
+        (None, [
+            'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
+        ]),
     ]),
     (u'Massnahmen', [
-        'additional_therapy_info'
+        (None, ['additional_therapy_info',]),
     ]),
     (u'Kurzfassung', [
-        'german_project_title', 'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
-        'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
-        'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
-        'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 'german_abort_info', 'german_dataaccess_info',
-        'german_financing_info', 'german_additional_info',
+        (None, [
+            'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
+            'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
+            'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
+            'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 'german_abort_info', 'german_dataaccess_info',
+            'german_financing_info', 'german_additional_info',
+        ]),
     ]),
     (u'Biometrie', [
-        'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
-        'study_plan_8_3_1', 'study_plan_8_3_2', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 
-        'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason',
-        'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
+        (None, [
+            'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
+            'study_plan_8_3_1', 'study_plan_8_3_2', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 
+            'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason',
+            'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
+        ] + ['study_plan_8_1_%s' % i for i in range(1, 23) if i not in (4, 8)]),
     ]),
     (u'Unterlagen', []),
     (u'Antragsteller', [
-        'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
-        'submitter_is_authorized_by_sponsor', 'submitter_sign_date', 'submitter_agrees_to_publishing',
+        (None, [
+            'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
+            'submitter_is_authorized_by_sponsor', 'submitter_sign_date', 'submitter_agrees_to_publishing',
+        ]),
     ]),
     (u'Prüfer', []),
 )
@@ -197,6 +218,9 @@ def create_submission_form(request):
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
             submission_form.submission = submission
             submission_form.save()
+            return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+        else:
+            print form.errors
     else:
         form = SubmissionFormForm()
     return render(request, 'submissions/form.html', {
@@ -205,7 +229,8 @@ def create_submission_form(request):
     })
 
 def view_submission_form(request, submission_form_pk=None):
-    submission = get_object_or_404(SubmissionForm, pk=submission_pk)
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     return render(request, 'submissions/view.html', {
-        'submission': submission,
+        'paper_form_fields': paper_forms.SUBMISSION_FIELD_DATA,
+        'submission_form': submission_form,
     })

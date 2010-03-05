@@ -248,6 +248,14 @@ class SubmissionForm(models.Model):
     # FIXME: needs to be nullable.
     submitter_sign_date = models.DateField()
     submitter_agrees_to_publishing = models.BooleanField(default=True)
+    
+    @property
+    def multicentric(self):
+        return self.investigators.count() > 1
+        
+    @property
+    def monocentric(self):
+        return self.investigators.count() == 1
 
 
 class Investigator(models.Model):
