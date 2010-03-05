@@ -32,10 +32,7 @@ class SubmissionFormTest(TestCase):
         sform = SubmissionForm(
             submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
-            protocol_number="HR-NBL-1",
-            date_of_protocol=datetime.date(2002,2,2),
             eudract_number="2006-001489-17",
-            isrctn_number="",
             sponsor_name="CCRI",
             sponsor_address1="Kinderspitalg. 6",
             sponsor_address2="",
@@ -134,11 +131,9 @@ class SubmissionFormTest(TestCase):
             study_plan_8_1_1=True,
             study_plan_8_1_2=True,
             study_plan_8_1_3=True,
-            study_plan_8_1_4=False,
             study_plan_8_1_5=False,
             study_plan_8_1_6=True,
             study_plan_8_1_7=False,
-            study_plan_8_1_8=True,
             study_plan_8_1_9=False,
             study_plan_8_1_10=False,
             study_plan_8_1_11=False,
@@ -178,6 +173,7 @@ class SubmissionFormTest(TestCase):
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
             submitter_sign_date=datetime.date(1999,9,9),
+            submitter_agrees_to_publishing=False,
             )
         sform.save()
         # normal way would be to fetch one, but the test database does not contain the data rows :(
@@ -192,10 +188,7 @@ class NotificationFormTest(TestCase):
         sform = SubmissionForm(
             submission = sub,
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
-            protocol_number="HR-NBL-1",
-            date_of_protocol=datetime.date(2002,2,2),
             eudract_number="2006-001489-17",
-            isrctn_number="",
             sponsor_name="CCRI",
             sponsor_address1="Kinderspitalg. 6",
             sponsor_address2="",
@@ -294,11 +287,9 @@ class NotificationFormTest(TestCase):
             study_plan_8_1_1=True,
             study_plan_8_1_2=True,
             study_plan_8_1_3=True,
-            study_plan_8_1_4=False,
             study_plan_8_1_5=False,
             study_plan_8_1_6=True,
             study_plan_8_1_7=False,
-            study_plan_8_1_8=True,
             study_plan_8_1_9=False,
             study_plan_8_1_10=False,
             study_plan_8_1_11=False,
@@ -338,6 +329,7 @@ class NotificationFormTest(TestCase):
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
             submitter_sign_date=datetime.date(1999,9,9),
+            submitter_agrees_to_publishing=False,
             )
         sform.save()
         # normal way would be to fetch one, but the test database does not contain the data rows :(

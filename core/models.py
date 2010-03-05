@@ -66,10 +66,9 @@ class SubmissionForm(models.Model):
     ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
 
     project_title = models.CharField(max_length=120)
-    protocol_number = models.CharField(max_length=40, null=True)
-    date_of_protocol = models.DateField()
     eudract_number = models.CharField(max_length=40, null=True)
-    isrctn_number = models.CharField(max_length=40, null=True)
+    
+    # 1.4 (via self.documents)
 
     # 1.5
     sponsor_name = models.CharField(max_length=80, null=True)
@@ -98,6 +97,7 @@ class SubmissionForm(models.Model):
     
     # 2.1
     # FIXME: 2.1.7 (Sonstiges) needs a TextField
+    # FIXME: add Register, Biobank, Retrospektive Datenauswertung, Fragebogen Untersuchung Bemerkung
     for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", 
               "2_1_3", "2_1_4", "2_1_4_1", "2_1_4_2", 
               "2_1_4_3", "2_1_5", "2_1_6", "2_1_7", 
@@ -203,8 +203,10 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
+    # FIXME: only one of 8.1.1, 8.1.5, 8.1.9 may be chosen, use a single field
     for i in range(1, 15):
-        exec "study_plan_8_1_%d = models.BooleanField(default=False)" % i
+        if i not in (4, 8,):
+            exec "study_plan_8_1_%d = models.BooleanField(default=False)" % i
 
     for i in range(15, 23):
         exec "study_plan_8_1_%d = models.TextField(default='', null=True)" % i
@@ -245,17 +247,8 @@ class SubmissionForm(models.Model):
     submitter_is_authorized_by_sponsor = models.BooleanField()
     # FIXME: needs to be nullable.
     submitter_sign_date = models.DateField()
+    submitter_agrees_to_publishing = models.BooleanField(default=True)
 
-    # wrong class???
-    investigator_name = models.CharField(max_length=80)
-    investigator_organisation = models.CharField(max_length=80)
-    investigator_phone = models.CharField(max_length=30)
-    investigator_mobile = models.CharField(max_length=30)
-    investigator_fax = models.CharField(max_length=30)
-    investigator_email = models.EmailField()
-    investigator_jus_practicandi = models.BooleanField()
-    investigator_specialist = models.CharField(max_length=80)
-    investigator_certified = models.BooleanField()
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`

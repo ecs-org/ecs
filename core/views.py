@@ -138,31 +138,33 @@ def notification_pdf(request, notification_pk=None):
 # submissions
 
 SUBMISSION_FORM_TABS = (
-    (u'Allgemeines', [
-        'project_title', 'protocol_number', 'date_of_protocol', 'eudract_number', 'isrctn_number',
+    (u'Eckdaten', [
+        'project_title', 'eudract_number', 
+        'specialism', 'pharma_checked_substance', 'pharma_reference_substance', 
+        'medtech_checked_product', 'medtech_reference_substance', 'clinical_phase', 'already_voted',
+        'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
+        'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',        
+    ]),
+    (u'Sponsor', [
         'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
         'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
         'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
         'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
         'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
     ]),
-    (u'Eckdaten', [
-        'specialism', 'pharma_checked_substance', 'pharma_reference_substance', 
-        'medtech_checked_product', 'medtech_reference_substance', 'clinical_phase', 'already_voted',
-        'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
-        'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
-    ]),
-    (u'AMG-Daten', [
+    (u'AMG', [
         'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
         'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
         'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
+    ]),
+    (u'MPG', [
         'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
         'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
     ]),
     (u'Versicherung', [
         'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
     ]),
-    (u'Therapie', [
+    (u'Massnahmen', [
         'additional_therapy_info'
     ]),
     (u'Kurzfassung', [
@@ -179,6 +181,10 @@ SUBMISSION_FORM_TABS = (
         'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
     ]),
     (u'Unterlagen', []),
+    (u'Antragsteller', [
+        'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
+        'submitter_is_authorized_by_sponsor', 'submitter_sign_date', 'submitter_agrees_to_publishing',
+    ]),
     (u'Prüfer', []),
 )
 
