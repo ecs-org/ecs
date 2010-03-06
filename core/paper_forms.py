@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from django.db.models import FieldDoesNotExist
 from ecs.core.models import SubmissionForm
 
 SUBMISSION_SECTION_DATA = [
@@ -114,11 +114,11 @@ _submission_field_data = (
     ('8.1.1', 'study_plan_8_1_1'),
     ('8.1.2', 'study_plan_8_1_2'),
     ('8.1.3', 'study_plan_8_1_3'),
-    ('8.1.4', None),#'study_plan_8_1_4'
+    ('8.1.4', 'monocentric'),# property
     ('8.1.5', 'study_plan_8_1_5'),
     ('8.1.6', 'study_plan_8_1_6'),
     ('8.1.7', 'study_plan_8_1_7'),
-    ('8.1.8', None),#'study_plan_8_1_8'
+    ('8.1.8', 'multicentric'),# property
     ('8.1.9', 'study_plan_8_1_9'),
     ('8.1.10', 'study_plan_8_1_10'),
     ('8.1.11', 'study_plan_8_1_11'),
@@ -162,9 +162,9 @@ _numbers_by_fieldname = {}
 
 SUBMISSION_FIELD_DATA = []
 for number, field_name in _submission_field_data:
-    if field_name:
+    try:
         label = SubmissionForm._meta.get_field(field_name).verbose_name
-    else:
+    except FieldDoesNotExist:
         label = None
     if field_name:
         _numbers_by_fieldname[field_name] = number

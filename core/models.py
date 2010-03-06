@@ -173,7 +173,6 @@ class SubmissionForm(models.Model):
     insurance_validity = models.CharField(max_length=60, null=True, blank=True)
     
     # 6.1 + 6.2 (via Measure)
-    # FIXME: use a single related model
 
     # 6.3
     additional_therapy_info = models.TextField()
@@ -291,6 +290,7 @@ class InvestigatorEmployee(models.Model):
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
+    #FIXME: need another field to distinguish between 6.1 and 6.2
     type = models.CharField(max_length=30)    
     count = models.IntegerField(null=True)
     period = models.CharField(max_length=30)

@@ -15,7 +15,36 @@
             {% endfor %}
             </ul>
             {% for tab, fieldsets in tabs %}
-                <div id="tabs-{{ forloop.counter }}">
+                <div id="tabs-{{ forloop.counter }}" class="tab">
+                    {# FIXME #}
+                    {% ifequal tab "Massnahmen" %}
+                        <fieldset>
+                            <legend>Angaben zur durchzuführenden Therapie und Diagnostik</legend>
+                            <div id="measure_formset" class="inline_formset">
+                                {{ measure_formset.management_form }}
+                                {% for form in measure_formset.forms %}
+                                    <div class="form">
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                        {% for field in form %}
+                                            {% if not field.is_hidden %}
+                                                <div class="field {{ field.field|type_name }}">
+                                                    {{ field.label_tag }}
+                                                    {{ field }}
+                                                    {% if field.errors %}
+                                                    <div class="errors">
+                                                        {{ field.errors }}
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% endfor%}
+                            </div>
+                        </fieldset>
+                    {% endifequal %}
                     {% for legend, fields in fieldsets %}
                         <fieldset class="fieldset_{{ forloop.counter }}">
                             {% if legend %}
@@ -44,6 +73,36 @@
         <script type="text/javascript">
             $(function(){
                 $("#tabs").tabs();
+               
+                $('#measure_formset .form').formset({
+                    prefix: '{{ measure_formset.prefix }}',
+                    formCssClass: 'measure_formset',
+                });
+                
+                $('fieldset').each(function(){
+                    var fieldset = $(this);
+                    var autofillLink = $('<a href="#">auto fill</a>');
+                    autofillLink.click(function(){
+                        $('input[type=text], textarea', fieldset).each(function(){
+                            var val = this.name;
+                            var maxlength = $(this).attr('maxlength');
+                            if(val.indexOf('email') != -1){
+                                val += '@example.com';
+                            }
+                            else if(maxlength){
+                                val = val.substring(val.length - maxlength);
+                            }
+                            $(this).val(val);
+                        });
+                    });
+                    fieldset.prepend(autofillLink);
+                });
+                
+                $("#tabs .tab").each(function(){
+                    if($('.errors', $(this)).length){
+                        $('#tabs ul li a[href=#' + this.id + ']').addClass('errors');
+                    }
+                });
             });
         </script>
     <input type="submit" value="Speichern" />

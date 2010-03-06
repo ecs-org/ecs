@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
-from ecs.core.forms import DocumentUploadForm, SubmissionFormForm
+from ecs.core.forms import DocumentUploadForm, SubmissionFormForm, MeasureFormSet
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
 
@@ -212,19 +212,23 @@ SUBMISSION_FORM_TABS = (
 def create_submission_form(request):
     if request.method == 'POST':
         form = SubmissionFormForm(request.POST)
-        if form.is_valid():
+        measure_formset = MeasureFormSet(request.POST, prefix='measures')
+        if form.is_valid() and measure_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
             submission_form.submission = submission
             submission_form.save()
+            for measure in measure_formset.save(commit=False):
+                measure.submission_form = submission_form
+                measure.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
-        else:
-            print form.errors
     else:
         form = SubmissionFormForm()
+        measure_formset = MeasureFormSet(prefix='measures')
     return render(request, 'submissions/form.html', {
         'form': form,
+        'measure_formset': measure_formset,
         'tabs': SUBMISSION_FORM_TABS,
     })
 

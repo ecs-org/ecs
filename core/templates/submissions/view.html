@@ -9,9 +9,33 @@
 {% block content %}
     <h1>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</h1>
     
+    <div>
+        6. Angaben zur durchzuführenden Therapie und Diagnostik
+        <table>                                           
+            <thead>
+                <tr>
+                    <th>Art</th>
+                    <th>Anzahl/Dosis</th>
+                    <th>Zeitraum</th>
+                    <th>Insgesamt</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for measure in submission_form.measures.all %}
+                <tr>
+                    <td>{{ measure.type }}</td>
+                    <td>{{ measure.count }}</td>
+                    <td>{{ measure.period }}</td>
+                    <td>{{ measure.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
     {% for field_number, label, field_name in paper_form_fields %}
         {% if field_number and field_name %}
-            <div>{{ field_number }} {{ label }}: {{ submission_form|getattr:field_name }}</div>
+            <div>{{ field_number }} {{ label|default:field_name }}: {{ submission_form|getattr:field_name }}</div>
         {% endif %}
     {% endfor %}
     

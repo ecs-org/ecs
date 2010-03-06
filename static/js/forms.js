@@ -1,5 +1,5 @@
 var ecs = {};
 
 jQuery(function($){
-    $('form .field.datefield > input').datepicker({dateFormat: 'dd.mm.yy'});    
+    $('form .field.DateField > input').datepicker({dateFormat: 'dd.mm.yy'});    
 });

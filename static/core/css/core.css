@@ -38,10 +38,16 @@ div#ecs-core-tabs {
     font-size: 12px;
 }
 
+#tabs ul li a.errors{
+	color: #ff0000;
+}
+
 form, form *{
 	font-size: 12px;
 }
-
+form fieldset{
+	border: 1px solid #eeeeee;
+}
 form legend{
     font-size: 14px;
     margin-left: 10px;

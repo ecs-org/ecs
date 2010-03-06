@@ -1,7 +1,7 @@
 from django import forms
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, modelformset_factory
 
-from ecs.core.models import Document, Investigator, SubmissionForm
+from ecs.core.models import Document, Investigator, SubmissionForm, Measure
 from ecs.core.models import BaseNotificationForm as BaseNotification
 from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
 
@@ -54,6 +54,11 @@ class DocumentUploadForm(forms.ModelForm):
         exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')
         
 class SubmissionFormForm(forms.ModelForm):
+    submitter_sign_date = DateField(required=True)
+
     class Meta:
         model = SubmissionForm
         exclude = ('submission', 'documents', 'ethics_commissions')
+
+MeasureFormSet = modelformset_factory(Measure, extra=1, exclude = ('submission_form',))
+        
