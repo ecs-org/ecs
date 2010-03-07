@@ -212,13 +212,25 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
-    # FIXME: only one of 8.1.1, 8.1.5, 8.1.9 may be chosen, use a single field
-    for i in range(1, 15):
-        if i not in (4, 8,):
-            exec "study_plan_8_1_%d = models.BooleanField(default=False)" % i
-
-    for i in range(15, 23):
-        exec "study_plan_8_1_%d = models.TextField(default='', null=True)" % i
+    # FIXME: study_plan_blind should not be nullable
+    study_plan_blind = models.SmallIntegerField(null=True, choices=[(0, 'offen'), (1, 'blind'), (2, 'doppelblind')])
+    study_plan_observer_blinded = models.BooleanField()
+    study_plan_randomized = models.BooleanField()
+    study_plan_parallelgroups = models.BooleanField()
+    study_plan_controlled = models.BooleanField()
+    study_plan_cross_over = models.BooleanField()
+    study_plan_placebo = models.BooleanField()
+    study_plan_factorized = models.BooleanField()
+    study_plan_pilot_project = models.BooleanField()
+    study_plan_equivalence_testing = models.BooleanField()
+    study_plan_misc = models.TextField(null=True, blank=True)
+    study_plan_number_of_groups = models.TextField(null=True, blank=True)
+    study_plan_stratification = models.TextField(null=True, blank=True)
+    study_plan_sample_frequency = models.TextField(null=True, blank=True) 
+    study_plan_primary_objectives = models.TextField(null=True, blank=True)
+    study_plan_null_hypothesis = models.TextField(null=True, blank=True)
+    study_plan_alternative_hypothesis = models.TextField(null=True, blank=True)
+    study_plan_secondary_objectives = models.TextField(null=True, blank=True) 
 
     # 8.2
     study_plan_alpha = models.CharField(max_length=40)

@@ -205,7 +205,11 @@ SUBMISSION_FORM_TABS = (
             'study_plan_population_intention_to_treat', 'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 
             'study_plan_dataquality_checking', 'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 
             'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
-        ] + ['study_plan_8_1_%s' % i for i in range(1, 23) if i not in (4, 8)]),
+            'study_plan_blind', 'study_plan_observer_blinded', 'study_plan_randomized', 'study_plan_parallelgroups', 'study_plan_controlled', 
+            'study_plan_cross_over', 'study_plan_placebo', 'study_plan_factorized', 'study_plan_pilot_project', 'study_plan_equivalence_testing', 
+            'study_plan_misc', 'study_plan_number_of_groups', 'study_plan_stratification', 'study_plan_sample_frequency', 'study_plan_primary_objectives',
+            'study_plan_null_hypothesis', 'study_plan_alternative_hypothesis', 'study_plan_secondary_objectives',
+        ]),
     ]),
     (u'Unterlagen', []),
     (u'Antragsteller', [
