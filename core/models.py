@@ -230,7 +230,7 @@ class SubmissionForm(models.Model):
     study_plan_primary_objectives = models.TextField(null=True, blank=True)
     study_plan_null_hypothesis = models.TextField(null=True, blank=True)
     study_plan_alternative_hypothesis = models.TextField(null=True, blank=True)
-    study_plan_secondary_objectives = models.TextField(null=True, blank=True) 
+    study_plan_secondary_objectives = models.TextField(null=True, blank=True)
 
     # 8.2
     study_plan_alpha = models.CharField(max_length=40)
@@ -277,7 +277,19 @@ class SubmissionForm(models.Model):
     @property
     def monocentric(self):
         return self.investigators.count() == 1
+        
+    @property
+    def study_plan_open(self):
+        return self.study_plan_blind == 0
 
+    @property
+    def study_plan_single_blind(self):
+        return self.study_plan_blind == 1
+
+    @property
+    def study_plan_double_blind(self):
+        return self.study_plan_blind == 2
+        
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
