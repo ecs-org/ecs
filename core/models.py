@@ -228,8 +228,8 @@ class SubmissionForm(models.Model):
     study_plan_dropout_ratio = models.CharField(max_length=40)
     
     # 8.3
-    study_plan_8_3_1 = models.BooleanField()
-    study_plan_8_3_2 = models.BooleanField()
+    study_plan_population_intention_to_treat  = models.BooleanField()
+    study_plan_population_per_protocol  = models.BooleanField()
     study_plan_abort_crit = models.CharField(max_length=40)
     study_plan_planned_statalgorithm = models.CharField(max_length=40)
 

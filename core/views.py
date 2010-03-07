@@ -199,9 +199,9 @@ SUBMISSION_FORM_TABS = (
     (u'Biometrie', [
         (None, [
             'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
-            'study_plan_8_3_1', 'study_plan_8_3_2', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 
-            'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason',
-            'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
+            'study_plan_population_intention_to_treat', 'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 
+            'study_plan_dataquality_checking', 'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 
+            'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
         ] + ['study_plan_8_1_%s' % i for i in range(1, 23) if i not in (4, 8)]),
     ]),
     (u'Unterlagen', []),
