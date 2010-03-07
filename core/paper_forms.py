@@ -35,20 +35,23 @@ _submission_field_data = (
     ('1.5.7', 'invoice_uid'),
     (None, 'invoice_uid_verified_level1'),
     (None, 'invoice_uid_verified_level2'),
-    ('2.1.1', 'project_type_2_1_1'),
-    ('2.1.2', 'project_type_2_1_2'),
-    ('2.1.2.1', 'project_type_2_1_2_1'),
-    ('2.1.2.2', 'project_type_2_1_2_2'),
-    ('2.1.3', 'project_type_2_1_3'),
-    ('2.1.4', 'project_type_2_1_4'),
-    ('2.1.4.1', 'project_type_2_1_4_1'),
-    ('2.1.4.2', 'project_type_2_1_4_2'),
-    ('2.1.4.3', 'project_type_2_1_4_3'),
-    ('2.1.5', 'project_type_2_1_5'),
-    ('2.1.6', 'project_type_2_1_6'),
-    ('2.1.7', 'project_type_2_1_7'),
-    ('2.1.8', 'project_type_2_1_8'),
-    ('2.1.9', 'project_type_2_1_9'),
+    ('2.1.1', 'project_type_non_reg_drug'),
+    ('2.1.2', 'project_type_reg_drug'),
+    ('2.1.2.1', 'project_type_reg_drug_within_indication'),
+    ('2.1.2.2', 'project_type_reg_drug_not_within_indication'),
+    ('2.1.3', 'project_type_medical_method'),
+    ('2.1.4', 'project_type_medical_device'),
+    ('2.1.4.1', 'project_type_medical_device_with_ce'),
+    ('2.1.4.2', 'project_type_medical_device_without_ce'),
+    ('2.1.4.3', 'project_type_medical_device_performance_evaluation'),
+    ('2.1.5', 'project_type_basic_research'),
+    ('2.1.6', 'project_type_genetic_study'),
+    ('2.1.7', 'project_type_register'), # new
+    ('2.1.8', 'project_type_biobank'), # new
+    ('2.1.9', 'project_type_retrospective'), # new
+    ('2.1.10', 'project_type_questionnaire'), # new
+    ('2.1.11', 'project_type_misc'), # was: 2.17
+    ('2.1.12', 'project_type_education_context'), # was: 2.1.8 + 2.1.9
     ('2.2', 'specialism'),
     ('2.3.1', 'pharma_checked_substance'),
     ('2.3.2', 'pharma_reference_substance'),

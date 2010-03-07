@@ -141,7 +141,12 @@ def notification_pdf(request, notification_pk=None):
 SUBMISSION_FORM_TABS = (
     (u'Eckdaten', [
         (u'Titel', ['project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted',]),
-        (u'Art des Projekts', ['project_type_2_1_%s' % i for i in range(1, 10)]),
+        (u'Art des Projekts', [
+            'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
+            'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
+            'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
+            'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_education_context', 'project_type_misc',
+        ]),
         (u'Zentren im Ausland', []),
         (u'Arzneimittelstudie', ['pharma_checked_substance', 'pharma_reference_substance']),
         (u'Medizinproduktestudie', ['medtech_checked_product', 'medtech_reference_substance']),

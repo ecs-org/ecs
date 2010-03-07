@@ -96,13 +96,23 @@ class SubmissionForm(models.Model):
     # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
     
     # 2.1
-    # FIXME: 2.1.7 (Sonstiges) needs a TextField
-    # FIXME: add Register, Biobank, Retrospektive Datenauswertung, Fragebogen Untersuchung Bemerkung
-    for i in ("2_1_1", "2_1_2", "2_1_2_1", "2_1_2_2", 
-              "2_1_3", "2_1_4", "2_1_4_1", "2_1_4_2", 
-              "2_1_4_3", "2_1_5", "2_1_6", "2_1_7", 
-              "2_1_8", "2_1_9"):
-        exec "project_type_%s = models.BooleanField()" % i
+    project_type_non_reg_drug = models.BooleanField()
+    project_type_reg_drug = models.BooleanField()
+    project_type_reg_drug_within_indication = models.BooleanField()
+    project_type_reg_drug_not_within_indication = models.BooleanField()
+    project_type_medical_method = models.BooleanField()
+    project_type_medical_device = models.BooleanField()
+    project_type_medical_device_with_ce = models.BooleanField()
+    project_type_medical_device_without_ce = models.BooleanField()
+    project_type_medical_device_performance_evaluation = models.BooleanField()
+    project_type_basic_research = models.BooleanField()
+    project_type_genetic_study = models.BooleanField()
+    project_type_register = models.BooleanField()
+    project_type_biobank = models.BooleanField()
+    project_type_retrospective = models.BooleanField()
+    project_type_questionnaire = models.BooleanField()
+    project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
+    project_type_misc = models.TextField(null=True, blank=True)
     
     # 2.2
     # FIXME: use fixed set of choices ?
