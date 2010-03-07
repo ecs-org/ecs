@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import inlineformset_factory, modelformset_factory
 
-from ecs.core.models import Document, Investigator, SubmissionForm, Measure
+from ecs.core.models import Document, Investigator, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.core.models import BaseNotificationForm as BaseNotification
 from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
 
@@ -61,4 +61,7 @@ class SubmissionFormForm(forms.ModelForm):
         exclude = ('submission', 'documents', 'ethics_commissions')
 
 MeasureFormSet = modelformset_factory(Measure, extra=1, exclude = ('submission_form',))
-        
+
+ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, extra=1, exclude=('submission_form',))
+
+NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, extra=1, exclude=('submission_form',))

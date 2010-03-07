@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
-from ecs.core.forms import DocumentUploadForm, SubmissionFormForm, MeasureFormSet
+from ecs.core.forms import DocumentUploadForm, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
 
@@ -222,27 +222,33 @@ SUBMISSION_FORM_TABS = (
 )
 
 def create_submission_form(request):
+    formsets = {}
+    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet):
+        name = formset_cls.__name__.replace('FormFormSet', '').lower()
+        formsets["%s_formset" % name] = formset_cls(request.POST or None, prefix=name)
+
     if request.method == 'POST':
-        form = SubmissionFormForm(request.POST)
-        measure_formset = MeasureFormSet(request.POST, prefix='measures')
-        if form.is_valid() and measure_formset.is_valid():
+        form = SubmissionFormForm(request.POST)        
+        if form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
             submission_form.submission = submission
             submission_form.save()
-            for measure in measure_formset.save(commit=False):
-                measure.submission_form = submission_form
-                measure.save()
+            for formset in formsets.itervalues():
+                for instance in formset.save(commit=False):
+                    instance.submission_form = submission_form
+                    instance.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     else:
         form = SubmissionFormForm()
         measure_formset = MeasureFormSet(prefix='measures')
-    return render(request, 'submissions/form.html', {
+    context = {
         'form': form,
-        'measure_formset': measure_formset,
         'tabs': SUBMISSION_FORM_TABS,
-    })
+    }
+    context.update(formsets)
+    return render(request, 'submissions/form.html', context)
 
 def view_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)

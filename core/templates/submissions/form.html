@@ -16,35 +16,32 @@
             </ul>
             {% for tab, fieldsets in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
-                    {# FIXME #}
                     {% ifequal tab "Massnahmen" %}
+                        {# FIXME #}
                         <fieldset>
                             <legend>Angaben zur durchzuführenden Therapie und Diagnostik</legend>
-                            <div id="measure_formset" class="inline_formset">
-                                {{ measure_formset.management_form }}
-                                {% for form in measure_formset.forms %}
-                                    <div class="form">
-                                        {% for hidden in form.hidden_fields %}
-                                            {{ hidden }}
-                                        {% endfor %}
-                                        {% for field in form %}
-                                            {% if not field.is_hidden %}
-                                                <div class="field {{ field.field|type_name }}">
-                                                    {{ field.label_tag }}
-                                                    {{ field }}
-                                                    {% if field.errors %}
-                                                    <div class="errors">
-                                                        {{ field.errors }}
-                                                    </div>
-                                                    {% endif %}
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </div>
-                                {% endfor%}
-                            </div>
+                            {% with measure_formset as formset %}
+                                {% include "submissions/inline_formset.html" %}
+                            {% endwith %}
+                        </fieldset>
+                        <fieldset>
+                            <legend>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</legend>
+                            {% with nontesteduseddrug_formset as formset %}
+                                {% include "submissions/inline_formset.html" %}
+                            {% endwith %}
+                        </fieldset>                        
+                    {% endifequal %}
+                    
+                    {% ifequal tab "Eckdaten" %}
+                        {# FIXME #}
+                        <fieldset>
+                            <legend>Ausländische teilnehmende Zentren</legend>
+                            {% with foreignparticipatingcenter_formset as formset %}
+                                {% include "submissions/inline_formset.html" %}
+                            {% endwith %}                            
                         </fieldset>
                     {% endifequal %}
+                    
                     {% for legend, fields in fieldsets %}
                         <fieldset class="fieldset_{{ forloop.counter }}">
                             {% if legend %}
@@ -78,6 +75,17 @@
                     prefix: '{{ measure_formset.prefix }}',
                     formCssClass: 'measure_formset',
                 });
+                
+                $('#foreignparticipatingcenter_formset .form').formset({
+                    prefix: '{{ foreignparticipatingcenter_formset.prefix }}',
+                    formCssClass: 'foreignparticipatingcenter_formset',
+                });
+
+                $('#nontesteduseddrug_formset .form').formset({
+                    prefix: '{{ nontesteduseddrug_formset.prefix }}',
+                    formCssClass: 'nontesteduseddrug_formset',
+                });
+
                 
                 $('fieldset').each(function(){
                     var fieldset = $(this);

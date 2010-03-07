@@ -33,6 +33,40 @@
         </table>
     </div>
     
+    <div>
+        3b. Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind
+        <table>
+            <thead>
+                <tr>
+                    <th>Generic Name</th>
+                    <th>Darreichungsform</th>
+                    <th>Dosis</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ntud in submission_form.nontesteduseddrug_set.all %}
+                    <tr>      
+                        <td>{{ ntud.generic_name }}</td>
+                        <td>{{ ntud.preparation_form }}</td>
+                        <td>{{ ntud.dosage }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        3b. Liste ausländischer teilnehmender Zentren
+        {% for fpc in submission_form.foreignparticipatingcenter_set.all %}
+            <div>
+                {{ fpc.name }} ({{ fpc.country }})<br/>
+                {{ fpc.address_1 }} {{ fpc.address_2 }}<br/>
+                {{ fpc.zip_code }} {{ fpc.city }}<br/>
+            </div>
+        {% endfor %}
+    </div>
+
+    
     {% for field_number, label, field_name in paper_form_fields %}
         {% if field_number and field_name %}
             <div>{{ field_number }} {{ label|default:field_name }}: {{ submission_form|getattr:field_name }}</div>

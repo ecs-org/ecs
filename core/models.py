@@ -320,7 +320,7 @@ class InvestigatorEmployee(models.Model):
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
     
-
+# 6.1 + 6.2
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
@@ -330,26 +330,27 @@ class Measure(models.Model):
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
 
-
-class NonTestedUsedDrugs(models.Model):
-    # FIXME: rename to `submission_form`
-    submission = models.ForeignKey(SubmissionForm)
+# 3b
+class NonTestedUsedDrug(models.Model):
+    submission_form = models.ForeignKey(SubmissionForm)
 
     generic_name = models.CharField(max_length=40)
     preparation_form = models.CharField(max_length=40)
     dosage = models.CharField(max_length=40)
 
-class ParticipatingCenter(models.Model):
-    # FIXME: rename to `submission_form`
-    submission = models.ForeignKey(SubmissionForm)
+# 2.6.2 + 2.7
+class ForeignParticipatingCenter(models.Model):
+    submission_form = models.ForeignKey(SubmissionForm)
     
     name = models.CharField(max_length=60)
     address_1 = models.CharField(max_length=60)
     address_2 = models.CharField(max_length=60)
     zip_code = models.CharField(max_length=10)
     city = models.CharField(max_length=40)
+    # FIXME: make country a FK to a country model
     country = models.CharField(max_length=4)
     
+
 class Amendment(models.Model):
     # FIXME: rename to `submission_form`
     submissionform = models.ForeignKey(SubmissionForm)
@@ -456,11 +457,11 @@ if not reversion.is_registered(Amendment):
     reversion.register(Document) 
     reversion.register(EthicsCommission) 
     reversion.register(Meeting) 
-    reversion.register(ParticipatingCenter) 
+    reversion.register(ForeignParticipatingCenter) 
     reversion.register(Submission) 
     reversion.register(SubmissionForm) 
     reversion.register(SubmissionReview) 
-    reversion.register(NonTestedUsedDrugs) 
+    reversion.register(NonTestedUsedDrug) 
     reversion.register(NotificationAnswer) 
     reversion.register(BaseNotificationForm) 
     reversion.register(ExtendedNotificationForm) 

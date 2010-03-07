@@ -7,7 +7,7 @@ from django.contrib import databrowse
 from core import models
 for m in ("Workflow", "Document", "EthicsCommission", 
           "SubmissionForm", "Investigator","InvestigatorEmployee",
-          "NonTestedUsedDrugs", "ParticipatingCenter",
+          "NonTestedUsedDrug", "ForeignParticipatingCenter",
           "Amendment",
           "BaseNotificationForm", "ExtendedNotificationForm", "Checklist",
           "VoteReview", "Vote", "SubmissionReview", "Submission", 

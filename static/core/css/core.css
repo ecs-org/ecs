@@ -62,6 +62,10 @@ form .field input[type=text], form .field textarea{
 	width: 30em;
 }
 
+form .field textarea{
+	height: 4em;
+}
+
 form .field > label{
 	width: 20em;
 	padding-right: 1em;
