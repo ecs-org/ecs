@@ -319,12 +319,14 @@ class InvestigatorEmployee(models.Model):
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
-    
+
+
 # 6.1 + 6.2
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
-    #FIXME: need another field to distinguish between 6.1 and 6.2
+    #FIXME: category should not be nullable
+    category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
     type = models.CharField(max_length=30)    
     count = models.IntegerField(null=True)
     period = models.CharField(max_length=30)
