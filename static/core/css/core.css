@@ -54,80 +54,81 @@ form legend{
     padding: 3px;
 }
 
-form .field{
+form ol li{
 	padding-top: 10px;
 	clear: both;
+	display: block;
 }
 
-form .field input[type=text], form .field textarea{
+form ol li input[type=text], form ol li textarea{
 	width: 30em;
 }
 
-form .field textarea{
+form ol li textarea{
 	height: 4em;
 }
 
-form .field > label{
+form ol li > label{
 	width: 20em;
 	padding-right: 1em;
 	text-align: right;
 	float: left;
 }
-form .field > label:after{
+form ol li > label:after{
 	content: ":";
 }
-form .field > .errors{
+form ol li > .errors{
 	margin-left: 21em;
 }
 
-form .field.BooleanField{
+form ol li.BooleanField{
 	padding-left: 21em;
 }
 
-form .field.BooleanField > label{
+form ol li.BooleanField > label{
 	float: none;
 	padding-left: 1em;
 	text-align: left;
 }
-form .field.BooleanField > label:after{
+form ol li.BooleanField > label:after{
 	content: none;
 }
-form .field.BooleanField > input{
+form ol li.BooleanField > input{
 	float: left;
 }
 
-form #tabs-1 .fieldset_2 .content{
+form #tabs-1 ol liset_2 .content{
 	padding-left: 21em;
 }
-form #tabs-1 .fieldset_2 .field.BooleanField{
+form #tabs-1 ol liset_2 ol li.BooleanField{
     float: left;
     width: auto;
     clear: none;
 	padding-left: 0;
 	width: 30em;
 }
-form #tabs-1 .fieldset_2 .field.BooleanField label{
+form #tabs-1 ol liset_2 ol li.BooleanField label{
 	font-size: 0.8em;
 }
 
-form .field .paperform_number{
+form ol li .paperform_number{
 	color: #666666;
 	font-size: 0.9em;
 }
-form .field .paperform_number:before{
+form ol li .paperform_number:before{
 	content: "[";
 }
-form .field .paperform_number:after{
+form ol li .paperform_number:after{
 	content: "]";
 }
 
-form .field .notes{
+form ol li .notes{
 	float: right;
 	font-size: 0.9em;
 	color: #666666;
 }
 
-form .field.focus{
+form ol li.focus{
 	background-color: #eeeeff;
 }
 

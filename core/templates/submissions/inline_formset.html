@@ -2,23 +2,23 @@
 <div id="{{ formset.prefix }}_formset" class="inline_formset">
     {{ formset.management_form }}
     {% for form in formset.forms %}
-        <div class="form">
+        <ol class="form">
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
             {% for field in form %}
                 {% if not field.is_hidden %}
-                    <div class="field {{ field.field|type_name }}">
+                    <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}">
                         {{ field.label_tag }}
                         {{ field }}
                         {% if field.errors %}
-                        <div class="errors">
+                        <span class="errors">
                             {{ field.errors }}
-                        </div>
+                        </span>
                         {% endif %}
-                    </div>
+                    </li>
                 {% endif %}
             {% endfor %}
-        </div>
+        </ol>
     {% endfor%}
 </div>
