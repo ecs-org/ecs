@@ -256,3 +256,8 @@ def view_submission_form(request, submission_form_pk=None):
         'paper_form_fields': paper_forms.SUBMISSION_FIELD_DATA,
         'submission_form': submission_form,
     })
+
+def submission_form_list(request):
+    return render(request, 'submissions/list.html', {
+        'submission_forms': SubmissionForm.objects.all().order_by('project_title')
+    })

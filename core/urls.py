@@ -24,4 +24,5 @@ urlpatterns = patterns(
 
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/new/$', 'ecs.core.views.create_submission_form'),
+    url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
 )

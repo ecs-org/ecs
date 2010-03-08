@@ -51,7 +51,12 @@
                                 {% for field_name in fields %}
                                     {% with form|getitem:field_name as field %}
                                         <div class="field {{ field.field|type_name }}">
-                                            {{ field.label_tag }}
+                                            <label for="id_{{ field_name }}">
+                                                {{ field.label }}
+                                                {% if field_name|paperform_number %}
+                                                    <span class="paperform_number">{{ field_name|paperform_number }}</span>
+                                                {% endif %}
+                                            </label>
                                             {{ field }}
                                             {% if field.errors %}
                                             <div class="errors">

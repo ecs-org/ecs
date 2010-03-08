@@ -270,6 +270,9 @@ class SubmissionForm(models.Model):
     submitter_sign_date = models.DateField()
     submitter_agrees_to_publishing = models.BooleanField(default=True)
     
+    def __unicode__(self):
+        return "%s: %s" % (self.submission.ec_number, self.project_title)
+    
     @property
     def multicentric(self):
         return self.investigators.count() > 1

@@ -16,8 +16,13 @@
         
 {% block usermenu %}
   <ul>
-    <li><a href="/core/submission/1/">&Uuml;bersicht</a></li>
-    <li><a href="/core/submission/1/">Studien</a></li>
+    <li><a href="/core/">&Uuml;bersicht</a></li>
+    <li>
+        <a href="{% url ecs.core.views.submission_form_list %}">Studien</a>
+        <ul>
+            <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
+        </ul>
+    </li>
     <li>
       <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
       <ul>
@@ -26,8 +31,8 @@
         <li><a href="#">vergangene Meldungen</a></li>
       </ul>
     </li>
-    <li><a href="/core/submission/1/">Konversationen</a></li>
-    <li><a href="/core/submission/1/">zuletzt bearbeitet</a></li>
-    <li><a href="/core/submission/1/">vorgemerkte T&auml;tigkeiten</a></li>
+    <li><a href="#">Konversationen</a></li>
+    <li><a href="#">zuletzt bearbeitet</a></li>
+    <li><a href="#">vorgemerkte T&auml;tigkeiten</a></li>
   </ul>
 {% endblock %}

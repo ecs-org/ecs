@@ -106,6 +106,17 @@ form #tabs-1 .fieldset_2 .field.BooleanField{
 	width: 30em;
 }
 
+form .field .paperform_number{
+	color: #666666;
+	font-size: 0.9em;
+}
+form .field .paperform_number:before{
+	content: "[";
+}
+form .field .paperform_number:after{
+	content: "]";
+}
+
 
 /* documents */
 .doclist{
