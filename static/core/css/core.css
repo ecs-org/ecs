@@ -55,6 +55,7 @@ form legend{
 }
 
 form .field{
+	padding-top: 10px;
 	clear: both;
 }
 
@@ -105,6 +106,9 @@ form #tabs-1 .fieldset_2 .field.BooleanField{
 	padding-left: 0;
 	width: 30em;
 }
+form #tabs-1 .fieldset_2 .field.BooleanField label{
+	font-size: 0.8em;
+}
 
 form .field .paperform_number{
 	color: #666666;
@@ -115,6 +119,16 @@ form .field .paperform_number:before{
 }
 form .field .paperform_number:after{
 	content: "]";
+}
+
+form .field .notes{
+	float: right;
+	font-size: 0.9em;
+	color: #666666;
+}
+
+form .field.focus{
+	background-color: #eeeeff;
 }
 
 
