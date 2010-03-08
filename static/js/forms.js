@@ -1,9 +1,9 @@
 var ecs = {};
 
 jQuery(function($){
-    $('form .field.DateField > input').datepicker({dateFormat: 'dd.mm.yy'});    
+    $('form ol li.DateField > input').datepicker({dateFormat: 'dd.mm.yy'});    
     
-    $('form .field').each(function(){
+    $('form ol li').each(function(){
         var maxlength = $('input[type=text]', this).attr('maxlength');
         var notes = [];
         if($(this).hasClass('required')){
@@ -17,12 +17,12 @@ jQuery(function($){
         }
     });
     
-    var formControls = $('form .field input, form .field textarea, form .field select');
+    var formControls = $('form ol li input, form ol li textarea, form ol li select');
     formControls.focus(function(){
-        $(this).parent('.field').addClass('focus');
+        $(this).parent('li').addClass('focus');
     });
     formControls.blur(function(){
-        $(this).parent('.field').removeClass('focus');
+        $(this).parent('li').removeClass('focus');
     });
     
 });
