@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
-from ecs.core.forms import DocumentUploadForm, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet
+from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
 
@@ -28,14 +28,6 @@ def redirect_to_next_url(request, default_url=None):
     if not next or '//' in next:
         next = default_url or '/'
     return HttpResponseRedirect(next)
-
-def file_uuid(doc_file):
-    """returns md5 digest of a given file as uuid"""
-    import hashlib
-    s = doc_file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
-    m = hashlib.md5()
-    m.update(s)
-    return m.hexdigest()
 
 ## views
 
@@ -79,48 +71,26 @@ def select_notification_creation_type(request):
 
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
+
+    form = notification_type.form_cls(request.POST or None)
+    document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
+
     if request.method == 'POST':
-        form = notification_type.form_cls(request.POST)
-        if form.is_valid():
+        if form.is_valid() and document_formset.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
             notification.save()
             notification.submission_forms = form.cleaned_data['submission_forms']
             notification.investigators = form.cleaned_data['investigators']
+            notification.documents = document_formset.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
-    else:
-        form = notification_type.form_cls()
 
     template_names = ['notifications/creation/%s.html' % name for name in (form.__class__.__name__, 'base')]
     return render(request, template_names, {
         'notification_type': notification_type,
         'form': form,
+        'document_formset': document_formset,
     })
-
-
-def upload_document_for_notification(request, notification_pk=None):
-    notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
-    documents = notification.documents.filter(deleted=False).order_by('doctype__name', '-date')
-    if request.method == 'POST':
-        form = DocumentUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            document = form.save(commit=False)
-            # FIXME: this should be handled by the file storage system on the fly.
-            document.uuid_document = file_uuid(document.file)
-            document.uuid_document_revision = document.uuid_document
-            document.file.seek(0)
-            document.save()
-            notification.documents.add(document)
-            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
-    else:
-        form = DocumentUploadForm()
-
-    return render(request, 'notifications/upload_document.html', {
-        'notification': notification,
-        'documents': documents,
-        'form': form,
-    })
-
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
@@ -136,8 +106,12 @@ def notification_pdf(request, notification_pk=None):
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
     return response
     
+
 # submissions
 
+# ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
+#  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
+# )
 SUBMISSION_FORM_TABS = (
     (u'Eckdaten', [
         (u'Titel', ['project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted',]),
@@ -226,10 +200,11 @@ def create_submission_form(request):
     for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(request.POST or None, prefix=name)
+    document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
+    form = SubmissionFormForm(request.POST or None)
 
     if request.method == 'POST':
-        form = SubmissionFormForm(request.POST)        
-        if form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
+        if form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and document_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
@@ -239,13 +214,12 @@ def create_submission_form(request):
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
+            submission_form.documents = document_formset.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
-    else:
-        form = SubmissionFormForm()
-        measure_formset = MeasureFormSet(prefix='measures')
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
+        'document_formset': document_formset,
     }
     context.update(formsets)
     return render(request, 'submissions/form.html', context)
@@ -255,6 +229,7 @@ def view_submission_form(request, submission_form_pk=None):
     return render(request, 'submissions/view.html', {
         'paper_form_fields': paper_forms.SUBMISSION_FIELD_DATA,
         'submission_form': submission_form,
+        'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
     })
 
 def submission_form_list(request):

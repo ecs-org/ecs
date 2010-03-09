@@ -11,74 +11,100 @@
 
 <h1>Neuer {{ notification_type.name }}</h1>
 
-<form action="" method="post">
-    {{ form.errors }}
-    {% block fields %}
-    <div class="field">
-        {{ form.investigators.label_tag }}
-        {{ form.investigators }}
-        {% if form.investigators.errors %}
-        <div class="errors">
-            {{ form.investigators.errors }}
-        </div>
-        {% endif %}
+<form action="" method="post" enctype="multipart/form-data">
+    <div id="tabs">
+    <ul>
+        {% block tab_headers %}
+        <li><a href="#tab-1">Tab 1</a></li>
+        <li><a href="#document_tab">Unterlagen</a></li>
+        {% endblock %}
+    </ul>
+    {% block tabs %}
+    <div id="tab-1" class="tab">
+        <ol>
+            <li>
+                {{ form.investigators.label_tag }}
+                {{ form.investigators }}
+                {% if form.investigators.errors %}
+                <div class="errors">
+                    {{ form.investigators.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li>
+                {{ form.investigator.label_tag }}
+                {{ form.investigator }}
+                {% if form.investigator.errors %}
+                <div class="errors">
+                    {{ form.investigator.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li class="datefield">
+                {{ form.date_of_vote.label_tag }}
+                {{ form.date_of_vote }}
+                {% if form.date_of_vote.errors %}
+                <div class="errors">
+                    {{ form.date_of_vote.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li>
+                {{ form.ek_number.label_tag }}
+                {{ form.ek_number }}
+                {% if form.ek_number.errors %}
+                <div class="errors">
+                    {{ form.ek_number.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li>
+                {{ form.comments.label_tag }}
+                {{ form.comments }}
+                {% if form.comments.errors %}
+                <div class="errors">
+                    {{ form.comments.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li class="DateField">
+                {{ form.signed_on.label_tag }}
+                {{ form.signed_on }}
+                {% if form.signed_on.errors %}
+                <div class="errors">
+                    {{ form.signed_on.errors }}
+                </div>
+                {% endif %}
+            </li>
+            <li>
+                {{ form.submission_forms.label_tag }}
+                {{ form.submission_forms }}
+                {% if form.submission_forms.errors %}
+                <div class="errors">
+                    {{ form.submission_forms.errors }}
+                </div>
+                {% endif %}
+            </li>
+        </ol>
     </div>
-    <div class="field">
-        {{ form.investigator.label_tag }}
-        {{ form.investigator }}
-        {% if form.investigator.errors %}
-        <div class="errors">
-            {{ form.investigator.errors }}
-        </div>
-        {% endif %}
-    </div>
-    <div class="field datefield">
-        {{ form.date_of_vote.label_tag }}
-        {{ form.date_of_vote }}
-        {% if form.date_of_vote.errors %}
-        <div class="errors">
-            {{ form.date_of_vote.errors }}
-        </div>
-        {% endif %}
-    </div>
-    <div class="field">
-        {{ form.ek_number.label_tag }}
-        {{ form.ek_number }}
-        {% if form.ek_number.errors %}
-        <div class="errors">
-            {{ form.ek_number.errors }}
-        </div>
-        {% endif %}
-    </div>
-    <div class="field">
-        {{ form.comments.label_tag }}
-        {{ form.comments }}
-        {% if form.comments.errors %}
-        <div class="errors">
-            {{ form.comments.errors }}
-        </div>
-        {% endif %}
-    </div>
-    <div class="field datefield">
-        {{ form.signed_on.label_tag }}
-        {{ form.signed_on }}
-        {% if form.signed_on.errors %}
-        <div class="errors">
-            {{ form.signed_on.errors }}
-        </div>
-        {% endif %}
-    </div>
-    <div class="field">
-        {{ form.submission_forms.label_tag }}
-        {{ form.submission_forms }}
-        {% if form.submission_forms.errors %}
-        <div class="errors">
-            {{ form.submission_forms.errors }}
-        </div>
-        {% endif %}
+    <div id="document_tab">
+        {% with document_formset as formset %}
+            {% include "forms/inline_formset.html" %}
+        {% endwith %}
     </div>
     {% endblock %}
     <input type="submit" value="Speichern" />
+    
+    <script type="text/javascript">
+        $(function(){
+            $("#tabs").tabs();
+
+            $('#document_formset .form').formset({
+                prefix: '{{ document_formset.prefix }}',
+                formCssClass: 'document_formset',
+            });            
+        });
+    </script>
 </form>
 
 {% endblock %}

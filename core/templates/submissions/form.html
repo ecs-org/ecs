@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
         <div id="tabs">
             <ul>
             {% for tab, fieldsets in tabs %}
@@ -21,13 +21,13 @@
                         <fieldset>
                             <legend>Angaben zur durchzuführenden Therapie und Diagnostik</legend>
                             {% with measure_formset as formset %}
-                                {% include "submissions/inline_formset.html" %}
+                                {% include "forms/inline_formset.html" %}
                             {% endwith %}
                         </fieldset>
                         <fieldset>
                             <legend>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</legend>
                             {% with nontesteduseddrug_formset as formset %}
-                                {% include "submissions/inline_formset.html" %}
+                                {% include "forms/inline_formset.html" %}
                             {% endwith %}
                         </fieldset>                        
                     {% endifequal %}
@@ -37,8 +37,17 @@
                         <fieldset>
                             <legend>Ausländische teilnehmende Zentren</legend>
                             {% with foreignparticipatingcenter_formset as formset %}
-                                {% include "submissions/inline_formset.html" %}
+                                {% include "forms/inline_formset.html" %}
                             {% endwith %}                            
+                        </fieldset>
+                    {% endifequal %}
+                    
+                    {% ifequal tab "Unterlagen" %}
+                        {# FIXME #}
+                        <fieldset>
+                            {% with document_formset as formset %}
+                                {% include "forms/inline_formset.html" %}
+                            {% endwith %}
                         </fieldset>
                     {% endifequal %}
                     
@@ -89,6 +98,11 @@
                 $('#nontesteduseddrug_formset .form').formset({
                     prefix: '{{ nontesteduseddrug_formset.prefix }}',
                     formCssClass: 'nontesteduseddrug_formset',
+                });
+
+                $('#document_formset .form').formset({
+                    prefix: '{{ document_formset.prefix }}',
+                    formCssClass: 'document_formset',
                 });
                 
                 $('fieldset').each(function(){

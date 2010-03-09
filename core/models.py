@@ -43,6 +43,17 @@ class Document(models.Model):
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
     deleted = models.BooleanField(default=False, blank=True)
+    
+    def save(self, **kwargs):
+        import hashlib
+        s = self.file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
+        m = hashlib.md5()
+        m.update(s)
+        self.file.seek(0)
+        self.uuid_document = m.hexdigest()
+        self.uuid_document_revision = self.uuid_document
+        return super(Document, self).save(**kwargs)
+
 
 class EthicsCommission(models.Model):
     name = models.CharField(max_length=60)

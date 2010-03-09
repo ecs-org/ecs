@@ -12,7 +12,6 @@
 {% block content %}
 <ul>
     <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification_form.pk %}">Download PDF</a></li>
-    <li><a href="{% url ecs.core.views.upload_document_for_notification notification_pk=notification_form.pk %}">Upload Document</a></li>
 </ul>  
 <table>
     {% block table_rows %}

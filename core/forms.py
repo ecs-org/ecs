@@ -1,5 +1,5 @@
 from django import forms
-from django.forms.models import inlineformset_factory, modelformset_factory
+from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
 from ecs.core.models import Document, Investigator, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.core.models import BaseNotificationForm as BaseNotification
@@ -46,13 +46,7 @@ class ExtendedNotificationForm(BaseNotificationForm):
         model = ExtendedNotification
         exclude = ('type', 'documents')
         
-class DocumentUploadForm(forms.ModelForm):
-    date = DateField(required=True)
-    
-    class Meta:
-        model = Document
-        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')
-        
+
 class SubmissionFormForm(forms.ModelForm):
     submitter_sign_date = DateField(required=True)
 
@@ -60,8 +54,42 @@ class SubmissionFormForm(forms.ModelForm):
         model = SubmissionForm
         exclude = ('submission', 'documents', 'ethics_commissions')
 
-MeasureFormSet = modelformset_factory(Measure, extra=1, exclude = ('submission_form',))
+## documents ##
+        
+class DocumentForm(forms.ModelForm):
+    date = DateField(required=True)
 
-ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, extra=1, exclude=('submission_form',))
+    class Meta:
+        model = Document
+        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')
 
-NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, extra=1, exclude=('submission_form',))
+class BaseDocumentFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', Document.objects.none())
+        super(BaseDocumentFormSet, self).__init__(*args, **kwargs)
+        
+DocumentFormSet = modelformset_factory(Document, formset=BaseDocumentFormSet, extra=1, form=DocumentForm)
+
+## ##
+
+class BaseForeignParticipatingCenterFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
+        super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
+
+ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=1, exclude=('submission_form',))
+
+class BaseNonTestedUsedDrugFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
+        super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
+
+NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=1, exclude=('submission_form',))
+
+class BaseMeasureFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', Measure.objects.none())
+        super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
+
+MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, exclude = ('submission_form',))
+
