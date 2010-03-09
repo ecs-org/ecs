@@ -20,3 +20,5 @@ class TestDocstashAPI:
         data = loads(response.content)
         assert isinstance(data, list)
         assert len(data) == 2
+        assert data[1] == 1
+        assert isinstance(data[0], basestring)
