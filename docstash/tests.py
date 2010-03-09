@@ -1,23 +1,22 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
+# -*- coding: utf-8 -*-
+#
+# (c) 2010 Medizinische Universität Wien
+#
 
-Replace these with more appropriate tests for your application.
+"""
+Unittests for docstash
 """
 
 from django.test import TestCase
+from django.test.client import Client
+from django.utils.simplejson import loads
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+class TestDocstashAPI:
+    def setUp(self):
+        self.c = Client()
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
-
+    def test_create(self):
+        response = self.c.post("/docstash/create", dict(name="name", form="form"))
+        data = loads(response.content)
+        assert isinstance(data, list)
+        assert len(data) == 2
