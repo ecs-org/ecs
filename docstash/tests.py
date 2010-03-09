@@ -28,6 +28,7 @@ class TestDocstashAPI:
         data = loads(response.content)
         response = self.c.get("/docstash/%s" % data[0])
         data = loads(response.content)
+        print data
         assert isinstance(data, list)
         assert len(data) == 2
         assert int(data[0]) or True, "token needs to be something compatible with int. Really"

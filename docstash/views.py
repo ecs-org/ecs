@@ -22,9 +22,9 @@ def jsonify(func):
 def create(request):
     key = hashlib.new("sha", u"%s|%s" % (request.POST["name"], request.POST["form"])).hexdigest()
     obj = DocStash.objects.create(name=request.POST["name"], form=request.POST["form"], 
-                                  key=key, value=dumps(None))
+                                  key=key, value="null")
     return [key, obj.token]
 
-@jsonify
 def read(request, key):
-    pass
+    obj = list(DocStash.objects.filter(key=key).order_by("-token")[0:1])[0]
+    return HttpResponse('["%s", %s]' % (obj.token, obj.value), "text/json")
