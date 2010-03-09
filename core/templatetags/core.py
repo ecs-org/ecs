@@ -1,6 +1,6 @@
 from django.template import Library
 
-from ecs.core.paper_forms import get_number_for_fieldname
+from ecs.core import paper_forms
 
 register = Library()
 
@@ -9,8 +9,5 @@ register.filter('getitem', lambda obj, name: obj[name])
 register.filter('type_name', lambda obj: type(obj).__name__)
 
 @register.filter
-def paperform_number(field_name):
-    try:
-        return get_number_for_fieldname(field_name)
-    except KeyError:
-        return None
+def get_field_info(formfield):
+    return paper_forms.get_field_info(model=formfield.form._meta.model, name=formfield.name)

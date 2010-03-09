@@ -131,28 +131,28 @@ class SubmissionForm(models.Model):
     specialism = models.TextField(null=True)
 
     # 2.3
-    pharma_checked_substance = models.TextField(null=True, blank=True, verbose_name=u'Prüfsubstanz(en)')
-    pharma_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzsubstanz')
+    pharma_checked_substance = models.TextField(null=True, blank=True)
+    pharma_reference_substance = models.TextField(null=True, blank=True)
     
     # 2.4
-    medtech_checked_product = models.TextField(null=True, blank=True, verbose_name=u'Prüfprodukt(e)')
-    medtech_reference_substance = models.TextField(null=True, blank=True, verbose_name=u'Referenzprodukt')
+    medtech_checked_product = models.TextField(null=True, blank=True)
+    medtech_reference_substance = models.TextField(null=True, blank=True)
 
     # 2.5
-    clinical_phase = models.CharField(max_length=10, verbose_name=u'Klinische Phase')
+    clinical_phase = models.CharField(max_length=10)
     
     # 2.6 + 2.7 (via ParticipatingCenter)
     
     # 2.8
-    already_voted = models.BooleanField(verbose_name=u'Liegen bereits Voten anderer Ethikkommissionen vor?')
+    already_voted = models.BooleanField()
     
     # 2.9
-    subject_count = models.IntegerField(verbose_name=u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt')
+    subject_count = models.IntegerField()
 
     # 2.10
-    subject_minage = models.IntegerField(verbose_name=u'Mindestalter')
-    subject_maxage = models.IntegerField(verbose_name=u'Höchstalter')
-    subject_noncompetents = models.BooleanField(verbose_name=u'Sind auch nicht persönlich Einwilligungsfähige einschließbar?')
+    subject_minage = models.IntegerField()
+    subject_maxage = models.IntegerField()
+    subject_noncompetents = models.BooleanField()
     subject_males = models.BooleanField()    
     subject_females = models.BooleanField()
     subject_childbearing = models.BooleanField()
@@ -166,8 +166,10 @@ class SubmissionForm(models.Model):
     subject_planned_total_duration = models.CharField(max_length=20)
 
     # 3a
+    # FIXME: substance_registered_in_countries should be a ManyToManyField(Country)
     substance_registered_in_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
+    # FIXME: substance_p_c_t_countries should be a ManyToManyField(Country)
     substance_p_c_t_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
@@ -342,7 +344,8 @@ class Measure(models.Model):
     
     #FIXME: category should not be nullable
     category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
-    type = models.CharField(max_length=30)    
+    type = models.CharField(max_length=30)
+    # FIXME: count should be a TextField
     count = models.IntegerField(null=True)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
@@ -364,7 +367,7 @@ class ForeignParticipatingCenter(models.Model):
     address_2 = models.CharField(max_length=60)
     zip_code = models.CharField(max_length=10)
     city = models.CharField(max_length=40)
-    # FIXME: make country a FK to a country model
+    # FIXME: country should be a ForeignKey(Country)
     country = models.CharField(max_length=4)
     
 
@@ -392,31 +395,31 @@ class NotificationType(models.Model):
 
 # FIME: rename to `BaseNotification`
 class BaseNotificationForm(models.Model):
-    type = models.ForeignKey(NotificationType, null=True, related_name='notifications', verbose_name=u'Typ')
-    investigators = models.ManyToManyField(Investigator, related_name='notifications', verbose_name=u'Ethik-Komissionen / Prüfer')
-    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications', verbose_name=u'Studien')
-    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications', verbose_name=r'Prüfer')
-    documents = models.ManyToManyField(Document, verbose_name=u'Unterlagen')
+    type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
+    investigators = models.ManyToManyField(Investigator, related_name='notifications')
+    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications')
+    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications')
+    documents = models.ManyToManyField(Document)
 
-    comments = models.TextField(default="", blank=True, verbose_name=u'Kommentare')
-    signed_on = models.DateField(null=True, blank=True, verbose_name=u'Unterschrieben am')
+    comments = models.TextField(default="", blank=True)
+    signed_on = models.DateField(null=True, blank=True)
     
     def __unicode__(self):
         return u"%s vom %s" % (self.type, self.signed_on)
 
 # FIME: rename to something meaningfull, or at least `ExtendedNotification`
 class ExtendedNotificationForm(BaseNotificationForm):
-    reason_for_not_started = models.TextField(null=True, blank=True, verbose_name=u'Grund warum noch nicht begonnen')
-    recruited_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en')
-    finished_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben')
-    aborted_subjects = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der Studienabbrüche')
-    SAE_count = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der SAEs') # FIXME: change to PositiveIntegerField(default=0, null=False)
-    SUSAR_count = models.IntegerField(null=True, blank=True, verbose_name=u'Zahl der SUSARs') # FIXME: change to PositiveIntegerField(default=0, null=False)
+    reason_for_not_started = models.TextField(null=True, blank=True)
+    recruited_subjects = models.IntegerField(null=True, blank=True)
+    finished_subjects = models.IntegerField(null=True, blank=True)
+    aborted_subjects = models.IntegerField(null=True, blank=True)
+    SAE_count = models.IntegerField(null=True, blank=True) # FIXME: change to PositiveIntegerField(default=0, null=False)
+    SUSAR_count = models.IntegerField(null=True, blank=True) # FIXME: change to PositiveIntegerField(default=0, null=False)
     # FIXME: use a single date and a study_state field instead of three DateFields:
-    runs_till = models.DateField(null=True, blank=True, verbose_name=u'Studie läuft noch bis voraussichtlich')
-    finished_on = models.DateField(null=True, blank=True, verbose_name=u'Studie planmäßig abgeschlossen am')
-    aborted_on = models.DateField(null=True, blank=True, verbose_name=u'Studie abgebrochen am')
-    extension_of_vote = models.BooleanField(default=False, blank=True, verbose_name=u'Ich beantrage die Verlängerung der Gültigkeit des Votums')
+    runs_till = models.DateField(null=True, blank=True)
+    finished_on = models.DateField(null=True, blank=True)
+    aborted_on = models.DateField(null=True, blank=True)
+    extension_of_vote = models.BooleanField(default=False, blank=True)
 
 
 class Checklist(models.Model):

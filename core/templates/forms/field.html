@@ -1,0 +1,18 @@
+{% load core %}
+
+{% with field|get_field_info as field_info %}
+    <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}">
+        <label for="id_{{ field_name }}">
+            {{ field_info.label|default:field.label }}
+            {% if field_info.number %}
+                <span class="paperform_number">{{ field_info.number }}</span>
+            {% endif %}
+        </label>
+        {{ field }}
+        {% if field.errors %}
+        <span class="errors">
+            {{ field.errors }}
+        </span>
+        {% endif %}
+    </li>
+{% endwith %}
