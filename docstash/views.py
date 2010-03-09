@@ -28,3 +28,7 @@ def create(request):
 def read(request, key):
     obj = list(DocStash.objects.filter(key=key).order_by("-token")[0:1])[0]
     return HttpResponse('["%s", %s]' % (obj.token, obj.value), "text/json")
+
+@jsonify
+def search(request):
+    pass

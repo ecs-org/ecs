@@ -33,3 +33,15 @@ class TestDocstashAPI:
         assert len(data) == 2
         assert int(data[0]) or True, "token needs to be something compatible with int. Really"
         assert data[1] == None
+
+    def test_search(self):
+        self.c.post("/docstash/create", dict(name="name", form="form"))
+        self.c.post("/docstash/create", dict(name="name abc", form="form"))
+        self.c.post("/docstash/create", dict(name="name def", form="form"))        
+        response = self.c.get("/docstash/search", dict(name="abc", form="form"))
+        data = loads(response.content)
+        assert len(data) == 1
+        assert isinstance(data[0], dict)
+        assert sorted(data[0].keys()) == sorted(["name", "form", "modtime", "key"])
+        assert data[0]["name"] == "name abc"
+        
