@@ -9,7 +9,7 @@ Unittests for docstash API
 
 from django.test import TestCase
 from django.test.client import Client
-from django.utils.simplejson import loads
+from django.utils.simplejson import loads, dumps
 
 class TestDocstashAPI:
     def setUp(self):
@@ -45,3 +45,17 @@ class TestDocstashAPI:
         assert sorted(data[0].keys()) == sorted(["name", "form", "modtime", "key"])
         assert data[0]["name"] == "name abc"
         
+    def tearDown(self):
+        from ecs.docstash.models import DocStash
+        for o in DocStash.objects.all():
+            o.delete()          # leave an empty database.
+
+    def test_post(self):
+        response = self.c.post("/docstash/create", dict(name="name", form="form"))
+        data = loads(response.content)
+        key, token = data
+        response = self.c.post("/docstash/%s/%s" % tuple(data), dumps(dict(abc="def")), "text/json")
+        assert response.status_code == 200
+        response = self.c.get("/docstash/%s" % key)
+        data = loads(response.content)
+        assert data[1] == dict(abc="def")

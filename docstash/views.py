@@ -37,9 +37,16 @@ def search(request):
         if res[obj.key].token < obj.token:
             res[obj.key] = obj
     result = []
-    for obj in res:
+    for obj in res.values():
         result.append(dict(name=obj.name, form=obj.form, modtime="?", key=obj.key))
     return result
 
+@jsonify
+def post(request, key, token):
+    if len(DocStash.objects.filter(key=key, token__gt=token)) > 0:
+        raise ValueError()      # make this thread safe :(
+    old = DocStash.objects.get(token=token)
+    DocStash.objects.create(key=key, name=old.name, form=old.form, value=request.raw_post_data)
+    
 
           
