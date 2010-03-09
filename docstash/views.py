@@ -31,4 +31,8 @@ def read(request, key):
 
 @jsonify
 def search(request):
-    pass
+    res = []
+    for obj in DocStash.objects.filter(name__icontains=request.GET["name"], form__icontains=request.GET["form"]):
+        res.append(dict(name=obj.name, form=obj.form, modtime="?", key=obj.key))
+    return res
+          
