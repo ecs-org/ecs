@@ -24,3 +24,7 @@ def create(request):
     obj = DocStash.objects.create(name=request.POST["name"], form=request.POST["form"], 
                                   key=key, value=dumps(None))
     return [key, obj.token]
+
+@jsonify
+def read(request, key):
+    pass
