@@ -31,13 +31,28 @@ class FormInfo(object):
             self.fields[field.name] = field
         _form_info[model] = self
 
-FormInfo(ForeignParticipatingCenter, fields=(
-))
-
 FormInfo(BaseNotificationForm, fields=(
+    
 ))
 
 FormInfo(ExtendedNotificationForm, fields=(
+    FieldInfo('3.1', 'reason_for_not_started', u'Wurde die Studie begonnen?'),
+    FieldInfo('3.2', 'reason_for_not_started', u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en'),
+    FieldInfo('3.3', 'reason_for_not_started', u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben'),
+    FieldInfo('3.4', 'reason_for_not_started', u'Zahl der Studienabbrüche'),
+    FieldInfo('3.5', 'reason_for_not_started', u'Zahl der SAEs'),
+    FieldInfo('3.5', 'reason_for_not_started', u'Zahl der SASARs'),
+    FieldInfo('3.6.1', '', u'läuft noch bis voraussichtlich'),
+    FieldInfo('3.6.2', '', u'läuft noch bis voraussichtlich'),
+))
+
+FormInfo(ForeignParticipatingCenter, fields=(
+    FieldInfo(None, 'name', 'Name'),
+    FieldInfo(None, 'address_1', 'Adresse 1'),
+    FieldInfo(None, 'address_2', 'Adresse 2'),
+    FieldInfo(None, 'zip_code', 'Postleitzahl'),
+    FieldInfo(None, 'city', 'Stadt'),
+    FieldInfo(None, 'country', 'Land'),
 ))
 
 FormInfo(Measure, fields=(
@@ -109,7 +124,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.3.2', 'pharma_reference_substance', u'Referenzsubstanz'),
     # 2.4 Medizinproduktestudie (wenn zutreffend)
     FieldInfo('2.4.1', 'medtech_checked_product', u'Prüfprodukt(e)'),
-    FieldInfo('2.4.2', 'medtech_reference_product', u'Referenzprodukt'),
+    FieldInfo('2.4.2', 'medtech_reference_substance', u'Referenzprodukt'),
     FieldInfo('2.5', 'clinical_phase', u'Klinische Phase', help_text=u'unbedingt angeben, bei Medizinprodukten die am ehesten zutreffende Phase'),
     FieldInfo('2.8', 'already_voted', u'Liegen bereits Voten anderer Ethikkommissionen vor?', help_text=u'Wenn ja, Voten beilegen!'),
     FieldInfo('2.9', 'subject_count', u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt', help_text=u'alle teilnehmenden Zentren'),
@@ -232,6 +247,9 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo(None, 'submitter_sign_date', None),
     FieldInfo(None, 'submitter_agrees_to_publishing', None),
 ))
+
+def get_field_info_for_model(model):
+    return _form_info.get(model).fields.values()
 
 def get_field_info(model=None, name=None, default=None):
     try:

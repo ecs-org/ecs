@@ -227,7 +227,7 @@ def create_submission_form(request):
 def view_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     return render(request, 'submissions/view.html', {
-        'paper_form_fields': paper_forms.SUBMISSION_FIELD_DATA,
+        'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
         'submission_form': submission_form,
         'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
     })

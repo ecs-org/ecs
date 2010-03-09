@@ -98,9 +98,9 @@
     </div>
 
     
-    {% for field_number, label, field_name in paper_form_fields %}
-        {% if field_number and field_name %}
-            <div>{{ field_number }} {{ label|default:field_name }}: {{ submission_form|getattr:field_name }}</div>
+    {% for field_info in paper_form_fields %}
+        {% if field_info.number and field_info.name %}
+            <div>{{ field_info.number }} {{ label|default:field_info.name }}: {{ submission_form|getattr:field_info.name }}</div>
         {% endif %}
     {% endfor %}
     
