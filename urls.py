@@ -27,6 +27,7 @@ urlpatterns = patterns(
     (r'^welcome', 'django.views.generic.simple.redirect_to', {'url': '/core/submission/1/'}),
 
     url(r'^core/', include('core.urls')),
+    url(r'^docstash/', include('docstash.urls')),
     url(r'^demo','ecs.core.views.demo'),
     
     url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
