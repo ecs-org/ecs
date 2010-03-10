@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document
+from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator
 
 _form_info = {}
 
@@ -258,6 +258,22 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', u'vom Sponsor autorisierte Person/Organisation'),
     FieldInfo(None, 'submitter_agrees_to_publishing', None),
 ))
+
+FormInfo(Investigator, fields=(
+    FieldInfo('10.1', 'name', u'Name'),
+    FieldInfo('10.2', 'organisation', u'Krankenanstalt/Institut/Abteilung'),
+    FieldInfo('10.3', 'phone', u'Telefon'),
+    FieldInfo('10.4', 'mobile', u'"Pieps"/Mobil'),
+    FieldInfo('10.5', 'fax', u'Fax'),
+    FieldInfo('10.6', 'email', u'e-mail-Adresse'),
+    FieldInfo('10.7', 'jus_practicandi', u''),
+    FieldInfo('10.8', 'specialist', u'Facharzt für'),
+    FieldInfo('10.9', 'certified', u'Prüfärztekurs'),
+    #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9
+    FieldInfo('11', 'subject_count', u'Anzahl Teilnehmer/innen'),
+    FieldInfo('13', 'sign_date', u'Datum Unterschrift'),
+))
+
 
 def get_field_info_for_model(model):
     try:
