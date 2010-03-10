@@ -38,7 +38,7 @@ def search(request):
             res[obj.key] = obj
     result = []
     for obj in res.values():
-        result.append(dict(name=obj.name, form=obj.form, modtime="?", key=obj.key))
+        result.append(dict(name=obj.name, form=obj.form, modtime=int(obj.modtime.strftime("%s")), key=obj.key))
     return result
 
 @jsonify
