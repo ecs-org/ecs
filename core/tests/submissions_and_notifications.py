@@ -1,29 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
 #from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, NotificationType, Investigator
 #from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
 from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from core.models import BaseNotificationForm, ExtendedNotificationForm, NotificationType
 import datetime
-
-def test_import():
-    "test if the urls module and the views are importable"
-    import urls
-    import views
-    import models
-    
-class BasicTest(TestCase):
-    def test_index(self):
-        response = self.client.get('/core/')
-        self.failUnlessEqual(response.status_code, 200)
 
 class SubmissionFormTest(TestCase):
     def test_creation(self):
