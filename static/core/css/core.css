@@ -38,7 +38,7 @@ div#ecs-core-tabs {
     font-size: 12px;
 }
 
-#submission_form_tabs li a.errors{
+.tab_headers li.errors a{
 	color: #ff0000;
 }
 

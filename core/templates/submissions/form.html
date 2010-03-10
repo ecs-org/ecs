@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block headernav %}
-    <ul id="submission_form_tabs">
+    <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
         <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
     {% endfor %}
@@ -68,15 +68,8 @@
             {% endfor %}
         </div>
         <script type="text/javascript">
-            $(function(){
-                $($("#submission_form_tabs li").get(0)).addClass('active');
-                $("#submission_form_tabs").tabify();
+            jQuery(function($){
                 
-                $(".tab").each(function(){
-                    if($('.errors', $(this)).length){
-                        $('#submission_form_tabs li a[href=#' + this.id + '-tab]').addClass('errors');
-                    }
-                });
                 
                 ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');

@@ -7,18 +7,20 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
-{% block content %}
+{% block headernav %}
+<ul class="tab_headers">
+    {% block tab_headers %}
+    <li><a href="#tab-1">Tab 1</a></li>
+    <li><a href="#document_tab">Unterlagen</a></li>
+    {% endblock %}
+</ul>
+{% endblock %}
 
+{% block content %}
 <h1>Neuer {{ notification_type.name }}</h1>
 
 <form action="" method="post" enctype="multipart/form-data">
     <div id="tabs">
-    <ul>
-        {% block tab_headers %}
-        <li><a href="#tab-1">Tab 1</a></li>
-        <li><a href="#document_tab">Unterlagen</a></li>
-        {% endblock %}
-    </ul>
     {% block tabs %}
     <div id="tab-1" class="tab">
         <ol>
@@ -87,7 +89,7 @@
             </li>
         </ol>
     </div>
-    <div id="document_tab">
+    <div id="document_tab" class="tab">
         {% with document_formset as formset %}
             {% include "forms/inline_formset.html" %}
         {% endwith %}
@@ -96,13 +98,8 @@
     <input type="submit" value="Speichern" />
     
     <script type="text/javascript">
-        $(function(){
-            $("#tabs").tabs();
-
-            $('#document_formset .form').formset({
-                prefix: '{{ document_formset.prefix }}',
-                formCssClass: 'document_formset',
-            });            
+        jQuery(function($){
+            ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
         });
     </script>
 </form>
