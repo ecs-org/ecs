@@ -23,19 +23,19 @@ class DocumentType(models.Model):
         return self.name
 
 def upload_document_to(instance=None, filename=None):
+    # file path is derived from the uuid_document_revision
+    # FIXME: handle file name collisions
     dirs = list(instance.uuid_document_revision[:6]) + [instance.uuid_document_revision]
     return os.path.join(settings.FILESTORE, *dirs)
-    
+
 class DocumentFileStorage(FileSystemStorage):
     def path(self, name):
         # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
         return smart_str(os.path.normpath(name))
 
-
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=32)
     uuid_document_revision = models.SlugField(max_length=32)
-    # file path is derived from the uuid_document_revision
     file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
     original_file_name = models.CharField(max_length=100, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
