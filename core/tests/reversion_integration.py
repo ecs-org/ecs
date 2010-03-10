@@ -7,7 +7,7 @@
 This module contains unit tests that demonstrate the usage of the Reversion storage.
 """
 
-from core import models
+from ecs.core import models
 import reversion, datetime
 from reversion.models import Version
 
