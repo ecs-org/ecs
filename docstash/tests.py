@@ -59,3 +59,12 @@ class TestDocstashAPI:
         response = self.c.get("/docstash/%s" % key)
         data = loads(response.content)
         assert data[1] == dict(abc="def")
+
+    def test_key_uniqueness_on_create(self):
+        response = self.c.post("/docstash/create", dict(name="name", form="form"))
+        data_0 = loads(response.content)
+        response = self.c.post("/docstash/create", dict(name="name", form="form"))
+        data_1 = loads(response.content)
+        assert data_0[0] != data_1[0]
+        assert data_0[1] < data_1[1]
+
