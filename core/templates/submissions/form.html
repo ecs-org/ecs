@@ -34,17 +34,7 @@
                             {% endwith %}
                         </fieldset>                        
                     {% endifequal %}
-                    
-                    {% ifequal tab "Eckdaten" %}
-                        {# FIXME #}
-                        <fieldset>
-                            <legend>Ausländische teilnehmende Zentren</legend>
-                            {% with foreignparticipatingcenter_formset as formset %}
-                                {% include "forms/inline_formset.html" %}
-                            {% endwith %}                            
-                        </fieldset>
-                    {% endifequal %}
-                    
+                                        
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME #}
                         <fieldset>
@@ -56,6 +46,12 @@
                     
                     {% for legend, fields in fieldsets %}
                         <fieldset class="fieldset_{{ forloop.counter }}">
+                            {% ifequal legend "Zentren im Ausland" %}
+                                {# FIXME #}
+                                {% with foreignparticipatingcenter_formset as formset %}
+                                    {% include "forms/inline_formset.html" %}
+                                {% endwith %}                            
+                            {% endifequal %}                            
                             {% if legend %}
                                 <legend>{{ legend }}</legend>
                             {% endif %}
