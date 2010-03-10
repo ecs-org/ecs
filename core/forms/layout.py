@@ -82,7 +82,7 @@ SUBMISSION_FORM_TABS = (
     (u'Antragsteller', [
         (u'Antragsteller', [
             'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
-            'submitter_is_authorized_by_sponsor', 'submitter_sign_date', 'submitter_agrees_to_publishing',
+            'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
         ]),
     ]),
     (u'Prüfer', []),

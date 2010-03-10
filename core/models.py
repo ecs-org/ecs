@@ -77,7 +77,7 @@ class SubmissionForm(models.Model):
     documents = models.ManyToManyField(Document)
     ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
 
-    project_title = models.CharField(max_length=120)
+    project_title = models.TextField()
     eudract_number = models.CharField(max_length=40, null=True)
     
     # 1.4 (via self.documents)
@@ -280,9 +280,9 @@ class SubmissionForm(models.Model):
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
     submitter_is_authorized_by_sponsor = models.BooleanField()
-    # FIXME: needs to be nullable.
-    submitter_sign_date = models.DateField()
     submitter_agrees_to_publishing = models.BooleanField(default=True)
+    
+    # FIXME: add a date that documents when the EC received the paper version
     
     def __unicode__(self):
         return "%s: %s" % (self.submission.ec_number, self.project_title)
@@ -345,8 +345,7 @@ class Measure(models.Model):
     #FIXME: category should not be nullable
     category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
     type = models.CharField(max_length=30)
-    # FIXME: count should be a TextField
-    count = models.IntegerField(null=True)
+    count = models.TextField()
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
 

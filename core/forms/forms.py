@@ -5,7 +5,7 @@ from ecs.core.models import Document, Investigator, SubmissionForm, Measure, For
 from ecs.core.models import BaseNotificationForm as BaseNotification
 from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
 
-from ecs.core.forms.fields import DateField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
+from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
 
 ## notifications ##
 
@@ -31,7 +31,14 @@ class ExtendedNotificationForm(BaseNotificationForm):
 ## submissions ##
 
 class SubmissionFormForm(forms.ModelForm):
-    submitter_sign_date = DateField(required=True)
+    substance_preexisting_clinical_tries = NullBooleanField(required=False)
+    substance_p_c_t_gcp_rules = NullBooleanField(required=False)
+    substance_p_c_t_final_report = NullBooleanField(required=False)
+
+    medtech_certified_for_exact_indications = NullBooleanField(required=False)
+    medtech_certified_for_other_indications = NullBooleanField(required=False)
+    medtech_ce_symbol = NullBooleanField(required=False)
+    medtech_manual_included = NullBooleanField(required=False)
 
     class Meta:
         model = SubmissionForm

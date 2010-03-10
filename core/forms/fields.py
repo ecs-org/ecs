@@ -19,3 +19,13 @@ class InvestigatorChoiceMixin(object):
 
 class InvestigatorChoiceField(InvestigatorChoiceMixin, forms.ModelChoiceField): pass
 class InvestigatorMultipleChoiceField(InvestigatorChoiceMixin, forms.ModelMultipleChoiceField): pass
+
+class NullBooleanWidget(forms.widgets.NullBooleanSelect):
+    def __init__(self, attrs=None):
+        choices = ((u'1', u'-'), (u'2', u'Ja'), (u'3', u'Nein'))
+        forms.widgets.Select.__init__(self, attrs, choices)
+
+class NullBooleanField(forms.NullBooleanField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('widget', NullBooleanWidget)
+        super(NullBooleanField, self).__init__(*args, **kwargs)
