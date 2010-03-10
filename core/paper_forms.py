@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug
+from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document
 
 _form_info = {}
 
@@ -37,22 +37,33 @@ FormInfo(BaseNotificationForm, fields=(
 
 FormInfo(ExtendedNotificationForm, fields=(
     FieldInfo('3.1', 'reason_for_not_started', u'Wurde die Studie begonnen?'),
-    FieldInfo('3.2', 'reason_for_not_started', u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en'),
-    FieldInfo('3.3', 'reason_for_not_started', u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben'),
-    FieldInfo('3.4', 'reason_for_not_started', u'Zahl der Studienabbrüche'),
-    FieldInfo('3.5', 'reason_for_not_started', u'Zahl der SAEs'),
-    FieldInfo('3.5', 'reason_for_not_started', u'Zahl der SASARs'),
-    FieldInfo('3.6.1', '', u'läuft noch bis voraussichtlich'),
-    FieldInfo('3.6.2', '', u'läuft noch bis voraussichtlich'),
+    FieldInfo('3.2', 'recruited_subjects', u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en'),
+    FieldInfo('3.3', 'finished_subjects', u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben'),
+    FieldInfo('3.4', 'aborted_subjects', u'Zahl der Studienabbrüche'),
+    FieldInfo('3.5', 'SAE_count', u'Zahl der SAEs'),
+    FieldInfo('3.5', 'SUSAR_count', u'Zahl der SASARs'),
+    FieldInfo('3.6.1', 'runs_till', u'läuft noch bis voraussichtlich'),
+    FieldInfo('3.6.2', 'finished_on', u'planmäßig abgeschlossen am'),
+    FieldInfo('3.6.2', 'aborted_on', u'abgebrochen am'),
+    FieldInfo('4.', 'comments', u'Ergebnisse und Schlussfolgerungen'),
+    FieldInfo(None, 'extension_of_vote', u'Ich beantrage die Verlängerung der Gültigkeit des Votums.'),
+))
+
+FormInfo(Document, fields=(
+    FieldInfo(None, 'file', u'Datei'),
+    FieldInfo(None, 'original_file_name', u'Dateiname'),
+    FieldInfo(None, 'version', u'Version'),
+    FieldInfo(None, 'date', u'Datum'),
+    FieldInfo(None, 'doctype', u'Typ'),
 ))
 
 FormInfo(ForeignParticipatingCenter, fields=(
-    FieldInfo(None, 'name', 'Name'),
-    FieldInfo(None, 'address_1', 'Adresse 1'),
-    FieldInfo(None, 'address_2', 'Adresse 2'),
-    FieldInfo(None, 'zip_code', 'Postleitzahl'),
-    FieldInfo(None, 'city', 'Stadt'),
-    FieldInfo(None, 'country', 'Land'),
+    FieldInfo(None, 'name', u'Name'),
+    FieldInfo(None, 'address_1', u'Adresse 1'),
+    FieldInfo(None, 'address_2', u'Adresse 2'),
+    FieldInfo(None, 'zip_code', u'Postleitzahl'),
+    FieldInfo(None, 'city', u'Stadt'),
+    FieldInfo(None, 'country', u'Land'),
 ))
 
 FormInfo(Measure, fields=(
@@ -249,7 +260,10 @@ FormInfo(SubmissionForm, fields=(
 ))
 
 def get_field_info_for_model(model):
-    return _form_info.get(model).fields.values()
+    try:
+        return sorted(_form_info[model].fields.values(), key=lambda f: f.number)
+    except KeyError:
+        return ()
 
 def get_field_info(model=None, name=None, default=None):
     try:
