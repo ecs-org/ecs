@@ -173,7 +173,6 @@ class SubmissionFormTest(TestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            submitter_sign_date=datetime.date(1999,9,9),
             submitter_agrees_to_publishing=False,
             )
         sform.save()
@@ -330,7 +329,6 @@ class NotificationFormTest(TestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            submitter_sign_date=datetime.date(1999,9,9),
             submitter_agrees_to_publishing=False,
             )
         sform.save()
