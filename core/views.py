@@ -144,28 +144,28 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'AMG', [
-        (None, [
+        (u'AMG', [
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
             'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
         ]),
     ]),
     (u'MPG', [
-        (None, [
+        (u'MPG', [
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
     ]),
     (u'Versicherung', [
-        (None, [
+        (u'Versicherung', [
             'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
         ]),
     ]),
     (u'Massnahmen', [
-        (None, ['additional_therapy_info',]),
+        (u'Massnahmen', ['additional_therapy_info',]),
     ]),
     (u'Kurzfassung', [
-        (None, [
+        (u'Kurzfassung', [
             'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
             'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
             'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
@@ -174,7 +174,7 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'Biometrie', [
-        (None, [
+        (u'Biometrie', [
             'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
             'study_plan_population_intention_to_treat', 'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 
             'study_plan_dataquality_checking', 'study_plan_datamanagement', 'study_plan_biometric_planning', 'study_plan_statistics_implementation', 
@@ -187,7 +187,7 @@ SUBMISSION_FORM_TABS = (
     ]),
     (u'Unterlagen', []),
     (u'Antragsteller', [
-        (None, [
+        (u'Antragsteller', [
             'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
             'submitter_is_authorized_by_sponsor', 'submitter_sign_date', 'submitter_agrees_to_publishing',
         ]),

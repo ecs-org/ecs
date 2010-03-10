@@ -38,7 +38,7 @@ div#ecs-core-tabs {
     font-size: 12px;
 }
 
-#tabs ul li a.errors{
+#submission_form_tabs li a.errors{
 	color: #ff0000;
 }
 
@@ -95,20 +95,6 @@ form ol li.BooleanField > label:after{
 }
 form ol li.BooleanField > input{
 	float: left;
-}
-
-form #tabs-1 ol liset_2 .content{
-	padding-left: 21em;
-}
-form #tabs-1 ol liset_2 ol li.BooleanField{
-    float: left;
-    width: auto;
-    clear: none;
-	padding-left: 0;
-	width: 30em;
-}
-form #tabs-1 ol liset_2 ol li.BooleanField label{
-	font-size: 0.8em;
 }
 
 form ol li .paperform_number{

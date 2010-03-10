@@ -6,14 +6,17 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
+{% block headernav %}
+    <ul id="submission_form_tabs">
+    {% for tab, fieldsets in tabs %}
+        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
 {% block content %}
     <form action="" method="post" enctype="multipart/form-data">
         <div id="tabs">
-            <ul>
-            {% for tab, fieldsets in tabs %}
-                <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-            {% endfor %}
-            </ul>
             {% for tab, fieldsets in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
                     {% ifequal tab "Massnahmen" %}
@@ -70,7 +73,14 @@
         </div>
         <script type="text/javascript">
             $(function(){
-                $("#tabs").tabs();
+                $($("#submission_form_tabs li").get(0)).addClass('active');
+                $("#submission_form_tabs").tabify();
+                
+                $(".tab").each(function(){
+                    if($('.errors', $(this)).length){
+                        $('#submission_form_tabs li a[href=#' + this.id + '-tab]').addClass('errors');
+                    }
+                });
                
                 $('#measure_formset .form').formset({
                     prefix: '{{ measure_formset.prefix }}',
@@ -111,11 +121,6 @@
                     fieldset.prepend(autofillLink);
                 });
                 
-                $("#tabs .tab").each(function(){
-                    if($('.errors', $(this)).length){
-                        $('#tabs ul li a[href=#' + this.id + ']').addClass('errors');
-                    }
-                });
             });
         </script>
     <input type="submit" value="Speichern" />

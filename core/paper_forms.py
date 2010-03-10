@@ -72,7 +72,7 @@ FormInfo(NonTestedUsedDrug, fields=(
 
 FormInfo(SubmissionForm, fields=(
     # 1. Allgemeines
-    FieldInfo('1.1', 'project_title', u'Projekttitel'),
+    FieldInfo('1.1', 'project_title', u'Projekttitel', short_label='Projekttitel (englisch)'),
     FieldInfo('1.2', None, u'Protokollnummer/-bezeichnung'), #'protocol_number'
     FieldInfo('1.3', None, u'Datum des Protokolls'), #'date_of_protocol'
     FieldInfo('1.2.1', 'eudract_number', u'EudraCT-Nr.'),
@@ -117,7 +117,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.9', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
     FieldInfo('2.1.10', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
     FieldInfo('2.1.11', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'), # was: 2.17
-    FieldInfo('2.1.12', 'project_type_education_context', u'Zusatzinformation'), # was: 2.1.8 + 2.1.9
+    FieldInfo('2.1.12', 'project_type_education_context', u'Dissertation/Diplomarbeit'), # was: 2.1.8 + 2.1.9
     FieldInfo('2.2', 'specialism', u'Fachgebiet'),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', u'Prüfsubstanz(en)'),
@@ -167,7 +167,7 @@ FormInfo(SubmissionForm, fields=(
     # 6. Angaben zur durchzuführenden Therapie und Diagnostik
     FieldInfo('6.3', 'additional_therapy_info', u'Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung'),
     # 7. Strukturierte Kurzfassung des Projektes (in deutscher Sprache, kein Verweis auf das Protokoll)
-    FieldInfo('7.1', 'german_project_title', u'Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels'),
+    FieldInfo('7.1', 'german_project_title', u'Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels', short_label=u'Projekttitel (deutsch)'),
     FieldInfo('7.2', 'german_summary', u'Zusammenfassung des Projektes', help_text=u'Rechtfertigung, Relevanz, Design, Maßnahmen und Vorgehensweise'),
     FieldInfo('7.3', 'german_preclinical_results', u'Ergebnisse der prä-klinischen Tests oder Begründung für den Verzicht auf prä-klinischen Tests'),
     FieldInfo('7.4', 'german_primary_hypothesis', u'Primäre Hypothese der Studie', help_text=u'wenn relevant auch sekundäre Hypothesen'),
