@@ -19,27 +19,16 @@ for m in ("Workflow", "Document", "EthicsCommission",
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns(
-    '',
-    # Example:
-    # (r'^ecs/', include('ecs.foo.urls')),
+urlpatterns = patterns('',
     (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/core/'}),
-    (r'^welcome', 'django.views.generic.simple.redirect_to', {'url': '/core/submission/1/'}),
 
     url(r'^core/', include('core.urls')),
     url(r'^docstash/', include('docstash.urls')),
-    url(r'^demo','ecs.core.views.demo'),
     
-    url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
+    #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-
-    # Enable databrowse
     url(r'^databrowse/(.*)', databrowse.site.root),
 
     url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
