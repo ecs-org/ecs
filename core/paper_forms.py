@@ -32,7 +32,7 @@ class FormInfo(object):
         _form_info[model] = self
 
 FormInfo(BaseNotificationForm, fields=(
-    
+    FieldInfo('4.', 'comments', u'Ergebnisse und Schlussfolgerungen'),
 ))
 
 FormInfo(ExtendedNotificationForm, fields=(
@@ -91,19 +91,19 @@ FormInfo(SubmissionForm, fields=(
     # 1.5 u'Sponsor / Rechnungsempfänger/in (Kontaktperson in der Buchhaltung)'
     FieldInfo('1.5.1', 'sponsor_name', u'Name'),
     FieldInfo('1.5.3', 'sponsor_contactname', u'Kontaktperson'),
-    FieldInfo('1.5.2', 'sponsor_address1', u'Adresse'),
-    FieldInfo('1.5.2', 'sponsor_address2', None),
-    FieldInfo('1.5.2', 'sponsor_zip_code', None),
-    FieldInfo('1.5.2', 'sponsor_city', None),
+    FieldInfo('1.5.2', 'sponsor_address1', u'Adresse', short_label='Adresse 1'),
+    FieldInfo('1.5.2', 'sponsor_address2', None, short_label='Adresse 2'),
+    FieldInfo('1.5.2', 'sponsor_zip_code', None, short_label='Postleitzahl'),
+    FieldInfo('1.5.2', 'sponsor_city', None, short_label='Stadt'),
     FieldInfo('1.5.4', 'sponsor_phone', u'Telefon'),
     FieldInfo('1.5.5', 'sponsor_fax', u'FAX'),
     FieldInfo('1.5.6', 'sponsor_email', u'e-mail'),
     FieldInfo('1.5.1', 'invoice_name', u'Name'),
     FieldInfo('1.5.3', 'invoice_contactname', u'Kontaktperson'),
-    FieldInfo('1.5.2', 'invoice_address1', u'Adresse'),
-    FieldInfo('1.5.2', 'invoice_address2', None),
-    FieldInfo('1.5.2', 'invoice_zip_code', None),
-    FieldInfo('1.5.2', 'invoice_city', None),
+    FieldInfo('1.5.2', 'invoice_address1', u'Adresse', short_label='Adresse 1'),
+    FieldInfo('1.5.2', 'invoice_address2', None, short_label='Adresse 2'),
+    FieldInfo('1.5.2', 'invoice_zip_code', None, short_label='Postleitzahl'),
+    FieldInfo('1.5.2', 'invoice_city', None, short_label='Stadt'),
     FieldInfo('1.5.4', 'invoice_phone', u'Telefon'),
     FieldInfo('1.5.5', 'invoice_fax', u'FAX'),
     FieldInfo('1.5.6', 'invoice_email', u'e-mail'),
