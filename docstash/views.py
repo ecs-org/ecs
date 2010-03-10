@@ -10,7 +10,7 @@ docstash API views.
 from django.http import HttpResponse
 from django.utils.simplejson import dumps
 from ecs.docstash.models import DocStash
-import hashlib
+import uuid
 
 def jsonify(func):
     def wrapper(*args, **kw):
@@ -20,7 +20,7 @@ def jsonify(func):
 
 @jsonify
 def create(request):
-    key = hashlib.new("sha", u"%s|%s" % (request.POST["name"], request.POST["form"])).hexdigest()
+    key = uuid.uuid4().hex
     obj = DocStash.objects.create(name=request.POST["name"], form=request.POST["form"], 
                                   key=key, value="null")
     return [key, obj.token]
