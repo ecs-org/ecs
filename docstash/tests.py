@@ -35,6 +35,8 @@ class TestDocstashAPI:
         assert data[1] == None
 
     def test_search(self):
+        import time
+        result_time = int(time.time())
         self.c.post("/docstash/create", dict(name="name", form="form"))
         self.c.post("/docstash/create", dict(name="name abc", form="form"))
         self.c.post("/docstash/create", dict(name="name def", form="form"))        
@@ -44,6 +46,7 @@ class TestDocstashAPI:
         assert isinstance(data[0], dict)
         assert sorted(data[0].keys()) == sorted(["name", "form", "modtime", "key"])
         assert data[0]["name"] == "name abc"
+        assert abs(int(data[0]["modtime"]) - result_time) < 5 # 5 secs for that test? If that takes THAT long, you should upgrade your C64 for something that is at least 16bit.
         
     def tearDown(self):
         from ecs.docstash.models import DocStash
@@ -68,3 +71,8 @@ class TestDocstashAPI:
         assert data_0[0] != data_1[0]
         assert data_0[1] < data_1[1]
 
+
+        response = self.c.post("/docstash/create", dict(name="name", form="form"))
+        data_0 = loads(response.content)
+        
+        
