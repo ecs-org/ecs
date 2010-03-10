@@ -117,7 +117,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.9', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
     FieldInfo('2.1.10', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
     FieldInfo('2.1.11', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'), # was: 2.17
-    FieldInfo('2.1.12', 'project_type_education_context', u'Dissertation/Diplomarbeit'), # was: 2.1.8 + 2.1.9
+    FieldInfo('2.1.12', 'project_type_education_context', u'Dissertation / Diplomarbeit'), # was: 2.1.8 + 2.1.9
     FieldInfo('2.2', 'specialism', u'Fachgebiet'),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', u'Prüfsubstanz(en)'),
@@ -191,6 +191,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('7.22', 'german_additional_info', u'Weitere Informationen', help_text=u'wenn erforderlich'),
     # 8. Biometrie, Datenschutz
     # 8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)
+    FieldInfo(None, 'study_plan_blind', None, short_label=u'Offen / blind / doppelblind'),
     FieldInfo('8.1.1', 'study_plan_open', u'offen', db_field=False), 
     FieldInfo('8.1.2', 'study_plan_randomized', u'randomisiert'),
     FieldInfo('8.1.3', 'study_plan_parallelgroups', u'Parallelgruppen'),

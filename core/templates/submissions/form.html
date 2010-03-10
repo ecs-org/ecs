@@ -77,26 +77,11 @@
                         $('#submission_form_tabs li a[href=#' + this.id + '-tab]').addClass('errors');
                     }
                 });
-               
-                $('#measure_formset .form').formset({
-                    prefix: '{{ measure_formset.prefix }}',
-                    formCssClass: 'measure_formset',
-                });
                 
-                $('#foreignparticipatingcenter_formset .form').formset({
-                    prefix: '{{ foreignparticipatingcenter_formset.prefix }}',
-                    formCssClass: 'foreignparticipatingcenter_formset',
-                });
-
-                $('#nontesteduseddrug_formset .form').formset({
-                    prefix: '{{ nontesteduseddrug_formset.prefix }}',
-                    formCssClass: 'nontesteduseddrug_formset',
-                });
-
-                $('#document_formset .form').formset({
-                    prefix: '{{ document_formset.prefix }}',
-                    formCssClass: 'document_formset',
-                });
+                ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
+                ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
+                ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
+                ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
                 
                 $('fieldset').each(function(){
                     var fieldset = $(this);
