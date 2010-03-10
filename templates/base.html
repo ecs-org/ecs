@@ -6,130 +6,130 @@
 {% endblock %}
 
 <html>
-	<head>
+    <head>
 
-		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-		
-		{% block htmlmeta %} {# Additional META tags should follow here #}
-		{% endblock %}
-		
-		<title>{% block htmltitle %}Title{% endblock %}</title>
-	
-		<link rel="stylesheet" type="text/css" href="/static/css/base.css" />
-		
-		{% block htmlcss %} {# additional css #}	
-		{% endblock %} 
-		
-		{% block jshead %} {# enqueue javasript #}
-		{% endblock %} 
-		
-	</head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        
+        {% block htmlmeta %} {# Additional META tags should follow here #}
+        {% endblock %}
+        
+        <title>{% block htmltitle %}Title{% endblock %}</title>
+    
+        <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
+        
+        {% block htmlcss %} {# additional css #}    
+        {% endblock %} 
+        
+        {% block jshead %} {# enqueue javasript #}
+        {% endblock %} 
+        
+    </head>
 
-	<body>
-		{# here should be include "header.html" #}
-		<div id="header">
-						
-		{% block header %}
-			
-    		<div id="headertitle">
-			
-			{% block headertitle %}
-			
-			{% endblock %}
-			
-			</div>
-			
-			<div id="headernav">
-			
-			{% block headernav %}
-			   headernav
-			{% endblock %}
-			
-			</div>
+    <body>
+        {# here should be include "header.html" #}
+        <div id="header">
+                        
+        {% block header %}
+            
+            <div id="headertitle">
+            
+            {% block headertitle %}
+            
+            {% endblock %}
+            
+            </div>
+            
+            <div id="headernav">
+            
+            {% block headernav %}
+               headernav
+            {% endblock %}
+            
+            </div>
             
             <div class="headerline"></div>
-		
-		{% endblock %}
-		
-		</div>
+        
+        {% endblock %}
+        
+        </div>
 
 
-		{# here should be include "sidebar.html" #}
-							
-		<div id="sidebar">
-			
-			<div class="innertube">
-			
-			{% block sidebar %}
-				
-	
-				<div id="logo">
-					
-				{% block logo %}
-					
-				<img src="{{ MEDIA_URL }}/images/logo.png" alt="Meduni Wien"/>
-				
-				{% endblock %}
-					
-				</div>
-				
-				<div id="account">
-				
-				{% block account %}
-				
-					<p>eingeloggt als Max Mustermann</p>
-					<p>Profil | Logout</p>
-					
-				{% endblock %}
-					
-				</div>
-				
-				<div id="usertoolbar">
-				
-				{% block usertoolbar %}
-				
-					Toolbar 
-					
-				{% endblock %}
-					
-				</div>
-				
-				<div id="usermenu">
-				
-				{% block usermenu %}
-				
-				{% endblock %}
-					
-				</div>
-			
-		
-			{% endblock %} {# sidebar #}	
+        {# here should be include "sidebar.html" #}
+                            
+        <div id="sidebar">
+            
+            <div class="innertube">
+            
+            {% block sidebar %}
+                
+    
+                <div id="logo">
+                    
+                {% block logo %}
+                    
+                <img src="{{ MEDIA_URL }}/images/logo.png" alt="Meduni Wien"/>
+                
+                {% endblock %}
+                    
+                </div>
+                
+                <div id="account">
+                
+                {% block account %}
+                
+                    <p>eingeloggt als Max Mustermann</p>
+                    <p>Profil | Logout</p>
+                    
+                {% endblock %}
+                    
+                </div>
+                
+                <div id="usertoolbar">
+                
+                {% block usertoolbar %}
+                
+                    Toolbar 
+                    
+                {% endblock %}
+                    
+                </div>
+                
+                <div id="usermenu">
+                
+                {% block usermenu %}
+                
+                {% endblock %}
+                    
+                </div>
+            
+        
+            {% endblock %} {# sidebar #}    
 
-			</div>
-			
-		</div>
+            </div>
+            
+        </div>
 
-		
-		<div id="content">			
-				
-			<div class="innertube">
-										
-			{% block content %}
-				
-			{% endblock %} {# content #}	
-				
-			</div>
-						
-		</div>
+        
+        <div id="content">          
+                
+            <div class="innertube">
+                                        
+            {% block content %}
+                
+            {% endblock %} {# content #}    
+                
+            </div>
+                        
+        </div>
 
-		<div id="footer">
+        <div id="footer">
 
-			{% block jsbottom %} {# enqueue additional javasript #}
-			
-			{% endblock %} 
-					
-		</div>
-		
+            {% block jsbottom %} {# enqueue additional javasript #}
+            
+            {% endblock %} 
+                    
+        </div>
+        
     </body>
 
 </html>
