@@ -48,7 +48,13 @@ class SubmissionFormForm(forms.ModelForm):
         
 class DocumentForm(forms.ModelForm):
     date = DateField(required=True)
-
+    
+    def clean(self):
+        file = self.cleaned_data['file']
+        if not self.cleaned_data.get('original_file_name') and file:
+            self.cleaned_data['original_file_name'] = file.name
+        return self.cleaned_data
+    
     class Meta:
         model = Document
         exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')

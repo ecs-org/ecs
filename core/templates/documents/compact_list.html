@@ -3,7 +3,10 @@
     {% for doc in documents %}
         {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
         <div>
-            <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">{{ doc.version }}; {{ doc.file.name }}</a>
+            <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">
+                Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
+                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
+            </a>
             <a href="{% url ecs.core.views.delete_document document_pk=doc.pk %}?next={{ request.get_full_path }}">delete</a>
         </div>
     {% endfor %}

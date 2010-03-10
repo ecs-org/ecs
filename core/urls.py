@@ -18,8 +18,8 @@ urlpatterns = patterns(
     url(r'^notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
     url(r'^notifications/$', 'ecs.core.views.notification_list'),
 
-    url(r'^document/(?P<document_pk>\d)/download/$', 'ecs.core.views.download_document'),
-    url(r'^document/(?P<document_pk>\d)/delete/$', 'ecs.core.views.delete_document'),
+    url(r'^document/(?P<document_pk>\d+)/download/$', 'ecs.core.views.download_document'),
+    url(r'^document/(?P<document_pk>\d+)/delete/$', 'ecs.core.views.delete_document'),
 
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/new/$', 'ecs.core.views.create_submission_form'),
