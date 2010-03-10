@@ -89,3 +89,10 @@ class BaseMeasureFormSet(BaseModelFormSet):
 
 MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, exclude = ('submission_form',))
 
+class BaseInvestigatorFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', Investigator.objects.none())
+        super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
+
+InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, exclude = ('submission', 'ehtics_commission', 'main',))
+

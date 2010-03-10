@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
-from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet
+from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
@@ -112,7 +112,7 @@ def notification_pdf(request, notification_pk=None):
 
 def create_submission_form(request):
     formsets = {}
-    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet):
+    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(request.POST or None, prefix=name)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
