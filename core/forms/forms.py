@@ -94,5 +94,5 @@ class BaseInvestigatorFormSet(BaseModelFormSet):
         kwargs.setdefault('queryset', Investigator.objects.none())
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
 
-InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, exclude = ('submission', 'ehtics_commission', 'main',))
+InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, exclude = ('submission', 'ethics_commission', 'main',))
 

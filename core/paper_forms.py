@@ -271,7 +271,6 @@ FormInfo(Investigator, fields=(
     FieldInfo('10.9', 'certified', u'Prüfärztekurs'),
     #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9
     FieldInfo('11', 'subject_count', u'Anzahl Teilnehmer/innen'),
-    FieldInfo('13', 'sign_date', u'Datum Unterschrift'),
 ))
 
 

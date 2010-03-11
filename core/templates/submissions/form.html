@@ -64,6 +64,14 @@
                             </ol>
                         </fieldset>
                     {% endfor %}
+
+                {% ifequal tab 'Prüfer' %}
+                  <fieldset>
+                  {% with investigator_formset as formset %}
+                  {% include 'forms/inline_formset.html' %}
+                  {% endwith %}
+                  </fieldset>
+                {% endifequal %}
                 </div>
             {% endfor %}
         </div>
