@@ -77,12 +77,11 @@
         </div>
         <script type="text/javascript">
             jQuery(function($){
-                
-                
                 ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
+                ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
                 
                 $('fieldset').each(function(){
                     var fieldset = $(this);
