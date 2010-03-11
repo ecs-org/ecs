@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
-from ecs.core.models import Document, Investigator, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.core.models import BaseNotificationForm as BaseNotification
 from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
 
@@ -89,10 +89,19 @@ class BaseMeasureFormSet(BaseModelFormSet):
 
 MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, exclude = ('submission_form',))
 
+
 class BaseInvestigatorFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Investigator.objects.none())
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
 
 InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, exclude = ('submission', 'ethics_commission', 'main', 'sign_date',))  # TODO drop sign_date from model?!
+
+
+class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
+        super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)
+
+InvestigatorEmployeeFormSet = modelformset_factory(InvestigatorEmployee, formset=BaseInvestigatorEmployeeFormSet, extra=1, exclude = ('submission',))
 
