@@ -67,9 +67,10 @@
 
                 {% ifequal tab 'Prüfer' %}
                   <fieldset>
-                  {% with investigator_formset as formset %}
-                  {% include 'forms/inline_formset.html' %}
-                  {% endwith %}
+                    <legend>Teil B</legend>
+                    {% with investigator_formset as formset %}
+                    {% include 'forms/inline_formset.html' %}
+                    {% endwith %}
                   </fieldset>
                 {% endifequal %}
                 </div>

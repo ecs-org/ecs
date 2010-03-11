@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator
+from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
 
 _form_info = {}
 
@@ -30,6 +30,7 @@ class FormInfo(object):
             field.model_info = self
             self.fields[field.name] = field
         _form_info[model] = self
+
 
 FormInfo(BaseNotificationForm, fields=(
     FieldInfo('4.', 'comments', u'Ergebnisse und Schlussfolgerungen'),
@@ -259,6 +260,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo(None, 'submitter_agrees_to_publishing', None),
 ))
 
+
 FormInfo(Investigator, fields=(
     FieldInfo('10.1', 'name', u'Name'),
     FieldInfo('10.2', 'organisation', u'Krankenanstalt/Institut/Abteilung'),
@@ -270,7 +272,15 @@ FormInfo(Investigator, fields=(
     FieldInfo('10.8', 'specialist', u'Facharzt für'),
     FieldInfo('10.9', 'certified', u'Prüfärztekurs'),
     #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9
-    FieldInfo('11', 'subject_count', u'Anzahl Teilnehmer/innen'),
+    FieldInfo('11.', 'subject_count', u'Anzahl Teilnehmer/innen'),
+))
+
+FormInfo(InvestigatorEmployee, fields=(
+    FieldInfo(None, 'sex', u'Fr/Hr'),
+    FieldInfo(None, 'title', u'Titel'),
+    FieldInfo(None, 'surname', u'Vorname'),
+    FieldInfo(None, 'firstname', u'Name'),
+    FieldInfo(None, 'organisation', u'Institution'),
 ))
 
 
