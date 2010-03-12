@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block jshead %} {# enqueue javasript #}
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.formset.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tabify-1.4.js"></script>
+{% endblock %}
+
+{% block jsbottom %}
+  <script type="text/javascript">
+    /* indicate what's actually clickable */
+    jQuery(function($){
+        $('a[href=#]').css('text-decoration', 'line-through');
+    });
+  </script>
+{% endblock %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
+{% endblock %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block logo %}
+  <img src="{{ MEDIA_URL }}core/images/logo.png" alt="ECS"/>
+{% endblock %}
+
+{% block account %} 
+  <!-- <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
+  Eingeloggt als Max Mustermann
+  <p><a href="">Profil</a> | 
+  <a href="">Logout</a></p> 
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
+  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a></p>  -->
+{% endblock %}
+
+{% block usertoolbar %} 
+  <!--
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
+{% endblock %}
+        
+{% block usermenu %}
+  <!-- <ul>
+    <li><a href="{% url ecs.core.views.index %}">&Uuml;bersicht</a></li>
+    <li>
+      <a href="{% url ecs.core.views.submission_form_list %}">Studien</a>
+      <ul>
+        <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
+        <li><a href="{% url ecs.core.views.stashed_submission_form_list %}">offene Antragsformulare</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
+      <ul>
+        <li><a href="#">offene Meldungen</a></li>
+        <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
+        <li><a href="#">vergangene Meldungen</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Konversationen</a></li>
+    <li><a href="#">zuletzt bearbeitet</a></li>
+    <li><a href="#">vorgemerkte T&auml;tigkeiten</a></li>
+  </ul>
+  -->
+  {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  <form method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
+  <table>
+  <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+  </tr>
+  <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+  </tr>
+  </table>
+
+  <input type="submit" value="login" />
+  <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+
+{% endblock %}
