@@ -10,7 +10,7 @@ from django.forms.models import inlineformset_factory
 import settings
 
 from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
-from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet
+from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
@@ -116,7 +116,7 @@ def create_submission_form(request):
     data = request.POST or request.docstash.get_query_dict() or None
         
     formsets = {}
-    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet):
+    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(data, prefix=name)
     document_formset = DocumentFormSet(data, request.FILES or None, prefix='document')

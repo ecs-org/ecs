@@ -69,10 +69,46 @@
                   <fieldset>
                     <legend>Teil B</legend>
                     {% with investigator_formset as formset %}
-                    {% include 'forms/inline_formset.html' %}
+<div id="{{ formset.prefix }}_formset" class="inline_formset">
+    {{ formset.management_form }}
+    {% for form in formset.forms %}
+        <ol class="form">
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    {% ifequal field.name 'name' %}
+                      <fieldset class="fieldset_i">
+                        <legend>Angaben zur Prüferin/zum Prüfer</legend>
+                    {% endifequal %}
+                    {% ifequal field.name 'subject_count' %}
+                      </fieldset>
+                      <fieldset class="fieldset_ii">
+                        <legend>Geplante Anzahl derPatient/inn/en bzw. Proband/inn/en an dieser Prüfstelle</legend>
+                    {% endifequal %}
+                    {% include "forms/field.html" %}
+                {% endif %}
+            {% endfor %}
+                      </fieldset>
+                      <fieldset class="fieldset_iii">
+                        <legend>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</legend>
+                        {# receive hidden fields here via JS #}
+                      </fieldset>
+        </ol>
+    {% endfor%}
+</div>
                     {% endwith %}
                   </fieldset>
+
+                  <fieldset>
+                    {% with investigatoremployee_formset as formset %}
+                    {% include "forms/inline_formset.html" %}
+                    {% endwith %}
+                  </fieldset>
+
                 {% endifequal %}
+
                 </div>
             {% endfor %}
         </div>
@@ -83,6 +119,7 @@
                 ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
+                ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
                 
                 $('fieldset').each(function(){
                     var fieldset = $(this);

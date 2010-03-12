@@ -86,4 +86,23 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'Prüfer', []),
+
+# TODO
+# The following declaration would fit in nicely, but is not working because
+# * fields below are from model Investigator and not Submission
+# * the whole tab needs to be repetitive, but FormSet usage is mostly hacked into
+#   the template and not declared right now
+#
+#    (u'Prüfer', [
+#        (u'Angaben zur Prüferin/zum Prüfer', [
+#            'name', 'organisation',
+#            'phone', 'mobile', 'fax', 'email',
+#            'jus_practicandi', 'specialist', 'certified', #'', TODO add missing field
+#        ]),
+#        (u'Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en an dieser Prüfstelle', [
+#            'subject_count',
+#        ]),
+#        (u'Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)', []),
+#    ]),
+
 )
