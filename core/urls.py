@@ -22,6 +22,7 @@ urlpatterns = patterns(
     url(r'^document/(?P<document_pk>\d+)/delete/$', 'ecs.core.views.delete_document'),
 
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
-    url(r'^submission_form/new/$', 'ecs.core.views.create_submission_form'),
-    url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
+    url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
+    url(r'^submission_forms/submitted/$', 'ecs.core.views.submission_form_list'),
+    url(r'^submission_forms/stashed/$', 'ecs.core.views.stashed_submission_form_list'),
 )
