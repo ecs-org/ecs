@@ -6,10 +6,9 @@ from ecs.core.models import Document, DocumentType
 class DocumentsTest(TestCase):
     def _create_document(self):
         doctype = DocumentType.objects.create(name="Test")
-        doc = Document(version="1", date=datetime.date(2010, 03, 10), doctype=doctype)
-        doc.save()
         pdf_file = open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb')
-        doc.file.save('Bericht.pdf', File(pdf_file), save=True)
+        doc = Document(version="1", date=datetime.date(2010, 03, 10), doctype=doctype, file=File(pdf_file))
+        doc.save()
         pdf_file.close()
         return doc
     
