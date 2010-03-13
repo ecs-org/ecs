@@ -37,39 +37,12 @@
   <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a></p>  -->
 {% endblock %}
 
-{% block usertoolbar %} 
-  <!--
-  <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
-{% endblock %}
-        
-{% block usermenu %}
-  <!-- <ul>
-    <li><a href="{% url ecs.core.views.index %}">&Uuml;bersicht</a></li>
-    <li>
-      <a href="{% url ecs.core.views.submission_form_list %}">Studien</a>
-      <ul>
-        <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
-        <li><a href="{% url ecs.core.views.stashed_submission_form_list %}">offene Antragsformulare</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
-      <ul>
-        <li><a href="#">offene Meldungen</a></li>
-        <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
-        <li><a href="#">vergangene Meldungen</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Konversationen</a></li>
-    <li><a href="#">zuletzt bearbeitet</a></li>
-    <li><a href="#">vorgemerkte T&auml;tigkeiten</a></li>
-  </ul>
-  -->
+{% block content %} <!-- usertoolbar -->
   {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
   {% endif %}
 
-  <form method="post" action="{% url django.contrib.auth.views.login %}">{% csrf_token %}
+  <form method="post" action="{% url django.contrib.auth.views.login %}">
   <table>
   <tr>
       <td>{{ form.username.label_tag }}</td>
@@ -84,5 +57,10 @@
   <input type="submit" value="login" />
   <input type="hidden" name="next" value="{{ next }}" />
   </form>
+  <!--
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
+{% endblock %}
+        
+{% block usermenu %}
 
 {% endblock %}
