@@ -3,7 +3,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 
-from ecs.docstash.models import DocStash, ConcurrentModification, UnknownVersion
+from ecs.docstash.models import DocStash
+from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
 VERSION_COOKIE_NAME = 'docstash_%s'
 
@@ -14,11 +15,11 @@ def with_docstash_transaction(view):
     @wraps(view)
     def decorated(request, docstash_key=None, **kwargs):
         if not docstash_key:
-            docstash = DocStash.objects.create(form=view_name)
+            docstash = DocStash.objects.create(group=view_name)
             kwargs['docstash_key'] = docstash.key
             response = HttpResponseRedirect(reverse(view_name, kwargs=kwargs))
         else:
-            docstash = get_object_or_404(DocStash, form=view_name, key=docstash_key)
+            docstash = get_object_or_404(DocStash, group=view_name, key=docstash_key)
             request.docstash = docstash
             version = request.COOKIES.get(VERSION_COOKIE_NAME % docstash.key, None)
             if version is None and request.method == 'GET':
@@ -40,6 +41,6 @@ def with_docstash_transaction(view):
                 docstash.rollback_transaction()
                 raise
             
-        response.set_cookie(str(VERSION_COOKIE_NAME % docstash.key), str(docstash.version))
+        response.set_cookie(str(VERSION_COOKIE_NAME % docstash.key), str(docstash.current_version))
         return response
     return decorated

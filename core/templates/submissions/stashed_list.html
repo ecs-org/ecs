@@ -13,7 +13,7 @@
 {% block content %}
 <ul>
     {% for stash in stashed_submission_forms %}
-        <li><a href="{% url ecs.core.views.create_submission_form docstash_key=stash.key %}">{{ stash.value.project_title.0 }} ({{ stash.key }}, version={{ stash.version }})</a></li>
+        <li><a href="{% url ecs.core.views.create_submission_form docstash_key=stash.key %}">{{ stash.current_value.project_title.0 }} ({{ stash.key }}, version={{ stash.current_version }})</a></li>
     {% endfor %}
 </ul>
 

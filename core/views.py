@@ -161,6 +161,6 @@ def submission_form_list(request):
     
 def stashed_submission_form_list(request):
     return render(request, 'submissions/stashed_list.html', {
-        'stashed_submission_forms': DocStash.objects.filter(form='ecs.core.views.create_submission_form'),
+        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.create_submission_form'),
     })
 

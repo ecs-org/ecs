@@ -16,7 +16,7 @@ import settings
 
 urlpatterns = patterns(
     '',
-    url(r'^create/(?P<form>.*)/$', 'docstash.views.create'),
+    url(r'^create/(?P<group>.*)/$', 'docstash.views.create'),
     url(r'^(?P<key>[0-9A-Fa-f]+)$', 'docstash.views.read'),
     url(r'^(?P<key>[0-9A-Fa-f]+)/(?P<version>[\d-]+)$', 'docstash.views.post'),
 )

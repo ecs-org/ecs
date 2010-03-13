@@ -19,15 +19,14 @@ def jsonify(func):
     return wrapper
 
 @jsonify
-def create(request, form=None):
-    stash = DocStash.objects.create(form=form)
-    return (stash.key, stash.version)
+def create(request, group=None):
+    stash = DocStash.objects.create(group=group)
+    return (stash.key, stash.current_version)
 
 @jsonify
 def read(request, key):
     stash = get_object_or_404(DocStash, key=key)
-    print stash.version
-    return (stash.version, stash.current_value)
+    return (stash.current_version, stash.current_value)
 
 @jsonify
 def post(request, key, version):
@@ -35,7 +34,7 @@ def post(request, key, version):
     stash.start_transaction(int(version))
     stash.value = simplejson.loads(request.raw_post_data)
     stash.commit_transaction()
-    return (stash.key, stash.version)
+    return (stash.current_version, stash.current_value)
     
 
           

@@ -5,8 +5,7 @@ from django.utils.functional import wraps
 
 from django_extensions.db.fields.json import JSONField
 
-class ConcurrentModification(Exception): pass
-class UnknownVersion(Exception): pass
+from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
 def _transaction_required(method):
     @wraps(method)
@@ -18,8 +17,9 @@ def _transaction_required(method):
 
 class DocStash(models.Model):
     key = models.CharField(max_length=41, primary_key=True)
-    form = models.CharField(max_length=120, db_index=True)
-    version = models.IntegerField(default=-1)
+    group = models.CharField(max_length=120, db_index=True, null=True)
+    current_version = models.IntegerField(default=-1)
+    deleted = models.BooleanField(default=False)
 
     def save(self, force_insert=None, force_update=None):
         if not self.key:
@@ -29,13 +29,13 @@ class DocStash(models.Model):
     @property
     def current_value(self):
         if not hasattr(self, '_value_cache'):
-            if self.version == -1:
+            if self.current_version == -1:
                 self._value_cache = {}
             else:
-                self._value_cache = self.data.get(version=self.version).value
+                self._value_cache = self.data.get(version=self.current_version).value
         return self._value_cache
         
-    def start_transaction(self, version):
+    def start_transaction(self, version, name=None, user=None):
         if hasattr(self, '_transaction'):
             raise TypeError('transaction already started')
         if version == -1:
@@ -45,16 +45,20 @@ class DocStash(models.Model):
                 value = self.data.get(version=version).value
             except DocStashData.DoesNotExist:
                 raise UnknownVersion("key=%s, version=%s" % (self.key, version))
-        self._transaction = DocStashData(stash=self, version=version+1, value=value)
+        self._transaction = DocStashData(stash=self, version=version+1, value=value, name=name or "")
     
     @_transaction_required
     def commit_transaction(self):
         if self._transaction.is_dirty():
-            if not DocStash.objects.filter(key=self.key, version=self.version).update(version=models.F('version') + 1):
+            # the following update query should be atomic (with Transaction Isolation Level "Read committed" or better)
+            # it serves as a guard against race conditions:
+            if not DocStash.objects.filter(key=self.key, current_version=self.current_version).update(current_version=models.F('current_version') + 1):
                 raise ConcurrentModification()
             else:
-                self.version += 1
+                self.current_version += 1
                 self._transaction.save()
+                if hasattr(self, '_value_cache'):
+                    del self._value_cache
         del self._transaction
     
     @_transaction_required

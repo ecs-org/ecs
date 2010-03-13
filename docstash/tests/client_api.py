@@ -33,9 +33,13 @@ class ClientApiTest(TestCase):
         test_data = dict(abc="def")
         response = self.client.post("/docstash/create/test/")
         key, version = loads(response.content)
+
         response = self.client.post("/docstash/%s/%s" % (key, version), dumps(test_data), "text/json")
-        assert response.status_code == 200
-        key, version = loads(response.content)
+        self.failUnlessEqual(response.status_code, 200)
+        version, data = loads(response.content)
+        print version, data
+        self.failUnlessEqual(data, test_data)
+
         response = self.client.get("/docstash/%s" % key)
         version, data = loads(response.content)
         self.failUnlessEqual(data, test_data)
