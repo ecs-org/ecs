@@ -8,8 +8,7 @@ class DocumentsTest(TestCase):
         doctype = DocumentType.objects.create(name="Test")
         doc = Document(version="1", date=datetime.date(2010, 03, 10), doctype=doctype)
         doc.save()
-        # FIXME: test pdf content should be avaiable locally.
-        pdf_file = open(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'docs', 'paperforms', 'Bericht.pdf'), 'rb')
+        pdf_file = open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb')
         doc.file.save('Bericht.pdf', File(pdf_file), save=True)
         pdf_file.close()
         return doc
