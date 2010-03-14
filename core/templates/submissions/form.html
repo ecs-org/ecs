@@ -38,6 +38,7 @@
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME #}
                         <fieldset>
+                            {% include "documents/upload_form.html" %}
                             {% with document_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
@@ -121,6 +122,11 @@
                 ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
                 
+                $('a.delete_document').click(function(){
+                    $(this).parent('div').remove();
+                    return false;
+                });
+                
                 $('fieldset').each(function(){
                     var fieldset = $(this);
                     var autofillLink = $('<a href="#">auto fill</a>');
@@ -142,6 +148,7 @@
                 
             });
         </script>
-    <input type="submit" value="Speichern" />
+    <input type="submit" value="Speichern" name="save" />
+    <input type="submit" value="Submit" name="submit" />
     </form>
 {% endblock %}

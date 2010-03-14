@@ -84,7 +84,7 @@ def _create_docstash_transaction_data_proxy(method):
     proxy.__name__ = method
     return proxy
 
-for method in ('post', 'get', '__getitem__', '__setitem__', 'update', 'get_query_dict'):
+for method in ('post', 'post_update', 'get', '__getitem__', '__setitem__', 'update', 'get_query_dict'):
     setattr(DocStash, method, _create_docstash_transaction_data_proxy(method))
 
 
@@ -104,19 +104,29 @@ class DocStashData(models.Model):
     def is_dirty(self):
         return getattr(self, '_dirty', False)
 
-    def post(self, query_dict, exclude=None):
+    def post_update(self, query_dict, exclude=None):
         self._dirty = True
         if not exclude:
             exclude = lambda name: False
-        self.value = dict((name, value_list) for name, value_list in query_dict.iterlists() if not exclude(name))
+        val = self.value
+        val.update(dict((name, value_list) for name, value_list in query_dict.iterlists() if not exclude(name)))
+        self.value = val
+        
+    def post(self, query_dict, exclude=None):
+        self.value = {}
+        self.post_update(query_dict, exclude=None)
 
     def update(self, d):
         self._dirty = True
-        self.value.update(d)
+        val = self.value
+        val.update(d)
+        self.value = val
 
     def __setitem__(self, name, value):
         self._dirty = True
-        self.value[name] = value
+        val = self.value
+        val[name] = value
+        self.value = val
 
     def get(self, name, default=None):
         return self.value.get(name, default)
