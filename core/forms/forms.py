@@ -102,6 +102,9 @@ class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
         super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)
+    def add_fields(self, form, index):
+        super(BaseInvestigatorEmployeeFormSet, self).add_fields(form, index)
+        form.fields['investigator_index'] = forms.IntegerField()
 
 InvestigatorEmployeeFormSet = modelformset_factory(InvestigatorEmployee, formset=BaseInvestigatorEmployeeFormSet, extra=1, exclude = ('submission',))
 

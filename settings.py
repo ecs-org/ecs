@@ -96,6 +96,10 @@ MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
 )   
 
+import sys
+if "test" not in sys.argv:      # TODO: unittests should login itself.
+    MIDDLEWARE_CLASSES += ('ecs.utils.forceauth.ForceAuth', )
+
 # debug toolbar config:
 # middleware on bottom:
 #    'debug_toolbar.middleware.DebugToolbarMiddleware',

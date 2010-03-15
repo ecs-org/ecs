@@ -29,38 +29,39 @@
 {% endblock %}
 
 {% block account %} 
-  <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
-  {{ request.user.get_full_name }}
+  <!-- <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
+  Eingeloggt als Max Mustermann
   <p><a href="">Profil</a> | 
   <a href="">Logout</a></p> 
   <p><a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
-  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a></p> 
+  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a></p>  -->
 {% endblock %}
 
-{% block usertoolbar %} 
-  <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p> 
+{% block content %} <!-- usertoolbar -->
+  {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+  {{ form.errors }}
+  {% endif %}
+
+  <form method="post" action="{% url django.contrib.auth.views.login %}">
+  <table>
+  <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+  </tr>
+  <tr>
+      <td>{{ form.password.label_tag }}</td>
+      <td>{{ form.password }}</td>
+  </tr>
+  </table>
+
+  <input type="submit" value="login" />
+  <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+  <!--
+  <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
 {% endblock %}
         
 {% block usermenu %}
-  <ul>
-    <li><a href="{% url ecs.core.views.index %}">&Uuml;bersicht</a></li>
-    <li>
-      <a href="{% url ecs.core.views.submission_form_list %}">Studien</a>
-      <ul>
-        <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
-        <li><a href="{% url ecs.core.views.stashed_submission_form_list %}">offene Antragsformulare</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
-      <ul>
-        <li><a href="#">offene Meldungen</a></li>
-        <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
-        <li><a href="#">vergangene Meldungen</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Konversationen</a></li>
-    <li><a href="#">zuletzt bearbeitet</a></li>
-    <li><a href="#">vorgemerkte T&auml;tigkeiten</a></li>
-  </ul>
+
 {% endblock %}

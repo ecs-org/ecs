@@ -136,6 +136,10 @@ def create_submission_form(request):
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
             submission_form.submission = submission
             submission_form.save()
+            investigators = investigator_formset.save()
+            for i, e in enumerate(investigatoremployee_formset.save(commit=False)):
+                e.investigator = investigators[request.POST['investigatoremployee-$s-investigator_index' % i]]
+                e.save()
             for formset in formsets.itervalues():
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form

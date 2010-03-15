@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 
     url(r'^core/', include('core.urls')),
     url(r'^docstash/', include('docstash.urls')),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 
