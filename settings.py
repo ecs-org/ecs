@@ -97,7 +97,7 @@ MIDDLEWARE_CLASSES = (
 )   
 
 import sys
-if "test" not in sys.argv:
+if "test" not in sys.argv:      # TODO: unittests should login itself.
     MIDDLEWARE_CLASSES += ('ecs.utils.forceauth.ForceAuth', )
 
 # debug toolbar config:
