@@ -1,0 +1,62 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+{% endblock %}
+
+{% block headernav %}
+    <ul class="tab_headers">
+    {% for tab, fieldsets in tabs %}
+        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+<h1>Neuer {{ notification_type.name }}</h1>
+
+<form action="" method="post" enctype="multipart/form-data">
+    <div id="tabs">
+        {% for tab, fieldsets in tabs %}
+            <div id="tabs-{{ forloop.counter }}" class="tab">
+                {% ifequal tab "Unterlagen" %}
+                    {# FIXME #}
+                    <fieldset>
+                        {% include "documents/upload_form.html" %}
+                        {% with document_formset as formset %}
+                            {% include "forms/inline_formset.html" %}
+                        {% endwith %}
+                    </fieldset>
+                {% endifequal %}
+                
+                {% for legend, fields in fieldsets %}
+                    <fieldset class="fieldset_{{ forloop.counter }}">
+                        {% if legend %}
+                            <legend>{{ legend }}</legend>
+                        {% endif %}
+                        <ol>
+                            {% for field_name in fields %}
+                                {% with form|getitem:field_name as field %}
+                                    {% include "forms/field.html" %}
+                                {% endwith %}
+                            {% endfor %}
+                        </ol>
+                    </fieldset>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <input type="submit" value="Speichern" />
+    
+    <script type="text/javascript">
+        jQuery(function($){
+            ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
+        });
+    </script>
+</form>
+
+{% endblock %}
