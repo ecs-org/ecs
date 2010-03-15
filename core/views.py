@@ -14,6 +14,8 @@ from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, 
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
+from ecs.docstash.decorators import with_docstash_transaction
+from ecs.docstash.models import DocStash
 
 ## helpers
 
@@ -109,17 +111,25 @@ def notification_pdf(request, notification_pk=None):
     
 
 # submissions
-
+@with_docstash_transaction
 def create_submission_form(request):
+    data = request.POST or request.docstash.get_query_dict() or None
+        
     formsets = {}
     for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
-        formsets["%s_formset" % name] = formset_cls(request.POST or None, prefix=name)
+        formsets["%s_formset" % name] = formset_cls(data, prefix=name)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
-    form = SubmissionFormForm(request.POST or None)
+    form = SubmissionFormForm(data)
 
     if request.method == 'POST':
-        if form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and document_formset.is_valid():
+        request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
+        if document_formset.is_valid():
+            request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
+            document_formset = DocumentFormSet(prefix='document')
+        
+        submit = request.POST.get('submit', False)
+        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
@@ -133,12 +143,15 @@ def create_submission_form(request):
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
-            submission_form.documents = document_formset.save()
+            submission_form.documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+    
+    documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'document_formset': document_formset,
+        'documents': documents,
     }
     context.update(formsets)
     return render(request, 'submissions/form.html', context)
@@ -155,3 +168,9 @@ def submission_form_list(request):
     return render(request, 'submissions/list.html', {
         'submission_forms': SubmissionForm.objects.all().order_by('project_title')
     })
+    
+def stashed_submission_form_list(request):
+    return render(request, 'submissions/stashed_list.html', {
+        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.create_submission_form'),
+    })
+

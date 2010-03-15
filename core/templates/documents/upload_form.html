@@ -6,6 +6,8 @@
             <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">
                 Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
+                <a href="" class="delete_document">delete</a>
+                <input type="hidden" name="documents" value="{{ doc.pk }}" />
             </a>
         </div>
     {% endfor %}

@@ -14,7 +14,7 @@ class CoreUrlsTest(TestCase):
         
     def test_submission_form_new(self):
         response = self.client.get('/core/submission_form/new/')
-        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(response.status_code, 302)
 
     def test_notification_new(self):
         response = self.client.get('/core/notification/new/')
@@ -25,5 +25,8 @@ class CoreUrlsTest(TestCase):
         self.failUnlessEqual(response.status_code, 200)
 
     def test_submission_forms(self):
-        response = self.client.get('/core/submission_forms/')
+        response = self.client.get('/core/submission_forms/submitted/')
+        self.failUnlessEqual(response.status_code, 200)
+
+        response = self.client.get('/core/submission_forms/stashed/')
         self.failUnlessEqual(response.status_code, 200)

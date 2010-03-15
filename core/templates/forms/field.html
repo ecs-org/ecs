@@ -14,5 +14,10 @@
             {{ field.errors }}
         </span>
         {% endif %}
+        {% if field_info.help_text %}
+        <span class="help_text">
+            {{ field_info.help_text }}
+        </span>
+        {% endif %}
     </li>
 {% endwith %}
