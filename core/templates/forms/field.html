@@ -1,7 +1,7 @@
 {% load core %}
 
 {% with field|get_field_info as field_info %}
-    <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}">
+    <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
         <label for="id_{{ field_name }}">
             {{ field_info.label|default:field.label }}
             {% if field_info.number %}

@@ -23,7 +23,7 @@ def with_docstash_transaction(view):
             request.docstash = docstash
             version = request.COOKIES.get(VERSION_COOKIE_NAME % docstash.key, None)
             if version is None and request.method == 'GET':
-                version = docstash.version
+                version = docstash.current_version
             else:
                 version = int(version)
             try:
