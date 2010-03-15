@@ -18,9 +18,13 @@ class Migration:
             firstname = name.split()[0]
             lastname = name.split()[1]
             password = hashlib.new("md5", email).hexdigest()[0:8]
-            User.objects.create(username=username, email=email, first_name=firstname, last_name=lastname, is_active=True)
+            u = User.objects.create(username=username, email=email, first_name=firstname, last_name=lastname, is_active=True)
+            u.set_password(password)
+            u.save()
             print username, password # capture that for distribution!
-        User.objects.create(username="root", is_active=True, is_staff=True, is_superuser=True)
+        u = User.objects.create(username="root", is_active=True, is_staff=True, is_superuser=True)
+        u.set_unusable_password()
+        u.save()
 
     def backwards(self, orm):
         "Write your backwards migration here"

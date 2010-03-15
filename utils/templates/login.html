@@ -40,6 +40,7 @@
 {% block content %} <!-- usertoolbar -->
   {% if form.errors %}
   <p>Your username and password didn't match. Please try again.</p>
+  {{ form.errors }}
   {% endif %}
 
   <form method="post" action="{% url django.contrib.auth.views.login %}">

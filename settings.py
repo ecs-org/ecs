@@ -94,8 +94,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
-    'ecs.utils.forceauth.ForceAuth',
 )   
+
+import sys
+if "test" not in sys.argv:
+    MIDDLEWARE_CLASSES += ('ecs.utils.forceauth.ForceAuth', )
 
 # debug toolbar config:
 # middleware on bottom:
