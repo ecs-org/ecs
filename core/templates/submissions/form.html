@@ -42,6 +42,7 @@
                             {% with document_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
+                            <input type="submit" name="Upload" value="upload" />
                         </fieldset>
                     {% endifequal %}
                     
@@ -140,7 +141,7 @@
                 ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
+                //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
                 
