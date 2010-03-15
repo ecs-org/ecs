@@ -9,9 +9,9 @@ from django.forms.models import inlineformset_factory
 
 import settings
 
-from ecs.core.models import Document, BaseNotificationForm, NotificationType, Submission, SubmissionForm
+from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
-from ecs.core.forms.layout import SUBMISSION_FORM_TABS
+from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
 from ecs.utils.htmldoc import htmldoc
 from ecs.core import paper_forms
 from ecs.docstash.decorators import with_docstash_transaction
@@ -56,15 +56,15 @@ def delete_document(request, document_pk=None):
 # notifications
 def notification_list(request):
     return render(request, 'notifications/list.html', {
-        'notifications': BaseNotificationForm.objects.all(),
+        'notifications': Notification.objects.all(),
     })
 
 def view_notification(request, notification_pk=None):
-    notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
+    notification = get_object_or_404(Notification, pk=notification_pk)
     template_names = ['notifications/view/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     return render(request, template_names, {
         'documents': notification.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-        'notification_form': notification,
+        'notification': notification,
     })
 
 def select_notification_creation_type(request):
@@ -77,26 +77,27 @@ def create_notification(request, notification_type_pk=None):
 
     form = notification_type.form_cls(request.POST or None)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
-
+    
     if request.method == 'POST':
         if form.is_valid() and document_formset.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
             notification.save()
-            notification.submission_forms = form.cleaned_data['submission_forms']
-            notification.investigators = form.cleaned_data['investigators']
-            notification.documents = document_formset.save()
+            submission_forms = form.cleaned_data['submission_forms']
+            notification.submission_forms = submission_forms
+            notification.investigators.add(*Investigator.objects.filter(submission__in=submission_forms))
+            #notification.documents = document_formset.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
-    template_names = ['notifications/creation/%s.html' % name for name in (form.__class__.__name__, 'base')]
-    return render(request, template_names, {
+    return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
         'form': form,
+        'tabs': NOTIFICATION_FORM_TABS[form.__class__],
         'document_formset': document_formset,
     })
 
 def notification_pdf(request, notification_pk=None):
-    notification = get_object_or_404(BaseNotificationForm, pk=notification_pk)
+    notification = get_object_or_404(Notification, pk=notification_pk)
     template_names = ['notifications/htmldoc/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     tpl = loader.select_template(template_names)
     html = tpl.render(Context({

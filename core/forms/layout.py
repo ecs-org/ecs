@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ecs.core.forms import NotificationForm, ProgressReportNotificationForm, CompletionReportNotificationForm
 
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
 #  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
@@ -106,3 +107,49 @@ SUBMISSION_FORM_TABS = (
 #    ]),
 
 )
+
+
+
+NOTIFICATION_FORM_TABS = {}
+
+NOTIFICATION_FORM_TABS[NotificationForm] = [
+    (u'Allgemeine Angaben', [
+        (u'Allgemeine Angaben', [
+            'submission_forms', 'comments',
+        ]),
+    ]),
+    (u'Unterlagen', []),
+]
+
+NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm] + [
+    (u'Studienstatus', [
+        (u'Status', [
+            'reason_for_not_started', 'study_aborted', 'completion_date',
+        ]),
+        (u'Teilnehmer', [
+            'recruited_subjects', 'finished_subjects', 'aborted_subjects',
+        ]),
+        (u'SAE / SUSAR', [
+            'SAE_count', 'SUSAR_count',
+        ])
+    ])
+]
+
+NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm] + [
+    (u'Studienstatus', [
+        (u'Status', [
+            'runs_till', 
+        ]),
+        (u'Teilnehmer', [
+            'recruited_subjects', 'finished_subjects', 'aborted_subjects',
+        ]),
+        (u'SAE / SUSAR', [
+            'SAE_count', 'SUSAR_count',
+        ]),
+    ]),
+    (u'Votum', [
+        (u'Verlängerung', [
+            'extension_of_vote_requested',
+        ]),
+    ])
+]

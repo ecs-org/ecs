@@ -2,32 +2,32 @@ from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
 from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
-from ecs.core.models import BaseNotificationForm as BaseNotification
-from ecs.core.models import ExtendedNotificationForm as ExtendedNotification
+from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
 
 ## notifications ##
 
-class BaseNotificationForm(forms.ModelForm):
-    investigators = InvestigatorMultipleChoiceField()
-    investigator = InvestigatorChoiceField(required=False)
-    signed_on = DateField(required=False)
-    
+class NotificationForm(forms.ModelForm):
     class Meta:
-        model = BaseNotification
-        exclude = ('type', 'documents')
+        model = Notification
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
         
 
-class ExtendedNotificationForm(BaseNotificationForm):
-    aborted_on = DateField(required=False)
-    runs_till = DateField(required=False)
-    finished_on = DateField(required=False)
-    
+class ProgressReportNotificationForm(NotificationForm):
+    runs_till = DateField()
+
     class Meta:
-        model = ExtendedNotification
-        exclude = ('type', 'documents')
-        
+        model = ProgressReportNotification
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+
+class CompletionReportNotificationForm(NotificationForm):
+    completion_date = DateField()
+
+    class Meta:
+        model = CompletionReportNotification
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+
 ## submissions ##
 
 class SubmissionFormForm(forms.ModelForm):
@@ -42,7 +42,7 @@ class SubmissionFormForm(forms.ModelForm):
 
     class Meta:
         model = SubmissionForm
-        exclude = ('submission', 'documents', 'ethics_commissions')
+        exclude = ('submission', 'documents', 'ethics_commissions', 'date_of_receipt')
 
 ## documents ##
         

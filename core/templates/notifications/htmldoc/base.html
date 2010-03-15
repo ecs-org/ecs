@@ -42,7 +42,9 @@
             <tr>
                 <th align="right">Protokollnummer</th>
                 <td>
-                    <i>nicht vorhanden</i>
+                    {% for submission_form in notification.submission_forms.all %}
+                        {{ submission_form.protocol_number }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
                 </td>
             </tr>
             <tr>

@@ -1,4 +1,5 @@
 {% extends 'core.html' %}
+{% load core %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
@@ -8,12 +9,11 @@
 {% endblock %}
 
 {% block headernav %}
-<ul class="tab_headers">
-    {% block tab_headers %}
-    <li><a href="#tab-1">Tab 1</a></li>
-    <li><a href="#document_tab">Unterlagen</a></li>
-    {% endblock %}
-</ul>
+    <ul class="tab_headers">
+    {% for tab, fieldsets in tabs %}
+        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+    {% endfor %}
+    </ul>
 {% endblock %}
 
 {% block content %}
@@ -21,80 +21,41 @@
 
 <form action="" method="post" enctype="multipart/form-data">
     <div id="tabs">
-    {% block tabs %}
-    <div id="tab-1" class="tab">
-        <ol>
-            <li>
-                {{ form.investigators.label_tag }}
-                {{ form.investigators }}
-                {% if form.investigators.errors %}
-                <div class="errors">
-                    {{ form.investigators.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li>
-                {{ form.investigator.label_tag }}
-                {{ form.investigator }}
-                {% if form.investigator.errors %}
-                <div class="errors">
-                    {{ form.investigator.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li class="datefield">
-                {{ form.date_of_vote.label_tag }}
-                {{ form.date_of_vote }}
-                {% if form.date_of_vote.errors %}
-                <div class="errors">
-                    {{ form.date_of_vote.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li>
-                {{ form.ek_number.label_tag }}
-                {{ form.ek_number }}
-                {% if form.ek_number.errors %}
-                <div class="errors">
-                    {{ form.ek_number.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li>
-                {{ form.comments.label_tag }}
-                {{ form.comments }}
-                {% if form.comments.errors %}
-                <div class="errors">
-                    {{ form.comments.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li class="DateField">
-                {{ form.signed_on.label_tag }}
-                {{ form.signed_on }}
-                {% if form.signed_on.errors %}
-                <div class="errors">
-                    {{ form.signed_on.errors }}
-                </div>
-                {% endif %}
-            </li>
-            <li>
-                {{ form.submission_forms.label_tag }}
-                {{ form.submission_forms }}
-                {% if form.submission_forms.errors %}
-                <div class="errors">
-                    {{ form.submission_forms.errors }}
-                </div>
-                {% endif %}
-            </li>
-        </ol>
+        {% for tab, fieldsets in tabs %}
+            <div id="tabs-{{ forloop.counter }}" class="tab">
+                {% ifequal tab "Unterlagen" %}
+                    {# FIXME #}
+                    <fieldset>
+                        {% include "documents/upload_form.html" %}
+                        {% with document_formset as formset %}
+                            {% include "forms/inline_formset.html" %}
+                        {% endwith %}
+                    </fieldset>
+                {% endifequal %}
+                
+                {% for legend, fields in fieldsets %}
+                    <fieldset class="fieldset_{{ forloop.counter }}">
+                        {% ifequal legend "Zentren im Ausland" %}
+                            {# FIXME #}
+                            {% with foreignparticipatingcenter_formset as formset %}
+                                {% include "forms/inline_formset.html" %}
+                            {% endwith %}                            
+                        {% endifequal %}                            
+                        {% if legend %}
+                            <legend>{{ legend }}</legend>
+                        {% endif %}
+                        <ol>
+                            {% for field_name in fields %}
+                                {% with form|getitem:field_name as field %}
+                                    {% include "forms/field.html" %}
+                                {% endwith %}
+                            {% endfor %}
+                        </ol>
+                    </fieldset>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
-    <div id="document_tab" class="tab">
-        {% with document_formset as formset %}
-            {% include "forms/inline_formset.html" %}
-        {% endwith %}
-    </div>
-    {% endblock %}
     <input type="submit" value="Speichern" />
     
     <script type="text/javascript">

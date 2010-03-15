@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from ecs.core.models import SubmissionForm, BaseNotificationForm, ExtendedNotificationForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
+from django.utils.functional import memoize
+
+from ecs.core.models import SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
+from ecs.core.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification
 
 _form_info = {}
 
@@ -29,25 +32,31 @@ class FormInfo(object):
         for field in fields:
             field.model_info = self
             self.fields[field.name] = field
-        _form_info[model] = self
+        _form_info[model.__name__] = self
 
 
-FormInfo(BaseNotificationForm, fields=(
+FormInfo(Notification, fields=(
+    FieldInfo(None, 'submission_forms', u'Studien'),
     FieldInfo('4.', 'comments', u'Ergebnisse und Schlussfolgerungen'),
 ))
 
-FormInfo(ExtendedNotificationForm, fields=(
+FormInfo(ReportNotification, fields=(
     FieldInfo('3.1', 'reason_for_not_started', u'Wurde die Studie begonnen?'),
     FieldInfo('3.2', 'recruited_subjects', u'Zahl der rekrutierten Patient/inn/en / Proband/inn/en'),
     FieldInfo('3.3', 'finished_subjects', u'Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben'),
     FieldInfo('3.4', 'aborted_subjects', u'Zahl der Studienabbrüche'),
     FieldInfo('3.5', 'SAE_count', u'Zahl der SAEs'),
     FieldInfo('3.5', 'SUSAR_count', u'Zahl der SASARs'),
-    FieldInfo('3.6.1', 'runs_till', u'läuft noch bis voraussichtlich'),
-    FieldInfo('3.6.2', 'finished_on', u'planmäßig abgeschlossen am'),
-    FieldInfo('3.6.2', 'aborted_on', u'abgebrochen am'),
-    FieldInfo('4.', 'comments', u'Ergebnisse und Schlussfolgerungen'),
-    FieldInfo(None, 'extension_of_vote', u'Ich beantrage die Verlängerung der Gültigkeit des Votums.'),
+))
+
+FormInfo(CompletionReportNotification, fields=(
+    FieldInfo(None, 'study_aborted', None, short_label=u'Die Studie wurde abgebrochen'), # 3.6.2
+    FieldInfo(None, 'completion_date', None, short_label=u'Datum der Beendigung'), # 3.6.2
+))
+
+FormInfo(ProgressReportNotification, fields=(
+    FieldInfo(None, 'runs_till', None, short_label=u'Voraussichtliches Enddatum'),
+    FieldInfo(None, 'extension_of_vote_requested', u'Ich beantrage die Verlängerung der Gültigkeit des Votums.'),
 ))
 
 FormInfo(Document, fields=(
@@ -285,14 +294,20 @@ FormInfo(InvestigatorEmployee, fields=(
 
 
 def get_field_info_for_model(model):
-    try:
-        return sorted(_form_info[model].fields.values(), key=lambda f: f.number)
-    except KeyError:
-        return ()
+    fields = {}
+    for cls in reversed(model.mro()):
+        if cls.__name__ in _form_info:
+            fields.update(_form_info[cls.__name__].fields)
+    return sorted(fields.values(), key=lambda f: f.number)
 
 def get_field_info(model=None, name=None, default=None):
-    try:
-        return _form_info[model].fields.get(name, default)
-    except KeyError:
-        return default
+    print model, name
+    for cls in model.mro():
+        if cls.__name__ in _form_info:
+            fields = _form_info[cls.__name__].fields
+            if name in fields:
+                return fields[name]
+        else:
+            print cls
+    return default
     

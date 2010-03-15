@@ -11,7 +11,7 @@
 
 {% block content %}
 <ul>
-    <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification_form.pk %}">Download PDF</a></li>
+    <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification.pk %}">Download PDF</a></li>
 </ul>  
 <table>
     {% block table_rows %}
@@ -19,7 +19,7 @@
     <th>Submission</th>
     <td>
         <ul>
-            {% for submission_form in notification_form.submission_forms.all %}
+            {% for submission_form in notification.submission_forms.all %}
                <li>{{ submission_form.project_title }}</li>
             {% endfor %}
         </ul>
@@ -29,7 +29,7 @@
     <th>Ethik-Komissionen/Prüfer</th>
     <td>
         <ul>
-        {% for investigator in notification_form.investigators.all %}
+        {% for investigator in notification.investigators.all %}
             <li>{{ investigator.ethics_commission.name }}: {{ investigator.name }}</li>
         {% endfor %}
         </ul>
@@ -38,22 +38,18 @@
 <tr>
     <th>Protokoll Nr.</th>
     <td>
-        {% for submission_form in notification_form.submission_forms.all %}
+        {% for submission_form in notification.submission_forms.all %}
             {{ submission_form.protocol_number }}{% if not forloop.last %}, {% endif %}
         {% endfor %}
     </td>
 </tr>
 <tr>
     <th>Pr&uuml;fer</th>
-    <td>{{ notification_form.investigator|default:'<i>Keine Angabe</i>' }}</td>
+    <td>{{ notification.investigator|default:'<i>Keine Angabe</i>' }}</td>
 </tr>
 <tr>
     <th>Kommentare</th>
-    <td>{{ notification_form.comments }}</td>
-</tr>
-<tr>
-    <th>Unterzeichnet am</th>
-    <td>{{ notification_form.signed_on|default:'<i>Keine Angabe</i>' }}</td>
+    <td>{{ notification.comments }}</td>
 </tr>
 {% endblock %}
 </table>

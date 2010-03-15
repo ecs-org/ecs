@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
-from django.test import TestCase
-#from core.models import Submission, SubmissionForm, EthicsCommission, InvolvedCommissionsForNotification, NotificationType, Investigator
-#from core.models import BaseNotificationForm, ExtendedNotificationForm, Notification
-from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
-from core.models import BaseNotificationForm, ExtendedNotificationForm, NotificationType
 import datetime
+from django.test import TestCase
+
+from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
+from core.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
+
 
 class SubmissionFormTest(TestCase):
     def test_creation(self):
@@ -325,14 +324,21 @@ class NotificationFormTest(TestCase):
         some_notification_type = NotificationType.objects.create(name='Test')
         some_date = datetime.date(2010, 3, 1)
 
-        nform = BaseNotificationForm(type=some_notification_type, comments="we need longer to torture our victims! Really.", signed_on=some_date, investigator=self.investigator)
+        nform = Notification(type=some_notification_type, comments="we need longer to torture our victims! Really.")
         nform.save()
         nform.submission_forms = [self.submission_form]
         
-        extended_form = ExtendedNotificationForm(type=some_notification_type, comments="foo", signed_on=some_date,
+        completion_notification = CompletionReportNotification(type=some_notification_type, comments="foo", 
             SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
-            reason_for_not_started='bar', runs_till=some_date, finished_on=some_date, aborted_on=some_date, extension_of_vote=True,
+            study_aborted=True, completion_date=some_date,
         )
-        extended_form.save()
-        extended_form.investigators = self.submission_form.investigators.all()
+        completion_notification.save()
+        completion_notification.investigators = self.submission_form.investigators.all()
+
+        progress_notification = ProgressReportNotification(type=some_notification_type, comments="foo", 
+            SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
+            runs_till=some_date, extension_of_vote_requested=True,
+        )
+        progress_notification.save()
+        progress_notification.investigators = self.submission_form.investigators.all()
 

@@ -283,7 +283,7 @@ class SubmissionForm(models.Model):
     submitter_is_authorized_by_sponsor = models.BooleanField()
     submitter_agrees_to_publishing = models.BooleanField(default=True)
     
-    # FIXME: add a date that documents when the EC received the paper version
+    date_of_receipt = models.DateField(null=True, blank=True)
     
     def __unicode__(self):
         return "%s: %s" % (self.submission.ec_number, self.project_title)
@@ -308,6 +308,14 @@ class SubmissionForm(models.Model):
     def study_plan_double_blind(self):
         return self.study_plan_blind == 2
         
+    @property
+    def protocol_number(self):
+        protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
+        if protocol_doc:
+            return protocol_doc[0].version
+        else:
+            return None
+
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
@@ -380,9 +388,9 @@ class Amendment(models.Model):
     date = models.DateField()
 
 class NotificationType(models.Model):
-    name = models.CharField(max_length=40, unique=True)
-    form = models.CharField(max_length=80, default='ecs.core.forms.BaseNotificationForm')
-    model = models.CharField(max_length=80, default='ecs.core.models.BaseNotificationForm')
+    name = models.CharField(max_length=80, unique=True)
+    form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
+    model = models.CharField(max_length=80, default='ecs.core.models.Notification')
     
     @property
     def form_cls(self):
@@ -394,33 +402,36 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.name
 
-# FIME: rename to `BaseNotification`
-class BaseNotificationForm(models.Model):
+class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
     investigators = models.ManyToManyField(Investigator, related_name='notifications')
     submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications')
-    investigator = models.ForeignKey(Investigator, null=True, blank=True, related_name='direct_notifications')
     documents = models.ManyToManyField(Document)
 
     comments = models.TextField(default="", blank=True)
-    signed_on = models.DateField(null=True, blank=True)
+    date_of_receipt = models.DateField(null=True, blank=True)
     
     def __unicode__(self):
-        return u"%s vom %s" % (self.type, self.signed_on)
+        return u"%s" % (self.type,)
 
-# FIME: rename to something meaningfull, or at least `ExtendedNotification`
-class ExtendedNotificationForm(BaseNotificationForm):
+class ReportNotification(Notification):
     reason_for_not_started = models.TextField(null=True, blank=True)
     recruited_subjects = models.IntegerField(null=True, blank=True)
     finished_subjects = models.IntegerField(null=True, blank=True)
     aborted_subjects = models.IntegerField(null=True, blank=True)
-    SAE_count = models.IntegerField(null=True, blank=True) # FIXME: change to PositiveIntegerField(default=0, null=False)
-    SUSAR_count = models.IntegerField(null=True, blank=True) # FIXME: change to PositiveIntegerField(default=0, null=False)
-    # FIXME: use a single date and a study_state field instead of three DateFields:
+    SAE_count = models.PositiveIntegerField(default=0, blank=True)
+    SUSAR_count = models.PositiveIntegerField(default=0, blank=True)
+    
+    class Meta:
+        abstract = True
+
+class CompletionReportNotification(ReportNotification):
+    study_aborted = models.BooleanField()
+    completion_date = models.DateField()
+    
+class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
-    finished_on = models.DateField(null=True, blank=True)
-    aborted_on = models.DateField(null=True, blank=True)
-    extension_of_vote = models.BooleanField(default=False, blank=True)
+    extension_of_vote_requested = models.BooleanField(default=False, blank=True)
 
 
 class Checklist(models.Model):
@@ -484,8 +495,9 @@ if not reversion.is_registered(Amendment):
     reversion.register(SubmissionReview) 
     reversion.register(NonTestedUsedDrug) 
     reversion.register(NotificationAnswer) 
-    reversion.register(BaseNotificationForm) 
-    reversion.register(ExtendedNotificationForm) 
+    reversion.register(Notification) 
+    reversion.register(CompletionReportNotification) 
+    reversion.register(ProgressReportNotification)
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
     reversion.register(Vote) 
