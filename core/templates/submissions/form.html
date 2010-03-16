@@ -17,7 +17,7 @@
 
 {% block header_actions %}
     {{ block.super }}
-    <a href="" class="submit_main_form">Submit</a>
+    <div class="header_actions"><a href="" class="submit_main_form">Abschicken</a></div>
 {% endblock %}
 
 {% block content %}
@@ -169,7 +169,7 @@
                 */
             });
         </script>
-    <input type="submit" value="Speichern" name="save" />
+    <div class="button"><input type="submit" value="Speichern" name="save" /></div>
     <input type="submit" value="Submit" name="submit" />
     </form>
 {% endblock %}

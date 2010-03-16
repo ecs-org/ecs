@@ -32,7 +32,54 @@ div#ecs-core-tabs {
 #ecs-core-selectable2  { list-style-type: none; margin: 0; padding: 0; }
 #ecs-core-selectable2 li  { margin: 3px; padding: 0.4em; height: 18px; }
 
+
+/* headernav */
+
+.tab_headers li {
+  display: inline;
+  line-height: 30px;
+}
+ul.tab_headers {
+  float: left;
+  width: 88%;
+}
+.tab_headers li a {
+  text-decoration: none;
+  padding: 3px 5px;
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.tab_headers .active a {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+.tab_headers .active.errors a {
+  color: #fff;
+  background: #ff8000;
+}
+.tab_headers .errors a {
+  background: #fb6464;
+  color: #fff !important;
+  border: 1px solid #ff0000;
+}
+.header_actions {
+  float: left;
+  display: block;
+  width: 10%;
+  padding: 4px 5px;
+  margin-top: 2px;
+  background: #4dc21b;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+.submit_main_form {
+  text-decoration: none;
+  color: #fff;
+}
+
 /* form layout hacks */
+
 .ui-tabs .ui-tabs-nav li a {
     /* FIXME: this is a hack */
     font-size: 12px;
@@ -54,7 +101,7 @@ form, form * {
 }
 form fieldset {
 	border: 1px solid #eeeeee;
-  background: #edfafe;
+  background: #f9feff;
 }
 form legend {
   font-size: 12pt;
@@ -131,6 +178,7 @@ form ol li.focus {
 
 
 /* documents */
+
 .doclist {
 	border: 1px solid #666666;
 }
