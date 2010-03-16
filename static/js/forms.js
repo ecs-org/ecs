@@ -39,8 +39,8 @@
     };
 
     $(function(){
-        if(!$('.tab_headers > li.active').length){
-            var href=$(".tab_headers > li:first-child")
+        if(!$('.tab_headers > li.active').length && !window.location.hash){
+            $(".tab_headers > li:first-child").addClass('active');
         }
         $(".tab_headers").tabify();
         ecs.setupFormFieldHelpers();

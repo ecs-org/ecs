@@ -118,7 +118,7 @@ NOTIFICATION_FORM_TABS[NotificationForm] = [
     (u'Unterlagen', []),
 ]
 
-NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm] + [
+NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
     (u'Studienstatus', [
         (u'Status', [
             'reason_for_not_started', 'study_aborted', 'completion_date',
@@ -129,10 +129,11 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
         (u'SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
         ])
-    ])
+    ]),
+    (u'Unterlagen', []),
 ]
 
-NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm] + [
+NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
     (u'Studienstatus', [
         (u'Status', [
             'runs_till', 
@@ -148,5 +149,6 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[
         (u'Verlängerung', [
             'extension_of_vote_requested',
         ]),
-    ])
+    ]),
+    (u'Unterlagen', []),
 ]
