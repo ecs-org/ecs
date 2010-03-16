@@ -38,6 +38,16 @@ div#ecs-core-tabs {
     font-size: 12px;
 }
 
+form .field, form .tab {
+  border: 1px solid #eee;
+  background: #f9feff;
+  min-width: 700px;
+}
+form .field h3, form .tab h3 {
+  font-size: 12pt;
+  letter-spacing: 1px;
+  padding: 5px 0 0 5px;
+}
 
 form, form * {
 	font-size: 12px;
