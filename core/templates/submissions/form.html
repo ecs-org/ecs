@@ -22,13 +22,13 @@
                     {% ifequal tab "Massnahmen" %}
                         {# FIXME #}
                         <fieldset>
-                            <legend>Angaben zur durchzuführenden Therapie und Diagnostik</legend>
+                            <legend><span>Angaben zur durchzuführenden Therapie und Diagnostik</span></legend>
                             {% with measure_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
                         </fieldset>
                         <fieldset>
-                            <legend>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</legend>
+                            <legend><span>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</span></legend>
                             {% with nontesteduseddrug_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
@@ -51,7 +51,7 @@
                                 {% endwith %}                            
                             {% endifequal %}                            
                             {% if legend %}
-                                <legend>{{ legend }}</legend>
+                                <legend><span>{{ legend }}</span></legend>
                             {% endif %}
                             <ol>
                                 {% for field_name in fields %}
@@ -65,7 +65,7 @@
 
                     {% ifequal tab 'Prüfer' %}
                       <fieldset>
-                        <legend>Teil B</legend>
+                        <legend><span>Teil B</span></legend>
                         {% with investigator_formset as formset %}
                           <div id="{{ formset.prefix }}_formset" class="inline_formset">
                             {{ investigator_formset.management_form }}
@@ -82,12 +82,12 @@
                                   {% if not field.is_hidden %}
                                     {% ifequal field.name 'name' %}
                                 <fieldset>
-                                  <legend>Angaben zur Prüferin/zum Prüfer</legend>
+                                  <legend><span>Angaben zur Prüferin/zum Prüfer</span></legend>
                                     {% endifequal %}
                                     {% ifequal field.name 'subject_count' %}
                                 </fieldset>
                                 <fieldset>
-                                  <legend>Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en an dieser Prüfstelle</legend>
+                                  <legend><span>Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en an dieser Prüfstelle</span></legend>
                                     {% endifequal %}
                                     {% include "forms/field.html" %}
                                   {% endif %}
@@ -95,7 +95,7 @@
                                 </fieldset>
 <!-- InvestigatorEmploye: dynamic code
                                 <fieldset>
-                                  <legend>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</legend>
+                                  <legend><span>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</span></legend>
                                   {# Employee #}
                                   <div id="{{ investigatoremployee_formset.prefix }}_formset" class="inline_formset">
                                     {# note: investigatoremployee_formset.management_form is defined once above #}
@@ -106,7 +106,7 @@
                                         <p>Hit {{ forloop.counter }} </p>                           
                                       {% endifequal %}
                                       <fieldset>
-                                        <legend>Mitarbeiter</legend>
+                                        <legend><span>Mitarbeiter</span></legend>
                                         {% with investigatoremployee_formset as formset %}
                                         {% include "forms/inline_formset.html" %}
                                         {% endwith %}
@@ -122,7 +122,7 @@
                       </fieldset>
 <!-- intermediate solution -->
                       <fieldset>
-                        <legend>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</legend>
+                        <legend><span>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</span></legend>
                           {% with investigatoremployee_formset as formset %}
                           {% include "forms/inline_formset.html" %}
                           {% endwith %}
