@@ -36,7 +36,7 @@ class DocStash(models.Model):
     
     @property
     def current_value(self):
-        return self._get_current_attribute('value', None)
+        return self._get_current_attribute('value', {})
         
     @property
     def current_name(self):
@@ -64,8 +64,8 @@ class DocStash(models.Model):
             else:
                 self.current_version += 1
                 self._transaction.save()
-                if hasattr(self, '_value_cache'):
-                    del self._value_cache
+                if hasattr(self, '_current_data'):
+                    del self._current_data
         del self._transaction
     
     @_transaction_required
