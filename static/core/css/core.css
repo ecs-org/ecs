@@ -22,116 +22,116 @@ div#ecs-core-tabs {
 
 
 /* jQuery ui selectables (generalized list views) */
-#ecs-core-selectable1 .ui-selecting { background: #FECA40; }
-#ecs-core-selectable1 .ui-selected { background: #F39814; color: white; }
-#ecs-core-selectable1 { list-style-type: none; margin: 0; padding: 0; }
-#ecs-core-selectable1 li { margin: 3px; padding: 0.4em; height: 18px; }
+#ecs-core-selectable1 .ui-selecting  { background: #FECA40; }
+#ecs-core-selectable1 .ui-selected  { background: #F39814; color: white; }
+#ecs-core-selectable1  { list-style-type: none; margin: 0; padding: 0; }
+#ecs-core-selectable1 li  { margin: 3px; padding: 0.4em; height: 18px; }
 
-#ecs-core-selectable2 .ui-selecting { background: #FECA40; }
-#ecs-core-selectable2 .ui-selected { background: #F39814; color: white; }
-#ecs-core-selectable2 { list-style-type: none; margin: 0; padding: 0; }
-#ecs-core-selectable2 li { margin: 3px; padding: 0.4em; height: 18px; }
+#ecs-core-selectable2 .ui-selecting  { background: #FECA40; }
+#ecs-core-selectable2 .ui-selected  { background: #F39814; color: white; }
+#ecs-core-selectable2  { list-style-type: none; margin: 0; padding: 0; }
+#ecs-core-selectable2 li  { margin: 3px; padding: 0.4em; height: 18px; }
 
 /* form layout hacks */
-.ui-tabs .ui-tabs-nav li a{
+.ui-tabs .ui-tabs-nav li a {
     /* FIXME: this is a hack */
     font-size: 12px;
 }
 
-.tab_headers li.errors a{
+.tab_headers li.errors a {
 	color: #ff0000;
 }
 
-form, form *{
+form, form * {
 	font-size: 12px;
 }
-form fieldset{
+form fieldset {
 	border: 1px solid #eeeeee;
 }
-form legend{
+form legend {
     font-size: 14px;
     margin-left: 10px;
     padding: 3px;
 }
 
-form ol li{
+form ol li {
 	padding-top: 10px;
 	clear: both;
 	display: block;
 }
 
-form ol li input[type=text], form ol li textarea{
+form ol li input[type=text], form ol li textarea {
 	width: 30em;
 }
 
-form ol li textarea{
+form ol li textarea {
 	height: 4em;
 }
 
-form ol li > label{
+form ol li > label {
 	width: 20em;
 	padding-right: 1em;
 	text-align: right;
 	float: left;
 }
-form ol li > label:after{
+form ol li > label:after {
 	content: ":";
 }
-form ol li > .errors{
+form ol li > .errors {
 	margin-left: 21em;
 }
 
-form ol li.BooleanField{
+form ol li.BooleanField {
 	padding-left: 21em;
 }
 
-form ol li.BooleanField > label{
+form ol li.BooleanField > label {
 	float: none;
 	padding-left: 1em;
 	text-align: left;
 }
-form ol li.BooleanField > label:after{
+form ol li.BooleanField > label:after {
 	content: none;
 }
-form ol li.BooleanField > input{
+form ol li.BooleanField > input {
 	float: left;
 }
 
-form ol li .paperform_number{
+form ol li .paperform_number {
 	color: #666666;
 	font-size: 0.9em;
 }
-form ol li .paperform_number:before{
+form ol li .paperform_number:before {
 	content: "[";
 }
-form ol li .paperform_number:after{
+form ol li .paperform_number:after {
 	content: "]";
 }
 
-form ol li .notes{
+form ol li .notes {
 	float: right;
 	font-size: 0.9em;
 	color: #666666;
 }
 
-form ol li.focus{
+form ol li.focus {
 	background-color: #eeeeff;
 }
 
 
 /* documents */
-.doclist{
+.doclist {
 	border: 1px solid #666666;
 }
 
-.doclist h3{
+.doclist h3 {
 	font-size: 1em;
 	background-image: url(/static/core/images/icon-triangle.png);
 	background-repeat: no-repeat;
 	padding-left: 24px;
 }
 
-.doclist div{
+.doclist div {
 	display: block;
 	margin-left: 2em;
 	padding-left: 24px;
