@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from ecs.core.models import DocumentType, Document, EthicsCommission, SubmissionForm, Investigator
-from ecs.core.models import InvestigatorEmployee, Measure, NonTestedUsedDrug, 
+from ecs.core.models import InvestigatorEmployee, Measure, NonTestedUsedDrug
 from ecs.core.models import ForeignParticipatingCenter, Amendment, NotificationType, Notification
 from ecs.core.models import VoteReview, Vote, SubmissionReview, Submission, NotificationAnswer, User
 #from ecs.core.models import Workflow
@@ -30,6 +30,6 @@ admin.site.register(VoteReview)
 admin.site.register(Vote)
 admin.site.register(SubmissionReview)
 admin.site.register(Submission)
-admin.site.register(Notification)
-admin.site.register(User)
+admin.site.register(NotificationAnswer)
+#admin.site.register(User)
 
