@@ -30,10 +30,12 @@
 
 {% if stashed_notifications %}
     <ul>
-    {% for notification in stashed_notifications %}
-        <li>
-            <a href="{% url ecs.core.views.create_notification notification_type_pk=notification.current_value.type_id,docstash_key=notification.key %}"> ({{ notification.key }}, version={{ notification.current_version }})</a>
-        </li>
+    {% for docstash in stashed_notifications %}
+        {% if docstash.current_value %}
+            <li>
+                <a href="{% url ecs.core.views.create_notification notification_type_pk=docstash.current_value.type_id,docstash_key=docstash.key %}"> ({{ docstash.key }}, version={{ docstash.current_version }})</a>
+            </li>
+        {% endif %}
     {% endfor %}
     </ul>
 {% endif %}

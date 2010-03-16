@@ -24,7 +24,9 @@
 <h2>Offene Studien</h2>
 <ul>
     {% for stash in stashed_submission_forms %}
-        <li><a href="{% url ecs.core.views.create_submission_form docstash_key=stash.key %}">{{ stash.current_value.project_title.0 }} ({{ stash.key }}, version={{ stash.current_version }})</a></li>
+        {% if stash.current_value %}
+            <li><a href="{% url ecs.core.views.create_submission_form docstash_key=stash.key %}">{{ stash.current_value.project_title.0 }} ({{ stash.key }}, version={{ stash.current_version }})</a></li>
+        {% endif %}
     {% endfor %}
 </ul>
 {% endif %}
