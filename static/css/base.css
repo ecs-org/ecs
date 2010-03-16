@@ -26,41 +26,37 @@ body {
   position: fixed;
   right: 230px;
   left: 0;
-  height: 140px;
+  min-height: 120px;
   z-index: 101;
   background: #d8e6ef;
+  display: block;
 }
 #headertitle {
   float: left;
   width: 15em;
-  padding: 20px 10px;
-  height: 80px;
+  padding: 20px 10px 0 10px;
+  height: 60px;
   display: block;
 }
 #headertext {
   float: left;
-  padding: 25px 10px;
-  height: 80px;
-  width: 65%;
+  padding: 20px 10px 0 10px;
+  height: 60px;
+  width: 60%;
   display: block;
 }
 #headernav {
-  position: absolute;
-  top: 90px;
-  left: 10px;
-  border-bottom: 1px solid #ccc;
-}
-.headerline {
-  position: relative;
-  top: 120px;
+  display: block;
+  float: left;
   left: 0;
-  right: 260px;
-  width: 100%;
-
+  padding-left: 10px;
+  border-bottom: 1px solid #ccc;
+  background: #d8e6ef;
+  clear: both;
 }
 #content {
   position: absolute;
-  top: 120px;
+  top: 130px;
   right: 230px;
   bottom: 0;
   left: 0;
@@ -90,7 +86,7 @@ body {
 #logo, #account, #usertoolbar, #usermenu {
   width: 230px;
   padding: 10px;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid #ccc;
 }
 #logo {
   height: 53px;
@@ -126,6 +122,13 @@ body {
 }
 #content p {
   margin-bottom: 20px;
+}
+#content a {
+  text-decoration: none;
+  color: #2b558e;
+}
+#content a:hover {
+  border-bottom: 1px solid #2b558e;
 }
 #content form {
   float: left;
@@ -175,6 +178,10 @@ input, textarea, select {
 #sidebar p {
   margin: 10px 0;
 }
+#sidebar a {
+  text-decoration: none;
+  color: #2b558e;
+}
 
 
 /*
@@ -192,16 +199,18 @@ input, textarea, select {
   background: #e2eaf0;
   color: #2b558e;
 }
-.tab_headers li.active a {
-  color: #ff8000;
+.tab_headers .active a {
+  background: #2b558e;
+  color: #e2eaf0;
 }
-.tab_headers li.active a:hover {
+.tab_headers .active.errors a {
   color: #fff;
   background: #ff8000;
 }
-.tab_headers li.errors a {
-  background: #ff0000;
+.tab_headers .errors a {
+  background: #fb6464;
   color: #fff !important;
+  border: 1px solid #ff0000;
 }
 
 /*
