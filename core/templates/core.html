@@ -30,7 +30,7 @@
 
 {% block account %} 
   <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
-  {{ request.user.get_full_name }}
+  {{ user.get_full_name }}
   <p><a href="">Profil</a> | 
   <a href="/accounts/logout">Logout</a></p> 
   <p><a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
