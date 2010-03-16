@@ -135,3 +135,25 @@ form ol li.focus {
 	background-image: url(/static/core/images/icon-doc.png);
 	background-repeat: no-repeat;	
 }
+
+/* notifications */
+table.notification th{
+    text-align: right;
+    padding-right: 1em;
+}
+
+table.notif_meta{
+    border: 1px solid #cccccc;
+    border-left: none;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    width: 100%;
+}
+table.notif_meta td, table.notif_meta th{
+    border-left: 1px solid #cccccc;
+    padding: 0.2em;
+}
+table.notif_meta th{
+    text-align: left;
+    border-bottom: 1px solid #cccccc;
+}

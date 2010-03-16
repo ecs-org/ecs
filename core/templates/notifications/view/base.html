@@ -13,48 +13,29 @@
 <ul>
     <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification.pk %}">Download PDF</a></li>
 </ul>  
-<table>
-    {% block table_rows %}
-<tr>
-    <th>Submission</th>
-    <td>
-        <ul>
-            {% for submission_form in notification.submission_forms.all %}
-               <li>{{ submission_form.project_title }}</li>
-            {% endfor %}
-        </ul>
-    </td>
-</tr>
-<tr>
-    <th>Ethik-Komissionen/Prüfer</th>
-    <td>
-        <ul>
-        {% for investigator in notification.investigators.all %}
-            <li>{{ investigator.ethics_commission.name }}: {{ investigator.name }}</li>
-        {% endfor %}
-        </ul>
-    </td>
-</tr>
-<tr>
-    <th>Protokoll Nr.</th>
-    <td>
-        {% for submission_form in notification.submission_forms.all %}
-            {{ submission_form.protocol_number }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </td>
-</tr>
-<tr>
-    <th>Pr&uuml;fer</th>
-    <td>{{ notification.investigator|default:'<i>Keine Angabe</i>' }}</td>
-</tr>
-<tr>
-    <th>Kommentare</th>
-    <td>{{ notification.comments }}</td>
-</tr>
-{% endblock %}
-</table>
+{% with notification.submission_forms.all as submission_forms %}
+    {% with notification.investigators.all as investigators %}
+        {% include "notifications/submission_data.html" %}
+    {% endwith %}
+{% endwith %}
 
-<h2>Für diese Meldung bereits eingereichte Unterlagen:</h2>
-{% include "documents/compact_list.html" %}
+<table class="notification">
+    {% block table_rows %}
+        <tr>
+            <th>Kommentare</th>
+            <td>{{ notification.comments }}</td>
+        </tr>
+        <tr>
+            <th>Unterlagen</th>
+            <td>
+                {% if documents %}
+                    {% include "documents/compact_list.html" %}
+                {% else %}
+                    <i>keine</i>
+                {% endif %}
+            </td>
+        </tr>
+    {% endblock %}
+</table>
 
 {% endblock %}

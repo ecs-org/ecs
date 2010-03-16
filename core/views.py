@@ -57,6 +57,7 @@ def delete_document(request, document_pk=None):
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
+        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.create_notification'),
     })
 
 def view_notification(request, notification_pk=None):
@@ -66,34 +67,53 @@ def view_notification(request, notification_pk=None):
         'documents': notification.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         'notification': notification,
     })
+    
+def submission_data_for_notification(request):
+    submission_forms = list(SubmissionForm.objects.filter(pk__in=request.GET.getlist('submission_form')))
+    investigators = Investigator.objects.filter(submission__in=submission_forms)
+    return render(request, 'notifications/submission_data.html', {
+        'submission_forms': submission_forms,
+        'investigators': investigators,
+    })
 
+# FIXME: move this into create_notification()
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
         'notification_types': NotificationType.objects.order_by('name')
     })
 
+@with_docstash_transaction
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
+    data = request.POST or request.docstash.get_query_dict() or None
 
-    form = notification_type.form_cls(request.POST or None)
+    form = notification_type.form_cls(data or None)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
     
     if request.method == 'POST':
-        if form.is_valid() and document_formset.is_valid():
+        request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
+        request.docstash['type_id'] = notification_type_pk
+        if document_formset.is_valid():
+            request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
+            document_formset = DocumentFormSet(prefix='document')
+        
+        submit = request.POST.get('submit', False)
+        if submit and form.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
             notification.save()
             submission_forms = form.cleaned_data['submission_forms']
             notification.submission_forms = submission_forms
             notification.investigators.add(*Investigator.objects.filter(submission__in=submission_forms))
-            #notification.documents = document_formset.save()
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
+    documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
         'form': form,
         'tabs': NOTIFICATION_FORM_TABS[form.__class__],
         'document_formset': document_formset,
+        'documents': documents,
     })
 
 def notification_pdf(request, notification_pk=None):

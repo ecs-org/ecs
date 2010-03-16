@@ -1,3 +1,4 @@
+{# context: documents, document_formset #}
 <div class="doclist">
 {% if documents %}
     {% for doc in documents %}
@@ -6,12 +7,18 @@
             <a href="{% url ecs.core.views.download_document document_pk=doc.pk %}">
                 Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
-                <a href="" class="delete_document">delete</a>
-                <input type="hidden" name="documents" value="{{ doc.pk }}" />
             </a>
+            <a href="" class="delete_document">delete</a>
+            <input type="hidden" name="documents" value="{{ doc.pk }}" />
         </div>
     {% endfor %}
 {% else %}
     <p>Noch keine Unterlagen</p>
 {% endif %}
 </div>
+
+{% with document_formset as formset %}
+    {% include "forms/inline_formset.html" %}
+{% endwith %}
+<input type="submit" name="upload" value="Upload" id="upload_button" />
+

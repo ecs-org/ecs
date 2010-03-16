@@ -7,15 +7,6 @@
   <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.tabify-1.4.js"></script>
 {% endblock %}
 
-{% block jsbottom %}
-  <script type="text/javascript">
-    /* indicate what's actually clickable */
-    jQuery(function($){
-        $('a[href=#]').css('text-decoration', 'line-through');
-    });
-  </script>
-{% endblock %}
-
 {% block htmlcss %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" />
@@ -53,9 +44,7 @@
     <li>
       <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
       <ul>
-        <li><a href="#">offene Meldungen</a></li>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
-        <li><a href="#">vergangene Meldungen</a></li>
       </ul>
     </li>
     <li><a href="#">Konversationen</a></li>
