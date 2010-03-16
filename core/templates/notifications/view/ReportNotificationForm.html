@@ -1,0 +1,13 @@
+{% extends 'notifications/view/base.html' %}
+
+{% block table_rows %}
+    {{ block.super }}
+    {% with notification.progressreportnotification|default:notification.completionreportnotification as notification %}
+        <tr><th>Grund warum noch nicht begonnen</th><td>{{ notification.reason_for_not_started }}</td></tr>
+        <tr><th>Angeworbene Versuchspersonen</th><td>{{ notification.recruited_subjects }}</td></tr>
+        <tr><th>Beendete Versuchspersonen</th><td>{{ notification.finished_subjects }}</td></tr>
+        <tr><th>Abgebrochene Versuchspersonen</th><td>{{ notification.aborted_subjects }}</td></tr>
+        <tr><th>SAE Zahl</th><td>{{ notification.SAE_count }}</td></tr>
+        <tr><th>SUSAR Zahl</th><td>{{ notification.SUSAR_count }}</td></tr>        
+    {% endwith %}
+{% endblock %}

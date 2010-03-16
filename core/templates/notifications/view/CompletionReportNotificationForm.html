@@ -1,0 +1,9 @@
+{% extends 'notifications/view/ReportNotificationForm.html' %}
+
+{% block table_rows %}
+    {{ block.super }}
+    {% with notification.completionreportnotification as completion_notification %}
+        <tr><th>Die Studie wurde abgebrochen</th><td>{{ completion_notification.study_aborted|yesno:"Ja,Nein" }}</td></tr>
+        <tr><th>Datum der Beendigung</th><td>{{ completion_notification.completion_date|date:'d.m.Y' }}</td></tr>
+    {% endwith %}
+{% endblock %}
