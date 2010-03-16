@@ -16,7 +16,7 @@
                 $(this).append('<span class="notes">' + notes.join(', ') + '</span>')
             }
 
-            var formControls = $('li input, li textarea, li select', context);
+            var formControls = $('input,textarea,select', this);
             formControls.focus(function(){
                 $(this).parent('li').addClass('focus');
             });
@@ -43,7 +43,7 @@
     };
     
     ecs.autosave = function(form){
-        var lastSave = form.data('lastSave') || {};
+        var lastSave = form.data('lastSave');
         var currentData = form.serialize();
         if(lastSave.data != currentData){
             lastSave.timestamp = new Date();
@@ -53,7 +53,7 @@
                 type: 'POST',
                 data: form.serialize() + '&autosave=autosave',
                 success: function(response){
-                    console.log(response);
+                    //console.log(response);
                     form.data('lastSave', lastSave);
                 }
             });
@@ -63,6 +63,10 @@
     ecs.setupAutoSave = function(){
         var form = $('form.main');
         if(form.length){
+            $(form).data('lastSave', {
+                timestamp: new Date(),
+                data: form.serialize()
+            });
             $(window).bind('unload', function(){
                 ecs.autosave(form);
             });
