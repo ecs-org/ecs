@@ -33,8 +33,5 @@ class CoreUrlsTest(TestCase):
         self.failUnlessEqual(response.status_code, 200)
 
     def test_submission_forms(self):
-        response = self.client.get('/core/submission_forms/submitted/')
-        self.failUnlessEqual(response.status_code, 200)
-
-        response = self.client.get('/core/submission_forms/stashed/')
+        response = self.client.get('/core/submission_forms/')
         self.failUnlessEqual(response.status_code, 200)
