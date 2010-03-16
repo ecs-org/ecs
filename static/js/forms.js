@@ -41,6 +41,30 @@
         $('form.main.tabbed').attr('action', window.location.hash);
         $('form.main').find('input[type=submit][name=' + name + ']').click();
     };
+    
+    ecs.setupAutoSave = function(){
+        var form = $('form.main');
+        if(form.length){
+            setInterval(function(){
+                var lastSave = form.data('lastSave') || {};
+                var currentData = form.serialize();
+                if(lastSave.data != currentData){
+                    lastSave.timestamp = new Date();
+                    lastSave.data = currentData;
+                    $.ajax({
+                        url: window.location.href,
+                        type: 'POST',
+                        data: form.serialize() + '&autosave=autosave',
+                        success: function(response){
+                            console.log(response);
+                            form.data('lastSave', lastSave);
+                        }
+                    });
+                    
+                }
+            }, 10 * 1000);
+        }
+    };
 
     $(function(){
         if(!$('.tab_headers > li.active').length && !window.location.hash){
@@ -48,6 +72,7 @@
         }
         $(".tab_headers").tabify();
         ecs.setupFormFieldHelpers();
+        ecs.setupAutoSave();
     
         $(".tab").each(function(){
             if($('.errors', $(this)).length){ 

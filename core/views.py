@@ -91,14 +91,21 @@ def create_notification(request, notification_type_pk=None):
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
     
     if request.method == 'POST':
+        submit = request.POST.get('submit', False)
+        autosave = request.POST.get('autosave', False)
+        
         request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
         request.docstash['type_id'] = notification_type_pk
         request.docstash.name = "%s" % notification_type.name
+        
+        if autosave:
+            return HttpResponse('autosave successful')
+        
         if document_formset.is_valid():
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')
         
-        submit = request.POST.get('submit', False)
+        
         if submit and form.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
@@ -145,13 +152,19 @@ def create_submission_form(request):
     form = SubmissionFormForm(data)
 
     if request.method == 'POST':
+        submit = request.POST.get('submit', False)
+        autosave = request.POST.get('autosave', False)
+
         request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
         request.docstash.name = "%s" % request.POST.get('project_title', '')
+
+        if autosave:
+            return HttpResponse('autosave successfull')
+        
         if document_formset.is_valid():
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')
         
-        submit = request.POST.get('submit', False)
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             submission_form = form.save(commit=False)
             from random import randint
