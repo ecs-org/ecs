@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data" class="tabbed">
         <div id="tabs">
             {% for tab, fieldsets in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
@@ -42,7 +42,7 @@
                             {% with document_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
-                            <input type="submit" name="Upload" value="upload" />
+                            <input type="submit" name="Upload" value="upload" id="upload_button" />
                         </fieldset>
                     {% endifequal %}
                     
@@ -147,9 +147,10 @@
                 
                 $('a.delete_document').click(function(){
                     $(this).parent('div').remove();
+                    $('#upload_button').click();
                     return false;
                 });
-                
+                /*
                 $('fieldset').each(function(){
                     var fieldset = $(this);
                     var autofillLink = $('<a href="#">auto fill</a>');
@@ -168,7 +169,7 @@
                     });
                     fieldset.prepend(autofillLink);
                 });
-                
+                */
             });
         </script>
     <input type="submit" value="Speichern" name="save" />

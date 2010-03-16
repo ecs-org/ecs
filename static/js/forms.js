@@ -39,7 +39,9 @@
     };
 
     $(function(){
-        $(".tab_headers > li:first-child").addClass('active');
+        if(!$('.tab_headers > li.active').length){
+            var href=$(".tab_headers > li:first-child")
+        }
         $(".tab_headers").tabify();
         ecs.setupFormFieldHelpers();
     
@@ -47,6 +49,12 @@
             if($('.errors', $(this)).length){ 
                 $('.tab_headers > li a[href=#' + this.id + '-tab]').parent('li').addClass('errors');
             }
+        });
+        
+        $('form.tabbed').each(function(){
+            $(this).submit(function(){
+                $(this).attr('action', window.location.hash);
+            });
         });
     
     }); 

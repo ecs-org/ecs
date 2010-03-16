@@ -167,11 +167,7 @@ def view_submission_form(request, submission_form_pk=None):
 
 def submission_form_list(request):
     return render(request, 'submissions/list.html', {
-        'submission_forms': SubmissionForm.objects.all().order_by('project_title')
-    })
-    
-def stashed_submission_form_list(request):
-    return render(request, 'submissions/stashed_list.html', {
+        'submission_forms': SubmissionForm.objects.all().order_by('project_title'),
         'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.create_submission_form'),
     })
-
+    
