@@ -24,41 +24,44 @@ body {
 }
 #header {
   position: fixed;
-  right: 250px;
+  right: 230px;
   left: 0;
-  height: 120px;
-  padding: 20px;
+  height: 140px;
   z-index: 101;
+  background: #d8e6ef;
 }
 #headertitle {
   float: left;
   width: 15em;
-  padding-right: 10px;
+  padding: 20px 10px;
   height: 80px;
   display: block;
 }
 #headertext {
   float: left;
+  padding: 25px 10px;
   height: 80px;
   width: 65%;
   display: block;
 }
 #headernav {
   position: absolute;
-  top: 80px;
+  top: 90px;
+  left: 10px;
+  border-bottom: 1px solid #ccc;
 }
 .headerline {
-  position: absolute;
+  position: relative;
   top: 120px;
   left: 0;
   right: 260px;
   width: 100%;
-  border-bottom: 1px solid #ccc;
+
 }
 #content {
   position: absolute;
   top: 120px;
-  right: 240px;
+  right: 230px;
   bottom: 0;
   left: 0;
   margin-top: 20px;
@@ -94,15 +97,14 @@ body {
   background: #fff;
 }
 #account {
-  background: #ccc;
+  background: #f5f5d2;
   min-height: 80px;
 }
 #usertoolbar {
-  background: #c0c0c0;
   min-height: 100px;
 }
 #usermenu {
-  background: #ccc;
+  background: #f5f5d2;
   min-height: 300px;
 }
 
@@ -113,13 +115,6 @@ body {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
-}
-#headertitle h1 {
-  font-size: 1.2em;
-  margin-bottom: 5px;
-}
-#headertext p {
-  font-size: 11pt;
 }
 #content h1 {
   font-size: 1.5em;
@@ -143,6 +138,23 @@ input, textarea, select {
   margin-bottom: 20px;
 }
 
+/*
+  header
+*/
+
+#header {
+  color: #333;
+}
+#headertitle h1 {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+#headertext p {
+  font-size: 10pt;
+  line-height: 14pt;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
 
 /*
   sidebar
@@ -164,17 +176,33 @@ input, textarea, select {
   margin: 10px 0;
 }
 
+
 /*
   topnav
 */
 
 #headernav li {
   display: inline;
-  padding: 5px;
   line-height: 35px;
-  border: 1px solid #ccc;
 }
-
+.tab_headers li a {
+  text-decoration: none;
+  padding: 5px;
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.tab_headers li.active a {
+  color: #ff8000;
+}
+.tab_headers li.active a:hover {
+  color: #fff;
+  background: #ff8000;
+}
+.tab_headers li.errors a {
+  background: #ff0000;
+  color: #fff !important;
+}
 
 /*
   general links
@@ -184,11 +212,6 @@ input, textarea, select {
   text-decoration: none;
   border: none !important;
 }
-
-
-/*
-  tabs
-*/
 
 
 /*

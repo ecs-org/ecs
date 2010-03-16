@@ -38,9 +38,6 @@ div#ecs-core-tabs {
     font-size: 12px;
 }
 
-.tab_headers li.errors a {
-	color: #ff0000;
-}
 
 form, form * {
 	font-size: 12px;
