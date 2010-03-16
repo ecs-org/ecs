@@ -39,10 +39,6 @@
                         {# FIXME #}
                         <fieldset>
                             {% include "documents/upload_form.html" %}
-                            {% with document_formset as formset %}
-                                {% include "forms/inline_formset.html" %}
-                            {% endwith %}
-                            <input type="submit" name="Upload" value="upload" id="upload_button" />
                         </fieldset>
                     {% endifequal %}
                     
@@ -145,11 +141,6 @@
                 ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
                 
-                $('a.delete_document').click(function(){
-                    $(this).parent('div').remove();
-                    $('#upload_button').click();
-                    return false;
-                });
                 /*
                 $('fieldset').each(function(){
                     var fieldset = $(this);

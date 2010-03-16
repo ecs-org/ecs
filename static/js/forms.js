@@ -56,6 +56,13 @@
                 $(this).attr('action', window.location.hash);
             });
         });
+        
+        $('.doclist a.delete_document').click(function(){
+            $(this).parent('div').find('input').remove();
+            $('#upload_button').click();
+            return false;
+        });
+        
     
     }); 
 
