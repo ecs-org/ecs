@@ -114,6 +114,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+#    'django.contrib.databrowse',
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,7 +123,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django_extensions',
 
-    'django.contrib.databrowse',
     'django.contrib.admin',
     'django.contrib.admindocs',
 

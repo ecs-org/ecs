@@ -3,7 +3,7 @@ from django.conf.urls.defaults import *
 import settings
 
 # setup databrowse for debugging
-from django.contrib import databrowse
+"""from django.contrib import databrowse
 from core import models
 for m in ("Document", "EthicsCommission", 
           "Submission", "SubmissionForm", "Investigator","InvestigatorEmployee", "NonTestedUsedDrug", "ForeignParticipatingCenter",
@@ -13,6 +13,7 @@ for m in ("Document", "EthicsCommission",
           "NotificationAnswer",
           "Meeting", "User"):
     databrowse.site.register(getattr(models, m))
+"""
 
 # enable the admin:
 from django.contrib import admin
