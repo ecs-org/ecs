@@ -42,27 +42,33 @@
         $('form.main').find('input[type=submit][name=' + name + ']').click();
     };
     
+    ecs.autosave = function(form){
+        var lastSave = form.data('lastSave') || {};
+        var currentData = form.serialize();
+        if(lastSave.data != currentData){
+            lastSave.timestamp = new Date();
+            lastSave.data = currentData;
+            $.ajax({
+                url: window.location.href,
+                type: 'POST',
+                data: form.serialize() + '&autosave=autosave',
+                success: function(response){
+                    console.log(response);
+                    form.data('lastSave', lastSave);
+                }
+            });
+        }
+    };
+    
     ecs.setupAutoSave = function(){
         var form = $('form.main');
         if(form.length){
+            $(window).bind('unload', function(){
+                ecs.autosave(form);
+            });
             setInterval(function(){
-                var lastSave = form.data('lastSave') || {};
-                var currentData = form.serialize();
-                if(lastSave.data != currentData){
-                    lastSave.timestamp = new Date();
-                    lastSave.data = currentData;
-                    $.ajax({
-                        url: window.location.href,
-                        type: 'POST',
-                        data: form.serialize() + '&autosave=autosave',
-                        success: function(response){
-                            console.log(response);
-                            form.data('lastSave', lastSave);
-                        }
-                    });
-                    
-                }
-            }, 10 * 1000);
+                ecs.autosave(form);
+            }, 120 * 1000);
         }
     };
 
