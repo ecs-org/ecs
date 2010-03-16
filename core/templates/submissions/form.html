@@ -12,10 +12,16 @@
         <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
     {% endfor %}
     </ul>
+    {{ block.super }}
+{% endblock %}
+
+{% block header_actions %}
+    {{ block.super }}
+    <a href="" class="submit_main_form">Submit</a>
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post" enctype="multipart/form-data" class="tabbed">
+    <form action="" method="post" enctype="multipart/form-data" class="tabbed main">
         <div id="tabs">
             {% for tab, fieldsets in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">

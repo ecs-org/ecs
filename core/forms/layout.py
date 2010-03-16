@@ -136,7 +136,7 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
 NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
     (u'Studienstatus', [
         (u'Status', [
-            'runs_till', 
+            'reason_for_not_started', 'runs_till',
         ]),
         (u'Teilnehmer', [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',

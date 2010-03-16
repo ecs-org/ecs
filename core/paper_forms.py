@@ -301,13 +301,10 @@ def get_field_info_for_model(model):
     return sorted(fields.values(), key=lambda f: f.number)
 
 def get_field_info(model=None, name=None, default=None):
-    print model, name
     for cls in model.mro():
         if cls.__name__ in _form_info:
             fields = _form_info[cls.__name__].fields
             if name in fields:
                 return fields[name]
-        else:
-            print cls
     return default
     

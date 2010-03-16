@@ -35,7 +35,11 @@
                 ecs.setupFormFieldHelpers(row);
             }
         });
+    };
     
+    ecs.submitMainForm = function(name){
+        $('form.main.tabbed').attr('action', window.location.hash);
+        $('form.main').find('input[type=submit][name=' + name + ']').click();
     };
 
     $(function(){
@@ -56,10 +60,18 @@
                 $(this).attr('action', window.location.hash);
             });
         });
+
+        if($('a.submit_main_form').length){
+            $('form.main').find('input[type=submit][name=submit]').css('display', 'none');
+        }
+        $('a.submit_main_form').click(function(){
+            ecs.submitMainForm('submit');
+            return false;
+        });
         
         $('.doclist a.delete_document').click(function(){
             $(this).parent('div').find('input').remove();
-            $('#upload_button').click();
+            ecs.submitMainForm('upload');
             return false;
         });
         
