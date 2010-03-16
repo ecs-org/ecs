@@ -23,9 +23,14 @@
 {% if stashed_submission_forms%}
 <h2>Offene Studien</h2>
 <ul>
-    {% for stash in stashed_submission_forms %}
-        {% if stash.current_value %}
-            <li><a href="{% url ecs.core.views.create_submission_form docstash_key=stash.key %}">{{ stash.current_value.project_title.0 }} ({{ stash.key }}, version={{ stash.current_version }})</a></li>
+    {% for docstash in stashed_submission_forms %}
+        {% if docstash.current_value %}
+            <li>
+                <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">
+                    {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
+                </a>
+                ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
+            </li>
         {% endif %}
     {% endfor %}
 </ul>
