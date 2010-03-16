@@ -9,7 +9,7 @@
             if($(this).hasClass('required')){
                 notes.push('required');
             }        
-            if(maxlength){
+            if(maxlength && maxlength >= 0){
                 notes.push('max. ' + maxlength + ' Zeichen');
             }
             if(notes.length){
