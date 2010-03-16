@@ -39,6 +39,16 @@
             
             </div>
             
+            <div id="headertext">
+            
+            {% block headertext %}
+            
+            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+            
+            {% endblock %}
+            
+            </div>
+            
             <div id="headernav">
             
             {% block headernav %}
@@ -57,8 +67,6 @@
         {# here should be include "sidebar.html" #}
                             
         <div id="sidebar">
-            
-            <div class="innertube">
             
             {% block sidebar %}
                 
@@ -104,8 +112,6 @@
             
         
             {% endblock %} {# sidebar #}    
-
-            </div>
             
         </div>
 
