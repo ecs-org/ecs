@@ -93,6 +93,7 @@ def create_notification(request, notification_type_pk=None):
     if request.method == 'POST':
         request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
         request.docstash['type_id'] = notification_type_pk
+        request.docstash.name = "%s" % notification_type.name
         if document_formset.is_valid():
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')
@@ -145,6 +146,7 @@ def create_submission_form(request):
 
     if request.method == 'POST':
         request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
+        request.docstash.name = "%s" % request.POST.get('project_title', '')
         if document_formset.is_valid():
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')

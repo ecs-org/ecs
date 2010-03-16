@@ -26,26 +26,33 @@ class DocStash(models.Model):
             self.key = uuid.uuid4().hex
         super(DocStash, self).save(force_insert=force_insert, force_update=force_update)
         
+    def _get_current_attribute(self, name, default=None):
+        if not hasattr(self, '_current_data'):
+            if self.current_version == -1:
+                self._current_data = None
+            else:
+                self._current_data = self.data.get(version=self.current_version)
+        return getattr(self._current_data, name, default)
+    
     @property
     def current_value(self):
-        if not hasattr(self, '_value_cache'):
-            if self.current_version == -1:
-                self._value_cache = {}
-            else:
-                self._value_cache = self.data.get(version=self.current_version).value
-        return self._value_cache
+        return self._get_current_attribute('value', None)
+        
+    @property
+    def current_name(self):
+        return self._get_current_attribute('name', '')
+        
+    @property
+    def modtime(self):
+        return self._get_current_attribute('modtime', None)
         
     def start_transaction(self, version, name=None, user=None):
         if hasattr(self, '_transaction'):
             raise TypeError('transaction already started')
-        if version == -1:
-            value = {}
-        else:
-            try:
-                value = self.data.get(version=version).value
-            except DocStashData.DoesNotExist:
-                raise UnknownVersion("key=%s, version=%s" % (self.key, version))
-        self._transaction = DocStashData(stash=self, version=version+1, value=value, name=name or "")
+        try:
+            self._transaction = DocStashData(stash=self, version=version+1, value=self.current_value, name=self.current_name)
+        except DocStashData.DoesNotExist:
+            raise UnknownVersion("key=%s, version=%s" % (self.key, version))
     
     @_transaction_required
     def commit_transaction(self):
@@ -75,6 +82,17 @@ class DocStash(models.Model):
         return self._transaction.value
         
     value = property(_get_value, _set_value)
+    
+    @_transaction_required
+    def _set_name(self, name):
+        self._transaction._dirty = True
+        self._transaction.name = name
+        
+    @_transaction_required
+    def _get_name(self):
+        return self._transaction.name
+        
+    name = property(_get_name, _set_name)
 
 
 def _create_docstash_transaction_data_proxy(method):
