@@ -2,7 +2,8 @@
 <div id="{{ formset.prefix }}_formset" class="inline_formset">
     {{ formset.management_form }}
     {% for form in formset.forms %}
-        <ol class="form">
+    <div class="form">
+        <ol>
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
@@ -12,5 +13,6 @@
                 {% endif %}
             {% endfor %}
         </ol>
+    </div>
     {% endfor%}
 </div>
