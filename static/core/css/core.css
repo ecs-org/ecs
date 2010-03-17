@@ -175,7 +175,20 @@ form ol li .notes {
 form ol li.focus {
 	background-color: #eeeeff;
 }
-
+div.form > a.delete-row {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: url(/static/core/images/remove.png) no-repeat;
+  padding-left: 20px;
+}
+.form .add-row {
+  background: url(/static/core/images/add.png) no-repeat;
+  padding-left: 20px;
+}
+#content a.delete-row:hover, #content a.add-row:hover {
+  border-bottom: 0 none !important;
+}
 
 /* documents */
 
