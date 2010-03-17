@@ -97,10 +97,10 @@ form .field h3, form .tab h3 {
 }
 
 form, form * {
-	font-size: 12px;
+  font-size: 12px;
 }
 form fieldset {
-	border: 1px solid #eeeeee;
+  border: 1px solid #eeeeee;
   background: #f9feff;
 }
 form legend {
@@ -112,103 +112,122 @@ form legend span {
   display: block;
 }
 
+form ol {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin-top: 20px;
+}
+/*
+form ol:last-child {
+  padding: 10px 0;
+  border-bottom: none;
+}
+*/
 form ol li {
-	padding-top: 10px;
-	clear: both;
-	display: block;
+  padding-top: 10px;
+  clear: both;
+  display: block;
 }
 
 form ol li input[type=text], form ol li textarea {
-	width: 30em;
+  width: 30em;
 }
 
 form ol li textarea {
-	height: 4em;
+  height: 4em;
 }
 
 form ol li > label {
-	width: 20em;
-	padding-right: 1em;
-	text-align: right;
-	float: left;
+  width: 20em;
+  padding-right: 1em;
+  text-align: right;
+  float: left;
 }
 form ol li > label:after {
-	content: ":";
+  content: ":";
 }
 form ol li > .errors {
-	margin-left: 21em;
+  margin-left: 21em;
 }
 
 form ol li.BooleanField {
-	padding-left: 21em;
+  padding-left: 21em;
 }
 
 form ol li.BooleanField > label {
-	float: none;
-	padding-left: 1em;
-	text-align: left;
+  float: none;
+  padding-left: 1em;
+  text-align: left;
 }
 form ol li.BooleanField > label:after {
-	content: none;
+  content: none;
 }
 form ol li.BooleanField > input {
-	float: left;
+  float: left;
 }
 
 form ol li .paperform_number {
-	color: #666666;
-	font-size: 0.9em;
+  color: #666666;
+  font-size: 0.9em;
 }
 form ol li .paperform_number:before {
-	content: "[";
+  content: "[";
 }
 form ol li .paperform_number:after {
-	content: "]";
+  content: "]";
 }
 
 form ol li .notes {
-	float: right;
-	font-size: 0.9em;
-	color: #666666;
+  float: right;
+  font-size: 0.9em;
+  color: #666666;
 }
 
 form ol li.focus {
-	background-color: #eeeeff;
+  background-color: #eeeeff;
 }
-div.form > a.delete-row {
+.inline_formset .form {
+    position: relative;
+    padding-top: 20px;
+}
+.inline_formset .form a.delete_row {
+  display: block;
+  height: 20px;
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 0px;
+  left: 0px;   
   background: url(/static/core/images/remove.png) no-repeat;
   padding-left: 20px;
+  margin-left: 10px;
 }
-.form .add-row {
+.inline_formset a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
   padding-left: 20px;
+  margin-left: 10px;
 }
-#content a.delete-row:hover, #content a.add-row:hover {
+#content a.delete_row:hover, #content a.add_row:hover {
   border-bottom: 0 none !important;
 }
 
 /* documents */
 
 .doclist {
-	border: 1px solid #666666;
+  border: 1px solid #666666;
 }
 
 .doclist h3 {
-	font-size: 1em;
-	background-image: url(/static/core/images/icon-triangle.png);
-	background-repeat: no-repeat;
-	padding-left: 24px;
+  font-size: 1em;
+  background-image: url(/static/core/images/icon-triangle.png);
+  background-repeat: no-repeat;
+  padding-left: 24px;
 }
 
 .doclist div {
-	display: block;
-	margin-left: 2em;
-	padding-left: 24px;
-	background-image: url(/static/core/images/icon-doc.png);
-	background-repeat: no-repeat;	
+  display: block;
+  margin-left: 2em;
+  padding-left: 24px;
+  background-image: url(/static/core/images/icon-doc.png);
+  background-repeat: no-repeat; 
 }
 
 /* notifications */
