@@ -6,6 +6,10 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
 {% block headernav %}
     <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
