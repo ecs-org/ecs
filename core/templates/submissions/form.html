@@ -69,9 +69,13 @@
                         </fieldset>
                     {% endfor %}
 
-                    {% ifequal tab 'Prüfer' %}
+                    {% ifequal tab 'Zentrum' %}
                       <fieldset>
                         <legend><span>Teil B</span></legend>
+                        <ul class="partb_navi">
+                          <li><a href="#partb-add">neuer Reiter Zentrum </a></li>
+                          <li><a href="#partb-remove">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
+                        </ul>
                         {% with investigator_formset as formset %}
                           <div id="{{ formset.prefix }}_formset" class="inline_formset">
                             {{ investigator_formset.management_form }}

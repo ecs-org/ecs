@@ -83,7 +83,7 @@ SUBMISSION_FORM_TABS = (
             'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
         ]),
     ]),
-    (u'Prüfer', []),
+    (u'Zentrum', []),
 
 # TODO
 # The following declaration would fit in nicely, but is not working because
