@@ -139,10 +139,11 @@ def create_submission_form(request):
     data = request.POST or request.docstash.get_query_dict() or None
         
     formsets = {}
-    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet):
+    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorEmployeeFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(data, prefix=name)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
+    investigator_formset = InvestigatorFormSet(data, prefix='document')
     form = SubmissionFormForm(data)
 
     if request.method == 'POST':
@@ -182,6 +183,7 @@ def create_submission_form(request):
         'tabs': SUBMISSION_FORM_TABS,
         'document_formset': document_formset,
         'documents': documents,
+        'investigator_formset': investigator_formset,
     }
     context.update(formsets)
     return render(request, 'submissions/form.html', context)
