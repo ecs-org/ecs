@@ -271,7 +271,7 @@ FormInfo(SubmissionForm, fields=(
 
 
 FormInfo(Investigator, fields=(
-    FieldInfo('', 'ethics_commission', u'Zentrum'),
+    FieldInfo('', 'ethics_commission', u'Ethik-Kommission'),
     FieldInfo('', 'main', u'Hauptprüfer'),
     FieldInfo('10.1', 'name', u'Name'),
     FieldInfo('10.2', 'organisation', u'Krankenanstalt/Institut/Abteilung'),
