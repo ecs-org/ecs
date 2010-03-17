@@ -139,7 +139,7 @@
           // TODO some warning, because entered data might get lost
           // TODO better disable than delete
 
-          $('.tab_headers >li:last').remove();  // TODO this removes the LAST not CURRENT tab, change this
+          $('.tab_headers li:last').remove();  // TODO this removes the LAST not CURRENT tab, change this
           ecs.partbNo--;
         });
     
