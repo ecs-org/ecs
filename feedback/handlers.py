@@ -1,6 +1,6 @@
 from piston.handler import BaseHandler
 from piston.doc import generate_doc
-from feedbackend.models import Feedback
+from feedback.models import Feedback
 import datetime
 
 class FeedbackHandler(BaseHandler):

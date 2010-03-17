@@ -10,7 +10,7 @@ URL map for feedback backend.
 from django.conf.urls.defaults import *
 from piston.resource import Resource
 
-from feedbackend.handlers import FeedbackHandler, FeedbackCreate, FeedbackSearch
+from feedback.handlers import FeedbackHandler, FeedbackCreate, FeedbackSearch
 
 feedbackpost_resource = Resource(handler=FeedbackHandler)
 feedbackpost_create = Resource(handler=FeedbackCreate)

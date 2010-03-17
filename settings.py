@@ -128,6 +128,7 @@ INSTALLED_APPS = (
 
     'core',
     'utils',
+    'ecs.feedback',
     'docstash',
     'south',
     'django_nose',
