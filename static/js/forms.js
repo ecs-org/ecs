@@ -36,6 +36,15 @@
             }
         });
     };
+
+    ecs.info = function(str) {
+        $('#info').html(str).css('opacity', '1.0');
+        $('#info').slideDown(2 * 1000, function () {
+          $('#info').fadeTo(4 * 1000, 0.4, function () {
+            $('#info').slideUp(2 * 1000);
+          })
+        });
+    };
     
     ecs.submitMainForm = function(name){
         $('form.main.tabbed').attr('action', window.location.hash);
@@ -55,6 +64,7 @@
                 success: function(response){
                     //console.log(response);
                     form.data('lastSave', lastSave);
+                    ecs.info('auto-saved');
                 }
             });
         }
