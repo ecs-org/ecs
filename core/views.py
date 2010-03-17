@@ -47,12 +47,6 @@ def download_document(request, document_pk=None):
     response['Content-Disposition'] = 'attachment;filename=document_%s.pdf' % doc.pk
     return response
     
-def delete_document(request, document_pk=None):
-    doc = get_object_or_404(Document, pk=document_pk)
-    doc.deleted = True
-    doc.save()
-    return redirect_to_next_url(request)
-
 # notifications
 def notification_list(request):
     return render(request, 'notifications/list.html', {
