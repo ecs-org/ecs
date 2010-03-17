@@ -123,7 +123,7 @@
           // add tab link
           var tabNo = ecs.partbNo + ecs.partbOffset;
           var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
-	  $('.tab_headers').append(tabItem);
+          $('.tab_headers').append(tabItem);
           // add fields
           var partb = $('div #tabs-' + (tabNo - 1)).clone();
 
@@ -135,11 +135,19 @@
         });
 
         $('.partb_remove').click(function() {
-          if (ecs.partbNo < 2) return;
+          if (ecs.partbNo < 2) {
+            alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
+            return;
+          }
+
           // TODO some warning, because entered data might get lost
           // TODO better disable than delete
 
-          $('.tab_headers li:last').remove();  // TODO this removes the LAST not CURRENT tab, change this
+          // TODO these ops remove the LAST not CURRENT tab, change this
+          $('.tab_headers li:last').remove();
+          var tabNo = ecs.partbNo + ecs.partbOffset;
+          $('div #tabs-' + tabNo).remove();
+
           ecs.partbNo--;
         });
     
