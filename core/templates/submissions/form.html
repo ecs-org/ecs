@@ -73,8 +73,8 @@
                       <fieldset>
                         <legend><span>Teil B</span></legend>
                         <ul class="partb_navi">
-                          <li><a href="#partb-add">neuer Reiter Zentrum </a></li>
-                          <li><a href="#partb-remove">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
+                          <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
+                          <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
                         </ul>
                         {% with investigator_formset as formset %}
                             {% for form in formset.forms %}
@@ -125,7 +125,7 @@
                 ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
                 ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
                 //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
+                //ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');  // TODO setupFormFieldHelpers()
                 ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
                 
                 /*

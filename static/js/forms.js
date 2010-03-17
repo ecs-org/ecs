@@ -76,6 +76,9 @@
         }
     };
 
+    ecs.partbNo = 1;
+    ecs.partbOffset = $('.tab_headers > li').size() - 1;
+
     $(function(){
         if(!$('.tab_headers > li.active').length && !window.location.hash){
             $(".tab_headers > li:first-child").addClass('active');
@@ -110,6 +113,35 @@
             return false;
         });
         
+
+        //
+        // handlers for adding and removing part B tabs
+        //
+
+        $('.partb_add').click(function() {
+          ecs.partbNo++;
+          // add tab link
+          var tabNo = ecs.partbNo + ecs.partbOffset;
+          var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
+	  $('.tab_headers').append(tabItem);
+          // add fields
+          var partb = $('div #tabs-' + (tabNo - 1)).clone();
+
+          // TODO fixup copy
+          partb.attr('id', 'tabs-' + tabNo);
+
+          // copy
+          partb.appendTo('div #tabs');
+        });
+
+        $('.partb_remove').click(function() {
+          if (ecs.partbNo < 2) return;
+          // TODO some warning, because entered data might get lost
+          // TODO better disable than delete
+
+          $('.tab_headers >li:last').remove();  // TODO this removes the LAST not CURRENT tab, change this
+          ecs.partbNo--;
+        });
     
     }); 
 
