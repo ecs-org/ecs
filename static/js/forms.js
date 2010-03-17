@@ -136,14 +136,15 @@
           }
           // TODO drop all but first InvestigatorEmployee entries
           // TODO fix form id's
-         // TODO reset entry fields
+          // TODO reset entry fields
+          return false;
         });
 
         // Part B remove
         $('.partb_remove').click(function() {
           if (ecs.partbNo < 2) {
             alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
-            return;
+            return false;
           }
           // TODO some warning, because entered data might get lost
           // TODO better disable than delete
@@ -152,6 +153,7 @@
           var tabNo = ecs.partbNo + ecs.partbOffset;
           $('div #tabs-' + tabNo).remove();
           ecs.partbNo--;
+          return false;
         });
     
     }); 
