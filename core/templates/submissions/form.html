@@ -71,7 +71,7 @@
 
                     {% ifequal tab 'Zentrum' %}
                       <fieldset>
-                        <legend><span>Teil B</span></legend>
+                        <legend><span class="partbno">Zentrum</span></legend>
                         <ul class="partb_navi">
                           <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
                           <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
@@ -87,7 +87,7 @@
                                   {% if not field.is_hidden %}
                                     {% ifequal field.name 'ethics_commission' %}
                                 <fieldset>
-                                  <legend><span class="partbno">Zentrum</span></legend>
+                                  <!-- <legend></legend> -->
                                     {% endifequal %}
                                     {% ifequal field.name 'name' %}
                                 </fieldset>
