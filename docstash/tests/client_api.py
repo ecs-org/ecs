@@ -6,12 +6,10 @@
 """
 Unittests for docstash API
 """
-
-from django.test import TestCase
-from django.test.client import Client
 from django.utils.simplejson import loads, dumps
+from ecs.utils.testcases import LoginTestCase
 
-class ClientApiTest(TestCase):
+class ClientApiTest(LoginTestCase):
     def test_create(self):
         response = self.client.post("/docstash/create/test/")
         data = loads(response.content)

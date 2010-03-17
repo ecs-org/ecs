@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.test import TestCase
 from django.utils import simplejson
-
+from ecs.utils.testcases import LoginTestCase
 from ecs.docstash.models import DocStash
 
-class DecoratorApiTest(TestCase):
+class DecoratorApiTest(LoginTestCase):
     urls = 'ecs.docstash.tests.urls'
     
     def _check_version_cookie(self, key, version):

@@ -1,9 +1,10 @@
 import datetime, os
-from django.test import TestCase
 from django.core.files.base import File
+from ecs.utils.testcases import LoginTestCase
 from ecs.core.models import Document, DocumentType
 
-class DocumentsTest(TestCase):
+
+class DocumentsTest(LoginTestCase):
     def _create_document(self):
         doctype = DocumentType.objects.create(name="Test")
         pdf_file = open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb')

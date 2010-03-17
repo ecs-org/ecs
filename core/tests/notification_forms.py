@@ -1,10 +1,10 @@
 import os
-from django.test import TestCase
+from ecs.utils.testcases import LoginTestCase
 from ecs.core.models import NotificationType, DocumentType
 
 from ecs.core.tests.submissions_and_notifications import create_submission_form
 
-class NotificationFormTest(TestCase):
+class NotificationFormTest(LoginTestCase):
     def test_creation_type_selection(self):
         NotificationType.objects.create(name='foo notif')
         response = self.client.get('/core/notification/new/')
