@@ -183,6 +183,7 @@ def create_submission_form(request):
         'tabs': SUBMISSION_FORM_TABS,
         'document_formset': document_formset,
         'documents': documents,
+        'investigator_formset': investigator_formset,
     }
     context.update(formsets)
     return render(request, 'submissions/form.html', context)
