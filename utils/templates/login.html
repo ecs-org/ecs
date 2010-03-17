@@ -24,18 +24,6 @@
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
-{% block logo %}
-  <img src="{{ MEDIA_URL }}core/images/logo.png" alt="ECS"/>
-{% endblock %}
-
-{% block account %} 
-  <!-- <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
-  Eingeloggt als Max Mustermann
-  <p><a href="">Profil</a> | 
-  <a href="">Logout</a></p> 
-  <p><a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
-  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a></p>  -->
-{% endblock %}
 
 {% block content %} <!-- usertoolbar -->
   {% if form.errors %}
@@ -60,8 +48,4 @@
   </form>
   <!--
   <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
-{% endblock %}
-        
-{% block usermenu %}
-
 {% endblock %}

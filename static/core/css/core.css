@@ -197,7 +197,8 @@ form ol li.focus {
   top: 0px;
   left: 0px;   
   background: url(/static/core/images/remove.png) no-repeat;
-  padding-left: 20px;
+  background-position: 0 5px;
+  padding: 5px 0 5px 20px;
   margin-left: 10px;
 }
 .inline_formset a.add_row {
