@@ -1,0 +1,164 @@
+<!-- START feedback system -->
+
+<!-- user input dialog --> 
+<div class="modal" id="feedback"> 
+  <h2>Geben Sie uns Ihr Feedback!</h2> 
+ 
+  <p> 
+    Bitte w&auml;hlen Sie den Feedback Typ aus (Idee oder Frage).
+    <br /> 
+    Zum Schliessen die Schaltfl&auml;che oder die ESC-Taste dr&uuml;cken. 
+  </p> 
+
+  <ul class="tabs"> 
+    <li><a href="#" onclick="">Idee</a></li> 
+    <li><a href="#" onclick="">Frage</a></li> 
+  </ul> 
+ 
+  <div class="panes"> 
+    <!-- Idea -->
+    <div class="pane">
+      <!-- input form. you can press enter too --> 
+      <div class="tooltip"></div>
+      <form id="ideaFeedbackForm" action="#">
+      <div id="ideaInputs"> 
+        <table width="100%" border="0">
+          <tr>
+            <td width="20%">
+              <table border="0">
+                <tr>
+                  <td>
+                    <label for="description">Beschreibung</label>
+                    <textarea id="ideaDescription" 
+                              cols="30" rows="6"
+                              title="Geben Sie bitte die Beschreibung Ihrer Idee hier ein."></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="summary">Zusammenfassung</label>
+                    <input id="ideaSummary" type="text" 
+                           size="30" maxlength="80"
+                           title="Geben Sie bitte eine zusammenfassende Zeile Ihrer Idee hier ein. (Max. 80 Zeichen)"/>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <div>
+                [<a class="prevPage browse up">&uArr; vorherige</a>]
+                <table border="0" cellpadding="0">
+                <tr>
+                <td width="235"><b>Was andere gesagt haben:</b></td>
+                <!-- <td width="40" align="right"><b>me<sub>2</sub></b></td> -->
+                <!-- <td width="10">&nbsp;<b>!</b></td> -->
+                </tr>
+                </table>
+                <!-- root element for scrollable --> 
+                <div class="scrollable vertical" id="ideaScrollable"> 
+                  <!-- root element for the items --> 
+                  <div class="items">
+                  </div> 
+                </div>
+                [<a class="nextPage browse down">&dArr; n&auml;chste</a>]
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table width="100%" border="0">
+                <tr>
+                  <td align="left">
+                    <button type="submit" 
+                            title="Speichern Sie Ihr Feedback."> Speichern </button> 
+                  </td>
+                  <td align="right">
+                    <button type="button" class="close" 
+                            title="Brechen Sie dieses Feedback ab."> Abbruch </button>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+      </div>
+      </form> 
+    </div>
+
+    <!-- Question --> 
+    <div class="pane">
+      <!-- input form. you can press enter too --> 
+      <form id="questionFeedbackForm" action="#">
+      <div id="questionInputs"> 
+        <table width="100%" border="0">
+          <tr>
+            <td width="20%">
+              <table border="0">
+                <tr>
+                  <td>
+                    <label for="description">Beschreibung</label>
+                    <textarea id="questionDescription" 
+                              cols="30" rows="6"
+                              title="Geben Sie bitte die Beschreibung Ihrer Frage hier ein."></textarea>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label for="summary">Zusammenfassung</label>
+                    <input id="questionSummary" type="text" 
+                           size="30" maxlength="80"
+                           title="Geben Sie bitte eine zusammenfassende Zeile Ihrer Frage hier ein. (Max. 80 Zeichen)"/>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+              <div>
+                [<a class="prevPage browse up">&uArr; vorherige</a>]
+                <table border="0" cellpadding="0">
+                <tr>
+                <td width="235"><b>Was andere gesagt haben</b></td>
+                <!-- <td width="40" align="right"><b>me<sub>2</sub></b></td> -->
+                <!-- <td width="10">&nbsp;<b>!</b></td> -->
+                </tr>
+                </table>
+                <!-- root element for scrollable --> 
+                <div class="scrollable vertical" id="questionScrollable"> 
+                  <!-- root element for the items --> 
+                  <div class="items">
+                  </div> 
+                </div>
+                [<a class="nextPage browse down">&dArr; n&auml;chste</a>]
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table width="100%" border="0">
+                <tr>
+                  <td align="left">
+                    <button type="submit" 
+                            title="Speichern Sie Ihr Feedback."> Speichern </button> 
+                  </td>
+                  <td align="right">
+                    <button type="button" class="close" 
+                            title="Brechen Sie dieses Feedback ab."> Abbruch </button>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </table>
+      </div>
+      </form> 
+    </div>
+
+  </div> <!-- panes -->
+ 
+</div> <!-- modal -->
+
+<!-- END feedback system -->
