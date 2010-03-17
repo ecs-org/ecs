@@ -24,6 +24,11 @@ var dirty = [];
 // backend interaction
 ////////////////////////
 
+function get_origin() {
+    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-")
+    alert(origin + "\n" + window.location.href + "\n" + x)
+    return x
+}
 
 // retrieve the set of existing feedback for (user, email, origin, feedback_type)
 function backend_load() {
@@ -37,7 +42,7 @@ function backend_load() {
   var fbt = (feedback_type == 'idea') ? 'i' : 'q';
 
   // backend call
-  $.getJSON('/feedback/' + fbt + '/', [], function (response) {
+    $.getJSON('/feedback/' + fbt + '/' + get_origin() + "/", [], function (response) {
     // we expect an array of data records
     var data = [];
     var n = response.length;
@@ -85,7 +90,7 @@ function backend_save(input) {
     feedbacktype: (feedback_type == 'idea') ? 'i' : 'q',
     summary: input.summary,
     description: input.description,
-    origin: origin, 
+    origin: get_origin(),
     username: user,
     email: email 
   },

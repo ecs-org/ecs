@@ -38,10 +38,13 @@ class FeedbackSearch(BaseHandler):
     model = Feedback
     fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'username', 'email', 'pub_date')
     allowed_methods = ("GET", )
-    def read(self, request, type, offsetdesc):
+    def read(self, request, type, origin, offsetdesc):
         objs = Feedback.objects.order_by("id")
         if type != "all":
             objs = objs.filter(feedbacktype=type)
+        if origin:
+            print "applying origin limit", origin
+            objs = objs.filter(origin=origin)
         offset = 0
         count = 20
         if offsetdesc:
