@@ -26,7 +26,6 @@ var dirty = [];
 
 function get_origin() {
     x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-")
-    alert(origin + "\n" + window.location.href + "\n" + x)
     return x
 }
 
