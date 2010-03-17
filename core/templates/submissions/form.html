@@ -76,6 +76,7 @@
                           <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
                           <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
                         </ul>
+                        {{ investigator_formset.mangement_form }}
                         {% with investigator_formset as formset %}
                             {% for form in formset.forms %}
                               {# Investigator #}
