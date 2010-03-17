@@ -118,6 +118,7 @@
         // handlers for adding and removing part B tabs
         //
 
+        // Part B add
         $('.partb_add').click(function() {
           ecs.partbNo++;
           // add tab link
@@ -125,29 +126,31 @@
           var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
           $('.tab_headers').append(tabItem);
           // add fields
-          var partb = $('div #tabs-' + (tabNo - 1)).clone();
-
-          // TODO fixup copy
-          partb.attr('id', 'tabs-' + tabNo);
-
-          // copy
+          var partb = $('div #tabs-' + (tabNo - 1)).clone(true);
           partb.appendTo('div #tabs');
+          // fixup copy
+          $('div #tabs >div:last').attr('id', 'tabs-' + tabNo);
+          $('div #tabs-' + tabNo + ' span.partbno').html('Zentrum ' + ecs.partbNo);
+          if (ecs.partbNo == 2) {
+            $('div #tabs-' + (tabNo - 1) + ' span.partbno').html('Zentrum 1');
+          }
+          // TODO drop all but first InvestigatorEmployee entries
+          // TODO fix form id's
+         // TODO reset entry fields
         });
 
+        // Part B remove
         $('.partb_remove').click(function() {
           if (ecs.partbNo < 2) {
             alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
             return;
           }
-
           // TODO some warning, because entered data might get lost
           // TODO better disable than delete
-
           // TODO these ops remove the LAST not CURRENT tab, change this
           $('.tab_headers li:last').remove();
           var tabNo = ecs.partbNo + ecs.partbOffset;
           $('div #tabs-' + tabNo).remove();
-
           ecs.partbNo--;
         });
     
