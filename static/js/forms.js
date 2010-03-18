@@ -36,6 +36,15 @@
             }
         });
     };
+
+    ecs.info = function(str) {
+        $('#info').html(str).css('opacity', '1.0');
+        $('#info').slideDown(2 * 1000, function () {
+          $('#info').fadeTo(4 * 1000, 0.4, function () {
+            $('#info').slideUp(2 * 1000);
+          })
+        });
+    };
     
     ecs.submitMainForm = function(name){
         $('form.main.tabbed').attr('action', window.location.hash);
@@ -55,6 +64,7 @@
                 success: function(response){
                     //console.log(response);
                     form.data('lastSave', lastSave);
+                    ecs.info('auto-saved');
                 }
             });
         }
@@ -75,6 +85,9 @@
             }, 120 * 1000);
         }
     };
+
+    ecs.partbNo = 1;
+    ecs.partbOffset = $('.tab_headers > li').size() - 1;
 
     $(function(){
         if(!$('.tab_headers > li.active').length && !window.location.hash){
@@ -110,6 +123,93 @@
             return false;
         });
         
+
+        //
+        // handlers for adding and removing part B tabs
+        // (using some code & ideas from jquery.formset.js)
+        //
+
+        ecs.updateElementIndex = function(elem, prefix, ndx) {
+            var idRegex = new RegExp('(' + prefix + '-\\d+-)|(^)');
+            var replacement = prefix + '-' + ndx + '-';
+            if (elem.attr('for')) elem.attr('for', elem.attr('for').replace(idRegex, replacement));
+            if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
+            if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
+        };
+
+
+        /* Part B add */
+        $('.partb_add').click(function() {
+          ecs.partbNo++;
+          // add tab link
+          var tabNo = ecs.partbNo + ecs.partbOffset;
+          var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
+          $('.tab_headers').append(tabItem);
+          // add fields
+          var partb = $('#tabs-' + (tabNo - 1)).clone(true);
+          partb.appendTo('#tabs');
+
+          // fixup copy:
+
+          // fix tab id
+          $('#tabs >div:last').attr('id', 'tabs-' + tabNo); 
+
+          // remove formset management_form data copies
+          $('#tabs-' + tabNo + ' #id_investigator-TOTAL_FORMS').remove();
+          $('#tabs-' + tabNo + ' #id_investigator-INITIAL_FORMS').remove();
+          
+          // TODO drop all but first InvestigatorEmployee entries
+          // Interim hack to allow a consistent save at this stage
+          $('#tabs-' + tabNo + ' #investigatoremployee_formset').empty().html('<center>(Dieser Abschnitt ist absichtlich deaktiviert)</center>');
+
+          // TODO fixups due to we can use only one Investigator Employee formset
+          
+          // fix form id's
+          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
+            ecs.updateElementIndex($(this), 'investigator', ecs.partbNo - 1);
+          });
+
+          // update formset count
+          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
+
+          // reset entry fields
+          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
+            var elem = $(this);
+            if (elem.is('input:checkbox') || elem.is('input:radio')) {
+              elem.attr('checked', false);
+            } else {
+              elem.val('');
+            }
+          });
+
+          // show numbers
+          $('div #tabs-' + tabNo + ' span.partbno').html('Zentrum ' + ecs.partbNo);
+          if (ecs.partbNo == 2) {
+            $('div #tabs-' + (tabNo - 1) + ' span.partbno').html('Zentrum 1');
+          }
+          return false;
+        });
+
+
+        /* Part B remove */
+        $('.partb_remove').click(function() {
+          if (ecs.partbNo < 2) {
+            alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
+            return false;
+          }
+          // TODO some warning, because entered data might get lost
+          // TODO better disable than delete
+          // TODO these ops remove the LAST not CURRENT tab, change this
+          $('.tab_headers li:last').remove();
+          var tabNo = ecs.partbNo + ecs.partbOffset;
+          $('div #tabs-' + tabNo).remove();
+          ecs.partbNo--;
+
+          // update formset count
+          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
+
+          return false;
+        });
     
     }); 
 

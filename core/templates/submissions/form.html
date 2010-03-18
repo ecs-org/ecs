@@ -6,6 +6,10 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
 {% block headernav %}
     <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
@@ -69,71 +73,40 @@
                         </fieldset>
                     {% endfor %}
 
-                    {% ifequal tab 'Prüfer' %}
+                    {% ifequal tab 'Zentrum' %}
                       <fieldset>
-                        <legend><span>Teil B</span></legend>
+                        <legend><span class="partbno">Zentrum</span></legend>
+                        <ol class="partb_navi">
+                          <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
+                          <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
+                        </ol>
+                        {{ investigator_formset.management_form }}
                         {% with investigator_formset as formset %}
-                          <div id="{{ formset.prefix }}_formset" class="inline_formset">
-                            {{ investigator_formset.management_form }}
-<!-- code for dynamic solution
-                            {{ investigatoremployee_formset.management_form }}
--->
-                            {% for form in formset.forms %}
-                              {# Investigator #}
-                              <ol class="form">
+                          {% for form in formset.forms %}
+                            {# Investigator #}
+                            <div class="form">
+                              <ol>
                                 {% for hidden in form.hidden_fields %}
                                   {{ hidden }}
                                 {% endfor %}
                                 {% for field in form %}
                                   {% if not field.is_hidden %}
-                                    {% ifequal field.name 'name' %}
-                                <fieldset>
-                                  <legend><span>Angaben zur Prüferin/zum Prüfer</span></legend>
-                                    {% endifequal %}
-                                    {% ifequal field.name 'subject_count' %}
-                                </fieldset>
-                                <fieldset>
-                                  <legend><span>Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en an dieser Prüfstelle</span></legend>
-                                    {% endifequal %}
                                     {% include "forms/field.html" %}
                                   {% endif %}
                                 {% endfor %}
-                                </fieldset>
-<!-- InvestigatorEmploye: dynamic code
-                                <fieldset>
-                                  <legend><span>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</span></legend>
-                                  {# Employee #}
-                                  <div id="{{ investigatoremployee_formset.prefix }}_formset" class="inline_formset">
-                                    {# note: investigatoremployee_formset.management_form is defined once above #}
-                                    {% for form2 in investigatoremployee_formset.forms %}
-                                      {# match investigator and investigatoremployee #}
-                                      {# PROBLEM: forlop.counter seems wrong concept here #}
-                                      {% ifequal form2.investigator_index.value forloop.counter %} 
-                                        <p>Hit {{ forloop.counter }} </p>                           
-                                      {% endifequal %}
-                                      <fieldset>
-                                        <legend><span>Mitarbeiter</span></legend>
-                                        {% with investigatoremployee_formset as formset %}
-                                        {% include "forms/inline_formset.html" %}
-                                        {% endwith %}
-                                      </fieldset>
-                                    {% endfor %}  {# form2 #}
-                                  </div>
-                                </fieldset>
--->
                               </ol> {# Investigator #}
-                            {% endfor%}
-                          </div>
+                            </div>
+                          {% endfor%}
                         {% endwith %}
                       </fieldset>
-<!-- intermediate solution -->
+
                       <fieldset>
                         <legend><span>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</span></legend>
                           {% with investigatoremployee_formset as formset %}
                           {% include "forms/inline_formset.html" %}
                           {% endwith %}
                       </fieldset>
-<!-- end intermediate solution -->
+
                     {% endifequal %}
                 </div>
             {% endfor %}

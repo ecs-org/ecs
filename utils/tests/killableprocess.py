@@ -5,7 +5,9 @@ from django.conf.urls.defaults import patterns, url
 from django.http import HttpResponse
 
 from ecs.utils import killableprocess
+from ecs.utils import forceauth
 
+@forceauth.exempt
 def timeout_view(request):
     popen = killableprocess.Popen('top', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     retcode = popen.wait(timeout=1)

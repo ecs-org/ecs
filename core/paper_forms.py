@@ -271,8 +271,10 @@ FormInfo(SubmissionForm, fields=(
 
 
 FormInfo(Investigator, fields=(
-    FieldInfo('10.1', 'name', u'Name'),
-    FieldInfo('10.2', 'organisation', u'Krankenanstalt/Institut/Abteilung'),
+    FieldInfo('10.2', 'organisation', u'Prüfzentrum'),
+    FieldInfo('', 'ethics_commission', u'Ethik-Kommission'),
+    FieldInfo('', 'main', u'Hauptprüfer'),
+    FieldInfo('10.1', 'name', u'Prüfarzt Name'),
     FieldInfo('10.3', 'phone', u'Telefon'),
     FieldInfo('10.4', 'mobile', u'"Pieps"/Mobil'),
     FieldInfo('10.5', 'fax', u'Fax'),

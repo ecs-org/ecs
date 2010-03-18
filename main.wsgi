@@ -44,6 +44,7 @@ appdir = os.path.dirname(os.path.abspath(x))
 appname = os.path.basename(appdir) 
 appbasedir = os.path.join(appdir, "..")
 basedir = os.path.join(appdir, "../..")
+# TODO: is hardcoded library path, and should be replaced
 envdir = os.path.join(basedir, "environment/lib/python2.6/site-packages")
 #print "ad %s, an %s, ab %s, b %s, e %s" % (appdir,appname,appbasedir,basedir,envdir) 
 

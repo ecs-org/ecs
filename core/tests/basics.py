@@ -1,4 +1,4 @@
-from django.test import TestCase
+from ecs.utils.testcases import LoginTestCase
 
 def test_import():
     "test if the urls module and the views are importable"
@@ -7,15 +7,7 @@ def test_import():
     import ecs.core.views
     import ecs.core.models
     
-class CoreUrlsTest(TestCase):
-    #def setUp(self):
-    #    from django.contrib.auth.models import User
-    #    u = User.objects.create(username="user")
-    #    u.set_password("password")
-    #    u.save()
-    #    self.client.login("user", "password")
-    # TODO: fix the login mess for unittests.
-
+class CoreUrlsTest(LoginTestCase):
     def test_index(self):
         response = self.client.get('/core/')
         self.failUnlessEqual(response.status_code, 200)

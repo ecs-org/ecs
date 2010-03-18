@@ -20,7 +20,6 @@ urlpatterns = patterns(
     url(r'^submission_data_for_notification/$', 'ecs.core.views.submission_data_for_notification'),
 
     url(r'^document/(?P<document_pk>\d+)/download/$', 'ecs.core.views.download_document'),
-    url(r'^document/(?P<document_pk>\d+)/delete/$', 'ecs.core.views.delete_document'),
 
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),

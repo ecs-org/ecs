@@ -4,15 +4,15 @@
 """
 Middleware that forces Authentication.
 """
-
-from django.contrib.auth.views import login
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+
+def exempt(view):
+    view._forceauth_exempt = True
+    return view
 
 class ForceAuth:
-    def process_request(self, request):
-        if not request.path.startswith('/accounts/login/') and "/js/" not in request.path and "/css/" not in request.path and request.user.is_anonymous():
-            if request.POST:
-                return login(request)
-            else:
-                return HttpResponseRedirect('/accounts/login/?next=%s' % request.path)
+    def process_view(self, request, view, args, kwargs):
+        if not getattr(view, '_forceauth_exempt', False) and request.user.is_anonymous():
+            return HttpResponseRedirect(reverse('django.contrib.auth.views.login') + '?next=%s' % request.path)
 
