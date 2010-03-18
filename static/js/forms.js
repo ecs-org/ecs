@@ -130,7 +130,7 @@
         //
 
         ecs.updateElementIndex = function(elem, prefix, ndx) {
-	    var idRegex = new RegExp('(' + prefix + '-\\d+-)|(^)');
+            var idRegex = new RegExp('(' + prefix + '-\\d+-)|(^)');
             var replacement = prefix + '-' + ndx + '-';
             if (elem.attr('for')) elem.attr('for', elem.attr('for').replace(idRegex, replacement));
             if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
@@ -159,6 +159,9 @@
           $('#tabs-' + tabNo + ' #id_investigator-INITIAL_FORMS').remove();
           
           // TODO drop all but first InvestigatorEmployee entries
+          // Interim hack to allow a consistent save at this stage
+          $('#tabs-' + tabNo + ' #investigatoremployee_formset').empty().html('<center>(Dieser Abschnitt ist absichtlich deaktiviert)</center>');
+
           // TODO fixups due to we can use only one Investigator Employee formset
           
           // fix form id's
