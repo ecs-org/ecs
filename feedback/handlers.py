@@ -2,6 +2,7 @@ from piston.handler import BaseHandler
 from piston.doc import generate_doc
 from feedback.models import Feedback
 import datetime
+from reversion.models import Version
 
 class FeedbackHandler(BaseHandler):
     model = Feedback
@@ -35,15 +36,22 @@ class FeedbackCreate(BaseHandler):
         return Feedback.objects.all()
 
 class FeedbackSearch(BaseHandler):
-    model = Feedback
-    fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'username', 'email', 'pub_date')
+    #model = Feedback
+    #exclude = ()
+    #fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'qqqusername', 'email', 'pub_date')
     allowed_methods = ("GET", )
+
+    @classmethod
+    def username(dummy, self):
+        version_list = Version.objects.get_for_object(self)
+        print version_list[-1].revision.user
+        return "XXX"
+
     def read(self, request, type, origin, offsetdesc):
         objs = Feedback.objects.order_by("id")
         if type != "all":
             objs = objs.filter(feedbacktype=type)
         if origin:
-            print "applying origin limit", origin
             objs = objs.filter(origin=origin)
         offset = 0
         count = 20
@@ -51,7 +59,6 @@ class FeedbackSearch(BaseHandler):
             offsets = offsetdesc.split("/")
             if len(offsets) == 3:
                 objs = objs.filter(origin=offsets[0])
-                print "ORIGIN", offsets[0]
                 offsets = offsets[1:]
             if len(offsets) == 2:
                 count = int(offsets[1])
@@ -61,11 +68,25 @@ class FeedbackSearch(BaseHandler):
                 offset = -count
             else:
                 offset = int(offsets[0])
-        print offset, count
+        print dir(self)
         if offset >= 0:
-            return objs.all()[offset:count]
+            data = list(objs.all()[offset:count])
         else:
-            return list(objs.all())[offset:]
+            data = list(objs.all())[offset:]
+        result = []
+        for item in data:
+            ditem = {}
+            for k in ('id', 'feedbacktype', 'summary', 'description', 'origin', 'pub_date'):
+                ditem[k] = getattr(item, k, None)
+                try:
+                    user = list(Version.objects.get_for_object(item))[-1].revision.user
+                    ditem["username"] = user.username
+                    ditem["email"] = user.email
+                except:
+                    import sys
+                    print sys.exc_info()
+            result.append(ditem)
+        return result
 
                 
 

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 import reversion
+from reversion.models import Version
+
 
 class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'Idea'),('q','Question'))
