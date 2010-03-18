@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
@@ -39,10 +40,17 @@ class SubmissionFormForm(forms.ModelForm):
     medtech_certified_for_other_indications = NullBooleanField(required=False)
     medtech_ce_symbol = NullBooleanField(required=False)
     medtech_manual_included = NullBooleanField(required=False)
+    
+    # non model fields (required for validation)
+    invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
 
     class Meta:
         model = SubmissionForm
         exclude = ('submission', 'documents', 'ethics_commissions', 'date_of_receipt')
+        
+    def clean(self):
+        cleaned_data = super(SubmissionFormForm, self).clean()
+        return cleaned_data
 
 ## documents ##
         
