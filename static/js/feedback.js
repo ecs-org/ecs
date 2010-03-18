@@ -143,11 +143,8 @@ function feedback_render(data) {
       var d = data[i];
       var summary = d.summary;
       var me2s = d.me2s;
-      var details = 'id=[' + d.id +
-                    '], description=[' + d.description +
-               	    '], date=[' + d.date +
-                    '], origin=[' + d.origin +
-                    ']';
+      var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
+
       var html = html1 + summary + html2 + details + html3 +html4; // + me2s + html4;
       itemWrap.append(html);      
     }
