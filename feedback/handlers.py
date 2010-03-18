@@ -7,8 +7,16 @@ from reversion.models import Version
 class FeedbackHandler(BaseHandler):
     model = Feedback
     fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'username', 'email', 'pub_date')
-    allowed_methods = ('GET', 'PUT')
+    allowed_methods = ('GET', 'PUT', "POST")
     
+    def create(self, request, pk):
+        obj = Feedback.objects.get(id=pk)
+        if request.POST.get("metoo") != "false":
+            obj.me_too_votes.add(request.user)
+        else:
+            obj.me_too_votes.remove(request.user)
+        return "OK"
+        
     def read(self, request, pk):
         return Feedback.objects.get(id=pk)
     
@@ -78,13 +86,19 @@ class FeedbackSearch(BaseHandler):
             ditem = {}
             for k in ('id', 'feedbacktype', 'summary', 'description', 'origin', 'pub_date'):
                 ditem[k] = getattr(item, k, None)
+                ditem["metoo"] = 0
                 try:
                     user = list(Version.objects.get_for_object(item))[-1].revision.user
                     ditem["username"] = user.username
                     ditem["email"] = user.email
+                    if user == request.user:
+                        ditem["metoo"] = 2
                 except:
                     import sys
                     print sys.exc_info()
+                me_too_users = list(item.me_too_votes.all())
+                if request.user in me_too_users:
+                    ditem["metoo"] = 1
             result.append(ditem)
         return result
 

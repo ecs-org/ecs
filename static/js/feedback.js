@@ -58,8 +58,7 @@ function backend_load() {
         email: rin.email,
         // extra
         date: rin.pub_date,
-        // missing
-        me2s: 0
+        me2s: rin.metoo,
       };
       data[i] = rout;
     }
@@ -101,6 +100,15 @@ function backend_save(input) {
   dirty[feedback_type] = true;
 }
 
+function me_too_toogle(id, checked) {
+  $.post('/feedback/' + id, 
+  { 
+      metoo: checked,
+  },
+  function () {
+    // deal with response
+  }, 'json');
+}
 
 function feedback_render(data) {
     var html1 = '<div>' +
@@ -116,13 +124,13 @@ function feedback_render(data) {
                 '</td>' +
  	        '<td width="40" align="right">';
     // 224
-    var html4 = '</td>' +
+    var html4a = '</td>' +
                 // wuxxin: temporary disable
-        //'<td width="10">' +
-        //'<input type="checkbox"' + 
-        //' name="me2" value="1"' + 
-        //' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
-        //'</td>' +
+        '<td width="10">' +
+        '<input type="checkbox"' +
+        ' name="me2" value="1"';
+    var html4b = ' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
+        '</td>' +
         '</tr>' +
         '</table>' +
         '</div>';
@@ -140,13 +148,18 @@ function feedback_render(data) {
     var itemWrap = api.getItemWrap();
     var len = data.length;
     for (var i = 0; i < len; i++) {
-      var d = data[i];
-      var summary = d.summary;
-      var me2s = d.me2s;
-      var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
+	var d = data[i];
+	var summary = d.summary;
+	var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
+	var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" '
+	
+	if(d.me2s == 1)
+	    checked += " checked "
+	if(d.me2s == 2)
+	    checked += " checked disabled "
 
-      var html = html1 + summary + html2 + details + html3 +html4; // + me2s + html4;
-      itemWrap.append(html);      
+	var html = html1 + summary + html2 + details + html3 +html4a + checked + html4b; // + me2s + html4;
+	itemWrap.append(html);      
     }
     api.reload().end();
     rendered[feedback_type] = true;
