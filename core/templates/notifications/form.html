@@ -3,11 +3,6 @@
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
-{% endblock %}
-
 {% block headernav %}
     <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
@@ -56,8 +51,14 @@
         {% endfor %}
     </div>
     <div class="button"><input type="submit" value="Speichern" name="save" /></div>
-    <input type="submit" value="Submit" name="submit"/>
-    
+    <input type="submit" value="Submit" name="submit"/>    
+</form>
+
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript">
         jQuery(function($){
             $('#id_submission_forms').bind('change', function(){
@@ -85,6 +86,5 @@
             //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
         });
     </script>
-</form>
-
 {% endblock %}
+
