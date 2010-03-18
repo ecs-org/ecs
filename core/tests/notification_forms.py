@@ -57,7 +57,6 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(response.status_code, 302)
         view_url = response['Location']
         response = self.client.get(view_url)
-        self.failIf('<form' in response.content)
         obj = response.context['notification']
         self.failUnlessEqual(obj.comments, 'foo comment')
         self.failUnlessEqual(obj.submission_forms.all()[0], submission_form)
