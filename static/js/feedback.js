@@ -118,15 +118,15 @@ function feedback_render(data) {
     // 224
     var html4 = '</td>' +
                 // wuxxin: temporary disable
-                // '<td width="10">' +
-                // '<input type="checkbox"' + 
-                //' name="me2" value="1"' + 
-                //' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
-                '</td>' +
-                '</tr>' +
-                '</table>' +
-         	'</div>';
-
+        '<td width="10">' +
+        '<input type="checkbox"' + 
+        ' name="me2" value="1"' + 
+        ' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
+        '</td>' +
+        '</tr>' +
+        '</table>' +
+        '</div>';
+    
     var id = feedback_type + 'Scrollable';
     var api = $('#' + id).scrollable();
 
