@@ -126,9 +126,19 @@
 
         //
         // handlers for adding and removing part B tabs
+        // (using some code & ideas from jquery.formset.js)
         //
 
-        // Part B add
+        ecs.updateElementIndex = function(elem, prefix, ndx) {
+	    var idRegex = new RegExp('(' + prefix + '-\\d+-)|(^)');
+            var replacement = prefix + '-' + ndx + '-';
+            if (elem.attr('for')) elem.attr('for', elem.attr('for').replace(idRegex, replacement));
+            if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
+            if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
+        };
+
+
+        /* Part B add */
         $('.partb_add').click(function() {
           ecs.partbNo++;
           // add tab link
@@ -136,21 +146,49 @@
           var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
           $('.tab_headers').append(tabItem);
           // add fields
-          var partb = $('div #tabs-' + (tabNo - 1)).clone(true);
-          partb.appendTo('div #tabs');
-          // fixup copy
-          $('div #tabs >div:last').attr('id', 'tabs-' + tabNo);
+          var partb = $('#tabs-' + (tabNo - 1)).clone(true);
+          partb.appendTo('#tabs');
+
+          // fixup copy:
+
+          // fix tab id
+          $('#tabs >div:last').attr('id', 'tabs-' + tabNo); 
+
+          // remove management_form data copies
+          $('#tabs-' + tabNo + ' #id_investigator-TOTAL_FORMS').remove();
+          $('#tabs-' + tabNo + ' #id_investigator-INITIAL_FORMS').remove();
+          
+          // TODO drop all but first InvestigatorEmployee entries
+          // TODO fixups due to we can use only one Investigator Employee formset
+          
+          // fix form id's
+          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
+            ecs.updateElementIndex($(this), 'investigator', ecs.partbNo - 1);
+          });
+
+          // reset entry fields
+          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
+            var elem = $(this);
+            if (elem.is('input:checkbox') || elem.is('input:radio')) {
+              elem.attr('checked', false);
+            } else {
+              elem.val('');
+            }
+          });
+
+          // update count
+          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
+
+          // show numbers
           $('div #tabs-' + tabNo + ' span.partbno').html('Zentrum ' + ecs.partbNo);
           if (ecs.partbNo == 2) {
             $('div #tabs-' + (tabNo - 1) + ' span.partbno').html('Zentrum 1');
           }
-          // TODO drop all but first InvestigatorEmployee entries
-          // TODO fix form id's
-          // TODO reset entry fields
           return false;
         });
 
-        // Part B remove
+
+        /* Part B remove */
         $('.partb_remove').click(function() {
           if (ecs.partbNo < 2) {
             alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
