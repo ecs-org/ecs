@@ -20,6 +20,7 @@
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/smoothness/jquery-ui-1.7.2.custom.css" />
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/login.css" />
 {% endblock %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
@@ -31,21 +32,16 @@
   {{ form.errors }}
   {% endif %}
 
-  <form method="post" action="{% url django.contrib.auth.views.login %}">
-  <table>
-  <tr>
-      <td>{{ form.username.label_tag }}</td>
-      <td>{{ form.username }}</td>
-  </tr>
-  <tr>
-      <td>{{ form.password.label_tag }}</td>
-      <td>{{ form.password }}</td>
-  </tr>
-  </table>
-
-  <input type="submit" value="login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-  </form>
+<div class="wrapper">
+  <h1>Ethikkommission Wien</h1>
+    <form class="login_screen" method="post" action="{% url django.contrib.auth.views.login %}">
+        <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
+        <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
+  
+    <p><input type="submit" value="login" /></p>
+    <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+</div>
   <!--
   <p><a href=""><img src="{{ MEDIA_URL }}core/images/feedback.png" /></a></p>  -->
 {% endblock %}

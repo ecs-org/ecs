@@ -95,7 +95,8 @@ class BaseInvestigatorFormSet(BaseModelFormSet):
         kwargs.setdefault('queryset', Investigator.objects.none())
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
 
-InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, exclude = ('submission', 'sign_date',))  # TODO drop sign_date from model?!
+InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
+                                           fields = ('organisation', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified', 'subject_count',)) 
 
 
 class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):

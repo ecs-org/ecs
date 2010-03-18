@@ -6,6 +6,10 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
 
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
 {% block headernav %}
     <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
@@ -72,40 +76,27 @@
                     {% ifequal tab 'Zentrum' %}
                       <fieldset>
                         <legend><span class="partbno">Zentrum</span></legend>
-                        <ul class="partb_navi">
+                        <ol class="partb_navi">
                           <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
                           <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
-                        </ul>
-                        {{ investigator_formset.mangement_form }}
+                        </ol>
+                        {{ investigator_formset.management_form }}
                         {% with investigator_formset as formset %}
-                            {% for form in formset.forms %}
-                              {# Investigator #}
-                              <ol class="form">
+                          {% for form in formset.forms %}
+                            {# Investigator #}
+                            <div class="form">
+                              <ol>
                                 {% for hidden in form.hidden_fields %}
                                   {{ hidden }}
                                 {% endfor %}
                                 {% for field in form %}
                                   {% if not field.is_hidden %}
-                                    {% ifequal field.name 'ethics_commission' %}
-                                <fieldset>
-                                  <!-- <legend></legend> -->
-                                    {% endifequal %}
-                                    {% ifequal field.name 'name' %}
-                                </fieldset>
-                                <fieldset>
-                                  <legend><span>Angaben zur Prüferin/zum Prüfer</span></legend>
-                                    {% endifequal %}
-                                    {% ifequal field.name 'subject_count' %}
-                                </fieldset>
-                                <fieldset>
-                                  <legend><span>Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en an dieser Prüfstelle</span></legend>
-                                    {% endifequal %}
                                     {% include "forms/field.html" %}
                                   {% endif %}
                                 {% endfor %}
-                                </fieldset>
                               </ol> {# Investigator #}
-                            {% endfor%}
+                            </div>
+                          {% endfor%}
                         {% endwith %}
                       </fieldset>
 
