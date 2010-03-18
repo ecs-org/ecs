@@ -25,6 +25,7 @@ SUBMISSION_FORM_TABS = (
         (u'Sponsor', [
             'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
             'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
+            'invoice_differs_from_sponsor',
         ]),
         (u'Rechnungsempfänger', [
             'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 

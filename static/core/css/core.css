@@ -210,6 +210,20 @@ form ol li.focus {
   border-bottom: 0 none !important;
 }
 
+fieldset.disabled{
+    display: none;
+}
+/* // alternative version of
+fieldset.disabled > ol{
+    display: none;
+}
+
+fieldset.disabled > .disabled_hint{
+    display: block;
+    font-style: italic;
+}
+*/
+
 /* documents */
 
 .doclist {

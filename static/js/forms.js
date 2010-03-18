@@ -36,6 +36,35 @@
             }
         });
     };
+    
+    ecs.clearFormFields = function(context){
+        $(context).find('.IntegerField,.CharField').find('input[type=text],textarea').each(function(){
+            $(this).val('');
+        });
+        $(context).find('.NullBooleanField > select').each(function(){
+            $(this).val(1);
+        });
+    };
+    
+    ecs.setupOptionalFormElements = function(checkboxSelector, elementSelector, requireChecked, hint){
+        var checkbox = $(checkboxSelector);
+        var elements = $(elementSelector);
+        /*
+        elements.each(function(){
+            $(this).append($('<i class="diabled_hint">' + hint + '</i>"'));
+        });
+        */
+        function updateElements(){
+            var checked = false;
+            checkbox.each(function(){
+                checked |= this.checked;
+            });
+            elements[checked == requireChecked ? 'addClass' : 'removeClass']('disabled');
+            ecs.clearFormFields(elements);
+        }
+        checkbox.bind('change', updateElements);
+        updateElements();
+    };
 
     ecs.info = function(str) {
         $('#info').html(str).css('opacity', '1.0');
@@ -121,9 +150,8 @@
             $(this).parent('div').find('input').remove();
             ecs.submitMainForm('upload');
             return false;
-        });
+        }); 
         
-
         //
         // handlers for adding and removing part B tabs
         // (using some code & ideas from jquery.formset.js)
