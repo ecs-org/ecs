@@ -143,7 +143,7 @@ def create_submission_form(request):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(data, prefix=name)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
-    investigator_formset = InvestigatorFormSet(data, prefix='document')
+    investigator_formset = InvestigatorFormSet(data, prefix='investigator')
     form = SubmissionFormForm(data)
 
     if request.method == 'POST':
