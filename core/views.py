@@ -139,11 +139,12 @@ def create_submission_form(request):
     data = request.POST or request.docstash.get_query_dict() or None
         
     formsets = {}
-    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorEmployeeFormSet):
+    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet):
         name = formset_cls.__name__.replace('FormFormSet', '').lower()
         formsets["%s_formset" % name] = formset_cls(data, prefix=name)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
     investigator_formset = InvestigatorFormSet(data, prefix='investigator')
+    investigatoremployee_formset = InvestigatorEmployeeFormSet(data, prefix='investigatoremployee')
     form = SubmissionFormForm(data)
 
     if request.method == 'POST':
@@ -166,10 +167,15 @@ def create_submission_form(request):
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
             submission_form.submission = submission
             submission_form.save()
-#            investigators = investigator_formset.save()
-#            for i, e in enumerate(investigatoremployee_formset.save(commit=False)):
-#                e.investigator = investigators[request.POST['investigatoremployee-$s-investigator_index' % i]]
-#                e.save()
+            investigators = investigator_formset.save(commit=False)
+            for investigator in investigators:
+              investigator.submission = submission_form
+              import datetime
+              investigator.sign_date = datetime.date.today() # TODO remove after model refactoring
+              investigator.save()
+            for i, employee in enumerate(investigatoremployee_formset.save(commit=False)):
+                employee.submission = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]  # TODO rename employee.submission to employee.investigator
+                employee.save()
             for formset in formsets.itervalues():
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
@@ -184,6 +190,7 @@ def create_submission_form(request):
         'document_formset': document_formset,
         'documents': documents,
         'investigator_formset': investigator_formset,
+        'investigatoremployee_formset': investigatoremployee_formset,
     }
     context.update(formsets)
     return render(request, 'submissions/form.html', context)
