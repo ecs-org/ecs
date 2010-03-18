@@ -190,8 +190,8 @@ $(function() {
       email = 'nutzer@ecsdev.ep3.at';
 
       // reset the input
-      $("textarea").val("");
-      $("input").val("");
+      $("#feedback textarea").val("");
+      $("#feedback input").val("");
 
       // first open [for that user]?
       if (!feedback_type) {
