@@ -25,7 +25,7 @@ class FeedbackCreate(BaseHandler):
     allowed_methods = ("POST", "GET")
     def create(self, request):
         args = {"pub_date": datetime.datetime.now()}
-        for fieldname in "feedbacktype,summary,description,origin,username,email".split(","):
+        for fieldname in "feedbacktype,summary,description,origin".split(","):
             args[fieldname] = request.POST.get(fieldname)
         obj = Feedback(**args)
         obj.save()

@@ -17,4 +17,5 @@ class Feedback(models.Model):
 
 import reversion
 
-reversion.register(Feedback)
+if not reversion.is_registered(Feedback):
+    reversion.register(Feedback)
