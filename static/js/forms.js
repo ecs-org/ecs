@@ -154,7 +154,7 @@
           // fix tab id
           $('#tabs >div:last').attr('id', 'tabs-' + tabNo); 
 
-          // remove management_form data copies
+          // remove formset management_form data copies
           $('#tabs-' + tabNo + ' #id_investigator-TOTAL_FORMS').remove();
           $('#tabs-' + tabNo + ' #id_investigator-INITIAL_FORMS').remove();
           
@@ -166,6 +166,9 @@
             ecs.updateElementIndex($(this), 'investigator', ecs.partbNo - 1);
           });
 
+          // update formset count
+          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
+
           // reset entry fields
           $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
             var elem = $(this);
@@ -175,9 +178,6 @@
               elem.val('');
             }
           });
-
-          // update count
-          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
 
           // show numbers
           $('div #tabs-' + tabNo + ' span.partbno').html('Zentrum ' + ecs.partbNo);
@@ -201,6 +201,10 @@
           var tabNo = ecs.partbNo + ecs.partbOffset;
           $('div #tabs-' + tabNo).remove();
           ecs.partbNo--;
+
+          // update formset count
+          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
+
           return false;
         });
     
