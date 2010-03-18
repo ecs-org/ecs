@@ -1,10 +1,5 @@
 {% extends "core.html" %}
-{% load core %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
-{% endblock %}
+{% load core %} 
 
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
@@ -111,38 +106,47 @@
                 </div>
             {% endfor %}
         </div>
-        <script type="text/javascript">
-            jQuery(function($){
-                ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
-                //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
-                ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
-                
-                /*
-                $('fieldset').each(function(){
-                    var fieldset = $(this);
-                    var autofillLink = $('<a href="#">auto fill</a>');
-                    autofillLink.click(function(){
-                        $('input[type=text], textarea', fieldset).each(function(){
-                            var val = this.name;
-                            var maxlength = $(this).attr('maxlength');
-                            if(val.indexOf('email') != -1){
-                                val += '@example.com';
-                            }
-                            else if(maxlength){
-                                val = val.substring(val.length - maxlength);
-                            }
-                            $(this).val(val);
-                        });
-                    });
-                    fieldset.prepend(autofillLink);
-                });
-                */
-            });
-        </script>
     <div class="button"><input type="submit" value="Speichern" name="save" /></div>
     <input type="submit" value="Submit" name="submit" />
     </form>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+    <script type="text/javascript">
+        jQuery(function($){
+            ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
+            ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
+            ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
+            //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
+            ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
+            ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');
+
+            // form dependency handling
+            ecs.setupOptionalFormElements('#id_invoice_differs_from_sponsor', '#tabs-3 .fieldset_2', false, 'siehe Sponsor');
+            //ecs.setupOptionalFormElements('#id_project_type_non_reg_drug,#id_project_type_reg_drug', '#tabs-4 fieldset', true, 'Um diese Angaben zu machen, müssen Sie in den Eckdaten die Prüfung eines Arzneimittels auswählen');
+            
+            /*
+            $('fieldset').each(function(){
+                var fieldset = $(this);
+                var autofillLink = $('<a href="#">auto fill</a>');
+                autofillLink.click(function(){
+                    $('input[type=text], textarea', fieldset).each(function(){
+                        var val = this.name;
+                        var maxlength = $(this).attr('maxlength');
+                        if(val.indexOf('email') != -1){
+                            val += '@example.com';
+                        }
+                        else if(maxlength){
+                            val = val.substring(val.length - maxlength);
+                        }
+                        $(this).val(val);
+                    });
+                });
+                fieldset.prepend(autofillLink);
+            });
+            */
+        });
+    </script>
 {% endblock %}
