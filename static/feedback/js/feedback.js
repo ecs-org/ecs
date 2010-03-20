@@ -174,7 +174,7 @@ $(function() {
   // init jquery tools overlay
   //////////////////////////////
 
-  var triggers = $("img[rel]").overlay({ 
+  var triggers = $('img#givefeedback').overlay({ 
     // some expose tweaks suitable for modal dialogs 
     expose: { 
       color: '#333', 
