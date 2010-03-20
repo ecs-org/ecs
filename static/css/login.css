@@ -18,7 +18,7 @@
   width: 300px;
 }
 .wrapper h1 {
-  background: url(/static/images/logo.png) no-repeat;
+  background: url(../images/logo.png) no-repeat;
   width: 200px;
   height: 48px;
   text-indent: -9999px;
