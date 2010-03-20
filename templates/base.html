@@ -15,8 +15,8 @@
         
         <title>{% block htmltitle %}Title{% endblock %}</title>
     
-        <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
-        <link rel="stylesheet" href="{{ MEDIA_URL}}css/feedback.css" media="screen"/>
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}css/base.css" />
+        <link rel="stylesheet" href="{{ MEDIA_URL}}feedback/css/feedback.css" media="screen"/>
         
         {% block htmlcss %} {# additional css #}    
         {% endblock %} 
@@ -27,8 +27,7 @@
     </head>
 
     <body>
-
-      {% include 'feedback.html' %}
+        {% include 'feedback.html' %}
 
         {# here should be include "header.html" #}
         <div id="header">
