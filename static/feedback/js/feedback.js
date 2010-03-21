@@ -98,7 +98,6 @@ function backend_save(input) {
 
   alert("Vielen Dank, Ihr Feedback wurde gespeichert");
   dirty[feedback_type] = true;
-  alert('cookie = [' + document.cookie + ']');
 }
 
 function me_too_toogle(id, checked) {

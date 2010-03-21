@@ -65,7 +65,7 @@ ul.tabs li {
 
 /* link inside the tab. uses a background image */
 ul.tabs a { 
-        background: url(../images/blue.png) no-repeat -420px 0;
+        background: url(../images/blue.png) no-repeat -420px -62px;
         font-size:11px;
         display:block;
         height: 30px;  
@@ -86,35 +86,35 @@ ul.tabs a:active {
 
 /* when mouse enters the tab move the background image */
 ul.tabs a:hover {
-        background-position: -420px -31px;      
+        background-position: -420px 0px;      
         color:#fff;     
 }
 
 /* active tab uses a class name "current". it's highlight is also done by moving the background image. */
 ul.tabs a.current, ul.tabs a.current:hover, ul.tabs li.current a {
-        background-position: -420px -62px;              
+        background-position: -420px -31px;              
         cursor:default !important; 
-        color:#000 !important;
+        color:#fff !important;
 }
+
 
 /* Different widths for tabs: use a class name: w1, w2, w3 or w2 */
 
-
 /* width 1 */
-ul.tabs a.s                     { background-position: -553px 0; width:81px; }
-ul.tabs a.s:hover       { background-position: -553px -31px; }
-ul.tabs a.s.current  { background-position: -553px -62px; }
+ul.tabs a.s                     { background-position: -553px -62px; width:81px; }
+ul.tabs a.s:hover       { background-position: -553px 0px; }
+ul.tabs a.s.current  { background-position: -553px -31px; }
 
 /* width 2 */
-ul.tabs a.l                     { background-position: -248px -0px; width:174px; }
-ul.tabs a.l:hover       { background-position: -248px -31px; }
-ul.tabs a.l.current  { background-position: -248px -62px; }
+ul.tabs a.l                     { background-position: -248px -62px; width:174px; }
+ul.tabs a.l:hover       { background-position: -248px 0px; }
+ul.tabs a.l.current  { background-position: -248px -31px; }
 
 
 /* width 3 */
-ul.tabs a.xl                    { background-position: 0 -0px; width:248px; }
-ul.tabs a.xl:hover      { background-position: 0 -31px; }
-ul.tabs a.xl.current { background-position: 0 -62px; }
+ul.tabs a.xl                    { background-position: 0px -62px; width:248px; }
+ul.tabs a.xl:hover      { background-position: 0px 0px; }
+ul.tabs a.xl.current { background-position: 0px -31px; }
 
 
 /* initially all panes are hidden */ 
