@@ -39,7 +39,8 @@ function get_origin() {
     // and thus will probably be easier to parse and makes no headache when put into the db, where
     // the feedback is grouped by this origin string  but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
     // prevent usable grouping.
-    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-");
+    var re_id_axe = /[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]/;  // quick hack
+    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'ID');
     return x;
 }
 
