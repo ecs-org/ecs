@@ -25,8 +25,22 @@ var dirty = [];
 ////////////////////////
 
 function get_origin() {
-    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-")
-    return x
+    // TODO either inject origin from application page or develop an URL scheme which allows solid inference by algorithm
+    //
+    // Counter example:
+    // When used on the "new submission" page the code turns 
+    //
+    //   http://ecsdev.ep3.at:8081/core/submission_form/new/6c8a98e534294bdf8ba558a037fcb9f8/
+    //
+    // into 
+    //
+    //   http-3A-2F-2Fecsdev.ep3.at-3A8081-2Fcore-2Fsubmission_form-2Fnew-2F6c8a98e534294bdf8ba558a037fcb9f8-2F
+    //
+    // and thus will probably be easier to parse and makes no headache when put into the db, where
+    // the feedback is grouped by this origin string  but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
+    // prevent usable grouping.
+    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-");
+    return x;
 }
 
 // retrieve the set of existing feedback for (user, email, origin, feedback_type)
