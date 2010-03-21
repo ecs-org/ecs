@@ -48,7 +48,7 @@ function backend_load() {
     for (var i = 0; i < n; i++) {
       var rin = response[i];
       var rout = {
-	// expected
+        // expected
         id: rin.id,
         feedback_type: (rin.feedbacktype == 'i') ? 'idea' : 'question',
         summary: rin.summary,
@@ -73,7 +73,7 @@ function backend_load() {
 
 // save the input for (user, email, origin, feedback_type)
 function backend_save(input) {
-    /*
+  /*
   alert("backend_save for user = [" + user +
         "], email = [" + email +
         "], origin = [" + origin +
@@ -98,6 +98,7 @@ function backend_save(input) {
 
   alert("Vielen Dank, Ihr Feedback wurde gespeichert");
   dirty[feedback_type] = true;
+  alert('cookie = [' + document.cookie + ']');
 }
 
 function me_too_toogle(id, checked) {
@@ -117,12 +118,12 @@ function feedback_render(data) {
                 '<td width="240">';
     // one 
     var html2 = ' (<a href="#" ' +
-	        'onclick="alert(' + "'";
+                'onclick="alert(' + "'";
     // details
     var html3 = "'" + ');" ' + 
                 'title="Klicken Sie auf diesen Link, um zur Detailansicht zu gelangen.">Link</a>)' +
                 '</td>' +
- 	        '<td width="40" align="right">';
+                '<td width="40" align="right">';
     // 224
     var html4a = '</td>' +
                 // wuxxin: temporary disable
@@ -148,18 +149,18 @@ function feedback_render(data) {
     var itemWrap = api.getItemWrap();
     var len = data.length;
     for (var i = 0; i < len; i++) {
-	var d = data[i];
-	var summary = d.summary;
-	var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
-	var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" '
-	
-	if(d.me2s == 1)
-	    checked += " checked "
-	if(d.me2s == 2)
-	    checked += " checked disabled "
+        var d = data[i];
+        var summary = d.summary;
+        var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
+        var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" '
+        
+        if(d.me2s == 1)
+            checked += " checked "
+        if(d.me2s == 2)
+            checked += " checked disabled "
 
-	var html = html1 + summary + html2 + details + html3 +html4a + checked + html4b; // + me2s + html4;
-	itemWrap.append(html);      
+        var html = html1 + summary + html2 + details + html3 +html4a + checked + html4b; // + me2s + html4;
+        itemWrap.append(html);      
     }
     api.reload().end();
     rendered[feedback_type] = true;
@@ -200,7 +201,7 @@ $(function() {
       } else {
         if (dirty[feedback_type]) {
           backend_load();
-	}
+        }
       }
     },
 
@@ -270,7 +271,7 @@ $(function() {
     // when the tab is clicked (different tab, and at construction time)
     onClick: function (event, tabIndex) {
       if (!feedback_type) {
-	  return;
+          return;
       }
 
       // determine and set feedback_type
