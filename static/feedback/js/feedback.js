@@ -37,10 +37,10 @@ function get_origin() {
     //   http-3A-2F-2Fecsdev.ep3.at-3A8081-2Fcore-2Fsubmission_form-2Fnew-2F6c8a98e534294bdf8ba558a037fcb9f8-2F
     //
     // and thus will probably be easier to parse and makes no headache when put into the db, where
-    // the feedback is grouped by this origin string  but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
+    // the feedback is grouped by this origin string but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
     // prevent usable grouping.
-    var re_id_axe = /[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f]/;  // quick hack
-    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'ID');
+    var re_id_axe = /[0-9a-f]{32}/;
+    x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
     return x;
 }
 
