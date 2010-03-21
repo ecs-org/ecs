@@ -174,7 +174,7 @@ $(function() {
   // init jquery tools overlay
   //////////////////////////////
 
-  var triggers = $("img[rel]").overlay({ 
+  var triggers = $('img#givefeedback').overlay({ 
     // some expose tweaks suitable for modal dialogs 
     expose: { 
       color: '#333', 
@@ -265,7 +265,7 @@ $(function() {
   ///////////////////////////
 
   // setup ul.tabs to work as tabs for each div directly under div.panes 
-  $("ul.tabs").tabs("div.panes > div", {
+  $("ul.tabs").tooltabs("div.panes > div", {
    
     // when the tab is clicked (different tab, and at construction time)
     onClick: function (event, tabIndex) {

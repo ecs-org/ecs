@@ -15,22 +15,20 @@
         
         <title>{% block htmltitle %}Title{% endblock %}</title>
     
-        <link rel="stylesheet" type="text/css" href="/static/css/base.css" />
-        <link rel="stylesheet" href="{{ MEDIA_URL}}css/feedback.css" media="screen"/>
         
-        {% block htmlcss %} {# additional css #}    
+        {% block htmlcss %} {# additional css, please block.super it  #}    
+            <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/base.css" />
+            <link rel="stylesheet" href="{{ MEDIA_URL}}feedback/css/feedback.css" media="screen"/>
         {% endblock %} 
         
-        {% block jshead %} {# enqueue javasript #}
+        {% block jshead %} {# enqueue javasript, please block.super it #}
         {% endblock %} 
         
     </head>
 
     <body>
+        {% include 'feedback.html' %}
 
-      {% include 'feedback.html' %}
-
-        {# here should be include "header.html" #}
         <div id="header">
                         
         {% block header %}
@@ -67,9 +65,7 @@
         
         </div>
 
-
-        {# here should be include "sidebar.html" #}
-                            
+                           
         <div id="sidebar">
             
             {% block sidebar %}
@@ -134,10 +130,10 @@
 
         <div id="footer">
 
-            {% block jsbottom %} {# enqueue additional javasript #}
-            
-            {% endblock %} 
-                    
+            {% block jsbottom %} {# enqueue additional javasript, please block.super it #}
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery-1.3.2.js"></script>
+                 {% include 'feedback-jsbottom.html' %}
+            {% endblock %}
         </div>
         
     </body>
