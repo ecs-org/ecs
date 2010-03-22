@@ -11,8 +11,8 @@
     opacity:0.8; 
     -moz-border-radius:6px; 
     -webkit-border-radius:6px; 
-    -moz-box-shadow: 0 0 50px #ccc; 
-    -webkit-box-shadow: 0 0 50px #ccc; 
+    -moz-box-shadow: 0 0 50px #0cc; 
+    -webkit-box-shadow: 0 0 50px #0cc; 
 } 
  
 .modal h2 { 
@@ -141,7 +141,6 @@ div.scrollable {
 /* root element for scrollable items */ 
 div.scrollable div.items { 
     position:absolute; 
- 
     /* this time we have very large space for the height */ 
     height:20000em; 
 }

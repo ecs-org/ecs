@@ -69,7 +69,7 @@ function backend_load() {
         summary: rin.summary,
         description: rin.description,
         origin: rin.origin,
-        user: rin.username,
+        user: rin.username,  // TODO user and email seem not needed anymore here
         email: rin.email,
         // extra
         date: rin.pub_date,
@@ -126,29 +126,27 @@ function me_too_toogle(id, checked) {
 }
 
 function feedback_render(data) {
-    var html1 = '<div>' +
-                '<table border="0" cellpadding="0">' +
-                '<tr>' +
-                '<td width="240">';
-    // one 
-    var html2 = ' (<a href="#" ' +
-                'onclick="alert(' + "'";
-    // details
-    var html3 = "'" + ');" ' + 
-                'title="Klicken Sie auf diesen Link, um zur Detailansicht zu gelangen.">Link</a>)' +
-                '</td>' +
-                '<td width="40" align="right">';
-    // 224
-    var html4a = '</td>' +
-                // wuxxin: temporary disable
-        '<td width="10">' +
-        '<input type="checkbox"' +
-        ' name="me2" value="1"';
-    var html4b = ' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
-        '</td>' +
-        '</tr>' +
-        '</table>' +
-        '</div>';
+  var html1 = 
+    '<div>' +
+    '<table border="0" cellpadding="0">' +
+    '<tr>' +
+    '<td width="280">';
+
+  var html2 = 
+    ' (<a href="#" onclick="alert(' + "'";
+  
+  var html3 = 
+    "'" + ');" title="Klicken Sie auf diesen Link, um zur Detailansicht zu gelangen.">Link</a>)' +
+    '</td>' + 
+    '<td width="10">' +
+    '<input type="checkbox" name="me2" value="1" style="margin-bottom: 0px;"';
+
+  var html4 = 
+    ' title="W&auml;hlen Sie diese Auswahl, falls Sie dieses Feedback auch betrifft!"/>' +
+    '</td>' +
+    '</tr>' +
+    '</table>' +
+    '</div>';
     
     var id = feedback_type + 'Scrollable';
     var api = $('#' + id).scrollable();
@@ -166,14 +164,17 @@ function feedback_render(data) {
         var d = data[i];
         var summary = d.summary;
         var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
-        var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" '
-        
-        if(d.me2s == 1)
-            checked += " checked "
-        if(d.me2s == 2)
-            checked += " checked disabled "
+        var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" ';
+      
+        if (d.me2s == 1) {
+            checked += " checked ";
+	}
+        if (d.me2s == 2) {
+            checked += " checked disabled ";
+	}
 
-        var html = html1 + summary + html2 + details + html3 +html4a + checked + html4b; // + me2s + html4;
+        var html = html1 + summary + html2 + details + html3 + checked + html4;
+
         itemWrap.append(html);      
     }
     api.reload().end();
@@ -200,7 +201,6 @@ $(function() {
 
     // when the overlay is opened 
     onLoad: function (event) { 
-      // TODO collect the user data from the host page
       user = 'Test Nutzer';
       email = 'nutzer@ecsdev.ep3.at';
 
@@ -312,7 +312,7 @@ $(function() {
 
   $("div.scrollable").scrollable({ 
     vertical: true,  
-    size: 5  // no. of elements visible at once
+    size: 7  // no. of elements visible at once
   // use mousewheel plugin 
   }).mousewheel();     
   
