@@ -56,7 +56,7 @@ function backend_load() {
   var fbt = (feedback_type == 'idea') ? 'i' : 'q';
 
   // backend call
-    $.getJSON('/feedback/' + fbt + '/' + get_origin() + "/", [], function (response) {
+  $.getJSON('/feedback/' + fbt + '/' + get_origin() + "/", [], function (response) {
     // we expect an array of data records
     var data = [];
     var n = response.length;
@@ -125,6 +125,20 @@ function me_too_toogle(id, checked) {
   }, 'json');
 }
 
+var tooltip_settings = 
+{ 
+    // place tooltip on the right edge 
+    position: "center right", 
+    // a little tweaking of the position 
+    offset: [-50, -175], 
+    // use the built-in fadeIn/fadeOut effect 
+    effect: "fade", 
+    // custom opacity setting 
+    opacity: 1.0, 
+    // use this single tooltip element 
+    tip: '.tooltip' 
+};
+
 function feedback_render(data) {
   var html1 = 
     '<div>' +
@@ -148,37 +162,38 @@ function feedback_render(data) {
     '</table>' +
     '</div>';
     
-    var id = feedback_type + 'Scrollable';
-    var api = $('#' + id).scrollable();
+  var id = feedback_type + 'Scrollable';
+  var api = $('#' + id).scrollable();
 
-    if (rendered[feedback_type]) {
-      // remove entries from the scrollable
-      api.getItems().remove();
-      api.reload();  // might be not necessary
-    }
+  if (rendered[feedback_type]) {
+    // remove entries from the scrollable
+    api.getItems().remove();
+    api.reload();  // might be not necessary
+  }
 
-    // add entries to scrollable
-    var itemWrap = api.getItemWrap();
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        var d = data[i];
-        var summary = d.summary;
-        var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
-        var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" ';
+  // add entries to scrollable
+  var itemWrap = api.getItemWrap();
+  var len = data.length;
+  for (var i = 0; i < len; i++) {
+    var d = data[i];
+    var summary = d.summary;
+    var details = d.description + "\\nvon " + d.user + " am " + d.date + "\\n";
+    var checked = ' onchange="me_too_toogle(' + d.id + ', this.checked)" ';
       
-        if (d.me2s == 1) {
-            checked += " checked ";
-	}
-        if (d.me2s == 2) {
-            checked += " checked disabled ";
-	}
-
-        var html = html1 + summary + html2 + details + html3 + checked + html4;
-
-        itemWrap.append(html);      
+    if (d.me2s == 1) {
+      checked += " checked ";
     }
-    api.reload().end();
-    rendered[feedback_type] = true;
+    if (d.me2s == 2) {
+      checked += " checked disabled ";
+    }
+
+    var html = html1 + summary + html2 + details + html3 + checked + html4;
+    itemWrap.append(html);      
+  }
+  api.reload().end();
+  rendered[feedback_type] = true;
+  // add tooltips
+  $(".items a, .items :input").tooltip(tooltip_settings);
 }
 
 
@@ -255,24 +270,7 @@ $(function() {
   ///////////////////////////////
 
   // select all desired input fields and attach tooltips to them 
-  $("#ideaFeedbackForm :input, #questionFeedbackForm :input, .tabs a").tooltip({ 
-
-    // place tooltip on the right edge 
-    position: "center right", 
- 
-    // a little tweaking of the position 
-    offset: [-50, -175], 
- 
-    // use the built-in fadeIn/fadeOut effect 
-    effect: "fade", 
- 
-    // custom opacity setting 
-    opacity: 1.0, 
- 
-    // use this single tooltip element 
-    tip: '.tooltip' 
-
-  });
+  $("#ideaFeedbackForm :input, #questionFeedbackForm :input, .tabs a").tooltip(tooltip_settings);
 
 
   ///////////////////////////
