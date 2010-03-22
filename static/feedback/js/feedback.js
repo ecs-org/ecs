@@ -255,7 +255,7 @@ $(function() {
   ///////////////////////////////
 
   // select all desired input fields and attach tooltips to them 
-  $("#ideaFeedbackForm :input, #questionFeedbackForm :input").tooltip({ 
+  $("#ideaFeedbackForm :input, #questionFeedbackForm :input, .tabs a").tooltip({ 
 
     // place tooltip on the right edge 
     position: "center right", 
