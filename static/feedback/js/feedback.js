@@ -187,7 +187,7 @@ function feedback_render(data) {
       checked += " checked disabled ";
     }
 
-    var html = html1 + summary + html2 + details + html3 + checked + html4;
+    var html = html1 + summary.substr(0,35) + html2 + details + html3 + checked + html4;
     itemWrap.append(html);      
   }
   api.reload().end();
