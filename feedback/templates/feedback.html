@@ -2,24 +2,24 @@
 
 <!-- user input dialog --> 
 <div class="modal" id="feedback"> 
+  <div class="tooltip"></div>
   <h2>Geben Sie uns Ihr Feedback!</h2> 
  
   <p> 
     Bitte w&auml;hlen Sie den Feedback Typ aus (Idee oder Frage).
     <br /> 
-    Zum Schliessen die Schaltfl&auml;che oder die ESC-Taste dr&uuml;cken. 
+    Zum Schliessen eine Schaltfl&auml;che oder die ESC-Taste dr&uuml;cken. 
   </p> 
 
   <ul class="tabs"> 
-    <li><a href="#" onclick="">Idee</a></li> 
-    <li><a href="#" onclick="">Frage</a></li> 
+    <li><a href="#" onclick="" title="Wählen Sie diesen Reiter zur Abgabe einer Idee.">Idee</a></li> 
+    <li><a href="#" onclick="" title=".. und diesen Reiter zur Abgabe einer Frage.">Frage</a></li> 
   </ul> 
  
   <div class="panes"> 
     <!-- Idea -->
     <div class="pane">
       <!-- input form. you can press enter too --> 
-      <div class="tooltip"></div>
       <form id="ideaFeedbackForm" action="#">
       <div id="ideaInputs"> 
         <table width="100%" border="0">
@@ -46,21 +46,16 @@
             </td>
             <td>
               <div>
-                [<a class="prevPage browse up">&uArr; vorherige</a>]
-                <table border="0" cellpadding="0">
-                <tr>
-                <td width="235"><b>Was andere gesagt haben:</b></td>
-                <!-- <td width="40" align="right"><b>me<sub>2</sub></b></td> -->
-                <!-- <td width="10">&nbsp;<b>!</b></td> -->
-                </tr>
-                </table>
+                <b>Was andere gesagt haben:</b>
+                <br>
+                [<a class="prevPage browse up">&uArr; vorherige &uArr;</a>]
                 <!-- root element for scrollable --> 
                 <div class="scrollable vertical" id="ideaScrollable"> 
                   <!-- root element for the items --> 
                   <div class="items">
                   </div> 
                 </div>
-                [<a class="nextPage browse down">&dArr; n&auml;chste</a>]
+                [<a class="nextPage browse down">&dArr; n&auml;chste &dArr;</a>]
               </div>
             </td>
           </tr>
@@ -116,21 +111,16 @@
             </td>
             <td>
               <div>
-                [<a class="prevPage browse up">&uArr; vorherige</a>]
-                <table border="0" cellpadding="0">
-                <tr>
-                <td width="235"><b>Was andere gesagt haben</b></td>
-                <!-- <td width="40" align="right"><b>me<sub>2</sub></b></td> -->
-                <!-- <td width="10">&nbsp;<b>!</b></td> -->
-                </tr>
-                </table>
+                <b>Was andere gesagt haben</b>
+                <br>
+                [<a class="prevPage browse up">&uArr; vorherige &uArr;</a>]
                 <!-- root element for scrollable --> 
                 <div class="scrollable vertical" id="questionScrollable"> 
                   <!-- root element for the items --> 
                   <div class="items">
                   </div> 
                 </div>
-                [<a class="nextPage browse down">&dArr; n&auml;chste</a>]
+                [<a class="nextPage browse down">&dArr; n&auml;chste &dArr;</a>]
               </div>
             </td>
           </tr>
