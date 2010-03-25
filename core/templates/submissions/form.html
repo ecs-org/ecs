@@ -69,6 +69,7 @@
                     {% endfor %}
 
                     {% ifequal tab 'Zentrum' %}
+                    <div class="partb">
                       <fieldset>
                         <legend><span class="partbno">Zentrum</span></legend>
                         <ol class="partb_navi">
@@ -103,7 +104,7 @@
                           {% include "forms/inline_formset.html" %}
                           {% endwith %}
                       </fieldset>
-
+                    </div>
                     {% endifequal %}
                 </div>
             {% endfor %}
@@ -118,17 +119,16 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript"> 
         window.addEvent('domready', function(){
-            ecs.setupFormSetHelpers = function(prefix){
+            var formsets = [
+                '{{ measure_formset.prefix }}', 
+                '{{ foreignparticipatingcenter_formset.prefix }}', 
+                '{{ investigator_formset.prefix }}', 
+                '{{ investigatoremployee_formset.prefix }}'
+            ].map(function(prefix){
                 return new ecs.InlineFormSet($(prefix + '_formset'), {
                     prefix: prefix
                 });
-            };
-            ecs.setupFormSetHelpers('{{ measure_formset.prefix }}');
-            ecs.setupFormSetHelpers('{{ foreignparticipatingcenter_formset.prefix }}');
-            ecs.setupFormSetHelpers('{{ nontesteduseddrug_formset.prefix }}');
-            //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
-            ecs.setupFormSetHelpers('{{ investigator_formset.prefix }}');
-            ecs.setupFormSetHelpers('{{ investigatoremployee_formset.prefix }}');            
+            });
         });
     </script>
 {% endblock %}

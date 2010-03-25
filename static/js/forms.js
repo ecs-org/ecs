@@ -22,35 +22,45 @@
             this.setClass('active', selected);
             this.panel.setStyle('display', selected ? 'block' : 'none');
             this.fireEvent('select');
+        },
+        remove: function(){
+            this.header.dispose();
+            this.panel.dispose();
+            this.fireEvent('remove');
         }
     });
     
     ecs.TabController = new Class({
         Implements: [Options, Events],
         options: {
-            
+            tabIdPrefix: 'tab-'
         },
         initialize: function(headerContainer, options){
             this.setOptions(options);
             this.tabs = [];
             this.selectedTab = null;
+            this.headerContainer = headerContainer;
             var index = 0;
             var initialSelection = null;
             headerContainer.getChildren('li').each(function(header){
                 var hash = header.getElement('a').href.split('#')[1];
                 var panel = $(hash);
                 var tab = new ecs.Tab(header, panel, index++);
-                this.tabs.push(tab);
                 if(window.location.hash == '#' + hash){
                     initialSelection = tab;
                 }
-                header.addEvent('click', (function(){
-                    this.selectTab(tab);
-                }).bind(this));
+                this.setupTab(tab);
             }, this);
-            this.selectTab(initialSelection || this.tabs[0]);
+            this.selectTab(initialSelection || this.tabs[0], true);
         },
-        selectTab: function(tab){
+        setupTab: function(tab){
+            tab.clickListener = (function(){
+                this.selectTab(tab);
+            }).bind(this)
+            tab.header.addEvent('click', tab.clickListener);
+            this.tabs.push(tab);
+        },
+        selectTab: function(tab, initial){
             if(tab == this.selectedTab){
                 return;
             }
@@ -58,14 +68,48 @@
                 this.selectedTab.setSelected(false);
             }
             this.selectedTab = tab;
-            tab.setSelected(true);
-            this.fireEvent('tabSelectionChange', tab);
+            if(tab){
+                tab.setSelected(true);
+            }
+            this.fireEvent('tabSelectionChange', tab, !!initial);
         },
         getSelectedTab: function(){
             return this.selectedTab;
         },
         getTabs: function(){
             return this.tabs;
+        },
+        getPanels: function(){
+            return this.tabs.map(function(tab){ return tab.panel;})
+        },
+        getTabForElement: function(el){
+            for(var i=0;i<this.tabs.length;i++){
+                var tab = this.tabs[i];
+                if(tab.panel.hasChild(el)){
+                    return tab;
+                }
+            }
+            return null;
+        },
+        getTab: function(index){
+            return this.tabs[index];
+        },
+        addTab: function(header, panel){
+            panel.id = panel.id || this.options.tabIdPrefix + this.tabs.length;
+            header = new Element('li', {html: '<a href="#' + panel.id + '">' + header + '</a>'});
+            this.headerContainer.grab(header);
+            panel.inject(this.tabs.getLast().panel, 'after');
+            var tab = new ecs.Tab(header, panel);
+            this.setupTab(tab);
+            this.fireEvent('tabAdded', tab);
+        },
+        removeTab: function(tab){
+            var index = this.tabs.indexOf(tab);
+            this.tabs.erase(tab);
+            tab.header.removeEvent('click', tab.clickListener);
+            tab.remove();
+            this.fireEvent('tabRemoved', tab);
+            this.selectTab(this.tabs[index-1]);
         }
     });
 
@@ -128,7 +172,7 @@
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
-            removeButtonClass: 'remove_row'
+            removeButtonClass: 'delete_row'
         },
         initialize: function(container, options){
             this.container = $(container);
@@ -200,6 +244,13 @@
         }
     });
     
+    ecs.InvestigatorEmployeeFormSet = new Class({
+        Extends: ecs.InlineFormSet,
+        initialize: function(container, options){
+            this.parent(container, options);
+        }
+    });
+    
     ecs.clearFormFields = function(context){
         context = $(context || document);
         context.getElements('.IntegerField input[type=text], .CharField input[type=text], .CharField textarea').each(function(input){
@@ -214,7 +265,8 @@
         context = $(context || document);
         var datepicker = new DatePicker('.DateField > input', {
             format: 'd.m.Y',
-            inputOutputFormat: 'd.m.Y'
+            inputOutputFormat: 'd.m.Y',
+            allowEmpty: true
         });
         context.getElements('li').each(function(field){
             var notes = [];
@@ -273,9 +325,28 @@
                 form.submit('upload');
                 return false;
             });
-            
         });
-    
+        
+        /* FIXME: demo */
+        function setupPartBLinks(context){
+            context = $(context || document)
+            context.getElements('.partb_remove').each(function(link){
+                link.addEvent('click', function(){
+                    var tab = tabController.getTabForElement(link);
+                    tabController.removeTab(tab);
+                    return false;
+                });
+            });
+            context.getElements('.partb_add').each(function(link){
+                link.addEvent('click', function(){
+                    var panel = link.getParent('.tab').clone(true);
+                    setupPartBLinks(panel);
+                    tabController.addTab('Zentrum', panel);
+                    return false;
+                })
+            });
+        }
+        setupPartBLinks();
     }); 
 
 })();
