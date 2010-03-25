@@ -1,244 +1,281 @@
-(function($){
+(function(){
     var ecs = window.ecs = {};
-    ecs.setupFormFieldHelpers = function(context){
-        context = $(context || 'form');
-        $('li.DateField > input', context).datepicker({dateFormat: 'dd.mm.yy'});
-        $('li', context).each(function(){
-            var maxlength = $('input[type=text]', this).attr('maxlength');
-            var notes = [];
-            if($(this).hasClass('required')){
-                notes.push('required');
-            }        
-            if(maxlength && maxlength >= 0){
-                notes.push('max. ' + maxlength + ' Zeichen');
+    ecs.Tab = new Class({
+        Implements: Events,
+        initialize: function(header, panel, index){
+            this.header = header;
+            this.panel = panel;
+            this.index = index;
+            this.panel.setStyle('display', 'none');
+        },
+        setClass: function(cls, set){
+            if(set){
+                this.header.addClass(cls);
+                this.panel.addClass(cls);
             }
-            if(notes.length){
-                $(this).append('<span class="notes">' + notes.join(', ') + '</span>')
+            else{
+                this.header.removeClass(cls);
+                this.panel.removeClass(cls);
             }
-
-            var formControls = $('input,textarea,select', this);
-            formControls.focus(function(){
-                $(this).parent('li').addClass('focus');
-            });
-            formControls.blur(function(){
-                $(this).parent('li').removeClass('focus');
-            });
-        
-        });
-    };
-
-    ecs.setupFormSetHelpers = function(prefix){
-        $('#' + prefix + '_formset .form').formset({
-            prefix: prefix,
-            formCssClass: prefix + '_formset',
-            added: function(row){
-                ecs.setupFormFieldHelpers(row);
-            }
-        });
-    };
-    
-    ecs.clearFormFields = function(context){
-        $(context).find('.IntegerField,.CharField').find('input[type=text],textarea').each(function(){
-            $(this).val('');
-        });
-        $(context).find('.NullBooleanField > select').each(function(){
-            $(this).val(1);
-        });
-    };
-    
-    ecs.setupOptionalFormElements = function(checkboxSelector, elementSelector, requireChecked, hint){
-        var checkbox = $(checkboxSelector);
-        var elements = $(elementSelector);
-        /*
-        elements.each(function(){
-            $(this).append($('<i class="diabled_hint">' + hint + '</i>"'));
-        });
-        */
-        function updateElements(){
-            var checked = false;
-            checkbox.each(function(){
-                checked |= this.checked;
-            });
-            elements[checked == requireChecked ? 'addClass' : 'removeClass']('disabled');
-            ecs.clearFormFields(elements);
+        },
+        setSelected: function(selected){
+            this.setClass('active', selected);
+            this.panel.setStyle('display', selected ? 'block' : 'none');
+            this.fireEvent('select');
         }
-        checkbox.bind('change', updateElements);
-        updateElements();
-    };
+    });
+    
+    ecs.TabController = new Class({
+        Implements: [Options, Events],
+        options: {
+            
+        },
+        initialize: function(headerContainer, options){
+            this.setOptions(options);
+            this.tabs = [];
+            this.selectedTab = null;
+            var index = 0;
+            var initialSelection = null;
+            headerContainer.getChildren('li').each(function(header){
+                var hash = header.getElement('a').href.split('#')[1];
+                var panel = $(hash);
+                var tab = new ecs.Tab(header, panel, index++);
+                this.tabs.push(tab);
+                if(window.location.hash == '#' + hash){
+                    initialSelection = tab;
+                }
+                header.addEvent('click', (function(){
+                    this.selectTab(tab);
+                }).bind(this));
+            }, this);
+            this.selectTab(initialSelection || this.tabs[0]);
+        },
+        selectTab: function(tab){
+            if(tab == this.selectedTab){
+                return;
+            }
+            if(this.selectedTab){
+                this.selectedTab.setSelected(false);
+            }
+            this.selectedTab = tab;
+            tab.setSelected(true);
+            this.fireEvent('tabSelectionChange', tab);
+        },
+        getSelectedTab: function(){
+            return this.selectedTab;
+        },
+        getTabs: function(){
+            return this.tabs;
+        }
+    });
 
-    ecs.info = function(str) {
-        $('#info').html(str).css('opacity', '1.0');
-        $('#info').slideDown(2 * 1000, function () {
-          $('#info').fadeTo(4 * 1000, 0.4, function () {
-            $('#info').slideUp(2 * 1000);
-          })
-        });
-    };
-    
-    ecs.submitMainForm = function(name){
-        $('form.main.tabbed').attr('action', window.location.hash);
-        $('form.main').find('input[type=submit][name=' + name + ']').click();
-    };
-    
-    ecs.autosave = function(form){
-        var lastSave = form.data('lastSave');
-        var currentData = form.serialize();
-        if(lastSave.data != currentData){
-            lastSave.timestamp = new Date();
-            lastSave.data = currentData;
-            $.ajax({
-                url: window.location.href,
-                type: 'POST',
-                data: form.serialize() + '&autosave=autosave',
-                success: function(response){
-                    //console.log(response);
-                    form.data('lastSave', lastSave);
-                    ecs.info('auto-saved');
+    ecs.TabbedForm = new Class({
+        Implements: Options,
+        options: {
+            tabController: null,
+            autosave: 15
+        },
+        initialize: function(form, options){
+            this.form = $(form);
+            this.setOptions(options);
+            var tabController = options.tabController;
+            tabController.getTabs().each(function(tab){
+                if(tab.panel.getElement('.errors')){
+                    tab.setClass('errors', true);
                 }
             });
+            tabController.addEvent('tabSelectionChange', (function(tab){
+                this.form.action = '#' + tab.panel.id;
+            }).bind(this));
+            if(this.options.autosave){
+                this.lastSave = {
+                    data: this.form.toQueryString(),
+                    timestamp: new Date()
+                };
+                setInterval(this.autosave.bind(this), this.options.autosave * 1000);
+                $(window).addEvent('unload', this.autosave.bind(this));
+            }
+        },
+        autosave: function(){
+            console.log('start autosave ..');
+            var currentData = this.form.toQueryString();
+            if(this.lastSave.data != currentData){
+                this.lastSave.timestamp = new Date();
+                this.lastSave.data = currentData;
+                var request = new Request({
+                    url: window.location.href,
+                    method: 'post',
+                    data: currentData + '&autosave=autosave',
+                    onSuccess: function(responseText, response){
+                        console.log('auto-saved');
+                    }
+                });
+                request.send();
+            }
+        },
+        submit: function(name){
+            if(!name){
+                return this.form.submit();
+            }
+            this.form.getElement('input[type=submit][name=' + name + ']').click();
         }
+    });
+    
+    ecs.InlineFormSet = new Class({
+        Implements: Options,
+        options: {
+            formSelector: '.form',
+            prefix: null,
+            idPrefix: 'id_',
+            addButtonClass: 'add_row',
+            removeButtonClass: 'remove_row'
+        },
+        initialize: function(container, options){
+            this.container = $(container);
+            this.setOptions(options);
+            this.forms = container.getElements(this.options.formSelector);
+            this.template = this.forms[0].clone(true, true);
+            ecs.clearFormFields(this.template);
+            this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
+            this.container.grab(this.addButton = new Element('a', {
+                html: 'add',
+                'class': this.options.addButtonClass,
+                events: {
+                    click: this.add.bind(this)
+                }
+            }));
+            this.forms.each(function(form, index){
+                this.setupForm(form, index);
+            }, this);
+        },
+        setupForm: function(form, index, added){
+            form.grab(new Element('a', {
+                html: 'remove',
+                'class': this.options.removeButtonClass,
+                events: {
+                    click: (function(){
+                        this.remove(index);
+                    }).bind(this)
+                }
+            }));
+            if(added){
+                ecs.setupFormFieldHelpers(form);
+            }
+        },
+        updateIndex: function(form, index){
+            function _update(el, attr){
+                var value = el.getProperty(attr);
+                if(value){
+                    el.setProperty(attr, value.replace(/-\d+-/, '-' + index + '-'));
+                }
+            }
+            form.getElements('input,select,textarea').each(function(field){
+                _update(field, 'name');
+                _update(field, 'id');
+            }, this);
+            form.getElements('label').each(function(label){
+                _update(label, 'for');
+            });
+        },
+        remove: function(index){
+            this.forms[index].dispose();
+            for(var i=index+1;i<this.forms.length;i++){
+                this.updateIndex(this.forms[i], i - 1);
+                this.forms[i - 1] = this.forms[i];
+            }
+            this.forms.pop();
+            this.updateTotalForms(-1);
+        },
+        updateTotalForms: function(delta){
+            this.totalForms.value = parseInt(this.totalForms.value) + delta;
+        },
+        add: function(){
+            var newForm = this.template.clone(true, true);
+            var index = this.forms.length;
+            this.updateIndex(newForm, index);
+            this.setupForm(newForm, index, true);
+            this.forms.push(newForm);
+            this.updateTotalForms(+1);
+            newForm.inject(this.addButton, 'before');
+        }
+    });
+    
+    ecs.clearFormFields = function(context){
+        context = $(context || document);
+        context.getElements('.IntegerField input[type=text], .CharField input[type=text], .CharField textarea').each(function(input){
+            input.setProperty('value', '');
+        });
+        context.getElements('.NullBooleanField > select', function(select){
+            select.setProperty(value, 1);
+        });
     };
     
-    ecs.setupAutoSave = function(){
-        var form = $('form.main');
-        if(form.length){
-            $(form).data('lastSave', {
-                timestamp: new Date(),
-                data: form.serialize()
+    ecs.setupFormFieldHelpers = function(context){
+        context = $(context || document);
+        var datepicker = new DatePicker('.DateField > input', {
+            format: 'd.m.Y',
+            inputOutputFormat: 'd.m.Y'
+        });
+        context.getElements('li').each(function(field){
+            var notes = [];
+            var input = field.getFirst('input[type=text]');
+            if(field.hasClass('required')){
+                notes.push('required');
+            }
+            if(input){
+                var maxlength = input.getProperty('maxlength');
+                if(maxlength && maxlength > 0){
+                    notes.push('max. ' +  maxlength + ' Zeichen');
+                }
+            }
+            if(notes.length){
+                field.grab(new Element('span', {
+                    'class': 'notes',
+                    'html': notes.join(', ')
+                }));
+            }
+            field.getChildren('input,textarea,select').each(function(input){
+                input.addEvent('focus', function(){
+                    field.addClass('focus');
+                });
+                input.addEvent('blur', function(){
+                    field.removeClass('focus');
+                });
             });
-            $(window).bind('unload', function(){
-                ecs.autosave(form);
-            });
-            setInterval(function(){
-                ecs.autosave(form);
-            }, 120 * 1000);
-        }
+        });
     };
-
+    
     ecs.partbNo = 1;
-    ecs.partbOffset = $('.tab_headers > li').size() - 1;
+    //ecs.partbOffset = $('.tab_headers > li').size() - 1;
 
-    $(function(){
-        if(!$('.tab_headers > li.active').length && !window.location.hash){
-            $(".tab_headers > li:first-child").addClass('active');
-        }
-        $(".tab_headers").tabify();
-        ecs.setupFormFieldHelpers();
-        ecs.setupAutoSave();
-    
-        $(".tab").each(function(){
-            if($('.errors', $(this)).length){ 
-                $('.tab_headers > li a[href=#' + this.id + '-tab]').parent('li').addClass('errors');
-            }
+    window.addEvent('domready', function(){
+        var tabController = new ecs.TabController($$('.tab_headers')[0]);
+        var form = new ecs.TabbedForm(document.getElement('form.tabbed.main'), {
+            tabController: tabController,
+            autosave: 15
         });
+
+        ecs.setupFormFieldHelpers();
         
-        $('form.tabbed').each(function(){
-            $(this).submit(function(){
-                $(this).attr('action', window.location.hash);
+        /* FIXME: cleanup the following code */
+        $$('form.main').getElements('input[type=submit][name=submit]').each(function(button){
+            button.setStyle('display', 'none');
+        });
+        $$('a.submit_main_form').each(function(link){
+            link.addEvent('click', function(){
+                form.submit('submit');
+                return false;
             });
         });
-
-        if($('a.submit_main_form').length){
-            $('form.main').find('input[type=submit][name=submit]').css('display', 'none');
-        }
-        $('a.submit_main_form').click(function(){
-            ecs.submitMainForm('submit');
-            return false;
-        });
-        
-        $('.doclist a.delete_document').click(function(){
-            $(this).parent('div').find('input').remove();
-            ecs.submitMainForm('upload');
-            return false;
-        }); 
-        
-        //
-        // handlers for adding and removing part B tabs
-        // (using some code & ideas from jquery.formset.js)
-        //
-
-        ecs.updateElementIndex = function(elem, prefix, ndx) {
-            var idRegex = new RegExp('(' + prefix + '-\\d+-)|(^)');
-            var replacement = prefix + '-' + ndx + '-';
-            if (elem.attr('for')) elem.attr('for', elem.attr('for').replace(idRegex, replacement));
-            if (elem.attr('id')) elem.attr('id', elem.attr('id').replace(idRegex, replacement));
-            if (elem.attr('name')) elem.attr('name', elem.attr('name').replace(idRegex, replacement));
-        };
-
-
-        /* Part B add */
-        $('.partb_add').click(function() {
-          ecs.partbNo++;
-          // add tab link
-          var tabNo = ecs.partbNo + ecs.partbOffset;
-          var tabItem = $('<li><a href="#tabs-' + tabNo + '-tab">Zentrum</a></li>');
-          $('.tab_headers').append(tabItem);
-          // add fields
-          var partb = $('#tabs-' + (tabNo - 1)).clone(true);
-          partb.appendTo('#tabs');
-
-          // fixup copy:
-
-          // fix tab id
-          $('#tabs >div:last').attr('id', 'tabs-' + tabNo); 
-
-          // remove formset management_form data copies
-          $('#tabs-' + tabNo + ' #id_investigator-TOTAL_FORMS').remove();
-          $('#tabs-' + tabNo + ' #id_investigator-INITIAL_FORMS').remove();
-          
-          // TODO drop all but first InvestigatorEmployee entries
-          // Interim hack to allow a consistent save at this stage
-          $('#tabs-' + tabNo + ' #investigatoremployee_formset').empty().html('<center>(Dieser Abschnitt ist absichtlich deaktiviert)</center>');
-
-          // TODO fixups due to we can use only one Investigator Employee formset
-          
-          // fix form id's
-          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
-            ecs.updateElementIndex($(this), 'investigator', ecs.partbNo - 1);
-          });
-
-          // update formset count
-          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
-
-          // reset entry fields
-          $('#tabs-' + tabNo).find('input,select,textarea,label').each(function() {
-            var elem = $(this);
-            if (elem.is('input:checkbox') || elem.is('input:radio')) {
-              elem.attr('checked', false);
-            } else {
-              elem.val('');
-            }
-          });
-
-          // show numbers
-          $('div #tabs-' + tabNo + ' span.partbno').html('Zentrum ' + ecs.partbNo);
-          if (ecs.partbNo == 2) {
-            $('div #tabs-' + (tabNo - 1) + ' span.partbno').html('Zentrum 1');
-          }
-          return false;
-        });
-
-
-        /* Part B remove */
-        $('.partb_remove').click(function() {
-          if (ecs.partbNo < 2) {
-            alert('Mehr darf nicht! (Und diese Meldung sollte nie angezeigt werden)');
-            return false;
-          }
-          // TODO some warning, because entered data might get lost
-          // TODO better disable than delete
-          // TODO these ops remove the LAST not CURRENT tab, change this
-          $('.tab_headers li:last').remove();
-          var tabNo = ecs.partbNo + ecs.partbOffset;
-          $('div #tabs-' + tabNo).remove();
-          ecs.partbNo--;
-
-          // update formset count
-          $('#id_investigator-TOTAL_FORMS').val(ecs.partbNo);
-
-          return false;
+        $$('.doclist a.delete_document').each(function(link){
+            link.addEvent('click', function(){
+                link.getParent('div').getElement('input').dispose();
+                form.submit('upload');
+                return false;
+            });
+            
         });
     
     }); 
 
-})(jQuery);
+})();

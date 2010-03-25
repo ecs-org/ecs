@@ -60,6 +60,7 @@
     {{ block.super }}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript">
+        /*
         jQuery(function($){
             $('#id_submission_forms').bind('change', function(){
                 var submission_ids = $(this).val();
@@ -85,6 +86,7 @@
             });
             //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
         });
+        */
     </script>
 {% endblock %}
 
