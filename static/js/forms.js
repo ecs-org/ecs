@@ -307,11 +307,13 @@
 
     window.addEvent('domready', function(){
         var tabController = new ecs.TabController($$('.tab_headers')[0]);
-        var form = new ecs.TabbedForm(document.getElement('form.tabbed.main'), {
-            tabController: tabController,
-            autosave: 15
-        });
-
+        var mainForm = document.getElement('form.tabbed.main');
+        if(mainForm){
+            var form = new ecs.TabbedForm(mainForm, {
+                tabController: tabController,
+                autosave: 15
+            });
+        }
         ecs.setupFormFieldHelpers();
         
         /* FIXME: cleanup the following code */

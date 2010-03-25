@@ -58,7 +58,7 @@ class DocumentForm(forms.ModelForm):
     date = DateField(required=True)
     
     def clean(self):
-        file = self.cleaned_data['file']
+        file = self.cleaned_data.get('file')
         if not self.cleaned_data.get('original_file_name') and file:
             self.cleaned_data['original_file_name'] = file.name
         return self.cleaned_data
