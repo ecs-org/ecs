@@ -1,494 +1,524 @@
-# -*- coding: utf-8 -*- 
-
+# encoding: utf-8
+import datetime
 from south.db import db
+from south.v2 import SchemaMigration
 from django.db import models
-from core.models import *
 
-class Migration:
+class Migration(SchemaMigration):
     
     def forwards(self, orm):
         
-        # Adding model 'Vote'
-        db.create_table('core_vote', (
-            ('id', orm['core.Vote:id']),
-            ('votereview', orm['core.Vote:votereview']),
-            ('submissionset', orm['core.Vote:submissionset']),
-            ('workflow', orm['core.Vote:workflow']),
-        ))
-        db.send_create_signal('core', ['Vote'])
-        
-        # Adding model 'DiagnosticsApplied'
-        db.create_table('core_diagnosticsapplied', (
-            ('id', orm['core.DiagnosticsApplied:id']),
-            ('submission', orm['core.DiagnosticsApplied:submission']),
-            ('type', orm['core.DiagnosticsApplied:type']),
-            ('count', orm['core.DiagnosticsApplied:count']),
-            ('period', orm['core.DiagnosticsApplied:period']),
-            ('total', orm['core.DiagnosticsApplied:total']),
-        ))
-        db.send_create_signal('core', ['DiagnosticsApplied'])
-        
-        # Adding model 'SubmissionReview'
-        db.create_table('core_submissionreview', (
-            ('id', orm['core.SubmissionReview:id']),
-            ('workflow', orm['core.SubmissionReview:workflow']),
-        ))
-        db.send_create_signal('core', ['SubmissionReview'])
-        
-        # Adding model 'NonTestedUsedDrugs'
-        db.create_table('core_nontesteduseddrugs', (
-            ('id', orm['core.NonTestedUsedDrugs:id']),
-            ('submission', orm['core.NonTestedUsedDrugs:submission']),
-            ('generic_name', orm['core.NonTestedUsedDrugs:generic_name']),
-            ('preparation_form', orm['core.NonTestedUsedDrugs:preparation_form']),
-            ('dosage', orm['core.NonTestedUsedDrugs:dosage']),
-        ))
-        db.send_create_signal('core', ['NonTestedUsedDrugs'])
-        
-        # Adding model 'EthicsCommission'
-        db.create_table('core_ethicscommission', (
-            ('id', orm['core.EthicsCommission:id']),
-            ('name', orm['core.EthicsCommission:name']),
-            ('address_1', orm['core.EthicsCommission:address_1']),
-            ('address_2', orm['core.EthicsCommission:address_2']),
-            ('zip_code', orm['core.EthicsCommission:zip_code']),
-            ('city', orm['core.EthicsCommission:city']),
-        ))
-        db.send_create_signal('core', ['EthicsCommission'])
-        
         # Adding model 'Workflow'
         db.create_table('core_workflow', (
-            ('id', orm['core.Workflow:id']),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))
         db.send_create_signal('core', ['Workflow'])
-        
-        # Adding model 'Checklist'
-        db.create_table('core_checklist', (
-            ('id', orm['core.Checklist:id']),
+
+        # Adding model 'DocumentType'
+        db.create_table('core_documenttype', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
-        db.send_create_signal('core', ['Checklist'])
-        
-        # Adding model 'Amendment'
-        db.create_table('core_amendment', (
-            ('id', orm['core.Amendment:id']),
-            ('submissionform', orm['core.Amendment:submissionform']),
-            ('order', orm['core.Amendment:order']),
-            ('number', orm['core.Amendment:number']),
-            ('date', orm['core.Amendment:date']),
-        ))
-        db.send_create_signal('core', ['Amendment'])
-        
+        db.send_create_signal('core', ['DocumentType'])
+
         # Adding model 'Document'
         db.create_table('core_document', (
-            ('id', orm['core.Document:id']),
-            ('uuid_document', orm['core.Document:uuid_document']),
-            ('uuid_document_revision', orm['core.Document:uuid_document_revision']),
-            ('version', orm['core.Document:version']),
-            ('date', orm['core.Document:date']),
-            ('absent', orm['core.Document:absent']),
+            ('mimetype', self.gf('django.db.models.fields.CharField')(default='application/pdf', max_length=100)),
+            ('deleted', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('uuid_document_revision', self.gf('django.db.models.fields.SlugField')(max_length=32, db_index=True)),
+            ('doctype', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.DocumentType'], null=True, blank=True)),
+            ('original_file_name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('version', self.gf('django.db.models.fields.CharField')(max_length=250)),
+            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100, null=True)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')()),
+            ('uuid_document', self.gf('django.db.models.fields.SlugField')(max_length=32, db_index=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))
         db.send_create_signal('core', ['Document'])
-        
-        # Adding model 'TherapiesApplied'
-        db.create_table('core_therapiesapplied', (
-            ('id', orm['core.TherapiesApplied:id']),
-            ('submission', orm['core.TherapiesApplied:submission']),
-            ('type', orm['core.TherapiesApplied:type']),
-            ('count', orm['core.TherapiesApplied:count']),
-            ('period', orm['core.TherapiesApplied:period']),
-            ('total', orm['core.TherapiesApplied:total']),
+
+        # Adding model 'EthicsCommission'
+        db.create_table('core_ethicscommission', (
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('fax', self.gf('django.db.models.fields.CharField')(max_length=30, null=True)),
+            ('chairperson', self.gf('django.db.models.fields.CharField')(max_length=120, null=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('url', self.gf('django.db.models.fields.URLField')(max_length=200, null=True)),
+            ('contactname', self.gf('django.db.models.fields.CharField')(max_length=120, null=True)),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, null=True)),
+            ('phone', self.gf('django.db.models.fields.CharField')(max_length=30, null=True)),
+            ('address_1', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('address_2', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('zip_code', self.gf('django.db.models.fields.CharField')(max_length=10)),
         ))
-        db.send_create_signal('core', ['TherapiesApplied'])
-        
-        # Adding model 'Investigator'
-        db.create_table('core_investigator', (
-            ('id', orm['core.Investigator:id']),
-            ('submission', orm['core.Investigator:submission']),
-            ('name', orm['core.Investigator:name']),
-            ('organisation', orm['core.Investigator:organisation']),
-            ('phone', orm['core.Investigator:phone']),
-            ('mobile', orm['core.Investigator:mobile']),
-            ('fax', orm['core.Investigator:fax']),
-            ('email', orm['core.Investigator:email']),
-            ('jus_practicandi', orm['core.Investigator:jus_practicandi']),
-            ('specialist', orm['core.Investigator:specialist']),
-            ('certified', orm['core.Investigator:certified']),
-            ('subject_count', orm['core.Investigator:subject_count']),
-            ('sign_date', orm['core.Investigator:sign_date']),
-        ))
-        db.send_create_signal('core', ['Investigator'])
-        
+        db.send_create_signal('core', ['EthicsCommission'])
+
         # Adding model 'SubmissionForm'
         db.create_table('core_submissionform', (
-            ('id', orm['core.SubmissionForm:id']),
-            ('project_title', orm['core.SubmissionForm:project_title']),
-            ('protocol_number', orm['core.SubmissionForm:protocol_number']),
-            ('date_of_protocol', orm['core.SubmissionForm:date_of_protocol']),
-            ('eudract_number', orm['core.SubmissionForm:eudract_number']),
-            ('isrctn_number', orm['core.SubmissionForm:isrctn_number']),
-            ('sponsor_name', orm['core.SubmissionForm:sponsor_name']),
-            ('sponsor_address1', orm['core.SubmissionForm:sponsor_address1']),
-            ('sponsor_address2', orm['core.SubmissionForm:sponsor_address2']),
-            ('sponsor_zip_code', orm['core.SubmissionForm:sponsor_zip_code']),
-            ('sponsor_city', orm['core.SubmissionForm:sponsor_city']),
-            ('sponsor_phone', orm['core.SubmissionForm:sponsor_phone']),
-            ('sponsor_fax', orm['core.SubmissionForm:sponsor_fax']),
-            ('sponsor_email', orm['core.SubmissionForm:sponsor_email']),
-            ('invoice_name', orm['core.SubmissionForm:invoice_name']),
-            ('invoice_address1', orm['core.SubmissionForm:invoice_address1']),
-            ('invoice_address2', orm['core.SubmissionForm:invoice_address2']),
-            ('invoice_zip_code', orm['core.SubmissionForm:invoice_zip_code']),
-            ('invoice_city', orm['core.SubmissionForm:invoice_city']),
-            ('invoice_phone', orm['core.SubmissionForm:invoice_phone']),
-            ('invoice_fax', orm['core.SubmissionForm:invoice_fax']),
-            ('invoice_email', orm['core.SubmissionForm:invoice_email']),
-            ('invoice_uid', orm['core.SubmissionForm:invoice_uid']),
-            ('invoice_uid_verified_level1', orm['core.SubmissionForm:invoice_uid_verified_level1']),
-            ('invoice_uid_verified_level2', orm['core.SubmissionForm:invoice_uid_verified_level2']),
-            ('project_type_2_1_1', orm['core.SubmissionForm:project_type_2_1_1']),
-            ('project_type_2_1_2', orm['core.SubmissionForm:project_type_2_1_2']),
-            ('project_type_2_1_2_1', orm['core.SubmissionForm:project_type_2_1_2_1']),
-            ('project_type_2_1_2_2', orm['core.SubmissionForm:project_type_2_1_2_2']),
-            ('project_type_2_1_3', orm['core.SubmissionForm:project_type_2_1_3']),
-            ('project_type_2_1_4', orm['core.SubmissionForm:project_type_2_1_4']),
-            ('project_type_2_1_4_1', orm['core.SubmissionForm:project_type_2_1_4_1']),
-            ('project_type_2_1_4_2', orm['core.SubmissionForm:project_type_2_1_4_2']),
-            ('project_type_2_1_4_3', orm['core.SubmissionForm:project_type_2_1_4_3']),
-            ('project_type_2_1_5', orm['core.SubmissionForm:project_type_2_1_5']),
-            ('project_type_2_1_6', orm['core.SubmissionForm:project_type_2_1_6']),
-            ('project_type_2_1_7', orm['core.SubmissionForm:project_type_2_1_7']),
-            ('project_type_2_1_8', orm['core.SubmissionForm:project_type_2_1_8']),
-            ('project_type_2_1_9', orm['core.SubmissionForm:project_type_2_1_9']),
-            ('specialism', orm['core.SubmissionForm:specialism']),
-            ('pharma_checked_substance', orm['core.SubmissionForm:pharma_checked_substance']),
-            ('pharma_reference_substance', orm['core.SubmissionForm:pharma_reference_substance']),
-            ('medtech_checked_product', orm['core.SubmissionForm:medtech_checked_product']),
-            ('medtech_reference_substance', orm['core.SubmissionForm:medtech_reference_substance']),
-            ('clinical_phase', orm['core.SubmissionForm:clinical_phase']),
-            ('already_voted', orm['core.SubmissionForm:already_voted']),
-            ('subject_count', orm['core.SubmissionForm:subject_count']),
-            ('subject_minage', orm['core.SubmissionForm:subject_minage']),
-            ('subject_maxage', orm['core.SubmissionForm:subject_maxage']),
-            ('subject_noncompetents', orm['core.SubmissionForm:subject_noncompetents']),
-            ('subject_males', orm['core.SubmissionForm:subject_males']),
-            ('subject_females', orm['core.SubmissionForm:subject_females']),
-            ('subject_childbearing', orm['core.SubmissionForm:subject_childbearing']),
-            ('subject_duration', orm['core.SubmissionForm:subject_duration']),
-            ('subject_duration_active', orm['core.SubmissionForm:subject_duration_active']),
-            ('subject_duration_controls', orm['core.SubmissionForm:subject_duration_controls']),
-            ('subject_planned_total_duration', orm['core.SubmissionForm:subject_planned_total_duration']),
-            ('substance_registered_in_countries', orm['core.SubmissionForm:substance_registered_in_countries']),
-            ('substance_preexisting_clinical_tries', orm['core.SubmissionForm:substance_preexisting_clinical_tries']),
-            ('substance_p_c_t_countries', orm['core.SubmissionForm:substance_p_c_t_countries']),
-            ('substance_p_c_t_phase', orm['core.SubmissionForm:substance_p_c_t_phase']),
-            ('substance_p_c_t_period', orm['core.SubmissionForm:substance_p_c_t_period']),
-            ('substance_p_c_t_application_type', orm['core.SubmissionForm:substance_p_c_t_application_type']),
-            ('substance_p_c_t_gcp_rules', orm['core.SubmissionForm:substance_p_c_t_gcp_rules']),
-            ('substance_p_c_t_final_report', orm['core.SubmissionForm:substance_p_c_t_final_report']),
-            ('medtech_product_name', orm['core.SubmissionForm:medtech_product_name']),
-            ('medtech_manufacturer', orm['core.SubmissionForm:medtech_manufacturer']),
-            ('medtech_certified_for_exact_indications', orm['core.SubmissionForm:medtech_certified_for_exact_indications']),
-            ('medtech_certified_for_other_indications', orm['core.SubmissionForm:medtech_certified_for_other_indications']),
-            ('medtech_ce_symbol', orm['core.SubmissionForm:medtech_ce_symbol']),
-            ('medtech_manual_included', orm['core.SubmissionForm:medtech_manual_included']),
-            ('medtech_technical_safety_regulations', orm['core.SubmissionForm:medtech_technical_safety_regulations']),
-            ('medtech_departure_from_regulations', orm['core.SubmissionForm:medtech_departure_from_regulations']),
-            ('insurance_name', orm['core.SubmissionForm:insurance_name']),
-            ('insurance_address_1', orm['core.SubmissionForm:insurance_address_1']),
-            ('insurance_phone', orm['core.SubmissionForm:insurance_phone']),
-            ('insurance_contract_number', orm['core.SubmissionForm:insurance_contract_number']),
-            ('insurance_validity', orm['core.SubmissionForm:insurance_validity']),
-            ('additional_therapy_info', orm['core.SubmissionForm:additional_therapy_info']),
-            ('german_project_title', orm['core.SubmissionForm:german_project_title']),
-            ('german_summary', orm['core.SubmissionForm:german_summary']),
-            ('german_preclinical_results', orm['core.SubmissionForm:german_preclinical_results']),
-            ('german_primary_hypothesis', orm['core.SubmissionForm:german_primary_hypothesis']),
-            ('german_inclusion_exclusion_crit', orm['core.SubmissionForm:german_inclusion_exclusion_crit']),
-            ('german_ethical_info', orm['core.SubmissionForm:german_ethical_info']),
-            ('german_protected_subjects_info', orm['core.SubmissionForm:german_protected_subjects_info']),
-            ('german_recruitment_info', orm['core.SubmissionForm:german_recruitment_info']),
-            ('german_consent_info', orm['core.SubmissionForm:german_consent_info']),
-            ('german_risks_info', orm['core.SubmissionForm:german_risks_info']),
-            ('german_benefits_info', orm['core.SubmissionForm:german_benefits_info']),
-            ('german_relationship_info', orm['core.SubmissionForm:german_relationship_info']),
-            ('german_concurrent_study_info', orm['core.SubmissionForm:german_concurrent_study_info']),
-            ('german_sideeffects_info', orm['core.SubmissionForm:german_sideeffects_info']),
-            ('german_statistical_info', orm['core.SubmissionForm:german_statistical_info']),
-            ('german_dataprotection_info', orm['core.SubmissionForm:german_dataprotection_info']),
-            ('german_aftercare_info', orm['core.SubmissionForm:german_aftercare_info']),
-            ('german_payment_info', orm['core.SubmissionForm:german_payment_info']),
-            ('german_abort_info', orm['core.SubmissionForm:german_abort_info']),
-            ('german_dataaccess_info', orm['core.SubmissionForm:german_dataaccess_info']),
-            ('german_financing_info', orm['core.SubmissionForm:german_financing_info']),
-            ('german_additional_info', orm['core.SubmissionForm:german_additional_info']),
-            ('study_plan_8_1_1', orm['core.SubmissionForm:study_plan_8_1_1']),
-            ('study_plan_8_1_2', orm['core.SubmissionForm:study_plan_8_1_2']),
-            ('study_plan_8_1_3', orm['core.SubmissionForm:study_plan_8_1_3']),
-            ('study_plan_8_1_4', orm['core.SubmissionForm:study_plan_8_1_4']),
-            ('study_plan_8_1_5', orm['core.SubmissionForm:study_plan_8_1_5']),
-            ('study_plan_8_1_6', orm['core.SubmissionForm:study_plan_8_1_6']),
-            ('study_plan_8_1_7', orm['core.SubmissionForm:study_plan_8_1_7']),
-            ('study_plan_8_1_8', orm['core.SubmissionForm:study_plan_8_1_8']),
-            ('study_plan_8_1_9', orm['core.SubmissionForm:study_plan_8_1_9']),
-            ('study_plan_8_1_10', orm['core.SubmissionForm:study_plan_8_1_10']),
-            ('study_plan_8_1_11', orm['core.SubmissionForm:study_plan_8_1_11']),
-            ('study_plan_8_1_12', orm['core.SubmissionForm:study_plan_8_1_12']),
-            ('study_plan_8_1_13', orm['core.SubmissionForm:study_plan_8_1_13']),
-            ('study_plan_8_1_14', orm['core.SubmissionForm:study_plan_8_1_14']),
-            ('study_plan_8_1_15', orm['core.SubmissionForm:study_plan_8_1_15']),
-            ('study_plan_8_1_16', orm['core.SubmissionForm:study_plan_8_1_16']),
-            ('study_plan_8_1_17', orm['core.SubmissionForm:study_plan_8_1_17']),
-            ('study_plan_8_1_18', orm['core.SubmissionForm:study_plan_8_1_18']),
-            ('study_plan_8_1_19', orm['core.SubmissionForm:study_plan_8_1_19']),
-            ('study_plan_8_1_20', orm['core.SubmissionForm:study_plan_8_1_20']),
-            ('study_plan_8_1_21', orm['core.SubmissionForm:study_plan_8_1_21']),
-            ('study_plan_alpha', orm['core.SubmissionForm:study_plan_alpha']),
-            ('study_plan_power', orm['core.SubmissionForm:study_plan_power']),
-            ('study_plan_statalgorithm', orm['core.SubmissionForm:study_plan_statalgorithm']),
-            ('study_plan_multiple_test_correction_algorithm', orm['core.SubmissionForm:study_plan_multiple_test_correction_algorithm']),
-            ('study_plan_dropout_ratio', orm['core.SubmissionForm:study_plan_dropout_ratio']),
-            ('study_plan_8_3_1', orm['core.SubmissionForm:study_plan_8_3_1']),
-            ('study_plan_8_3_2', orm['core.SubmissionForm:study_plan_8_3_2']),
-            ('study_plan_abort_crit', orm['core.SubmissionForm:study_plan_abort_crit']),
-            ('study_plan_planned_statalgorithm', orm['core.SubmissionForm:study_plan_planned_statalgorithm']),
-            ('study_plan_dataquality_checking', orm['core.SubmissionForm:study_plan_dataquality_checking']),
-            ('study_plan_datamanagement', orm['core.SubmissionForm:study_plan_datamanagement']),
-            ('study_plan_biometric_planning', orm['core.SubmissionForm:study_plan_biometric_planning']),
-            ('study_plan_statistics_implementation', orm['core.SubmissionForm:study_plan_statistics_implementation']),
-            ('study_plan_dataprotection_reason', orm['core.SubmissionForm:study_plan_dataprotection_reason']),
-            ('study_plan_dataprotection_dvr', orm['core.SubmissionForm:study_plan_dataprotection_dvr']),
-            ('study_plan_dataprotection_anonalgoritm', orm['core.SubmissionForm:study_plan_dataprotection_anonalgoritm']),
-            ('submitter_name', orm['core.SubmissionForm:submitter_name']),
-            ('submitter_organisation', orm['core.SubmissionForm:submitter_organisation']),
-            ('submitter_jobtitle', orm['core.SubmissionForm:submitter_jobtitle']),
-            ('submitter_is_coordinator', orm['core.SubmissionForm:submitter_is_coordinator']),
-            ('submitter_is_main_investigator', orm['core.SubmissionForm:submitter_is_main_investigator']),
-            ('submitter_is_sponsor', orm['core.SubmissionForm:submitter_is_sponsor']),
-            ('submitter_is_authorized_by_sponsor', orm['core.SubmissionForm:submitter_is_authorized_by_sponsor']),
-            ('submitter_sign_date', orm['core.SubmissionForm:submitter_sign_date']),
-            ('investigator_name', orm['core.SubmissionForm:investigator_name']),
-            ('investigator_organisation', orm['core.SubmissionForm:investigator_organisation']),
-            ('investigator_phone', orm['core.SubmissionForm:investigator_phone']),
-            ('investigator_mobile', orm['core.SubmissionForm:investigator_mobile']),
-            ('investigator_fax', orm['core.SubmissionForm:investigator_fax']),
-            ('investigator_email', orm['core.SubmissionForm:investigator_email']),
-            ('investigator_jus_practicandi', orm['core.SubmissionForm:investigator_jus_practicandi']),
-            ('investigator_specialist', orm['core.SubmissionForm:investigator_specialist']),
-            ('investigator_certified', orm['core.SubmissionForm:investigator_certified']),
+            ('invoice_uid', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('study_plan_abort_crit', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('medtech_product_name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('study_plan_statistics_implementation', self.gf('django.db.models.fields.CharField')(max_length=120)),
+            ('sponsor_fax', self.gf('django.db.models.fields.CharField')(max_length=30, null=True)),
+            ('substance_p_c_t_final_report', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('substance_registered_in_countries', self.gf('django.db.models.fields.CharField')(max_length=300, null=True, blank=True)),
+            ('project_type_basic_research', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('medtech_ce_symbol', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('study_plan_alpha', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('project_type_reg_drug', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_secondary_objectives', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('eudract_number', self.gf('django.db.models.fields.CharField')(max_length=40, null=True)),
+            ('study_plan_dropout_ratio', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('german_protected_subjects_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('project_type_genetic_study', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_blind', self.gf('django.db.models.fields.SmallIntegerField')(null=True)),
+            ('study_plan_misc', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('project_type_retrospective', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_preclinical_results', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('study_plan_biometric_planning', self.gf('django.db.models.fields.CharField')(max_length=120)),
+            ('invoice_uid_verified_level2', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('study_plan_placebo', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('submitter_jobtitle', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('project_type_medical_device', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_aftercare_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('german_recruitment_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('study_plan_factorized', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('invoice_uid_verified_level1', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('project_type_medical_device_performance_evaluation', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_dataprotection_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('german_concurrent_study_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('study_plan_planned_statalgorithm', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('submission', self.gf('django.db.models.fields.related.ForeignKey')(related_name='forms', to=orm['core.Submission'])),
+            ('medtech_reference_substance', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('study_plan_statalgorithm', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('subject_duration_active', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('submitter_is_coordinator', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('sponsor_name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True)),
+            ('sponsor_email', self.gf('django.db.models.fields.EmailField')(max_length=75, null=True)),
+            ('subject_duration', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('pharma_reference_substance', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('project_type_questionnaire', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('submitter_is_main_investigator', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('insurance_phone', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('study_plan_population_intention_to_treat', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('submitter_name', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('submitter_is_authorized_by_sponsor', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('medtech_manufacturer', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('subject_planned_total_duration', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('project_type_medical_device_with_ce', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('submitter_is_sponsor', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_summary', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('insurance_contract_number', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('study_plan_power', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('sponsor_phone', self.gf('django.db.models.fields.CharField')(max_length=30, null=True)),
+            ('subject_maxage', self.gf('django.db.models.fields.IntegerField')()),
+            ('subject_noncompetents', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('date_of_receipt', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('project_type_medical_device_without_ce', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('invoice_phone', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('german_risks_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('additional_therapy_info', self.gf('django.db.models.fields.TextField')()),
+            ('specialism', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('study_plan_population_per_protocol', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('medtech_certified_for_other_indications', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('study_plan_parallelgroups', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_payment_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('study_plan_controlled', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_dataprotection_anonalgoritm', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('german_ethical_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('german_inclusion_exclusion_crit', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('medtech_technical_safety_regulations', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('study_plan_pilot_project', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_number_of_groups', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('insurance_name', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('study_plan_null_hypothesis', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('clinical_phase', self.gf('django.db.models.fields.CharField')(max_length=10)),
+            ('substance_preexisting_clinical_tries', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('substance_p_c_t_phase', self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
+            ('subject_males', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('substance_p_c_t_period', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('german_benefits_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('german_abort_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('insurance_address_1', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('german_additional_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('study_plan_primary_objectives', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('sponsor_contactname', self.gf('django.db.models.fields.CharField')(max_length=80, null=True)),
+            ('study_plan_dataprotection_reason', self.gf('django.db.models.fields.CharField')(max_length=120, blank=True)),
+            ('medtech_certified_for_exact_indications', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('sponsor_city', self.gf('django.db.models.fields.CharField')(max_length=40, null=True)),
+            ('medtech_manual_included', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('submitter_agrees_to_publishing', self.gf('django.db.models.fields.BooleanField')(default=True, blank=True)),
+            ('study_plan_alternative_hypothesis', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('medtech_checked_product', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('study_plan_sample_frequency', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('study_plan_dataquality_checking', self.gf('django.db.models.fields.TextField')()),
+            ('project_type_non_reg_drug', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_relationship_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('project_title', self.gf('django.db.models.fields.TextField')()),
+            ('invoice_fax', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('sponsor_zip_code', self.gf('django.db.models.fields.CharField')(max_length=10, null=True)),
+            ('insurance_validity', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('already_voted', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('subject_duration_controls', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('study_plan_dataprotection_dvr', self.gf('django.db.models.fields.CharField')(max_length=12, blank=True)),
+            ('german_sideeffects_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('subject_females', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('pharma_checked_substance', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('project_type_misc', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('invoice_city', self.gf('django.db.models.fields.CharField')(max_length=40, null=True, blank=True)),
+            ('german_financing_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('project_type_register', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_dataaccess_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('project_type_biobank', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_observer_blinded', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('substance_p_c_t_application_type', self.gf('django.db.models.fields.CharField')(max_length=40, null=True, blank=True)),
+            ('invoice_zip_code', self.gf('django.db.models.fields.CharField')(max_length=10, null=True, blank=True)),
+            ('project_type_reg_drug_within_indication', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('invoice_email', self.gf('django.db.models.fields.EmailField')(max_length=75, null=True, blank=True)),
+            ('study_plan_datamanagement', self.gf('django.db.models.fields.TextField')()),
+            ('german_primary_hypothesis', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('subject_childbearing', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('substance_p_c_t_countries', self.gf('django.db.models.fields.CharField')(max_length=300, null=True, blank=True)),
+            ('study_plan_stratification', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('project_type_reg_drug_not_within_indication', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('project_type_medical_method', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('project_type_education_context', self.gf('django.db.models.fields.SmallIntegerField')(null=True, blank=True)),
+            ('invoice_address1', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('invoice_address2', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('study_plan_equivalence_testing', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('subject_count', self.gf('django.db.models.fields.IntegerField')()),
+            ('substance_p_c_t_gcp_rules', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
+            ('subject_minage', self.gf('django.db.models.fields.IntegerField')()),
+            ('study_plan_randomized', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('study_plan_cross_over', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('german_consent_info', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('medtech_departure_from_regulations', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('german_project_title', self.gf('django.db.models.fields.TextField')(null=True)),
+            ('submitter_organisation', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('study_plan_multiple_test_correction_algorithm', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('sponsor_address1', self.gf('django.db.models.fields.CharField')(max_length=60, null=True)),
+            ('invoice_name', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('invoice_contactname', self.gf('django.db.models.fields.CharField')(max_length=80, null=True, blank=True)),
+            ('sponsor_address2', self.gf('django.db.models.fields.CharField')(max_length=60, null=True)),
+            ('german_statistical_info', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
         ))
         db.send_create_signal('core', ['SubmissionForm'])
-        
-        # Adding model 'NotificationAnswer'
-        db.create_table('core_notificationanswer', (
-            ('id', orm['core.NotificationAnswer:id']),
-            ('workflow', orm['core.NotificationAnswer:workflow']),
+
+        # Adding M2M table for field documents on 'SubmissionForm'
+        db.create_table('core_submissionform_documents', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('submissionform', models.ForeignKey(orm['core.submissionform'], null=False)),
+            ('document', models.ForeignKey(orm['core.document'], null=False))
         ))
-        db.send_create_signal('core', ['NotificationAnswer'])
-        
-        # Adding model 'Submission'
-        db.create_table('core_submission', (
-            ('id', orm['core.Submission:id']),
-            ('submissionreview', orm['core.Submission:submissionreview']),
-            ('vote', orm['core.Submission:vote']),
-            ('workflow', orm['core.Submission:workflow']),
+        db.create_unique('core_submissionform_documents', ['submissionform_id', 'document_id'])
+
+        # Adding model 'Investigator'
+        db.create_table('core_investigator', (
+            ('specialist', self.gf('django.db.models.fields.CharField')(max_length=80, blank=True)),
+            ('fax', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
+            ('sign_date', self.gf('django.db.models.fields.DateField')()),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('submission', self.gf('django.db.models.fields.related.ForeignKey')(related_name='investigators', to=orm['core.SubmissionForm'])),
+            ('subject_count', self.gf('django.db.models.fields.IntegerField')()),
+            ('mobile', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
+            ('organisation', self.gf('django.db.models.fields.CharField')(max_length=80, blank=True)),
+            ('ethics_commission', self.gf('django.db.models.fields.related.ForeignKey')(related_name='investigators', null=True, to=orm['core.EthicsCommission'])),
+            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75, blank=True)),
+            ('phone', self.gf('django.db.models.fields.CharField')(max_length=30, blank=True)),
+            ('jus_practicandi', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('main', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('certified', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
         ))
-        db.send_create_signal('core', ['Submission'])
-        
-        # Adding model 'NotificationSet'
-        db.create_table('core_notificationset', (
-            ('id', orm['core.NotificationSet:id']),
-            ('notificationform', orm['core.NotificationSet:notificationform']),
-        ))
-        db.send_create_signal('core', ['NotificationSet'])
-        
-        # Adding model 'SubmissionSet'
-        db.create_table('core_submissionset', (
-            ('id', orm['core.SubmissionSet:id']),
-            ('submission', orm['core.SubmissionSet:submission']),
-            ('submissionform', orm['core.SubmissionSet:submissionform']),
-        ))
-        db.send_create_signal('core', ['SubmissionSet'])
-        
-        # Adding model 'Meeting'
-        db.create_table('core_meeting', (
-            ('id', orm['core.Meeting:id']),
-        ))
-        db.send_create_signal('core', ['Meeting'])
-        
-        # Adding model 'InvolvedCommissionsForSubmission'
-        db.create_table('core_involvedcommissionsforsubmission', (
-            ('id', orm['core.InvolvedCommissionsForSubmission:id']),
-            ('commission', orm['core.InvolvedCommissionsForSubmission:commission']),
-            ('submission', orm['core.InvolvedCommissionsForSubmission:submission']),
-            ('main', orm['core.InvolvedCommissionsForSubmission:main']),
-        ))
-        db.send_create_signal('core', ['InvolvedCommissionsForSubmission'])
-        
-        # Adding model 'Notification'
-        db.create_table('core_notification', (
-            ('id', orm['core.Notification:id']),
-            ('submission', orm['core.Notification:submission']),
-            ('notificationset', orm['core.Notification:notificationset']),
-            ('answer', orm['core.Notification:answer']),
-            ('workflow', orm['core.Notification:workflow']),
-        ))
-        db.send_create_signal('core', ['Notification'])
-        
+        db.send_create_signal('core', ['Investigator'])
+
         # Adding model 'InvestigatorEmployee'
         db.create_table('core_investigatoremployee', (
-            ('id', orm['core.InvestigatorEmployee:id']),
-            ('submission', orm['core.InvestigatorEmployee:submission']),
-            ('sex', orm['core.InvestigatorEmployee:sex']),
-            ('title', orm['core.InvestigatorEmployee:title']),
-            ('surname', orm['core.InvestigatorEmployee:surname']),
-            ('firstname', orm['core.InvestigatorEmployee:firstname']),
-            ('organisation', orm['core.InvestigatorEmployee:organisation']),
+            ('surname', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('submission', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Investigator'])),
+            ('firstname', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('organisation', self.gf('django.db.models.fields.CharField')(max_length=80)),
+            ('sex', self.gf('django.db.models.fields.CharField')(max_length=1)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))
         db.send_create_signal('core', ['InvestigatorEmployee'])
-        
-        # Adding model 'NotificationForm'
-        db.create_table('core_notificationform', (
-            ('id', orm['core.NotificationForm:id']),
+
+        # Adding model 'Measure'
+        db.create_table('core_measure', (
+            ('category', self.gf('django.db.models.fields.CharField')(max_length=3, null=True)),
+            ('count', self.gf('django.db.models.fields.TextField')()),
+            ('submission_form', self.gf('django.db.models.fields.related.ForeignKey')(related_name='measures', to=orm['core.SubmissionForm'])),
+            ('period', self.gf('django.db.models.fields.CharField')(max_length=30)),
+            ('total', self.gf('django.db.models.fields.CharField')(max_length=30)),
+            ('type', self.gf('django.db.models.fields.CharField')(max_length=30)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))
-        db.send_create_signal('core', ['NotificationForm'])
-        
-        # Adding model 'ParticipatingCenter'
-        db.create_table('core_participatingcenter', (
-            ('id', orm['core.ParticipatingCenter:id']),
-            ('submission', orm['core.ParticipatingCenter:submission']),
-            ('name', orm['core.ParticipatingCenter:name']),
-            ('address_1', orm['core.ParticipatingCenter:address_1']),
-            ('address_2', orm['core.ParticipatingCenter:address_2']),
-            ('zip_code', orm['core.ParticipatingCenter:zip_code']),
-            ('city', orm['core.ParticipatingCenter:city']),
-            ('country', orm['core.ParticipatingCenter:country']),
+        db.send_create_signal('core', ['Measure'])
+
+        # Adding model 'NonTestedUsedDrug'
+        db.create_table('core_nontesteduseddrug', (
+            ('generic_name', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('preparation_form', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('submission_form', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.SubmissionForm'])),
+            ('dosage', self.gf('django.db.models.fields.CharField')(max_length=40)),
         ))
-        db.send_create_signal('core', ['ParticipatingCenter'])
-        
+        db.send_create_signal('core', ['NonTestedUsedDrug'])
+
+        # Adding model 'ForeignParticipatingCenter'
+        db.create_table('core_foreignparticipatingcenter', (
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('submission_form', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.SubmissionForm'])),
+            ('country', self.gf('django.db.models.fields.CharField')(max_length=4)),
+            ('address_1', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('address_2', self.gf('django.db.models.fields.CharField')(max_length=60)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('zip_code', self.gf('django.db.models.fields.CharField')(max_length=10)),
+        ))
+        db.send_create_signal('core', ['ForeignParticipatingCenter'])
+
+        # Adding model 'Amendment'
+        db.create_table('core_amendment', (
+            ('submissionform', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.SubmissionForm'])),
+            ('date', self.gf('django.db.models.fields.DateField')()),
+            ('number', self.gf('django.db.models.fields.CharField')(max_length=40)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('order', self.gf('django.db.models.fields.IntegerField')()),
+        ))
+        db.send_create_signal('core', ['Amendment'])
+
+        # Adding model 'NotificationType'
+        db.create_table('core_notificationtype', (
+            ('model', self.gf('django.db.models.fields.CharField')(default='ecs.core.models.Notification', max_length=80)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('form', self.gf('django.db.models.fields.CharField')(default='ecs.core.forms.NotificationForm', max_length=80)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=80)),
+        ))
+        db.send_create_signal('core', ['NotificationType'])
+
+        # Adding model 'Notification'
+        db.create_table('core_notification', (
+            ('date_of_receipt', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('type', self.gf('django.db.models.fields.related.ForeignKey')(related_name='notifications', null=True, to=orm['core.NotificationType'])),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('comments', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
+        ))
+        db.send_create_signal('core', ['Notification'])
+
+        # Adding M2M table for field submission_forms on 'Notification'
+        db.create_table('core_notification_submission_forms', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('notification', models.ForeignKey(orm['core.notification'], null=False)),
+            ('submissionform', models.ForeignKey(orm['core.submissionform'], null=False))
+        ))
+        db.create_unique('core_notification_submission_forms', ['notification_id', 'submissionform_id'])
+
+        # Adding M2M table for field documents on 'Notification'
+        db.create_table('core_notification_documents', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('notification', models.ForeignKey(orm['core.notification'], null=False)),
+            ('document', models.ForeignKey(orm['core.document'], null=False))
+        ))
+        db.create_unique('core_notification_documents', ['notification_id', 'document_id'])
+
+        # Adding M2M table for field investigators on 'Notification'
+        db.create_table('core_notification_investigators', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('notification', models.ForeignKey(orm['core.notification'], null=False)),
+            ('investigator', models.ForeignKey(orm['core.investigator'], null=False))
+        ))
+        db.create_unique('core_notification_investigators', ['notification_id', 'investigator_id'])
+
+        # Adding model 'CompletionReportNotification'
+        db.create_table('core_completionreportnotification', (
+            ('finished_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('SAE_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, blank=True)),
+            ('study_aborted', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('recruited_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('reason_for_not_started', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('aborted_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('completion_date', self.gf('django.db.models.fields.DateField')()),
+            ('SUSAR_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, blank=True)),
+            ('notification_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.Notification'], unique=True)),
+        ))
+        db.send_create_signal('core', ['CompletionReportNotification'])
+
+        # Adding model 'ProgressReportNotification'
+        db.create_table('core_progressreportnotification', (
+            ('finished_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('SAE_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, blank=True)),
+            ('recruited_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('reason_for_not_started', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
+            ('aborted_subjects', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('runs_till', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('extension_of_vote_requested', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True)),
+            ('SUSAR_count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0, blank=True)),
+            ('notification_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.Notification'], unique=True, primary_key=True)),
+        ))
+        db.send_create_signal('core', ['ProgressReportNotification'])
+
+        # Adding model 'Checklist'
+        db.create_table('core_checklist', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal('core', ['Checklist'])
+
         # Adding model 'VoteReview'
         db.create_table('core_votereview', (
-            ('id', orm['core.VoteReview:id']),
-            ('workflow', orm['core.VoteReview:workflow']),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('workflow', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Workflow'])),
         ))
         db.send_create_signal('core', ['VoteReview'])
-        
-        # Adding ManyToManyField 'Vote.checklists'
+
+        # Adding model 'Vote'
+        db.create_table('core_vote', (
+            ('submissionform', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.SubmissionForm'], null=True)),
+            ('votereview', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.VoteReview'])),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('workflow', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Workflow'])),
+        ))
+        db.send_create_signal('core', ['Vote'])
+
+        # Adding M2M table for field checklists on 'Vote'
         db.create_table('core_vote_checklists', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('vote', models.ForeignKey(orm.Vote, null=False)),
-            ('checklist', models.ForeignKey(orm.Checklist, null=False))
+            ('vote', models.ForeignKey(orm['core.vote'], null=False)),
+            ('checklist', models.ForeignKey(orm['core.checklist'], null=False))
         ))
-        
-        # Adding ManyToManyField 'NotificationSet.documents'
-        db.create_table('core_notificationset_documents', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('notificationset', models.ForeignKey(orm.NotificationSet, null=False)),
-            ('document', models.ForeignKey(orm.Document, null=False))
+        db.create_unique('core_vote_checklists', ['vote_id', 'checklist_id'])
+
+        # Adding model 'SubmissionReview'
+        db.create_table('core_submissionreview', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('workflow', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Workflow'])),
         ))
-        
-        # Adding ManyToManyField 'Meeting.submissions'
+        db.send_create_signal('core', ['SubmissionReview'])
+
+        # Adding model 'Submission'
+        db.create_table('core_submission', (
+            ('submissionreview', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.SubmissionReview'], null=True)),
+            ('vote', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Vote'], null=True)),
+            ('workflow', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Workflow'], null=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('ec_number', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
+        ))
+        db.send_create_signal('core', ['Submission'])
+
+        # Adding model 'NotificationAnswer'
+        db.create_table('core_notificationanswer', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('workflow', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Workflow'])),
+        ))
+        db.send_create_signal('core', ['NotificationAnswer'])
+
+        # Adding model 'Meeting'
+        db.create_table('core_meeting', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal('core', ['Meeting'])
+
+        # Adding M2M table for field submissions on 'Meeting'
         db.create_table('core_meeting_submissions', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('meeting', models.ForeignKey(orm.Meeting, null=False)),
-            ('submission', models.ForeignKey(orm.Submission, null=False))
+            ('meeting', models.ForeignKey(orm['core.meeting'], null=False)),
+            ('submission', models.ForeignKey(orm['core.submission'], null=False))
         ))
-        
-        # Adding ManyToManyField 'SubmissionSet.documents'
-        db.create_table('core_submissionset_documents', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('submissionset', models.ForeignKey(orm.SubmissionSet, null=False)),
-            ('document', models.ForeignKey(orm.Document, null=False))
-        ))
-        
+        db.create_unique('core_meeting_submissions', ['meeting_id', 'submission_id'])
     
     
     def backwards(self, orm):
         
-        # Deleting model 'Vote'
-        db.delete_table('core_vote')
-        
-        # Deleting model 'DiagnosticsApplied'
-        db.delete_table('core_diagnosticsapplied')
-        
-        # Deleting model 'SubmissionReview'
-        db.delete_table('core_submissionreview')
-        
-        # Deleting model 'NonTestedUsedDrugs'
-        db.delete_table('core_nontesteduseddrugs')
-        
-        # Deleting model 'EthicsCommission'
-        db.delete_table('core_ethicscommission')
-        
         # Deleting model 'Workflow'
         db.delete_table('core_workflow')
-        
-        # Deleting model 'Checklist'
-        db.delete_table('core_checklist')
-        
-        # Deleting model 'Amendment'
-        db.delete_table('core_amendment')
-        
+
+        # Deleting model 'DocumentType'
+        db.delete_table('core_documenttype')
+
         # Deleting model 'Document'
         db.delete_table('core_document')
-        
-        # Deleting model 'TherapiesApplied'
-        db.delete_table('core_therapiesapplied')
-        
-        # Deleting model 'Investigator'
-        db.delete_table('core_investigator')
-        
+
+        # Deleting model 'EthicsCommission'
+        db.delete_table('core_ethicscommission')
+
         # Deleting model 'SubmissionForm'
         db.delete_table('core_submissionform')
-        
-        # Deleting model 'NotificationAnswer'
-        db.delete_table('core_notificationanswer')
-        
-        # Deleting model 'Submission'
-        db.delete_table('core_submission')
-        
-        # Deleting model 'NotificationSet'
-        db.delete_table('core_notificationset')
-        
-        # Deleting model 'SubmissionSet'
-        db.delete_table('core_submissionset')
-        
-        # Deleting model 'Meeting'
-        db.delete_table('core_meeting')
-        
-        # Deleting model 'InvolvedCommissionsForSubmission'
-        db.delete_table('core_involvedcommissionsforsubmission')
-        
-        # Deleting model 'Notification'
-        db.delete_table('core_notification')
-        
+
+        # Removing M2M table for field documents on 'SubmissionForm'
+        db.delete_table('core_submissionform_documents')
+
+        # Deleting model 'Investigator'
+        db.delete_table('core_investigator')
+
         # Deleting model 'InvestigatorEmployee'
         db.delete_table('core_investigatoremployee')
-        
-        # Deleting model 'NotificationForm'
-        db.delete_table('core_notificationform')
-        
-        # Deleting model 'ParticipatingCenter'
-        db.delete_table('core_participatingcenter')
-        
+
+        # Deleting model 'Measure'
+        db.delete_table('core_measure')
+
+        # Deleting model 'NonTestedUsedDrug'
+        db.delete_table('core_nontesteduseddrug')
+
+        # Deleting model 'ForeignParticipatingCenter'
+        db.delete_table('core_foreignparticipatingcenter')
+
+        # Deleting model 'Amendment'
+        db.delete_table('core_amendment')
+
+        # Deleting model 'NotificationType'
+        db.delete_table('core_notificationtype')
+
+        # Deleting model 'Notification'
+        db.delete_table('core_notification')
+
+        # Removing M2M table for field submission_forms on 'Notification'
+        db.delete_table('core_notification_submission_forms')
+
+        # Removing M2M table for field documents on 'Notification'
+        db.delete_table('core_notification_documents')
+
+        # Removing M2M table for field investigators on 'Notification'
+        db.delete_table('core_notification_investigators')
+
+        # Deleting model 'CompletionReportNotification'
+        db.delete_table('core_completionreportnotification')
+
+        # Deleting model 'ProgressReportNotification'
+        db.delete_table('core_progressreportnotification')
+
+        # Deleting model 'Checklist'
+        db.delete_table('core_checklist')
+
         # Deleting model 'VoteReview'
         db.delete_table('core_votereview')
-        
-        # Dropping ManyToManyField 'Vote.checklists'
+
+        # Deleting model 'Vote'
+        db.delete_table('core_vote')
+
+        # Removing M2M table for field checklists on 'Vote'
         db.delete_table('core_vote_checklists')
-        
-        # Dropping ManyToManyField 'NotificationSet.documents'
-        db.delete_table('core_notificationset_documents')
-        
-        # Dropping ManyToManyField 'Meeting.submissions'
+
+        # Deleting model 'SubmissionReview'
+        db.delete_table('core_submissionreview')
+
+        # Deleting model 'Submission'
+        db.delete_table('core_submission')
+
+        # Deleting model 'NotificationAnswer'
+        db.delete_table('core_notificationanswer')
+
+        # Deleting model 'Meeting'
+        db.delete_table('core_meeting')
+
+        # Removing M2M table for field submissions on 'Meeting'
         db.delete_table('core_meeting_submissions')
-        
-        # Dropping ManyToManyField 'SubmissionSet.documents'
-        db.delete_table('core_submissionset_documents')
-        
     
     
     models = {
         'core.amendment': {
+            'Meta': {'object_name': 'Amendment'},
             'date': ('django.db.models.fields.DateField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
@@ -496,48 +526,85 @@ class Migration:
             'submissionform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
         },
         'core.checklist': {
+            'Meta': {'object_name': 'Checklist'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         },
-        'core.diagnosticsapplied': {
-            'count': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'period': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"}),
-            'total': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '30'})
+        'core.completionreportnotification': {
+            'Meta': {'object_name': 'CompletionReportNotification'},
+            'SAE_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
+            'SUSAR_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
+            'aborted_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'completion_date': ('django.db.models.fields.DateField', [], {}),
+            'finished_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'notification_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['core.Notification']", 'unique': 'True'}),
+            'reason_for_not_started': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'recruited_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'study_aborted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'})
         },
         'core.document': {
-            'absent': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'Meta': {'object_name': 'Document'},
             'date': ('django.db.models.fields.DateTimeField', [], {}),
+            'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'doctype': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.DocumentType']", 'null': 'True', 'blank': 'True'}),
+            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'mimetype': ('django.db.models.fields.CharField', [], {'default': "'application/pdf'", 'max_length': '100'}),
+            'original_file_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'uuid_document': ('django.db.models.fields.SlugField', [], {'max_length': '32', 'db_index': 'True'}),
             'uuid_document_revision': ('django.db.models.fields.SlugField', [], {'max_length': '32', 'db_index': 'True'}),
-            'version': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'version': ('django.db.models.fields.CharField', [], {'max_length': '250'})
+        },
+        'core.documenttype': {
+            'Meta': {'object_name': 'DocumentType'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'core.ethicscommission': {
+            'Meta': {'object_name': 'EthicsCommission'},
+            'address_1': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'address_2': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'chairperson': ('django.db.models.fields.CharField', [], {'max_length': '120', 'null': 'True'}),
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'contactname': ('django.db.models.fields.CharField', [], {'max_length': '120', 'null': 'True'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True'}),
+            'fax': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
+            'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
+        },
+        'core.foreignparticipatingcenter': {
+            'Meta': {'object_name': 'ForeignParticipatingCenter'},
             'address_1': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'address_2': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
             'city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'country': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'submission_form': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"}),
             'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
         },
         'core.investigator': {
+            'Meta': {'object_name': 'Investigator'},
             'certified': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            'fax': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
+            'ethics_commission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'investigators'", 'null': 'True', 'to': "orm['core.EthicsCommission']"}),
+            'fax': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'jus_practicandi': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'mobile': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'main': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'mobile': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'organisation': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'organisation': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'sign_date': ('django.db.models.fields.DateField', [], {}),
-            'specialist': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'specialist': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
             'subject_count': ('django.db.models.fields.IntegerField', [], {}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
+            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'investigators'", 'to': "orm['core.SubmissionForm']"})
         },
         'core.investigatoremployee': {
+            'Meta': {'object_name': 'InvestigatorEmployee'},
             'firstname': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'organisation': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
@@ -546,187 +613,194 @@ class Migration:
             'surname': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '40'})
         },
-        'core.involvedcommissionsforsubmission': {
-            'commission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.EthicsCommission']"}),
+        'core.measure': {
+            'Meta': {'object_name': 'Measure'},
+            'category': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True'}),
+            'count': ('django.db.models.fields.TextField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'main': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
+            'period': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'submission_form': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'measures'", 'to': "orm['core.SubmissionForm']"}),
+            'total': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'type': ('django.db.models.fields.CharField', [], {'max_length': '30'})
         },
         'core.meeting': {
+            'Meta': {'object_name': 'Meeting'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'submissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Submission']"})
         },
-        'core.nontesteduseddrugs': {
+        'core.nontesteduseddrug': {
+            'Meta': {'object_name': 'NonTestedUsedDrug'},
             'dosage': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'generic_name': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'preparation_form': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
+            'submission_form': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
         },
         'core.notification': {
-            'answer': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.NotificationAnswer']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'notificationset': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.NotificationSet']"}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Submission']"}),
-            'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
-        },
-        'core.notificationanswer': {
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
-        },
-        'core.notificationform': {
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
-        },
-        'core.notificationset': {
+            'Meta': {'object_name': 'Notification'},
+            'comments': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'}),
+            'date_of_receipt': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'documents': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Document']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'notificationform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.NotificationForm']"})
+            'investigators': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'notifications'", 'to': "orm['core.Investigator']"}),
+            'submission_forms': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'notifications'", 'to': "orm['core.SubmissionForm']"}),
+            'type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'notifications'", 'null': 'True', 'to': "orm['core.NotificationType']"})
         },
-        'core.participatingcenter': {
-            'address_1': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'address_2': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'country': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
+        'core.notificationanswer': {
+            'Meta': {'object_name': 'NotificationAnswer'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"}),
-            'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
-        },
-        'core.submission': {
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'submissionreview': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionReview']"}),
-            'vote': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Vote']"}),
             'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
         },
+        'core.notificationtype': {
+            'Meta': {'object_name': 'NotificationType'},
+            'form': ('django.db.models.fields.CharField', [], {'default': "'ecs.core.forms.NotificationForm'", 'max_length': '80'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'model': ('django.db.models.fields.CharField', [], {'default': "'ecs.core.models.Notification'", 'max_length': '80'}),
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'})
+        },
+        'core.progressreportnotification': {
+            'Meta': {'object_name': 'ProgressReportNotification'},
+            'SAE_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
+            'SUSAR_count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'blank': 'True'}),
+            'aborted_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'extension_of_vote_requested': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'finished_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'notification_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['core.Notification']", 'unique': 'True', 'primary_key': 'True'}),
+            'reason_for_not_started': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'recruited_subjects': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'runs_till': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'})
+        },
+        'core.submission': {
+            'Meta': {'object_name': 'Submission'},
+            'ec_number': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'submissionreview': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionReview']", 'null': 'True'}),
+            'vote': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Vote']", 'null': 'True'}),
+            'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']", 'null': 'True'})
+        },
         'core.submissionform': {
+            'Meta': {'object_name': 'SubmissionForm'},
             'additional_therapy_info': ('django.db.models.fields.TextField', [], {}),
             'already_voted': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'clinical_phase': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
-            'date_of_protocol': ('django.db.models.fields.DateField', [], {}),
-            'eudract_number': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'german_abort_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_additional_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_aftercare_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_benefits_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_concurrent_study_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_consent_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_dataaccess_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_dataprotection_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_ethical_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_financing_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_inclusion_exclusion_crit': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_payment_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_preclinical_results': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_primary_hypothesis': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_project_title': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_protected_subjects_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_recruitment_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_relationship_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_risks_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_sideeffects_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_statistical_info': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'german_summary': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'date_of_receipt': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'documents': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Document']"}),
+            'ethics_commissions': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'submission_forms'", 'through': "'Investigator'", 'to': "orm['core.EthicsCommission']"}),
+            'eudract_number': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
+            'german_abort_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_additional_info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'german_aftercare_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_benefits_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_concurrent_study_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_consent_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_dataaccess_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_dataprotection_info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'german_ethical_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_financing_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_inclusion_exclusion_crit': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_payment_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_preclinical_results': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_primary_hypothesis': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_project_title': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_protected_subjects_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_recruitment_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_relationship_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_risks_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_sideeffects_info': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'german_statistical_info': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'german_summary': ('django.db.models.fields.TextField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'insurance_address_1': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'insurance_contract_number': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'insurance_name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'insurance_phone': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'insurance_validity': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'investigator_certified': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'investigator_email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            'investigator_fax': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'investigator_jus_practicandi': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'investigator_mobile': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'investigator_name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'investigator_organisation': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'investigator_phone': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'investigator_specialist': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'invoice_address1': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'invoice_address2': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'invoice_city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'invoice_email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            'invoice_fax': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'invoice_name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'invoice_phone': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'invoice_uid': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'invoice_uid_verified_level1': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'invoice_uid_verified_level2': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'invoice_zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
-            'isrctn_number': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'medtech_ce_symbol': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'medtech_certified_for_exact_indications': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'medtech_certified_for_other_indications': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'medtech_checked_product': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'medtech_departure_from_regulations': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'medtech_manual_included': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'medtech_manufacturer': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'medtech_product_name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'medtech_reference_substance': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'medtech_technical_safety_regulations': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'pharma_checked_substance': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'pharma_reference_substance': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'project_title': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
-            'project_type_2_1_1': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_2': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_2_1': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_2_2': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_3': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_4': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_4_1': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_4_2': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_4_3': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_5': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_6': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_7': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_8': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'project_type_2_1_9': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'protocol_number': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'specialism': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'sponsor_address1': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'sponsor_address2': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
-            'sponsor_city': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'sponsor_email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            'sponsor_fax': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'sponsor_name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'sponsor_phone': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'sponsor_zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
-            'study_plan_8_1_1': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_10': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_11': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_12': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_13': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_14': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_15': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_16': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_17': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_18': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_19': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_2': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_20': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_21': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'study_plan_8_1_3': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_4': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_5': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_6': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_7': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_8': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_1_9': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_3_1': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'study_plan_8_3_2': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'insurance_address_1': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'insurance_contract_number': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'insurance_name': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'insurance_phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'insurance_validity': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'invoice_address1': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'invoice_address2': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
+            'invoice_city': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True', 'blank': 'True'}),
+            'invoice_contactname': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'invoice_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
+            'invoice_fax': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'invoice_name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'invoice_phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'invoice_uid': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
+            'invoice_uid_verified_level1': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'invoice_uid_verified_level2': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'invoice_zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+            'medtech_ce_symbol': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_certified_for_exact_indications': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_certified_for_other_indications': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_checked_product': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_departure_from_regulations': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_manual_included': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_manufacturer': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'medtech_product_name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
+            'medtech_reference_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'medtech_technical_safety_regulations': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'pharma_checked_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'pharma_reference_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'project_title': ('django.db.models.fields.TextField', [], {}),
+            'project_type_basic_research': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_biobank': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_education_context': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'project_type_genetic_study': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_medical_device': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_medical_device_performance_evaluation': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_medical_device_with_ce': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_medical_device_without_ce': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_medical_method': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_misc': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'project_type_non_reg_drug': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_questionnaire': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_reg_drug': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_reg_drug_not_within_indication': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_reg_drug_within_indication': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_register': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'project_type_retrospective': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'specialism': ('django.db.models.fields.TextField', [], {'null': 'True'}),
+            'sponsor_address1': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
+            'sponsor_address2': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
+            'sponsor_city': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
+            'sponsor_contactname': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True'}),
+            'sponsor_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True'}),
+            'sponsor_fax': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'sponsor_name': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True'}),
+            'sponsor_phone': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'sponsor_zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True'}),
             'study_plan_abort_crit': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'study_plan_alpha': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'study_plan_alternative_hypothesis': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_biometric_planning': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'study_plan_blind': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
+            'study_plan_controlled': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_cross_over': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'study_plan_datamanagement': ('django.db.models.fields.TextField', [], {}),
-            'study_plan_dataprotection_anonalgoritm': ('django.db.models.fields.CharField', [], {'max_length': '12'}),
-            'study_plan_dataprotection_dvr': ('django.db.models.fields.CharField', [], {'max_length': '12'}),
-            'study_plan_dataprotection_reason': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'study_plan_dataprotection_anonalgoritm': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'study_plan_dataprotection_dvr': ('django.db.models.fields.CharField', [], {'max_length': '12', 'blank': 'True'}),
+            'study_plan_dataprotection_reason': ('django.db.models.fields.CharField', [], {'max_length': '120', 'blank': 'True'}),
             'study_plan_dataquality_checking': ('django.db.models.fields.TextField', [], {}),
             'study_plan_dropout_ratio': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'study_plan_equivalence_testing': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_factorized': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_misc': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_multiple_test_correction_algorithm': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'study_plan_null_hypothesis': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'study_plan_number_of_groups': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'study_plan_observer_blinded': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_parallelgroups': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_pilot_project': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_placebo': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'study_plan_planned_statalgorithm': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'study_plan_population_intention_to_treat': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_population_per_protocol': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'study_plan_power': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
+            'study_plan_primary_objectives': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'study_plan_randomized': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
+            'study_plan_sample_frequency': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'study_plan_secondary_objectives': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_statalgorithm': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'study_plan_statistics_implementation': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'study_plan_stratification': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'subject_childbearing': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'subject_count': ('django.db.models.fields.IntegerField', [], {}),
             'subject_duration': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
@@ -738,6 +812,8 @@ class Migration:
             'subject_minage': ('django.db.models.fields.IntegerField', [], {}),
             'subject_noncompetents': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'subject_planned_total_duration': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
+            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'forms'", 'to': "orm['core.Submission']"}),
+            'submitter_agrees_to_publishing': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
             'submitter_is_authorized_by_sponsor': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'submitter_is_coordinator': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'submitter_is_main_investigator': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
@@ -745,46 +821,35 @@ class Migration:
             'submitter_jobtitle': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
             'submitter_name': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
             'submitter_organisation': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
-            'submitter_sign_date': ('django.db.models.fields.DateField', [], {}),
-            'substance_p_c_t_application_type': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'substance_p_c_t_countries': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
-            'substance_p_c_t_final_report': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'substance_p_c_t_gcp_rules': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'substance_p_c_t_period': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
-            'substance_p_c_t_phase': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
-            'substance_preexisting_clinical_tries': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
-            'substance_registered_in_countries': ('django.db.models.fields.CharField', [], {'max_length': '300'})
+            'substance_p_c_t_application_type': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_countries': ('django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_final_report': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_gcp_rules': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_period': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_phase': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+            'substance_preexisting_clinical_tries': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'substance_registered_in_countries': ('django.db.models.fields.CharField', [], {'max_length': '300', 'null': 'True', 'blank': 'True'})
         },
         'core.submissionreview': {
+            'Meta': {'object_name': 'SubmissionReview'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
         },
-        'core.submissionset': {
-            'documents': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Document']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sets'", 'to': "orm['core.Submission']"}),
-            'submissionform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
-        },
-        'core.therapiesapplied': {
-            'count': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'period': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"}),
-            'total': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
-            'type': ('django.db.models.fields.CharField', [], {'max_length': '30'})
-        },
         'core.vote': {
+            'Meta': {'object_name': 'Vote'},
             'checklists': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['core.Checklist']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'submissionset': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionSet']"}),
+            'submissionform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']", 'null': 'True'}),
             'votereview': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.VoteReview']"}),
             'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
         },
         'core.votereview': {
+            'Meta': {'object_name': 'VoteReview'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'workflow': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Workflow']"})
         },
         'core.workflow': {
+            'Meta': {'object_name': 'Workflow'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }

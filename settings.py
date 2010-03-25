@@ -137,3 +137,5 @@ FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
 # use django-nose as default test runner
 TEST_RUNNER = 'django_nose.run_tests'
+
+FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
