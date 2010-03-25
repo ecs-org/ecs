@@ -19,6 +19,7 @@
         {% block htmlcss %} {# additional css, please block.super it  #}    
             <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/base.css" />
             <link rel="stylesheet" href="{{ MEDIA_URL}}css/datepicker.css" media="screen"/>
+            <link rel="stylesheet" href="{{ MEDIA_URL}}css/Roar.css" media="screen"/>
             <link rel="stylesheet" href="{{ MEDIA_URL}}feedback/css/feedback.css" media="screen"/>
         {% endblock %} 
         
@@ -135,6 +136,7 @@
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
                  {% include 'feedback-jsbottom.html' %}
             {% endblock %}
         </div>

@@ -1,5 +1,7 @@
 (function(){
-    var ecs = window.ecs = {};
+    var ecs = window.ecs = {
+        messages: new Roar()
+    };
     ecs.Tab = new Class({
         Implements: Events,
         initialize: function(header, panel, index){
@@ -151,7 +153,7 @@
                     method: 'post',
                     data: currentData + '&autosave=autosave',
                     onSuccess: function(responseText, response){
-                        console.log('auto-saved');
+                        ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');
                     }
                 });
                 request.send();
