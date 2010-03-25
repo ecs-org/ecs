@@ -60,30 +60,29 @@
     {{ block.super }}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript">
-        jQuery(function($){
-            $('#id_submission_forms').bind('change', function(){
-                var submission_ids = $(this).val();
+        window.addEvent('domready', function(){
+            var submissionFormsSelect = $('id_submission_forms');
+            var submissionDataDisplay = new Element('div', {'class': 'submission_data'});
+            submissionFormsSelect.getParent('li').grab(submissionDataDisplay);
+
+            function loadSubmissionFormData(){
                 var querystring = [];
-                for(var i=0;i<submission_ids.length;i++){
-                    querystring.push('submission_form=' + submission_ids[i]);
-                }
-                $.ajax({
-                    url: '/core/submission_data_for_notification/',
-                    data: querystring.join('&'),
-                    context: this,
-                    success: function(data){
-                        var li = $('#id_submission_forms').parent('li');
-                        var display = li.find('.submission_data');
-                        if(display.length){
-                            display.replaceWith($(data));
-                        }
-                        else{
-                            li.append($(data));
-                        }
+                submissionFormsSelect.getChildren('option').each(function(option){
+                    if(option.selected){
+                        querystring.push('submission_form=' + option.value);
                     }
                 });
-            });
-            //ecs.setupFormSetHelpers('{{ document_formset.prefix }}');
+                var request = new Request.HTML({
+                    url: '/core/submission_data_for_notification/',
+                    data: querystring.join('&'),
+                    method: 'get',
+                    evalScripts: false,
+                    update: submissionDataDisplay
+                });
+                request.send();
+            }
+            submissionFormsSelect.addEvent('change', loadSubmissionFormData);
+            loadSubmissionFormData();
         });
     </script>
 {% endblock %}
