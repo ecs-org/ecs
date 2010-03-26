@@ -58,17 +58,17 @@ class Document(models.Model):
 
 
 class EthicsCommission(models.Model):
-    name = models.CharField(max_length=60)
-    address_1 = models.CharField(max_length=60)
-    address_2 = models.CharField(max_length=60)
+    name = models.CharField(max_length=120)
+    address_1 = models.CharField(max_length=120)
+    address_2 = models.CharField(max_length=120)
     zip_code = models.CharField(max_length=10)
-    city = models.CharField(max_length=40)
+    city = models.CharField(max_length=80)
     contactname = models.CharField(max_length=120, null=True)
     chairperson = models.CharField(max_length=120, null=True)
     email = models.EmailField(null=True)
     url = models.URLField(null=True)
-    phone = models.CharField(max_length=30, null=True)
-    fax = models.CharField(max_length=30, null=True)
+    phone = models.CharField(max_length=60, null=True)
+    fax = models.CharField(max_length=60, null=True)
     
     def __unicode__(self):
         return self.name
