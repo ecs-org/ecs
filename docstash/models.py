@@ -157,3 +157,17 @@ class DocStashData(models.Model):
         for name, value in self.value.iteritems():
             query_dict.setlist(name, value)
         return query_dict
+
+try:
+    from south.modelsinspector import add_introspection_rules
+    add_introspection_rules([
+            (
+                [JSONField],
+                [],
+                {
+                    "default": ["default", {"default": "{}"}],
+                    },
+                ),
+            ], ["^django_extensions\.db\.fields\.json\.JSONField"])
+except ImportError:
+    pass
