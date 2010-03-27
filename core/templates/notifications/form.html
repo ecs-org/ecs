@@ -67,10 +67,8 @@
 
             function loadSubmissionFormData(){
                 var querystring = [];
-                submissionFormsSelect.getChildren('option').each(function(option){
-                    if(option.selected){
-                        querystring.push('submission_form=' + option.value);
-                    }
+                submissionFormsSelect.getSelected().each(function(option){
+                    querystring.push('submission_form=' + option.value);
                 });
                 var request = new Request.HTML({
                     url: '/core/submission_data_for_notification/',
