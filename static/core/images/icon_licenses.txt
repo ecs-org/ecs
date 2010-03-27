@@ -1,0 +1,7 @@
+Aestetica Icons:
+
+add.png, help.png, remove.png, search.png, user.png
+
+Human Icons:
+
+emblem-people.png - used for feedback.png
