@@ -1,0 +1,77 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"/>
+</head>
+<body>
+    <!-- FOOTER LEFT "Version: {% now "d.m.Y H:i:s" %} - URL: {{ url }}" -->
+    <!-- FOOTER RIGHT "Seite $PAGE/$PAGES" -->
+    {% block head %}
+        <h1>{{ notification.type.name }}</h1>
+    {% endblock %}
+    
+    {% block ethic_commissions %}
+        <table border="1">
+            <tr>
+                <th align="left">Ethik-Kommission</th>
+                <th align="left">EK-Nummer</th>
+                <th align="left">Datum des Votums</th>
+                <th align="left">Prüfer</th>
+            </tr>
+            {% for investigator in notification.investigators.all %}
+            <tr>
+                <td>{{ investigator.ethics_commission.name }}</td>
+                <td>{{ investigator.submission.submission.ec_number }}</td>
+                <td>{{ investigator.submission.date_of_protocol }}{# FIXME: use date_of_vote instead of date_of_protocol #}</td>
+                <td>{{ investigator.name }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endblock %}
+    {% block details %}
+        <h2>Angaben zum Forschungsprojekt</h2>
+        <table>
+            {% block main_table %}
+            <tr>
+                <th align="right">Projekttitel</th>
+                <td>
+                    {% for submission in notification.submission_forms.all %}
+                        {{ submission.project_title }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th align="right">Protokollnummer</th>
+                <td>
+                    {% for submission_form in notification.submission_forms.all %}
+                        {{ submission_form.protocol_number }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th align="right">Begründung/Stellungnahme/Mitteilung</th>
+                <td>
+                    {{ notification.comments|default:'<i>nicht vorhanden</i>' }}
+                </td>
+            </tr>
+            {% endblock %}
+        </table>
+    {% endblock %}
+
+    {% block documents %}
+        <h2>Anlagen</h2>
+        {% if notification.documents.all %}
+        <ol>
+            {% for doc in notification.documents.all %}
+                <li>{{ doc.file }}</li>
+            {% endfor %}
+        </ol>
+        {% endif %}
+    {% endblock %}
+
+    {% block signature %}
+        <p>
+            Unterschrieben am: {{ notification.signed_on|default:'<i>keine Angabe</i>' }}
+        </p>
+    {% endblock %}
+</body>
+</html>

@@ -16,6 +16,7 @@ urlpatterns = patterns(
     url(r'^notification/new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_notification'),
     url(r'^notification/(?P<notification_pk>\d+)/$', 'ecs.core.views.view_notification'),
     url(r'^notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
+    url(r'^notification/(?P<notification_pk>\d+)/xhtml2pdf/$', 'ecs.core.views.notification_xhtml2pdf'),
     url(r'^notifications/$', 'ecs.core.views.notification_list'),
     url(r'^submission_data_for_notification/$', 'ecs.core.views.submission_data_for_notification'),
 
