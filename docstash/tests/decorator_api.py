@@ -11,7 +11,7 @@ class DecoratorApiTest(LoginTestCase):
 
     def test_simple_post(self):
         base_url = '/simple_post/'
-        test_post_data = {'foo': ['bar']}
+        test_post_data = {'foo': 'bar'}
         response = self.client.post(base_url)
         self.failUnlessEqual(response.status_code, 302)
         key_url = response['Location']
@@ -35,12 +35,10 @@ class DecoratorApiTest(LoginTestCase):
         
         # post test data again
         test_post_data = {'baz': '42'}
-        # everything gets stuffed into a list if it's not a list!!!
-        expected_result_data = dict(baz=["42"]) 
         response = self.client.post(key_url, test_post_data)
         self.failUnlessEqual(response.status_code, 200)
         data = simplejson.loads(response.content)
-        self.failUnlessEqual(data, expected_result_data)
+        self.failUnlessEqual(data, test_post_data)
         self._check_version_cookie(key, 1)
 
 
