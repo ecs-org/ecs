@@ -1,0 +1,111 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</h1>    
+    
+    {% for field_info in paper_form_fields %}
+        {% ifequal field_info.name "already_voted" %}
+            <div>
+                2.7 Liste ausländischer teilnehmender Zentren
+                {% for fpc in submission_form.foreignparticipatingcenter_set.all %}
+                    <div>
+                        {{ fpc.name }} ({{ fpc.country }})<br/>
+                        {{ fpc.address_1 }} {{ fpc.address_2 }}<br/>
+                        {{ fpc.zip_code }} {{ fpc.city }}<br/>
+                    </div>
+                {% endfor %}
+            </div>        
+        {% endifequal %}
+        {% ifequal field_info.name "medtech_product_name" %}
+            <div>
+                3b. Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Generic Name</th>
+                            <th>Darreichungsform</th>
+                            <th>Dosis</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ntud in submission_form.nontesteduseddrug_set.all %}
+                            <tr>      
+                                <td>{{ ntud.generic_name }}</td>
+                                <td>{{ ntud.preparation_form }}</td>
+                                <td>{{ ntud.dosage }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>          
+        {% endifequal %}
+        
+        {% ifequal field_info.name "additional_therapy_info"%}
+            <div>
+                6.1. Welche Maßnahmen bzw. Behandlungen werden ausschließlich studienbezogen durchgeführt?
+                <table>                                           
+                    <thead>
+                        <tr>
+                            <th>Art</th>
+                            <th>Anzahl/Dosis</th>
+                            <th>Zeitraum</th>
+                            <th>Insgesamt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for measure in submission_form.measures.all %}
+                        {% ifequal measure.category "6.1" %}
+                            <tr>
+                                <td>{{ measure.type }}</td>
+                                <td>{{ measure.count }}</td>
+                                <td>{{ measure.period }}</td>
+                                <td>{{ measure.total }}</td>
+                            </tr>
+                        {% endifequal %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                6.2. Welche speziellen Untersuchungen (nur invasive und strahlenbelastende) werden während des Studienzeitraumes zu Routinezwecken durchgeführt:
+                <table>                                           
+                    <thead>
+                        <tr>
+                            <th>Art</th>
+                            <th>Anzahl/Dosis</th>
+                            <th>Zeitraum</th>
+                            <th>Insgesamt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for measure in submission_form.measures.all %}
+                        {% ifequal measure.category "6.2" %}
+                            <tr>
+                                <td>{{ measure.type }}</td>
+                                <td>{{ measure.count }}</td>
+                                <td>{{ measure.period }}</td>
+                                <td>{{ measure.total }}</td>
+                            </tr>
+                        {% endifequal %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endifequal %}
+        
+        {% if field_info.number and field_info.name %}
+            <div>{{ field_info.number }} {{ field_info.label|default:field_info.name }}: {{ submission_form|getattr:field_info.name }}</div>
+        {% endif %}
+        
+    {% endfor %}
+    
+    {% include "documents/compact_list.html" %}
+    
+{% endblock %}
