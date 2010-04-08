@@ -3,11 +3,18 @@ from django import forms
 from ecs.core.models import Investigator
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
+TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
+DATE_TIME_INPUT_FORMATS = tuple("%s %s" % (date_format, time_format) for time_format in TIME_INPUT_FORMATS for date_format in DATE_INPUT_FORMATS)
 
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_INPUT_FORMATS)
         super(DateField, self).__init__(*args, **kwargs)
+
+class DateTimeField(forms.DateTimeField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
+        super(DateTimeField, self).__init__(*args, **kwargs)
 
 class InvestigatorChoiceMixin(object):
     def __init__(self, **kwargs):

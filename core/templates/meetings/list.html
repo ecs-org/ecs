@@ -1,0 +1,23 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+<h1>Liste aller Meetings</h1>
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+{% block content %}
+
+<h2>Meetings</h2>
+<ul>
+    {% for meeting in meetings %}
+        <li>
+            <a href="{% url ecs.core.views.view_notification notification_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

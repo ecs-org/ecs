@@ -1,0 +1,45 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Neues Meeting
+{% endblock %}
+
+{% block content %}
+    <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
+    <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a> | <a href="">Pause hinzufügen</a>
+    <ul id="timetable" style="list-style: none;">
+    {% for entry in meeting %}
+        <li style="border: 1px solid #eeeeee; margin: 10px; display: block;background-color:#ffffff">
+            <h3>{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}: {{ entry.title|default:'<i>Unbenannt</i>' }}</h3>
+            <span>Teilnehmer: 
+                {% for user in entry.users.all %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </span>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+window.addEvent('domready', function(){
+    new Sortables('timetable', {
+        clone: true,
+        opacity: 0.5,
+        revert: true,
+        onStart: function(el, clone){
+            clone.setStyle('z-index', 100);
+        },
+        onComplete: function(el, clone){
+            clone.setStyle('z-index', 0);
+        },
+        onSort: function(){
+            
+        }
+    });
+});
+</script>
+{% endblock %}

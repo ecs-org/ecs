@@ -26,4 +26,11 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_form_pk>\d+)/pdf/$', 'ecs.core.views.submission_pdf'),
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
+    
+    url(r'^meeting/new/$', 'ecs.core.views.create_meeting'),
+    #url(r'^meeting/(?P<meeting_pk>\d+)/$', 'ecs.core.views.view_meeting'),
+    url(r'^meetings/$', 'ecs.core.views.meeting_list'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/editor/$', 'ecs.core.views.timetable_editor'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/add_entry/$', 'ecs.core.views.add_timetable_entry'),
+
 )

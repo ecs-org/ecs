@@ -45,7 +45,6 @@ class Checklist(models.Model):
         app_label = 'core'
 
 class VoteReview(models.Model):
-    
     class Meta:
         app_label = 'core'
 
@@ -66,20 +65,11 @@ class NotificationAnswer(models.Model):
     class Meta:
         app_label = 'core'
 
-
-class Meeting(models.Model):
-    submissions = models.ManyToManyField('core.Submission')
-
-    class Meta:
-        app_label = 'core'
-
-
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 if not reversion.is_registered(Amendment):
     reversion.register(Amendment) 
     reversion.register(Checklist) 
     reversion.register(EthicsCommission) 
-    reversion.register(Meeting) 
     reversion.register(SubmissionReview) 
     reversion.register(NotificationAnswer) 
     reversion.register(Vote) 
