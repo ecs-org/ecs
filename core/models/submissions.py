@@ -1,101 +1,25 @@
 # -*- coding: utf-8 -*-
-import os
+from django.db import models
+
 import reversion
 
-from django.db import models
-from django.contrib.auth.models import User
-from django.utils.importlib import import_module
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.utils._os import safe_join
-from django.utils.encoding import smart_str
+class Submission(models.Model):
+    ec_number = models.CharField(max_length=50, null=True, blank=True)
 
-# metaclassen:
-#  master control programm model:
-#   date, time, user, uuid,  
-class Workflow(models.Model):
-    pass
+    class Meta:
+        app_label = 'core'
 
-class DocumentType(models.Model):
-    name = models.CharField(max_length=100)
-    
-    def __unicode__(self):
-        return self.name
-
-def upload_document_to(instance=None, filename=None):
-    # file path is derived from the uuid_document_revision
-    # FIXME: handle file name collisions
-    dirs = list(instance.uuid_document_revision[:6]) + [instance.uuid_document_revision]
-    return os.path.join(settings.FILESTORE, *dirs)
-
-class DocumentFileStorage(FileSystemStorage):
-    def get_available_name(self, name):
-        """
-        Returns a filename that's free on the target storage system, and
-        available for new content to be written to.
-        Limit the length to some reasonable value.
-        """
-        dir_name, file_name = os.path.split(name)
-        file_root, file_ext = os.path.splitext(file_name)
-        # If the filename already exists, add _ with a 4 digit number till we get an empty slot.
-        counter = 0
-        while self.exists(name):
-            # file_ext includes the dot.
-            counter += 1
-            name = os.path.join(dir_name, "%s_%04d%s" % (file_root, counter, file_ext))
-        return name
-
-    def path(self, name):
-        # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
-        return smart_str(os.path.normpath(name))
-
-class Document(models.Model):
-    uuid_document = models.SlugField(max_length=32)
-    uuid_document_revision = models.SlugField(max_length=32)
-    file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
-    original_file_name = models.CharField(max_length=100, null=True, blank=True)
-    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
-    mimetype = models.CharField(max_length=100, default='application/pdf')
-
-    version = models.CharField(max_length=250)
-    date = models.DateTimeField()
-    deleted = models.BooleanField(default=False, blank=True)
-    
-    def save(self, **kwargs):
-        if self.file:
-            import hashlib
-            s = self.file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
-            m = hashlib.md5()
-            m.update(s)
-            self.file.seek(0)
-            self.uuid_document = m.hexdigest()
-            self.uuid_document_revision = self.uuid_document
-        return super(Document, self).save(**kwargs)
-
-
-class EthicsCommission(models.Model):
-    name = models.CharField(max_length=120)
-    address_1 = models.CharField(max_length=120)
-    address_2 = models.CharField(max_length=120)
-    zip_code = models.CharField(max_length=10)
-    city = models.CharField(max_length=80)
-    contactname = models.CharField(max_length=120, null=True)
-    chairperson = models.CharField(max_length=120, null=True)
-    email = models.EmailField(null=True)
-    url = models.URLField(null=True)
-    phone = models.CharField(max_length=60, null=True)
-    fax = models.CharField(max_length=60, null=True)
-    
-    def __unicode__(self):
-        return self.name
 
 class SubmissionForm(models.Model):
-    submission = models.ForeignKey("Submission", related_name="forms")
-    documents = models.ManyToManyField(Document)
-    ethics_commissions = models.ManyToManyField(EthicsCommission, related_name='submission_forms', through='Investigator')
+    submission = models.ForeignKey('core.Submission', related_name="forms")
+    documents = models.ManyToManyField('core.Document')
+    ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=40, null=True)
+    
+    class Meta:
+        app_label = 'core'
     
     # 1.4 (via self.documents)
 
@@ -336,7 +260,7 @@ class SubmissionForm(models.Model):
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm, related_name='investigators')
-    ethics_commission = models.ForeignKey(EthicsCommission, null=True, related_name='investigators')
+    ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
 
     name = models.CharField(max_length=80)
@@ -350,6 +274,9 @@ class Investigator(models.Model):
     certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
     sign_date = models.DateField()
+    
+    class Meta:
+        app_label = 'core'
 
 
 class InvestigatorEmployee(models.Model):
@@ -362,6 +289,9 @@ class InvestigatorEmployee(models.Model):
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
+    
+    class Meta:
+        app_label = 'core'
 
 
 # 6.1 + 6.2
@@ -374,6 +304,9 @@ class Measure(models.Model):
     count = models.TextField()
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
+    
+    class Meta:
+        app_label = 'core'
 
 # 3b
 class NonTestedUsedDrug(models.Model):
@@ -382,6 +315,9 @@ class NonTestedUsedDrug(models.Model):
     generic_name = models.CharField(max_length=40)
     preparation_form = models.CharField(max_length=40)
     dosage = models.CharField(max_length=40)
+    
+    class Meta:
+        app_label = 'core'
 
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
@@ -395,127 +331,14 @@ class ForeignParticipatingCenter(models.Model):
     # FIXME: country should be a ForeignKey(Country)
     country = models.CharField(max_length=4)
     
-
-class Amendment(models.Model):
-    # FIXME: rename to `submission_form`
-    submissionform = models.ForeignKey(SubmissionForm)
-    order = models.IntegerField()
-    number = models.CharField(max_length=40)
-    date = models.DateField()
-
-class NotificationType(models.Model):
-    name = models.CharField(max_length=80, unique=True)
-    form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
-    model = models.CharField(max_length=80, default='ecs.core.models.Notification')
-    
-    @property
-    def form_cls(self):
-        if not hasattr(self, '_form_cls'):
-            module, cls_name = self.form.rsplit('.', 1)
-            self._form_cls = getattr(import_module(module), cls_name)
-        return self._form_cls
-    
-    def __unicode__(self):
-        return self.name
-
-class Notification(models.Model):
-    type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
-    investigators = models.ManyToManyField(Investigator, related_name='notifications')
-    submission_forms = models.ManyToManyField(SubmissionForm, related_name='notifications')
-    documents = models.ManyToManyField(Document)
-
-    comments = models.TextField(default="", blank=True)
-    date_of_receipt = models.DateField(null=True, blank=True)
-    
-    def __unicode__(self):
-        return u"%s" % (self.type,)
-
-class ReportNotification(Notification):
-    reason_for_not_started = models.TextField(null=True, blank=True)
-    recruited_subjects = models.IntegerField(null=True, blank=True)
-    finished_subjects = models.IntegerField(null=True, blank=True)
-    aborted_subjects = models.IntegerField(null=True, blank=True)
-    SAE_count = models.PositiveIntegerField(default=0, blank=True)
-    SUSAR_count = models.PositiveIntegerField(default=0, blank=True)
-    
     class Meta:
-        abstract = True
-
-class CompletionReportNotification(ReportNotification):
-    study_aborted = models.BooleanField()
-    completion_date = models.DateField()
+        app_label = 'core'
     
-class ProgressReportNotification(ReportNotification):
-    runs_till = models.DateField(null=True, blank=True)
-    extension_of_vote_requested = models.BooleanField(default=False, blank=True)
-
-
-class Checklist(models.Model):
-    pass
-
-class VoteReview(models.Model):   
-    workflow = models.ForeignKey(Workflow)
-
-class Vote(models.Model):
-    votereview = models.ForeignKey(VoteReview)
-    submissionform = models.ForeignKey(SubmissionForm, null=True)
-    checklists = models.ManyToManyField(Checklist)
-    workflow = models.ForeignKey(Workflow)
-
-class SubmissionReview(models.Model):   
-    workflow = models.ForeignKey(Workflow)
-
-class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True)
-    submissionreview = models.ForeignKey(SubmissionReview, null=True)
-    vote = models.ForeignKey(Vote, null=True)
-    workflow = models.ForeignKey(Workflow, null=True)
-
-class NotificationAnswer(models.Model):
-    workflow = models.ForeignKey(Workflow)
- 
-class Meeting(models.Model):
-    submissions = models.ManyToManyField(Submission)
-"""
-class Revision(models.Model):
-    pass
-
-class Message(models.Model):
-    pass
-
-class AuditLog(models.Model):
-    pass
-
-
-class User(models.Model):
-    pass
-
-class Reviewer(models.Model):
-    pass
-
-class Annotation(models.Model):
-    pass
-"""
-
-# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-if not reversion.is_registered(Amendment):
-    reversion.register(Amendment) 
-    reversion.register(Checklist) 
+if not reversion.is_registered(Submission):
     reversion.register(Measure) 
-    reversion.register(Document) 
-    reversion.register(EthicsCommission) 
-    reversion.register(Meeting) 
     reversion.register(ForeignParticipatingCenter) 
     reversion.register(Submission) 
     reversion.register(SubmissionForm) 
-    reversion.register(SubmissionReview) 
     reversion.register(NonTestedUsedDrug) 
-    reversion.register(NotificationAnswer) 
-    reversion.register(Notification) 
-    reversion.register(CompletionReportNotification) 
-    reversion.register(ProgressReportNotification)
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
-    reversion.register(Vote) 
-    reversion.register(VoteReview) 
-    reversion.register(Workflow)
