@@ -35,7 +35,7 @@ def download_document(request, document_pk=None):
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
-        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.create_notification'),
+        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification'),
     })
 
 def view_notification(request, notification_pk=None):
@@ -218,6 +218,6 @@ def submission_pdf(request, submission_form_pk=None):
 def submission_form_list(request):
     return render(request, 'submissions/list.html', {
         'submission_forms': SubmissionForm.objects.all().order_by('project_title'),
-        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.create_submission_form'),
+        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.core.create_submission_form'),
     })
     
