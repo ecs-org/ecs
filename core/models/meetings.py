@@ -140,7 +140,10 @@ class Constraint(models.Model):
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
     weight = models.FloatField(default=0.5)
-    
+
+    class Meta:
+        app_label = 'core'
+
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 #if not reversion.is_registered(Meeting):

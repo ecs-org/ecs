@@ -15,7 +15,7 @@
 <ul>
     {% for meeting in meetings %}
         <li>
-            <a href="{% url ecs.core.views.view_notification notification_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}</a>
+            <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}</a>
         </li>
     {% endfor %}
 </ul>
