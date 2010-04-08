@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
 from django.db import models, transaction
+from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 
 import reversion
@@ -57,7 +58,6 @@ class Meeting(models.Model):
             
     def __delitem__(self, index):
         self[index].delete()
-        self.timetable_entries.filter(timetable_index__gt=index).update(timetable_index=models.F('index') - 1)
         self._clear_caches()
         
     def __len__(self):
@@ -125,7 +125,12 @@ class TimeTableEntry(models.Model):
     @property
     def end(self):
         return self.start + self.duration
-    
+
+def _timetable_entry_delete_post_delete(sender, **kwargs):
+    entry = kwargs['instance']
+    entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+
+post_delete.connect(_timetable_entry_delete_post_delete, sender=TimeTableEntry)
 
 class Participation(models.Model):
     entry = models.ForeignKey(TimeTableEntry, related_name='participations')
