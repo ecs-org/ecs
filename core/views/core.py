@@ -2,13 +2,13 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import RequestContext, Context, loader, Template
+from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.generic.list_detail import object_list
 from django.forms.models import inlineformset_factory
+from django.conf import settings
 
-import settings
-
+from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
@@ -17,23 +17,6 @@ from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-
-## helpers
-
-def render(request, template, context):
-    if isinstance(template, (tuple, list)):
-        template = loader.select_template(template)
-    if not isinstance(template, Template):
-        template = loader.get_template(template)
-    return HttpResponse(template.render(RequestContext(request, context)))
-    
-def redirect_to_next_url(request, default_url=None):
-    next = request.REQUEST.get('next')
-    if not next or '//' in next:
-        next = default_url or '/'
-    return HttpResponseRedirect(next)
-
-## views
 
 def demo(request):
     return render_to_response('demo-django.html')
