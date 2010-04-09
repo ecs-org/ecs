@@ -26,14 +26,14 @@
                 <div id="tabs-{{ forloop.counter }}" class="tab">
                     {% ifequal tab "Massnahmen" %}
                         {# FIXME #}
-                        <fieldset>
-                            <legend><span>Angaben zur durchzuführenden Therapie und Diagnostik</span></legend>
+                        <div class="field">
+                            <h3>Angaben zur durchzuführenden Therapie und Diagnostik</h3>
                             {% with measure_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
-                        </fieldset>
-                        <fieldset>
-                            <legend><span>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</span></legend>
+                        </div>
+                        <div class="field">
+                            <h3>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</h3>
                             {% with nontesteduseddrug_formset as formset %}
                                 {% include "forms/inline_formset.html" %}
                             {% endwith %}
@@ -42,13 +42,13 @@
                                         
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME #}
-                        <fieldset>
+                        <div class="field">
                             {% include "documents/upload_form.html" %}
-                        </fieldset>
+                        </div>
                     {% endifequal %}
                     
                     {% for legend, fields in fieldsets %}
-                        <fieldset class="fieldset_{{ forloop.counter }}">
+                        <div class="field fieldset_{{ forloop.counter }}">
                             {% ifequal legend "Zentren im Ausland" %}
                                 {# FIXME #}
                                 {% with foreignparticipatingcenter_formset as formset %}
@@ -56,7 +56,7 @@
                                 {% endwith %}                            
                             {% endifequal %}                            
                             {% if legend %}
-                                <legend><span>{{ legend }}</span></legend>
+                                <h3>{{ legend }}</h3>
                             {% endif %}
                             <ol>
                                 {% for field_name in fields %}
@@ -65,13 +65,13 @@
                                     {% endwith %}
                                 {% endfor %}
                             </ol>
-                        </fieldset>
+                        </div>
                     {% endfor %}
 
                     {% ifequal tab 'Zentrum' %}
                     <div class="partb">
-                      <fieldset>
-                        <legend><span class="partbno">Zentrum</span></legend>
+                      <div class="field">
+                        <h3 class="partbno">Zentrum</h3>
                         <ol class="partb_navi">
                           <li><a class="partb_add" href="#">neuer Reiter Zentrum </a></li>
                           <li><a class="partb_remove" href="#">diesen Reiter löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
@@ -96,14 +96,14 @@
                           {% endfor%}
                         {% endwith %}
                         </div>
-                      </fieldset>
+                      </div>
 
-                      <fieldset>
-                        <legend><span>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</span></legend>
+                      <div class="field">
+                        <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
                           {% with investigatoremployee_formset as formset %}
                           {% include "forms/inline_formset.html" %}
                           {% endwith %}
-                      </fieldset>
+                      </div>
                     </div>
                     {% endifequal %}
                 </div>
