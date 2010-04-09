@@ -339,7 +339,7 @@
     window.addEvent('domready', function(){
         var tabHeaders = $$('.tab_headers')[0];
         if(tabHeaders){
-            var tabController = new ecs.TabController();
+            var tabController = new ecs.TabController(tabHeaders);
             var mainForm = document.getElement('form.tabbed.main');
             if(mainForm){
                 var form = new ecs.TabbedForm(mainForm, {
