@@ -4,7 +4,63 @@ from django.db import models, transaction
 from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 
+from ecs.utils import cached_property
+
 import reversion
+
+#impediments = p.get_impediments(time, event.duration)
+#if impediments:
+#    self.impediments.setdefault(p, []).extend(impediments)
+#if p not in self.impediments:
+#    self.impediments[p] =
+
+
+class TimetableMetrics(object):
+    def __init__(self, permutation, entries_by_user=None, users_by_entry=None):
+        self.entries_by_user = {}
+        self.users_by_entry = {}
+        for p in Participation.objects.filter(entry__in=permutation).select_related('entry', 'user'):
+            self.entries_by_user.setdefault(p.user, set()).add(p.entry)
+            self.users_by_entry.setdefault(p.entry, set()).add(p.user)
+        self.waiting_time_per_user = {}
+        for user in self.entries_by_user:
+            self.waiting_time_per_user[user] = timedelta(seconds=0)
+        #self.impediments = {}
+        offset = timedelta(seconds=0)
+        participants = set()
+        visited_entries = set()
+        for entry in permutation:
+            entry_participants = self.users_by_entry[entry]
+            for user in participants.difference(entry_participants):
+                self.waiting_time_per_user[user] += entry.duration
+            visited_entries.add(entry)
+            for user in entry_participants:
+                 if self.entries_by_user[user] <= visited_entries:
+                     if user in participants:
+                         participants.remove(user)
+                 else:
+                     participants.add(user)
+            offset += entry.duration
+
+    @cached_property
+    def total_waiting_time(self):
+        s = timedelta(seconds=0)
+        for time in self.waiting_time_per_user.itervalues():
+            s += time
+        return s
+        
+    @cached_property
+    def avg_waiting_time(self):
+        return self.total_waiting_time / len(self.entries_by_user)
+        
+    @cached_property
+    def max_waiting_time(self):
+        return max(self.waiting_time_per_user.itervalues())
+
+    @cached_property
+    def min_waiting_time(self):
+        return min(self.waiting_time_per_user.itervalues())
+
 
 class Meeting(models.Model):
     start = models.DateTimeField()
@@ -13,19 +69,34 @@ class Meeting(models.Model):
     class Meta:
         app_label = 'core'
         
-    @property
+    @cached_property
     def duration(self):
-        if not hasattr(self, '_duration'):
-            self._duration = timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
-        return self._duration
-    
+        return timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
+
     @property
     def end(self):
         return self.start + self.duration
         
+    @cached_property
+    def metrics(self):
+        return TimetableMetrics(self)
+        
+    @property
+    def users(self):
+        return User.objects.filter(meeting_participations__entry__meeting=self).distinct().order_by('username')
+        
+    @property
+    def users_with_constraints(self):
+        constraints_by_user_id = {}
+        for constraint in self.constraints.order_by('start_time'):
+            constraints_by_user_id.setdefault(constraint.user_id, []).append(constraint)
+        for user in self.users:
+            user.constraints = constraints_by_user_id.get(user.id, [])
+            yield user
+        
     def _clear_caches(self):
-        if hasattr(self, '_duration'):
-            del self._duration
+        del self.metrics
+        del self.duration
         
     def add_entry(self, **kwargs):
         last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
@@ -45,7 +116,7 @@ class Meeting(models.Model):
         entry = self.add_entry(**kwargs)
         self._clear_caches()
         return entry
-
+        
     def __getitem__(self, index):
         if not isinstance(index, int):
             raise KeyError()
@@ -53,7 +124,7 @@ class Meeting(models.Model):
             raise IndexError()
         try:
             return self.timetable_entries.get(timetable_index=index)
-        except TimeTableEntry.DoesNotExist:
+        except TimetableEntry.DoesNotExist:
             raise IndexError()
             
     def __delitem__(self, index):
@@ -65,10 +136,14 @@ class Meeting(models.Model):
         
     def __iter__(self):
         duration = timedelta(seconds=0)
+        users_by_entry_id = {}
+        for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
+            users_by_entry_id.setdefault(participation.entry_id, []).append(participation.user)
         for entry in self.timetable_entries.order_by('timetable_index'):
-            entry._start = self.start + duration
+            entry.users = users_by_entry_id.get(entry.id, [])
+            entry.start = self.start + duration
             duration += entry.duration
-            entry._end = self.start + duration
+            entry.end = self.start + duration
             yield entry
         self._duration = duration
         
@@ -77,14 +152,13 @@ class Meeting(models.Model):
         return self.start + timedelta(seconds=offset or 0)
     
 
-class TimeTableEntry(models.Model):
+class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
     title = models.CharField(max_length=200, blank=True)
     timetable_index = models.IntegerField()
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True)
-    users = models.ManyToManyField(User, through='Participation')
     
     class Meta:
         app_label = 'core'
@@ -96,6 +170,10 @@ class TimeTableEntry(models.Model):
     @property
     def duration(self):
         return timedelta(seconds=self.duration_in_seconds)
+        
+    @cached_property
+    def users(self):
+        return User.objects.filter(meeting_participations__entry=self).order_by('username')
     
     def _get_index(self):
         return self.timetable_index
@@ -116,13 +194,11 @@ class TimeTableEntry(models.Model):
     
     index = property(_get_index, _set_index)
     
-    @property
+    @cached_property
     def start(self):
-        if not hasattr(self, '_start'):
-            self._start = self.meeting._get_start_for_index(self.timetable_index)
-        return self._start
+        return self.meeting._get_start_for_index(self.timetable_index)
         
-    @property
+    @cached_property
     def end(self):
         return self.start + self.duration
 
@@ -130,11 +206,11 @@ def _timetable_entry_delete_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
 
-post_delete.connect(_timetable_entry_delete_post_delete, sender=TimeTableEntry)
+post_delete.connect(_timetable_entry_delete_post_delete, sender=TimetableEntry)
 
 class Participation(models.Model):
-    entry = models.ForeignKey(TimeTableEntry, related_name='participations')
-    user = models.ForeignKey(User)
+    entry = models.ForeignKey(TimetableEntry, related_name='participations')
+    user = models.ForeignKey(User, related_name='meeting_participations')
     
     class Meta:
         app_label = 'core'

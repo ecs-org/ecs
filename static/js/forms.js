@@ -182,7 +182,8 @@
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
-            removeButtonClass: 'delete_row'
+            removeButtonClass: 'delete_row',
+            canDelete: false
         },
         initialize: function(container, options){
             this.container = $(container);
@@ -212,6 +213,10 @@
                     }).bind(this)
                 }
             }));
+            if(this.options.canDelete){
+                var deleteLi = $(this.options.idPrefix + this.options.prefix + '-' + index + '-DELETE').getParent('li');
+                deleteLi.setStyle('display', 'none');
+            }
             if(added){
                 ecs.setupFormFieldHelpers(form);
             }
@@ -232,7 +237,16 @@
             });
         },
         remove: function(index){
-            this.forms[index].dispose();
+            var f = this.forms[index];
+            if(this.options.canDelete){
+                var idField = $(this.options.idPrefix + this.options.prefix + '-' + index + '-id');
+                if(idField && idField.value){
+                    $(this.options.idPrefix + this.options.prefix + '-' + index + '-DELETE').checked = true;
+                    f.setStyle('display', 'none');
+                    return;
+                }
+            }
+            f.dispose();
             for(var i=index+1;i<this.forms.length;i++){
                 this.updateIndex(this.forms[i], i - 1);
                 this.forms[i - 1] = this.forms[i];
@@ -278,7 +292,7 @@
     
     ecs.clearFormFields = function(context){
         context = $(context || document);
-        context.getElements('.IntegerField input[type=text], .CharField input[type=text], .CharField textarea').each(function(input){
+        context.getElements('input[type=text], textarea').each(function(input){
             input.setProperty('value', '');
         });
         context.getElements('.NullBooleanField > select', function(select){
@@ -323,13 +337,16 @@
     };
     
     window.addEvent('domready', function(){
-        var tabController = new ecs.TabController($$('.tab_headers')[0]);
-        var mainForm = document.getElement('form.tabbed.main');
-        if(mainForm){
-            var form = new ecs.TabbedForm(mainForm, {
-                tabController: tabController,
-                autosave: 15
-            });
+        var tabHeaders = $$('.tab_headers')[0];
+        if(tabHeaders){
+            var tabController = new ecs.TabController();
+            var mainForm = document.getElement('form.tabbed.main');
+            if(mainForm){
+                var form = new ecs.TabbedForm(mainForm, {
+                    tabController: tabController,
+                    autosave: 15
+                });
+            }
         }
         ecs.setupFormFieldHelpers();
         

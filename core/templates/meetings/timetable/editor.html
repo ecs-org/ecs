@@ -8,20 +8,58 @@
 {% endblock %}
 
 {% block content %}
+<div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
     <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a> | <a href="">Pause hinzufügen</a>
-    <ul id="timetable" style="list-style: none;">
+    <div class="waiting_time">
+    Waiting time: 
+        sum={{ meeting.metrics.total_waiting_time }}h, 
+        avg={{ meeting.metrics.avg_waiting_time }}h, 
+        max={{ meeting.metrics.max_waiting_time }}h, 
+        min={{ meeting.metrics.min_waiting_time }}h
+    </div>
+    <ul id="timetable" style="list-style: none;width:600px; font-size:13px">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" style="border: 1px solid #eeeeee; margin: 3px; display: block;background-color:#ffffff">
-            <h3 style="font-size:1em">{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }} Uhr</h3>
-            <span class="id">#{{ entry.pk }}</span>
-            <a href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
-            <span>Teilnehmer: 
-                {% for user in entry.users.all %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
-            </span>
+        <li id="entry_{{ entry.pk }}" style="border: 1px solid #eeeeee; margin: 3px; display: block;height:55px;background-color:#ffffff">
+            <div class="dragHandle" style="float:left;width:50px;background-color:#cccccc;height:100%">#{{ entry.pk }} <span style="color:#ffffff">DRAG ME</span></div>
+            <h3 style="font-size:1em">
+                {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+                {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
+            </h3>
+            <a style="float:right" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
+            <div style="height:20px">Dauer:
+                <input type="text" value="15 min"/>
+            </div>
+            <div style="font-size:12px">Teilnehmer: 
+                {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </div>
         </li>
     {% endfor %}
     </ul>
+    <div style="position:absolute;right:0px;top:0px; width:200px">
+        <ul id="userlist">
+            {% for user in meeting.users_with_constraints %}
+                <li><a class="user">{{ user }}</a>
+                    <div class="info">
+                    {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time%}
+                        {% if waiting_time %}
+                            <div class="waiting_time">Waiting Time: {{ waiting_time }}</div>
+                        {% endif %}
+                    {% endwith %}
+                    {% if user.constraints %}
+                        <ul class="constraints">
+                            {% for constraint in user.constraints %}
+                                <li>{{ constraint.start_time }} - {{ constraint.end_time }} ({{ constraint.weight }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <a href="{% url ecs.core.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Edit Constraints</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}
 
 {% block jsbottom %}
@@ -38,6 +76,7 @@ window.addEvent('domready', function(){
         clone: true,
         opacity: 0.5,
         revert: true,
+        handle: '.dragHandle',
         onStart: function(el, clone){
             clone.setStyle('z-index', 100);
             dndInfo.startIndex = getSortableIndex(clone);
@@ -49,7 +88,7 @@ window.addEvent('domready', function(){
             var toIndex = getSortableIndex(el);
             var fromIndex = dndInfo.startIndex;
             dndInfo.startIndex = null;
-            if(fromIndex != toIndex){
+            if(fromIndex != toIndex && fromIndex !== null){
                 window.location.href = '{% url ecs.core.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
             }
         }

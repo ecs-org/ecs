@@ -6,6 +6,11 @@ import reversion
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
 
+    @property
+    def project_title(self):
+        # FIXME: pick the last SubmissionForm
+        return self.forms.get().project_title
+
     class Meta:
         app_label = 'core'
 
