@@ -51,14 +51,20 @@ class TimetableMetrics(object):
         
     @cached_property
     def avg_waiting_time(self):
+        if not self.entries_by_user:
+            return timedelta(seconds=0)
         return self.total_waiting_time / len(self.entries_by_user)
         
     @cached_property
     def max_waiting_time(self):
+        if not self.waiting_time_per_user:
+            return timedelta(seconds=0)
         return max(self.waiting_time_per_user.itervalues())
 
     @cached_property
     def min_waiting_time(self):
+        if not self.waiting_time_per_user:
+            return timedelta(seconds=0)
         return min(self.waiting_time_per_user.itervalues())
 
 
