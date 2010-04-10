@@ -13,10 +13,11 @@
     <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a> | <a href="">Pause hinzufügen</a>
     <div class="waiting_time">
     Waiting time: 
-        sum={{ meeting.metrics.total_waiting_time }}h, 
-        avg={{ meeting.metrics.avg_waiting_time }}h, 
-        max={{ meeting.metrics.max_waiting_time }}h, 
-        min={{ meeting.metrics.min_waiting_time }}h
+        sum={{ meeting.metrics.waiting_time_total }},
+        avg={{ meeting.metrics.waiting_time_avg }}, 
+        max={{ meeting.metrics.waiting_time_max }}, 
+        min={{ meeting.metrics.waiting_time_min }},
+        var={{ meeting.metrics.waiting_time_variance }},
     </div>
     <ul id="timetable" style="list-style: none;width:600px; font-size:13px">
     {% for entry in meeting %}
@@ -28,7 +29,9 @@
             </h3>
             <a style="float:right" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
             <div style="height:20px">Dauer:
-                <input type="text" value="15 min"/>
+                <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                    <input type="text" value="{{ entry.duration }}" name="duration"/>
+                </form>
             </div>
             <div style="font-size:12px">Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}

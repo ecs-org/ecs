@@ -34,6 +34,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/new/$', 'ecs.core.views.add_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'ecs.core.views.move_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'ecs.core.views.meetings.edit_user_constraints'),
 
 )

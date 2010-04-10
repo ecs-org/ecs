@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from ecs.core.views.utils import render
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet
+from ecs.utils.timedelta import parse_timedelta
 
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
@@ -33,6 +34,15 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
     entry.delete()
+    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    entry = get_object_or_404(TimetableEntry, pk=entry_pk)
+    duration = request.POST.get('duration')
+    if duration:
+        entry.duration = parse_timedelta(duration)
+        entry.save()
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def move_timetable_entry(request, meeting_pk=None):

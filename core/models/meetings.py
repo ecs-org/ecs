@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import math
 from datetime import timedelta
 from django.db import models, transaction
 from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 
 from ecs.utils import cached_property
+from ecs.utils.timedelta import timedelta_to_seconds
 
 import reversion
 
@@ -43,30 +45,41 @@ class TimetableMetrics(object):
             offset += entry.duration
 
     @cached_property
-    def total_waiting_time(self):
+    def waiting_time_total(self):
         s = timedelta(seconds=0)
         for time in self.waiting_time_per_user.itervalues():
             s += time
         return s
         
     @cached_property
-    def avg_waiting_time(self):
+    def waiting_time_avg(self):
         if not self.entries_by_user:
             return timedelta(seconds=0)
-        return self.total_waiting_time / len(self.entries_by_user)
+        return self.waiting_time_total / len(self.entries_by_user)
         
     @cached_property
-    def max_waiting_time(self):
+    def waiting_time_max(self):
         if not self.waiting_time_per_user:
             return timedelta(seconds=0)
         return max(self.waiting_time_per_user.itervalues())
 
     @cached_property
-    def min_waiting_time(self):
+    def waiting_time_min(self):
         if not self.waiting_time_per_user:
             return timedelta(seconds=0)
         return min(self.waiting_time_per_user.itervalues())
-
+        
+    @cached_property
+    def waiting_time_variance(self):
+        if not self.waiting_time_per_user:
+            return timedelta(seconds=0)
+        avg = timedelta_to_seconds(self.waiting_time_avg)
+        var = 0
+        for time in self.waiting_time_per_user.itervalues():
+            d = avg - timedelta_to_seconds(time)
+            var += d*d
+        return timedelta(seconds=math.sqrt(var / len(self.waiting_time_per_user)))
+        
 
 class Meeting(models.Model):
     start = models.DateTimeField()
@@ -156,7 +169,12 @@ class Meeting(models.Model):
     def _get_start_for_index(self, index):
         offset = self.timetable_entries.filter(timetable_index__lt=index).aggregate(sum=models.Sum('duration_in_seconds'))['sum']
         return self.start + timedelta(seconds=offset or 0)
-    
+        
+    def _apply_permutation(self, permutation):
+        assert set(self) == set(permutation)
+        for i, entry in enumerate(permutation):
+            entry.timetable_index = i
+            entry.save()
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -173,9 +191,14 @@ class TimetableEntry(models.Model):
     def __unicode__(self):
         return "%s, index=%s" % (self.title, self.timetable_index)
     
-    @property
-    def duration(self):
+    
+    def _get_duration(self):
         return timedelta(seconds=self.duration_in_seconds)
+        
+    def _set_duration(self, d):
+        self.duration_in_seconds = int(timedelta_to_seconds(d))
+    
+    duration = property(_get_duration, _set_duration)
         
     @cached_property
     def users(self):
