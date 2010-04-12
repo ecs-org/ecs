@@ -250,6 +250,7 @@ class TimetableEntry(models.Model):
             self.meeting.timetable_entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).update(timetable_index=models.F('timetable_index') - 1)
         self.timetable_index = index
         self.save(force_update=True)
+        self.meeting._clear_caches()
     
     index = property(_get_index, _set_index)
     

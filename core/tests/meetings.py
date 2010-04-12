@@ -5,7 +5,6 @@ from django.db.models import connection
 from django.contrib.auth.models import User
 
 from ecs.core.models import Meeting
-from ecs.core.models.meetings import TimetableEvaluationContext
 
 class MeetingModelTest(TestCase):
     def test_entry_management(self):
