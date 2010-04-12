@@ -105,7 +105,6 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'meeting': meeting,
         'participant': user,
         'constraint_formset': constraint_formset,
-        'users_with_constraints': list(meetings.users_with_constraints),
     })
         
     
