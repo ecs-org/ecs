@@ -16,33 +16,37 @@ import reversion
 #if p not in self.impediments:
 #    self.impediments[p] =
 
-
 class TimetableMetrics(object):
-    def __init__(self, permutation, entries_by_user=None, users_by_entry=None):
-        self.entries_by_user = {}
-        self.users_by_entry = {}
-        for p in Participation.objects.filter(entry__in=permutation).select_related('entry', 'user'):
-            self.entries_by_user.setdefault(p.user, set()).add(p.entry)
-            self.users_by_entry.setdefault(p.entry, set()).add(p.user)
-        self.waiting_time_per_user = {}
-        for user in self.entries_by_user:
-            self.waiting_time_per_user[user] = timedelta(seconds=0)
-        #self.impediments = {}
-        offset = timedelta(seconds=0)
-        participants = set()
-        visited_entries = set()
+    def __init__(self, permutation, users=None):
+        self.users = users
+        self._waiting_time_total = 0
+        self._waiting_time_min = None
+        self._waiting_time_max = None
+        offset = 0
+        for user in users:
+            user._waiting_time = 0
+            user._waiting_time_offset = None
         for entry in permutation:
-            entry_participants = self.users_by_entry[entry]
-            for user in participants.difference(entry_participants):
-                self.waiting_time_per_user[user] += entry.duration
-            visited_entries.add(entry)
-            for user in entry_participants:
-                 if self.entries_by_user[user] <= visited_entries:
-                     if user in participants:
-                         participants.remove(user)
-                 else:
-                     participants.add(user)
-            offset += entry.duration
+            next_offset = offset + entry.duration_in_seconds
+            for user in entry.users:
+                if user._waiting_time_offset is not None:
+                    wt = offset - user._waiting_time_offset
+                    user._waiting_time += wt
+                    self._waiting_time_total += wt
+                user._waiting_time_offset = next_offset
+            offset = next_offset
+        
+        self.waiting_time_per_user = {}
+        for user in users:
+            wt = user._waiting_time
+            self.waiting_time_per_user[user] = timedelta(seconds=wt)
+            if self._waiting_time_min is None or wt < self._waiting_time_min:
+                self._waiting_time_min = wt
+            if self._waiting_time_max is None or wt > self._waiting_time_max:
+                self._waiting_time_max = wt
+            
+    def __repr__(self):
+        return ", ".join("%s: %s" % (name, getattr(self, 'waiting_time_%s' % name)) for name in ('total', 'avg', 'min', 'max', 'variance'))
 
     @cached_property
     def waiting_time_total(self):
@@ -53,9 +57,9 @@ class TimetableMetrics(object):
         
     @cached_property
     def waiting_time_avg(self):
-        if not self.entries_by_user:
+        if not self.waiting_time_per_user:
             return timedelta(seconds=0)
-        return self.waiting_time_total / len(self.entries_by_user)
+        return self.waiting_time_total / len(self.waiting_time_per_user)
         
     @cached_property
     def waiting_time_max(self):
@@ -98,24 +102,35 @@ class Meeting(models.Model):
         
     @cached_property
     def metrics(self):
-        return TimetableMetrics(self)
+        entries, users = self.entries_with_users
+        return TimetableMetrics(entries, users)
+        
+    def create_evaluation_func(self, func):
+        entries, users = self.entries_with_users
+        def f(permutation):
+            return func(TimetableMetrics(permutation, users=users))
+        return f
         
     @property
     def users(self):
         return User.objects.filter(meeting_participations__entry__meeting=self).distinct().order_by('username')
         
-    @property
+    @cached_property
     def users_with_constraints(self):
         constraints_by_user_id = {}
         for constraint in self.constraints.order_by('start_time'):
             constraints_by_user_id.setdefault(constraint.user_id, []).append(constraint)
+        users = []
         for user in self.users:
             user.constraints = constraints_by_user_id.get(user.id, [])
-            yield user
+            users.append(user)
+        return users
         
     def _clear_caches(self):
         del self.metrics
         del self.duration
+        del self.entries_with_users
+        del self.users_with_constraints
         
     def add_entry(self, **kwargs):
         last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
@@ -152,29 +167,41 @@ class Meeting(models.Model):
         
     def __len__(self):
         return self.timetable_entries.count()
-        
-    def __iter__(self):
+    
+    @cached_property
+    def entries_with_users(self):
         duration = timedelta(seconds=0)
         users_by_entry_id = {}
+        users_by_id = {}
+        entries = list()
         for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
-            users_by_entry_id.setdefault(participation.entry_id, []).append(participation.user)
+            users_by_entry_id.setdefault(participation.entry_id, set()).add(users_by_id.setdefault(participation.user_id, participation.user))
         for entry in self.timetable_entries.order_by('timetable_index'):
-            entry.users = users_by_entry_id.get(entry.id, [])
+            entry.users = users_by_entry_id.get(entry.id, set())
             entry.start = self.start + duration
             duration += entry.duration
             entry.end = self.start + duration
-            yield entry
-        self._duration = duration
+            entries.append(entry)
+        return tuple(entries), set(users_by_id.itervalues())
+
+    def __iter__(self):
+        entries, users = self.entries_with_users
+        return iter(entries)
         
     def _get_start_for_index(self, index):
         offset = self.timetable_entries.filter(timetable_index__lt=index).aggregate(sum=models.Sum('duration_in_seconds'))['sum']
         return self.start + timedelta(seconds=offset or 0)
-        
+    
     def _apply_permutation(self, permutation):
         assert set(self) == set(permutation)
         for i, entry in enumerate(permutation):
             entry.timetable_index = i
             entry.save()
+        self._clear_caches()
+        
+    def sort_timetable(self, func):
+        perm = func(tuple(self))
+        self._apply_permutation(perm)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -203,6 +230,9 @@ class TimetableEntry(models.Model):
     @cached_property
     def users(self):
         return User.objects.filter(meeting_participations__entry=self).order_by('username')
+        
+    def add_user(self, user):
+        Participation.objects.create(user=user, entry=self)
     
     def _get_index(self):
         return self.timetable_index

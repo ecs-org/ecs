@@ -1,4 +1,4 @@
-import datetime
+import datetime, random, itertools
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
@@ -7,6 +7,7 @@ from ecs.core.views.utils import render
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet
 from ecs.utils.timedelta import parse_timedelta
+from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
 
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
@@ -26,7 +27,7 @@ def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = meeting.add_entry(duration=datetime.timedelta(minutes=15), submission=Submission.objects.order_by('?')[:1].get())
     import random
-    for user in User.objects.order_by('?')[:random.randint(1, 5)]:
+    for user in User.objects.order_by('?')[:random.randint(1, 4)]:
         Participation.objects.create(entry=entry, user=user)
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
@@ -57,7 +58,39 @@ def timetable_editor(request, meeting_pk=None):
     return render(request, 'meetings/timetable/editor.html', {
         'meeting': meeting,
     })
+
+
+def optimize_random(timetable, func):
+    p = list(timetable)
+    random.shuffle(p)
+    return p
     
+def optimize_brute_force(timetable, func):
+    value, p = max((func(p), p) for p in itertools.permutations(timetable))
+    return p
+    
+def optimize_ga(timetable, func):
+    sorter = GeneticSorter(timetable, func, seed=(timetable,), population_size=100, crossover_p=0.3, mutations={
+        inversion_mutation: 0.002,
+        swap_mutation: 0.02,
+        displacement_mutation: 0.01,
+    })
+    return sorter.run(100)
+
+_OPTIMIZATION_ALGORITHMS = {
+    'random': optimize_random,
+    'brute_force': optimize_brute_force,
+    'ga': optimize_ga,
+}
+
+def optimize_timetable(request, meeting_pk=None, algorithm=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
+    entries, users = meeting.entries_with_users
+    f = meeting.create_evaluation_func(lambda metrics: 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)))
+    meeting._apply_permutation(algo(entries, f))
+    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)
@@ -72,6 +105,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'meeting': meeting,
         'participant': user,
         'constraint_formset': constraint_formset,
+        'users_with_constraints': list(meetings.users_with_constraints),
     })
         
     

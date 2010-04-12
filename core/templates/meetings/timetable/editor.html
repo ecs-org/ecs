@@ -11,6 +11,9 @@
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
     <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a> | <a href="">Pause hinzufügen</a>
+    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">shuffle</a>
+    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a>
+    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">genetic algorithm</a>
     <div class="waiting_time">
     Waiting time: 
         sum={{ meeting.metrics.waiting_time_total }},
@@ -40,6 +43,7 @@
     {% endfor %}
     </ul>
     <div style="position:absolute;right:0px;top:0px; width:200px">
+        <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
         <ul id="userlist">
             {% for user in meeting.users_with_constraints %}
                 <li><a class="user">{{ user }}</a>
