@@ -50,7 +50,8 @@
             </div>
         {% endfor %}
     </div>
-    <div class="button"><input type="submit" value="Speichern" name="save" /></div>
+    <div class="button"><input type="submit" value="Validieren" name="save" /></div>
+    <div class="button"><input type="button" value="Speichern" name="save" id="save-button" /></div>
     <input type="submit" value="Submit" name="submit"/>    
 </form>
 
@@ -61,6 +62,10 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript">
         window.addEvent('domready', function(){
+            $('save-button').addEvent('click', function(){
+                ecs.mainForm.autosave(true);
+            });
+
             var submissionFormsSelect = $('id_submission_forms');
             var submissionDataDisplay = new Element('div', {'class': 'submission_data'});
             submissionFormsSelect.getParent('li').grab(submissionDataDisplay);
@@ -81,6 +86,8 @@
             }
             submissionFormsSelect.addEvent('change', loadSubmissionFormData);
             loadSubmissionFormData();
+
+
         });
     </script>
 {% endblock %}

@@ -150,10 +150,10 @@
                 $(window).addEvent('unload', this.autosave.bind(this));
             }
         },
-        autosave: function(){
-            console.log('start autosave ..');
+        autosave: function(force){
+            //console.log('start autosave ..');
             var currentData = this.form.toQueryString();
-            if(this.lastSave.data != currentData){
+            if(force || this.lastSave.data != currentData){
                 this.lastSave.timestamp = new Date();
                 this.lastSave.data = currentData;
                 var request = new Request({
@@ -342,7 +342,7 @@
             var tabController = new ecs.TabController(tabHeaders);
             var mainForm = document.getElement('form.tabbed.main');
             if(mainForm){
-                var form = new ecs.TabbedForm(mainForm, {
+                var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                     tabController: tabController,
                     autosave: 15
                 });

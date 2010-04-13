@@ -109,7 +109,8 @@
                 </div>
             {% endfor %}
         </div>
-    <div class="button"><input type="submit" value="Speichern" name="save" /></div>
+    <div class="button"><input type="button" value="Speichern" name="save" id="save-button" /></div>
+    <div class="button"><input type="submit" value="Validieren" name="save" /></div>
     <input type="submit" value="Submit" name="submit" />
     </form>
 {% endblock %}
@@ -128,6 +129,9 @@
                 return new ecs.InlineFormSet($(prefix + '_formset'), {
                     prefix: prefix
                 });
+            });
+            $('save-button').addEvent('click', function(){
+                ecs.mainForm.autosave(true);
             });
         });
     </script>
