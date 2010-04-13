@@ -65,7 +65,7 @@ class GeneticSorter(object):
         sum_value = 0.0
         for permutation in self.population:
             value = self.evaluation_func(permutation)
-            self.evaluation[permutation] = value
+            self.evaluation[id(permutation)] = value
             sum_value += value
             if self.max_value is None or value > self.max_value:
                 self.max_value = value
@@ -99,19 +99,20 @@ class GeneticSorter(object):
 
     def next_generation(self):
         next_population = []
-        fractional = []
-        for permutation, value in self.evaluation.iteritems():
+        wheel = []
+        for permutation in self.population:
+            value = self.evaluation[id(permutation)]
             fitness = value / self.avg_value
             fitness_fraction, copies = math.modf(fitness)
             if fitness_fraction:
-                fractional.append(permutation)
-                fractional.append(permutation)
+                wheel.append(permutation)
+                wheel.append(permutation)
             if copies == 1:
                 next_population.append(permutation)
             elif copies > 1:
                 next_population += [permutation] * int(copies)
-        
-        next_population += random.sample(fractional, len(self.population) - len(next_population))
+
+        next_population += random.sample(wheel, len(self.population) - len(next_population))
         next_population_size = len(next_population)
 
         # crossover

@@ -324,3 +324,17 @@ table.notif_meta th{
 	float: right;
 	display: block;
 }
+
+#meeting_editor .constraint_status{
+	width: 10px;
+	height: 10px;
+	text-indent: -20px;
+	display: block;
+	float: left;
+	overflow: hidden;
+}
+
+#meeting_editor #userlist .constraints{
+	list-style: none;
+	margin-left: 0px;
+}

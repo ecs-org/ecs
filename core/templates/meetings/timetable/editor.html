@@ -22,6 +22,7 @@
         min={{ meeting.metrics.waiting_time_min }},
         var={{ meeting.metrics.waiting_time_variance }},
     </div>
+    <div>Constraint Violations: {{ meeting.metrics.constraint_violation_total }}</div>
     <ul id="timetable" style="list-style: none;width:600px; font-size:13px">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" style="border: 1px solid #eeeeee; margin: 3px; display: block;height:55px;background-color:#ffffff">
@@ -48,7 +49,7 @@
             {% for user in meeting.users_with_constraints %}
                 <li><a class="user">{{ user }}</a>
                     <div class="info">
-                    {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time%}
+                    {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
                             <div class="waiting_time">Waiting Time: {{ waiting_time }}</div>
                         {% endif %}
@@ -56,7 +57,7 @@
                     {% if user.constraints %}
                         <ul class="constraints">
                             {% for constraint in user.constraints %}
-                                <li>{{ constraint.start_time }} - {{ constraint.end_time }} ({{ constraint.weight }})</li>
+                                <li><span class="constraint_status">{{ meeting.metrics.constraint_violations|getitem:constraint|yesno:'1,0' }}</span>{{ constraint.start_time }} - {{ constraint.end_time }} ({{ constraint.weight }})</li>
                             {% endfor %}
                         </ul>
                     {% endif %}
@@ -79,6 +80,13 @@ window.addEvent('domready', function(){
     var dndInfo = {
         startIndex: null
     };
+    $$('.constraint_status').each(function(span){
+        var color = '#ff0000';
+        if(parseFloat(span.innerHTML) == 0){
+            color = '#00ff00';
+        }
+        span.setStyle('background-color', color);
+    });
     new Sortables('timetable', {
         clone: true,
         opacity: 0.5,

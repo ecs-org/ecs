@@ -86,8 +86,8 @@ _OPTIMIZATION_ALGORITHMS = {
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
-    entries, users = meeting.entries_with_users
-    f = meeting.create_evaluation_func(lambda metrics: 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)))
+    entries, users = meeting.timetable
+    f = meeting.create_evaluation_func(lambda metrics: 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1))
     meeting._apply_permutation(algo(entries, f))
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 

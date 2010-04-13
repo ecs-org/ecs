@@ -29,11 +29,23 @@ class Command(BaseCommand):
             #print len(entries_by_title)
 
             setup = 'from ecs.core.models.meetings import Meeting;m = Meeting.objects.get(pk=%s);f = m.create_evaluation_func(lambda x: x);perm=list(m)' % meeting.pk
-            print "%.3fms" % (timeit.timeit('f(perm)', setup, number=1000))
-            print meeting.metrics
+            print "%.3fms per metric constructor" % (timeit.timeit('f(perm)', setup, number=1000))
+            
+            setup = 'from ecs.utils.genetic_sort import order_crossover'
+            print "%.3fms per order_crossover" % (timeit.timeit('order_crossover((1,2,3,4,5,6,7,8,9), (9,8,7,6,5,4,3,2,1))', setup, number=1000))
+
+            setup = 'from ecs.utils.genetic_sort import swap_mutation'
+            print "%.3fms per swap_mutuation" % (timeit.timeit('swap_mutation((1,2,3,4,5,6,7,8,9))', setup, number=1000))
+            
+            setup = 'from ecs.utils.genetic_sort import inversion_mutation'
+            print "%.3fms per swap_mutuation" % (timeit.timeit('inversion_mutation((1,2,3,4,5,6,7,8,9))', setup, number=1000))
+            
+            setup = 'from ecs.utils.genetic_sort import displacement_mutation'
+            print "%.3fms per displacement_mutation" % (timeit.timeit('displacement_mutation((1,2,3,4,5,6,7,8,9))', setup, number=1000))
+            
             get_metrics = meeting.create_evaluation_func(lambda x: x)
             evalf = meeting.create_evaluation_func(lambda metrics: 1000*1000 * (10.0 / (metrics._waiting_time_total + 1) + 0 / (metrics._waiting_time_max + 1)))
-            entries, users = meeting.entries_with_users
+            entries, users = meeting.timetable
             sorter = GeneticSorter(entries, evalf, population_size=100, crossover_p=0.3, mutations={
                 inversion_mutation: 0.002,
                 swap_mutation: 0.02,
