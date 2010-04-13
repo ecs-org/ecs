@@ -135,11 +135,6 @@ form ol li input[type=text], form ol li textarea {
 
 form ol li textarea {
   height: 4em;
-  width: 40em;
-}
-
-form ol li .mooeditable-container{
-    left: 21em;
 }
 
 form ol li > label {
