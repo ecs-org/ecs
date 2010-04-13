@@ -1,0 +1,32 @@
+{
+
+	"MooEditable": {
+	
+		"MooEditable": {
+			"deps": ["MooEditable"],
+			"desc": "Class for creating a WYSIWYG editor, for contentEditable-capable browsers."
+		},
+	
+		"MooEditable.UI.MenuList": {
+			"deps": ["MooEditable"],
+			"desc": "UI Class to create a menu list (select) element."
+		},
+	
+		"MooEditable.UI.ButtonOverlay": {
+			"deps": ["MooEditable"],
+			"desc": "UI Class to create a button element with a popup overlay."
+		},
+	
+		"MooEditable.Extras": {
+			"deps": ["MooEditable"],
+			"desc": "Extends MooEditable to include more (simple) toolbar buttons."
+		},
+	
+		"MooEditable.Group": {
+			"deps": ["MooEditable"],
+			"desc": "A MooEditable extension for having multiple MooEditable instances on a page controlled by one toolbar."
+		}
+		
+	}
+
+}

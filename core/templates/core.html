@@ -2,11 +2,13 @@
 
 {% block jsbottom %}
   {{ block.super }}
+  <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
 {% endblock %}
 
 {% block htmlcss %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
 {% endblock %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universit&auml;t Wien{% endblock %}

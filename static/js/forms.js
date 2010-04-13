@@ -153,7 +153,7 @@
         autosave: function(force){
             //console.log('start autosave ..');
             var currentData = this.form.toQueryString();
-            if(force || this.lastSave.data != currentData){
+            if(!!force || this.lastSave.data != currentData){
                 this.lastSave.timestamp = new Date();
                 this.lastSave.data = currentData;
                 var request = new Request({
@@ -268,6 +268,25 @@
         }
     });
     
+    ecs.setupRichTextEditor = function(textArea){
+        textArea.addEvent('click', function(){
+            var editable = textArea.retrieve('MooEditable');
+            if(editable){
+                editable.attach();
+            }
+            else{
+                editable = new MooEditable(textArea);
+            }
+            editable.focus();
+        });
+        document.body.addEvent('click', function(e){
+            var editable = textArea.retrieve('MooEditable');
+            if(editable && !editable.container.hasChild(e.target)){
+                editable.detach();
+            }
+        });
+    };
+    
     /*
     // TODO: implement #88
     ecs.InvestigatorFormSet = new Class({
@@ -344,7 +363,7 @@
             if(mainForm){
                 var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                     tabController: tabController,
-                    autosave: 15
+                    autosave: 60
                 });
             }
         }

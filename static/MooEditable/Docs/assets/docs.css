@@ -1,0 +1,64 @@
+head,title{
+	display: block;
+}
+
+title{
+	font-weight: bold;
+	padding: .5em;
+	text-align: center;
+	border-bottom: 1px solid #000;
+}
+
+#container{
+	max-width: 80em;
+	margin: auto;
+}
+
+#menu{
+	float: left;
+	width: 20%;
+}
+
+#menu ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#menu a:focus{
+	font-weight: bold;
+}
+
+#docs{
+	margin: 0 22%;
+	overflow: hidden;
+}
+
+#methods{
+	float: right;
+	width: 20%;
+}
+
+#methods ul{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#methods ul ul{
+	list-style-type: disc;
+	margin: 1em 1.5em;
+}
+
+h1{
+	border-bottom: 3px solid #ccc;
+}
+h2{
+	color: #444;
+	border-bottom: 1px solid #ccc;
+}
+
+h3, h4, h5, h6{
+	color: #999;
+	background-color: transparent;
+}

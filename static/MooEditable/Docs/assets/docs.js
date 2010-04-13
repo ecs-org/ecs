@@ -1,0 +1,129 @@
+var Docs = {
+
+	urls: [
+		'MooEditable/MooEditable.md',
+		'MooEditable/MooEditable.UI.MenuList.md',
+		'MooEditable/MooEditable.UI.ButtonOverlay.md',
+		'MooEditable/MooEditable.Extras.md',
+		'MooEditable/MooEditable.Group.md',
+		],
+	start: function(){
+		Docs.generateMenu();
+		
+		var href = window.location.hash.slice(1);
+		if (href && /(\.md)/.test(href)) Docs.getContent(href, Docs.parse);
+		
+		document.addEvent('click', function(e){
+			if (e.target.tagName.toLowerCase() != 'a') return;
+			var hrefsplit = e.target.href.split('#');
+			var href = hrefsplit[1];
+			if (!href || !/(\.md)/.test(href)) return;
+			Docs.getContent(href, Docs.parse);
+			if (hrefsplit.length>2) setTimeout(function(){
+				var id = location.hash = hrefsplit[2];
+				var to = $(id.replace(/\./g, '-')).getCoordinates();
+				window.scrollTo(0, to.top);
+			}, 100);
+		});
+	},
+	
+	generateMenu: function(){
+		var html = '<ul>';
+		Docs.urls.each(function(url){
+			var file = url.split('/')[1].slice(0, -3);
+			html += '<li><a href="#' + url + '">' + file + '</a></li>';
+		});
+		html += '</ul>';
+		
+		$('menu').set('html', html);
+	},
+	
+	// inspired by http://cssgallery.info/mootools-ajax-request-for-local-files/
+	getContent: function(url, fn){
+		if (document.location.protocol == 'file:'){
+			var mdIFrame = new IFrame({
+				'class': 'md-iframe',
+				src: url,
+				styles: {
+					visibility: 'hidden',
+					position: 'absolute',
+					left: '-999em',
+					top: 0
+				},
+				events: {
+					load: function(){
+						var doc = $(this.contentWindow.document.body).getElement('pre').get('text');
+						fn(url, doc);
+						Docs.disposeIframes();
+					}
+				}
+			}).inject(document.body);
+		} else {
+			new Request({
+				url: url,
+				method: 'get',
+				onSuccess: function(doc){
+					fn(url, doc);
+				}
+			}).send();
+		}
+	},
+	
+	parse: function(url, doc){
+		var html = new Showdown.converter().makeHtml(doc);
+		var sd = $('docs').set('html', html);
+		
+		// anchorize the headings
+		var anchor = (/\{#(.*)\}/);
+		sd.getElements('h1, h2, h3, h4, h5, h6').each(function(h){
+			var matches = h.innerHTML.match(anchor);
+			if (matches) h.set('id', matches[1]);
+			h.innerHTML = h.innerHTML.replace(anchor, '');
+		});
+		
+		// hash methods list
+		var headings = sd.getElements('h1');
+		var methods = sd.getElements('h2');
+		
+		var html = '<ul>';
+		headings.each(function(heading){
+			var href = heading.get('id');
+			var text = heading.get('text').split(':')[1].trim();
+			html += '<li><a href="#' + href + '"><strong>' + text + '</strong></a>';
+			html += '<ul>';
+			methods.filter('[id^=' + href + ':]').each(function(method){
+				var href = method.get('id');
+				var text = href.split(':')[1];
+				html += '<li><a href="#' + href + '">' + text + '</a></li>';
+			});
+			html += '</ul></li>';
+		});
+		html += '</ul>';
+		$('methods').set('html', html);
+		
+		// hack some links
+		sd.getElements('a[href^=/]').each(function(a){
+			var href = a.href;
+			var hrefsplit = href.split('#');
+			var href = '#' + hrefsplit[0].replace('file:///', '') + '.md';
+			if (hrefsplit.length>1) href += '#' + hrefsplit[1];
+			a.href = href;
+		});
+		
+		// prettify code
+		sd.getElements('pre').addClass('prettyprint');
+		prettyPrint();
+		
+		// scroll to top
+		window.scrollTo(0, 0);
+	},
+	
+	disposeIframes: function(){
+		setTimeout(function(){
+			$$('.md-iframe').dispose();
+		}, 100);
+	},
+	
+};
+
+window.addEvent('domready', Docs.start);
