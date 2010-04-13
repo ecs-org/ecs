@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
+{% endblock %}
+
 {% block htmlcss %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
 {% endblock %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universit&auml;t Wien{% endblock %}
@@ -28,25 +34,22 @@
   <ul>
     <li><a href="{% url ecs.core.views.index %}">&Uuml;bersicht</a></li>
     <li>
-      <span class="togglers">Studien</span>
-      <ul class="elements">
-	<li><a href="{% url ecs.core.views.submission_form_list %}">&Uuml;bersicht</a></li>
+      <a href="{% url ecs.core.views.submission_form_list %}">Studien</a>
+      <ul>
         <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Studien Meldungen</span>
-      <ul class="elements">
-	<li><a href="{% url ecs.core.views.notification_list %}">&Uuml;bersicht</a></li>
+      <a href="{% url ecs.core.views.notification_list %}">Studien Meldungen</a>
+      <ul>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Meetings</span>
-      <ul class="elements">
-        <li><a href="{% url ecs.core.views.meeting_list %}">Meetings</a></li>
-        <li><a href="{% url ecs.core.views.create_meeting %}">neues Meeting</li>
-      </ul>
+        <a href="{% url ecs.core.views.meeting_list %}">Meetings</a>
+        <ul>
+            <li><a href="{% url ecs.core.views.create_meeting %}">neues Meeting</li>
+        </ul>
     </li>
     <li><a href="#">Konversationen</a></li>
     <li><a href="#">zuletzt bearbeitet</a></li>
@@ -57,16 +60,4 @@
 {% block headernav %}
     {% block header_actions %}
     {% endblock %}
-{% endblock %}
-
-{% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript">window.addEvent('domready', function(){
-    console.log("s1");
-    var toggles = $$('.togglers');
-    var content = $$('.elements');
-    
-    var AccordionObject = new Accordion(toggles, content);
-    });
-  </script>
 {% endblock %}
