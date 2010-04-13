@@ -24,18 +24,5 @@ urlpatterns = patterns('',
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
 
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
-    #url(r'^databrowse/(.*)', databrowse.site.root),
 )
 
-# setup databrowse for debugging
-"""from django.contrib import databrowse
-from core import models
-for m in ("Document", "EthicsCommission", 
-          "Submission", "SubmissionForm", "Investigator","InvestigatorEmployee", "NonTestedUsedDrug", "ForeignParticipatingCenter",
-          "Notification", "ProgressReportNotification", "CompletionReportNotification",
-          "Amendment", "Checklist", "Workflow",
-          "VoteReview", "Vote", "SubmissionReview",
-          "NotificationAnswer",
-          "Meeting", "User"):
-    databrowse.site.register(getattr(models, m))
-"""
