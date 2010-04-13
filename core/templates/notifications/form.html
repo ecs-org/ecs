@@ -65,6 +65,8 @@
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.autosave(true);
             });
+            ecs.setupRichTextEditor($('id_comments'));
+            
 
             var submissionFormsSelect = $('id_submission_forms');
             var submissionDataDisplay = new Element('div', {'class': 'submission_data'});
