@@ -15,12 +15,13 @@
 {% block account %} 
   <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
   {{ user.get_full_name }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
+  <p>
   {% comment %}
   <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
   <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a>
   {% endcomment %}
-  <a href=""><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback" title="Feedback" id="givefeedback" rel="#feedback"/></a></p> 
-
+  <a href=""><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback" title="Feedback" id="givefeedback" rel="#feedback"/></a>
+  </p> 
 {% endblock %}
 
 {% block usertoolbar %} 
