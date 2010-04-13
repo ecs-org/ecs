@@ -21,10 +21,10 @@ class DocStash(models.Model):
     current_version = models.IntegerField(default=-1)
     deleted = models.BooleanField(default=False)
 
-    def save(self, force_insert=None, force_update=None):
+    def save(self, *args, **kwargs):
         if not self.key:
             self.key = uuid.uuid4().hex
-        super(DocStash, self).save(force_insert=force_insert, force_update=force_update)
+        super(DocStash, self).save(*args, **kwargs)
         
     def _get_current_attribute(self, name, default=None):
         if not hasattr(self, '_current_data'):
