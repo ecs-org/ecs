@@ -97,7 +97,7 @@ body {
   min-height: 80px;
 }
 #usertoolbar {
-  min-height: 100px;
+  min-height: 10px;
 }
 #usermenu {
   background: #f5f5d2;
