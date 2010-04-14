@@ -85,6 +85,11 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'Zentrum', []),
+    (u'Review', [
+        (u'Review', [
+            'medical_categories', 'thesis', 'retrospective', 'expedited', 'external_reviewer', 'external_reviewer_name',
+        ]),
+    ]),
 
 # TODO
 # The following declaration would fit in nicely, but is not working because
