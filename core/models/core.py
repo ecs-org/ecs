@@ -73,6 +73,7 @@ class MedicalCategory(models.Model):
     expeditedreview = models.CharField(max_length=2, choices=EXPEDITED_REVIEW_CHOICES)
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=8)
+    users = models.ManyToManyField(User, related_name='medical_categories')
 
     class Meta:
         app_label = 'core'
