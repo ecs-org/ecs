@@ -49,15 +49,15 @@
                     
                     {% for legend, fields in fieldsets %}
                         <div class="field fieldset_{{ forloop.counter }}">
+                            {% if legend %}
+                                <h3>{{ legend }}</h3>
+                            {% endif %}
                             {% ifequal legend "Zentren im Ausland" %}
                                 {# FIXME #}
                                 {% with foreignparticipatingcenter_formset as formset %}
                                     {% include "forms/inline_formset.html" %}
                                 {% endwith %}                            
                             {% endifequal %}                            
-                            {% if legend %}
-                                <h3>{{ legend }}</h3>
-                            {% endif %}
                             <ol>
                                 {% for field_name in fields %}
                                     {% with form|getitem:field_name as field %}
