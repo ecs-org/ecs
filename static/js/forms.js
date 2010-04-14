@@ -275,7 +275,9 @@
                 editable.attach();
             }
             else{
-                editable = new MooEditable(textArea);
+                editable = new MooEditable(textArea, {
+                    actions: 'bold italic underline strikethrough | indent outdent | undo redo',
+                });
             }
             editable.focus();
         });
