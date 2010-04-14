@@ -22,7 +22,7 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=40, null=True)
-    
+
     class Meta:
         app_label = 'core'
     
@@ -229,7 +229,15 @@ class SubmissionForm(models.Model):
     submitter_agrees_to_publishing = models.BooleanField(default=True)
     
     date_of_receipt = models.DateField(null=True, blank=True)
-    
+
+    # medical categories
+    medical_categories = models.ManyToManyField('core.MedicalCategory')
+    thesis = models.BooleanField()
+    retrospective = models.BooleanField()
+    expedited = models.BooleanField()
+    external_reviewer = models.BooleanField()
+    external_reviewer_name = models.ForeignKey('auth.user', null=True)
+   
     def __unicode__(self):
         return "%s: %s" % (self.submission.ec_number, self.project_title)
     

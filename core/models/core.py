@@ -65,6 +65,19 @@ class NotificationAnswer(models.Model):
     class Meta:
         app_label = 'core'
 
+
+class MedicalCategory(models.Model):
+    EXPEDITED_REVIEW_CHOICES = [
+        ('IM', 'Innere Medizin'),
+    ]
+    expeditedreview = models.CharField(max_length=2, choices=EXPEDITED_REVIEW_CHOICES)
+    name = models.CharField(max_length=60)
+    abbrev = models.CharField(max_length=8)
+
+    class Meta:
+        app_label = 'core'
+
+
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 if not reversion.is_registered(Amendment):
     reversion.register(Amendment) 
@@ -74,3 +87,4 @@ if not reversion.is_registered(Amendment):
     reversion.register(NotificationAnswer) 
     reversion.register(Vote) 
     reversion.register(VoteReview) 
+    reversion.register(MedicalCategory)
