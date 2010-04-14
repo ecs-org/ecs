@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
-
-from ecs.core.models import Meeting, TimetableEntry, Constraint
-
+from django.contrib.auth.models import User
+from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation
 from ecs.core.forms.fields import DateTimeField
 
 
@@ -24,3 +23,6 @@ class BaseConstraintFormSet(BaseModelFormSet):
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
 
 UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=1, exclude = ('meeting', 'user'), can_delete=True)
+
+ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=True)
+    

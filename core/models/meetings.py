@@ -5,6 +5,7 @@ from django.db import models, transaction
 from django.db.models.signals import post_delete
 from django.contrib.auth.models import User
 
+from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 
@@ -221,7 +222,7 @@ class TimetableEntry(models.Model):
     timetable_index = models.IntegerField()
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
-    submission = models.ForeignKey('core.Submission', null=True)
+    submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
     
     class Meta:
         app_label = 'core'
@@ -273,6 +274,17 @@ class TimetableEntry(models.Model):
     @cached_property
     def end(self):
         return self.start + self.duration
+
+    @cached_property
+    def medical_categories(self):
+        if not self.submission:
+            return []
+        assigned_categories = set(MedicalCategory.objects.filter(users__meeting_participations__entry=self))
+        categories = list(MedicalCategory.objects.filter(submissionform__submission__timetable_entries=self))
+        for category in categories:
+            category.assigned = category in assigned_categories
+        return categories
+    
 
 def _timetable_entry_delete_post_delete(sender, **kwargs):
     entry = kwargs['instance']

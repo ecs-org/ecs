@@ -343,3 +343,9 @@ table.notif_meta th{
 	list-style: none;
 	margin-left: 0px;
 }
+#meeting_participation_editor .categories .missing{
+	color: #ff0000;
+}
+#meeting_participation_editor .categories .assigned{
+	color: #00ff00;
+}

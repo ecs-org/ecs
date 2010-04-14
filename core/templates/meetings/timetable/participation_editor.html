@@ -1,0 +1,34 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Teilnehmer für {{ meeting.start|date:'d.m.Y H:i' }}
+{% endblock %}
+
+{% block content %}
+<div id="meeting_participation_editor">
+<form action="" method="post" enctype="multipart/form-data" class="tabbed main">
+    
+    {% for entry in meeting %}
+        <div>
+            <h2>{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}: {{ entry.submission.project_title }}</h2>
+            Kategorien: <span class="categories">
+            {% for cat in entry.medical_categories %}
+                <span class="{% if cat.assigned %}assigned{% else %}missing{% endif %}">{{ cat }}</span>{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </span>
+            <ul>
+            {% for user in entry.users %}
+                <li>
+                    {{ user }} (Kategorien: <span class="categories">{% for cat in user.medical_categories.all %}{{ cat }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>)
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    <input type="submit" value="Submit" name="submit"/>    
+</form>
+</div>
+{% endblock %}

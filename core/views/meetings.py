@@ -58,6 +58,15 @@ def timetable_editor(request, meeting_pk=None):
     return render(request, 'meetings/timetable/editor.html', {
         'meeting': meeting,
     })
+    
+def participation_editor(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    #entries = meeting.timetable_entries.exclude(submission=None).select_related('submission')
+    if request.method == 'POST':
+        pass
+    return render(request, 'meetings/timetable/participation_editor.html', {
+        'meeting': meeting,
+    })
 
 
 def optimize_random(timetable, func):
