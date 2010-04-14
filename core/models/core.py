@@ -68,7 +68,7 @@ class NotificationAnswer(models.Model):
 
 class MedicalCategory(models.Model):
     EXPEDITED_REVIEW_CHOICES = [
-        ('IM', 'Innere Medizin'),
+        (u'IM', u'Innere Medizin'),
     ]
     expeditedreview = models.CharField(max_length=2, choices=EXPEDITED_REVIEW_CHOICES)
     name = models.CharField(max_length=60)
