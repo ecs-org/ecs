@@ -141,6 +141,13 @@ form ol li textarea {
 form ol li .mooeditable-container{
     left: 21em;
 }
+form ol li .mooeditable-ui-toolbar .toolbar-item,
+form ol li .mooeditable-ui-toolbar .toolbar-separator{
+	display: block;
+	float: left;
+	vertical-align: none;
+	margin-left: 0px;
+}
 
 form ol li > label {
   width: 20em;

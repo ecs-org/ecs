@@ -7,10 +7,11 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
-    /* indicate what's actually clickable */
-    jQuery(function($){
-        $('a[href=#]').css('text-decoration', 'line-through');
-    });
+  window.addEvent('domready', function(){
+      if(Browser.Engine.name != 'gecko' || Browser.Engine.version < 19){
+          $('browser_warning').show();
+      }
+  });
   </script>
 {% endblock %}
 
@@ -30,6 +31,10 @@
 
 <div class="wrapper">
   <h1>Ethikkommission Wien</h1>
+    <div id="browser_warning" style="display:none">
+        Diese Webanwednung ist zZt nur für Firefox 3.5/3.6 testet.
+        Bitte installieren Sie eine <a href="http://www.mozilla-europe.org/de/firefox/">aktuelle Firefox Version</a>.
+    </div>
     <form class="login_screen" method="post" action="{% url django.contrib.auth.views.login %}">
         <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
         <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
