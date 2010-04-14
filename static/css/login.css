@@ -1,14 +1,27 @@
 /* login */
 
+* html body { /*IE6 hack*/
+  padding: 0 !important; /*Set value to (0 WidthOfFrameDiv 0 0)*/
+  text-align: center;
+}
 #header {
   display: none;
 }
 #content {
+  position: absolute;
   right: 0 !important;
   top: 0 !important;
+  overflow: hidden;
+  height: 100% !important;
+  width: 100% !important;
 }
 #sidebar {
-  display: none;
+  position: relative;
+  display: none !important;
+  width: 0 !important;
+  height: 0px !important;
+  top: 0 !important;
+  left: 0 !important;
 }
 .innertube {
   float: none;
@@ -16,6 +29,7 @@
 .wrapper {
   margin: 150px auto;
   width: 300px;
+  text-align: left;
 }
 .wrapper h1 {
   background: url(../images/logo.png) no-repeat;
@@ -47,7 +61,7 @@
   font-size: 11pt;
   width: 250px;
 }
-.login_screen input[type=submit] {
+.login_screen input [type=submit] {
   width: 50px;
   float: right;
 }
