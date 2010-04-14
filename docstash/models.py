@@ -1,4 +1,5 @@
 import uuid, datetime
+import reversion
 from django.db import models
 from django.http import QueryDict
 from django.utils.functional import wraps
@@ -171,3 +172,7 @@ try:
             ], ["^django_extensions\.db\.fields\.json\.JSONField"])
 except ImportError:
     pass
+
+if not reversion.is_registered(DocStash):
+    reversion.register(DocStash) 
+    reversion.register(DocStashData) 
