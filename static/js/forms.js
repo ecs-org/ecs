@@ -157,7 +157,7 @@
             console.log(currentData);
             console.log(this.lastSave.data);
             */
-            if(!!force || (this.lastSave.data != currentData)){
+            if(force === true || (this.lastSave.data != currentData)){
                 this.lastSave.timestamp = new Date();
                 this.lastSave.data = currentData;
                 var request = new Request({
