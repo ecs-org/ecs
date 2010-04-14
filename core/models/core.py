@@ -78,7 +78,7 @@ class MedicalCategory(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
-        return self.expeditedreview + u' (' + self.get_expeditedreview_display() + u') - ' + self.name + u' (' + self.abbrev + u')'
+        return u'%s (%s) - %s (%s)' % (self.expeditedreview, self.get_expeditedreview_display(), self.name, self.abbrev)
 
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
