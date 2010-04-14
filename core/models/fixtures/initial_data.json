@@ -762,5 +762,115 @@
       "name": "Protokoll\u00e4nderung", 
       "form": "ecs.core.forms.NotificationForm"
     }
+  },
+  {
+    "pk": 1, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Pulmologie", 
+      "abbrev": "PU",
+      "users": []
+    }
+  },
+  {
+    "pk": 2, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Kardiologie",
+      "abbrev": "KA",
+      "users": []
+    }
+  },
+  {
+    "pk": 3, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Gastrologie",
+      "abbrev": "GA",
+      "users": []
+    }
+  },
+  {
+    "pk": 4, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Hepatologie",
+      "abbrev": "HE",
+      "users": []
+    }
+  },
+  {
+    "pk": 5, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Hämato-Onkologie",
+      "abbrev": "HÄ",
+      "users": []
+    }
+  },
+  {
+    "pk": 6, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Endokrinologie",
+      "abbrev": "EN",
+      "users": []
+    }
+  },
+  {
+    "pk": 7, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Intensivmedizin",
+      "abbrev": "IM",
+      "users": []
+    }
+  },
+  {
+    "pk": 8, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Infektionen",
+      "abbrev": "IF",
+      "users": []
+    }
+  },
+  {
+    "pk": 9, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Rheumatologie",
+      "abbrev": "RH",
+      "users": []
+    }
+  },
+  {
+    "pk": 10, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Nephrologie",
+      "abbrev": "NP",
+      "users": []
+    }
+  },
+  {
+    "pk": 11, 
+    "model": "core.MedicalCategory", 
+    "fields": {
+      "expeditedreview": "IM", 
+      "name": "Hypertonie",
+      "abbrev": "HY",
+      "users": []
+    }
   }
 ]
