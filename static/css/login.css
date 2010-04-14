@@ -65,3 +65,10 @@
   width: 50px;
   float: right;
 }
+
+#browser_warning{
+  border: 1px solid #ff0000;
+  background-color: #ffcccc;
+  padding: 20px;
+  margin-bottom: 10px;
+}
