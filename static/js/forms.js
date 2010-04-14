@@ -151,9 +151,13 @@
             }
         },
         autosave: function(force){
-            //console.log('start autosave ..');
             var currentData = this.form.toQueryString();
-            if(!!force || this.lastSave.data != currentData){
+            /*
+            console.log('start autosave ..', arguments);
+            console.log(currentData);
+            console.log(this.lastSave.data);
+            */
+            if(!!force || (this.lastSave.data != currentData)){
                 this.lastSave.timestamp = new Date();
                 this.lastSave.data = currentData;
                 var request = new Request({
@@ -363,7 +367,7 @@
             if(mainForm){
                 var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                     tabController: tabController,
-                    autosave: 60
+                    autosave: 10
                 });
             }
         }

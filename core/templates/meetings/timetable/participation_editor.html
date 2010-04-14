@@ -23,9 +23,11 @@
             {% for user in entry.users %}
                 <li>
                     {{ user }} (Kategorien: <span class="categories">{% for cat in user.medical_categories.all %}{{ cat }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>)
+                    <a href="">remove</a>
                 </li>
             {% endfor %}
             </ul>
+            <a href="add">add</a>
         </div>
     {% endfor %}
     <input type="submit" value="Submit" name="submit"/>    
