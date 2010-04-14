@@ -62,10 +62,17 @@ class DocumentForm(forms.ModelForm):
         if not self.cleaned_data.get('original_file_name') and file:
             self.cleaned_data['original_file_name'] = file.name
         return self.cleaned_data
+        
+    def save(self, commit=True):
+        obj = super(DocumentForm, self).save(commit=False)
+        obj.original_file_name = self.cleaned_data.get('original_file_name')
+        if commit:
+            obj.save()
+        return obj
     
     class Meta:
         model = Document
-        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted')
+        exclude = ('uuid_document', 'uuid_document_revision', 'mimetype', 'deleted', 'original_file_name')
 
 class BaseDocumentFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
