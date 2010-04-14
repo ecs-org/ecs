@@ -152,11 +152,7 @@
         },
         autosave: function(force){
             var currentData = this.form.toQueryString();
-            /*
             console.log('start autosave ..', arguments);
-            console.log(currentData);
-            console.log(this.lastSave.data);
-            */
             if(force === true || (this.lastSave.data != currentData)){
                 this.lastSave.timestamp = new Date();
                 this.lastSave.data = currentData;
@@ -325,10 +321,14 @@
     
     ecs.setupFormFieldHelpers = function(context){
         context = $(context || document);
+        $$('.DateField > input').each(function(input){
+            (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
+        });
         var datepicker = new DatePicker('.DateField > input', {
             format: 'd.m.Y',
             inputOutputFormat: 'd.m.Y',
-            allowEmpty: true
+            allowEmpty: true,
+            toggleElements: '.datepicker_toggler'
         });
         context.getElements('li').each(function(field){
             var notes = [];
