@@ -27,6 +27,8 @@ urlpatterns = patterns(
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
     
+    url(r'^users/by_medical_category/$', 'ecs.core.views.users_by_medical_category'),
+    
     url(r'^meeting/new/$', 'ecs.core.views.create_meeting'),
     #url(r'^meeting/(?P<meeting_pk>\d+)/$', 'ecs.core.views.view_meeting'),
     url(r'^meetings/$', 'ecs.core.views.meeting_list'),
@@ -37,6 +39,8 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'ecs.core.views.move_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/participations/(?P<category_pk>\d+)/add/$', 'ecs.core.views.add_entry_participator'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/participation/(?P<participation_pk>\d+)/delete/$', 'ecs.core.views.remove_participation'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'ecs.core.views.meetings.edit_user_constraints'),
 
 )

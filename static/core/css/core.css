@@ -362,14 +362,46 @@ table.notif_meta th{
 	list-style: none;
 	margin-left: 0px;
 }
-
-#meeting_participation_editor .categories .missing{
-	color: #ff0000;
-}
-#meeting_participation_editor .categories .assigned{
-	color: #00ff00;
+#meeting_participation_editor form{
+	float: none;
+	display: inline;
 }
 
 #meeting_participation_editor .entry{
 	clear: both;
+}
+
+#meeting_participation_editor .entry h2{
+	margin: 0px;
+}
+
+#meeting_participation_editor .entry a.remove{
+  background: url(/static/core/images/remove.png) no-repeat;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 3px;
+  text-indent: -200px;
+  overflow: hidden;
+  display: inline-block;
+}
+#meeting_participation_editor .entry a.add{
+  background: url(/static/core/images/add.png) no-repeat;
+  width: 16px;
+  height: 16px;
+  text-indent: -200px;
+  overflow: hidden;
+  display: inline-block;
+}
+#content #meeting_participation_editor .entry a.remove:hover,
+#content #meeting_participation_editor .entry a.add:hover{
+  text-decoration: none;
+  border-bottom: 0px;
+}
+
+#meeting_participation_editor .entry .user_list > span{
+	margin-right: 0.5em;
+	padding: 2px;
+	border: 1px solid #ccccff;
+	background-color: #eeeeff;
 }

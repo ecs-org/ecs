@@ -242,10 +242,16 @@ class TimetableEntry(models.Model):
         
     @cached_property
     def users(self):
-        return User.objects.filter(meeting_participations__entry=self).order_by('username')
+        return User.objects.filter(meeting_participations__entry=self).order_by('username').distinct()
         
-    def add_user(self, user):
-        Participation.objects.create(user=user, entry=self)
+    def add_user(self, user, medical_category=None):
+        Participation.objects.get_or_create(user=user, entry=self, medical_category=medical_category)
+        
+    def remove_user(self, user, medical_category=False):
+        participations = Participation.objects.filter(user=user, entry=self)
+        if medical_category is not False:
+            participations = participations.filter(medical_category=medical_category)
+        participations.delete()
     
     def _get_index(self):
         return self.timetable_index
@@ -278,12 +284,19 @@ class TimetableEntry(models.Model):
     @cached_property
     def medical_categories(self):
         if not self.submission:
-            return []
-        assigned_categories = set(MedicalCategory.objects.filter(users__meeting_participations__entry=self))
-        categories = list(MedicalCategory.objects.filter(submissionform__submission__timetable_entries=self))
-        for category in categories:
-            category.assigned = category in assigned_categories
-        return categories
+            return MedicalCategory.objects.none()
+        return MedicalCategory.objects.filter(submissionform__submission__timetable_entries=self)
+        
+    @cached_property
+    def users_by_medical_category(self):
+        users_by_category = {}
+        for cat in self.medical_categories:
+            users_by_category.setdefault(cat, [])
+        for p in self.participations.select_related('user', 'medical_category'):
+            users_by_category.setdefault(p.medical_category, []).append(p.user)
+            p.user.participation = p
+        return users_by_category
+
     
 
 def _timetable_entry_delete_post_delete(sender, **kwargs):
@@ -295,6 +308,7 @@ post_delete.connect(_timetable_entry_delete_post_delete, sender=TimetableEntry)
 class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')
     user = models.ForeignKey(User, related_name='meeting_participations')
+    medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
     
     class Meta:
         app_label = 'core'
