@@ -111,7 +111,7 @@ class BaseInvestigatorFormSet(BaseModelFormSet):
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
 
 InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
-                                           fields = ('organisation', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified', 'subject_count',)) 
+                                           fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
 
 
 class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):
