@@ -21,6 +21,12 @@ SUBMISSION_FORM_TABS = (
             'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
     ]),
+    (u'Antragsteller', [
+        (u'Antragsteller', [
+            'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
+            'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
+        ]),
+    ]),
     (u'Sponsor', [
         (u'Sponsor', [
             'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
@@ -78,12 +84,6 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'Unterlagen', []),
-    (u'Antragsteller', [
-        (u'Antragsteller', [
-            'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
-            'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
-        ]),
-    ]),
     (u'Zentrum', []),
     (u'Review', [
         (u'Review', [
