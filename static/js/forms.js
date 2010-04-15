@@ -224,10 +224,6 @@
             else{
                 form.grab(removeLink);
             }
-            if(this.options.canDelete){
-                var deleteLi = $(this.options.idPrefix + this.options.prefix + '-' + index + '-DELETE').getParent('li');
-                deleteLi.setStyle('display', 'none');
-            }
             if(added){
                 ecs.setupFormFieldHelpers(form);
             }
@@ -256,7 +252,15 @@
             if(this.options.canDelete){
                 var idField = $(this.options.idPrefix + this.options.prefix + '-' + index + '-id');
                 if(idField && idField.value){
-                    $(this.options.idPrefix + this.options.prefix + '-' + index + '-DELETE').checked = true;
+                    var delName = this.options.prefix + '-' + index + '-DELETE';
+                    var checkbox = new Element('input', {type: 'checkbox', style: 'display:none', name: delName, id: this.options.idPrefix + delName, checked: 'checked'});
+                    console.log(f);
+                    if(this.isTable){
+                        f.getFirst('td').grab(checkbox);
+                    }
+                    else{
+                        f.grab(checkbox);
+                    }
                     f.setStyle('display', 'none');
                     return;
                 }

@@ -5,7 +5,7 @@
     <tr>
         <th></th>
         {% for field in formset.forms.0 %}
-            {% if not field.is_hidden %}
+            {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                 {% with field|get_field_info as field_info %}
                 <th class="label">
                     {{ field_info.label|default:field.label }}
@@ -32,7 +32,7 @@
             {% endfor %}
         </td>
         {% for field in form %}
-            {% if not field.is_hidden %}
+            {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                 {% with field|get_field_info as field_info %}
                     <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
                         {{ field }}
