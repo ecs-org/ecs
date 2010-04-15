@@ -54,20 +54,6 @@ def move_timetable_entry(request, meeting_pk=None):
     meeting[from_index].index = to_index
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
-def add_entry_participator(request, meeting_pk=None, entry_pk=None, category_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    entry = get_object_or_404(TimetableEntry, pk=entry_pk)
-    category = get_object_or_404(MedicalCategory, pk=category_pk)
-    user = User.objects.get(pk=request.POST.get('user'))
-    entry.add_user(user, category)
-    return HttpResponseRedirect(reverse('ecs.core.views.participation_editor', kwargs={'meeting_pk': meeting.pk}))
-    
-def remove_participation(request, meeting_pk=None, participation_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    participation = get_object_or_404(Participation, pk=participation_pk)
-    participation.delete()
-    return HttpResponseRedirect(reverse('ecs.core.views.participation_editor', kwargs={'meeting_pk': meeting.pk}))
-    
 def users_by_medical_category(request):
     category = get_object_or_404(MedicalCategory, pk=request.POST.get('category'))
     users = list(User.objects.filter(medical_categories=category).values('pk', 'username'))
