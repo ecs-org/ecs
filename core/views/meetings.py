@@ -1,10 +1,11 @@
 import datetime, random, itertools
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.utils import simplejson
 from django.contrib.auth.models import User
 from ecs.core.views.utils import render
-from ecs.core.models import Meeting, Participation, TimetableEntry, Submission
+from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet
 from ecs.utils.timedelta import parse_timedelta
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
@@ -52,6 +53,25 @@ def move_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     meeting[from_index].index = to_index
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+def add_entry_participator(request, meeting_pk=None, entry_pk=None, category_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    entry = get_object_or_404(TimetableEntry, pk=entry_pk)
+    category = get_object_or_404(MedicalCategory, pk=category_pk)
+    user = User.objects.get(pk=request.POST.get('user'))
+    entry.add_user(user, category)
+    return HttpResponseRedirect(reverse('ecs.core.views.participation_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+def remove_participation(request, meeting_pk=None, participation_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    participation = get_object_or_404(Participation, pk=participation_pk)
+    participation.delete()
+    return HttpResponseRedirect(reverse('ecs.core.views.participation_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+def users_by_medical_category(request):
+    category = get_object_or_404(MedicalCategory, pk=request.POST.get('category'))
+    users = list(User.objects.filter(medical_categories=category).values('pk', 'username'))
+    return HttpResponse(simplejson.dumps(users), content_type='text/json')
 
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -61,11 +81,20 @@ def timetable_editor(request, meeting_pk=None):
     
 def participation_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    #entries = meeting.timetable_entries.exclude(submission=None).select_related('submission')
+    users = User.objects.all()
+    entries = meeting.timetable_entries.exclude(submission=None).select_related('submission')
     if request.method == 'POST':
-        pass
+        for entry in entries:
+            for cat in entry.medical_categories:
+                participations = Participation.objects.filter(entry=entry, medical_category=cat)
+                user_pks = set(map(int, request.POST.getlist('users_%s_%s' % (entry.pk, cat.pk))))
+                participations.exclude(user__pk__in=user_pks).delete()
+                for user in User.objects.filter(pk__in=user_pks).exclude(meeting_participations__in=participations.values('pk')):
+                    entry.add_user(user, cat)
+            
     return render(request, 'meetings/timetable/participation_editor.html', {
         'meeting': meeting,
+        'categories': MedicalCategory.objects.all(),
     })
 
 
