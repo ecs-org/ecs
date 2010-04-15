@@ -13,7 +13,6 @@ SUBMISSION_FORM_TABS = (
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_education_context', 'project_type_misc',
         ]),
-        (u'Zentren im Ausland', []),
     ]),
     (u'Prüfungsteilnehmer', [
         (u'Prüfungsteilnehmer', [
@@ -84,6 +83,9 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (u'Unterlagen', []),
+    (u'Auslandszentren', [
+        (u'Zentren im Ausland', []),
+    ]),
     (u'Zentrum', []),
     (u'Review', [
         (u'Review', [
