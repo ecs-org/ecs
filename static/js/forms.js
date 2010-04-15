@@ -182,7 +182,9 @@
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
+            addButtonText: 'Hinzufügen',
             removeButtonClass: 'delete_row',
+            removeButtonText: 'Löschen',
             canDelete: false
         },
         initialize: function(container, options){
@@ -194,7 +196,7 @@
             ecs.clearFormFields(this.template);
             this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
             this.addButton = new Element('a', {
-                html: 'add',
+                html: this.options.addButtonText,
                 'class': this.options.addButtonClass,
                 events: {
                     click: this.add.bind(this)
@@ -212,7 +214,7 @@
         },
         setupForm: function(form, index, added){
             var removeLink = new Element('a', {
-                html: 'remove',
+                html: this.options.removeButtonText,
                 'class': this.options.removeButtonClass,
                 events: {
                     click: this.onRemoveButtonClick.bind(this)

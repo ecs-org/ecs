@@ -23,7 +23,9 @@ class BaseConstraintFormSet(BaseModelFormSet):
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
         
 class ConstraintForm(forms.ModelForm):
-    weight = forms.ChoiceField(choices=((0.5, u'ungünstig'), (1.0, u'unmöglich')))
+    start_time = forms.TimeField(label=u'Von (Uhrzeit)', required=True)
+    end_time = forms.TimeField(label=u'Bis (Uhrzeit)', required=True)
+    weight = forms.ChoiceField(label=u'Gewichtung', choices=((0.5, u'ungünstig'), (1.0, u'unmöglich')))
 
     class Meta:
         model = Constraint

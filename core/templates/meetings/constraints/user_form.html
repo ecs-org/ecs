@@ -4,17 +4,20 @@
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
 {% block headertitle %}
-    Constraints for user {{ participant }} at meeting {{ meeting.start }} {{ meeting.title }}
+    Einschränken für {{ participant }} für die Sitzung am {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
 {% endblock %}
 
 {% block content %}
 <div id="meeting_constraint_editor">
-<form action="" method="post" enctype="multipart/form-data">
-    {% with constraint_formset as formset %}
-        {% include "forms/tables/inline_formset.html" %}
-    {% endwith %}
-    <input type="submit" value="Submit" name="submit"/>
-</form>
+    <div>
+        <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan für dieses Meeting</a>
+    </div>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% with constraint_formset as formset %}
+            {% include "forms/tables/inline_formset.html" %}
+        {% endwith %}
+        <span class="button"><input type="submit" value="Submit" name="submit"/></span>
+    </form>
 </div>
 {% endblock %}
 

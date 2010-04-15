@@ -372,6 +372,10 @@ table.notif_meta th{
 	position: relative;
 }
 
+#meeting_editor .entry.break{
+	background-color: #ffffcc;
+}
+
 #meeting_editor .entry a.remove{
 	position: absolute;
 	top: 0px;

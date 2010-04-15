@@ -26,19 +26,22 @@
     <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ul id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" class="entry">
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}">
             <div class="dragHandle">#{{ entry.pk }} <span style="color:#ffffff">DRAG ME</span></div>
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
+                {% if entry.is_break %}Pause{% endif %}
             </h3>
             <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
             <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
                 <input type="text" value="{{ entry.duration }}" name="duration" class="duration"/>
             </form>
+            {% if not entry.is_break %}
             <div>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
             </div>
+            {% endif %}
         </li>
     {% endfor %}
     </ul>
