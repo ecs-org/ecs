@@ -73,10 +73,10 @@
 {% block jsbottom %}
 {{ block.super }}
 <script type="text/javascript">
-function getSortableIndex(el){
-    return $('timetable').getChildren().indexOf(el);
-}
 window.addEvent('domready', function(){
+    function getSortableIndex(el){
+        return $('timetable').getChildren().indexOf(el);
+    }
     var dndInfo = {
         startIndex: null
     };
@@ -95,9 +95,6 @@ window.addEvent('domready', function(){
         onStart: function(el, clone){
             clone.setStyle('z-index', 100);
             dndInfo.startIndex = getSortableIndex(clone);
-        },
-        onSort: function(el){
-            //console.log(el.id.substring(6));
         },
         onComplete: function(el){
             var toIndex = getSortableIndex(el);
