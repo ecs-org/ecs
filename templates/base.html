@@ -5,6 +5,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 {% endblock %}
 
+{% load version_tag %} {% comment %} Loads ECS-Version Tag into Template {% endcomment %}
+
 <html>
     <head>
 
@@ -13,7 +15,7 @@
         {% block htmlmeta %} {# Additional META tags should follow here #}
         {% endblock %}
         
-        <title>{% block htmltitle %}Title{% endblock %}</title>
+        <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
     
         
         {% block htmlcss %} {# additional css, please block.super it  #}    
@@ -73,11 +75,12 @@
                 
     
                 <div id="logo">
+
                     
                 {% block logo %}
-                    
-                <img src="{{ MEDIA_URL }}/images/logo.png" alt="Meduni Wien"/>
                 
+                <img src="{{ MEDIA_URL }}/images/logo.png" alt="EC- Meduni Wien"/>
+                <small>{% current_version %}</small>
                 {% endblock %}
                     
                 </div>

@@ -43,6 +43,12 @@ else:
     except ImportError:
         pass
 
+# get version of the Programm from version.py if exists (gets updated on deployment)
+try:
+    from version import *
+except ImportError:
+    ECS_VERSION = 'unknown'
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -88,7 +94,16 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-# wuxxin: removed context processors list, because this is less than the default (which is what we need)
+# wuxxin: this should give us user and request in the context template but somebody should review it
+#TEMPLATE_CONTEXT_PROCESSORS = (
+#    "django.contrib.auth.context_processors.auth",
+#    "django.core.context_processors.debug",
+#    "django.core.context_processors.i18n",
+#    "django.core.context_processors.media",
+#    "django.contrib.messages.context_processors.messages",
+#    "django.core.context_processors.request",
+#    "django.contrib.auth.context_processors.user",
+#    )
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -148,4 +163,5 @@ FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 # use django-nose as default test runner
 TEST_RUNNER = 'django_nose.run_tests'
 
+# FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]

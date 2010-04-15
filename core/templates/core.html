@@ -6,12 +6,6 @@
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
 {% endblock %}
 
-{% block htmltitle %}Ethik-Kommission der Medizinischen Universit&auml;t Wien{% endblock %}
-
-{% block logo %}
-  <img src="{{ MEDIA_URL }}images/logo.png" alt="ECS"/>
-{% endblock %}
-
 {% block account %} 
   <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
   {{ user.get_full_name }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
@@ -29,18 +23,18 @@
         
 {% block usermenu %}
   <ul>
-    <li><a href="{% url ecs.core.views.index %}">&Uuml;bersicht</a></li>
+    <li><a href="{% url ecs.core.views.index %}">Übersicht</a></li>
     <li>
       <span class="togglers">Studien</span>
       <ul class="elements">
-	<li><a href="{% url ecs.core.views.submission_form_list %}">&Uuml;bersicht</a></li>
+	<li><a href="{% url ecs.core.views.submission_form_list %}">Übersicht</a></li>
         <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
       </ul>
     </li>
     <li>
       <span class="togglers">Studien Meldungen</span>
       <ul class="elements">
-	<li><a href="{% url ecs.core.views.notification_list %}">&Uuml;bersicht</a></li>
+	<li><a href="{% url ecs.core.views.notification_list %}">Übersicht</a></li>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
@@ -53,7 +47,7 @@
     </li>
     <li><a href="#">Konversationen</a></li>
     <li><a href="#">zuletzt bearbeitet</a></li>
-    <li><a href="#">vorgemerkte T&auml;tigkeiten</a></li>
+    <li><a href="#">vorgemerkte Tätigkeiten</a></li>
   </ul>
 {% endblock %}
 
