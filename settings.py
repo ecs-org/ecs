@@ -2,8 +2,6 @@
 
 import os.path, platform
 
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 PROJECT_DIR = os.path.dirname(__file__)
 
 ADMINS = (
@@ -18,6 +16,10 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+# Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
+# (because we want 404 and 500 custom errors and log the error)
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 # use postgres if on host ecsdev.ep3.at depending username
 if platform.node() == "ecsdev.ep3.at":
@@ -32,6 +34,9 @@ if platform.node() == "ecsdev.ep3.at":
     DATABASE_NAME = user
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
+    if user == "testecs":
+        DEBUG = False
+        TEMPLATE_DEBUG = False
 else:
     try:
         from local_settings import *
@@ -92,7 +97,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'ecs.utils.forceauth.ForceAuth',
-)   
+    )   
+# middleware:     'djangodblog.middleware.DBLogMiddleware',
 
 # debug toolbar config:
 # middleware on bottom:
@@ -110,8 +116,6 @@ TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
-
-#    'django.contrib.databrowse',
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -131,6 +135,12 @@ INSTALLED_APPS = (
     'django_nose',
     'reversion',
 )
+
+# installed_apps     'djangodblog',
+
+# django-db-log
+# temporary for testing, cat 404 defaults to false
+DBLOG_CATCH_404_ERRORS = True
 
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))

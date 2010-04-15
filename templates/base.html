@@ -29,7 +29,7 @@
     </head>
 
     <body>
-        {% include 'feedback.html' %}
+        {% comment %} include 'feedback.html' {% endcomment %}
 
         <div id="header">
                         
@@ -58,7 +58,6 @@
             <div id="headernav">
             
             {% block headernav %}
-               headernav
             {% endblock %}
               
             </div>
@@ -86,10 +85,7 @@
                 <div id="account">
                 
                 {% block account %}
-                
-                    <p>eingeloggt als Max Mustermann</p>
-                    <p>Profil | Logout</p>
-                    
+                                    
                 {% endblock %}
                     
                 </div>
@@ -98,7 +94,6 @@
                 
                 {% block usertoolbar %}
                 
-                    Toolbar 
                     
                 {% endblock %}
                     
@@ -137,7 +132,7 @@
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
-                 {% include 'feedback-jsbottom.html' %}
+                 {% comment %} include 'feedback-jsbottom.html'{% endcomment  %}
             {% endblock %}
         </div>
         
