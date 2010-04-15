@@ -16,8 +16,8 @@
     {% for meeting in meetings %}
         <li>
             {{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}
-                (<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">timetable</a>
-                | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">participations</a>)
+                (<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
+                | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>)
         </li>
     {% endfor %}
 </ul>

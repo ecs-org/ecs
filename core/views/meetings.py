@@ -26,10 +26,14 @@ def meeting_list(request):
 
 def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    entry = meeting.add_entry(duration=datetime.timedelta(minutes=15), submission=Submission.objects.order_by('?')[:1].get())
-    import random
-    for user in User.objects.order_by('?')[:random.randint(1, 4)]:
-        Participation.objects.create(entry=entry, user=user)
+    is_break = request.GET.get('break', False)
+    if is_break:
+        entry = meeting.add_break(duration=datetime.timedelta(minutes=30))
+    else:
+        entry = meeting.add_entry(duration=datetime.timedelta(minutes=15), submission=Submission.objects.order_by('?')[:1].get())
+        import random
+        for user in User.objects.order_by('?')[:random.randint(1, 4)]:
+            Participation.objects.create(entry=entry, user=user)
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):

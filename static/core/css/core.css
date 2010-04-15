@@ -362,6 +362,49 @@ table.notif_meta th{
 	list-style: none;
 	margin-left: 0px;
 }
+
+#meeting_editor .entry{
+	border: 1px solid #eeeeee;
+	margin: 3px;
+	display: block;
+	height:55px;
+	background-color:#ffffff;
+	position: relative;
+}
+
+#meeting_editor .entry a.remove{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	text-indent: -200px;
+	overflow: hidden;
+	background: url(/static/core/images/remove.png) no-repeat;
+}
+#meeting_editor .entry .dragHandle{
+	float:left;
+	width:50px;
+	background-color:#cccccc;
+	height:100%;
+}
+
+#meeting_editor .entry input.duration{
+	width: 4em;
+}
+
+#meeting_editor .entry h3{
+	font-size: 1em;
+}
+
+#meeting_editor #timetable{
+	list-style: none;
+	width:550px;
+	font-size:13px;
+	margin: 0px;
+}
+
 #meeting_participation_editor form{
 	float: none;
 	display: inline;

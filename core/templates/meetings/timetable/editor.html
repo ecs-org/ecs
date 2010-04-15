@@ -10,34 +10,33 @@
 {% block content %}
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
-    <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a> | <a href="">Pause hinzufügen</a>
-    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">shuffle</a>
-    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a>
-    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">genetic algorithm</a>
+    <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
+    | <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}?break=yes">Pause hinzufügen</a>
+    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
+    <!--| <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> -->
+    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
     <div class="waiting_time">
-    Waiting time: 
+    Wartezeit: 
         sum={{ meeting.metrics.waiting_time_total }},
         avg={{ meeting.metrics.waiting_time_avg }}, 
         max={{ meeting.metrics.waiting_time_max }}, 
         min={{ meeting.metrics.waiting_time_min }},
         var={{ meeting.metrics.waiting_time_variance }},
     </div>
-    <div>Constraint Violations: {{ meeting.metrics.constraint_violation_total }}</div>
-    <ul id="timetable" style="list-style: none;width:600px; font-size:13px">
+    <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
+    <ul id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" style="border: 1px solid #eeeeee; margin: 3px; display: block;height:55px;background-color:#ffffff">
-            <div class="dragHandle" style="float:left;width:50px;background-color:#cccccc;height:100%">#{{ entry.pk }} <span style="color:#ffffff">DRAG ME</span></div>
-            <h3 style="font-size:1em">
+        <li id="entry_{{ entry.pk }}" class="entry">
+            <div class="dragHandle">#{{ entry.pk }} <span style="color:#ffffff">DRAG ME</span></div>
+            <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
             </h3>
-            <a style="float:right" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
-            <div style="height:20px">Dauer:
-                <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
-                    <input type="text" value="{{ entry.duration }}" name="duration"/>
-                </form>
-            </div>
-            <div style="font-size:12px">Teilnehmer: 
+            <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
+            <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                <input type="text" value="{{ entry.duration }}" name="duration" class="duration"/>
+            </form>
+            <div>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
             </div>
         </li>
@@ -51,7 +50,7 @@
                     <div class="info">
                     {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
-                            <div class="waiting_time">Waiting Time: {{ waiting_time }}</div>
+                            <div class="waiting_time">Wartezeit: {{ waiting_time }}</div>
                         {% endif %}
                     {% endwith %}
                     {% if user.constraints %}
@@ -61,7 +60,7 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="{% url ecs.core.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Edit Constraints</a>
+                    <a href="{% url ecs.core.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
                     </div>
                 </li>
             {% endfor %}
