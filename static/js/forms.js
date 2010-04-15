@@ -190,29 +190,40 @@
             this.setOptions(options);
             this.forms = container.getElements(this.options.formSelector);
             this.template = this.forms[0].clone(true, true);
+            this.isTable = this.container.tagName.toUpperCase() == 'TABLE';
             ecs.clearFormFields(this.template);
             this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
-            this.container.grab(this.addButton = new Element('a', {
+            this.addButton = new Element('a', {
                 html: 'add',
                 'class': this.options.addButtonClass,
                 events: {
                     click: this.add.bind(this)
                 }
-            }));
+            });
+            if(this.isTable){
+                this.addButton.inject(container, 'after');
+            }
+            else{
+                this.container.grab(this.addButton);
+            }
             this.forms.each(function(form, index){
                 this.setupForm(form, index);
             }, this);
         },
         setupForm: function(form, index, added){
-            form.grab(new Element('a', {
+            var removeLink = new Element('a', {
                 html: 'remove',
                 'class': this.options.removeButtonClass,
                 events: {
-                    click: (function(){
-                        this.remove(index);
-                    }).bind(this)
+                    click: this.onRemoveButtonClick.bind(this)
                 }
-            }));
+            });
+            if(this.isTable){
+                form.getElement('td').grab(removeLink);
+            }
+            else{
+                form.grab(removeLink);
+            }
             if(this.options.canDelete){
                 var deleteLi = $(this.options.idPrefix + this.options.prefix + '-' + index + '-DELETE').getParent('li');
                 deleteLi.setStyle('display', 'none');
@@ -235,6 +246,10 @@
             form.getElements('label').each(function(label){
                 _update(label, 'for');
             });
+        },
+        onRemoveButtonClick: function(e){
+            var form = e.target.getParent(this.options.formSelector);
+            this.remove(this.forms.indexOf(form));
         },
         remove: function(index){
             var f = this.forms[index];
@@ -264,7 +279,12 @@
             this.setupForm(newForm, index, true);
             this.forms.push(newForm);
             this.updateTotalForms(+1);
-            newForm.inject(this.addButton, 'before');
+            if(this.isTable){
+                newForm.inject(this.container.getElement('tbody'));
+            }
+            else{
+                newForm.inject(this.addButton, 'before');
+            }
         }
     });
     
@@ -322,7 +342,7 @@
     };
     
     ecs.setupFormFieldHelpers = function(context){
-        context = $(context || document);
+        context = $(context || document.body);
         $$('.DateField > input').each(function(input){
             (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
         });
@@ -332,9 +352,16 @@
             allowEmpty: true,
             toggleElements: '.datepicker_toggler'
         });
-        context.getElements('li').each(function(field){
+        context.getElements('li,th.label').each(function(field){
             var notes = [];
-            var input = field.getFirst('input[type=text]');
+            var input = null;
+            if(field.tagName == 'TH'){
+                var index = field.getParent('tr').getChildren('th').indexOf(field);
+                input = field.getParent('table').getElement('tbody > tr').getChildren('td')[index].getFirst('input[type=text]');
+            }
+            else{
+                input = field.getFirst('input[type=text]');
+            }
             if(field.hasClass('required')){
                 notes.push('required');
             }
@@ -350,15 +377,16 @@
                     'html': notes.join(', ')
                 }));
             }
-            field.getChildren('input,textarea,select').each(function(input){
-                input.addEvent('focus', function(){
-                    field.addClass('focus');
-                });
-                input.addEvent('blur', function(){
-                    field.removeClass('focus');
-                });
+        });
+        context.getChildren('input[type=text],input[type=checkbox],textarea,select').each(function(input){
+            input.addEvent('focus', function(){
+                field.addClass('focus');
+            });
+            input.addEvent('blur', function(){
+                field.removeClass('focus');
             });
         });
+
     };
     
     window.addEvent('domready', function(){

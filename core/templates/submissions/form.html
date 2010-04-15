@@ -35,7 +35,7 @@
                         <div class="field">
                             <h3>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</h3>
                             {% with nontesteduseddrug_formset as formset %}
-                                {% include "forms/inline_formset.html" %}
+                                {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
                         </div>
                     {% endifequal %}
@@ -101,7 +101,7 @@
                       <div class="field">
                         <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
                           {% with investigatoremployee_formset as formset %}
-                          {% include "forms/inline_formset.html" %}
+                            {% include "forms/tables/inline_formset.html" %}
                           {% endwith %}
                       </div>
                     </div>

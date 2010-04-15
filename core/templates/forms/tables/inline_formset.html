@@ -1,0 +1,51 @@
+{% load core %}
+{{ formset.management_form }}
+<table id="{{ formset.prefix }}_formset" class="inline_formset">
+    <thead>
+    <tr>
+        <th></th>
+        {% for field in formset.forms.0 %}
+            {% if not field.is_hidden %}
+                {% with field|get_field_info as field_info %}
+                <th class="label">
+                    {{ field_info.label|default:field.label }}
+                    {% if field_info.number %}
+                        <span class="paperform_number">{{ field_info.number }}</span>
+                    {% endif %}
+                    {% if field_info.help_text %}
+                    <span class="help_text">
+                        {{ field_info.help_text }}
+                    </span>
+                    {% endif %}
+                </th>
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for form in formset.forms %}
+    <tr class="form">
+        <td>
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+        </td>
+        {% for field in form %}
+            {% if not field.is_hidden %}
+                {% with field|get_field_info as field_info %}
+                    <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
+                        {{ field }}
+                        {% if field.errors %}
+                        <span class="errors">
+                            {{ field.errors }}
+                        </span>
+                        {% endif %}
+                    </td>
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor%}
+    </tbody>
+</table>

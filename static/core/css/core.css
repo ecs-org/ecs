@@ -158,6 +158,10 @@ form ol li > label {
 form ol li > label:after {
   content: ":";
 }
+form th.label{
+	text-align: left;
+}
+
 form ol li > .errors {
   margin-left: 21em;
 }
@@ -189,10 +193,16 @@ form ol li .paperform_number:after {
   content: "]";
 }
 
-form ol li .notes {
-  float: right;
+form .notes{
   font-size: 0.9em;
   color: #666666;
+  font-weight: normal
+}
+from ol li .notes{
+  float: right;
+}
+form th.label .notes{
+  display: block;
 }
 
 form ol li.focus {
@@ -203,17 +213,19 @@ form ol li.focus {
     padding-top: 20px;
 }
 .inline_formset .form a.delete_row {
-  display: block;
-  height: 20px;
-  position: absolute;
-  top: 0px;
-  left: 0px;   
   background: url(/static/core/images/remove.png) no-repeat;
   background-position: 0 5px;
   padding: 5px 0 5px 20px;
   margin-left: 10px;
 }
-.inline_formset a.add_row {
+div.inline_formset .form a.delete_row{
+    display: block;
+    height: 20px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+form a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
   padding-left: 20px;
   margin-left: 10px;
@@ -350,9 +362,14 @@ table.notif_meta th{
 	list-style: none;
 	margin-left: 0px;
 }
+
 #meeting_participation_editor .categories .missing{
 	color: #ff0000;
 }
 #meeting_participation_editor .categories .assigned{
 	color: #00ff00;
+}
+
+#meeting_participation_editor .entry{
+	clear: both;
 }
