@@ -205,13 +205,14 @@ def view_submission_form(request, submission_form_pk=None):
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     html = render(request, 'submissions/xhtml2pdf/view.html', {
-        'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-        'submission_form': submission_form,
-        'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-    })
-    pdf = xhtml2pdf(html.encode('utf-8'), webpage=True)
+            'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
+            'submission_form': submission_form,
+            'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
+            }).content
+    pdf = xhtml2pdf(html, webpage=True)
+    assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
+    response['Content-Disposition'] = 'attachment;filename=submission_%s.pdf' % submission_form_pk
     return response
 
 

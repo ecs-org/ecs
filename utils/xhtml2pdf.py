@@ -20,4 +20,5 @@ def xhtml2pdf(html, **options):
     # FIXME: add error handling / sanitize options
     popen = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     result, stderr = popen.communicate(html)
-    return result
+    open("/tmp/xhtml2pdf.log", "w").write(stderr)
+    return result 

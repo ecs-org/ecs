@@ -7,7 +7,7 @@ def render(request, template, context):
     if not isinstance(template, Template):
         template = loader.get_template(template)
     return HttpResponse(template.render(RequestContext(request, context)))
-    
+
 def redirect_to_next_url(request, default_url=None):
     next = request.REQUEST.get('next')
     if not next or '//' in next:
