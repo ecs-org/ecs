@@ -22,7 +22,6 @@
             <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/base.css" />
             <link rel="stylesheet" href="{{ MEDIA_URL}}css/datepicker.css" media="screen"/>
             <link rel="stylesheet" href="{{ MEDIA_URL}}css/Roar.css" media="screen"/>
-            <link rel="stylesheet" href="{{ MEDIA_URL}}feedback/css/feedback.css" media="screen"/>
         {% endblock %} 
         
         {% block jshead %} {# enqueue javasript, please block.super it #}
@@ -31,8 +30,6 @@
     </head>
 
     <body>
-        {% comment %} include 'feedback.html' {% endcomment %}
-
         <div id="header">
                         
         {% block header %}
@@ -150,7 +147,6 @@
                     }
                  }
                  </script>
-                 {% comment %} include 'feedback-jsbottom.html'{% endcomment  %}
             {% endblock %}
         </div>
         
