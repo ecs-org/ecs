@@ -728,15 +728,6 @@
     }
   }, 
   {
-    "pk": 5, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "model": "ecs.core.models.BaseNotificationForm", 
-      "name": "SUSAR Bericht", 
-      "form": "ecs.core.forms.NotificationForm"
-    }
-  }, 
-  {
     "pk": 2, 
     "model": "core.notificationtype", 
     "fields": {
