@@ -17,11 +17,11 @@
     | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
     <div class="waiting_time">
     Wartezeit: 
-        sum={{ meeting.metrics.waiting_time_total }},
-        avg={{ meeting.metrics.waiting_time_avg }}, 
-        max={{ meeting.metrics.waiting_time_max }}, 
-        min={{ meeting.metrics.waiting_time_min }},
-        var={{ meeting.metrics.waiting_time_variance }},
+        sum={{ meeting.metrics.waiting_time_total|simple_timedelta_format|default:'-' }},
+        avg={{ meeting.metrics.waiting_time_avg|simple_timedelta_format|default:'-' }}, 
+        max={{ meeting.metrics.waiting_time_max|simple_timedelta_format|default:'-' }}, 
+        min={{ meeting.metrics.waiting_time_min|simple_timedelta_format|default:'-' }},
+        var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
     </div>
     <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ul id="timetable">
@@ -35,7 +35,7 @@
             </h3>
             <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
             <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
-                <input type="text" value="{{ entry.duration }}" name="duration" class="duration"/>
+                <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
                 <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
             </form>
             {% if not entry.is_break %}
@@ -54,7 +54,7 @@
                     <div class="info">
                     {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
-                            <div class="waiting_time">Wartezeit: {{ waiting_time }}</div>
+                            <div class="waiting_time">Wartezeit: {{ waiting_time|simple_timedelta_format }}</div>
                         {% endif %}
                     {% endwith %}
                     {% if user.constraints %}

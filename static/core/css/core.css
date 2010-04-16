@@ -395,7 +395,7 @@ table.notif_meta th{
 }
 
 #meeting_editor .entry input.duration{
-	width: 4em;
+	width: 5em;
 }
 
 #meeting_editor .entry input.optimal_start{
