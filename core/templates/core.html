@@ -4,6 +4,7 @@
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/css/MooDialog.css" media="screen" />
 {% endblock %}
 
 {% block account %} 
@@ -14,7 +15,7 @@
   <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
   <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a>
   {% endcomment %}
-  <a href=""><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback" title="Feedback" id="givefeedback" rel="#feedback"/></a>
+  <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback"/></a>
   </p> 
 {% endblock %}
 
@@ -59,11 +60,26 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
-  <script type="text/javascript">window.addEvent('domready', function(){
-    var toggles = $$('.togglers');
-    var content = $$('.elements');
-    
-    var AccordionObject = new Accordion(toggles, content);
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Overlay.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/MooDialog.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/MooDialog.Iframe.js"></script>
+  <script type="text/javascript">
+    window.addEvent('domready', function(){
+      var toggles = $$('.togglers');
+      var content = $$('.elements');
+      var AccordionObject = new Accordion(toggles, content);
+
+      var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
+      var feedback_handler = function() { 
+        new MooDialog.Iframe('https://ecsdev.ep3.at/project/ecs/attachment/ticket/1/AAA-feedback-new_4.png',{
+        title: 'Feedback',
+        size: {
+        width: 700,
+        height: 400
+        }});
+        return false;
+      };
+      feedback_triggers.addEvent('click', feedback_handler);
     });
   </script>
 {% endblock %}
