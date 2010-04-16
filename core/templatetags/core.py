@@ -22,3 +22,18 @@ def get_field_info(formfield):
         return paper_forms.get_field_info(model=formfield.form._meta.model, name=formfield.name)
     else:
         return None
+        
+@register.filter
+def simple_timedelta_format(td):
+    if not td.seconds:
+        return "0"
+    minutes, seconds = divmod(td.seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    result = []
+    if hours:
+        result.append("%sh" % hours)
+    if minutes:
+        result.append("%smin" % minutes)
+    if seconds:
+        result.append("%ss" % seconds)
+    return " ".join(result)
