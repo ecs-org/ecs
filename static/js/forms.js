@@ -296,8 +296,9 @@
     });
     
     ecs.setupRichTextEditor = function(textArea){
-        var display = new Element('div');
-        display.addEvent('click', function(){
+        var display = new Element('div', {'class': 'rte_display', html: textArea.value});
+        display.addEvent('click', function(e){
+            textArea.show();
             var editable = textArea.retrieve('MooEditable');
             if(editable){
                 editable.attach();
@@ -307,14 +308,22 @@
                     actions: 'bold italic underline strikethrough | indent outdent | undo redo',
                 });
             }
+            display.hide();
+            console.log(editable);
             editable.focus();
+            e.stop();
         });
         document.body.addEvent('click', function(e){
             var editable = textArea.retrieve('MooEditable');
             if(editable && !editable.container.hasChild(e.target)){
                 editable.detach();
+                textArea.hide();
+                display.innerHTML = textArea.value;
+                display.show();
             }
         });
+        textArea.hide();
+        display.inject(textArea, 'after');
     };
     
     /*

@@ -131,15 +131,17 @@ form ol li {
 
 form ol li input[type=text], form ol li textarea {
   width: 30em;
+  font-size: 1em;
 }
 
 form ol li textarea {
   height: 4em;
-  width: 40em;
+  width: 30em;
 }
 
 form ol li .mooeditable-container{
     left: 21em;
+	border: 1px solid #666666;
 }
 form ol li .mooeditable-ui-toolbar .toolbar-item,
 form ol li .mooeditable-ui-toolbar .toolbar-separator{
@@ -147,6 +149,19 @@ form ol li .mooeditable-ui-toolbar .toolbar-separator{
 	float: left;
 	vertical-align: none;
 	margin-left: 0px;
+}
+form ol li .rte_display{
+	margin-left: 21em;
+	width: 29em;
+	padding: 0.5em;
+	height: auto;
+	min-height: 4em;
+	background-color: #ffffff;
+	border: 1px solid #666666;
+}
+form ol li .rte_display *{
+	margin: 0;
+	padding: 0;
 }
 
 form ol li > label {
