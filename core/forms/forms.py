@@ -16,14 +16,14 @@ class NotificationForm(forms.ModelForm):
         
 
 class ProgressReportNotificationForm(NotificationForm):
-    runs_till = DateField()
+    runs_till = DateField(required=True)
 
     class Meta:
         model = ProgressReportNotification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
 
 class CompletionReportNotificationForm(NotificationForm):
-    completion_date = DateField()
+    completion_date = DateField(required=True)
 
     class Meta:
         model = CompletionReportNotification

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+from datetime import datetime
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
@@ -7,7 +8,9 @@ from ecs.core.forms.fields import DateTimeField
 
 
 class MeetingForm(forms.ModelForm):
-    start = DateTimeField()
+    start = DateTimeField(label=u'Datum und Uhrzeit', initial=datetime.now)
+    title = forms.CharField(label=u'Titel', required=False)
+
     class Meta:
         model = Meeting
 

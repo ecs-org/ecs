@@ -3,6 +3,7 @@
         window.console = {log: $empty};
     }
     var ecs = window.ecs = {
+        datepickerInputSelector: '.DateField > input, .DateTimeField > input[name$=_0]',
         messages: new Roar(),
         Element: {
             setClass: function(cls, set){
@@ -295,7 +296,8 @@
     });
     
     ecs.setupRichTextEditor = function(textArea){
-        textArea.addEvent('click', function(){
+        var display = new Element('div');
+        display.addEvent('click', function(){
             var editable = textArea.retrieve('MooEditable');
             if(editable){
                 editable.attach();
@@ -349,10 +351,10 @@
     
     ecs.setupFormFieldHelpers = function(context){
         context = $(context || document.body);
-        $$('.DateField > input').each(function(input){
+        $$(ecs.datepickerInputSelector).each(function(input){
             (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
         });
-        var datepicker = new DatePicker('.DateField > input', {
+        var datepicker = new DatePicker(ecs.datepickerInputSelector, {
             format: 'd.m.Y',
             inputOutputFormat: 'd.m.Y',
             allowEmpty: true,

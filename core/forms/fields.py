@@ -14,6 +14,7 @@ class DateField(forms.DateField):
 class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
+        kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
         super(DateTimeField, self).__init__(*args, **kwargs)
 
 class InvestigatorChoiceMixin(object):

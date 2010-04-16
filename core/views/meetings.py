@@ -30,7 +30,7 @@ def add_timetable_entry(request, meeting_pk=None):
     if is_break:
         entry = meeting.add_break(duration=datetime.timedelta(minutes=30))
     else:
-        entry = meeting.add_entry(duration=datetime.timedelta(minutes=15), submission=Submission.objects.order_by('?')[:1].get())
+        entry = meeting.add_entry(duration=datetime.timedelta(minutes=7, seconds=30), submission=Submission.objects.order_by('?')[:1].get())
         import random
         for user in User.objects.order_by('?')[:random.randint(1, 4)]:
             Participation.objects.create(entry=entry, user=user)
