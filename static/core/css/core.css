@@ -398,6 +398,10 @@ table.notif_meta th{
 	width: 4em;
 }
 
+#meeting_editor .entry input.optimal_start{
+	width: 5em;
+}
+
 #meeting_editor .entry h3{
 	font-size: 1em;
 }

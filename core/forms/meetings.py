@@ -11,11 +11,10 @@ class MeetingForm(forms.ModelForm):
     class Meta:
         model = Meeting
 
-class TimetableEntryForm(forms.ModelForm):
-    class Meta:
-        model = TimetableEntry
-        exclude = ('timetable_index', 'meeting', 'users', 'submission')
-        
+class TimetableEntryForm(forms.Form):
+    duration = forms.CharField(required=False)
+    optimal_start = forms.TimeField(required=False)
+
 
 class BaseConstraintFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):

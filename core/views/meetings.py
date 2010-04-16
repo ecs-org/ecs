@@ -1,4 +1,4 @@
-import datetime, random, itertools
+import datetime, random, itertools, math
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
@@ -45,9 +45,12 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
-    duration = request.POST.get('duration')
-    if duration:
-        entry.duration = parse_timedelta(duration)
+    form = TimetableEntryForm(request.POST)
+    if form.is_valid():
+        duration = form.cleaned_data['duration']
+        if duration:
+            entry.duration = parse_timedelta(duration)
+        entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
@@ -111,11 +114,14 @@ _OPTIMIZATION_ALGORITHMS = {
     'ga': optimize_ga,
 }
 
+def _eval_timetable(metrics):
+    return 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1) + 1000.0 / (math.sqrt(metrics._optimal_start_diff_squared_sum) + 1)
+
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
     entries, users = meeting.timetable
-    f = meeting.create_evaluation_func(lambda metrics: 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1))
+    f = meeting.create_evaluation_func(_eval_timetable)
     meeting._apply_permutation(algo(entries, f))
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 

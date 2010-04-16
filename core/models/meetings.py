@@ -20,12 +20,20 @@ import reversion
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
         self.users = users
+
+        self.waiting_time_per_user = {}
         self._waiting_time_total = 0
         self._waiting_time_min = None
         self._waiting_time_max = None
-        offset = 0
+
         self.constraint_violations = {}
         self.constraint_violation_total = 0
+        
+        self.optimal_start_diffs = {}
+        self._optimal_start_diff_sum = 0
+        self._optimal_start_diff_squared_sum = 0
+
+        offset = 0
         for user in users:
             user._waiting_time = 0
             user._waiting_time_offset = None
@@ -42,9 +50,13 @@ class TimetableMetrics(object):
                         self.constraint_violations.setdefault(constraint, 0)
                         self.constraint_violations[constraint] += constraint.weight
                         self.constraint_violation_total += constraint.weight
+            if entry.optimal_start_offset is not None:
+                diff = abs(offset - entry.optimal_start_offset)
+                self.optimal_start_diffs[entry] = diff
+                self._optimal_start_diff_squared_sum += diff * diff
+                self._optimal_start_diff_sum += diff
             offset = next_offset
         
-        self.waiting_time_per_user = {}
         for user in users:
             wt = user._waiting_time
             self.waiting_time_per_user[user] = timedelta(seconds=wt)
@@ -189,14 +201,14 @@ class Meeting(models.Model):
         entries = list()
         for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
             users_by_entry_id.setdefault(participation.entry_id, set()).add(users_by_id.get(participation.user_id))
-        for entry in self.timetable_entries.order_by('timetable_index'):
+        for entry in self.timetable_entries.select_related('submission').order_by('timetable_index'):
             entry.users = users_by_entry_id.get(entry.id, set())
             entry.start = self.start + duration
             duration += entry.duration
             entry.end = self.start + duration
             entries.append(entry)
         return tuple(entries), set(users_by_id.itervalues())
-
+        
     def __iter__(self):
         entries, users = self.timetable
         return iter(entries)
@@ -223,6 +235,7 @@ class TimetableEntry(models.Model):
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
+    optimal_start = models.TimeField(null=True)
     
     class Meta:
         app_label = 'core'
@@ -239,7 +252,13 @@ class TimetableEntry(models.Model):
         self.duration_in_seconds = int(timedelta_to_seconds(d))
     
     duration = property(_get_duration, _set_duration)
-        
+    
+    @cached_property
+    def optimal_start_offset(self):
+        if self.optimal_start is None:
+            return None
+        return timedelta_to_seconds(datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start)
+    
     @cached_property
     def users(self):
         return User.objects.filter(meeting_participations__entry=self).order_by('username').distinct()
@@ -297,7 +316,21 @@ class TimetableEntry(models.Model):
             p.user.participation = p
         return users_by_category
 
+    @cached_property
+    def is_retrospective(self):
+        return bool(self.submission.forms.filter(thesis=True)[:1])
     
+    @cached_property
+    def is_thesis(self):
+        return bool(self.submission.forms.filter(retrospective=True)[:1])
+        
+    @cached_property
+    def is_expedited(self):
+        return bool(self.submission.forms.filter(expedited=True)[:1])
+    
+    @property
+    def is_batch_processed(self):
+        return self.is_thesis or self.is_expedited or self.is_retrospective
 
 def _timetable_entry_delete_post_delete(sender, **kwargs):
     entry = kwargs['instance']
@@ -331,7 +364,7 @@ class Constraint(models.Model):
     @cached_property
     def duration_in_seconds(self):
         return timedelta_to_seconds(self.duration)
-        
+   
 
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
