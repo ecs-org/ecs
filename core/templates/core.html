@@ -27,27 +27,27 @@
     <li>
       <span class="togglers">Studien</span>
       <ul class="elements">
-	<li><a href="{% url ecs.core.views.submission_form_list %}">Übersicht</a></li>
-        <li><a href="{% url ecs.core.views.create_submission_form %}">neues Antragsformular</a></li>
+	<li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
+        <li><a href="{% url ecs.core.views.create_submission_form %}">neuer Antrag</a></li>
       </ul>
     </li>
     <li>
       <span class="togglers">Studien Meldungen</span>
       <ul class="elements">
-	<li><a href="{% url ecs.core.views.notification_list %}">Übersicht</a></li>
+	<li><a href="{% url ecs.core.views.notification_list %}">Offene Meldungen</a></li>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Meetings</span>
+      <span class="togglers">Sitzungen</span>
       <ul class="elements">
-        <li><a href="{% url ecs.core.views.meeting_list %}">Meetings</a></li>
-        <li><a href="{% url ecs.core.views.create_meeting %}">neues Meeting</li>
+        <li><a href="{% url ecs.core.views.meeting_list %}">Sitzungen</a></li>
+        <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</li>
       </ul>
     </li>
-    <li><a href="#">Konversationen</a></li>
+    <!--<li><a href="#">Konversationen</a></li>
     <li><a href="#">zuletzt bearbeitet</a></li>
-    <li><a href="#">vorgemerkte Tätigkeiten</a></li>
+    <li><a href="#">vorgemerkte Tätigkeiten</a></li>-->
   </ul>
 {% endblock %}
 
