@@ -44,12 +44,19 @@ appdir = os.path.dirname(os.path.abspath(x))
 appname = os.path.basename(appdir) 
 appbasedir = os.path.join(appdir, "..")
 basedir = os.path.join(appdir, "../..")
-# FIXME: is hardcoded library path, and should be replaced
-envdir = os.path.join(basedir, "environment/lib/python2.6/site-packages")
+
+# FIXME: is hardcoded path names, and should be replaced
+envdir = os.path.join(basedir, "environment")
+sitedir = os.path.join(envdir, "/lib/python2.6/site-packages")
+bindir = os.path.join(envdir, "bin")
+
 #print "ad %s, an %s, ab %s, b %s, e %s" % (appdir,appname,appbasedir,basedir,envdir) 
 
 # Add each new site-packages directory.. 
-site.addsitedir(envdir)
+site.addsitedir(sitedir)
+
+# include environment bin dir in path
+sys.path.append(bindir)
 
 # Reorder sys.path so new directories at the front.
 new_sys_path = []
