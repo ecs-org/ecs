@@ -208,6 +208,23 @@ der Zentren: <br/>
 <p style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0.11cm 0cm; line-height: 100%">
 2.9 Geplante Anzahl der Prüfungsteilnehmer/innen gesamt (<u>alle teilnehmenden Zentren</u>): <b> {{ submission_form.subject_count }}</b> </p>
 
+<p style="margin-bottom: 0cm; line-height: 100%; page-break-after: avoid">
+2.10 Charakterisierung der Prüfungsteilnehmer/innen : 2.10.1 Mindestalter: <b> {{ submission_form.subject_minage }} </b> 2.10.2 Höchstalter: <b> {{ submission_form.subject_maxage }} </b> </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: none; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.10.3 Sind auch nicht persönlich Einwilligungsfähige einschließbar? 
+{{ submission_form.subject_noncompetents|yesno:"[X],[ ]" }} ja
+{{ submission_form.subject_noncompetents|yesno:"[ ],[X]" }} nein </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: none; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.10.4 Einschließbar sind 
+{{ submission_form.subject_females|yesno:"[X],[ ]" }} <u>weibliche</u> (und/oder) 
+{{ submission_form.subject_males|yesno:"[X],[ ]" }} <u>männliche</u> Teilnehmer/innen . </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+<a name="A2x10x5j"></a><a name="A2x10x5n"></a> 2.10.5 Sind gebärfähige Frauen einschließbar? {{ submission_form.subject_childbearing|yesno:"[X],[ ]" }} ja {{ submission_form.subject_childbearing|yesno:"[ ],[X]" }} nein </p>
+
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
