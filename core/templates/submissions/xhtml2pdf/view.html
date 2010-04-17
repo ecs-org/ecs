@@ -1,12 +1,5 @@
-{% extends "core.html" %}
-{% load core %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
-{% endblock %}
-
-{% block content %}
+<html>
+<body>
     <h1>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</h1>    
     
     {% for field_info in paper_form_fields %}
@@ -100,12 +93,6 @@
             </div>
         {% endifequal %}
         
-        {% if field_info.number and field_info.name %}
-            <div>{{ field_info.number }} {{ field_info.label|default:field_info.name }}: {{ submission_form|getattr:field_info.name }}</div>
-        {% endif %}
-        
     {% endfor %}
     
     {% include "documents/compact_list.html" %}
-    
-{% endblock %}
