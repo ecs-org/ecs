@@ -23,7 +23,7 @@ def xhtml2pdf(html, **options):
     for options without arguments.
     """
     
-    args = [which('xhtml2pdf')]
+    args = ['xhtml2pdf']
     for key, value in options.iteritems():
         if value is False:
             continue
