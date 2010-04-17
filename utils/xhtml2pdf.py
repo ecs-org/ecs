@@ -2,6 +2,7 @@ import subprocess
 import killableprocess
 import tempfile
 import os
+import time
 
 def which(file, mode=os.F_OK | os.X_OK, path=None):
     """Locate a file in the user's path, or a supplied path. The function
@@ -23,7 +24,7 @@ def xhtml2pdf(html, **options):
     for options without arguments.
     """
     
-    args = ['xhtml2pdf']
+    args = ['ulimit -t 15 ; xhtml2pdf']
     for key, value in options.iteritems():
         if value is False:
             continue
@@ -36,9 +37,11 @@ def xhtml2pdf(html, **options):
 
     # FIXME: add error handling / sanitize options
     # FIXME: debug file is left on disk 
-    with tempfile.NamedTemporaryFile(prefix="xhtml2pdfdebug", delete=False) as t:
-        t.write(str(args))
-        popen = killableprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    with tempfile.NamedTemporaryFile(prefix=time.strftime("xhtml2pdfdebug-%y%m%d%H%M%S-"), delete=False) as t:
+        t.write(str(args) + "\n\n")
+        with open(t.name + ".html", "w") as html_out:
+            html_out.write(html)
+        t.flush()
+        popen = killableprocess.Popen(" ".join(args), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=t)
         result, stderr = popen.communicate(html)
-        t.write(stderr)
     return result 
