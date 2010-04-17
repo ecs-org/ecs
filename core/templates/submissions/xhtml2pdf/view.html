@@ -35,6 +35,29 @@
       und aus einem speziellen Teil B - Angaben zu der/den einzelnen Pr&uuml;fstelle(n) - zusammen. <br/>
       Bei Einreichungen für mehrere Zentren (Pr&uuml;fer) muss nur der Teil B an das jeweilige Zentrum angepasst werden.
     </center>
+
+    <table border=1>
+      <tr>
+	<td align=left valign=top><span style="font-size:small">Adresse der Ethikkommission (optional)</span><br/>An die<br/>Ethikkommission<br/>der Medizinischen Universität Wien<br/>Borschkegasse 8b<br/>1090 Wien<br/></td>
+	<td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
+      </tr>
+    </table>
+    <center><span style="font-weight:bold; font-size:large"><br/>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES<br/></span>
+      für folgende Prüfer bei folgenden österreichischen Ethikkommissionen:<br/>
+    </center>
+    <ul>
+      <li>Bitte alle Ethikkommissionen eintragen, an die der Antrag gesendet wird (Kurzbezeichnung!)</li>
+      <li>Im Falle einer multizentrischen Arzneimittelstudie ist die Leitethikkommission als erste anzuführen!</li>
+    </ul>
+    <table border=1 style="width:18cm">
+      <tr>
+	<th>Zuständige Ethikkommission</th><th> Prüfer (lokaler Studienleiter)</th>
+      </tr>
+      {% for inv in submission_form.investigators.all %}
+      <tr>
+	<td valign=center>{{ inv.ethics_commission.name }}</td><td valign=center>{{ inv.name }}</td>
+      </tr>
+      {% endfor %}
     
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
