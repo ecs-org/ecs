@@ -50,7 +50,7 @@
         <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
         <ul id="userlist">
             {% for user in meeting.users_with_constraints %}
-                <li><a class="user">{{ user }}</a>
+                <li><span class="user">{{ user }}</span>
                     <div class="info">
                     {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
