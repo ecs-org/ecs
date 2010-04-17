@@ -262,13 +262,20 @@ class SubmissionForm(models.Model):
         return self.study_plan_blind == 2
         
     @property
+    def protocol(self):
+        protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
+        if protocol_doc:
+            return protocol_doc[0]
+        else:
+            return None
+
+    @property
     def protocol_number(self):
         protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
         if protocol_doc:
             return protocol_doc[0].version
         else:
             return None
-
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`

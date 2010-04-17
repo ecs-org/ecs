@@ -63,6 +63,23 @@
     <div class="header"><br/>Teil A</div><br/>
     1. Allgemeines <br/>
     1.1. Projekttitel: <b> {{ submission_form.project_title }}</b><br/>
+    <table border=0>
+      <tr>
+	<td align=left valign=top>1.2. Protokollnummer/-bezeichnung:</td>
+	<td align=left valign=top><b>{{ submission_form.protocol.version }}</b></td>
+	<td align=left valign=top>1.2.1 EudraCT-Nr.:</td>
+	<td align=left valign=top><b>{{ submission_form.eudract_number }}</b></td>
+      </tr>
+      <tr>
+	<td align=left valign=top>1.3. Datum des Protokolls:</td>
+	<td align=left valign=top><b>{{ submission_form.protocol.date }}</b></td>
+	<td align=left valign=top>1.3.1 ISRCTN-Nr.:</td>
+	<td align=left valign=top></td>
+      </tr>
+    </table>
+
+
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
