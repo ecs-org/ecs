@@ -1,4 +1,6 @@
 import subprocess
+import killableprocess
+import tempfile
 
 def xhtml2pdf(html, **options):
     """ 
@@ -18,7 +20,10 @@ def xhtml2pdf(html, **options):
     args.append('-')
 
     # FIXME: add error handling / sanitize options
-    popen = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    result, stderr = popen.communicate(html)
-    open("/tmp/xhtml2pdf.log", "w").write(stderr)
+    # FIXME: debug file is left on disk 
+    with tempfile.NamedTemporaryFile(prefix="xhtml2pdfdebug", delete=False) as t:
+        t.write(str(args))
+        popen = killableprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result, stderr = popen.communicate(html)
+        t.write(stderr)
     return result 

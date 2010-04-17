@@ -209,7 +209,7 @@ def submission_pdf(request, submission_form_pk=None):
             'submission_form': submission_form,
             'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
             }).content
-    pdf = xhtml2pdf(html, webpage=True)
+    pdf = xhtml2pdf(html)
     assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=submission_%s.pdf' % submission_form_pk
