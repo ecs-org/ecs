@@ -225,7 +225,7 @@ der Zentren: <br/>
 2.10.5 Sind gebärfähige Frauen einschließbar? {{ submission_form.subject_childbearing|yesno:"[X],[ ]" }} ja {{ submission_form.subject_childbearing|yesno:"[ ],[X]" }} nein </p>
 
 <p style="margin-top: 0.07cm; margin-bottom: 0.11cm; page-break-after: avoid">
-</a> 2.11 Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der
+2.11 Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der
 Studie: <b> {{ submission_form.subject_duration }} </b> </p>
 
 <p style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.14cm; padding-left: 0cm; padding-right: 0cm">
@@ -235,6 +235,20 @@ Studie: <b> {{ submission_form.subject_duration }} </b> </p>
 <p style="border-top: none; border-bottom: 1px solid #000; padding-top: 0cm; padding-bottom: 0.14cm">
 Voraussichtliche Gesamtdauer der Studie: <b> {{ submission_form.subject_planned_total_duration }} </b> </p>
 
+<p style="margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+<b>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%; page-break-after: avoid">
+3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries|yesno:"[X],[ ]" }} ja {{ submission_form.substance_registered_in_countries|yesno:"[ ],[X]" }} nein.
+Wenn <b>ja</b>, geben Sie an, in welchen: </p>
+
+<p style="margin-left: 0.63cm; text-indent: -0.63cm; margin-bottom: 0cm">
+<b> {{ submission_form.substance_registered_in_countries }} </b> </p>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%">
+3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
+{{ submission_form.substance_preexisting_clinical_tries|yesno:"[X],[ ]" }} ja 
+{{ submission_form.substance_preexisting_clinical_tries|yesno:"[ ],[X]" }} nein </p>
 
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
