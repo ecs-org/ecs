@@ -277,6 +277,14 @@ class SubmissionForm(models.Model):
         else:
             return None
 
+    @property
+    def project_type_education_context_phd(self):
+        return self.project_type_education_context == 1
+
+    @property
+    def project_type_education_context_master(self):
+        return self.project_type_education_context == 2
+
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm, related_name='investigators')
