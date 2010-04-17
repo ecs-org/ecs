@@ -158,6 +158,31 @@ spezifizieren:</p>
 <p style="margin-left: 3.6cm; text-indent: -3.6cm; margin-top: 0.21cm; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0.11cm 0cm">
 2.2 Fachgebiet:<b>{{ submission_form.specialism }}</b></p>
 
+<table width="624" border="0" cellpadding="2" cellspacing="0">
+<col width="147">
+<col width="147">
+<col width="157">
+<col width="157">
+<tr>
+<td colspan="2" width="298"><b>2.3 Arzneimittelstudie</b> (wenn zutreffend)</td>
+<td colspan="2" width="317" valign="top"><b>2.4 Medizinproduktestudie</b> (wenn zutreffend)</td>
+</tr>
+<tr valign="top">
+<td width="147">2.3.1 Prüfsubstanz(en):</td>
+<td width="147">{{ submission_form.pharma_checked_substance }}</td>
+<td width="157">2.4.1 Prüfprodukt(e):</td>
+<td width="157">{{ submission_form.medtech_checked_product }}</td>
+</tr>
+<tr valign="top">
+<td width="147">2.3.2 Referenzsubstanz:</td>
+<td width="147">{{ submission_form.pharma_reference_substance }}</td>
+<td width="157">2.4.2 Referenzprodukt:</td>
+<td width="157">{{ submission_form.medtech_reference_substance }}</td>
+</tr>
+</table>
+<p style="margin-left: 3.5cm; text-indent: -3.5cm; margin-top: 0.21cm">
+2.5 Klinische Phase: {{ submission_form.clinical_phase }} </p>
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
