@@ -100,6 +100,18 @@
 	<td align=left valign=top><b>kodiert?</b></td>
       </tr>
     </table>
+    1.5 Sponsor / Rechnungsempfänger (Kontaktperson in der Buchhaltung):<br/>
+    <table border=0>
+      <tr><th style="width:3cm"></th><th align=left>Sponsor</th><th align=left>Rechnungsempfänger</th></tr>
+      <tr><td>1.5.1 Name:</td><td> {{ submission_form.sponsor_name }}</td>
+	<td>{{ submission_form.invoice_name }}</td></tr>
+      <tr><td valign=top>1.5.2 Adresse:</td><td>{{ submission_form.sponsor_address1 }}<br/>{{ submission_form.sponsor_address2 }}<br/>{{ submission_form.sponsor_zip_code }} {{ submission_form.sponsor_city }}</td>
+	<td>{{ submission_form.invoice_address1 }}<br/>{{ submission_form.invoice_address2 }}<br/>{{ submission_form.invoice_zip_code }} {{ submission_form.invoice_city }}</td></tr>
+      <tr><td>1.5.3 Kontaktperson:</td><td>{{ submission_form.sponsor_contactname|default_if_none:"" }} </td><td>{{ submission_form.invoice_contact_name|default_if_none:"" }} </td></tr>
+      <tr><td>1.5.4 Telefon:</td><td>{{ submission_form.sponsor_phone }}</td><td>{{ submission_form.invoice_phone }}</td></tr>
+      <tr><td>1.5.5 FAX:</td><td> {{ submission_form.sponsor_fax }} </td><td>{{ submission_form.invoice_fax }}</td></tr>
+      <tr><td>1.5.6 e-mail:</td><td> {{ submission_form.sponsor_email }} </td><td> {{ submission_form.invoice_email|default:"<span style=\"font-size:small\">(wenn nicht gleich wie \"Sponsor\")" }}</td></tr>
+    </table>
 
 
 
