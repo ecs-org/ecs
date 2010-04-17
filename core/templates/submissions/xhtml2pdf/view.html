@@ -183,6 +183,24 @@ spezifizieren:</p>
 <p style="margin-left: 3.5cm; text-indent: -3.5cm; margin-top: 0.21cm">
 2.5 Klinische Phase: {{ submission_form.clinical_phase }} </p>
 
+<p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.6 Nehmen andere Zentren an der Studie teil: 
+{{ submission_form.multicentric|yesno:"[X],[ ]" }} ja {{ submission_form.multicentric|yesno:"[ ],[X]" }} nein. Wenn <b>ja:</b> </p>
+
+<p style="line-height: 100%; page-break-after: avoid"> {{ submission_form.multicentric|yesno:"[X],[ ]" }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|yesno:"[X],[ ]" }} 2.6.2 im Ausland </p>
+<p> 2.7 Liste
+der Zentren: <br/>
+{% for ec in submission_form.ethics_commissions.all %}
+  {{ ec.name }} ; {{ ec.zip_code }} {{ ec.city }} <br/>
+{% endfor %}
+{% for pc in submission_form.foreignparticipatingcenter_set.all %}
+  {{ pc.name }} ; {{ pc.zip_code }} {{ pc.city }} <br/>
+{% endfor %}
+</p>
+</td>
+</tr>
+</table>
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
