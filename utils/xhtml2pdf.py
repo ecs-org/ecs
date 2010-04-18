@@ -30,7 +30,7 @@ def xhtml2pdf(html, **options):
     for options without arguments.
     """
     if sys.platform.startswith("linux"): # ugly, but our production platform is Ubuntu
-        cmd = 'ulimit -t 15 ; '
+        cmd = 'ulimit -t 30 ; '
     else:
         cmd = ''
     cmd += which('xhtml2pdf').next()
