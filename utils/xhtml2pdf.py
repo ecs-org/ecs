@@ -45,7 +45,7 @@ def xhtml2pdf(html, **options):
     # FIXME: debug file is left on disk 
     with tempfile.NamedTemporaryFile(prefix="xhtml2pdfdebug", delete=False) as t:
         t.write(str(args))
-        t.write(str(os.environ.get("PATH", os.defpath))
+        t.write(str(os.environ.get("PATH", os.defpath)))
         popen = killableprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         result, stderr = popen.communicate(html)
         t.write(stderr)
