@@ -369,6 +369,64 @@ herangezogen worden (Technische Sicherheit): </p>
 <p align="center" style="margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%">
 <i><b>Diese Angaben müssen in der Patienten- / Probandeninformation enthalten sein!</b></i></p>
 
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
+ <b>6. Angaben zur
+durchzuführenden Therapie und Diagnostik</b> </p>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; page-break-after: avoid">
+ 6.1. Welche Maßnahmen bzw.
+Behandlungen werden <b>ausschließlich studienbezogen</b>
+durchgeführt? </p>
+
+<center>
+<table width="624" border="1" bordercolor="#000000" cellpadding="5"
+cellspacing="0">
+<col width="169">
+<col width="217">
+<col width="120">
+<col width="76">
+<tr>
+<th width="169">Art</th>
+<th width="217">Anzahl/Dosis</th>
+<th width="120">Zeitraum</th>
+<th width="76">Insgesamt</th>
+</tr>
+{% for m in submission_form.measures_study_specific %}
+<tr>
+<td width="169">{{ m.type }}</td>
+<td width="217">{{ m.count }}</td>
+<td width="120">{{ m.period }}</td>
+<td width="76">{{ m.total }}</td>
+</tr>
+{% endfor %}
+</table>
+</center>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm">
+6.2. Welche speziellen Untersuchungen (<b>nur invasive und strahlenbelastende</b>) werden
+während des Studienzeitraumes <b>zu Routinezwecken</b> durchgeführt: </p>
+<center>
+<table width="624" border="1" bordercolor="#000000" cellpadding="5"
+cellspacing="0">
+<col width="169">
+<col width="217">
+<col width="120">
+<col width="76">
+<tr>
+<th width="169">Art</th>
+<th width="217">Anzahl/Dosis</th>
+<th width="120">Zeitraum</th>
+<th width="76">Insgesamt</th></tr>
+{% for m in submission_form.measures_nonspecific %}
+<tr>
+<td width="169">{{ m.type }}</td>
+<td width="217">{{ m.count }}</td>
+<td width="120">{{ m.period }}</td>
+<td width="76">{{ m.total }}</td></tr>
+{% endfor %}
+</table>
+</center>
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>

@@ -285,6 +285,14 @@ class SubmissionForm(models.Model):
     def project_type_education_context_master(self):
         return self.project_type_education_context == 2
 
+    @property
+    def measures_study_specific(self):
+        return self.measures.filter(category="6.1")
+    
+    @property
+    def measures_nonspecific(self):
+        return self.measures.filter(category="6.2")
+
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
     submission = models.ForeignKey(SubmissionForm, related_name='investigators')
