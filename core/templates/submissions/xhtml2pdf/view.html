@@ -920,22 +920,24 @@ Proband/inn/en an dieser Prüfstelle {{ inv.subject_count }} </b> </p>
 <th width="106" valign="top">Name</th>
 <th width="289" valign="top">Institution</th>
 </tr>
+{% for emp in inv.investigatoremployee_set.all %}
 <tr>
-<td width="29" valign="top">Fr/Hr</td>
-<td width="52" valign="top">Titel</th>
-<td width="89" valign="top">Vorname</td>
-<td width="106" valign="top">Name</td>
-<td width="289" valign="top">Institution</td>
+<td width="29" valign="top">{{ emp.geschlecht_string }}</td>
+<td width="52" valign="top">{{ emp.title }}</th>
+<td width="89" valign="top">{{ emp.firstname }}</td>
+<td width="106" valign="top">{{ emp.surname }}</td>
+<td width="289" valign="top">{{ emp.organisation }}</td>
 </tr>
+{% endfor %}
 </table>
 <p style="margin-top: 0.85cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
  <b>13. Unterschrift der
 Prüferin/des Prüfers</b> </p>
 
 <p style="margin-bottom: 0cm"> Ich bestätige hiermit, dass die in diesem Antrag
-gemachten Angaben korrekt sind und dass ich der Mein­ung bin, dass
+gemachten Angaben korrekt sind und dass ich der Meinung bin, dass
 die durchführung der studie in Übereinstimmung mit dem Protokoll,
-nationalen Regelun­gen und mit den Prinzipien der Guten Klinischen
+nationalen Regelungen und mit den Prinzipien der Guten Klinischen
 Praxis möglich sein wird. </p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 1.06cm; page-break-after: avoid">

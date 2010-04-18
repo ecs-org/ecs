@@ -326,6 +326,9 @@ class InvestigatorEmployee(models.Model):
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
     
+    @property
+    def geschlecht_string(self):
+        return dict(m="Hr", f="Fr").get(self.sex, "")
     class Meta:
         app_label = 'core'
 
