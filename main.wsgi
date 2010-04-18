@@ -55,9 +55,6 @@ bindir = os.path.join(envdir, "bin")
 # Add each new site-packages directory.. 
 site.addsitedir(sitedir)
 
-# include environment bin dir in path
-sys.path.append(bindir)
-
 # Reorder sys.path so new directories at the front.
 new_sys_path = []
 for item in list(sys.path):
@@ -71,6 +68,15 @@ sys.path.append(appbasedir)
 sys.path.append(appdir)
 os.environ['DJANGO_SETTINGS_MODULE'] = appname+".settings"
 
-import django.core.handlers.wsgi
+# include environment bin dir at beginning of PATH
+pathlist = os.environ['PATH'].split(os.pathsep)
+try:
+    pathlist.remove(bindir)
+except ValueError:
+    pass
+pathlist.insert(0,bindir)
+os.environ['PATH']= os.pathsep.join(pathlist)
 
+# start wsgi main
+import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
