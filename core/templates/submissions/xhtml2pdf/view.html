@@ -619,6 +619,30 @@ Parallelgruppen, multizentrisch)</p>
 <p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0.14cm; page-break-inside: avoid">
  8.1.22 Nebenzielgrößen: <b> {{ submission_form.study_plan_secondary_objectives|default_if_none:"" }} </b> </p>
 
+<p style="margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+8.2 Studienplanung </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+Die Fallzahlberechnung basiert auf (Alpha = Fehler 1. Art, Power = 1 – Beta = 1 –
+Fehler 2. Art): </p>
+
+<p style="margin-left: 10.5cm; text-indent: -10.5cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+8.2.1 Alpha:  <b> {{ submission_form.study_plan_alpha|default_if_none:"" }} </b> 
+8.2.2 Power: <b> {{ submission_form.study_plan_power|default_if_none:"" }} </b> 
+8.2.3 Stat.Verfahren: <b>  {{ submission_form.study_plan_statalgorithm|default_if_none:"" }}    </b> </p>
+<p style="margin-left: 9.75cm; text-indent: -9.75cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+
+8.2.4 Multiples
+Testen:{{ submission_form.study_plan_multiple_test_correction_algorithm|yesno:"[ ],[X]" }} nein 
+{{ submission_form.study_plan_multiple_test_correction_algorithm|yesno:"[X],[ ]" }} ja:
+Korrekturverfahren.: <b> {{ submission_form.study_plan_multiple_test_correction_algorithm|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 11.25cm; text-indent: -11.25cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+ 8.2.5 Erwartete Anzahl von Studienabbrecher/inne/n
+(Drop-out-Quote): <b> {{ submission_form.study_plan_dropout_ratio|default_if_none:"" }} </b> </p>
+
+
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
