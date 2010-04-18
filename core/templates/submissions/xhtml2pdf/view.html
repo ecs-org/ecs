@@ -558,6 +558,45 @@ Informationen (wennerforderlich): <br> {{ submission_form.german_additional_info
 
 </p>
 
+<p style="margin-bottom: 0cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-before: always; page-break-after: avoid">
+ <b>8. Biometrie,
+Datenschutz: <i>!!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen
+!!!</i></b> </p>
+
+<p align="center" style="margin-bottom: 0.14cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+ <i>(Hier nur
+Kurzinformationen in Stichworten, ausführlicher &nbsp; wenn
+erforderlich &nbsp; unter Punkt 7.15 und 7.16)</i> </p>
+
+<p style="margin-top: 0.04cm; margin-bottom: 0.11cm; line-height: 100%; page-break-after: avoid">
+ 8.1 Studiendesign 
+(z.B. doppelblind, randomisiert, kontrolliert, Placebo,
+Parallelgruppen, multizentrisch)</p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+{{ submission_form.study_plan_open|yesno:"[X],[ ]" }} 8.1.1 offen 
+{{ submission_form.study_plan_randomized|yesno:"[X],[ ]" }} 8.1.2 randomisiert 
+{{ submission_form.study_plan_parallelgroups|yesno:"[X],[ ]" }} 8.1.3 Parallelgruppen 
+{{ submission_form.multicentric|yesno:"[ ],[X]" }} 8.1.4 monozentrisch </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+{{ submission_form.study_plan_single_blind|yesno:"[X],[ ]" }} 8.1.5 blind 
+{{ submission_form.study_plan_controlled|yesno:"[X],[ ]" }} 8.1.6 kontrolliert 
+{{ submission_form.study_plan_cross_over|yesno:"[X],[ ]" }} 8.1.7 cross-over 
+{{ submission_form.multicentric|yesno:"[X],[ ]" }} 8.1.8 multizentrisch </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+{{ submission_form.study_plan_double_blind|yesno:"[X],[ ]" }} 8.1.9 doppelblind 
+{{ submission_form.study_plan_placebo|yesno:"[X],[ ]" }} 8.1.10 Placebo 
+{{ submission_form.study_plan_factorized|yesno:"[X],[ ]" }} 8.1.11 faktoriell 
+{{ submission_form.study_plan_pilot_project|yesno:"[X],[ ]" }} 8.1.12 Pilotprojekt </p>
+
+<p style="margin-left: 8.5cm; text-indent: -8.5cm; margin-bottom: 0cm; line-height: 120%; page-break-inside: avoid">
+{{ submission_form.study_plan_observer_blinded|yesno:"[X],[ ]" }} 8.1.13 observer-blinded 
+{{ submission_form.study_plan_equivalence_testing|yesno:"[X],[ ]" }} 8.1.14 Äquivalenzprüfung </p>
+
+<p style="margin-left: 4.5cm; text-indent: -4.5cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+ 8.1.15 sonstiges: <b> {{ submission_form.study_plan_misc|default_if_none:"" }} </b> </p>
 
 
     <div id="footer">
