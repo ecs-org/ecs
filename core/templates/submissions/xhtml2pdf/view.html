@@ -641,6 +641,22 @@ Korrekturverfahren.: <b> {{ submission_form.study_plan_multiple_test_correctio
  8.2.5 Erwartete Anzahl von Studienabbrecher/inne/n
 (Drop-out-Quote): <b> {{ submission_form.study_plan_dropout_ratio|default_if_none:"" }} </b> </p>
 
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+ 8.3 Geplante statistische analyse </p>
+
+<p style="margin-bottom: 0cm; line-height: 90%; page-break-inside: avoid">
+ Population: {{ submission_form.study_plan_population_intention_to_treat|yesno:"[X],[ ]" }} 8.3.1 Intention-to-treat 
+{{ submission_form.study_plan_population_per_protocol|yesno:"[X],[ ]" }} 8.3.2 Per Protocol </p>
+
+<p style="margin-left: 10cm; text-indent: -10cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+
+8.3.3 Zwischenauswertung: {{ submission_form.study_plan_abort_crit|yesno:"[ ],[X]" }} nein {{ submission_form.study_plan_abort_crit|yesno:"[X],[ ]" }} ja: Abbruchkriterien: <b> {{ submission_form.study_plan_abort_crit|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 6cm; text-indent: -6cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+ 8.3.4 Geplante statistische Verfahren: 
+ <b> {{ submission_form.study_plan_planned_statalgorithm }}</b> </p>
+
+
 
 
     <div id="footer">
