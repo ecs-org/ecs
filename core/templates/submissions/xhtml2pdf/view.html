@@ -255,7 +255,32 @@ an: </p>
 
 <p style="page-break-inside: avoid">3.2.1
  In welchen Staaten wurden
-die Prüfungen durchgeführt: {{ submission_form.substance_p_c_t_countries }} </p>
+die Prüfungen durchgeführt: <b> {{ submission_form.substance_p_c_t_countries }} </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 3.2.2 Phase: <b> {{ submission_form.substance_p_c_t_phase }} </b> (Wenn Studien in mehreren Phasen angeführt sind,
+die höchste Phase angeben) </p>
+
+<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
+ 3.2.3 Zeitraum: <b> {{ submission_form.substance_p_c_t_period }} </b> </p>
+
+<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
+ 3.2.4 Anwendungsart(en): <b> {{ submission_form.substance_p_c_t_application_type }} </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+3.2.5 Wurde(n) die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt? 
+{{ submission_form.substance_p_c_t_gcp_rules|yesno:"[X],[ ]" }} ja 
+{{ submission_form.substance_p_c_t_gcp_rules|yesno:"[ ],[X]" }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 3.2.6 Liegt ein Abschlußbericht vor? 
+{{ submission_form.substance_p_c_t_final_report|yesno:"[X],[ ]" }} ja 
+{{ submission_form.substance_p_c_t_final_report|yesno:"[ ],[X]" }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 110%">
+ Wenn <b>ja</b>, bitte legen
+Sie die <b>Investigator´s Brochure, relevante Daten</b> oder ein
+<b>Gutachten des Arznei­mittelbeirates</b> bei. </p>
 
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
