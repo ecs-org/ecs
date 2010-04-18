@@ -52,11 +52,13 @@
     </ul>
     <table border=1 style="width:18cm">
       <tr>
-	<th>Zuständige Ethikkommission</th><th> Prüfer (lokaler Studienleiter)</th>
+	<th>Zuständige Ethikkommission</th><th>Zentrum</th><th> Prüfer (lokaler Studienleiter)</th>
       </tr>
       {% for inv in submission_form.investigators.all %}
       <tr>
-	<td valign=center>{{ inv.ethics_commission.name }}</td><td valign=center>{{ inv.name }}</td>
+	<td valign=center>{{ inv.ethics_commission.name }}</td>
+	<td valign=center>{{ inv.organisation }}</td>
+	<td valign=center>{{ inv.name }}</td>
       </tr>
       {% endfor %}
     </table>
