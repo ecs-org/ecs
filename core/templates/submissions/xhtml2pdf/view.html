@@ -600,6 +600,25 @@ Parallelgruppen, multizentrisch)</p>
 
 <p style="margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-inside: avoid">
  8.1.16 Anzahl der Gruppen: <b> {{ submission_form.study_plan_number_of_groups|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 9cm; text-indent: -9cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.17 Stratifizierung: {{ submission_form.study_plan_stratification|yesno:"[ ],[X]" }} nein {{ submission_form.study_plan_stratification|yesno:"[X],[ ]" }} ja: Kriterien: <b> {{ submission_form.study_plan_stratification|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 9cm; text-indent: -9cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.18 Messwiederholungen: {{ submission_form.study_plan_sample_frequency|yesno:"[ ],[X]" }} nein {{ submission_form.study_plan_sample_frequency|yesno:"[X],[ ]" }} ja: Zeitpunkte: <b> {{ submission_form.study_plan_sample_frequency|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.19 Hauptzielgröße: <b> {{ submission_form.study_plan_primary_objectives|default_if_none:"" }}  </b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.20 Nullhypothese(n): <b> {{ submission_form.study_plan_null_hypothesis|default_if_none:"" }}</b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.21 Alternativhypothese(n): <b> {{ submission_form.study_plan_alternative_hypothesis|default_if_none:"" }}</b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0.14cm; page-break-inside: avoid">
+ 8.1.22 Nebenzielgrößen: <b> {{ submission_form.study_plan_secondary_objectives|default_if_none:"" }} </b> </p>
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
