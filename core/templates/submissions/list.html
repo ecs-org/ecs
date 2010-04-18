@@ -15,7 +15,7 @@
 <h2>Eingereichte Studien</h2>
 <ul>
     {% for submission_form in submission_forms %}
-        <li><a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a></li>
+        <li><a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a> <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">PDF</a></li>
     {% endfor %}
 </ul>
 {% endif %}
