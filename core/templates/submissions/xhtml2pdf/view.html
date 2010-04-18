@@ -282,6 +282,31 @@ die höchste Phase angeben) </p>
 Sie die <b>Investigator´s Brochure, relevante Daten</b> oder ein
 <b>Gutachten des Arzneimittelbeirates</b> bei. </p>
 
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+ <b>3b. Sonstige im Rahmen
+der Studie verabreichte Medikamente, deren Wirksamkeit und/oder
+Sicherheit nicht Gegenstand der Prüfung sind:</b> </p>
+
+<dl>
+<dd>
+<table width="576" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
+<col width="216">
+<col width="188">
+<col width="140">
+<tr>
+<th>Generic Name</th>
+<th>Darreichungsform</th>
+<th>Dosis</th>
+</tr>
+{% for drug in submission_form.nontesteduseddrug_set.all %}
+<tr>
+<td width="216">{{ drug.generic_name }}</td>
+<td width="188">{{ drug.preparation_form }}</td>
+<td width="140">{{ drug.dosage }}</td>
+</tr>
+{% endfor %}
+</table>
+
     <div id="footer">
       Antragsformular - &Ouml;sterreichische Ethikkommissionen, Version 6.0, 03.07.2009
     </div>
