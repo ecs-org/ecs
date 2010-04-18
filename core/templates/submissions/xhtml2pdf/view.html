@@ -676,6 +676,50 @@ Datenmanagement </p>
  {{ submission_form.study_plan_datamanagement }}
       </p>
 
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+ 8.5 Verantwortliche und
+Qualifikation </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.5.1 Wer führte die
+biometrische Planung durch (ggf. Nachweis der
+Qualifikation)? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+  {{ submission_form.study_plan_biometric_planning }}
+      </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.5.2 Wer wird die
+statistische Auswertung durchführen (ggf. Nachweis der
+Qualifikation)? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+  {{ submission_form.study_plan_statistics_implementation }}
+      </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+8.6 Datenschutz </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+ 8.6.1 Die Datenverarbeitung erfolgt {{ submission_form.study_plan_dataprotection_reason|yesno:"[X],[ ]" }} a) 
+ personenbezogen {{ submission_form.study_plan_dataprotection_reason|yesno:"[ ],[X]" }} b) 
+ indirekt
+personenbezogen </p>
+
+<p style="margin-left: 5.25cm; text-indent: -5.25cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+ 8.6.2 Wenn a): Begründung: <b> {{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}    </b> </p>
+
+<p style="margin-left: 5.25cm; text-indent: -5.25cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+ DVR-Nummer: <b> {{ submission_form.study_plan_dataprotection_dvr|default_if_none:"" }}    </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.6.3 Wenn b): Wie erfolgt
+die Anonymisierung? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0cm; page-break-inside: avoid">
+  {{ submission_form.study_plan_dataprotection_anonalgoritm }}
+      </p>
 
 
     <div id="footer">
