@@ -149,7 +149,19 @@ registrierten <b>Arzneimittels</b></p>
 {{ submission_form.project_type_genetic_study|yesno:"[X],[ ]" }} 2.1.6 <b>Genetische Untersuchung</b></p>
 
 <p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
-2.1.7 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
+{{ submission_form.project_type_register|yesno:"[X],[ ]" }} 2.1.7 <b>Register</b>
+
+<p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
+{{ submission_form.project_type_biobank|yesno:"[X],[ ]" }} 2.1.8 <b>Biobank</b></p>
+
+<p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
+{{ submission_form.project_type_retrospective|yesno:"[X],[ ]" }} 2.1.9 <b>Retrospektive Datenauswertung</b></p>
+
+<p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
+{{ submission_form.project_type_questionnaire|yesno:"[X],[ ]" }} 2.1.10 <b>Fragebogen Untersuchung</b></p>
+
+<p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
+2.1.11 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
 spezifizieren:</p>
 <p style="page-break-inside: avoid">{{ submission_form.project_type_misc|default_if_none:"" }} </p>
 
