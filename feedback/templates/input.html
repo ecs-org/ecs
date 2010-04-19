@@ -1,0 +1,36 @@
+<title>Feedback</title>
+
+<h1>Feedback: Teilen Sie Ihre {{ type }} mit</h1>
+
+<form action="" method="post" enctype="multipart/form-data" class="main">
+
+  <div class="fb_types">
+    <a href="" id="idea-button" class="button_fb_type"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback Idee"/>Idee</a>
+    <a href="" id="question-button" class="button_fb_type"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback Frage"/>Frage</a>
+    <a href="" id="problem-button" class="button_fb_type"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback Problem"/>Problem</a>
+    <a href="" id="praise-button" class="button_fb_type"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback Lob"/>Lob</a>
+  </div>
+
+  <p><textarea id="description" cols="30" rows="6">Beschreibung Ihrer {{ type }}</textarea></p>
+
+  <p><input id="summary" type="text" size="30" maxlength="80" value="Zusammenfassung" /></p>
+
+  <p><input type="submit" value="Abschicken" name="submit" /></p>
+
+  <p><h2>{{ type }} anderer Benutzer</h2></p>
+  {% if fb_list %}
+    {% for fb in fb_list %}
+      <p>Zusammenfassung: {{ fb.summary }}</p>
+      <p>Beschreibung: {{ fb.description }}</p>
+      <p>X Personen gefällt diese {{ type }}</p>
+    {% endfor %}
+    <p>
+    <a href="" id="prev-button" class="button_fb_nav"><img src="{{ MEDIA_URL }}images/feedback.png" alt="prev"/>prev</a>
+    <a href="" id="next-button" class="button_fb_nav"><img src="{{ MEDIA_URL }}images/feedback.png" alt="next"/>next</a>
+    Seite {{ fb_page }} von {{ fb_pages }}
+    </p>
+  {% else %}
+    Keine {{ type }} anderer Benutzer.
+  {% endif %}
+</form>
+

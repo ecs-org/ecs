@@ -27,7 +27,8 @@ urlpatterns = patterns(
     url(r'^$', feedbackpost_create),
     url(r'^(?P<pk>[^/]+)$', feedbackpost_resource), 
     url(r'^(?P<type>[^/]+)/(?P<origin>[^/]+)/(?P<offsetdesc>.*)$', feedbackpost_search), 
-    #url(r'^(?P<pk>.*)$', test), 
+    #url(r'^(?P<pk>.*)$', test),
+    url(r'^input/$', 'ecs.feedback.views.feedback_input'),
 )
 
 #
