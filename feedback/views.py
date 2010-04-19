@@ -5,6 +5,16 @@ from ecs.feedback.models import Feedback
 
 
 def feedback_input(request, type='idea'):
+    if request.method == 'POST':
+        description = request.POST.get('description')
+        summary = request.POST.get('summary')
+        1/0
+        return render(request, 'thanks.html', {
+           'type': type,
+           'description': description,
+           'summary': summary,
+        })
+ 
     fb_list = Feedback.objects.all().order_by('-pub_date')  # TODO restrict to feedbacktype iqpl
 
     page_size = 5
