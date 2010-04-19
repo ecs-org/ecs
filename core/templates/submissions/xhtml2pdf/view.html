@@ -163,7 +163,7 @@ registrierten <b>Arzneimittels</b></p>
 <p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
 2.1.11 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
 spezifizieren:</p>
-<p style="page-break-inside: avoid">{{ submission_form.project_type_misc|default_if_none:"" }} </p>
+<p style="page-break-inside: avoid"><b>{{ submission_form.project_type_misc|default_if_none:"" }}</b> </p>
 
 <p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; ">
 <b>Zusatzinformation:</b> 
@@ -183,19 +183,19 @@ spezifizieren:</p>
 </tr>
 <tr valign="top">
 <td width="147">2.3.1 Prüfsubstanz(en):</td>
-<td width="147">{{ submission_form.pharma_checked_substance }}</td>
+<td width="147"><b>{{ submission_form.pharma_checked_substance }}</b></td>
 <td width="157">2.4.1 Prüfprodukt(e):</td>
-<td width="157">{{ submission_form.medtech_checked_product }}</td>
+<td width="157"><b>{{ submission_form.medtech_checked_product }}</b></td>
 </tr>
 <tr valign="top">
 <td width="147">2.3.2 Referenzsubstanz:</td>
-<td width="147">{{ submission_form.pharma_reference_substance }}</td>
+<td width="147"><b>{{ submission_form.pharma_reference_substance }}</b></td>
 <td width="157">2.4.2 Referenzprodukt:</td>
-<td width="157">{{ submission_form.medtech_reference_substance }}</td>
+<td width="157"><b>{{ submission_form.medtech_reference_substance }}</b></td>
 </tr>
 </table>
 <p style="margin-left: 3.5cm; text-indent: -3.5cm; margin-top: 0.21cm">
-2.5 Klinische Phase: {{ submission_form.clinical_phase }} </p>
+2.5 Klinische Phase: <b>{{ submission_form.clinical_phase }}</b> </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
 2.6 Nehmen andere Zentren an der Studie teil: 
@@ -205,15 +205,13 @@ spezifizieren:</p>
 <p> 2.7 Liste
 der Zentren: <br/>
 {% for ec in submission_form.ethics_commissions.all %}
-  {{ ec.name }} ; {{ ec.zip_code }} {{ ec.city }} <br/>
+  <b>{{ ec.name }}</b> ; {{ ec.zip_code }} {{ ec.city }} <br/>
 {% endfor %}
 {% for pc in submission_form.foreignparticipatingcenter_set.all %}
-  {{ pc.name }} ; {{ pc.zip_code }} {{ pc.city }} <br/>
+  <b>{{ pc.name }}</b> ; {{ pc.zip_code }} {{ pc.city }} <br/>
 {% endfor %}
 </p>
-</td>
-</tr>
-</table>
+
 
 <p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; page-break-after: avoid">
 2.8 Liegen bereits Voten anderer Ethikkommissionen vor? </p>
