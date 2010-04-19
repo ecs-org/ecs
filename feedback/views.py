@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
 
+from django.http import HttpResponse, HttpResponseRedirect
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.feedback.models import Feedback
+import datetime
 
 
-def feedback_input(request, type='idea'):
+def feedback_input(request, type='i'):
+    m = dict(Feedback.FEEDBACK_TYPES)
+    if not m.has_key(type):
+        return HttpResponse("Error: unknown feedback type '%s'!" % type)
+
     if request.method == 'POST':
-        description = request.POST.get('description')
-        summary = request.POST.get('summary')
-        1/0
+        description = request.POST['description']
+        summary = request.POST['summary']
+        feedbacktype = type
+        origin = 'TODO'
+        question = 'WTF'
+        pub_date = datetime.datetime.now()
+        feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
+        feedback.save()
         return render(request, 'thanks.html', {
            'type': type,
            'description': description,

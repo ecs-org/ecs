@@ -25,10 +25,11 @@ def test(*args, **kw):
 urlpatterns = patterns(
     '',
     url(r'^$', feedbackpost_create),
+    url(r'^input/$', 'ecs.feedback.views.feedback_input'),
+    url(r'^input/(?P<type>[a-z])/$', 'ecs.feedback.views.feedback_input'),
     url(r'^(?P<pk>[^/]+)$', feedbackpost_resource), 
     url(r'^(?P<type>[^/]+)/(?P<origin>[^/]+)/(?P<offsetdesc>.*)$', feedbackpost_search), 
     #url(r'^(?P<pk>.*)$', test),
-    url(r'^input/$', 'ecs.feedback.views.feedback_input'),
 )
 
 #

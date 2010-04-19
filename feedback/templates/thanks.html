@@ -2,9 +2,15 @@
 
 <h1>Vielen Dank für Ihre {{ type }}!</h1>
 
-<ol>
-  <li>Feedbacktyp: [{{ type }}]</li>
-  <li>Beschreibung: [{{ description }}]</li>
-  <li>Zusammenfassung: [{{ summary }}]</li>
-</ol>
+<table border="1">
+  <tr>
+    <th>Feedbacktyp</th><td>{{ type }}</td>
+  </tr>
+  <tr>
+    <th>Beschreibung</th> <td>{{ description }}</td>
+  </tr>
+  <tr>
+    <th>Zusammenfassung</th> <td>{{ summary }}</td>
+  </tr>
+</table>
 
