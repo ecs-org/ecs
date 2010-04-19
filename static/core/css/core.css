@@ -245,7 +245,12 @@ form a.add_row {
   border-bottom: 0 none !important;
 }
 tr.form {
-  height: 30px;
+  height: 35px;
+  border: 2px solid #D1EAEF;
+  background: #E0ECEF;
+}
+tr.form td {
+  padding: 3px;
 }
 
 fieldset.disabled {
