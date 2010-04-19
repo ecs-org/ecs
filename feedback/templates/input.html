@@ -11,13 +11,13 @@
     <a href="" id="praise-button" class="button_fb_type"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback Lob"/>Lob</a>
   </div>
 
-  <p>Beschreibung Ihrer {{ type }}</p>
+  <p><textarea id="description" cols="30" rows="6">Beschreibung Ihrer {{ type }}</textarea></p>
 
-  <p>Zusammenfassung</p>
+  <p><input id="summary" type="text" size="30" maxlength="80" value="Zusammenfassung" /></p>
 
-  <input type="submit" value="Abschicken" name="submit" />
+  <p><input type="submit" value="Abschicken" name="submit" /></p>
 
-  <p>{{ type }} anderer Benutzer:</p>
+  <p><h2>{{ type }} anderer Benutzer</h2></p>
   {% if fb_list %}
     {% for fb in fb_list %}
       <p>Zusammenfassung: {{ fb.summary }}</p>
