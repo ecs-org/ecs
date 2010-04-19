@@ -21,8 +21,9 @@ body {
   float: left;
 }
 #header {
-  position: fixed;
-  right: 230px;
+  position: absolute;
+  right: 220px;
+  top: 0;
   left: 0;
   min-height: 120px;
   z-index: 101;
@@ -31,11 +32,12 @@ body {
 }
 #headertitle {
   float: left;
-  width: 15em;
-  padding: 20px 10px 0 10px;
+  width: 170px;
+  padding: 20px 0 0 10px;
   height: 60px;
   display: block;
   background: #d8e6ef;
+  line-break: strict;
 }
 #headertext {
   float: left;
@@ -46,19 +48,20 @@ body {
   background: #d8e6ef;
 }
 #headernav {
-  width: 98%;
   float: left;
-  padding-left: 10px;
+  display: block;
+  width: 85%;
+  padding: 5px 10px;
   background: #d8e6ef;
   font-size: 11pt;
 }
-*html #headernav {
+*html #header, *html #headernav  {
   width: 100%;
 }
 #content {
   position: absolute;
   top: 160px;
-  right: 230px;
+  right: 220px;
   bottom: 0;
   left: 0;
   background: #fff;
@@ -76,7 +79,7 @@ body {
   top: 0;
   bottom: 0; 
   right: 0;
-  width: 230px; /*Width of frame div*/
+  width: 220px; /*Width of frame div*/
   height: 100%;
   overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
   color: #333;
@@ -132,27 +135,20 @@ body {
   float: left;
 }
 #content ul {
-  margin: 0 0 20px 20px;
+
 }
 input, textarea, select {
   border: 1px solid #666;
-  margin-bottom: 20px;
-}
-.button input {
-  float: right;
-  padding: 3px;
-  background: #333;
-  color: #fff;
-  cursor: pointer;
 }
 
 /* header */
 
 #header {
   color: #333;
+  background: #D8E6EF;
 }
 #headertitle h1 {
-  font-size: 1.2em;
+  font-size: 12pt;
   margin-bottom: 5px;
   font-family: Georgia, "Times New Roman", Times, serif;
 }

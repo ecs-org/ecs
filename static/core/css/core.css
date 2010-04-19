@@ -40,8 +40,6 @@ div#ecs-core-tabs {
   line-height: 30px;
 }
 ul.tab_headers {
-  float: left;
-  width: 88%;
 }
 .tab_headers li a {
   text-decoration: none;
@@ -64,18 +62,37 @@ ul.tab_headers {
   border: 1px solid #ff0000;
 }
 .header_actions {
-  float: left;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 20px 10px 0 0;
   display: block;
-  width: 10%;
-  padding: 4px 5px;
-  margin-top: 2px;
-  background: #4dc21b;
-  border: 1px solid #ccc;
+  width: 105px;
   text-align: center;
 }
-.submit_main_form {
-  text-decoration: none;
+.header_actions a {
+  float: right;
+  padding: 3px;
+  margin-bottom: 5px;
+  display: block;
+  height: 20px;
+  width: 90px;
+  cursor: pointer;
+  z-index: 100;
   color: #fff;
+  text-decoration: none;
+}
+.button_save {
+  background: #333;
+  border: 1px solid #ccc;  
+}
+.button_validate {
+  background: #333;
+  border: 1px solid #ccc;  
+}
+.button_submit {
+  background: #4dc21b;
+  border: 1px solid #ccc;  
 }
 
 /* form layout hacks */
@@ -93,23 +110,16 @@ form .field, form .tab {
 form .field h3, form .tab h3 {
   font-size: 12pt;
   letter-spacing: 1px;
-  padding: 5px 0 0 5px;
+  padding: 5px 0 10px 5px;
+  line-break: normal;
 }
 
 form, form * {
-  font-size: 12px;
+  font-size: 9pt;
 }
-form fieldset {
-  border: 1px solid #eeeeee;
-  background: #f9feff;
-}
-form legend {
-  font-size: 12pt;
-  margin-left: 10px;
-  padding: 3px;
-}
-form legend span {
-  display: block;
+
+*html form .field {
+  width: 700px;
 }
 
 form ol {
@@ -124,77 +134,134 @@ form ol:last-child {
 }
 */
 form ol li {
-  padding-top: 10px;
   clear: both;
   display: block;
+  list-style-type: none;
+  margin-bottom: 10px;
 }
 
 form ol li input[type=text], form ol li textarea {
-  width: 30em;
-  font-size: 1em;
 }
-
 form ol li textarea {
-  height: 4em;
+  height: 3em;
   width: 30em;
 }
-
-form ol li .mooeditable-container{
-    left: 21em;
-	border: 1px solid #666666;
+form ol li.focus {
+  background-color: #eeeeff;
 }
-form ol li .mooeditable-ui-toolbar .toolbar-item,
-form ol li .mooeditable-ui-toolbar .toolbar-separator{
-	display: block;
-	float: left;
-	vertical-align: none;
-	margin-left: 0px;
-}
-form ol li .rte_display{
-	margin-left: 21em;
-	width: 29em;
-	padding: 0.5em;
-	height: auto;
-	min-height: 4em;
-	background-color: #ffffff;
-	border: 1px solid #666666;
-}
-form ol li .rte_display *{
-	margin: 0;
-	padding: 0;
-}
-
-form ol li > label {
-  width: 20em;
-  padding-right: 1em;
+form ol li label {
+  width: 200px;
+  padding-right: 10px;
   text-align: right;
   float: left;
 }
-form ol li > label:after {
+form ol li label:after {
   content: ":";
 }
-form th.label{
-	text-align: left;
+form th.label {
+  text-align: left;
 }
-
-form ol li > .errors {
-  margin-left: 21em;
+form .errors ul li {
+  margin-left: 220px;
+  display: block;
+  float: left;
+  color: #ff0000;
+  padding: 2px;
 }
-
 form ol li.BooleanField {
-  padding-left: 21em;
+  padding-left: 15em;
 }
-
-form ol li.BooleanField > label {
+form ol li.BooleanField label {
   float: none;
   padding-left: 1em;
   text-align: left;
 }
-form ol li.BooleanField > label:after {
+form ol li.BooleanField label:after {
   content: none;
 }
-form ol li.BooleanField > input {
+form ol li.BooleanField input {
   float: left;
+}
+
+form ol li .notes {
+  font-size: 0.9em;
+  color: #666666;
+  padding-left: 10px;
+}
+
+form th.label .notes{
+  display: block;
+}
+form ol li .help_text {
+  margin: 0 0 10px 200px;
+  display: block;
+  color: #666;
+  padding-left: 10px;
+}
+form ol li.BooleanField .help_text {
+  clear: both;
+  margin: 10px 0 0 20px;
+  height: 15px;
+  display: block;
+  color: #666;
+}
+
+
+.inline_formset .form {
+    position: relative;
+    padding-top: 20px;
+}
+.inline_formset .form a.delete_row {
+  background: url(/static/core/images/remove.png) no-repeat;
+  background-position: 0 5px;
+  padding: 5px 0 5px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+div.inline_formset .form a.delete_row {
+  display: block;
+  height: 20px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+form a.add_row {
+  background: url(/static/core/images/add.png) no-repeat;
+  padding-left: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+#content a.delete_row:hover, #content a.add_row:hover {
+  border-bottom: 0 none !important;
+}
+
+fieldset.disabled{
+    display: none;
+}
+
+form ol li .mooeditable-container {
+  left: 21em;
+  border: 1px solid #666666;
+}
+form ol li .mooeditable-ui-toolbar .toolbar-item,
+form ol li .mooeditable-ui-toolbar .toolbar-separator {
+  display: block;
+  float: left;
+  vertical-align: none;
+  margin-left: 0px;
+}
+form ol li .rte_display {
+  margin-left: 21em;
+  width: 29em;
+  padding: 0.5em;
+  height: auto;
+  min-height: 4em;
+  background-color: #ffffff;
+  border: 1px solid #666666;
+}
+form ol li .rte_display * {
+  margin: 0;
+  padding: 0;
 }
 
 form ol li .paperform_number {
@@ -208,50 +275,6 @@ form ol li .paperform_number:after {
   content: "]";
 }
 
-form .notes{
-  font-size: 0.9em;
-  color: #666666;
-  font-weight: normal
-}
-from ol li .notes{
-  float: right;
-}
-form th.label .notes{
-  display: block;
-}
-
-form ol li.focus {
-  background-color: #eeeeff;
-}
-.inline_formset .form {
-    position: relative;
-    padding-top: 20px;
-}
-.inline_formset .form a.delete_row {
-  background: url(/static/core/images/remove.png) no-repeat;
-  background-position: 0 5px;
-  padding: 5px 0 5px 20px;
-  margin-left: 10px;
-}
-div.inline_formset .form a.delete_row{
-    display: block;
-    height: 20px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
-form a.add_row {
-  background: url(/static/core/images/add.png) no-repeat;
-  padding-left: 20px;
-  margin-left: 10px;
-}
-#content a.delete_row:hover, #content a.add_row:hover {
-  border-bottom: 0 none !important;
-}
-
-fieldset.disabled{
-    display: none;
-}
 /* // alternative version of
 fieldset.disabled > ol{
     display: none;
@@ -285,28 +308,30 @@ fieldset.disabled > .disabled_hint{
 }
 
 /* notifications */
-table.notification th{
+
+table.notification th {
     text-align: right;
     padding-right: 1em;
 }
 
-table.notif_meta{
+table.notif_meta {
     border: 1px solid #cccccc;
     border-left: none;
     border-collapse: collapse;
     margin-bottom: 1em;
     width: 100%;
 }
-table.notif_meta td, table.notif_meta th{
+table.notif_meta td, table.notif_meta th {
     border-left: 1px solid #cccccc;
     padding: 0.2em;
 }
-table.notif_meta th{
+table.notif_meta th {
     text-align: left;
     border-bottom: 1px solid #cccccc;
 }
 
 /* meeting editor */
+
 #meeting_editor #userlist{
 	list-style: none;
 	background-color: #eeeeee;

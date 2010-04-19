@@ -16,7 +16,11 @@
 
 {% block header_actions %}
     {{ block.super }}
-    <div class="header_actions"><a href="" class="submit_main_form">Abschicken</a></div>
+    <div class="header_actions">
+      <a href="" class="button_save">Speichern</a>
+      <a href="" class="button_validate">Validieren</a>
+      <a href="" class="button_submit">Einreichen</a>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -109,9 +113,6 @@
                 </div>
             {% endfor %}
         </div>
-    <div class="button"><input type="button" value="Speichern" name="save" id="save-button" /></div>
-    <div class="button"><input type="submit" value="Validieren" name="save" /></div>
-    <input type="submit" value="Submit" name="submit" />
     </form>
 {% endblock %}
 
