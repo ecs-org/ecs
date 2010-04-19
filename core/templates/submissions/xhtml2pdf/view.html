@@ -350,11 +350,11 @@ gemäß MPG: Angaben zum Medizinprodukt:</b> </p>
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 0.11cm;">
  4.7 Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des Medizinproduktes
 herangezogen worden (Technische Sicherheit): </p>
-<p> {{ submission_form.medtech_technical_safety_regulations }} </p>
+<p> <b>{{ submission_form.medtech_technical_safety_regulations }}</b> </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0.11cm;">
  4.8 Allfällige Abweichungen von den o.a. Bestimmungen (Normen): </p>
-<p> {{ submission_form.medtech_departure_from_regulations }} </p>
+<p> <b>{{ submission_form.medtech_departure_from_regulations }}</b> </p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 <b>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §47 und §48 MPG)</b> </p>
@@ -405,10 +405,10 @@ cellspacing="0">
 </tr>
 {% for m in submission_form.measures_study_specific %}
 <tr>
-<td width="169">{{ m.type }}</td>
-<td width="217">{{ m.count }}</td>
-<td width="120">{{ m.period }}</td>
-<td width="76">{{ m.total }}</td>
+<td width="169"><b>{{ m.type }}</b></td>
+<td width="217"><b>{{ m.count }}</b></td>
+<td width="120"><b>{{ m.period }}</b></td>
+<td width="76"><b>{{ m.total }}</b></td>
 </tr>
 {% endfor %}
 </table>
@@ -431,10 +431,10 @@ cellspacing="0">
 <th width="76">Insgesamt</th></tr>
 {% for m in submission_form.measures_nonspecific %}
 <tr>
-<td width="169">{{ m.type }}</td>
-<td width="217">{{ m.count }}</td>
-<td width="120">{{ m.period }}</td>
-<td width="76">{{ m.total }}</td></tr>
+<td width="169"><b>{{ m.type }}</b></td>
+<td width="217"><b>{{ m.count }}</b></td>
+<td width="120"><b>{{ m.period }}</b></td>
+<td width="76"><b>{{ m.total }}</b></td></tr>
 {% endfor %}
 </table>
 </center>
@@ -442,7 +442,7 @@ cellspacing="0">
 <p style="margin-bottom: 0cm"> 6.3. Ergänzende Informationen zu studienbezogenen
 Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>
 
-<p style="margin-left: 0.6cm; margin-top: 0.21cm">{{ submission_form.additional_therapy_info }}</p>
+<p style="margin-left: 0.6cm; margin-top: 0.21cm"><b>{{ submission_form.additional_therapy_info }}</b></p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.21cm; page-break-before: always; page-break-after: avoid">
 <b>7. Strukturierte Kurzfassung des Projektes (<i><u>in deutscher Sprache, kein Verweis
