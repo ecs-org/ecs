@@ -312,9 +312,9 @@ Sicherheit nicht Gegenstand der Prüfung sind:</b> </p>
 </tr>
 {% for drug in submission_form.nontesteduseddrug_set.all %}
 <tr>
-<td width="216">{{ drug.generic_name }}</td>
-<td width="188">{{ drug.preparation_form }}</td>
-<td width="140">{{ drug.dosage }}</td>
+<td width="216"><b>{{ drug.generic_name }}</b></td>
+<td width="188"><b>{{ drug.preparation_form }}</b></td>
+<td width="140"><b>{{ drug.dosage }}</b></td>
 </tr>
 {% endfor %}
 </table>
