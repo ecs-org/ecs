@@ -109,3 +109,8 @@
     {% include "documents/compact_list.html" %}
     
 {% endblock %}
+
+{% block jsbottom %}
+    var accordionitem = 0;
+    {{ block.super }}
+{% endblock %}
