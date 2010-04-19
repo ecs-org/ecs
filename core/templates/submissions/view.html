@@ -2,6 +2,7 @@
 {% load core %}
 
 {% block jsbottom %}
+    <script type="text/javascript"> var accordionitem = 0; </script>
     {{ block.super }}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
@@ -110,7 +111,3 @@
     
 {% endblock %}
 
-{% block jsbottom %}
-    var accordionitem = 0;
-    {{ block.super }}
-{% endblock %}
