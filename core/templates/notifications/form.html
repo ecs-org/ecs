@@ -19,9 +19,9 @@
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-      <a href="" class="button_save">Speichern</a>
-      <a href="" class="button_validate">Validieren</a>
-      <a href="" class="button_submit">Einreichen</a>
+      <a href="" id="save-button" class="button_save">Speichern</a>
+      <a href="" id="validate-button" class="button_validate">Validieren</a>
+      <a href="" id="submit-button" class="button_submit">Einreichen</a>
     </div>
 {% endblock %}
 
@@ -54,7 +54,8 @@
             </div>
         {% endfor %}
     </div>
-    <input type="submit" value="Submit" name="submit"/>    
+    <input type="submit" value="submit" name="submit" class="hidden" />
+    <input type="submit" value="validate" name="validate" class="hidden" />
 </form>
 
 {% endblock %}
@@ -66,9 +67,18 @@
         window.addEvent('domready', function(){
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.autosave(true);
+                return false;
             });
+            $('validate-button').addEvent('click', function(){
+                ecs.mainForm.submit('validate');
+                return false;
+            });
+            $('submit-button').addEvent('click', function(){
+                ecs.mainForm.submit('submit');
+                return false;
+            });
+
             ecs.setupRichTextEditor($('id_comments'));
-            
 
             var submissionFormsSelect = $('id_submission_forms');
             var submissionDataDisplay = new Element('div', {'class': 'submission_data'});

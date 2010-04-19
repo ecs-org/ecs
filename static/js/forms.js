@@ -421,7 +421,7 @@
         ecs.setupFormFieldHelpers();
         
         /* FIXME: cleanup the following code */
-        $$('form.main').getElements('input[type=submit]').each(function(button){
+        $$('form.main').getElements('input[type=submit].hidden').each(function(button){
             button.setStyle('display', 'none');
         });
         $$('a.submit_main_form').each(function(link){
