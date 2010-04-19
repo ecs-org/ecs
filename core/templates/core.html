@@ -4,7 +4,7 @@
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/css/MooDialog.css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" media="screen" />
 {% endblock %}
 
 {% block account %} 
@@ -60,9 +60,9 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Overlay.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/MooDialog.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/MooDialog.Iframe.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/Overlay.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.js"></script>
+  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.Iframe.js"></script>
   <script type="text/javascript">
     window.addEvent('domready', function(){
       var toggles = $$('.togglers');
