@@ -183,9 +183,9 @@
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
-            addButtonText: 'Hinzufügen',
+            addButtonText: '&nbsp;',
             removeButtonClass: 'delete_row',
-            removeButtonText: 'Löschen',
+            removeButtonText: '',
             templateClass: 'template',
             canDelete: false
         },
