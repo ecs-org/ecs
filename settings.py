@@ -94,16 +94,13 @@ TEMPLATE_LOADERS = (
 #     'django.template.loaders.eggs.load_template_source',
 )
 
-# wuxxin: this should give us user and request in the context template but somebody should review it
-#TEMPLATE_CONTEXT_PROCESSORS = (
-#    "django.contrib.auth.context_processors.auth",
-#    "django.core.context_processors.debug",
-#    "django.core.context_processors.i18n",
-#    "django.core.context_processors.media",
-#    "django.contrib.messages.context_processors.messages",
-#    "django.core.context_processors.request",
-#    "django.contrib.auth.context_processors.user",
-#    )
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth", # FIXME: replace with "django.contrib.auth.context_processors.auth" for django 1.2 
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.request",
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -112,6 +109,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'ecs.utils.forceauth.ForceAuth',
+    'ecs.groupchooser.middleware.GroupChooserMiddleware',
     )   
 # middleware:     'djangodblog.middleware.DBLogMiddleware',
 
@@ -142,13 +140,15 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'core',
-    'utils',
-    'ecs.feedback',
-    'docstash',
     'south',
     'django_nose',
     'reversion',
+
+    'ecs.core',
+    'ecs.utils',
+    'ecs.feedback',
+    'ecs.docstash',
+    'ecs.groupchooser',
 )
 
 # installed_apps     'djangodblog',

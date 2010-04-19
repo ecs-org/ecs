@@ -10,6 +10,8 @@
 {% block account %} 
   <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
   {{ user.get_full_name }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
+  {% load groupchooser %}
+  {% groupchooser %}
   <p>
   {% comment %}
   <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
