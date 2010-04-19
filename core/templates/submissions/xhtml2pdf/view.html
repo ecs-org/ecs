@@ -875,10 +875,10 @@ cellspacing="0">
 <th width="111">10.5 Fax</th>
 <th width="241">10.6 e-mail-Adresse:</th>
 </tr><tr>
-<td width="110">{{ inv.phone }}</td>
-<td width="122">{{ inv.mobile }}</td>
-<td width="111">{{ inv.fax }}</td>
-<td width="241">{{ inv.email }}</td>
+<td width="110"><b>{{ inv.phone }}</b></td>
+<td width="122"><b>{{ inv.mobile }}</b></td>
+<td width="111"><b>{{ inv.fax }}</b></td>
+<td width="241"><b>{{ inv.email }}</b></td>
 </tr>
 </table>
 <p style="margin-left: 10cm; text-indent: -10cm; margin-top: 0.21cm; margin-bottom: 0.11cm; page-break-inside: avoid">
@@ -921,11 +921,11 @@ Proband/inn/en an dieser Prüfstelle {{ inv.subject_count }} </b> </p>
 </tr>
 {% for emp in inv.investigatoremployee_set.all %}
 <tr>
-<td width="29" valign="top">{{ emp.geschlecht_string }}</td>
-<td width="52" valign="top">{{ emp.title }}</th>
-<td width="89" valign="top">{{ emp.firstname }}</td>
-<td width="106" valign="top">{{ emp.surname }}</td>
-<td width="289" valign="top">{{ emp.organisation }}</td>
+<td width="29" valign="top"><b>{{ emp.geschlecht_string }}</b></td>
+<td width="52" valign="top"><b>{{ emp.title }}</b></th>
+<td width="89" valign="top"><b>{{ emp.firstname }}</b></td>
+<td width="106" valign="top"><b>{{ emp.surname }}</b></td>
+<td width="289" valign="top"><b>{{ emp.organisation }}</b></td>
 </tr>
 {% endfor %}
 </table>
