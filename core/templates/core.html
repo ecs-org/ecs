@@ -69,7 +69,9 @@
     window.addEvent('domready', function(){
       var toggles = $$('.togglers');
       var content = $$('.elements');
-      var AccordionObject = new Accordion(toggles, content);
+      if (window.accordionitem === undefined)
+         accordionitem = -1
+      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
 
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
       var feedback_handler = function() { 

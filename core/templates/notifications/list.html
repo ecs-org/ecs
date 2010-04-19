@@ -46,3 +46,8 @@
 {% endif %}
 
 {% endblock %}
+
+{% block jsbottom %}
+    <script type="text/javascript"> var accordionitem = 1;     </script>
+    {{ block.super }}
+{% endblock %}
