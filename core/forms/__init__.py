@@ -1,2 +1,2 @@
 from ecs.core.forms.forms import NotificationForm, CompletionReportNotificationForm, ProgressReportNotificationForm, SubmissionFormForm, DocumentForm, \
-    DocumentFormSet, ForeignParticipatingCenterFormSet, NonTestedUsedDrugFormSet, MeasureFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
+    DocumentFormSet, ForeignParticipatingCenterFormSet, NonTestedUsedDrugFormSet, MeasureFormSet, RoutineMeasureFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet

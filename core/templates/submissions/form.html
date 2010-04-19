@@ -31,8 +31,14 @@
                     {% ifequal tab "Massnahmen" %}
                         {# FIXME #}
                         <div class="field">
-                            <h3>Angaben zur durchzuführenden Therapie und Diagnostik</h3>
+                            <h3>Studienbezogen durchzuführende Therapie und Diagnostik</h3>
                             {% with measure_formset as formset %}
+                                {% include "forms/tables/inline_formset.html" %}
+                            {% endwith %}
+                        </div>
+                        <div class="field">
+                            <h3>Routinemäßig durchzuführende Therapie und Diagnostik</h3>
+                            {% with routinemeasure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
                         </div>
@@ -125,6 +131,7 @@
         window.addEvent('domready', function(){
             var formsets = [
                 '{{ measure_formset.prefix }}', 
+                '{{ routinemeasure_formset.prefix }}', 
                 '{{ nontesteduseddrug_formset.prefix }}', 
                 '{{ foreignparticipatingcenter_formset.prefix }}', 
                 '{{ investigator_formset.prefix }}', 

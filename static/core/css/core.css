@@ -275,16 +275,12 @@ form ol li .paperform_number:after {
   content: "]";
 }
 
-/* // alternative version of
-fieldset.disabled > ol{
-    display: none;
-}
+/* specific formset styles */
 
-fieldset.disabled > .disabled_hint{
-    display: block;
-    font-style: italic;
+#measure_formset textarea,
+#routinemeasure_formset textarea{
+	height: 1.4em;
 }
-*/
 
 /* documents */
 

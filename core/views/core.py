@@ -10,7 +10,7 @@ from django.conf import settings
 
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
-from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
+from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
 from ecs.utils.htmldoc import htmldoc
 from ecs.utils.xhtml2pdf import xhtml2pdf
@@ -136,10 +136,13 @@ def notification_xhtml2pdf(request, notification_pk=None):
 def create_submission_form(request):
     data = request.POST or request.docstash.get_query_dict() or None
         
-    formsets = {}
-    for formset_cls in (MeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet):
-        name = formset_cls.__name__.replace('FormFormSet', '').lower()
-        formsets["%s_formset" % name] = formset_cls(data, prefix=name)
+    formsets = {
+        'measure': MeasureFormSet,
+        'routinemeasure': RoutineMeasureFormSet,
+        'nontesteduseddrug': NonTestedUsedDrugFormSet,
+        'foreignparticipatingcenter': ForeignParticipatingCenterFormSet,
+    }
+    formsets = dict(('%s_formset' % name, formset_cls(data, prefix=name)) for name, formset_cls in formsets.iteritems())
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
     investigator_formset = InvestigatorFormSet(data, prefix='investigator')
     investigatoremployee_formset = InvestigatorEmployeeFormSet(data, prefix='investigatoremployee')

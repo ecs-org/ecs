@@ -97,12 +97,23 @@ class BaseNonTestedUsedDrugFormSet(BaseModelFormSet):
 
 NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=1, exclude=('submission_form',))
 
+class MeasureForm(forms.ModelForm):
+    category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
+    
+    class Meta:
+        model = Measure
+        exclude = ('submission_form',)
+        
+class RoutineMeasureForm(MeasureForm):
+    category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
+
 class BaseMeasureFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Measure.objects.none())
         super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
-
-MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, exclude = ('submission_form',))
+        
+MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=MeasureForm)
+RoutineMeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=RoutineMeasureForm)
 
 
 class BaseInvestigatorFormSet(BaseModelFormSet):
