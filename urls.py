@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^groupchooser/', include('ecs.groupchooser.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
+    url(r'^trigger500/$', lambda request: 1/0),
 
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 )

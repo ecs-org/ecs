@@ -106,12 +106,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'ecs.utils.forceauth.ForceAuth',
     'ecs.groupchooser.middleware.GroupChooserMiddleware',
-    )   
-# middleware:     'djangodblog.middleware.DBLogMiddleware',
+    'djangodblog.middleware.DBLogMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+)   
 
 # debug toolbar config:
 # middleware on bottom:
@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'reversion',
+    'djangodblog',
 
     'ecs.core',
     'ecs.utils',
@@ -150,8 +151,6 @@ INSTALLED_APPS = (
     'ecs.docstash',
     'ecs.groupchooser',
 )
-
-# installed_apps     'djangodblog',
 
 # django-db-log
 # temporary for testing, cat 404 defaults to false
