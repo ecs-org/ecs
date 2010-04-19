@@ -106,14 +106,14 @@
     1.5 Sponsor / Rechnungsempfänger (Kontaktperson in der Buchhaltung):<br/>
     <table border=0>
       <tr><th style="width:3cm"></th><th align=left>Sponsor</th><th align=left>Rechnungsempfänger</th></tr>
-      <tr><td>1.5.1 Name:</td><td> {{ submission_form.sponsor_name }}</td>
-	<td>{{ submission_form.invoice_name }}</td></tr>
-      <tr><td valign=top>1.5.2 Adresse:</td><td>{{ submission_form.sponsor_address1 }}<br/>{{ submission_form.sponsor_address2 }}<br/>{{ submission_form.sponsor_zip_code }} {{ submission_form.sponsor_city }}</td>
-	<td>{{ submission_form.invoice_address1 }}<br/>{{ submission_form.invoice_address2 }}<br/>{{ submission_form.invoice_zip_code }} {{ submission_form.invoice_city }}</td></tr>
-      <tr><td>1.5.3 Kontaktperson:</td><td>{{ submission_form.sponsor_contactname|default_if_none:"" }} </td><td>{{ submission_form.invoice_contact_name|default_if_none:"" }} </td></tr>
-      <tr><td>1.5.4 Telefon:</td><td>{{ submission_form.sponsor_phone }}</td><td>{{ submission_form.invoice_phone }}</td></tr>
-      <tr><td>1.5.5 FAX:</td><td> {{ submission_form.sponsor_fax }} </td><td>{{ submission_form.invoice_fax }}</td></tr>
-      <tr><td>1.5.6 e-mail:</td><td> {{ submission_form.sponsor_email }} </td><td> {{ submission_form.invoice_email|default:"<span style=\"font-size:small\">(wenn nicht gleich wie \"Sponsor\")" }}</td></tr>
+      <tr><td>1.5.1 Name:</td><td><b>{{ submission_form.sponsor_name }}</b></td>
+	<td><b>{{ submission_form.invoice_name }}</b></td></tr>
+      <tr><td valign=top>1.5.2 Adresse:</td><td><b>{{ submission_form.sponsor_address1 }}</b><br/><b>{{ submission_form.sponsor_address2 }}</b><br/><b>{{ submission_form.sponsor_zip_code }} {{ submission_form.sponsor_city }}</b></td>
+	<td><b>{{ submission_form.invoice_address1 }}</b><br/><b>{{ submission_form.invoice_address2 }}</b><br/><b>{{ submission_form.invoice_zip_code }} {{ submission_form.invoice_city }}</b></td></tr>
+      <tr><td>1.5.3 Kontaktperson:</td><td><b>{{ submission_form.sponsor_contactname|default_if_none:"" }}</b> </td><td><b>{{ submission_form.invoice_contact_name|default_if_none:"" }}</b> </td></tr>
+      <tr><td>1.5.4 Telefon:</td><td><b>{{ submission_form.sponsor_phone }}</b></td><td><b>{{ submission_form.invoice_phone }}</b></td></tr>
+      <tr><td>1.5.5 FAX:</td><td> <b>{{ submission_form.sponsor_fax }}</b> </td><td><b>{{ submission_form.invoice_fax }}</b></td></tr>
+      <tr><td>1.5.6 e-mail:</td><td> <b>{{ submission_form.sponsor_email }}</b> </td><td> <b>{{ submission_form.invoice_email|default:"<span style=\"font-size:small\">(wenn nicht gleich wie \"Sponsor\")" }}</b></td></tr>
     </table>
 
 <p style="border-top: 1px solid #000000; page-break-after: avoid; margin-bottom: 0cm; line-height: 100%; page-break-before: always; "><b>2. Eckdaten der Studie</b><br/></p>
@@ -163,7 +163,7 @@ registrierten <b>Arzneimittels</b></p>
 <p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%; ">
 2.1.11 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
 spezifizieren:</p>
-<p style="page-break-inside: avoid">{{ submission_form.project_type_misc|default_if_none:"" }} </p>
+<p style="page-break-inside: avoid"><b>{{ submission_form.project_type_misc|default_if_none:"" }}</b> </p>
 
 <p style="margin-left: 3.6cm; margin-top: 0.11cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; ">
 <b>Zusatzinformation:</b> 
@@ -183,19 +183,19 @@ spezifizieren:</p>
 </tr>
 <tr valign="top">
 <td width="147">2.3.1 Prüfsubstanz(en):</td>
-<td width="147">{{ submission_form.pharma_checked_substance }}</td>
+<td width="147"><b>{{ submission_form.pharma_checked_substance }}</b></td>
 <td width="157">2.4.1 Prüfprodukt(e):</td>
-<td width="157">{{ submission_form.medtech_checked_product }}</td>
+<td width="157"><b>{{ submission_form.medtech_checked_product }}</b></td>
 </tr>
 <tr valign="top">
 <td width="147">2.3.2 Referenzsubstanz:</td>
-<td width="147">{{ submission_form.pharma_reference_substance }}</td>
+<td width="147"><b>{{ submission_form.pharma_reference_substance }}</b></td>
 <td width="157">2.4.2 Referenzprodukt:</td>
-<td width="157">{{ submission_form.medtech_reference_substance }}</td>
+<td width="157"><b>{{ submission_form.medtech_reference_substance }}</b></td>
 </tr>
 </table>
 <p style="margin-left: 3.5cm; text-indent: -3.5cm; margin-top: 0.21cm">
-2.5 Klinische Phase: {{ submission_form.clinical_phase }} </p>
+2.5 Klinische Phase: <b>{{ submission_form.clinical_phase }}</b> </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
 2.6 Nehmen andere Zentren an der Studie teil: 
@@ -205,15 +205,13 @@ spezifizieren:</p>
 <p> 2.7 Liste
 der Zentren: <br/>
 {% for ec in submission_form.ethics_commissions.all %}
-  {{ ec.name }} ; {{ ec.zip_code }} {{ ec.city }} <br/>
+  <b>{{ ec.name }}</b> ; {{ ec.zip_code }} {{ ec.city }} <br/>
 {% endfor %}
 {% for pc in submission_form.foreignparticipatingcenter_set.all %}
-  {{ pc.name }} ; {{ pc.zip_code }} {{ pc.city }} <br/>
+  <b>{{ pc.name }}</b> ; {{ pc.zip_code }} {{ pc.city }} <br/>
 {% endfor %}
 </p>
-</td>
-</tr>
-</table>
+
 
 <p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; page-break-after: avoid">
 2.8 Liegen bereits Voten anderer Ethikkommissionen vor? </p>
@@ -314,9 +312,9 @@ Sicherheit nicht Gegenstand der Prüfung sind:</b> </p>
 </tr>
 {% for drug in submission_form.nontesteduseddrug_set.all %}
 <tr>
-<td width="216">{{ drug.generic_name }}</td>
-<td width="188">{{ drug.preparation_form }}</td>
-<td width="140">{{ drug.dosage }}</td>
+<td width="216"><b>{{ drug.generic_name }}</b></td>
+<td width="188"><b>{{ drug.preparation_form }}</b></td>
+<td width="140"><b>{{ drug.dosage }}</b></td>
 </tr>
 {% endfor %}
 </table>
@@ -352,11 +350,11 @@ gemäß MPG: Angaben zum Medizinprodukt:</b> </p>
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 0.11cm;">
  4.7 Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des Medizinproduktes
 herangezogen worden (Technische Sicherheit): </p>
-<p> {{ submission_form.medtech_technical_safety_regulations }} </p>
+<p> <b>{{ submission_form.medtech_technical_safety_regulations }}</b> </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0.11cm;">
  4.8 Allfällige Abweichungen von den o.a. Bestimmungen (Normen): </p>
-<p> {{ submission_form.medtech_departure_from_regulations }} </p>
+<p> <b>{{ submission_form.medtech_departure_from_regulations }}</b> </p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 <b>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §47 und §48 MPG)</b> </p>
@@ -407,10 +405,10 @@ cellspacing="0">
 </tr>
 {% for m in submission_form.measures_study_specific %}
 <tr>
-<td width="169">{{ m.type }}</td>
-<td width="217">{{ m.count }}</td>
-<td width="120">{{ m.period }}</td>
-<td width="76">{{ m.total }}</td>
+<td width="169"><b>{{ m.type }}</b></td>
+<td width="217"><b>{{ m.count }}</b></td>
+<td width="120"><b>{{ m.period }}</b></td>
+<td width="76"><b>{{ m.total }}</b></td>
 </tr>
 {% endfor %}
 </table>
@@ -433,10 +431,10 @@ cellspacing="0">
 <th width="76">Insgesamt</th></tr>
 {% for m in submission_form.measures_nonspecific %}
 <tr>
-<td width="169">{{ m.type }}</td>
-<td width="217">{{ m.count }}</td>
-<td width="120">{{ m.period }}</td>
-<td width="76">{{ m.total }}</td></tr>
+<td width="169"><b>{{ m.type }}</b></td>
+<td width="217"><b>{{ m.count }}</b></td>
+<td width="120"><b>{{ m.period }}</b></td>
+<td width="76"><b>{{ m.total }}</b></td></tr>
 {% endfor %}
 </table>
 </center>
@@ -444,7 +442,7 @@ cellspacing="0">
 <p style="margin-bottom: 0cm"> 6.3. Ergänzende Informationen zu studienbezogenen
 Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>
 
-<p style="margin-left: 0.6cm; margin-top: 0.21cm">{{ submission_form.additional_therapy_info }}</p>
+<p style="margin-left: 0.6cm; margin-top: 0.21cm"><b>{{ submission_form.additional_therapy_info }}</b></p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.21cm; page-break-before: always; page-break-after: avoid">
 <b>7. Strukturierte Kurzfassung des Projektes (<i><u>in deutscher Sprache, kein Verweis
@@ -452,25 +450,25 @@ auf das Protokoll</u></i>)</b></p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-top: 0.11cm; margin-bottom: 0.11cm; page-break-after: avoid">
 7.1 Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels: <br/> 
- {{ submission_form.german_project_title }} </p>
+ <b>{{ submission_form.german_project_title }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.2 Zusammenfassung des Projektes (Rechtfertigung, Relevanz, Design, Maßnahmen und
 Vorgehensweise):<br/>
-{{ submission_form.german_summary }}
+<b>{{ submission_form.german_summary }}</b>
 </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.3 Ergebnisse der präklinischen Tests oder Begründung für den Verzicht auf präklinischen Tests: <br/>
-{{ submission_form.german_preclinical_results }}</p>
+<b>{{ submission_form.german_preclinical_results }}</b></p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.4 Primäre Hypothese der Studie (wenn relevant auch sekundäre Hypothesen): <br/>
-{{ submission_form.german_primary_hypothesis }} </p>
+<b>{{ submission_form.german_primary_hypothesis }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.5 Relevante Ein- und Ausschlusskriterien: <br/>
- {{ submission_form.german_inclusion_exclusion_crit }} </p>
+ <b>{{ submission_form.german_inclusion_exclusion_crit }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.6 Ethische Überlegungen<br> (Identifizieren und beschreiben Sie alle
@@ -480,23 +478,23 @@ und seine Bedeutung, sowie mögliche Risiken für Schädigungen
 oder Belastungen der Prüfungsteilnehmer/innen. <b>Legen Sie Ihre
 eigene Bewertung des Nutzen/Risiko-Verhältnisses
 dar</b>): <br>
-{{ submission_form.german_ethical_info }} </p>
+<b>{{ submission_form.german_ethical_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.7 Begründung für den Einschluss von Personen aus geschützten Gruppen<br> (z.B. Minderjährige, temporär oder permanent nicht-einwilligungsfähige Personen; wenn zutreffend): <br/>
-{{submission_form.german_protected_subjects_info }} </p>
+<b>{{submission_form.german_protected_subjects_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm"> 7.8 Beschreibung des
 Rekrutierungsverfahrens<br/> (alle zur Verwendung bestimmte
 Materialien, z.B. Inserate <b>inkl. Layout</b> müssen beigelegt
-werden):<br> {{ submission_form.german_recruitment_info }} </p>
+werden):<br> <b>{{ submission_form.german_recruitment_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm"> 7.9 Vorgehensweise an
 der/den Prüfstelle(n) zur Information und Erlangung der
 informierten Einwilligung von Prüfungsteilnehmer/inne/n, bzw.
 Eltern oder gesetzlichen Vertreter/inne/n, wenn zutreffend 
 (wer wird informieren und wann, Erfordernis für gesetzliche
-Vertretung, Zeugen, etc.):<br/> {{ submission_form.german_consent_info }} </p>
+Vertretung, Zeugen, etc.):<br/> <b>{{ submission_form.german_consent_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
  7.10 Risikoabschätzung,
@@ -504,7 +502,7 @@ vorhersehbare Risiken der Behandlung und sonstiger Verfahren, die
 verwendet werden sollen (inkl. Schmerzen,
 Unannehmlichkeiten, Verletzung der persönlichen Integrität und
 Maßnah­men zur Vermeidung und/oder Versorgung von unvorhergesehenen
-/ unerwünschten Ereignissen): <br/> {{ submission_form.german_risks_info }} </p>
+/ unerwünschten Ereignissen): <br/> <b>{{ submission_form.german_risks_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.11 Voraussichtliche Vorteile für die eingeschlossenen Prüfungsteilnehmer/innen: <br> {{ submission_form.german_benefits_info }} </p>
@@ -512,7 +510,7 @@ Maßnah­men zur Vermeidung und/oder Versorgung von unvorhergesehenen
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
  7.12 Relation zwischen Prüfungsteilnehmer/in und Prüfer/in (z.B. Patient/in -
 Ärztin/Arzt, Student/in - Lehrer/in, Dienstnehmer/in - Dienstgeber/in, etc.): <br>
-{{ submission_form.german_relationship_info }} </p>
+<b>{{ submission_form.german_relationship_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.13 Verfahren an der/den
@@ -521,54 +519,54 @@ gleichzeitig an einer anderen Studie teilnimmt oder ob eine
 erforderliche Zeitspanne seit einer Teilnahme an einer anderen
 Studie verstrichen ist<br> (von besonderer Bedeutung, wenn
 gesunde Proband/inn/en in pharmakologische Studien eingeschlossen
-werden): <br> {{ submission_form.german_concurrent_study_info }} </p>
+werden): <br> <b>{{ submission_form.german_concurrent_study_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.14 Methoden, um unerwünschte Effekte ausfindig zu machen, sie aufzuzeichnen und zu
 berichten<br> (Beschreiben Sie wann, von wem und wie, z.B. freies Befragen und/oder an Hand von Listen): <br>
-{{ submission_form.german_sideeffects_info }} </p>
+<b>{{ submission_form.german_sideeffects_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.15 Optional: Statistische Überlegungen und Gründe für die Anzahl der Personen, die in die
 Studie eingeschlossen werden sollen (ergänzende informationen zu Punkt 8, wenn erforderlich): <br>
-{{ submission_form.german_statistical_info }}</p>
+<b>{{ submission_form.german_statistical_info }}</b></p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.16 Optional: Verwendete
 Verfahren zum Schutz der Vertraulichkeit der erhobenen Daten, der
 Quell­dokumente und von Proben (ergänzende Informationen zu
 Punkt 8, wenn erforderlich): <br>
-{{ submission_form.german_dataprotection_info }} </p>
+<b>{{ submission_form.german_dataprotection_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.17 Plan zur Behandlung oder versorgung Nachdem die Personen ihre Teilnahme an der Studie
-beendet haben (wer wird verantwortlich sein und wo): <br/> {{ submission_form.german_aftercare_info }} </p>
+beendet haben (wer wird verantwortlich sein und wo): <br/> <b>{{ submission_form.german_aftercare_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.18 Betrag und Verfahren der Entschädigung oder Vergütung an die Prüfungsteilnehmer/innen<br>
 (Beschreibung des Betrages, der während der Prüfungsteilnahme bezahlt wird und wofür, z.B.
 Fahrtspesen, Einkommensverlust, Schmerzen und Unannehmlichkeiten,
-usw.): {{ submission_form.german_payment_info }} </p>
+usw.): <b>{{ submission_form.german_payment_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">7.19 Regeln für das
 Aussetzen oder vorzeitige Beenden der Studie an der/den
 Prüfstelle(n) in diesem Mitgliedstaat oder der gesamten
-Studie: <br> {{ submission_form.german_abort_info }} </p>
+Studie: <br> <b>{{ submission_form.german_abort_info }}</b> </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.20 Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten,
 Publikationsricht­linien, etc. (wenn nicht im Protokoll dargestellt): <br>
-{{ submission_form.german_dataaccess_info }}
+<b>{{ submission_form.german_dataaccess_info }}</b>
 </p>
 
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.21 Finanzierung der
 Studie (wenn nicht im Protokoll dargestellt) und Informationen über finanzielle oder
 andere Interessen der Prüferin/des Prüfers/der Prüfer: 
-<br/> {{ submission_form.german_financing_info }}
+<br/> <b>{{ submission_form.german_financing_info }}</b>
 <p style="margin-left: 0.75cm; text-indent: -0.75cm; margin-bottom: 0.11cm; padding-top: 0.04cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
 7.22 Weitere
-Informationen (wennerforderlich): <br> {{ submission_form.german_additional_info }} </p>
+Informationen (wennerforderlich): <br> <b>{{ submission_form.german_additional_info }}</b> </p>
 
 </p>
 
@@ -679,7 +677,7 @@ Datenmanagement </p>
 Datenqualitätsprüfung </p>
 
 <p style="margin-left: 1cm; margin-bottom: 0.07cm; page-break-inside: avoid">
-  {{ submission_form.study_plan_dataquality_checking }}
+  <b>{{ submission_form.study_plan_dataquality_checking }}</b>
      </p>
 
 <p style="margin-bottom: 0cm; line-height: 90%; page-break-after: avoid">
@@ -687,7 +685,7 @@ Datenqualitätsprüfung </p>
 Datenmanagement </p>
 
 <p style="margin-left: 1cm; margin-bottom: 0.04cm; page-break-inside: avoid">
- {{ submission_form.study_plan_datamanagement }}
+ <b>{{ submission_form.study_plan_datamanagement }}</b>
       </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
@@ -700,7 +698,7 @@ biometrische Planung durch (ggf. Nachweis der
 Qualifikation)? </p>
 
 <p style="margin-left: 1cm; margin-bottom: 0.07cm; page-break-inside: avoid">
-  {{ submission_form.study_plan_biometric_planning }}
+  <b>{{ submission_form.study_plan_biometric_planning }}</b>
       </p>
 
 <p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
@@ -709,7 +707,7 @@ statistische Auswertung durchführen (ggf. Nachweis der
 Qualifikation)? </p>
 
 <p style="margin-left: 1cm; margin-bottom: 0.04cm; page-break-inside: avoid">
-  {{ submission_form.study_plan_statistics_implementation }}
+  <b>{{ submission_form.study_plan_statistics_implementation }}</b>
       </p>
 
 <p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
@@ -732,7 +730,7 @@ personenbezogen </p>
 die Anonymisierung? </p>
 
 <p style="margin-left: 1cm; margin-bottom: 0cm; page-break-inside: avoid">
-  {{ submission_form.study_plan_dataprotection_anonalgoritm }}
+  <b>{{ submission_form.study_plan_dataprotection_anonalgoritm }}</b>
       </p>
 
 <p style="margin-bottom: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; page-break-before: always; page-break-after: avoid">
@@ -753,11 +751,11 @@ cellspacing="1">
 </tr>
 {% for doc in submission_form.documents.all %}
 <tr>
-<td width="328" height="13">{{ doc.doctype.name }}</td>
+<td width="328" height="13"><b>{{ doc.doctype.name }}</b></td>
 </td>
-<td width="178">{{ doc.version }}</td>
+<td width="178"><b>{{ doc.version }}</b></td>
 </td>
-<td width="82">{{ doc.date }}</td>
+<td width="82"><b>{{ doc.date }}</b></td>
 </tr>
 {% endfor %}
 </table>
@@ -876,10 +874,11 @@ cellspacing="0">
 <th width="122">10.4 „Pieps“/Mobil</th>
 <th width="111">10.5 Fax</th>
 <th width="241">10.6 e-mail-Adresse:</th>
-<td width="110">{{ inv.phone }}</td>
-<td width="122">{{ inv.mobile }}</td>
-<td width="111">{{ inv.fax }}</td>
-<td width="241">{{ inv.email }}</td>
+</tr><tr>
+<td width="110"><b>{{ inv.phone }}</b></td>
+<td width="122"><b>{{ inv.mobile }}</b></td>
+<td width="111"><b>{{ inv.fax }}</b></td>
+<td width="241"><b>{{ inv.email }}</b></td>
 </tr>
 </table>
 <p style="margin-left: 10cm; text-indent: -10cm; margin-top: 0.21cm; margin-bottom: 0.11cm; page-break-inside: avoid">
@@ -922,11 +921,11 @@ Proband/inn/en an dieser Prüfstelle {{ inv.subject_count }} </b> </p>
 </tr>
 {% for emp in inv.investigatoremployee_set.all %}
 <tr>
-<td width="29" valign="top">{{ emp.geschlecht_string }}</td>
-<td width="52" valign="top">{{ emp.title }}</th>
-<td width="89" valign="top">{{ emp.firstname }}</td>
-<td width="106" valign="top">{{ emp.surname }}</td>
-<td width="289" valign="top">{{ emp.organisation }}</td>
+<td width="29" valign="top"><b>{{ emp.geschlecht_string }}</b></td>
+<td width="52" valign="top"><b>{{ emp.title }}</b></th>
+<td width="89" valign="top"><b>{{ emp.firstname }}</b></td>
+<td width="106" valign="top"><b>{{ emp.surname }}</b></td>
+<td width="289" valign="top"><b>{{ emp.organisation }}</b></td>
 </tr>
 {% endfor %}
 </table>
