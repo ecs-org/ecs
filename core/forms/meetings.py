@@ -32,7 +32,7 @@ class ConstraintForm(forms.ModelForm):
     class Meta:
         model = Constraint
 
-UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=1, exclude = ('meeting', 'user'), can_delete=True, form=ConstraintForm)
+UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=0, exclude = ('meeting', 'user'), can_delete=True, form=ConstraintForm)
 
 ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=True)
     

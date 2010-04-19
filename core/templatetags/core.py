@@ -49,7 +49,6 @@ def empty_form(formset):
     if formset.data or formset.files:
         defaults['data'] = formset.data
         defaults['files'] = formset.files
-    defaults.update(kwargs)
     form = formset.form(**defaults)
-    formset.add_fields(form, None)
+    formset.add_fields(form, 0)
     return form

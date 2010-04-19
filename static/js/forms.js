@@ -186,13 +186,21 @@
             addButtonText: 'Hinzufügen',
             removeButtonClass: 'delete_row',
             removeButtonText: 'Löschen',
+            templateClass: 'template',
             canDelete: false
         },
         initialize: function(container, options){
             this.container = $(container);
             this.setOptions(options);
             this.forms = container.getElements(this.options.formSelector);
-            this.template = this.forms[0].clone(true, true);
+            if(this.forms[0].hasClass(this.options.templateClass)){
+                this.template = this.forms.pop();
+                this.template.dispose();
+                this.forms.splice(0, 1);
+            }
+            else{
+                this.template = this.forms[0].clone(true, true);
+            }
             this.isTable = this.container.tagName.toUpperCase() == 'TABLE';
             ecs.clearFormFields(this.template);
             this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
@@ -228,6 +236,10 @@
                 form.grab(removeLink);
             }
             if(added){
+                var idField = form.getElement('input[name$=-id]');
+                if(idField){
+                    idField.value = "";
+                }
                 ecs.setupFormFieldHelpers(form);
             }
         },
@@ -235,7 +247,7 @@
             function _update(el, attr){
                 var value = el.getProperty(attr);
                 if(value){
-                    el.setProperty(attr, value.replace(/-\d+-/, '-' + index + '-'));
+                    el.setProperty(attr, value.replace(/-.+?-/, '-' + index + '-'));
                 }
             }
             form.getElements('input,select,textarea').each(function(field){
@@ -257,7 +269,6 @@
                 if(idField && idField.value){
                     var delName = this.options.prefix + '-' + index + '-DELETE';
                     var checkbox = new Element('input', {type: 'checkbox', style: 'display:none', name: delName, id: this.options.idPrefix + delName, checked: 'checked'});
-                    console.log(f);
                     if(this.isTable){
                         f.getFirst('td').grab(checkbox);
                     }
