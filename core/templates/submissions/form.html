@@ -17,9 +17,9 @@
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-      <a href="" class="button_save">Speichern</a>
-      <a href="" class="button_validate">Validieren</a>
-      <a href="" class="button_submit">Einreichen</a>
+      <a href="" id="save-button" class="button_save">Speichern</a>
+      <a href="" id="validate-button" class="button_validate">Validieren</a>
+      <a href="" id="submit-button" class="button_submit">Einreichen</a>
     </div>
 {% endblock %}
 
@@ -59,7 +59,7 @@
                             {% ifequal legend "Zentren im Ausland" %}
                                 {# FIXME #}
                                 {% with foreignparticipatingcenter_formset as formset %}
-                                    {% include "forms/inline_formset.html" %}
+                                    {% include "forms/tables/inline_formset.html" %}
                                 {% endwith %}                            
                             {% endifequal %}                            
                             <ol>
@@ -113,6 +113,8 @@
                 </div>
             {% endfor %}
         </div>
+        <input type="submit" name="validate" value="validate" />
+        <input type="submit" name="submit" value="submit" />
     </form>
 {% endblock %}
 
@@ -134,7 +136,17 @@
             });
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.autosave(true);
+                return false;
             });
+            $('validate-button').addEvent('click', function(){
+                ecs.mainForm.submit('validate');
+                return false;
+            });
+            $('submit-button').addEvent('click', function(){
+                ecs.mainForm.submit('submit');
+                return false;
+            });
+
             [
                 'id_project_type_misc', 
                 'id_pharma_checked_substance', 

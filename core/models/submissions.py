@@ -361,14 +361,8 @@ class NonTestedUsedDrug(models.Model):
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
-    
     name = models.CharField(max_length=60)
-    address_1 = models.CharField(max_length=60)
-    address_2 = models.CharField(max_length=60)
-    zip_code = models.CharField(max_length=10)
-    city = models.CharField(max_length=40)
-    # FIXME: country should be a ForeignKey(Country)
-    country = models.CharField(max_length=4)
+    investigator_name = models.CharField(max_length=60, blank=True)
     
     class Meta:
         app_label = 'core'

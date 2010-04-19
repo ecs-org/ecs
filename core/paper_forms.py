@@ -69,11 +69,7 @@ FormInfo(Document, fields=(
 
 FormInfo(ForeignParticipatingCenter, fields=(
     FieldInfo(None, 'name', u'Name'),
-    FieldInfo(None, 'address_1', u'Adresse 1'),
-    FieldInfo(None, 'address_2', u'Adresse 2'),
-    FieldInfo(None, 'zip_code', u'Postleitzahl'),
-    FieldInfo(None, 'city', u'Stadt'),
-    FieldInfo(None, 'country', u'Land'),
+    FieldInfo(None, 'investigator_name', u'Prüfarzt'),
 ))
 
 FormInfo(Measure, fields=(
