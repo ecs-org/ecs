@@ -751,11 +751,11 @@ cellspacing="1">
 </tr>
 {% for doc in submission_form.documents.all %}
 <tr>
-<td width="328" height="13">{{ doc.doctype.name }}</td>
+<td width="328" height="13"><b>{{ doc.doctype.name }}</b></td>
 </td>
-<td width="178">{{ doc.version }}</td>
+<td width="178"><b>{{ doc.version }}</b></td>
 </td>
-<td width="82">{{ doc.date }}</td>
+<td width="82"><b>{{ doc.date }}</b></td>
 </tr>
 {% endfor %}
 </table>
