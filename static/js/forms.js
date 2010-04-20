@@ -183,9 +183,9 @@
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
-            addButtonText: 'Hinzufügen',
+            addButtonText: '&nbsp;',
             removeButtonClass: 'delete_row',
-            removeButtonText: 'Löschen',
+            removeButtonText: '',
             templateClass: 'template',
             canDelete: false
         },
@@ -397,6 +397,14 @@
                 var maxlength = input.getProperty('maxlength');
                 if(maxlength && maxlength > 0){
                     notes.push('max. ' +  maxlength + ' Zeichen');
+                    var ml = 1 + parseInt(maxlength / 10)
+                    if(ml == 3){
+                        ml = 4;
+                    }
+                    if(ml >= 5){
+                        ml = 6;
+                    }
+                    field.addClass('max' + 10*ml);
                 }
             }
             if(notes.length){

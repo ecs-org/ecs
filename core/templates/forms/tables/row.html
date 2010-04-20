@@ -7,7 +7,7 @@
 {% for field in form %}
     {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
         {% with field|get_field_info as field_info %}
-            <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
+            <td valign="top" class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
                 {{ field }}
                 {% if field.errors %}
                 <span class="errors">

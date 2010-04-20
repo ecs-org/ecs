@@ -1,0 +1,21 @@
+{% load feedback %}
+
+<title>Feedback Dank</title>
+
+<div class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</div>
+
+<div class="fb_entry">
+  <div class="fb_field">
+    <div class="fb_field_name">Feedbacktyp</div>
+    <div class="fb_field_value">{{ type|fb_type }}</div>
+  </div>
+  <div class="fb_field">
+    <div class="fb_field_name">Beschreibung</div> 
+    <div class="fb_field_value">{{ description }}</div>
+  </div>
+  <div class="fb_field">
+    <div class="fb_field_name">Zusammenfassung</div> 
+    <div class="fb_field_value">{{ summary }}</div>
+  </div>
+</div>
+

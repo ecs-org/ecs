@@ -1,6 +1,8 @@
 .mooeditable-container{
-	position: relative;
-	border: 2px solid #ddd;
+  float: left;
+  height: 100px;
+  background: #fff;
+  margin-bottom: 20px;
 }
 
 .mooeditable-ui-toolbar{

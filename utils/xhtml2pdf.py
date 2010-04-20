@@ -32,7 +32,7 @@ def xhtml2pdf(html, **options):
     if isinstance(html, unicode):
         html = html.encode("utf-8")
     if sys.platform.startswith("linux"): # ugly, but our production platform is Ubuntu
-        cmd = 'ulimit -t 30 ; '
+        cmd = 'ulimit -t 30 ; ' # FIXME: Hardcoded process abbort criterium: Currently 30 Seconds
     else:
         cmd = ''
     cmd += which('xhtml2pdf').next()
