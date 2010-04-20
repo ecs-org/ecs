@@ -236,12 +236,16 @@ form ol li.BooleanField .help_text {
     position: relative;
     padding-top: 20px;
 }
-.inline_formset .form a.delete_row {
+tr.form > td{
+    vertical-align: top;
+}
+.inline_formset .form a.delete_row,
+.investigator_tab > a.delete_row{
   background: url(/static/core/images/remove.png) no-repeat;
   height: 16px;
   width: 16px;
-  float: left;
-  margin-top: -16px;
+  display: inline-block;
+  overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
 }
@@ -252,19 +256,25 @@ div.inline_formset .form a.delete_row {
   top: 0px;
   left: 0px;
 }
+.investigator_tab > a.delete_row{
+    border: 1px solid #ff0000;
+}
+
 form a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
-  padding-left: 20px;
-  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  overflow: hidden;
   cursor: pointer;
-  position: absolute;
-  left: 26px;
-  margin-top: -18px;
   text-indent: -9999px;
+  /* FIXME: margin is needed because tables still have cellspacing */
+  margin-left: 2px;
 }
 form #investigator_formset > a.add_row{
 	border: 1px solid #00ff00;
 }
+
 #content a.delete_row:hover, #content a.add_row:hover {
   border-bottom: 0 none !important;
 }
