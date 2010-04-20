@@ -119,13 +119,14 @@ def notification_pdf(request, notification_pk=None):
 def notification_xhtml2pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     template_names = ['notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
+    print template_names
     tpl = loader.select_template(template_names)
     html = tpl.render(Context({
         'notification': notification,
         'investigators': notification.investigators.order_by('ethics_commission__name', 'name'),
         'url': request.build_absolute_uri(),
     }))
-    pdf = xhtml2pdf(html.encode('utf-8'))
+    pdf = xhtml2pdf(html)
     assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
