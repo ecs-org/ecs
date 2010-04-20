@@ -4,67 +4,65 @@
 
 <title>Feedback Eingabe</title>
 
-<div class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</div>
+<span class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</span>
 
 <form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
 
   <div class="fb_new">
-
-    <div class="fb_types">
+    <ol class="fb_types">
   {% for t in types %}
     {% ifequal type t %}
-      <div class="fb_type_selected"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</div>
+      <li class="fb_type_selected"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</li>
     {% else %}
-      <div class="fb_type"><a href="{% url feedback_input t 1 origin %}" id="idea-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</a></div>
+      <li class="fb_type"><a href="{% url feedback_input t 1 origin %}" id="idea-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</a></li>
     {% endifequal %}
   {% endfor %}
-    </div>
-
-    <div><textarea id="description" cols="30" rows="6" name="description">Beschreibung {{ type|fb_type_of_your }}</textarea></div>
-
-    <div><input id="summary" type="text" size="30" maxlength="80" name="summary" value="Zusammenfassung" /></div>
-
-    <div><input type="submit" value="Abschicken" name="submit" /></div>
+    </ol>
+    <ol class="fb_form">
+      <li><textarea id="description" cols="30" rows="6" name="description">Beschreibung {{ type|fb_type_of_your }}</textarea></li>
+      <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="Zusammenfassung" /></li>
+      <li><input type="submit" value="Abschicken" name="submit" /></li>
+    </ol>
   </div>
 
-  <div class="fb_old">
-    <div class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</div>
-    <div class="fb_separator"><hr></div>
+  <ol class="fb_old">
+    <li class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</li>
+    <li class="fb_separator"><hr></li>
   {% if list %}
-    <div class="fb_list">
+    <li class="fb_list">
     {% for fb in list %}
-      <div class="fb_summary">
-        {{ fb.index }}. {{ fb.summary }}
-      {% ifequal fb.me2 'yours' %}
-	<div class="fb_yours">(von Ihnen)</div>
-      {% endifequal %}
-      {% ifequal fb.me2 'u2' %}
-        <div class="fb_u2">(Sie auch!)</div>
-      {% endifequal %}
-      {% ifequal fb.me2 'me2' %}
-	<div class="fb_me2">&lt;<a href="" id="me2">Ich auch!</a>|</div>
-      {% endifequal %}
-      </div>
-      <div class="fb_description">{{ fb.description }}</div>
-      <div class="fb_others">{{ fb.count|fb_count_persons }} gefällt {{ type|fb_type_this }}</div>
-      <div class="fb_separator"><hr></div>
+      <span class="fb_summary">{{ fb.index }}. {{ fb.summary }}</span>
+    {% ifequal fb.me2 'yours' %}
+      <span class="fb_yours">(von Ihnen)</span>
+    {% endifequal %}
+    {% ifequal fb.me2 'u2' %}
+      <span class="fb_u2">(Sie auch!)</span>
+    {% endifequal %}
+    {% ifequal fb.me2 'me2' %}
+      <span class="fb_me2">&lt;<a href="" id="me2">Ich auch!</a>|</div>
+    {% endifequal %}
+      <br/>
+      <span class="fb_description">{{ fb.description }}</span>
+      <br/>
+      <span class="fb_others">{{ fb.count|fb_count_persons }} gefällt {{ type|fb_type_this }}</span>
+      <span class="fb_separator"><hr></span>
+    </li>
     {% endfor %}
-    </div>
-    <div class="fb_bottom">
+    <li class="fb_bottom">
     {% if page|greater:1 %}
-      <div class="fb_nav"><a href="{% url feedback_input type page|add:'-1' origin %}" id="prev-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="prev"/>prev</a></div>
+      <span class="fb_nav"><a href="{% url feedback_input type page|add:'-1' origin %}" id="prev-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="prev"/>zurück</a></span>
     {% endif %}
     {% if page|less:pages %}
-      <div class="fb_nav"><a href="{% url feedback_input type page|add:'1' origin %}" id="next-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="next"/>next</a></div>
+      <span class="fb_nav"><a href="{% url feedback_input type page|add:'1' origin %}" id="next-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="next"/>vor</a></span>
     {% endif %}
-      Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)
-    </div>
+      <span class="fb_navinfo">Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)</span>
+    </li>
   {% else %}
-    <div class="fb_nolist">
+    <li class="fb_nolist">
       Keine {{ type|fb_type_many }} anderer Benutzer.
-    </div>
+    </li>
   {% endif %}
-  </div>
+  </ol>
 
 </form>
 
