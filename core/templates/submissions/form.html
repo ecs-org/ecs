@@ -8,7 +8,9 @@
 {% block headernav %}
     <ul class="tab_headers">
     {% for tab, fieldsets in tabs %}
+        {% ifnotequal tab "Zentrum" %}
         <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+        {% endifnotequal %}
     {% endfor %}
     </ul>
     {{ block.super }}
@@ -27,6 +29,7 @@
     <form action="" method="post" enctype="multipart/form-data" class="tabbed main">
         <div id="tabs">
             {% for tab, fieldsets in tabs %}
+                {% ifnotequal tab "Zentrum" %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
                     {% ifequal tab "Massnahmen" %}
                         {# FIXME #}
@@ -77,47 +80,79 @@
                             </ol>
                         </div>
                     {% endfor %}
-
-                    {% ifequal tab 'Zentrum' %}
-                    <div class="partb">
-                      <div class="field">
-                        <h3 class="partbno">Zentrum</h3>
-                        <ol class="partb_navi">
-                          <li><a class="partb_add" href="#">Neues Zentrum hinzufügen</a></li>
-                          <li><a class="partb_remove" href="#">Dieses Zentrum löschen</a></li> <!-- TODO deaktivieren, wenn erster Tab -->
-                        </ol>
-                        <div id="investigator_formset">
-                        {{ investigator_formset.management_form }}
-                        {% with investigator_formset as formset %}
-                          {% for form in formset.forms %}
-                            {# Investigator #}
-                            <div class="form">
-                              <ol>
-                                {% for hidden in form.hidden_fields %}
-                                  {{ hidden }}
-                                {% endfor %}
-                                {% for field in form %}
-                                  {% if not field.is_hidden %}
-                                    {% include "forms/field.html" %}
-                                  {% endif %}
-                                {% endfor %}
-                              </ol> {# Investigator #}
-                            </div>
-                          {% endfor%}
-                        {% endwith %}
-                        </div>
-                      </div>
-
-                      <div class="field">
-                        <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
-                          {% with investigatoremployee_formset as formset %}
-                            {% include "forms/tables/inline_formset.html" %}
-                          {% endwith %}
-                      </div>
-                    </div>
-                    {% endifequal %}
                 </div>
+                {% endifnotequal %}
             {% endfor %}
+        </div>
+
+        {{ investigator_formset.management_form }}
+        {{ investigatoremployee_formset.management_form }}
+        
+        <div id="investigator_formset">
+        {% for form in investigator_formset.forms %}
+            {% with forloop.counter0 as investigator_index %}
+            <div class="investigator_tab tab" id="investigator_tab{{ forloop.counter0 }}">
+                <div class="field">
+                    <h3 class="partbno">Zentrum</h3>
+                    <div class="investigator_form">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <ol>
+                            {% for field in form %}
+                                {% if not field.is_hidden %}
+                                    {% include "forms/field.html" %}
+                                {% endif %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                </div>
+                <div class="field">
+                    <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
+                    {# FIXME: reuse forms/tables/inline_formset.html #}
+                    <table class="inline_formset investigatoremployee_formset">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            {% for field in investigatoremployee_formset|empty_form %}
+                                {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
+                                    {% with field|get_field_info as field_info %}
+                                    <th class="label">
+                                        {{ field_info.label|default:field.label }}
+                                        {% if field_info.number %}
+                                            <span class="paperform_number">{{ field_info.number }}</span>
+                                        {% endif %}
+                                        {% if field_info.help_text %}
+                                        <span class="help_text">
+                                            {{ field_info.help_text }}
+                                        </span>
+                                        {% endif %}
+                                    </th>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for form in investigatoremployee_formset.forms %}
+                            {% ifequal form.investigator_index.data|default:"0" investigator_index|stringformat:'s' %}
+                            <tr class="form">
+                                {% include "forms/tables/row.html" %}
+                            </tr>
+                            {% endifequal %}
+                        {% empty %}
+                            {% with investigatoremployee_formset|empty_form as form %}
+                                <tr class="form template">
+                                    {% include "forms/tables/row.html" %}
+                                </tr>
+                            {% endwith %}
+                        {% endfor%}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endwith %}
+        {% endfor%}
         </div>
         <input type="submit" name="validate" value="validate" class="hidden" />
         <input type="submit" name="submit" value="submit" class="hidden" />
@@ -135,13 +170,12 @@
                 '{{ routinemeasure_formset.prefix }}', 
                 '{{ nontesteduseddrug_formset.prefix }}', 
                 '{{ foreignparticipatingcenter_formset.prefix }}', 
-                '{{ investigator_formset.prefix }}', 
-                '{{ investigatoremployee_formset.prefix }}'
             ].map(function(prefix){
                 return new ecs.InlineFormSet($(prefix + '_formset'), {
                     prefix: prefix
                 });
             });
+            
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.autosave(true);
                 return false;
@@ -154,7 +188,7 @@
                 ecs.mainForm.submit('submit');
                 return false;
             });
-
+            
             [
                 'id_project_type_misc', 
                 'id_pharma_checked_substance', 

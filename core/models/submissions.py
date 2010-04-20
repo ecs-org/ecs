@@ -327,6 +327,17 @@ class InvestigatorEmployee(models.Model):
     organisation = models.CharField(max_length=80)
     
     @property
+    def full_name(self):
+        name = []
+        if self.title:
+            name.append(self.title)
+        if self.firstname:
+            name.append(self.firstname)
+        if self.surname:
+            name.append(self.surname)
+        return " ".join(name)
+    
+    @property
     def geschlecht_string(self):
         return dict(m="Hr", f="Fr").get(self.sex, "")
     class Meta:

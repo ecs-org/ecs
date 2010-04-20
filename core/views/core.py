@@ -12,7 +12,6 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
-from ecs.utils.htmldoc import htmldoc
 from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
 from ecs.docstash.decorators import with_docstash_transaction
@@ -104,20 +103,6 @@ def create_notification(request, notification_type_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    template_names = ['notifications/htmldoc/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
-    tpl = loader.select_template(template_names)
-    html = tpl.render(Context({
-        'notification': notification,
-        'investigators': notification.investigators.order_by('ethics_commission__name', 'name'),
-        'url': request.build_absolute_uri(),
-    }))
-    pdf = htmldoc(html.encode('ISO-8859-1'), webpage=True)
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
-    return response
-
-def notification_xhtml2pdf(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
     template_names = ['notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     print template_names
     tpl = loader.select_template(template_names)
@@ -164,7 +149,7 @@ def create_submission_form(request):
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')
         
-        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
+        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and investigator_formset.is_valid() and investigatoremployee_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))

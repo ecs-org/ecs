@@ -56,6 +56,18 @@ ul.tab_headers {
   color: #fff;
   background: #ff8000;
 }
+.tab_headers li a.delete_row{
+	border: none;
+	background: url(/static/core/images/remove.png) no-repeat;
+	width: 16px;
+	height: 16px;
+	padding: 0px;
+	position: relative;
+	top: 3px;
+	display: inline-block;
+	overflow: hidden;
+	text-indent: -1000px;
+}
 .tab_headers .errors a {
   background: #fb6464;
   color: #fff !important;
@@ -163,17 +175,24 @@ form ol li label {
   float: left;
 }
 
+form ol li label:after {
+  content: ":";
+}
+form th.label {
+  text-align: left;
+}
+
 form .errors ul li {
-  display: none;
-/*
   margin-left: 220px;
   display: block;
   float: left;
   color: #ff0000;
   padding: 2px;
-*/
 }
-
+form table td > .errors li{
+	margin: 0px;
+	float: none;
+}
 form ol li.BooleanField {
   padding-left: 240px;
 }
@@ -195,9 +214,6 @@ form ol li .notes {
   padding-left: 10px;
 }
 
-form th.label {
-  text-align: left;
-}
 form th.label .notes{
   display: block;
 }
@@ -238,27 +254,22 @@ div.inline_formset .form a.delete_row {
 }
 form a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
-  width: 16px;
-  height: 16px;
+  padding-left: 20px;
+  margin-left: 10px;
   cursor: pointer;
   position: absolute;
   left: 26px;
   margin-top: -18px;
   text-indent: -9999px;
 }
+form #investigator_formset > a.add_row{
+	border: 1px solid #00ff00;
+}
 #content a.delete_row:hover, #content a.add_row:hover {
   border-bottom: 0 none !important;
 }
-tr.form {
-  height: 35px;
-  border: 2px solid #D1EAEF;
-  background: #E0ECEF;
-}
-tr.form td {
-  padding: 3px;
-}
 
-fieldset.disabled {
+fieldset.disabled{
     display: none;
 }
 
@@ -313,20 +324,8 @@ form li.max60 input{ width: 340px;}
 /* specific formset styles */
 
 #measure_formset textarea,
-#routinemeasure_formset textarea {
-  width: 15em;
-  height: 2.4em;
-}
-#measure_formset input,
-#routinemeasure_formset input {
-  height: 1.2em;
-}
-#measure_formset textarea,
-#routinemeasure_formset textarea,
-#measure_formset input,
-#routinemeasure_formset input {
-  float: left;
-  display: block;
+#routinemeasure_formset textarea{
+	height: 1.4em;
 }
 
 

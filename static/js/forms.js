@@ -41,6 +41,9 @@
             this.header.dispose();
             this.panel.dispose();
             this.fireEvent('remove');
+        },
+        getIndex: function(){
+            return this.controller.tabs.indexOf(this);
         }
     });
     
@@ -96,7 +99,7 @@
         getTabForElement: function(el){
             for(var i=0;i<this.tabs.length;i++){
                 var tab = this.tabs[i];
-                if(tab.panel.hasChild(el)){
+                if(tab.panel == el || tab.panel.hasChild(el)){
                     return tab;
                 }
             }
@@ -105,14 +108,17 @@
         getTab: function(index){
             return this.tabs[index];
         },
-        addTab: function(header, panel){
+        addTab: function(header, panel, inject){
             panel.id = panel.id || this.options.tabIdPrefix + this.tabs.length;
             header = new Element('li', {html: '<a href="#' + panel.id + '">' + header + '</a>'});
             this.headerContainer.grab(header);
-            panel.inject(this.tabs.getLast().panel, 'after');
+            if(inject){
+                panel.inject(this.tabs.getLast().panel, 'after');
+            }
             var tab = new ecs.Tab(this, header, panel, this.tabs.length);
             this.tabs.push(tab);
             this.fireEvent('tabAdded', tab);
+            return tab;
         },
         removeTab: function(tab){
             this.tabs.erase(tab);
@@ -128,13 +134,18 @@
         Implements: Options,
         options: {
             tabController: null,
-            autosave: 15
+            autosaveInterval: 15
         },
         initialize: function(form, options){
             this.form = $(form);
-            //this.setOptions(options);
-            var tabController = options.tabController;
+            this.options = options;
+            var tabController = this.tabs = options.tabController;
             tabController.getTabs().each(function(tab){
+                if(tab.panel.getElement('.errors')){
+                    tab.setClass('errors', true);
+                }
+            });
+            tabController.addEvent('tabAdded', function(tab){
                 if(tab.panel.getElement('.errors')){
                     tab.setClass('errors', true);
                 }
@@ -142,12 +153,12 @@
             tabController.addEvent('tabSelectionChange', (function(tab){
                 this.form.action = '#' + tab.panel.id;
             }).bind(this));
-            if(this.options.autosave){
+            if(this.options.autosaveInterval){
                 this.lastSave = {
                     data: this.form.toQueryString(),
                     timestamp: new Date()
                 };
-                setInterval(this.autosave.bind(this), this.options.autosave * 1000);
+                setInterval(this.autosave.bind(this), this.options.autosaveInterval * 1000);
                 $(window).addEvent('unload', this.autosave.bind(this));
             }
         },
@@ -177,22 +188,26 @@
     });
     
     ecs.InlineFormSet = new Class({
-        Implements: Options,
+        Implements: [Options, Events],
         options: {
             formSelector: '.form',
             prefix: null,
             idPrefix: 'id_',
             addButtonClass: 'add_row',
-            addButtonText: '&nbsp;',
+            addButtonText: 'add',
             removeButtonClass: 'delete_row',
-            removeButtonText: '',
+            removeButtonText: 'remove',
             templateClass: 'template',
-            canDelete: false
+            canDelete: false,
+            offset: 0
         },
-        initialize: function(container, options){
-            this.container = $(container);
+        initialize: function(containers, options){
+            this.containers = $$(containers);
             this.setOptions(options);
-            this.forms = container.getElements(this.options.formSelector);
+            this.forms = containers.getElements(this.options.formSelector).flatten();
+            if(!this.forms.length){
+                console.log(this.options.prefix, this.forms);
+            }
             if(this.forms[0].hasClass(this.options.templateClass)){
                 this.template = this.forms.pop();
                 this.template.dispose();
@@ -201,25 +216,43 @@
             else{
                 this.template = this.forms[0].clone(true, true);
             }
-            this.isTable = this.container.tagName.toUpperCase() == 'TABLE';
+            this.isTable = this.containers[0].tagName.toUpperCase() == 'TABLE';
             ecs.clearFormFields(this.template);
+            this.containers.each(function(container){
+                this.addContainer(container);
+            }, this);
             this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
-            this.addButton = new Element('a', {
-                html: this.options.addButtonText,
-                'class': this.options.addButtonClass,
-                events: {
-                    click: this.add.bind(this)
-                }
-            });
-            if(this.isTable){
-                this.addButton.inject(container, 'after');
-            }
-            else{
-                this.container.grab(this.addButton);
-            }
             this.forms.each(function(form, index){
                 this.setupForm(form, index);
             }, this);
+        },
+        addContainer: function(container){
+            var addButton = new Element('a', {
+                html: this.options.addButtonText,
+                'class': this.options.addButtonClass,
+                events: {
+                    click: this.add.bind(this, container)
+                }
+            });
+            if(this.isTable){
+                addButton.inject(container, 'after');
+            }
+            else{
+                container.grab(addButton);
+            }
+            this.containers.push(container);
+
+        },
+        removeContainer: function(container){
+            for(var i=this.forms.length - 1;i>=0;i--){
+                if(container.hasChild(forms[i])){
+                    this.remove(i);
+                }
+            }
+            this.containers.erase(container);
+        },
+        getFormCount: function(){
+            return this.forms.length;
         },
         setupForm: function(form, index, added){
             var removeLink = new Element('a', {
@@ -242,14 +275,15 @@
                 }
                 ecs.setupFormFieldHelpers(form);
             }
+            this.fireEvent('formSetup', arguments);
         },
-        updateIndex: function(form, index){
-            function _update(el, attr){
+        updateIndex: function(form, index, oldIndex){
+            var _update = (function(el, attr){
                 var value = el.getProperty(attr);
                 if(value){
-                    el.setProperty(attr, value.replace(/-.+?-/, '-' + index + '-'));
+                    el.setProperty(attr, value.replace(/-.+?-/, '-' + (this.options.offset + index) + '-'));
                 }
-            }
+            }).bind(this);
             form.getElements('input,select,textarea').each(function(field){
                 _update(field, 'name');
                 _update(field, 'id');
@@ -257,6 +291,9 @@
             form.getElements('label').each(function(label){
                 _update(label, 'for');
             });
+            if(oldIndex !== null){
+                this.fireEvent('formIndexChanged', [form, index, oldIndex]);
+            }
         },
         onRemoveButtonClick: function(e){
             var form = e.target.getParent(this.options.formSelector);
@@ -265,10 +302,17 @@
         remove: function(index){
             var f = this.forms[index];
             if(this.options.canDelete){
-                var idField = $(this.options.idPrefix + this.options.prefix + '-' + index + '-id');
+                var name = this.options.prefix + '-' + (this.options.offset + index);
+                var idField = $(this.options.idPrefix + name + '-id');
                 if(idField && idField.value){
-                    var delName = this.options.prefix + '-' + index + '-DELETE';
-                    var checkbox = new Element('input', {type: 'checkbox', style: 'display:none', name: delName, id: this.options.idPrefix + delName, checked: 'checked'});
+                    var delName = name + '-DELETE';
+                    var checkbox = new Element('input', {
+                        type: 'checkbox', 
+                        style: 'display:none', 
+                        name: delName, 
+                        id: this.options.idPrefix + delName, 
+                        checked: 'checked'
+                    });
                     if(this.isTable){
                         f.getFirst('td').grab(checkbox);
                     }
@@ -281,29 +325,48 @@
             }
             f.dispose();
             for(var i=index+1;i<this.forms.length;i++){
-                this.updateIndex(this.forms[i], i - 1);
+                this.updateIndex(this.forms[i], i - 1, i);
                 this.forms[i - 1] = this.forms[i];
             }
             this.forms.pop();
             this.updateTotalForms(-1);
+            this.fireEvent('formRemoved', [f, index]);
+        },
+        clear: function(){
+            for(var i=this.forms.length - 1;i>=0;i--){
+                this.remove(i);
+            }
         },
         updateTotalForms: function(delta){
             this.totalForms.value = parseInt(this.totalForms.value) + delta;
         },
-        add: function(){
+        add: function(container){
             var newForm = this.template.clone(true, true);
             var index = this.forms.length;
-            this.updateIndex(newForm, index);
+            this.updateIndex(newForm, index, null);
             this.setupForm(newForm, index, true);
             this.forms.push(newForm);
             this.updateTotalForms(+1);
             if(this.isTable){
-                newForm.inject(this.container.getElement('tbody'));
+                newForm.inject(container.getElement('tbody'));
             }
             else{
-                newForm.inject(this.addButton, 'before');
+                newForm.inject(container.getElements(this.options.formSelector).getLast(), 'after');
             }
+            this.fireEvent('formAdded', [newForm, index])
+        },
+        getIndexForElement: function(el){
+            for(var i=0;i<this.forms.length;i++){
+                if(this.forms[i].hasChild(el)){
+                    return i;
+                }
+            }
+            return -1;
         }
+    });
+    
+    ecs.InvestigatorFormSet = new Class({
+        Extends: ecs.InlineFormSet,
     });
     
     ecs.setupRichTextEditor = function(textArea){
@@ -320,7 +383,6 @@
                 });
             }
             display.hide();
-            console.log(editable);
             editable.focus();
             e.stop();
         });
@@ -338,14 +400,6 @@
     };
     
     /*
-    // TODO: implement #88
-    ecs.InvestigatorFormSet = new Class({
-        Extends: ecs.InlineFormSet,
-        initialize: function(){
-            
-        }
-    });
-    
     ecs.InvestigatorEmployeeFormSet = new Class({
         Extends: ecs.InlineFormSet,
         initialize: function(container, options){
@@ -367,25 +421,33 @@
         context.getElements('.NullBooleanField > select', function(select){
             select.setProperty('value', 1);
         });
+        context.getElements('span.errors').each(function(errors){
+            errors.dispose();
+        });
     };
     
     ecs.setupFormFieldHelpers = function(context){
         context = $(context || document.body);
-        $$(ecs.datepickerInputSelector).each(function(input){
+        /*
+        context.getElements(ecs.datepickerInputSelector).each(function(input){
             (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
         });
-        var datepicker = new DatePicker(ecs.datepickerInputSelector, {
+        var datepicker = new DatePicker(context.getElements(ecs.datepickerInputSelector), {
             format: 'd.m.Y',
             inputOutputFormat: 'd.m.Y',
             allowEmpty: true,
-            toggleElements: '.datepicker_toggler'
+            toggleElements: context.getElements('.datepicker_toggler')
         });
+        */
         context.getElements('li,th.label').each(function(field){
             var notes = [];
             var input = null;
             if(field.tagName == 'TH'){
                 var index = field.getParent('tr').getChildren('th').indexOf(field);
-                input = field.getParent('table').getElement('tbody > tr').getChildren('td')[index].getFirst('input[type=text]');
+                var row = field.getParent('table').getElement('tbody > tr');
+                if(row){
+                    input = row.getChildren('td')[index].getFirst('input[type=text]');
+                }
             }
             else{
                 input = field.getFirst('input[type=text]');
@@ -414,6 +476,7 @@
                 }));
             }
         });
+        /*
         context.getChildren('input[type=text],input[type=checkbox],textarea,select').each(function(input){
             input.addEvent('focus', function(){
                 field.addClass('focus');
@@ -422,6 +485,7 @@
                 field.removeClass('focus');
             });
         });
+        */
 
     };
     
@@ -433,8 +497,42 @@
             if(mainForm){
                 var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                     tabController: tabController,
-                    autosave: 10
+                    autosaveInterval: 120
                 });
+                var ifs = $('investigator_formset');
+                if(ifs){
+                    var investigatorFormset = new ecs.InlineFormSet(ifs, {
+                        prefix: 'investigator',
+                        formSelector: '.investigator_tab',
+                        onFormSetup: function(form, index){
+                            tabController.addTab('Zentrum ' + (index + 1) +  '', form);
+                        },
+                        onFormRemoved: function(form, index){
+                            var tab = tabController.getTabForElement(form);
+                            tabController.removeTab(tab);
+                        }
+                    });
+                    var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
+                        prefix: 'investigatoremployee',
+                        onFormAdded: function(form, index, added){
+                            console.log(form);
+                            var indexField = form.getElement('input[name$=-investigator_index]');
+                            indexField.value = investigatorFormset.getIndexForElement(form);
+                        }
+                    });
+                    investigatorFormset.addEvent('formAdded', function(form, index){
+                        form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
+                        employeeFormSet.addContainer(form.getElement('.investigatoremployee_formset'));
+                    });
+                    investigatorFormset.addEvent('formRemoved', function(){
+                        employeeFormSet.removeContainer(form.getElement('.investigatoremployee_formset'));
+                    });
+                    investigatorFormset.addEvent('formIndexChanged', function(form, newIndex){
+                        form.getElement('.investigatoremployee_formset').getElements('input[name$=-investigator_index]').each(function(indexField){
+                            indexField.value = newIndex;
+                        });
+                    });
+                }
             }
         }
         ecs.setupFormFieldHelpers();
@@ -457,26 +555,6 @@
             });
         });
         
-        /* FIXME: demo */
-        function setupPartBLinks(context){
-            context = $(context || document)
-            context.getElements('.partb_remove').each(function(link){
-                link.addEvent('click', function(){
-                    var tab = tabController.getTabForElement(link);
-                    tabController.removeTab(tab);
-                    return false;
-                });
-            });
-            context.getElements('.partb_add').each(function(link){
-                link.addEvent('click', function(){
-                    var panel = link.getParent('.tab').clone(true);
-                    setupPartBLinks(panel);
-                    tabController.addTab('Zentrum', panel);
-                    return false;
-                })
-            });
-        }
-        setupPartBLinks();
     }); 
 
 })();
