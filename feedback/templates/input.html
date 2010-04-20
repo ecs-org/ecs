@@ -50,7 +50,7 @@ pages: {{ pages }}
       {% endifequal %}
       </div>
       <div class="fb_description">{{ fb.description }}</div>
-      <div class="fb_others">X Personen gefällt diese {{ type|fb_type }}</div>
+      <div class="fb_others">X Personen gefällt {{ type|fb_type_this }}</div>
       <div class="fb_separator"><hr></div>
     {% endfor %}
     </div>

@@ -14,16 +14,16 @@ def greater(x, y):
     return x > y
 
 
-# poor man's translation
+# poor man's translator
 
 types_de = {
-    'i': ('Ihre', 'Idee', 'Ideen', 'Ihrer Idee'),
-    'q': ('Ihre', 'Frage', 'Fragen', 'Ihrer Frage'),
-    'p': ('Ihr', 'Problem', 'Probleme', 'Ihres Problems'),
-    'l': ('Ihr', 'Lob', 'Lob', 'Ihres Lobs'),
+    'i': ('Ihre', 'Idee', 'Ideen', 'Ihrer Idee', 'diese Idee'),
+    'q': ('Ihre', 'Frage', 'Fragen', 'Ihrer Frage', 'diese Frage'),
+    'p': ('Ihr', 'Problem', 'Probleme', 'Ihres Problems', 'dieses Problem'),
+    'l': ('Ihr', 'Lob', 'Lob', 'Ihres Lobs', 'dieses Lob'),
 }
 
-types_de_whatever = ('Ihr', 'Irgendwas', 'Irgendwas', 'Ihres Irgendwas')
+types_de_whatever = ('Ihr', 'Irgendwas', 'Irgendwas', 'Ihres Irgendwas', 'dieses Irgendwas')
 
 @register.filter
 def fb_type_your(type):
@@ -40,3 +40,7 @@ def fb_type_many(type):
 @register.filter
 def fb_type_of_your(type):
     return types_de.get(type, types_de_whatever)[3]
+
+@register.filter
+def fb_type_this(type):
+    return types_de.get(type, types_de_whatever)[4]
