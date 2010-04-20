@@ -79,19 +79,19 @@ ul.tab_headers {
   width: 90px;
   cursor: pointer;
   z-index: 100;
-  color: #fff;
+  color: #333;
   text-decoration: none;
 }
 .button_save {
-  background: #333;
+  background: #84cefb;
   border: 1px solid #ccc;  
 }
 .button_validate {
-  background: #333;
+  background: #84cefb;
   border: 1px solid #ccc;  
 }
 .button_submit {
-  background: #4dc21b;
+  background: #84cefb;
   border: 1px solid #ccc;  
 }
 
@@ -103,10 +103,13 @@ ul.tab_headers {
 }
 
 form .field, form .tab {
-  border: 1px solid #eee;
   background: #f9feff;
   min-width: 700px;
   display: block;
+}
+form .field {
+  border: 1px solid #eee;
+  clear: both;
 }
 form .field h3, form .tab h3 {
   font-size: 12pt;
@@ -127,7 +130,6 @@ form ol {
   padding: 10px 0;
   margin-top: 10px;
   display: block;
-  clear: both;
 }
 /*
 form ol:last-child {
@@ -155,15 +157,9 @@ form ol li.focus {
 form ol li label {
   width: 220px;
   padding-right: 10px;
+  margin-bottom: 10px;
   text-align: right;
   float: left;
-}
-form ol li label:after {
-  content: ":";
-}
-form ol li label:before {
-  content: "*";
-  color: #f00;
 }
 
 form .errors ul li {
@@ -205,7 +201,7 @@ form th.label .notes{
   display: block;
 }
 form ol li .help_text {
-  margin: 0 0 10px 200px;
+  margin: 0 0 10px 220px;
   display: block;
   color: #666;
   padding-left: 10px;
@@ -231,6 +227,7 @@ form ol li.BooleanField .help_text {
   right: 30px;
   margin-top: -16px;
   cursor: pointer;
+  text-indent: -9999px;
 }
 div.inline_formset .form a.delete_row {
   display: block;
@@ -247,6 +244,7 @@ form a.add_row {
   position: absolute;
   right: 30px;
   margin-top: -16px;
+  text-indent: -9999px;
 }
 #content a.delete_row:hover, #content a.add_row:hover {
   border-bottom: 0 none !important;
@@ -275,15 +273,19 @@ form ol li .mooeditable-ui-toolbar .toolbar-separator {
   margin-left: 0px;
 }
 form ol li .rte_display {
-  float: left;
+  position: relative;
+  left: 230px;
   display: block;
-  width: 29em;
+  width: 350px;
   padding: 0.5em;
   margin-bottom: 10px;
-  height: 60px;
   min-height: 4em;
-  background-color: #ffffff;
-  border: 1px solid #666666;
+  background-color: #fff;
+  border: 1px solid #666;
+}
+form ol li .rte_display p {
+  margin: 0 !important;
+  line-height: 14pt;
 }
 form ol li .rte_display * {
   margin: 0;
@@ -301,7 +303,10 @@ form ol li .paperform_number:after {
   content: "]";
 }
 
-form li.max40 input{ width: 40em;}
+form li.max10 input{ width: 60px;}
+form li.max20 input{ width: 100px;}
+form li.max40 input{ width: 200px;}
+form li.max60 input{ width: 340px;}
 
 /* specific formset styles */
 

@@ -1,14 +1,20 @@
 .mooeditable-container{
-  float: left;
-  height: 100px;
+  position: relative;
+  left: 230px;
   background: #fff;
-  margin-bottom: 20px;
+  display: block;
 }
 
 .mooeditable-ui-toolbar{
+  position: absolute;
+  width: 99%;
 	color: inherit;
 	background-color: #eee;
 	padding: 2px;
+}
+
+.mooeditable-ui-toolbar button{
+
 }
 
 .mooeditable-ui-toolbar:after{
