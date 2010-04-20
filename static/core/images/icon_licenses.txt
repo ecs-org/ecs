@@ -2,6 +2,10 @@ Aestetica Icons:
 
 add.png, help.png, remove.png, search.png, user.png
 
+Vaga Icons:
+
+calendar.png
+
 Human Icons:
 
 emblem-people.png - used for feedback.png

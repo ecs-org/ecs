@@ -107,9 +107,10 @@ form .field, form .tab {
   min-width: 700px;
   display: block;
 }
-form .field {
+form #tabs {
   border: 1px solid #eee;
   clear: both;
+  margin-bottom: 20px;
 }
 form .field h3, form .tab h3 {
   font-size: 12pt;
@@ -156,7 +157,7 @@ form ol li.focus {
 }
 form ol li label {
   width: 220px;
-  padding-right: 10px;
+  padding: 0 10px;
   margin-bottom: 10px;
   text-align: right;
   float: left;
@@ -174,7 +175,7 @@ form .errors ul li {
 }
 
 form ol li.BooleanField {
-  padding-left: 230px;
+  padding-left: 240px;
 }
 form ol li.BooleanField label {
   float: none;
@@ -201,7 +202,7 @@ form th.label .notes{
   display: block;
 }
 form ol li .help_text {
-  margin: 0 0 10px 220px;
+  margin: 0 0 10px 230px;
   display: block;
   color: #666;
   padding-left: 10px;
@@ -223,8 +224,7 @@ form ol li.BooleanField .help_text {
   background: url(/static/core/images/remove.png) no-repeat;
   height: 16px;
   width: 16px;
-  position: absolute;
-  right: 30px;
+  float: left;
   margin-top: -16px;
   cursor: pointer;
   text-indent: -9999px;
@@ -242,8 +242,8 @@ form a.add_row {
   height: 16px;
   cursor: pointer;
   position: absolute;
-  right: 30px;
-  margin-top: -16px;
+  left: 26px;
+  margin-top: -18px;
   text-indent: -9999px;
 }
 #content a.delete_row:hover, #content a.add_row:hover {
@@ -274,7 +274,7 @@ form ol li .mooeditable-ui-toolbar .toolbar-separator {
 }
 form ol li .rte_display {
   position: relative;
-  left: 230px;
+  left: 240px;
   display: block;
   width: 350px;
   padding: 0.5em;
@@ -285,7 +285,9 @@ form ol li .rte_display {
 }
 form ol li .rte_display p {
   margin: 0 !important;
+  padding: 0 !important;
   line-height: 14pt;
+  display: block;
 }
 form ol li .rte_display * {
   margin: 0;
@@ -325,6 +327,16 @@ form li.max60 input{ width: 340px;}
 #routinemeasure_formset input {
   float: left;
   display: block;
+}
+
+
+form ol li .datepicker_toggler {
+  position: absolute;
+  text-indent: -9999px; 
+  background: url(/static/core/images/calendar.png) no-repeat;
+  height: 16px;
+  width: 16px;
+  margin-left: 5px;
 }
 
 /* documents */
