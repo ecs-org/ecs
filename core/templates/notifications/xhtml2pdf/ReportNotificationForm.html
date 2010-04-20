@@ -1,0 +1,12 @@
+{% extends 'notifications/xhtml2pdf/base.html' %}
+
+{% block headitem %}
+
+{{ block.super }}
+<p>Grund warum noch nicht begonnen <b>{{ notification.reason_for_not_started }}</b></p>
+<p>Angeworbene Versuchspersonen <b>{{ notification.recruited_subjects }}</b></p>
+<p>Beendete Versuchspersonen <b>{{ notification.finished_subjects }}</b></p>
+<p>Abgebrochene Versuchspersonen <b>{{ notification.aborted_subjects }}</b></p>
+<p>SAE Zahl <b>{{ notification.SAE_count }}</b></p>
+<p>SUSAR Zahl <b>{{ notification.SUSAR_count }}</b></p> 
+{% endblock %}
