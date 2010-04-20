@@ -104,20 +104,6 @@ def create_notification(request, notification_type_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    template_names = ['notifications/htmldoc/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
-    tpl = loader.select_template(template_names)
-    html = tpl.render(Context({
-        'notification': notification,
-        'investigators': notification.investigators.order_by('ethics_commission__name', 'name'),
-        'url': request.build_absolute_uri(),
-    }))
-    pdf = htmldoc(html.encode('ISO-8859-1'), webpage=True)
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
-    return response
-
-def notification_xhtml2pdf(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
     template_names = ['notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     print template_names
     tpl = loader.select_template(template_names)
