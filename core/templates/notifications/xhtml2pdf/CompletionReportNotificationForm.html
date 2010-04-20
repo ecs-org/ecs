@@ -59,6 +59,15 @@ Ethik-Kommissionen: </p>
 </table>
 </center>
 
+<p><b>2. Angaben zum Forschungsprojekt</b>
+
+<p style="margin-left: 2cm; text-indent: -2cm">
+2.1 Projekttitel (Kurzbezeichnung):<br>
+<b>{% for submission in notification.submission_forms.all %}
+{{ submission.project_title }}{% if not forloop.last %}, {% endif %}
+{% endfor %}</b>
+</p>
+
 <!-- footer -->
     <div id="footer">
       Meldungsformular - Österreichische Ethikkommissionen, Version 5.1, 25.08.2006
