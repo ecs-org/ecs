@@ -33,13 +33,31 @@
   Version 5.1 vom 25.08.2006 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bitte immer die <i>aktuelle</i> Version verwenden (http://ethikkommissionen.at/)
 </div>
 
-    <table border=1>
-      <tr>
-	<td align=left valign=top><span style="font-size:small">Adresse der Ethikkommission (optional)</span><br/>An die<br/>Ethikkommission<br/>der Medizinischen Universität Wien<br/>Borschkegasse 8b<br/>1090 Wien<br/></td>
-	<td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
-      </tr>
-    </table>
+<p align="center" style="margin-top: 0.14cm; margin-bottom: 0.28cm"> an folgende österreichische
+Ethik-Kommissionen: </p>
 
+<table border=1>
+  <tr>
+    <td align=left valign=top><span style="font-size:small">Adresse der Ethikkommission (optional)</span><br/>An die<br/>Ethikkommission<br/>der Medizinischen Universität Wien<br/>Borschkegasse 8b<br/>1090 Wien<br/></td>
+    <td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
+  </tr>
+</table>
+
+<center>
+<table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
+<col width="215"><col width="84"><col width="84"><col width="195">
+<tr><th width="215" height="24">Ethik-Kommission</th><th width="84">EK-Nummer</th>
+<th width="84">Datum des Votums</th><th width="195">Prüfer</th></tr>
+{% for investigator in notification.investigators.all %}
+<tr>
+  <td>{{ investigator.ethics_commission.name }}</td>
+  <td>{{ investigator.submission.submission.ec_number }}</td>
+  <td>{{ investigator.submission.date_of_protocol }}<!-- TODO: date_of_vote? -->
+  <td>{{ investigator.name }}</td>
+</tr>
+{% endfor %}
+</table>
+</center>
 
 <!-- footer -->
     <div id="footer">
