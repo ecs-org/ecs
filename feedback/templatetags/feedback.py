@@ -45,6 +45,13 @@ def fb_type_of_your(type):
 def fb_type_this(type):
     return types_de.get(type, types_de_whatever)[4]
 
+@register.filter
+def fb_type_items(type, items):
+    if items == 1:
+        return fb_type(type)
+    else:
+        return fb_type_many(type)
+
 
 person_de = ('Niemanden', 'Einer Person', 'Personen')
 

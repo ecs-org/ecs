@@ -1,6 +1,6 @@
 {% load feedback %}
 
-{% url feedback_input type page as fb_url %}
+{% url feedback_input type page origin as fb_url %}
 
 <title>Feedback Eingabe</title>
 
@@ -15,7 +15,7 @@
     {% ifequal type t %}
       <div class="fb_type_selected"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</div>
     {% else %}
-      <div class="fb_type"><a href="{% url feedback_input t page %}" id="idea-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</a></div>
+      <div class="fb_type"><a href="{% url feedback_input t 1 origin %}" id="idea-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</a></div>
     {% endifequal %}
   {% endfor %}
     </div>
@@ -51,13 +51,13 @@
     {% endfor %}
     </div>
     <div class="fb_bottom">
-    {% if page|greater:'1' %}
-      <div class="fb_nav"><a href="{% url feedback_input type page|add:'-1' %}" id="prev-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="prev"/>prev</a></div>
+    {% if page|greater:1 %}
+      <div class="fb_nav"><a href="{% url feedback_input type page|add:'-1' origin %}" id="prev-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="prev"/>prev</a></div>
     {% endif %}
     {% if page|less:pages %}
-      <div class="fb_nav"><a href="{% url feedback_input type page|add:'1'%}" id="next-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="next"/>next</a></div>
+      <div class="fb_nav"><a href="{% url feedback_input type page|add:'1' origin %}" id="next-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="next"/>next</a></div>
     {% endif %}
-      Seite {{ page }} von {{ pages }}
+      Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)
     </div>
   {% else %}
     <div class="fb_nolist">

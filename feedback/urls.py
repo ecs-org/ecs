@@ -28,7 +28,8 @@ urlpatterns = patterns(
     
     url(r'^input/$', 'ecs.feedback.views.feedback_input'),
     url(r'^input/(?P<type>[a-z])/$', 'ecs.feedback.views.feedback_input'),
-    url(r'^input/(?P<type>[a-z])/(?P<page>\d+)/$', 'ecs.feedback.views.feedback_input', name='feedback_input'),
+    url(r'^input/(?P<type>[a-z])/(?P<page>\d+)/$', 'ecs.feedback.views.feedback_input'),
+    url(r'^input/(?P<type>[a-z])/(?P<page>\d+)/(?P<origin>[^/]+)/$', 'ecs.feedback.views.feedback_input', name='feedback_input'),
     
     url(r'^(?P<pk>[^/]+)$', feedbackpost_resource), 
     url(r'^(?P<type>[^/]+)/(?P<origin>[^/]+)/(?P<offsetdesc>.*)$', feedbackpost_search), 

@@ -16,7 +16,7 @@ def is_int(x):
         return False
   
 
-def feedback_input(request, type='i', page=1):
+def feedback_input(request, type='i', page=1, origin='TODO'):
     m = dict(Feedback.FEEDBACK_TYPES)
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
@@ -25,7 +25,6 @@ def feedback_input(request, type='i', page=1):
         description = request.POST['description']
         summary = request.POST['summary']
         feedbacktype = type
-        origin = 'TODO'
         question = 'WTF?!'
         pub_date = datetime.datetime.now()
         feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
@@ -59,12 +58,12 @@ def feedback_input(request, type='i', page=1):
             return 'me2'
     def get_count(): # TODO replace by real data
         return random.randint(0, 3)
-    for fb in Feedback.objects.filter(feedbacktype=type).order_by('-pub_date')[index:index+page_size]:
+    for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
         list.append({ 'index': index, 'summary': fb.summary, 'description': fb.description, 'me2': get_me2(), 'count': get_count() })
 
     # calculate number of pages
-    items = len(Feedback.objects.filter(feedbacktype=type))
+    items = len(Feedback.objects.filter(feedbacktype=type).filter(origin=origin))
     if items > 0:
         pages = (items - 1) / page_size + 1
         if page > pages:
@@ -77,6 +76,8 @@ def feedback_input(request, type='i', page=1):
         'types': types,
         'list': list,
         'page': page,
+        'items': items,
         'pages': pages,
+        'origin': origin,
     })
 
