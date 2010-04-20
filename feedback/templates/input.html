@@ -67,7 +67,7 @@
     </li>
   {% else %}
     <li class="fb_nolist">
-      Keine {{ type|fb_type_many }} anderer Benutzer.
+      {{ type|fb_type_none}} {{ type|fb_type_many }}.
     </li>
   {% endif %}
   </ol>

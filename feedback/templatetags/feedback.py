@@ -17,13 +17,13 @@ def greater(x, y):
 # poor man's translator
 
 types_de = {
-    'i': ('Ihre', 'Idee', 'Ideen', 'Ihrer Idee', 'diese Idee'),
-    'q': ('Ihre', 'Frage', 'Fragen', 'Ihrer Frage', 'diese Frage'),
-    'p': ('Ihr', 'Problem', 'Probleme', 'Ihres Problems', 'dieses Problem'),
-    'l': ('Ihr', 'Lob', 'Lob', 'Ihres Lobs', 'dieses Lob'),
+    'i': ('Ihre', 'Idee', 'Ideen', 'Ihrer Idee', 'diese Idee', 'Keine'),
+    'q': ('Ihre', 'Frage', 'Fragen', 'Ihrer Frage', 'diese Frage', 'Keine'),
+    'p': ('Ihr', 'Problem', 'Probleme', 'Ihres Problems', 'dieses Problem', 'Keine'),
+    'l': ('Ihr', 'Lob', 'Lob', 'Ihres Lobs', 'dieses Lob', 'Kein'),
 }
 
-types_de_whatever = ('Ihr', 'Irgendwas', 'Irgendwas', 'Ihres Irgendwas', 'dieses Irgendwas')
+types_de_whatever = ('Ihr', 'Irgendwas', 'Irgendwas', 'Ihres Irgendwas', 'dieses Irgendwas', 'Kein')
 
 @register.filter
 def fb_type_your(type):
@@ -44,6 +44,10 @@ def fb_type_of_your(type):
 @register.filter
 def fb_type_this(type):
     return types_de.get(type, types_de_whatever)[4]
+
+@register.filter
+def fb_type_none(type):
+    return types_de.get(type, types_de_whatever)[5]
 
 @register.filter
 def fb_type_items(type, items):
