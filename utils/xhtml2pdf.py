@@ -29,6 +29,8 @@ def xhtml2pdf(html, **options):
     All `xhtml2pdf` commandline options (see `man htmldoc`) are supported, just replace '-' with '_' and use True/False values 
     for options without arguments.
     """
+    if isinstance(html, unicode):
+        html = html.encode("utf-8")
     if sys.platform.startswith("linux"): # ugly, but our production platform is Ubuntu
         cmd = 'ulimit -t 30 ; '
     else:
