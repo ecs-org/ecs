@@ -1,68 +1,9 @@
-{% extends "notifications/htmldoc/base.html" %}
-{% block main_table %}
-    {{ block.super }}
-    <tr>
-        <th align="right">Wurde die Studie begonnen?</th>
-        <td>
-            {% if notification.reason_for_not_started %}
-                Nein. Begründung: {{ notification.reason_for_not_started }}
-            {% else %}
-                Ja
-            {% endif %}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Zahl der rekrutierten Patient/inn/en / Proband/inn/en</th>
-        <td>
-            {{ notification.extendednotificationform.recruited_subjects }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben</th>
-        <td>
-            {{ notification.extendednotificationform.finished_subjects }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Zahl der Studienabbrüche</th>
-        <td>
-            {{ notification.extendednotificationform.aborted_subjects }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Zahl der SAEs</th>
-        <td>
-            {{ notification.extendednotificationform.SAE_count }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Zahl der SUSARs</th>
-        <td>
-            {{ notification.extendednotificationform.SUSAR_count }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">läuft noch bis voraussichtlich</th>
-        <td>
-            {{ notification.extendednotificationform.runs_till }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">planmäßig abgeschlossen am</th>
-        <td>
-            {{ notification.extendednotificationform.finished_on }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">abgebrochen am</th>
-        <td>
-            {{ notification.extendednotificationform.aborted_on }}
-        </td>
-    </tr>
-    <tr>
-        <th align="right">Ich beantrage die Verlängerung der Gültigkeit des Votums.</th>
-        <td>
-            {{ notification.extendednotificationform.extension_of_vote|yesno:"Ja,Nein" }}
-        </td>
-    </tr>
-{% endblock %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+</head>
+<body>
+Hello World
+</body>
+</html>
