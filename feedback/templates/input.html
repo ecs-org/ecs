@@ -20,9 +20,9 @@
     <ol class="fb_types">
   {% for t in types %}
     {% ifequal type t %}
-      <li class="fb_type_selected"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</li>
+      <li class="fb_type_{{ t }} fb_type_selected">{{ t|fb_type }}</li>
     {% else %}
-      <li class="fb_type"><a href="{% url feedback_input t 1 origin %}" id="idea-button"><img src="{{ MEDIA_URL }}images/feedback.png" alt="Feedback {{ t|fb_type }}"/>{{ t|fb_type }}</a></li>
+      <li class="fb_type_{{ t }}"><a href="{% url feedback_input t 1 origin %}">{{ t|fb_type }}</a></li>
     {% endifequal %}
   {% endfor %}
     </ol>
