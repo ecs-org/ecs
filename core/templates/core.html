@@ -75,15 +75,38 @@
 
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
       var feedback_handler = function() { 
-        new MooDialog.Iframe('/feedback/input/',{
-        title: 'Feedback',
-        size: {
-        width: 700,
-        height: 400
+        var url = '/feedback/input/i/1/' + get_origin() + '/';
+        new MooDialog.Iframe(url, {
+          title: 'Feedback',
+          size: {
+          width: 700,
+          height: 400
         }});
         return false;
       };
       feedback_triggers.addEvent('click', feedback_handler);
     });
+
+    function get_origin() {
+      {% comment %}
+      // TODO either inject origin from application page or develop an URL scheme which allows solid inference by algorithm
+      //
+      // Counter example:
+      // When used on the "new submission" page the code turns 
+      //
+      //   http://ecsdev.ep3.at:8081/core/submission_form/new/6c8a98e534294bdf8ba558a037fcb9f8/
+      //
+      // into 
+      //
+      //   http-3A-2F-2Fecsdev.ep3.at-3A8081-2Fcore-2Fsubmission_form-2Fnew-2F6c8a98e534294bdf8ba558a037fcb9f8-2F
+      //
+      // where the feedback is grouped by this origin string but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
+      // prevent usable grouping. => we remove the hex id
+      {% endcomment %}
+      var re_id_axe = /[0-9a-f]{32}/;
+      x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
+      return x;
+    }
+
   </script>
 {% endblock %}
