@@ -59,20 +59,24 @@ Ethik-Kommissionen: </p>
 </table>
 </center>
 
-<p><b>2. Angaben zum Forschungsprojekt</b>
+<p><b>2. Angaben zum Forschungsprojekt</b></p>
 
 <p style="margin-left: 2cm; text-indent: -2cm">
-2.1 Projekttitel (Kurzbezeichnung):<br>
+2.1. Projekttitel (Kurzbezeichnung):<br>
 <b>{% for submission in notification.submission_forms.all %}
 {{ submission.project_title }}{% if not forloop.last %}, {% endif %}
 {% endfor %}</b>
 </p>
 <p style="margin-left: 2cm; text-indent: -2cm">
-2.2 Protokollnummer (falls vorhanden):<br>
+2.2. Protokollnummer (falls vorhanden):<br>
 <b>{% for submission in notification.submission_forms.all %}
 {{ submission.protocol_number|default_if_none:"unbekannt" }}{% if not forloop.last %}, {% endif %}
 {% endfor %}</b>
 </p>
+
+<p style="margin-left: 1cm; text-indent: -1cm">
+<b>3. Begründung/Stellungnahme/Mitteilung</b><br>
+<b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
 
 <!-- footer -->
     <div id="footer">
