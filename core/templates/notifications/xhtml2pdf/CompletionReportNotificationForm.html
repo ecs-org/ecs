@@ -67,6 +67,12 @@ Ethik-Kommissionen: </p>
 {{ submission.project_title }}{% if not forloop.last %}, {% endif %}
 {% endfor %}</b>
 </p>
+<p style="margin-left: 2cm; text-indent: -2cm">
+2.2 Protokollnummer (falls vorhanden):<br>
+<b>{% for submission in notification.submission_forms.all %}
+{{ submission.protocol_number|default_if_none:"unbekannt" }}{% if not forloop.last %}, {% endif %}
+{% endfor %}</b>
+</p>
 
 <!-- footer -->
     <div id="footer">
