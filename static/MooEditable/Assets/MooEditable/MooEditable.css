@@ -1,13 +1,7 @@
 .mooeditable-container{
-  position: relative;
-  left: 240px;
-  background: #fff;
-  display: block;
 }
 
 .mooeditable-ui-toolbar{
-  position: absolute;
-  width: 99%;
 	color: inherit;
 	background-color: #eee;
 	padding: 2px;

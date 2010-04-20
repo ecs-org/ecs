@@ -288,19 +288,19 @@ fieldset.disabled{
 
 form ol li .mooeditable-container {
   border: 1px solid #666666;
+  margin-left: 240px;
+  overflow: hidden;
 }
 form ol li .mooeditable-ui-toolbar .toolbar-item,
 form ol li .mooeditable-ui-toolbar .toolbar-separator {
-  display: block;
-  float: left;
-  vertical-align: none;
   margin-left: 0px;
 }
+form ol li .mooeditable-iframe{
+}
 form ol li .rte_display {
-  position: relative;
-  left: 240px;
   display: block;
   width: 350px;
+  margin-left: 240px;
   padding: 0.5em;
   margin-bottom: 10px;
   min-height: 4em;
@@ -314,8 +314,10 @@ form ol li .rte_display p {
   display: block;
 }
 form ol li .rte_display * {
-  margin: 0;
-  padding: 0;
+  margin: 0px;
+  padding: 0px;
+  left: 0px;
+  text-indent: 0px;
 }
 
 form ol li .paperform_number {
