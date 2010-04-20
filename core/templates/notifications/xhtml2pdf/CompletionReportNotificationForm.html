@@ -74,9 +74,30 @@ Ethik-Kommissionen: </p>
 {% endfor %}</b>
 </p>
 
+{% block mainitem %}
 <p style="margin-left: 1cm; text-indent: -1cm">
 <b>3. Begründung/Stellungnahme/Mitteilung</b><br>
 <b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
+{% endblock %}
+
+{% block documents %}
+{% if notification.documents.all %}
+<p style="margin-top: 0.2cm; margin-bottom: 0.2cm">
+<b>4. Anlagen</b></p>
+
+<ol>
+  {% for doc in notification.documents.all %}
+  <li>{{ doc.file }}</li>
+  {% endfor %}
+</ol>
+{% endif %}
+{% endblock %}
+
+
+<p style="margin-top: 1cm; margin-bottom: 2cm">
+<b>{% if notification.documents.all %} 5. {% else %} 4. {% endif %} Unterschrift</b></p>
+
+<table><tr><td align=left width=200>Unterschrift (Prüfer/in bzw. Antragsteller/in)</td><td align=center>Datum</td></tr></table>
 
 <!-- footer -->
     <div id="footer">
