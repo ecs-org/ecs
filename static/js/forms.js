@@ -251,7 +251,7 @@
         },
         removeContainer: function(container){
             for(var i=this.forms.length - 1;i>=0;i--){
-                if(container.hasChild(forms[i])){
+                if(container.hasChild(this.forms[i])){
                     this.remove(i);
                 }
             }
@@ -502,14 +502,25 @@
                         removeButtonText: 'Dieses Zentrum Entfernen',
                         onFormSetup: function(form, index, added, formset){
                             tabController.addTab('Zentrum ' + (index + 1) +  '', form);
-                            console.log(formset, 'setup', form);
-                            formset.createAddButton(ifs).inject(form, 'top');
+                            var addButton = formset.createAddButton(ifs);
+                            addButton.inject(form, 'top');
                         },
                         onFormRemoved: function(form, index){
                             var tab = tabController.getTabForElement(form);
                             tabController.removeTab(tab);
                         }
                     });
+                    // HACK
+                    console.log(investigatorFormset.getFormCount());
+                    if(investigatorFormset.getFormCount() == 1){
+                        investigatorFormset.forms[0].getElement('.delete_row').hide();
+                    }
+                    else{
+                        investigatorFormset.forms.each(function(f){
+                            f.getElement('.delete_row').show();
+                        });
+                    }
+                    
                     var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
                         prefix: 'investigatoremployee',
                         onFormAdded: function(form, index, added){
@@ -520,9 +531,19 @@
                     investigatorFormset.addEvent('formAdded', function(form, index){
                         form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
                         employeeFormSet.addContainer(form.getElement('.investigatoremployee_formset'));
+                        // HACK
+                        if(investigatorFormset.getFormCount() > 1){
+                            investigatorFormset.forms.each(function(f){
+                                f.getElement('.delete_row').show();
+                            });
+                        }
                     });
-                    investigatorFormset.addEvent('formRemoved', function(){
+                    investigatorFormset.addEvent('formRemoved', function(form, index){
                         employeeFormSet.removeContainer(form.getElement('.investigatoremployee_formset'));
+                        // HACK
+                        if(investigatorFormset.getFormCount() == 1){
+                            investigatorFormset.forms[0].getElement('.delete_row').hide();
+                        }
                     });
                     investigatorFormset.addEvent('formIndexChanged', function(form, newIndex){
                         form.getElement('.investigatoremployee_formset').getElements('input[name$=-investigator_index]').each(function(indexField){
