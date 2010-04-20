@@ -57,9 +57,11 @@ def feedback_input(request, type='i', page=1):
             return 'u2'
         else:
             return 'me2'
+    def get_count(): # TODO replace by real data
+        return random.randint(0, 3)
     for fb in Feedback.objects.filter(feedbacktype=type).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
-        list.append({ 'index': index, 'summary': fb.summary, 'description': fb.description, 'me2': get_me2() })
+        list.append({ 'index': index, 'summary': fb.summary, 'description': fb.description, 'me2': get_me2(), 'count': get_count() })
 
     # calculate number of pages
     items = len(Feedback.objects.filter(feedbacktype=type))

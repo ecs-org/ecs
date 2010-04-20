@@ -2,14 +2,9 @@
 
 {% url feedback_input type page as fb_url %}
 
-<hr>
-page: {{ page }}
-pages: {{ pages }}
-<hr>
+<title>Feedback Eingabe</title>
 
-<title>Feedback</title>
-
-<h1>Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</h1>
+<div class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</div>
 
 <form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
 
@@ -33,24 +28,25 @@ pages: {{ pages }}
   </div>
 
   <div class="fb_old">
-    <div class="fb_list_top"><h2>{{ type|fb_type_many }} anderer Benutzer</h2></div>
+    <div class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</div>
+    <div class="fb_separator"><hr></div>
   {% if list %}
     <div class="fb_list">
     {% for fb in list %}
       <div class="fb_summary">
         {{ fb.index }}. {{ fb.summary }}
       {% ifequal fb.me2 'yours' %}
-	<div class="fb_yours">von Ihnen</div>
+	<div class="fb_yours">(von Ihnen)</div>
       {% endifequal %}
       {% ifequal fb.me2 'u2' %}
-        <div class="fb_u2">Sie auch!</div>
+        <div class="fb_u2">(Sie auch!)</div>
       {% endifequal %}
       {% ifequal fb.me2 'me2' %}
-	<div class="fb_me2"><a href="" id="me2">Ich auch!</a></div>
+	<div class="fb_me2">&lt;<a href="" id="me2">Ich auch!</a>|</div>
       {% endifequal %}
       </div>
       <div class="fb_description">{{ fb.description }}</div>
-      <div class="fb_others">X Personen gefällt {{ type|fb_type_this }}</div>
+      <div class="fb_others">{{ fb.count|fb_count_persons }} gefällt {{ type|fb_type_this }}</div>
       <div class="fb_separator"><hr></div>
     {% endfor %}
     </div>

@@ -44,3 +44,17 @@ def fb_type_of_your(type):
 @register.filter
 def fb_type_this(type):
     return types_de.get(type, types_de_whatever)[4]
+
+
+person_de = ('Niemanden', 'Einer Person', 'Personen')
+
+@register.filter
+def fb_count_persons(count):
+    if count == 0:
+        return person_de[0]
+    elif count == 1:
+        return person_de[1]
+    else:
+        return '%s %s' % (count, person_de[2])
+
+
