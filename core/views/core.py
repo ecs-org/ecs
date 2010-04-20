@@ -12,7 +12,6 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
-from ecs.utils.htmldoc import htmldoc
 from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
 from ecs.docstash.decorators import with_docstash_transaction
