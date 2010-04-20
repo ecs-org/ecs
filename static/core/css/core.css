@@ -106,6 +106,7 @@ form .field, form .tab {
   border: 1px solid #eee;
   background: #f9feff;
   min-width: 700px;
+  display: block;
 }
 form .field h3, form .tab h3 {
   font-size: 12pt;
@@ -124,8 +125,9 @@ form, form * {
 
 form ol {
   padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  margin-top: 20px;
+  margin-top: 10px;
+  display: block;
+  clear: both;
 }
 /*
 form ol:last-child {
@@ -134,8 +136,8 @@ form ol:last-child {
 }
 */
 form ol li {
-  clear: both;
   display: block;
+  clear: both;
   list-style-type: none;
   margin-bottom: 10px;
 }
@@ -143,20 +145,25 @@ form ol li {
 form ol li input[type=text], form ol li textarea {
 }
 form ol li textarea {
-  height: 3em;
+  height: 40px;
+  display: block;
   width: 30em;
 }
 form ol li.focus {
   background-color: #eeeeff;
 }
 form ol li label {
-  width: 200px;
+  width: 220px;
   padding-right: 10px;
   text-align: right;
   float: left;
 }
 form ol li label:after {
   content: ":";
+}
+form ol li label:before {
+  content: "*";
+  color: #f00;
 }
 
 form .errors ul li {
@@ -171,7 +178,7 @@ form .errors ul li {
 }
 
 form ol li.BooleanField {
-  padding-left: 15em;
+  padding-left: 230px;
 }
 form ol li.BooleanField label {
   float: none;
@@ -258,7 +265,6 @@ fieldset.disabled {
 }
 
 form ol li .mooeditable-container {
-  left: 21em;
   border: 1px solid #666666;
 }
 form ol li .mooeditable-ui-toolbar .toolbar-item,
@@ -269,10 +275,12 @@ form ol li .mooeditable-ui-toolbar .toolbar-separator {
   margin-left: 0px;
 }
 form ol li .rte_display {
-  margin-left: 21em;
+  float: left;
+  display: block;
   width: 29em;
   padding: 0.5em;
-  height: auto;
+  margin-bottom: 10px;
+  height: 60px;
   min-height: 4em;
   background-color: #ffffff;
   border: 1px solid #666666;
@@ -292,6 +300,8 @@ form ol li .paperform_number:before {
 form ol li .paperform_number:after {
   content: "]";
 }
+
+form li.max40 input{ width: 40em;}
 
 /* specific formset styles */
 
@@ -359,137 +369,137 @@ table.notif_meta th {
 /* meeting editor */
 
 #meeting_editor #userlist{
-	list-style: none;
-	background-color: #eeeeee;
+  list-style: none;
+  background-color: #eeeeee;
 }
 
 #meeting_editor #userlist li{
-	border-top: 1px solid #ffffff;
-	padding: 5px;
+  border-top: 1px solid #ffffff;
+  padding: 5px;
 }
 
 #meeting_editor #userlist .info{
-	background-color: #ffffff;
-	font-size: 0.8em;
+  background-color: #ffffff;
+  font-size: 0.8em;
 }
 
 #meeting_editor #userlist .info .constraints{
-	margin-bottom: 0px;
+  margin-bottom: 0px;
 }
 
 #meeting_editor #userlist .info .constraints li{
-	padding: 0px;
+  padding: 0px;
 }
 
 
 #meeting_constraint_editor #constraint_formset{
-	width: 800px;
+  width: 800px;
 }
 #meeting_constraint_editor form ol li{
-	width: 100px;
-	float: left;
-	clear: none;
-	display: block;
-	height: 50px;
+  width: 100px;
+  float: left;
+  clear: none;
+  display: block;
+  height: 50px;
 }
 #meeting_constraint_editor form ol{
-	margin: 0px;
-	height: 50px;
+  margin: 0px;
+  height: 50px;
 }
 #meeting_constraint_editor form ol li label{
-	width: auto;
-	float: none;
-	display: block;
-	text-align: left;
+  width: auto;
+  float: none;
+  display: block;
+  text-align: left;
 }
 #meeting_constraint_editor form ol li input[type=text]{
-	width: 7em;
+  width: 7em;
 }
 #meeting_constraint_editor form .inline_formset .form{
-	padding: 0px;
-	clear: both;
+  padding: 0px;
+  clear: both;
 }
 #meeting_constraint_editor form .inline_formset .form a.delete_row{
-	width: 100px;
-	float: right;
-	display: block;
+  width: 100px;
+  float: right;
+  display: block;
 }
 
 #meeting_editor .constraint_status{
-	width: 10px;
-	height: 10px;
-	text-indent: -20px;
-	display: block;
-	float: left;
-	overflow: hidden;
+  width: 10px;
+  height: 10px;
+  text-indent: -20px;
+  display: block;
+  float: left;
+  overflow: hidden;
 }
 
 #meeting_editor #userlist .constraints{
-	list-style: none;
-	margin-left: 0px;
+  list-style: none;
+  margin-left: 0px;
 }
 
 #meeting_editor .entry{
-	border: 1px solid #eeeeee;
-	margin: 3px;
-	display: block;
-	height:55px;
-	background-color:#ffffff;
-	position: relative;
+  border: 1px solid #eeeeee;
+  margin: 3px;
+  display: block;
+  height:55px;
+  background-color:#ffffff;
+  position: relative;
 }
 
 #meeting_editor .entry.break{
-	background-color: #ffffcc;
+  background-color: #ffffcc;
 }
 
 #meeting_editor .entry a.remove{
-	position: absolute;
-	top: 0px;
-	right: 0px;
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	text-indent: -200px;
-	overflow: hidden;
-	background: url(/static/core/images/remove.png) no-repeat;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  text-indent: -200px;
+  overflow: hidden;
+  background: url(/static/core/images/remove.png) no-repeat;
 }
 #meeting_editor .entry .dragHandle{
-	float:left;
-	width:50px;
-	background-color:#cccccc;
-	height:100%;
+  float:left;
+  width:50px;
+  background-color:#cccccc;
+  height:100%;
 }
 
 #meeting_editor .entry input.duration{
-	width: 5em;
+  width: 5em;
 }
 
 #meeting_editor .entry input.optimal_start{
-	width: 5em;
+  width: 5em;
 }
 
 #meeting_editor .entry h3{
-	font-size: 1em;
+  font-size: 1em;
 }
 
 #meeting_editor #timetable{
-	list-style: none;
-	width:550px;
-	font-size:13px;
-	margin: 0px;
+  list-style: none;
+  width:550px;
+  font-size:13px;
+  margin: 0px;
 }
 
 #meeting_participation_editor form{
-	float: none;
-	display: inline;
+  float: none;
+  display: inline;
 }
 
 #meeting_participation_editor .entry{
-	clear: both;
+  clear: both;
 }
 
 #meeting_participation_editor .entry h2{
-	margin: 0px;
+  margin: 0px;
 }
 
 #meeting_participation_editor .entry a.remove{
@@ -517,8 +527,8 @@ table.notif_meta th {
 }
 
 #meeting_participation_editor .entry .user_list > span{
-	margin-right: 0.5em;
-	padding: 2px;
-	border: 1px solid #ccccff;
-	background-color: #eeeeff;
+  margin-right: 0.5em;
+  padding: 2px;
+  border: 1px solid #ccccff;
+  background-color: #eeeeff;
 }
