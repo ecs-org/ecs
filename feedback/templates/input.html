@@ -1,8 +1,16 @@
-{% load feedback %}
+<!-- feedback input -->
 
+{% load feedback %}
 {% url feedback_input type page origin as fb_url %}
 
-<title>Feedback Eingabe</title>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}feedback/css/feedback.css" />
+  <title>Feedback Eingabe</title>
+</head>
+
+<body>
 
 <span class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</span>
 
@@ -66,3 +74,6 @@
 
 </form>
 
+</body>
+
+</html>

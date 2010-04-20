@@ -1,0 +1,152 @@
+/** overlays **/
+
+.modal { 
+    background-color:#fff; 
+    display:none; 
+    width:600px; 
+    padding:15px; 
+    text-align:left; 
+    border:2px solid #333; 
+ 
+    opacity:0.8; 
+    -moz-border-radius:6px; 
+    -webkit-border-radius:6px; 
+    -moz-box-shadow: 0 0 50px #0cc; 
+    -webkit-box-shadow: 0 0 50px #0cc; 
+} 
+ 
+.modal h2 { 
+    margin:0px; 
+    padding:10px 0 10px 45px; 
+    border-bottom:1px solid #333; 
+    font-size:20px; 
+}
+
+
+/** tooltips **/
+
+/* simple css-based tooltip */ 
+div.tooltip { 
+    background-color:#00f; 
+    border:1px solid #fff; 
+    padding:10px 10px; 
+    width:140px; 
+    display:none; 
+    color:#fff; 
+    text-align:left; 
+    font-size:12px; 
+    z-index:20000;
+
+    /* outline radius for mozilla/firefox only */ 
+    -moz-box-shadow:0 0 10px #000; 
+    -webkit-box-shadow:0 0 10px #000; 
+}
+
+
+/** tabs **/
+
+/* root element for tabs  */
+ul.tabs { 
+        list-style:none; 
+        margin:0 !important; 
+        padding:0;      
+        border-bottom:1px solid #666;   
+        height:30px;
+}
+
+/* single tab */
+ul.tabs li { 
+        float:left;      
+        text-indent:0;
+        padding:0;
+        margin:0 !important;
+        list-style-image:none !important; 
+}
+
+/* link inside the tab. uses a background image */
+ul.tabs a { 
+        background: url(../images/blue.png) no-repeat -420px -62px;
+        font-size:11px;
+        display:block;
+        height: 30px;  
+        line-height:30px;
+        width: 134px;
+        text-align:center;      
+        text-decoration:none;
+        color:#333;
+        padding:0px;
+        margin:0px;     
+        position:relative;
+        top:1px;
+}
+
+ul.tabs a:active {
+        outline:none;           
+}
+
+/* when mouse enters the tab move the background image */
+ul.tabs a:hover {
+        background-position: -420px 0px;      
+        color:#fff;     
+}
+
+/* active tab uses a class name "current". it's highlight is also done by moving the background image. */
+ul.tabs a.current, ul.tabs a.current:hover, ul.tabs li.current a {
+        background-position: -420px -31px;              
+        cursor:default !important; 
+        color:#fff !important;
+}
+
+
+/* Different widths for tabs: use a class name: w1, w2, w3 or w2 */
+
+/* width 1 */
+ul.tabs a.s                     { background-position: -553px -62px; width:81px; }
+ul.tabs a.s:hover       { background-position: -553px 0px; }
+ul.tabs a.s.current  { background-position: -553px -31px; }
+
+/* width 2 */
+ul.tabs a.l                     { background-position: -248px -62px; width:174px; }
+ul.tabs a.l:hover       { background-position: -248px 0px; }
+ul.tabs a.l.current  { background-position: -248px -31px; }
+
+
+/* width 3 */
+ul.tabs a.xl                    { background-position: 0px -62px; width:248px; }
+ul.tabs a.xl:hover      { background-position: 0px 0px; }
+ul.tabs a.xl.current { background-position: 0px -31px; }
+
+
+/* initially all panes are hidden */ 
+div.panes div.pane {
+        display:none;
+    border:1px solid #333; 
+}
+
+
+/** scrollable **/
+
+/* root element for scrollable */ 
+div.scrollable { 
+    /* required settings */ 
+    position:relative; 
+    overflow:hidden; 
+    border:1px solid #333; 
+ 
+    /* vertical scrollers have typically larger height than width */ 
+    height: 130px; 
+    width: 300px; 
+} 
+ 
+/* root element for scrollable items */ 
+div.scrollable div.items { 
+    position:absolute; 
+    /* this time we have very large space for the height */ 
+    height:20000em; 
+}
+
+/* you may want to setup some decorations to active the item */ 
+div.items div.active { 
+    border:1px inset #ccc; 
+    background-color:#99f; 
+}

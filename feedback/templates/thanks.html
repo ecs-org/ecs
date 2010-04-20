@@ -1,21 +1,35 @@
+<!-- feedback thanks -->
+
 {% load feedback %}
+{% url feedback_input type page origin as fb_url %}
 
-<title>Feedback Dank</title>
+<html>
 
-<div class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</div>
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}feedback/css/feedback.css" />
+  <title>Feedback Dank</title>
+</head>
 
-<div class="fb_entry">
-  <div class="fb_field">
+<body>
+
+<span class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</span>
+
+<ol class="fb_entry">
+  <li class="fb_field">
     <div class="fb_field_name">Feedbacktyp</div>
     <div class="fb_field_value">{{ type|fb_type }}</div>
-  </div>
-  <div class="fb_field">
+  </li>
+  <li class="fb_field">
     <div class="fb_field_name">Beschreibung</div> 
     <div class="fb_field_value">{{ description }}</div>
-  </div>
-  <div class="fb_field">
+  </li>
+  <li class="fb_field">
     <div class="fb_field_name">Zusammenfassung</div> 
     <div class="fb_field_value">{{ summary }}</div>
-  </div>
-</div>
+  </li>
+</ol>
+
+</body>
+
+</html>
 
