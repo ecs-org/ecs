@@ -193,10 +193,12 @@
             formSelector: '.form',
             prefix: null,
             idPrefix: 'id_',
+            addButton: true,
             addButtonClass: 'add_row',
             addButtonText: 'add',
             removeButtonClass: 'delete_row',
             removeButtonText: 'remove',
+            removeButtonInject: 'bottom',
             templateClass: 'template',
             canDelete: false,
             offset: 0
@@ -223,25 +225,29 @@
             }, this);
             this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
             this.forms.each(function(form, index){
-                this.setupForm(form, index);
+                this.setupForm(form, index, false);
             }, this);
         },
-        addContainer: function(container){
-            var addButton = new Element('a', {
+        createAddButton: function(container){
+            return new Element('a', {
                 html: this.options.addButtonText,
                 'class': this.options.addButtonClass,
                 events: {
                     click: this.add.bind(this, container)
                 }
             });
-            if(this.isTable){
-                addButton.inject(container, 'after');
-            }
-            else{
-                container.grab(addButton);
+        },
+        addContainer: function(container){
+            if(this.options.addButton){
+                var addButton = this.createAddButton(container);
+                if(this.isTable){
+                    addButton.inject(container, 'after');
+                }
+                else{
+                    container.grab(addButton);
+                }
             }
             this.containers.push(container);
-
         },
         removeContainer: function(container){
             for(var i=this.forms.length - 1;i>=0;i--){
@@ -266,7 +272,7 @@
                 form.getElement('td').grab(removeLink);
             }
             else{
-                form.grab(removeLink);
+                removeLink.inject(form, this.options.removeButtonInject);
             }
             if(added){
                 var idField = form.getElement('input[name$=-id]');
@@ -275,7 +281,7 @@
                 }
                 ecs.setupFormFieldHelpers(form);
             }
-            this.fireEvent('formSetup', arguments);
+            this.fireEvent('formSetup', [arguments, this].flatten());
         },
         updateIndex: function(form, index, oldIndex){
             var _update = (function(el, attr){
@@ -399,20 +405,6 @@
         display.inject(textArea, 'after');
     };
     
-    /*
-    ecs.InvestigatorEmployeeFormSet = new Class({
-        Extends: ecs.InlineFormSet,
-        initialize: function(container, options){
-            this.parent(container, options);
-            this.tab = this.options.tabController.getTabForElement(container);
-        },
-        setupForm: function(form, index, added){
-            this.parent(form, index, added);
-            form.getElement('input[type=hidden][name=$investigator_index]');
-        }
-    });
-    */
-    
     ecs.clearFormFields = function(context){
         context = $(context || document);
         context.getElements('input[type=text], textarea').each(function(input){
@@ -504,8 +496,14 @@
                     var investigatorFormset = new ecs.InlineFormSet(ifs, {
                         prefix: 'investigator',
                         formSelector: '.investigator_tab',
-                        onFormSetup: function(form, index){
+                        removeButtonInject: 'top',
+                        addButton: false,
+                        addButtonText: 'Weiteres Zentrum Hinzufügen',
+                        removeButtonText: 'Dieses Zentrum Entfernen',
+                        onFormSetup: function(form, index, added, formset){
                             tabController.addTab('Zentrum ' + (index + 1) +  '', form);
+                            console.log(formset, 'setup', form);
+                            formset.createAddButton(ifs).inject(form, 'top');
                         },
                         onFormRemoved: function(form, index){
                             var tab = tabController.getTabForElement(form);
@@ -515,7 +513,6 @@
                     var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
                         prefix: 'investigatoremployee',
                         onFormAdded: function(form, index, added){
-                            console.log(form);
                             var indexField = form.getElement('input[name$=-investigator_index]');
                             indexField.value = investigatorFormset.getIndexForElement(form);
                         }
