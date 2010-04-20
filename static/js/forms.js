@@ -420,7 +420,6 @@
     
     ecs.setupFormFieldHelpers = function(context){
         context = $(context || document.body);
-        /*
         context.getElements(ecs.datepickerInputSelector).each(function(input){
             (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
         });
@@ -430,7 +429,6 @@
             allowEmpty: true,
             toggleElements: context.getElements('.datepicker_toggler')
         });
-        */
         context.getElements('li,th.label').each(function(field){
             var notes = [];
             var input = null;
@@ -445,7 +443,15 @@
                 input = field.getFirst('input[type=text]');
             }
             if(field.hasClass('required')){
-                notes.push('required');
+                var span = field.getElement('span');
+                var star = new Element('span', {html: '*', style: 'color:red', 'class': 'star'});
+                if(span){
+                    star.inject(span, 'before');
+                }
+                else{
+                    star.inject(field);
+                }
+                //notes.push('required');
             }
             if(input){
                 var maxlength = input.getProperty('maxlength');
