@@ -124,14 +124,14 @@ class BaseInvestigatorFormSet(BaseModelFormSet):
 InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
                                            fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
 
-
 class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
         super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)
+
     def add_fields(self, form, index):
         super(BaseInvestigatorEmployeeFormSet, self).add_fields(form, index)
-        form.fields['investigator_index'] = forms.IntegerField(required=True,widget=forms.HiddenInput(attrs={'value' : 0}))
+        form.fields['investigator_index'] = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
 
 InvestigatorEmployeeFormSet = modelformset_factory(InvestigatorEmployee, formset=BaseInvestigatorEmployeeFormSet, extra=1, exclude = ('submission',))
 

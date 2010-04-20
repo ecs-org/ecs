@@ -164,7 +164,7 @@ def create_submission_form(request):
             request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
             document_formset = DocumentFormSet(prefix='document')
         
-        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
+        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and investigator_formset.is_valid() and investigatoremployee_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
             submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))

@@ -107,6 +107,19 @@
         
     {% endfor %}
     
+    {% for investigator in submission_form.investigators.all %}
+    <div>
+        <h2>Zentrum: {{ investigator.organisation }}</h2>
+        <div>Prüfer: {{ investigator.name }}</div>
+        <div>
+        Mitarbeiter: 
+        {% for employee in investigator.investigatoremployee_set.all %}
+            {{ employee.full_name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    
     {% include "documents/compact_list.html" %}
     
 {% endblock %}
