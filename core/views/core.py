@@ -125,7 +125,8 @@ def notification_xhtml2pdf(request, notification_pk=None):
         'investigators': notification.investigators.order_by('ethics_commission__name', 'name'),
         'url': request.build_absolute_uri(),
     }))
-    pdf = xhtml2pdf(html.encode('utf-8'), webpage=True)
+    pdf = xhtml2pdf(html.encode('utf-8'))
+    assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
     return response
