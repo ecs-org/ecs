@@ -386,6 +386,7 @@
             else{
                 editable = new MooEditable(textArea, {
                     actions: 'bold italic underline strikethrough | indent outdent | undo redo',
+                    extraCSS: '*{font-size: 9pt;}'
                 });
             }
             display.hide();
