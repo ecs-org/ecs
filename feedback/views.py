@@ -43,7 +43,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         return HttpResponse("Error: invalid parameter page = '%s'!" % page)
     page = int(page)
 
-    page_size = 5  # TODO emphasize parameter
+    page_size = 4  # TODO emphasize parameter
 
     # create display list from database fb records
     list = []
