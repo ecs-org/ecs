@@ -91,7 +91,7 @@
       var description = $(document.body).getElementById('description');
       if (description.get('text') == '') {
         description_handling = true;
-        description.set('text', '(Beschreibung {{ type|fb_type_of_your }})');
+        description.set('text', 'Beschreibung {{ type|fb_type_of_your }}');
         var description_handler = function(event) {
           event.stop();
           if (description_clicked) {
@@ -108,7 +108,7 @@
       var summary = $(document.body).getElementById('summary');
       if (summary.get('value') == '') {
         summary_handling = true;
-        summary.set('value', '(Zusammenfassung)');
+        summary.set('value', 'Zusammenfassung');
         var summary_handler = function(event) {
           event.stop();
           if (summary_clicked) {
