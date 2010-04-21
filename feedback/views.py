@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.feedback.models import Feedback
@@ -17,6 +18,12 @@ def is_int(x):
   
 
 def feedback_input(request, type='i', page=1, origin='TODO'):
+
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: you need to be logged in!")
+    else:
+        user = request.user
+
     m = dict(Feedback.FEEDBACK_TYPES)
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
@@ -33,9 +40,8 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         summary_error = (summary == '')
         if not (description_error or summary_error):
             feedbacktype = type
-            question = 'WTF?!'
             pub_date = datetime.datetime.now()
-            feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
+            feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, pub_date=pub_date, user=user)
             feedback.save()
             return render(request, 'thanks.html', {
                 'type': type,
