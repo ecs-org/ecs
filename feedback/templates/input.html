@@ -14,7 +14,7 @@
 
 <span class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</span>
 
-<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
+<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main" id="id_form">
 
   <div class="fb_new">
     <ol class="fb_types">
@@ -35,9 +35,11 @@
       <li class="fb_error">Zusammenfassung fehlt!</li>
   {% endif %}
       <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
-      <li><input id="submit" type="submit" value="Abschicken" name="submit" /></li>
+      <li><input id="id_submit" type="submit" value="Abschicken" name="submit" /></li>
     </ol>
   </div>
+
+  <input id="fb_id" type="hidden" name="fb_id" />
 
   <ol class="fb_old">
     <li class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</li>
@@ -53,7 +55,7 @@
       <span class="fb_u2">(Sie auch!)</span>
     {% endifequal %}
     {% ifequal fb.me2 'me2' %}
-      <span class="fb_me2"><a href="">Ich auch!</a></span>
+      <span class="fb_me2"><a href="" id="fb{{ fb.id }}">Ich auch!</a></span>
     {% endifequal %}
       <br/>
       <span class="fb_description">{{ fb.description|truncate:28 }}</span>
@@ -124,7 +126,7 @@
         summary.addEvent('click', summary_handler);
       }
 
-      var submit = $(document.body).getElementById('submit');
+      var submit = $(document.body).getElementById('id_submit');
       var submit_handler = function(event) {
         if (description_handling && !description_clicked) {
           description.set('text', '');
@@ -138,27 +140,27 @@
 
 
       /*
-       *  me2 
+       *  me2
        */
 
-      var me2_triggers = $(document.body).getElements('.fb_me2');
       var me2_handler = function(event) {
-        event.stop();
-        alert('JAAA, ICH AUCH!!');
+        //event.stop();
+        fb_id = event.target.get('id').substr(2);
+        $('fb_id').set('value', fb_id);
+        //$$('id_form').submit();
       };
-      me2_triggers.addEvent('click', me2_handler);
+      $(document.body).getElements('.fb_me2').addEvent('click', me2_handler);
 
 
       /*
        *  details view
        */
 
-      var details_triggers = $(document.body).getElements('.fb_list_item');
       var details_handler = function(event) {
         event.stop();
         alert('Details, Details, Details ..');
       };
-      details_triggers.addEvent('click', details_handler);
+      $(document.body).getElements('.fb_list_item').addEvent('click', details_handler);
 
     });
   </script>

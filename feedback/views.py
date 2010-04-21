@@ -36,18 +36,24 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
         summary = request.POST['summary']
-        description_error = (description == '')
-        summary_error = (summary == '')
-        if not (description_error or summary_error):
-            feedbacktype = type
-            pub_date = datetime.datetime.now()
-            feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, pub_date=pub_date, user=user)
-            feedback.save()
-            return render(request, 'thanks.html', {
-                'type': type,
-                'description': description,
-                'summary': summary,
-            })
+        id = request.POST['fb_id']
+        if id:
+            # me2 vote (via GET)
+            fb = Feedback.objects.get(id=id)
+            fb.me_too_votes.add(user)
+        else:
+            description_error = (description == '')
+            summary_error = (summary == '')
+            if not (description_error or summary_error):
+                feedbacktype = type
+                pub_date = datetime.datetime.now()
+                feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, pub_date=pub_date, user=user)
+                feedback.save()
+                return render(request, 'thanks.html', {
+                    'type': type,
+                    'description': description,
+                    'summary': summary,
+                })
 
     types = []
     for t, _ in Feedback.FEEDBACK_TYPES:
@@ -66,7 +72,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     def get_me2(fb):
         if fb.user.id == user.id:
             return 'yours'
-        elif len(fb.me_too_votes.filter(author=user)):
+        elif len(fb.me_too_votes.filter(id=user.id)) > 0:
             return 'u2'
         else:
             return 'me2'
@@ -78,6 +84,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         index = index + 1
         list.append({
             'index': index,
+            'id': fb.id,
             'summary': fb.summary,
             'description': fb.description,
             'me2': get_me2(fb),
