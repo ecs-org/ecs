@@ -13,6 +13,7 @@ class Feedback(models.Model):
     summary = models.CharField(max_length=200) 
     description = models.TextField()
     origin = models.CharField(max_length=200)
+    user = models.ForeignKey(User, related_name='author', null=True)
     pub_date = models.DateTimeField('date published')
     me_too_votes = models.ManyToManyField(User)
 
