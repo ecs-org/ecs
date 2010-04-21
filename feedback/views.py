@@ -21,7 +21,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
         summary = request.POST['summary']
         feedbacktype = type
