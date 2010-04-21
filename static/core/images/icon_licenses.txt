@@ -1,11 +1,20 @@
 Aestetica Icons:
+----------------
 
 add.png, help.png, remove.png, search.png, user.png
 
 Vaga Icons:
+-----------
 
 calendar.png
 
+Woofunctions Icons
+------------------
+
+http://www.woothemes.com/2009/09/woofunction-178-amazing-web-design-icons/
+GPL: http://www.gnu.org/licenses/gpl.html
+
 Human Icons:
+------------
 
 emblem-people.png - used for feedback.png

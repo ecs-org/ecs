@@ -1,1 +1,123 @@
 /* feedback.css */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+.main {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  color: #000;
+}
+.fb_new, .fb_old {
+  float: left;
+  width: 300px;
+  margin: 20px 0 0 20px;
+}
+
+.main li {
+  list-style-type: none;
+}
+.fb_form li {
+  margin-bottom: 10px;
+}
+.fb_form input, .fb_form textarea {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 3px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+}
+
+.fb_title {
+  font-size: 14pt;
+  margin: 10px;
+}
+.fb_types {
+  margin-bottom: 10px;
+}
+.fb_types li {
+  display: inline;
+  margin-right: 5px;
+}
+.fb_types li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.fb_type_selected {
+  font-weight: bold;
+}
+
+.fb_type_i {
+  background: url(/static/core/images/bulb.png) no-repeat;
+  padding: 3px 3px 3px 20px;
+}
+.fb_type_q {
+  background: url(/static/core/images/info.png) no-repeat;
+  padding-left: 20px;  
+}
+.fb_type_p {
+  background: url(/static/core/images/problem.png) no-repeat;
+  padding-left: 20px;
+}
+.fb_type_l {
+  background: url(/static/core/images/star.png) no-repeat;
+  padding-left: 20px;
+}
+
+.fb_list_top {
+  font-size: 12pt;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+li.fb_list {
+  float: left;
+  display: block;
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  background: #F9FEFF;
+  clear: right;
+  font-size: 10pt;
+  line-height: 14pt;
+}
+li.fb_list a {
+  text-decoration: none;
+  color: #349ff8;
+}
+.fb_summary {
+  font-weight: bold;
+}
+.fb_others {
+  font-size: 8pt;
+}
+.fb_u2, #me2, .fb_yours {
+  float: right;
+}
+.fb_bottom {
+  float: left;
+  display: block;
+  margin: 5px;
+  width: 100%;
+  text-align: center;
+  font-size: 9pt;
+}
+.fb_nav_next img {
+  float: right;
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.fb_nav_prev img {
+  float: left;
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+}
