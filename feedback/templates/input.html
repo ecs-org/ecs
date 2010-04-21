@@ -37,8 +37,8 @@
     <li class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</li>
     <li class="fb_separator"><hr></li>
   {% if list %}
-    <li class="fb_list">
     {% for fb in list %}
+    <li class="fb_list">
       <span class="fb_summary">{{ fb.index }}. {{ fb.summary }}</span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
