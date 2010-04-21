@@ -38,9 +38,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
             feedback.save()
             return render(request, 'thanks.html', {
-                    'type': type,
-                    'description': description,
-                    'summary': summary,
+                'type': type,
+                'description': description,
+                'summary': summary,
             })
 
     types = []
@@ -66,11 +66,17 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         else:
             return 'me2'
     def get_me2(fb):
+        # TODO
+        # yours: fb.user == user
+        # u2: fb.user != user and user in fb.me2votes
+        # me2: fb.user != user and not(user in fb.me2votes)
         return get_me2_random(fb)
 
     def get_count_random(fb):
         return random.randint(0, 3)
     def get_count(fb):
+        # TODO
+        # count = len(fb.me2votes)
         return get_count_random(fb)
 
     for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:

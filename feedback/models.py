@@ -10,10 +10,10 @@ from reversion.models import Version
 class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'Idea'),('q','Question'),('p', 'Problem'),('l','Praise'))
     feedbacktype = models.CharField(choices=FEEDBACK_TYPES, max_length=1)
-    summary= models.CharField(max_length=200) 
+    summary = models.CharField(max_length=200) 
     description = models.TextField()
     origin = models.CharField(max_length=200)
-    question = models.CharField(max_length=200)
+    question = models.CharField(max_length=200, null=True)
     pub_date = models.DateTimeField('date published')
     me_too_votes = models.ManyToManyField(User)
 
