@@ -84,7 +84,9 @@
       var description = $(document.body).getElementById('description');
       var description_handler = function(event) {
         event.stop();
-        if (description_clicked) return;
+        if (description_clicked) {
+          return;
+        }
         description_clicked = true;
         this.set('text', '');
       };
@@ -94,11 +96,24 @@
       var summary = $(document.body).getElementById('summary');
       var summary_handler = function(event) {
         event.stop();
-        if (summary_clicked) return;
+        if (summary_clicked) {
+          return;
+        }
         summary_clicked = true;
         this.set('value', '');
       };
-      summary.addEvent('click', summary_handler); // keydown?
+      summary.addEvent('click', summary_handler);
+
+      var submit = $(document.body).getElementById('submit');
+      var submit_handler = function(event) {
+        if (!description_clicked) {
+          description.set('text', '');
+        }
+        if (!summary_clicked) {
+          summary.set('value', '');
+        }
+      };
+      submit.addEvent('click', submit_handler);
 
     });
   </script>

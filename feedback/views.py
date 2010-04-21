@@ -24,16 +24,17 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
         summary = request.POST['summary']
-        feedbacktype = type
-        question = 'WTF?!'
-        pub_date = datetime.datetime.now()
-        feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
-        feedback.save()
-        return render(request, 'thanks.html', {
-           'type': type,
-           'description': description,
-           'summary': summary,
-        })
+        if description != '' and summary != '':
+            feedbacktype = type
+            question = 'WTF?!'
+            pub_date = datetime.datetime.now()
+            feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, question=question, pub_date=pub_date)
+            feedback.save()
+            return render(request, 'thanks.html', {
+                    'type': type,
+                    'description': description,
+                    'summary': summary,
+            })
 
     types = []
     for t, _ in Feedback.FEEDBACK_TYPES:
