@@ -63,27 +63,16 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     list = []
     index = (page - 1) * page_size;
 
-    def get_me2_random(fb):
-        r = random.randint(0, 2)
-        if r == 0:
+    def get_me2(fb):
+        if fb.user.id == user.id:
             return 'yours'
-        elif r == 1:
+        if len(fb.me_too_votes.filter(author=user)):
             return 'u2'
         else:
             return 'me2'
-    def get_me2(fb):
-        # TODO
-        # yours: fb.user == user
-        # u2: fb.user != user and user in fb.me2votes
-        # me2: fb.user != user and not(user in fb.me2votes)
-        return get_me2_random(fb)
 
-    def get_count_random(fb):
-        return random.randint(0, 3)
     def get_count(fb):
-        # TODO
-        # count = len(fb.me2votes)
-        return get_count_random(fb)
+        return len(fb.me_too_votes.all())
 
     for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
