@@ -14,20 +14,25 @@
 
 <span class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</span>
 
-<ol class="fb_entry">
-  <li class="fb_field">
-    <div class="fb_field_name">Feedbacktyp</div>
-    <div class="fb_field_value">{{ type|fb_type }}</div>
-  </li>
-  <li class="fb_field">
-    <div class="fb_field_name">Beschreibung</div> 
-    <div class="fb_field_value">{{ description }}</div>
-  </li>
-  <li class="fb_field">
-    <div class="fb_field_name">Zusammenfassung</div> 
-    <div class="fb_field_value">{{ summary }}</div>
-  </li>
-</ol>
+<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
+
+  <ol class="fb_entry">
+    <li class="fb_field">
+      <div class="fb_field_name">Feedbacktyp</div>
+      <div class="fb_field_value">{{ type|fb_type }}</div>
+    </li>
+    <li class="fb_field">
+      <div class="fb_field_name">Beschreibung</div> 
+      <div class="fb_field_value">{{ description }}</div>
+    </li>
+    <li class="fb_field">
+      <div class="fb_field_name">Zusammenfassung</div> 
+      <div class="fb_field_value">{{ summary }}</div>
+    </li>
+  </ol>
+
+  <input type="submit" value="Weiteres Feedback" name="submit" />
+</form>
 
 </body>
 
