@@ -22,9 +22,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
 
     summary = ''
+    summary_error = False
     description = ''
     description_error = False
-    summary_error = False
 
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
@@ -56,7 +56,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     # create display list from database fb records
     list = []
     index = (page - 1) * page_size;
-    def get_me2():  # TODO replace by value depending on data model
+    def get_me2(fb):  # TODO replace by value depending on data model
         r = random.randint(0, 2)
         if r == 0:
             return 'yours'
@@ -64,11 +64,17 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             return 'u2'
         else:
             return 'me2'
-    def get_count(): # TODO replace by real data
+    def get_count(fb): # TODO replace by real data
         return random.randint(0, 3)
     for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
-        list.append({ 'index': index, 'summary': fb.summary, 'description': fb.description, 'me2': get_me2(), 'count': get_count() })
+        list.append({
+            'index': index,
+            'summary': fb.summary,
+            'description': fb.description,
+            'me2': get_me2(fb),
+            'count': get_count(fb),
+        })
 
     # calculate number of pages
     items = len(Feedback.objects.filter(feedbacktype=type).filter(origin=origin))
@@ -87,9 +93,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         'items': items,
         'pages': pages,
         'origin': origin,
-        'description': description,
         'summary': summary,
-        'description_error': description_error,
         'summary_error': summary_error,
+        'description': description,
+        'description_error': description_error,
     })
 
