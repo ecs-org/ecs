@@ -56,7 +56,8 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     # create display list from database fb records
     list = []
     index = (page - 1) * page_size;
-    def get_me2(fb):  # TODO replace by value depending on data model
+
+    def get_me2_random(fb):
         r = random.randint(0, 2)
         if r == 0:
             return 'yours'
@@ -64,8 +65,14 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             return 'u2'
         else:
             return 'me2'
-    def get_count(fb): # TODO replace by real data
+    def get_me2(fb):
+        return get_me2_random(fb)
+
+    def get_count_random(fb):
         return random.randint(0, 3)
+    def get_count(fb):
+        return get_count_random(fb)
+
     for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
         list.append({

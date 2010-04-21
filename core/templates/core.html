@@ -78,7 +78,7 @@
         event.stop();
         var url = '/feedback/input/i/1/' + get_origin() + '/';
         new MooDialog.Iframe(url, {
-          title: 'Feedback',
+          title: 'Feedback von {{ user.get_full_name }}',
           size: {
           width: 700,
           height: 400
