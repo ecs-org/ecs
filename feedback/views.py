@@ -21,10 +21,17 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
 
+    summary = ''
+    description = ''
+    description_error = False
+    summary_error = False
+
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
         summary = request.POST['summary']
-        if description != '' and summary != '':
+        description_error = (description == '')
+        summary_error = (summary == '')
+        if not (description_error or summary_error):
             feedbacktype = type
             question = 'WTF?!'
             pub_date = datetime.datetime.now()
@@ -80,5 +87,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         'items': items,
         'pages': pages,
         'origin': origin,
+        'description': description,
+        'summary': summary,
+        'description_error': description_error,
+        'summary_error': summary_error,
     })
 

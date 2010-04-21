@@ -27,8 +27,14 @@
   {% endfor %}
     </ol>
     <ol class="fb_form">
-      <li><textarea id="description" cols="30" rows="6" name="description">Beschreibung {{ type|fb_type_of_your }}</textarea></li>
-      <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="Zusammenfassung" /></li>
+  {% if description_error %}
+      <li class="fb_error">Beschreibung fehlt!</li>
+  {% endif %}
+      <li><textarea id="description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
+  {% if summary_error %}
+      <li class="fb_error">Zusammenfassung fehlt!</li>
+  {% endif %}
+      <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
       <li><input id="submit" type="submit" value="Abschicken" name="submit" /></li>
     </ol>
   </div>
@@ -80,36 +86,46 @@
   <script type="text/javascript">
     window.addEvent('domready', function(){
 
+      var description_handling = false;
       var description_clicked = false;
       var description = $(document.body).getElementById('description');
-      var description_handler = function(event) {
-        event.stop();
-        if (description_clicked) {
-          return;
-        }
-        description_clicked = true;
-        this.set('text', '');
-      };
-      description.addEvent('click', description_handler); // keydown?
-      
+      if (description.get('text') == '') {
+        description_handling = true;
+        description.set('text', '(Beschreibung {{ type|fb_type_of_your }})');
+        var description_handler = function(event) {
+          event.stop();
+          if (description_clicked) {
+            return;
+          }
+          description_clicked = true;
+          this.set('text', '');
+        };
+        description.addEvent('click', description_handler); // keydown?      
+      }
+
+      var summary_handling = false;
       var summary_clicked = false;
       var summary = $(document.body).getElementById('summary');
-      var summary_handler = function(event) {
-        event.stop();
-        if (summary_clicked) {
-          return;
-        }
-        summary_clicked = true;
-        this.set('value', '');
-      };
-      summary.addEvent('click', summary_handler);
+      if (summary.get('value') == '') {
+        summary_handling = true;
+        summary.set('value', '(Zusammenfassung)');
+        var summary_handler = function(event) {
+          event.stop();
+          if (summary_clicked) {
+            return;
+          }
+          summary_clicked = true;
+          this.set('value', '');
+        };
+        summary.addEvent('click', summary_handler);
+      }
 
       var submit = $(document.body).getElementById('submit');
       var submit_handler = function(event) {
-        if (!description_clicked) {
+        if (description_handling && !description_clicked) {
           description.set('text', '');
         }
-        if (!summary_clicked) {
+        if (summary_handling && !summary_clicked) {
           summary.set('value', '');
         }
       };
