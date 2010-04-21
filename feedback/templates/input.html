@@ -44,7 +44,7 @@
 
   {% if list %}
     {% for fb in list %}
-    <li class="fb_list">
+    <li class="fb_list_item">
       <span class="fb_summary">{{ fb.index }}. {{ fb.summary|truncate:20 }}</span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
@@ -53,7 +53,7 @@
       <span class="fb_u2">(Sie auch!)</span>
     {% endifequal %}
     {% ifequal fb.me2 'me2' %}
-      <span class="fb_me2"><a href="" id="me2">Ich auch!</a></span>
+      <span class="fb_me2"><a href="">Ich auch!</a></span>
     {% endifequal %}
       <br/>
       <span class="fb_description">{{ fb.description|truncate:28 }}</span>
@@ -62,7 +62,7 @@
 
     </li>
     {% endfor %}
-    <li class="fb_bottom">
+    <li class="fb_list_bottom">
     {% if page|greater:1 %}
       <span class="fb_nav_prev"><a href="{% url feedback_input type page|add:'-1' origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
     {% endif %}
@@ -85,6 +85,10 @@
 <!--  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script> -->
   <script type="text/javascript">
     window.addEvent('domready', function(){
+       
+      /*
+       * pre-input information display 
+       */
 
       var description_handling = false;
       var description_clicked = false;
@@ -128,8 +132,33 @@
         if (summary_handling && !summary_clicked) {
           summary.set('value', '');
         }
+        /* event propagates .. */
       };
       submit.addEvent('click', submit_handler);
+
+
+      /*
+       *  me2 
+       */
+
+      var me2_triggers = $(document.body).getElements('.fb_me2');
+      var me2_handler = function(event) {
+        event.stop();
+        alert('JAAA, ICH AUCH!!');
+      };
+      me2_triggers.addEvent('click', me2_handler);
+
+
+      /*
+       *  details view
+       */
+
+      var details_triggers = $(document.body).getElements('.fb_list_item');
+      var details_handler = function(event) {
+        event.stop();
+        alert('Details, Details, Details ..');
+      };
+      details_triggers.addEvent('click', details_handler);
 
     });
   </script>

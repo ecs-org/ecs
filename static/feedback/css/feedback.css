@@ -75,7 +75,7 @@
   font-weight: bold;
 }
 
-li.fb_list {
+li.fb_list_item {
   float: left;
   display: block;
   width: 100%;
@@ -87,7 +87,7 @@ li.fb_list {
   font-size: 10pt;
   line-height: 14pt;
 }
-li.fb_list a {
+li.fb_list_item a {
   text-decoration: none;
   color: #349ff8;
 }
@@ -97,10 +97,10 @@ li.fb_list a {
 .fb_others {
   font-size: 8pt;
 }
-.fb_u2, #me2, .fb_yours {
+.fb_u2, .fb_me2, .fb_yours {
   float: right;
 }
-.fb_bottom {
+.fb_list_bottom {
   float: left;
   display: block;
   margin: 5px;
