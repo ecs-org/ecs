@@ -29,7 +29,7 @@
     <ol class="fb_form">
       <li><textarea id="description" cols="30" rows="6" name="description">Beschreibung {{ type|fb_type_of_your }}</textarea></li>
       <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="Zusammenfassung" /></li>
-      <li><input type="submit" value="Abschicken" name="submit" /></li>
+      <li><input id="submit" type="submit" value="Abschicken" name="submit" /></li>
     </ol>
   </div>
 
@@ -73,6 +73,36 @@
   </ol>
 
 </form>
+
+<div class="fb_js">
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+<!--  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script> -->
+  <script type="text/javascript">
+    window.addEvent('domready', function(){
+
+      var description_clicked = false;
+      var description = $(document.body).getElementById('description');
+      var description_handler = function(event) {
+        event.stop();
+        if (description_clicked) return;
+        description_clicked = true;
+        this.set('text', '');
+      };
+      description.addEvent('click', description_handler); // keydown?
+      
+      var summary_clicked = false;
+      var summary = $(document.body).getElementById('summary');
+      var summary_handler = function(event) {
+        event.stop();
+        if (summary_clicked) return;
+        summary_clicked = true;
+        this.set('value', '');
+      };
+      summary.addEvent('click', summary_handler); // keydown?
+
+    });
+  </script>
+</div>
 
 </body>
 

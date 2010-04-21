@@ -74,7 +74,8 @@
       var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
 
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
-      var feedback_handler = function() { 
+      var feedback_handler = function(event) { 
+        event.stop();
         var url = '/feedback/input/i/1/' + get_origin() + '/';
         new MooDialog.Iframe(url, {
           title: 'Feedback',
@@ -82,7 +83,6 @@
           width: 700,
           height: 400
         }});
-        return false;
       };
       feedback_triggers.addEvent('click', feedback_handler);
     });
