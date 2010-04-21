@@ -50,19 +50,19 @@
 }
 
 .fb_type_i {
-  background: url(/static/core/images/bulb.png) no-repeat;
+  background: url(/static/feedback/images/bulb.png) no-repeat;
   padding: 3px 3px 3px 20px;
 }
 .fb_type_q {
-  background: url(/static/core/images/info.png) no-repeat;
+  background: url(/static/feedback/images/info.png) no-repeat;
   padding-left: 20px;  
 }
 .fb_type_p {
-  background: url(/static/core/images/problem.png) no-repeat;
+  background: url(/static/feedback/images/problem.png) no-repeat;
   padding-left: 20px;
 }
 .fb_type_l {
-  background: url(/static/core/images/star.png) no-repeat;
+  background: url(/static/feedback/images/star.png) no-repeat;
   padding-left: 20px;
 }
 
