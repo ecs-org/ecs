@@ -69,3 +69,15 @@ def fb_count_persons(count):
         return '%s %s' % (count, person_de[2])
 
 
+# truncate string after max characters
+
+@register.filter
+def truncate(s, max):
+    n = len(s)
+    if n > max:
+        dots = ' ..'
+        return s[0:max-len(dots)] + dots
+    else:
+        return s
+
+

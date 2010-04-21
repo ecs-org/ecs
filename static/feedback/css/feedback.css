@@ -121,3 +121,18 @@ li.fb_list a {
   margin-right: 10px;
   cursor: pointer;
 }
+
+
+.fb_entry {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  padding: 3px;
+  background: #F9FEFF;
+}
+.fb_field {
+  padding: 10px;
+}
+.fb_field_name {
+  font-weight: bold;
+}
+
