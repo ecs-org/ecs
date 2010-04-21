@@ -66,7 +66,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     def get_me2(fb):
         if fb.user.id == user.id:
             return 'yours'
-        if len(fb.me_too_votes.filter(author=user)):
+        elif len(fb.me_too_votes.filter(author=user)):
             return 'u2'
         else:
             return 'me2'
