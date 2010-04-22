@@ -30,16 +30,16 @@
   {% if description_error %}
       <li class="fb_error">Beschreibung fehlt!</li>
   {% endif %}
-      <li><textarea id="description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
+      <li><textarea id="id_description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
   {% if summary_error %}
       <li class="fb_error">Zusammenfassung fehlt!</li>
   {% endif %}
-      <li><input id="summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
+      <li><input id="id_summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
       <li><input id="id_submit" type="submit" value="Abschicken" name="submit" /></li>
     </ol>
   </div>
 
-  <input id="fb_id" type="hidden" name="fb_id" />
+  <input id="id_fb" type="hidden" name="fb_id" />
 
   <ol class="fb_old">
     <li class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</li>
@@ -55,7 +55,7 @@
       <span class="fb_u2">(Sie auch!)</span>
     {% endifequal %}
     {% ifequal fb.me2 'me2' %}
-      <span class="fb_me2"><a href="" id="fb{{ fb.id }}">Ich auch!</a></span>
+      <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
     {% endifequal %}
       <br/>
       <span class="fb_description">{{ fb.description|truncate:28 }}</span>
@@ -92,75 +92,58 @@
        * pre-input information display 
        */
 
-      var description_handling = false;
-      var description_clicked = false;
-      var description = $(document.body).getElementById('description');
-      if (description.get('text') == '') {
-        description_handling = true;
-        description.set('text', 'Beschreibung {{ type|fb_type_of_your }}');
-        var description_handler = function(event) {
-          event.stop();
-          if (description_clicked) {
-            return;
-          }
-          description_clicked = true;
-          this.set('text', '');
-        };
-        description.addEvent('click', description_handler); // keydown?      
-      }
+      var Infohandler = new Class({
+        initialize: function(id, valfield, info) {
+          this.clicked = false;
 
-      var summary_handling = false;
-      var summary_clicked = false;
-      var summary = $(document.body).getElementById('summary');
-      if (summary.get('value') == '') {
-        summary_handling = true;
-        summary.set('value', 'Zusammenfassung');
-        var summary_handler = function(event) {
-          event.stop();
-          if (summary_clicked) {
-            return;
-          }
-          summary_clicked = true;
-          this.set('value', '');
-        };
-        summary.addEvent('click', summary_handler);
-      }
+          var infohandler = this;
+          var field = $(id);
 
-      var submit = $(document.body).getElementById('id_submit');
-      var submit_handler = function(event) {
-        if (description_handling && !description_clicked) {
-          description.set('text', '');
+          if (field.get(valfield) == '') {
+            field.set(valfield, info);
+
+            field.addEvent('click', function(event) {
+              event.stop();
+              if (infohandler.clicked) { // already cleaned
+                return;
+              }
+              infohandler.clicked = true;
+              field.set(valfield, '');
+            });
+
+            $('id_submit').addEvent('click', function(event) {
+              if (!infohandler.clicked) {
+                field.set(valfield, '');
+              }
+              // event propagates..
+            });
+          }
         }
-        if (summary_handling && !summary_clicked) {
-          summary.set('value', '');
-        }
-        /* event propagates .. */
-      };
-      submit.addEvent('click', submit_handler);
+      });
+
+      var description_handler = new Infohandler('id_description', 'text', 'Beschreibung {{ type|fb_type_of_your }}');
+      var summary_handler = new Infohandler('id_summary', 'value', 'Zusammenfassung');
 
 
       /*
        *  me2
        */
 
-      var me2_handler = function(event) {
-        //event.stop();
-        fb_id = event.target.get('id').substr(2);
-        $('fb_id').set('value', fb_id);
-        //$$('id_form').submit();
-      };
-      $(document.body).getElements('.fb_me2').addEvent('click', me2_handler);
+      $(document.body).getElements('.fb_me2').addEvent('click', function(event) {
+        var id = event.target.get('id').substr(3);
+        $('id_fb').set('value', id);
+        $('id_form').submit();
+      });
 
 
       /*
        *  details view
        */
 
-      var details_handler = function(event) {
+      $(document.body).getElements('.fb_list_item').addEvent('click', function(event) {
         event.stop();
         alert('Details, Details, Details ..');
-      };
-      $(document.body).getElements('.fb_list_item').addEvent('click', details_handler);
+      });
 
     });
   </script>
