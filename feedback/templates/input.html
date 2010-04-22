@@ -35,7 +35,7 @@
       <li class="fb_error">Zusammenfassung fehlt!</li>
   {% endif %}
       <li><input id="id_summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
-      <li><input id="id_submit" type="submit" value="Abschicken" name="submit" /></li>
+      <li><input id="id_submit" type="submit" value="Abschicken" /></li>
     </ol>
   </div>
 
@@ -130,6 +130,7 @@
        */
 
       $(document.body).getElements('.fb_me2').addEvent('click', function(event) {
+        event.stop();
         var id = event.target.get('id').substr(3);
         $('id_fb').set('value', id);
         $('id_form').submit();
