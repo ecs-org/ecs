@@ -12,7 +12,7 @@
 
 <body>
 
-<span class="fb_title">Feedback: Teilen Sie {{ type|fb_type_your }} {{ type|fb_type }} mit</span>
+<span class="fb_title">Feedback: {{ type|fb_motivate }}</span>
 
 <form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main" id="id_form">
 
@@ -60,16 +60,16 @@
       <br/>
       <span class="fb_description">{{ fb.description|truncate:28 }}</span>
       <br/>
-      <span class="fb_others">{{ fb.count|fb_count_persons }} gefällt {{ type|fb_type_this }}</span>
+      <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
 
     </li>
     {% endfor %}
     <li class="fb_list_bottom">
     {% if page|greater:1 %}
-      <span class="fb_nav_prev"><a href="{% url feedback_input type page|add:'-1' origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
+      <span class="fb_nav_prev"><a href="{% url feedback_input type page|add:-1 origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
     {% endif %}
     {% if page|less:pages %}
-      <span class="fb_nav_next"><a href="{% url feedback_input type page|add:'1' origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_right.png" alt="nächster Eintrag" /></a></span>
+      <span class="fb_nav_next"><a href="{% url feedback_input type page|add:1 origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_right.png" alt="nächster Eintrag" /></a></span>
     {% endif %}
       <span class="fb_nav_info">Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)</span>
     </li>
