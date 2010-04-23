@@ -120,8 +120,13 @@ def feedback_details(request, id=0):
     else:
         user = request.user
     fb = Feedback.objects.get(id=id)
+    type = fb.feedbacktype
+    me2_votes = fb.me_too_votes.all()
     return render(request, 'details.html', {
-        'fb': fb
+        'id': id,
+        'fb': fb,
+        'type': type,
+        'me2_votes': me2_votes,
     })
 
 

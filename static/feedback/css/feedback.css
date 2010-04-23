@@ -125,7 +125,7 @@ li.fb_list_item a {
   cursor: pointer;
 }
 
-
+/* to be reviewed .. */
 .fb_entry {
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -137,5 +137,9 @@ li.fb_list_item a {
 }
 .fb_field_name {
   font-weight: bold;
+  font-size: 10pt;
+}
+.fb_field_value {
+  font-size: 10pt;
 }
 

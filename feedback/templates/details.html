@@ -2,6 +2,8 @@
 
 {% load feedback %}
 
+{% url feedback_input type 1 fb.origin as fb_url %}
+
 <html>
 
 <head>
@@ -12,9 +14,44 @@
 <body>
   <span class="fb_title">Details</span>
 
-  <ol>
-    <li>{{ fb }}</li>
-  </old>
+<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
+
+  <ol class="fb_entry">
+    <li class "fb_field">
+      <div class="fb_field_name">Typ</div>
+      <div class="fb_field_value">{{ type|fb_type }}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Beschreibung</div>
+      <div class="fb_field_value">{{ fb.description }}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Zusammenfassung</div>
+      <div class="fb_field_value">{{ fb.summary }}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Autor</div>
+      <div class="fb_field_value">{{ fb.user }}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Datum</div>
+      <div class="fb_field_value">{{ fb.pub_date }}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Me Too Voten</div>
+      <div class="fb_field_value">{% for u in me2_votes %}{{ u }}{% if not forloop.last %}, {% endif %}{% empty %}(Keine){% endfor %}</div>
+    </li>
+    <li class "fb_field">
+      <div class="fb_field_name">Herkunft</div>
+      <div class="fb_field_value">{{ fb.origin }}</div>
+    </li>
+  </ol>
+
+  <br/>
+
+  <span class="fb_form"><input type="submit" value="Weiteres Feedback" name="submit" /></span>
+
+</form>
 
 </body>
 
