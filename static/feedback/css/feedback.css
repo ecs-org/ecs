@@ -142,4 +142,7 @@ li.fb_list_item a {
 .fb_field_value {
   font-size: 10pt;
 }
-
+.fb_link a {
+  text-decoration: none;
+  color: #349ff8;
+}

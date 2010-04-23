@@ -14,8 +14,6 @@
 <body>
   <span class="fb_title">Details</span>
 
-<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
-
   <ol class="fb_entry">
     <li class "fb_field">
       <div class="fb_field_name">Typ</div>
@@ -43,15 +41,15 @@
     </li>
     <li class "fb_field">
       <div class="fb_field_name">Herkunft</div>
-      <div class="fb_field_value">{{ fb.origin }}</div>
+      <div class="fb_field_value">{{ fb.origin|fb_origin }}</div>
     </li>
   </ol>
 
   <br/>
 
-  <span class="fb_form"><input type="submit" value="Weiteres Feedback" name="submit" /></span>
-
-</form>
+  <span class="fb_link"><a href="{{ fb_url }}">Weiteres Feedback</a></span>
+  <br/>
+  <span class="fb_link"><a href="{% url feedback_origins %}">Übersicht</a></span>
 
 </body>
 

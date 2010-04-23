@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 from django import template
 from django.template.defaultfilters import stringfilter
 
@@ -144,7 +145,20 @@ def truncate(s, max):
         return s
 
 
+# translate Python booleans to JavaScript
+
 @register.filter
 def booljs(x):
     return x and 'true' or 'false'
+
+
+# decode feedback origin strings
+
+@register.filter
+@stringfilter
+def fb_origin(origin):
+    import re, urllib
+    return urllib.unquote(re.sub(r'-([0-9A-F]{2})', lambda mo: '%' + mo.group(0)[1:3], origin).replace('--', '-'))
+
+
 

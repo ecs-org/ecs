@@ -12,9 +12,7 @@
 
 <body>
 
-<span class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</span>
-
-<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main">
+  <span class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</span>
 
   <ol class="fb_entry">
     <li class="fb_field">
@@ -31,9 +29,7 @@
     </li>
   </ol>
 
-  <span class="fb_form"><input type="submit" value="Weiteres Feedback" name="submit" /></span>
-
-</form>
+  <span class="fb_link"><a href="{{ fb_url }}">Weiteres Feedback<a/></span>
 
 </body>
 

@@ -54,9 +54,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
                     'summary': summary,
                 })
 
-    types = []
-    for t, _ in Feedback.FEEDBACK_TYPES:
-        types.append(t)
+    types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
  
     if not is_int(page) or page < 1:
         return HttpResponse("Error: invalid parameter page = '%s'!" % page)
@@ -71,13 +69,13 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     def get_me2(fb):
         if fb.user.id == user.id:
             return 'yours'
-        elif len(fb.me_too_votes.filter(id=user.id)) > 0:
+        elif fb.me_too_votes.filter(id=user.id).count() > 0:
             return 'u2'
         else:
             return 'me2'
 
     def get_count(fb):
-        return len(fb.me_too_votes.all())
+        return fb.me_too_votes.all().count()
 
     for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
         index = index + 1
@@ -91,7 +89,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         })
 
     # calculate number of pages
-    items = len(Feedback.objects.filter(feedbacktype=type).filter(origin=origin))
+    items = Feedback.objects.filter(feedbacktype=type).filter(origin=origin).count()
     if items > 0:
         pages = (items - 1) / page_size + 1
         if page > pages:
@@ -126,7 +124,7 @@ def feedback_details(request, id=0):
         'id': id,
         'fb': fb,
         'type': type,
-        'me2_votes': me2_votes,
+        'me2_votes': me2_votes
     })
 
 
@@ -135,7 +133,14 @@ def feedback_origins(request):
         return HttpResponse("Error: you need to be logged in!")
     else:
         user = request.user
+
+    origins = [ x['origin'] for x in Feedback.objects.values('origin').distinct() ]
+    types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
+    list = [ { 'origin': origin, 'stats': [ (type, Feedback.objects.filter(feedbacktype=type, origin=origin).count()) for type in types ] } for origin in origins ]
+
     return render(request, 'origins.html', {
+        'types': types,
+        'list': list
     })
 
 
