@@ -19,33 +19,38 @@ def greater(x, y):
 # intergalactic translator
 
 types_de = {
-    'i': (u'Idee', u'Ideen', u'Ihrer Idee', u'Keine'),
-    'q': (u'Frage', u'Fragen', u'Ihrer Frage', u'Keine'),
-    'p': (u'Problem', u'Probleme', u'Ihres Problems', u'Keine'),
-    'l': (u'Lob', u'Lob', u'Ihres Lobs', u'Kein')
+    'i': (u'Ihre', u'Idee', u'Ideen', u'Ihrer Idee', u'Keine'),
+    'q': (u'Ihre', u'Frage', u'Fragen', u'Ihrer Frage', u'Keine'),
+    'p': (u'Ihr', u'Problem', u'Probleme', u'Ihres Problems', u'Keine'),
+    'l': (u'Ihr', u'Lob', u'Lob', u'Ihres Lobs', u'Kein')
 }
 
-types_de_whatever = (u'Irgendwas', u'Irgendwas', u'Ihres Irgendwas', u'Kein')
+types_de_whatever = (u'Ihr', u'Irgendwas', u'Irgendwas', u'Ihres Irgendwas', u'Kein')
 
 @register.filter
 @stringfilter
-def fb_type(type):
+def fb_type_your(type):
     return types_de.get(type, types_de_whatever)[0]
 
 @register.filter
 @stringfilter
-def fb_type_many(type):
+def fb_type(type):
     return types_de.get(type, types_de_whatever)[1]
 
 @register.filter
 @stringfilter
-def fb_type_of_your(type):
+def fb_type_many(type):
     return types_de.get(type, types_de_whatever)[2]
 
 @register.filter
 @stringfilter
-def fb_type_none(type):
+def fb_type_of_your(type):
     return types_de.get(type, types_de_whatever)[3]
+
+@register.filter
+@stringfilter
+def fb_type_none(type):
+    return types_de.get(type, types_de_whatever)[4]
 
 
 @register.filter
