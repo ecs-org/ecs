@@ -18,7 +18,6 @@ def is_int(x):
   
 
 def feedback_input(request, type='i', page=1, origin='TODO'):
-
     if not request.user.is_authenticated():
         return HttpResponse("Error: you need to be logged in!")
     else:
@@ -114,3 +113,31 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         'description_error': description_error,
     })
 
+
+def feedback_details(request, id=0):
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: you need to be logged in!")
+    else:
+        user = request.user
+    fb = Feedback.objects.get(id=id)
+    return render(request, 'details.html', {
+        'fb': fb
+    })
+
+
+def feedback_origins(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: you need to be logged in!")
+    else:
+        user = request.user
+    return render(request, 'origins.html', {
+    })
+
+
+def feedback_main(request):
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: you need to be logged in!")
+    else:
+        user = request.user
+    return render(request, 'main.html', {
+    })

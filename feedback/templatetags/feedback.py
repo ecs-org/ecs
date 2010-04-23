@@ -125,11 +125,11 @@ def fb_me2(pair, me2):
     type = pair[0]
     count = pair[1]
     if count < 2:
-        s = others_de.get((count, me2, type), u'Tja .. (%s, %s, %s)' % (count,me2,type))
+        s = others_de.get((count, me2, type), u'Tja .. (%s, %s, %s)' % (count, me2, type))
         return s
     else:
-        s = others_de.get((2, me2, type), u'Tsk, tsk .. (%s, %s, %s)' % (count,me2,type))
-        return s % (count)
+        s = others_de.get((2, me2, type), u'Tsk, tsk .. (%s, %s, %s)' % (count, me2, type))
+        return s % count
 
 
 # truncate string after max characters

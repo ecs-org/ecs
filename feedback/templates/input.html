@@ -1,7 +1,10 @@
 <!-- feedback input -->
 
 {% load feedback %}
+
 {% url feedback_input type page origin as fb_url %}
+{% url feedback_input type page|add:-1 origin as fb_url_prev %}
+{% url feedback_input type page|add:1 origin as fb_url_next %}
 
 <html>
 
@@ -47,7 +50,7 @@
   {% if list %}
     {% for fb in list %}
     <li class="fb_list_item">
-      <span class="fb_summary">{{ fb.index }}. {{ fb.summary|truncate:20 }}</span>
+      <span class="fb_summary">{{ fb.index }}. <a href="{% url feedback_details fb.id %}">{{ fb.summary|truncate:20 }}</a></span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
@@ -61,15 +64,14 @@
       <span class="fb_description">{{ fb.description|truncate:28 }}</span>
       <br/>
       <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
-
     </li>
     {% endfor %}
     <li class="fb_list_bottom">
     {% if page|greater:1 %}
-      <span class="fb_nav_prev"><a href="{% url feedback_input type page|add:-1 origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
+      <span class="fb_nav_prev"><a href="{{ fb_url_prev }}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
     {% endif %}
     {% if page|less:pages %}
-      <span class="fb_nav_next"><a href="{% url feedback_input type page|add:1 origin %}"><img src="{{ MEDIA_URL }}feedback/images/arrow_right.png" alt="nächster Eintrag" /></a></span>
+      <span class="fb_nav_next"><a href="{{ fb_url_next }}"><img src="{{ MEDIA_URL }}feedback/images/arrow_right.png" alt="nächster Eintrag" /></a></span>
     {% endif %}
       <span class="fb_nav_info">Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)</span>
     </li>
@@ -84,7 +86,6 @@
 
 <div class="fb_js">
   <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-<!--  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script> -->
   <script type="text/javascript">
     window.addEvent('domready', function(){
        
@@ -143,11 +144,11 @@
       /*
        *  details view
        */
-
+/*
       $(document.body).getElements('.fb_list_item').addEvent('click', function(event) {
         event.stop();
-        alert('Details, Details, Details ..');
       });
+*/
 
     });
   </script>
