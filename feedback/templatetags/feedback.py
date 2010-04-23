@@ -139,3 +139,7 @@ def truncate(s, max):
         return s
 
 
+@register.filter
+def booljs(x):
+    return x and 'true' or 'false'
+
