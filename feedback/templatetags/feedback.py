@@ -76,45 +76,45 @@ def fb_motivate(type):
 
 
 others_de = {
-    (0, 'yours', 'i'): u'Niemanden sonst gefällt Ihre Idee',
+    (0, 'yours', 'i'): u'Sie haben diese Idee beschrieben',
     (0, 'u2',    'i'): u'(das sollte nun wirklich gar nicht vorkommen)',
-    (0, 'me2',   'i'): u'Niemanden gefällt diese Idee',
+    (0, 'me2',   'i'): u'Eine Person hat diese Idee beschrieben',
     (1, 'yours', 'i'): u'Einer weiteren Person gefällt Ihre Idee',
-    (1, 'u2',    'i'): u'Ihnen gefällt diese Idee',
-    (1, 'me2',   'i'): u'Einer Person gefällt diese Idee',
+    (1, 'u2',    'i'): u'Einer Person und Ihnen gefällt diese Idee',
+    (1, 'me2',   'i'): u'2 Personen gefällt diese Idee',
     (2, 'yours', 'i'): u'%s weiteren Personen gefällt Ihre Idee',
-    (2, 'u2',    'i'): u'%s Personen gefällt diese Idee',
+    (2, 'u2',    'i'): u'%s Personen und Ihnen gefällt diese Idee',
     (2, 'me2',   'i'): u'%s Personen gefällt diese Idee',
 
-    (0, 'yours', 'q'): u'Niemand sonst hat ebenfalls Ihre Frage',
+    (0, 'yours', 'q'): u'Sie haben diese Frage beschrieben',
     (0, 'u2',    'q'): u'(wenn das der Admin sieht)',
-    (0, 'me2',   'q'): u'Niemand hat ebenfalls diese Frage',
+    (0, 'me2',   'q'): u'Eine Person hat diese Frage beschrieben',
     (1, 'yours', 'q'): u'Eine weitere Person hat ebenfalls Ihre Frage',
-    (1, 'u2',    'q'): u'Sie haben ebenfalls diese Frage',
-    (1, 'me2',   'q'): u'Eine Person hat ebenfalls diese Frage',
+    (1, 'u2',    'q'): u'Eine Person und Sie haben diese Frage',
+    (1, 'me2',   'q'): u'2 Personen haben diese Frage',
     (2, 'yours', 'q'): u'%s weitere Personen haben ebenfalls Ihre Frage',
-    (2, 'u2',    'q'): u'%s Personen haben ebenfalls diese Frage',
-    (2, 'me2',   'q'): u'%s Personen haben ebenfalls diese Frage',
+    (2, 'u2',    'q'): u'%s Personen und Sie haben diese Frage',
+    (2, 'me2',   'q'): u'%s Personen haben diese Frage',
 
-    (0, 'yours', 'p'): u'Niemand sonst hat ebenfalls Ihr Problem',
+    (0, 'yours', 'p'): u'Sie haben dieses Problem beschrieben',
     (0, 'u2',    'p'): u'(jodeldü)',
-    (0, 'me2',   'p'): u'Niemand hat ebenfalls dieses Problem',
+    (0, 'me2',   'p'): u'Eine Person hat dieses Problem beschrieben',
     (1, 'yours', 'p'): u'Eine weitere Person hat ebenfalls Ihr Problem',
-    (1, 'u2',    'p'): u'Sie haben ebenfalls dieses Problem',
-    (1, 'me2',   'p'): u'Eine Person hat ebenfalls dieses Problem',
+    (1, 'u2',    'p'): u'Eine Person und Sie haben dieses Problem',
+    (1, 'me2',   'p'): u'2 Personen haben dieses Problem',
     (2, 'yours', 'p'): u'%s weitere Personen haben ebenfalls Ihr Problem',
-    (2, 'u2',    'p'): u'%s Personen haben ebenfalls dieses Problem',
-    (2, 'me2',   'p'): u'%s Personen haben ebenfalls dieses Problem',
+    (2, 'u2',    'p'): u'%s Personen und Sie haben dieses Problem',
+    (2, 'me2',   'p'): u'%s Personen haben dieses Problem',
 
-    (0, 'yours', 'l'): u'Niemand sonst möchte Ihr Lob aussprechen',
+    (0, 'yours', 'l'): u'Sie haben dieses Lob ausgesprochen',
     (0, 'u2',    'l'): u'(meine CPU ist heissgelaufen)',
-    (0, 'me2',   'l'): u'Niemand möchte ebenfalls dieses Lob aussprechen',
-    (1, 'yours', 'l'): u'Eine weitere Person möchte ebenfalls Ihr Lob aussprechen',
-    (1, 'u2',    'l'): u'Sie haben ebenfalls dieses Lob ausgesprochen',
-    (1, 'me2',   'l'): u'Eine Person möchte ebenfalls dieses Lob aussprechen',
-    (2, 'yours', 'l'): u'%s weitere Personen möchten ebenfalls Ihr Lob aussprechen',
-    (2, 'u2',    'l'): u'%s Personen haben ebenfalls dieses Lob ausgesprochen',
-    (2, 'me2',   'l'): u'%s Personen haben ebenfalls dieses Lob ausgesprochen'
+    (0, 'me2',   'l'): u'Eine Person hat dieses Lob ausgesprochen',
+    (1, 'yours', 'l'): u'Eine weitere Person hat sich Ihrem Lob angeschlossen',
+    (1, 'u2',    'l'): u'Eine Person und Sie haben dieses Lob ausgesprochen',
+    (1, 'me2',   'l'): u'2 Personen haben dieses Lob ausgesprochen',
+    (2, 'yours', 'l'): u'%s weitere Personen haben sich Ihrem Lob angeschlossen',
+    (2, 'u2',    'l'): u'%s Personen und Sie haben dieses Lob ausgesprochen',
+    (2, 'me2',   'l'): u'%s Personen haben dieses Lob ausgesprochen'
 }
 
 @register.filter
@@ -130,6 +130,9 @@ def fb_me2(pair, me2):
         return s
     else:
         s = others_de.get((2, me2, type), u'Tsk, tsk .. (%s, %s, %s)' % (count, me2, type))
+        if me2 == 'me2':
+            count += 1
+            # XXX: Add one to count, because user and other users voted for it, so add one for the initial user
         return s % count
 
 
