@@ -106,11 +106,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'reversion.middleware.RevisionMiddleware',
     'ecs.utils.forceauth.ForceAuth',
     'ecs.groupchooser.middleware.GroupChooserMiddleware',
     'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 )   
 
 # debug toolbar config:

@@ -22,6 +22,8 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         return HttpResponse("Error: you need to be logged in!")
     else:
         user = request.user
+        if user is None:
+            return HttpResponse("Error: user is none!")
 
     m = dict(Feedback.FEEDBACK_TYPES)
     if not m.has_key(type):
