@@ -55,7 +55,7 @@
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
     {% ifequal fb.me2 'u2' %}
-      <span class="fb_u2">(Sie auch!)</span>
+      <span class="fb_u2"><a href="#" id="id_{{ fb.id }}">Sie auch!</a></span>
     {% endifequal %}
     {% ifequal fb.me2 'me2' %}
       <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
@@ -136,6 +136,12 @@
       $(document.body).getElements('.fb_me2').addEvent('click', function(event) {
         event.stop();
         var id = event.target.get('id').substr(3);
+        $('id_fb').set('value', id);
+        $('id_form').submit();
+      });
+      $(document.body).getElements('.fb_u2').addEvent('click', function(event) {
+        event.stop();
+        var id = - event.target.get('id').substr(3);
         $('id_fb').set('value', id);
         $('id_form').submit();
       });
