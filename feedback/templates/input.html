@@ -50,7 +50,7 @@
   {% if list %}
     {% for fb in list %}
     <li class="fb_list_item">
-      <span class="fb_summary">{% comment %}Does not add value for the user therefore disabled {{ fb.index }}.{% endcomment%} <a href="{% url feedback_details fb.id %}">{{ fb.summary|truncate:37 }}</a></span>
+      <span class="fb_summary">{% comment %}Does not add value for the user therefore disabled {{ fb.index }}.{% endcomment%} <a href="{% url feedback_details fb.id %}">{{ fb.summary|truncate:36 }}</a></span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
