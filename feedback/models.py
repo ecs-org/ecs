@@ -15,7 +15,7 @@ class Feedback(models.Model):
     origin = models.CharField(max_length=200)
     user = models.ForeignKey(User, related_name='author', null=True)
     pub_date = models.DateTimeField('date published')
-    me_too_votes = models.ManyToManyField(User)
+    me_too_votes = models.ManyToManyField(User, null=True, blank=True)
 
 import reversion
 
