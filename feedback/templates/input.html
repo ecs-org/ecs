@@ -135,13 +135,13 @@
 
       $(document.body).getElements('.fb_me2').addEvent('click', function(event) {
         event.stop();
-        var id = event.target.get('id').substr(3);
+        var id = $(event.target).get('id').substr(3);
         $('id_fb').set('value', id);
         $('id_form').submit();
       });
       $(document.body).getElements('.fb_u2').addEvent('click', function(event) {
         event.stop();
-        var id = - event.target.get('id').substr(3);
+        var id = - $(event.target).get('id').substr(3);
         $('id_fb').set('value', id);
         $('id_form').submit();
       });
