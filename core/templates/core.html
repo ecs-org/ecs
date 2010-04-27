@@ -66,27 +66,6 @@
   <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.js"></script>
   <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.Iframe.js"></script>
   <script type="text/javascript">
-    window.addEvent('domready', function(){
-      var toggles = $$('.togglers');
-      var content = $$('.elements');
-      if (window.accordionitem === undefined)
-         accordionitem = -1
-      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
-
-      var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
-      var feedback_handler = function(event) { 
-        event.stop();
-        var url = '/feedback/input/i/1/' + get_origin() + '/';
-        new MooDialog.Iframe(url, {
-          title: 'Feedback von {{ user.get_full_name }}',
-          size: {
-          width: 700,
-          height: 400
-        }});
-      };
-      feedback_triggers.addEvent('click', feedback_handler);
-    });
-
     function get_origin() {
       {% comment %}
       // TODO either inject origin from application page or develop an URL scheme which allows solid inference by algorithm
@@ -104,9 +83,37 @@
       // prevent usable grouping. => we replace the volatile <hex id> with static 'id' string
       {% endcomment %}
       var re_id_axe = /[0-9a-f]{32}/;
-      x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
+      var x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
       return x;
     }
+
+    var accordionitem;
+
+    window.addEvent('domready', function(){
+
+      // accordions
+      var toggles = $$('.togglers');
+      var content = $$('.elements');      
+      if (window.accordionitem === undefined) {
+        accordionitem = -1;
+      }
+      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
+
+
+      // feedback system
+      var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
+      var feedback_handler = function(event) { 
+        event.stop();
+        var url = '/feedback/input/i/1/' + get_origin() + '/';
+        new MooDialog.Iframe(url, {
+          title: 'Feedback von {{ user.get_full_name }}',
+          size: {
+          width: 700,
+          height: 400
+        }});
+      };
+      feedback_triggers.addEvent('click', feedback_handler);
+    });
 
   </script>
 {% endblock %}
