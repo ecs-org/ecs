@@ -37,7 +37,7 @@
     </li>
     <li class "fb_field">
       <div class="fb_field_name">Me Too Voten</div>
-      <div class="fb_field_value">{% for u in me2_votes %}{{ u }}{% if not forloop.last %}, {% endif %}{% empty %}(Keine){% endfor %}</div>
+      <div class="fb_field_value">{% for u in me2_votes %}{{ u }}{% ifequal u fb.user %} <span class="fb_error">data bug!</span>{% endifequal %}{% if not forloop.last %}, {% endif %}{% empty %}(Keine){% endfor %}</div>
     </li>
     <li class "fb_field">
       <div class="fb_field_name">Herkunft</div>
