@@ -16,7 +16,7 @@ def with_docstash_transaction(*args, **kwargs):
         @wraps(view)
         def decorated(request, docstash_key=None, **kwargs):
             if not docstash_key:
-                docstash = DocStash.objects.create(group=view_name)
+                docstash = DocStash.objects.create(group=view_name, owner=request.user)
                 kwargs['docstash_key'] = docstash.key
                 response = HttpResponseRedirect(reverse(view_name, kwargs=kwargs))
             else:

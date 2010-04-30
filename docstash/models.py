@@ -3,6 +3,7 @@ import reversion
 from django.db import models
 from django.http import QueryDict
 from django.utils.functional import wraps
+from django.contrib.auth.models import User
 
 from django_extensions.db.fields.json import JSONField
 
@@ -21,6 +22,8 @@ class DocStash(models.Model):
     group = models.CharField(max_length=120, db_index=True, null=True)
     current_version = models.IntegerField(default=-1)
     deleted = models.BooleanField(default=False)
+    # FIXME: owner should not be nullable
+    owner = models.ForeignKey(User, null=True)
 
     def save(self, *args, **kwargs):
         if not self.key:
