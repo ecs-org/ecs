@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 from django import forms
+from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
 from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
@@ -45,6 +46,12 @@ class SubmissionFormForm(forms.ModelForm):
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
     medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
+    thesis = forms.NullBooleanField(required=False)
+    retrospective = forms.NullBooleanField(required=False)
+    expedited = forms.NullBooleanField(required=False)
+    external_reviewer = forms.NullBooleanField(required=False)
+    external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
+
 
     class Meta:
         model = SubmissionForm

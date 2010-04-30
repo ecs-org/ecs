@@ -318,15 +318,15 @@ class TimetableEntry(models.Model):
 
     @cached_property
     def is_retrospective(self):
-        return bool(self.submission.forms.filter(thesis=True)[:1])
+        return self.submission.thesis
     
     @cached_property
     def is_thesis(self):
-        return bool(self.submission.forms.filter(retrospective=True)[:1])
+        return self.submission.retrospective
         
     @cached_property
     def is_expedited(self):
-        return bool(self.submission.forms.filter(expedited=True)[:1])
+        return self.submission.expedited
     
     @property
     def is_batch_processed(self):

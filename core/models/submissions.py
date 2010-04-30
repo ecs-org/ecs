@@ -8,6 +8,11 @@ class Submission(models.Model):
 
     # medical categories
     medical_categories = models.ManyToManyField('core.MedicalCategory')
+    thesis = models.NullBooleanField()
+    retrospective = models.NullBooleanField()
+    expedited = models.NullBooleanField()
+    external_reviewer = models.NullBooleanField()
+    external_reviewer_name = models.ForeignKey('auth.user', null=True)
 
     @property
     def project_title(self):
@@ -232,12 +237,6 @@ class SubmissionForm(models.Model):
     submitter_agrees_to_publishing = models.BooleanField(default=True)
     
     date_of_receipt = models.DateField(null=True, blank=True)
-   
-    thesis = models.BooleanField()
-    retrospective = models.BooleanField()
-    expedited = models.BooleanField()
-    external_reviewer = models.BooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True)
    
     def __unicode__(self):
         return "%s: %s" % (self.submission.ec_number, self.project_title)

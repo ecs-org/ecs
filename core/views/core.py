@@ -152,8 +152,16 @@ def create_submission_form(request):
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and investigator_formset.is_valid() and investigatoremployee_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
-            medical_categories = MedicalCategory.objects.filter(pk__in=request.docstash.get('medical_categories', []))
-            submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000), medical_categories=medical_categories)
+            submission_create_kwargs = {
+                'ec_number': "EK-%s" % randint(10000, 100000),
+                'medical_categories': MedicalCategory.objects.filter(pk__in=request.docstash.get('medical_categories', [])),
+                'thesis': request.docstash.get('medical_categories', None),
+                'retrospective': request.docstash.get('medical_categories', None),
+                'expedited': request.docstash.get('medical_categories', None),
+                'external_reviewer': request.docstash.get('medical_categories', None),
+                'external_reviewer_name': request.docstash.get('external_reviewer_name', None),
+            }
+            submission = Submission.objects.create(submission_create_kwargs)
             submission_form.submission = submission
             submission_form.save()
             investigators = investigator_formset.save(commit=False)
