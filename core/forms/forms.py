@@ -4,6 +4,7 @@ from django.forms.models import BaseModelFormSet, inlineformset_factory, modelfo
 
 from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
+from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
 
@@ -43,6 +44,7 @@ class SubmissionFormForm(forms.ModelForm):
     
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
+    medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
 
     class Meta:
         model = SubmissionForm

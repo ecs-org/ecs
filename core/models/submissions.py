@@ -6,6 +6,9 @@ import reversion
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
 
+    # medical categories
+    medical_categories = models.ManyToManyField('core.MedicalCategory')
+
     @property
     def project_title(self):
         # FIXME: pick the last SubmissionForm
@@ -229,9 +232,7 @@ class SubmissionForm(models.Model):
     submitter_agrees_to_publishing = models.BooleanField(default=True)
     
     date_of_receipt = models.DateField(null=True, blank=True)
-
-    # medical categories
-    medical_categories = models.ManyToManyField('core.MedicalCategory')
+   
     thesis = models.BooleanField()
     retrospective = models.BooleanField()
     expedited = models.BooleanField()

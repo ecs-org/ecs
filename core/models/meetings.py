@@ -304,7 +304,7 @@ class TimetableEntry(models.Model):
     def medical_categories(self):
         if not self.submission:
             return MedicalCategory.objects.none()
-        return MedicalCategory.objects.filter(submissionform__submission__timetable_entries=self)
+        return MedicalCategory.objects.filter(submission__timetable_entries=self)
         
     @cached_property
     def users_by_medical_category(self):

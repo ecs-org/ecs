@@ -9,7 +9,7 @@ from django.forms.models import inlineformset_factory
 from django.conf import settings
 
 from ecs.core.views.utils import render, redirect_to_next_url
-from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator
+from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator, MedicalCategory
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
 from ecs.utils.xhtml2pdf import xhtml2pdf
@@ -152,7 +152,8 @@ def create_submission_form(request):
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and investigator_formset.is_valid() and investigatoremployee_formset.is_valid():
             submission_form = form.save(commit=False)
             from random import randint
-            submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000))
+            medical_categories = MedicalCategory.objects.filter(pk__in=request.docstash.get('medical_categories', []))
+            submission = Submission.objects.create(ec_number="EK-%s" % randint(10000, 100000), medical_categories=medical_categories)
             submission_form.submission = submission
             submission_form.save()
             investigators = investigator_formset.save(commit=False)

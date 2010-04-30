@@ -88,11 +88,11 @@ SUBMISSION_FORM_TABS = (
     ]),
     (u'Zentrum', []),
 # disabled for sprint 4
-#    (u'Review', [
-#        (u'Review', [
-#            'medical_categories', 'thesis', 'retrospective', 'expedited', 'external_reviewer', 'external_reviewer_name',
-#        ]),
-#    ]),
+    # (u'Review', [
+    #     (u'Review', [
+    #         'medical_categories', 'thesis', 'retrospective', 'expedited', 'external_reviewer', 'external_reviewer_name',
+    #     ]),
+    # ]),
 )
 
 
