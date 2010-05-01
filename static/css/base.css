@@ -107,6 +107,10 @@ body {
   min-height: 300px;
 }
 
+#usermenu .elements {
+    display: none;
+}
+
 
 /* content-specific */
 

@@ -87,18 +87,16 @@
       return x;
     }
 
-    var accordionitem;
+    var accordionitem = {% block menuSelection %}-1{% endblock %};
 
     window.addEvent('domready', function(){
 
       // accordions
       var toggles = $$('.togglers');
       var content = $$('.elements');      
-      if (window.accordionitem === undefined) {
-        accordionitem = -1;
-      }
-      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
 
+      $$('#usermenu .elements').show();
+      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
 
       // feedback system
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');

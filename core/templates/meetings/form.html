@@ -20,8 +20,8 @@
 </form>
 {% endblock %}
 
+{% block menuSelection %}2{% endblock %}
 {% block jsbottom %}
-    <script type="text/javascript"> var accordionitem = 2; </script>
     {{ block.super }}
     <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
 {% endblock %}
