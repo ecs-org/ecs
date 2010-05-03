@@ -23,7 +23,10 @@ BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CELERY_RESULT_BACKEND = 'amqp'  # we have to use amqp, because of the test cases
-CELERY_IMPORTS = ('ecs.core.tests.task_queue', )
+CELERY_IMPORTS = (
+    'ecs.core.tests.task_queue',
+    'ecs.core.task_queue',
+)
 
 # Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
 # (because we want 404 and 500 custom errors and log the error)
