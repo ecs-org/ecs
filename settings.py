@@ -16,6 +16,15 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+# celery configuration
+BROKER_HOST = 'localhost'
+BROKER_PORT = 5672
+BROKER_USER = 'ecsuser'
+BROKER_PASSWORD = 'ecspassword'
+BROKER_VHOST = 'ecshost'
+CELERY_RESULT_BACKEND = 'amqp'  # we have to use amqp, because of the test cases
+CELERY_IMPORTS = ('ecs.core.tests.task_queue', )
+
 # Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
 # (because we want 404 and 500 custom errors and log the error)
 DEBUG = True
@@ -34,6 +43,12 @@ if platform.node() == "ecsdev.ep3.at":
     DATABASE_NAME = user
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
+    
+    # rabbit mq users and db users are the same (also passwords)
+    BROKER_USER = user
+    BROKER_PASSWORD = DBPWD_DICT[user]
+    BROKER_VHOST = user
+    
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
@@ -144,6 +159,7 @@ INSTALLED_APPS = (
     'django_nose',
     'reversion',
     'djangodblog',
+    'celery',
 
     'ecs.core',
     'ecs.utils',

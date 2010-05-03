@@ -4,3 +4,4 @@ from ecs.core.tests.reversion_integration import TestReversion
 from ecs.core.tests.documents import DocumentsTest
 from ecs.core.tests.notification_forms import NotificationFormTest
 from ecs.core.tests.meetings import MeetingModelTest
+from ecs.core.tests.task_queue import CeleryTest
