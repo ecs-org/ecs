@@ -7,33 +7,43 @@
 {% endblock %}
 
 {% block headertitle %}
+
 <h1>Liste aller Studien</h1>
 {% endblock %}
 
 {% block content %}
 {% if submission_forms %}
+<div>
 <h2>Eingereichte Studien</h2>
-<ul>
     {% for submission_form in submission_forms %}
-        <li><a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a> <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">PDF</a></li>
+        {% ifchanged submission_form.submission %}
+            <h3>{{ submission_form.submission.ec_number }}</h3>
+        {% endifchanged %}
+        <div>
+            <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>
+            (<a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">PDF</a>
+            | <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>)
+        </div>
     {% endfor %}
-</ul>
 {% endif %}
+</div>
 
 {% if stashed_submission_forms%}
-<h2>Offene Studien</h2>
-<ul>
-    {% for docstash in stashed_submission_forms %}
-        {% if docstash.current_value %}
-            <li>
-                <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">
-                    {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
-                </a>
-                ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
-            </li>
-        {% endif %}
-    {% endfor %}
-</ul>
+<div style="margin-top: 4em">
+    <h2>Offene Studien</h2>
+    <ul>
+        {% for docstash in stashed_submission_forms %}
+            {% if docstash.current_value %}
+                <li>
+                    <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">
+                        {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
+                    </a>
+                    ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
 {% endif %}
 
 {% endblock %}

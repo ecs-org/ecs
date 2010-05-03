@@ -18,6 +18,12 @@ class Submission(models.Model):
     def project_title(self):
         # FIXME: pick the last SubmissionForm
         return self.forms.get().project_title
+        
+    def save(self, **kwargs):
+        if not self.ec_number:
+            from random import randint
+            self.ec_number = "EK-%s" % randint(10000, 100000)
+        super(Submission, self).save(**kwargs)
 
     class Meta:
         app_label = 'core'
@@ -295,7 +301,7 @@ class SubmissionForm(models.Model):
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
-    submission = models.ForeignKey(SubmissionForm, related_name='investigators')
+    submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
 
@@ -309,7 +315,6 @@ class Investigator(models.Model):
     specialist = models.CharField(max_length=80, blank=True)
     certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
-    sign_date = models.DateField()
     
     class Meta:
         app_label = 'core'

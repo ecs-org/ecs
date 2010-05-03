@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import Context, loader
 from django.shortcuts import render_to_response, get_object_or_404
 from django.views.generic.list_detail import object_list
-from django.forms.models import inlineformset_factory
+from django.forms.models import inlineformset_factory, model_to_dict
 from django.conf import settings
 
 from ecs.core.views.utils import render, redirect_to_next_url
@@ -116,80 +116,108 @@ def notification_pdf(request, notification_pk=None):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
     return response
+
+def get_submission_formsets(data=None, instance=None):
+    formset_classes = [
+        # (prefix, formset_class, callable SubmissionForm -> initial data)
+        ('measure', MeasureFormSet, lambda sf: sf.measures.filter(category='6.1')),
+        ('routinemeasure', RoutineMeasureFormSet, lambda sf: sf.measures.filter(category='6.2')),
+        ('nontesteduseddrug', NonTestedUsedDrugFormSet, lambda sf: sf.nontesteduseddrug_set.all()),
+        ('foreignparticipatingcenter', ForeignParticipatingCenterFormSet, lambda sf: sf.foreignparticipatingcenter_set.all()),
+        ('investigator', InvestigatorFormSet, lambda sf: sf.investigators.all()),
+    ]
+    formsets = {}
+    for name, formset_cls, initial in formset_classes:
+        kwargs = {'prefix': name}
+        if instance:
+            kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
+        formsets[name] = formset_cls(data, **kwargs)
     
+    employees = []
+    if instance:
+        for index, investigator in enumerate(formsets['investigator'].queryset):
+            for employee in investigator.investigatoremployee_set.all():
+                employee_dict = model_to_dict(employee, exclude=('id',))
+                employee_dict['investigator_index'] = index
+                employees.append(employee_dict)
+    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or None, prefix='investigatoremployee')
+    return formsets
+
+def copy_submission_form(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    
+    docstash = DocStash.objects.create(group='ecs.core.views.core.create_submission_form', owner=request.user)
+    with docstash.transaction:
+        docstash.update({
+            'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
+            'formsets': get_submission_formsets(instance=submission_form),
+            'submission': submission_form.submission,
+            'documents': list(submission_form.documents.all().order_by('pk')),
+        })
+        docstash.name = "%s" % submission_form.project_title
+    return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
+
 
 # submissions
 @with_docstash_transaction
 def create_submission_form(request):
-    data = request.POST or request.docstash.get_query_dict() or None
-        
-    formsets = {
-        'measure': MeasureFormSet,
-        'routinemeasure': RoutineMeasureFormSet,
-        'nontesteduseddrug': NonTestedUsedDrugFormSet,
-        'foreignparticipatingcenter': ForeignParticipatingCenterFormSet,
-    }
-    formsets = dict(('%s_formset' % name, formset_cls(data, prefix=name)) for name, formset_cls in formsets.iteritems())
+    if request.method == 'GET' and request.docstash.value:
+        form = request.docstash['form']
+        formsets = request.docstash['formsets']
+    else:
+        form = SubmissionFormForm(request.POST or None)
+        formsets = get_submission_formsets(request.POST or None)
+
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
-    investigator_formset = InvestigatorFormSet(data, prefix='investigator')
-    investigatoremployee_formset = InvestigatorEmployeeFormSet(data, prefix='investigatoremployee')
-    form = SubmissionFormForm(data)
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
         autosave = request.POST.get('autosave', False)
 
-        request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
+        request.docstash.update({
+            'form': form,
+            'formsets': formsets,
+            'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
+        })
         request.docstash.name = "%s" % request.POST.get('project_title', '')
 
         if autosave:
             return HttpResponse('autosave successfull')
         
         if document_formset.is_valid():
-            request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
+            request.docstash['documents'] = request.docstash['documents'] + document_formset.save()
             document_formset = DocumentFormSet(prefix='document')
-        
-        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and investigator_formset.is_valid() and investigatoremployee_formset.is_valid():
+
+        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             submission_form = form.save(commit=False)
-            from random import randint
-            submission_create_kwargs = {
-                'ec_number': "EK-%s" % randint(10000, 100000),
-                'medical_categories': MedicalCategory.objects.filter(pk__in=request.docstash.get('medical_categories', [])),
-                'thesis': request.docstash.get('medical_categories', None),
-                'retrospective': request.docstash.get('medical_categories', None),
-                'expedited': request.docstash.get('medical_categories', None),
-                'external_reviewer': request.docstash.get('medical_categories', None),
-                'external_reviewer_name': request.docstash.get('external_reviewer_name', None),
-            }
-            submission = Submission.objects.create(submission_create_kwargs)
+            submission = request.docstash.get('submission') or Submission.objects.create()
             submission_form.submission = submission
             submission_form.save()
-            investigators = investigator_formset.save(commit=False)
+            submission_form.documents = request.docstash.get('documents', [])
+            
+            formsets = formsets.copy()
+            investigators = formsets.pop('investigator').save(commit=False)
             for investigator in investigators:
-              investigator.submission = submission_form
-              import datetime
-              investigator.sign_date = datetime.date.today() # TODO remove after model refactoring
-              investigator.save()
-            for i, employee in enumerate(investigatoremployee_formset.save(commit=False)):
+                investigator.submission_form = submission_form
+                investigator.save()
+            for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
                 employee.submission = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]  # TODO rename employee.submission to employee.investigator
                 employee.save()
+
             for formset in formsets.itervalues():
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
-            submission_form.documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
-    documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'document_formset': document_formset,
-        'documents': documents,
-        'investigator_formset': investigator_formset,
-        'investigatoremployee_formset': investigatoremployee_formset,
+        'documents': request.docstash['documents'],
     }
-    context.update(formsets)
+    for prefix, formset in formsets.iteritems():
+        context['%s_formset' % prefix] = formset
     return render(request, 'submissions/form.html', context)
 
 def view_submission_form(request, submission_form_pk=None):

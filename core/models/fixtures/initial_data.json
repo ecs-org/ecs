@@ -704,9 +704,8 @@
     "fields": {
       "specialist": "", 
       "fax": "", 
-      "sign_date": "2010-01-01", 
       "name": "Univ. Doz. Dr. Ruth Ladenstein", 
-      "submission": 1, 
+      "submission_form": 1, 
       "subject_count": 1, 
       "mobile": "", 
       "organisation": "Kinderspital St. Anna", 

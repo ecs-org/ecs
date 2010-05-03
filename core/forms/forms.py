@@ -9,9 +9,21 @@ from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
 
+
+def _unpickle(f, args, kwargs):
+    return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
+    
+class ModelFormPickleMixin(object):
+    def __reduce__(self):
+        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
+        
+class ModelFormSetPickleMixin(object):
+    def __reduce__(self):
+        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
+
 ## notifications ##
 
-class NotificationForm(forms.ModelForm):
+class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
@@ -24,7 +36,7 @@ class ProgressReportNotificationForm(NotificationForm):
         model = ProgressReportNotification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
 
-class CompletionReportNotificationForm(NotificationForm):
+class CompletionReportNotificationForm(ModelFormPickleMixin):
     completion_date = DateField(required=True)
 
     class Meta:
@@ -33,7 +45,7 @@ class CompletionReportNotificationForm(NotificationForm):
 
 ## submissions ##
 
-class SubmissionFormForm(forms.ModelForm):
+class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
@@ -45,13 +57,13 @@ class SubmissionFormForm(forms.ModelForm):
     
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
-    medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
-    thesis = forms.NullBooleanField(required=False)
-    retrospective = forms.NullBooleanField(required=False)
-    expedited = forms.NullBooleanField(required=False)
-    external_reviewer = forms.NullBooleanField(required=False)
-    external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
-
+    # FIXME: the following fields do not belong here
+    #medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
+    #thesis = forms.NullBooleanField(required=False)
+    #retrospective = forms.NullBooleanField(required=False)
+    #expedited = forms.NullBooleanField(required=False)
+    #external_reviewer = forms.NullBooleanField(required=False)
+    #external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
 
     class Meta:
         model = SubmissionForm
@@ -63,7 +75,7 @@ class SubmissionFormForm(forms.ModelForm):
 
 ## documents ##
         
-class DocumentForm(forms.ModelForm):
+class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
     
     def clean(self):
@@ -92,21 +104,21 @@ DocumentFormSet = modelformset_factory(Document, formset=BaseDocumentFormSet, ex
 
 ## ##
 
-class BaseForeignParticipatingCenterFormSet(BaseModelFormSet):
+class BaseForeignParticipatingCenterFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
         super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
 
 ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=1, exclude=('submission_form',))
 
-class BaseNonTestedUsedDrugFormSet(BaseModelFormSet):
+class BaseNonTestedUsedDrugFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
         super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
-
+        
 NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=1, exclude=('submission_form',))
 
-class MeasureForm(forms.ModelForm):
+class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
     
     class Meta:
@@ -116,7 +128,7 @@ class MeasureForm(forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(BaseModelFormSet):
+class BaseMeasureFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Measure.objects.none())
         super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
@@ -125,7 +137,7 @@ MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra
 RoutineMeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=RoutineMeasureForm)
 
 
-class BaseInvestigatorFormSet(BaseModelFormSet):
+class BaseInvestigatorFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Investigator.objects.none())
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
@@ -133,7 +145,7 @@ class BaseInvestigatorFormSet(BaseModelFormSet):
 InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
                                            fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
 
-class BaseInvestigatorEmployeeFormSet(BaseModelFormSet):
+class BaseInvestigatorEmployeeFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
         super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)

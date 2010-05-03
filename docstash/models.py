@@ -6,6 +6,7 @@ from django.utils.functional import wraps
 from django.contrib.auth.models import User
 
 from django_extensions.db.fields.json import JSONField
+from picklefield.fields import PickledObjectField
 
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
@@ -16,6 +17,20 @@ def _transaction_required(method):
             raise TypeError('DocStash.%s() must be called from within a DocStash transaction' % method.__name__)
         return method(self, *args, **kwargs)
     return decorated
+    
+class TransactionContextManager(object):
+    def __init__(self, docstash):
+        self.docstash = docstash
+
+    def __enter__(self):
+        self.docstash.start_transaction()
+        
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        if exc_type is None:
+            self.docstash.commit_transaction()
+        else:
+            self.docstash.rollback_transaction()
+        
 
 class DocStash(models.Model):
     key = models.CharField(max_length=41, primary_key=True)
@@ -50,9 +65,14 @@ class DocStash(models.Model):
     def modtime(self):
         return self._get_current_attribute('modtime', None)
         
-    def start_transaction(self, version, name=None, user=None):
+    def transaction(self):
+        return TransactionContextManager(self)
+        
+    def start_transaction(self, version=None, name=None, user=None):
         if hasattr(self, '_transaction'):
             raise TypeError('transaction already started')
+        if not version:
+            version = self.current_version
         try:
             self._transaction = DocStashData(stash=self, version=version+1, value=self.current_value, name=self.current_name)
         except DocStashData.DoesNotExist:
@@ -113,7 +133,7 @@ for method in ('post', 'post_update', 'get', '__getitem__', '__setitem__', 'upda
 class DocStashData(models.Model):
     version = models.IntegerField()
     stash = models.ForeignKey(DocStash, related_name='data')
-    value = JSONField()
+    value = PickledObjectField(compress=True)
     modtime = models.DateTimeField(default=datetime.datetime.now)
     name = models.CharField(max_length=120, blank=True)
     
