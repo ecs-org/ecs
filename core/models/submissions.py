@@ -17,7 +17,7 @@ class Submission(models.Model):
     @property
     def project_title(self):
         # FIXME: pick the last SubmissionForm
-        return self.forms.get().project_title
+        return self.forms.order_by('-pk')[0].project_title
         
     def save(self, **kwargs):
         if not self.ec_number:
