@@ -151,7 +151,7 @@ def copy_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     
     docstash = DocStash.objects.create(group='ecs.core.views.core.create_submission_form', owner=request.user)
-    with docstash.transaction:
+    with docstash.transaction():
         docstash.update({
             'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
             'formsets': get_submission_formsets(instance=submission_form),
