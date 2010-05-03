@@ -62,26 +62,30 @@ def select_notification_creation_type(request):
 @with_docstash_transaction
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
-    data = request.POST or request.docstash.get_query_dict() or None
+    if request.method == 'GET' and request.docstash.value:
+        form = request.docstash.get('form')
+    else:
+        form = notification_type.form_cls(request.POST or None)
 
-    form = notification_type.form_cls(data or None)
     document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
     
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
         autosave = request.POST.get('autosave', False)
         
-        request.docstash.post(request.POST, exclude=lambda name: name.startswith('document-'))
-        request.docstash['type_id'] = notification_type_pk
+        request.docstash.update({
+            'form': form,
+            'type_id': notification_type_pk,
+            'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
+        })
         request.docstash.name = "%s" % notification_type.name
         
         if autosave:
             return HttpResponse('autosave successful')
         
         if document_formset.is_valid():
-            request.docstash['documents'] = request.docstash.get('documents', []) + [doc.pk for doc in document_formset.save()]
+            request.docstash['documents'] = request.docstash['documents'] + document_formset.save()
             document_formset = DocumentFormSet(prefix='document')
-        
         
         if submit and form.is_valid():
             notification = form.save(commit=False)
@@ -90,15 +94,15 @@ def create_notification(request, notification_type_pk=None):
             submission_forms = form.cleaned_data['submission_forms']
             notification.submission_forms = submission_forms
             notification.investigators.add(*Investigator.objects.filter(submission_form__in=submission_forms))
+            notification.documents = request.docstash['documents']
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
-    documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
         'form': form,
         'tabs': NOTIFICATION_FORM_TABS[form.__class__],
         'document_formset': document_formset,
-        'documents': documents,
+        'documents': request.docstash.get('documents', []),
     })
 
 def notification_pdf(request, notification_pk=None):
@@ -193,7 +197,7 @@ def create_submission_form(request):
             submission = request.docstash.get('submission') or Submission.objects.create()
             submission_form.submission = submission
             submission_form.save()
-            submission_form.documents = request.docstash.get('documents', [])
+            submission_form.documents = request.docstash['documents']
             
             formsets = formsets.copy()
             investigators = formsets.pop('investigator').save(commit=False)
@@ -214,7 +218,7 @@ def create_submission_form(request):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'document_formset': document_formset,
-        'documents': request.docstash['documents'],
+        'documents': request.docstash.get('documents', []),
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
