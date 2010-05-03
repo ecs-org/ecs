@@ -47,7 +47,7 @@ def view_notification(request, notification_pk=None):
     
 def submission_data_for_notification(request):
     submission_forms = list(SubmissionForm.objects.filter(pk__in=request.GET.getlist('submission_form')))
-    investigators = Investigator.objects.filter(submission__in=submission_forms)
+    investigators = Investigator.objects.filter(submission_form__in=submission_forms)
     return render(request, 'notifications/submission_data.html', {
         'submission_forms': submission_forms,
         'investigators': investigators,
