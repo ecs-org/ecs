@@ -89,7 +89,7 @@ def create_notification(request, notification_type_pk=None):
             notification.save()
             submission_forms = form.cleaned_data['submission_forms']
             notification.submission_forms = submission_forms
-            notification.investigators.add(*Investigator.objects.filter(submission__in=submission_forms))
+            notification.investigators.add(*Investigator.objects.filter(submission_form__in=submission_forms))
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
     documents = Document.objects.filter(pk__in=request.docstash.get('documents', []))
