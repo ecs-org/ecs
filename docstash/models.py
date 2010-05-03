@@ -64,7 +64,7 @@ class DocStash(models.Model):
     @property
     def modtime(self):
         return self._get_current_attribute('modtime', None)
-        
+
     def transaction(self):
         return TransactionContextManager(self)
         
