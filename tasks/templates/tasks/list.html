@@ -1,0 +1,14 @@
+{% extends "core.html" %}
+
+{% block content %}
+
+{% for task in tasks %}
+<div>
+    <h2>{{ task.task_type.name }}</h2>
+    <span>Assigned to: {{ task.assigned_to }}</span>
+    <span>Groups: {% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+    
+</div>
+{% endfor %}
+
+{% endblock %}
