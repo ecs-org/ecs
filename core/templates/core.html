@@ -87,7 +87,17 @@
       return x;
     }
 
-    var accordionitem = {% block menuSelection %}-1{% endblock %};
+    var accordionitem_name = '{% block menuSelection %}overview{% endblock %}';
+    var accordion_items = {
+      'overview': -1,
+      'submissions': 0,
+      'notifications': 1,
+      'meetings': 2
+    };
+    var accordionitem = accordion_items[accordionitem_name];
+    if(typeof(accordionitem) === 'undefined') {
+      var accordionitem = accordion_items['overview'];
+    }
 
     window.addEvent('domready', function(){
 
