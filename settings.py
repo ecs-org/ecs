@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'ecs.feedback',
     'ecs.docstash',
     'ecs.groupchooser',
+    'ecs.pdfviewer',
 )
 
 # django-db-log
