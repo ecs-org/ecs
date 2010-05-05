@@ -67,19 +67,15 @@ class NotificationAnswer(models.Model):
 
 
 class MedicalCategory(models.Model):
-    EXPEDITED_REVIEW_CHOICES = (
-        (u'IM', u'Innere Medizin'),
-    )
-    expeditedreview = models.CharField(max_length=2, choices=EXPEDITED_REVIEW_CHOICES)
     name = models.CharField(max_length=60)
-    abbrev = models.CharField(max_length=8)
+    abbrev = models.CharField(max_length=12)
     users = models.ManyToManyField(User, related_name='medical_categories')
 
     class Meta:
         app_label = 'core'
 
     def __unicode__(self):
-        return u'%s (%s) - %s (%s)' % (self.expeditedreview, self.get_expeditedreview_display(), self.name, self.abbrev)
+        return u'%s (%s)' % (self.name, self.abbrev)
 
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
