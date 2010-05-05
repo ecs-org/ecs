@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'reversion',
     'djangodblog',
     'celery',
+    'ecs.utils.countries',
 
     'ecs.core',
     'ecs.utils',
