@@ -1,11 +1,13 @@
-<!-- pdfviewer show -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
 {% load pdfviewer %}
 
 {% url pdf_show id page|add:-1 as pv_url_prev %}
 {% url pdf_show id page|add:1 as pv_url_next %}
-
-<html>
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
@@ -62,6 +64,24 @@
   </div>
 
 </div>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+<script type="text/javascript">
+  window.addEvent('domready', function(){
+
+    $(document.body).getElements('.pv_page').addEvent('click', function(event) {
+      event.stop();
+      var x = event.client.x;
+      var mid_x = 12 + 760 / 2;
+      if (x < mid_x) {
+          alert('page prev');
+      } else {
+          alert('page next');
+      }
+    });
+
+  });
+</script>
 
 </body>
 
