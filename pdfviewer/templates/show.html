@@ -8,6 +8,8 @@
 
 {% url pdf_show id page|add:-1 as pv_url_prev %}
 {% url pdf_show id page|add:1 as pv_url_next %}
+{% url pdf_show id 1 as pv_url_first %}
+{% url pdf_show id pages as pv_url_last %}
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
@@ -47,8 +49,9 @@
       {% if page|greater:1 %}
         <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
       {% endif %}
-        <li>normal</li>
-        <li>overview</li>
+        <li>normal view</li>
+        <li>overview 3x3</li>
+        <li>overview 5x5</li>
       {% if page|less:pages %}
         <li><span class="pv_nav_next"><a href="{{ pv_url_next }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
       {% endif %}
@@ -67,23 +70,30 @@
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
 <script type="text/javascript">
+  var go_url_prev = function () {
+  {% if page|greater:1 %}
+    window.location.href = '{{ pv_url_prev }}';
+  {% endif %}
+  };
+
+  var go_url_next = function () {
+  {% if page|less:pages %}
+    window.location.href = '{{ pv_url_next }}';
+  {% endif %}
+  };
+
+  var go_url_first = function () {
+    window.location.href = '{{ pv_url_first }}';
+  };
+
+  var go_url_last = function () {
+    window.location.href = '{{ pv_url_last }}';
+  };
+
   window.addEvent('domready', function(){
 
     $(document.body).getElements('.pv_page').addEvent('click', function(event) {
       event.stop();
-
-      var go_url_prev = function () {
-{% if page|greater:1 %}
-          window.location.href = '{{ pv_url_prev }}';
-{% endif %}
-      };
-
-      var go_url_next = function () {
-{% if page|less:pages %}
-          window.location.href = '{{ pv_url_next }}';
-{% endif %}
-      };
-
       var x = event.client.x;
       var mid_x = 12 + 760 / 2;
       if (x < mid_x) {
@@ -94,6 +104,25 @@
         return;
       }
     });
+
+    $(document.body).addEvent('mousewheel', function(event) {
+      event.stop();
+      var wheel = event.wheel;
+      alert('mouse wheel: ' + wheel);
+    });
+
+    $(document.body).addEvent('contextmenu', function(event) {
+      event.stop();
+      alert('contextmenu');
+    });
+
+   /* works on IE8, but not on firefox, body is probably not good anchor element for the event handler.. */
+   $(document.body).addEvent('keydown', function(event) {
+     event.stop();
+     var code = event.code;
+     var key = event.key;
+     alert('keydown code: ' + code + ', key: [' + key + ']');
+   });
 
   });
 </script>
