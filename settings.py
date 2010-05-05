@@ -170,6 +170,8 @@ INSTALLED_APPS = (
     'ecs.docstash',
     'ecs.groupchooser',
     'ecs.pdfviewer',
+    'ecs.workflow',
+    #'ecs.tasks',
 )
 
 # django-db-log
