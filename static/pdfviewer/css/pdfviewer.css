@@ -5,24 +5,22 @@
   padding: 0;
 }
 
-.pv_main {
+.pv {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
   color: black;
   background: white;
 }
 
-.pv_top {
+.pv_main {
+  /* height and width set by js */
+}
+
+.pv_header {
 }
 
 .pv_title {
   font-size: 14pt;
-  margin: 10px;
-}
-
-.pv_link a {
-  text-decoration: none;
-  color: #349ff8;
 }
 
 .pv_nav_prev img {
@@ -98,4 +96,9 @@
   border-width: medium;
   border-style: solid;
   border-color: blue;
+}
+
+.pv_link a {
+  text-decoration: none;
+  color: #349ff8;
 }
