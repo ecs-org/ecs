@@ -1,7 +1,12 @@
 from django.db.models.signals import post_save, class_prepared
 from django.contrib.contenttypes.models import ContentType
-from ecs.workflow.controller import activity, control, guard
-from ecs.workflow import patterns
+from ecs.workflow.controller import registry
+
+activity = registry.activity
+control = registry.control
+guard = registry.guard
+clear_caches = registry.clear_caches
+
 
 __registry = set()
 

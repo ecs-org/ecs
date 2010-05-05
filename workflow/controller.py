@@ -1,9 +1,14 @@
-import datetime
+import datetime, imp
+
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.utils.functional import wraps
+from django.utils.importlib import import_module
+from django.conf import settings
+
 from ecs.utils import cached_property
 from ecs.workflow.exceptions import TokenRequired
+
 
 class NodeHandler(object):
     def __init__(self, func, model=None, deadline=None, lock=None, signal=None):
@@ -117,55 +122,93 @@ class Guard(object):
     def check(self, workflow):
         return self(workflow)
 
-_activities = {}
-_guards = {}
-_controls = {}
-_node_type_map = {}
-_guard_map = {}
 
-def clear_caches():
-    for handler in _node_type_map.itervalues():
-        del handler.node_type
-    for g in _guard_map.itervalues():
-        del g.instance
+class Registry(object):
+    def __init__(self):
+        self._activities = {}
+        self._guards = {}
+        self._controls = {}
+        self._node_type_map = {}
+        self._guard_map = {}
+        self.loaded = False
 
+    def clear_caches(self):
+        for handler in self._node_type_map.itervalues():
+            del handler.node_type
+        for g in self._guard_map.itervalues():
+            del g.instance
+            
+    def autodiscover(self):
+        for app in settings.INSTALLED_APPS:
+            try:
+                app_path = import_module(app).__path__
+            except AttributeError:
+                continue
+            try:
+                imp.find_module('workflow', app_path)
+            except ImportError:
+                continue
+            module = import_module("%s.workflow" % app)
+            
+    def _load(self):
+        if self.loaded:
+            return
+        import ecs.workflow.patterns
+        self.autodiscover()
+        self.loaded = True
 
-def get_handler(node):
-    try:
-        return _node_type_map[node.node_type_id]
-    except KeyError:
-        if node.node_type.is_subgraph:
-            return _controls['ecs.workflow.patterns.subgraph']
-        raise KeyError("Missing FlowHandler for NodeType %s" % node.node_type)
+    def get_handler(self, node):
+        self._load()
+        try:
+            return self._node_type_map[node.node_type_id]
+        except KeyError:
+            if node.node_type.is_subgraph:
+                return self._controls['ecs.workflow.patterns.subgraph']
+            raise KeyError("Missing FlowHandler for NodeType %s" % node.node_type)
 
+    def get_guard(self, edge):
+        self._load()
+        try:
+            return self._guard_map[edge.guard_id]
+        except KeyError:
+            raise KeyError("Unknown guard: %s" % edge.guard)
+            
+    @property
+    def activities(self):
+        self._load()
+        return self._activities.itervalues()
+        
+    @property
+    def controls(self):
+        self._load()
+        return self._controls.itervalues()
+        
+    @property
+    def guards(self):
+        self._load()
+        return self._guards.itervalues()
 
-def get_guard(edge):
-    try:
-        return _guard_map[edge.guard_id]
-    except KeyError:
-        raise KeyError("Unknown guard: %s" % edge.guard)
+    ## DECORATORS: ##
 
+    def control(self, factory=Control, **kwargs):
+        def decorator(func):
+            control = factory(func, **kwargs)
+            self._controls[control.name] = control
+            return wraps(func)(control)
+        return decorator
 
-def control(factory=Control, **kwargs):
-    def decorator(func):
-        control = factory(func, **kwargs)
-        _controls[control.name] = control
-        return wraps(func)(control)
-    return decorator
+    def activity(self, model=None, factory=Activity, **kwargs):
+        def decorator(func):
+            act = factory(func, model=model, **kwargs)
+            self._activities[act.name] = act
+            return wraps(func)(act)
+        return decorator
 
+    def guard(self, model=None, factory=Guard, **kwargs):
+        def decorator(func):
+            guard = factory(func, model=model, **kwargs)
+            self._guards[guard.name] = guard
+            return wraps(func)(guard)
+        return decorator
 
-def activity(model=None, factory=Activity, **kwargs):
-    def decorator(func):
-        act = factory(func, model=model, **kwargs)
-        model_activities = _activities.setdefault(model, {})
-        model_activities[act.name] = act
-        return wraps(func)(act)
-    return decorator
-
-
-def guard(model=None, factory=Guard, **kwargs):
-    def decorator(func):
-        guard = factory(func, model=model, **kwargs)
-        _guards.setdefault(model, {})[guard.name] = guard
-        return wraps(func)(guard)
-    return decorator
+registry = Registry()
