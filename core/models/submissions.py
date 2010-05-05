@@ -126,11 +126,9 @@ class SubmissionForm(models.Model):
     subject_planned_total_duration = models.CharField(max_length=20)
 
     # 3a
-    # FIXME: substance_registered_in_countries should be a ManyToManyField(Country)
-    substance_registered_in_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
+    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms')
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
-    # FIXME: substance_p_c_t_countries should be a ManyToManyField(Country)
-    substance_p_c_t_countries = models.CharField(max_length=300, null=True, blank=True) # comma seperated 2 letter codes.
+    substance_p_c_t_countries = models.ManyToManyField('countries.Country')
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
     substance_p_c_t_application_type = models.CharField(max_length=40, null=True, blank=True)
