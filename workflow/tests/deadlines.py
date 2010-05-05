@@ -17,7 +17,7 @@ class DeadlineTest(TestCase):
         management.call_command('workflow_sync')
         
     def tearDown(self):
-        workflow.controller.clear_caches()
+        workflow.clear_caches()
         
     def assertActivitiesEqual(self, obj, acts):
         self.failUnlessEqual(set(acts), set(bound_activity.activity for bound_activity in obj.workflow.activities))

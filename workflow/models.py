@@ -1,10 +1,10 @@
-import datetime
+import datetime, uuid
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
-from ecs.workflow import controller
+from ecs.workflow.controller import registry, NodeHandler
 from ecs.workflow.signals import workflow_started, workflow_finished, token_created, token_consumed, token_unlocked, deadline_reached
 from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
@@ -24,7 +24,15 @@ class NodeType(models.Model):
     description = models.TextField(null=True, blank=True)
     category = models.PositiveIntegerField(choices=CATEGORIES, db_index=True)
     content_type = models.ForeignKey(ContentType, null=True)
-    implementation = models.CharField(max_length=100)
+    implementation = models.CharField(max_length=200)
+    
+    class Meta:
+        unique_together = ('content_type', 'implementation')
+        
+    def save(self, **kwargs):
+        if not self.implementation and self.is_subgraph:
+            self.implementation = ".%s" % uuid.uuid4().hex
+        super(NodeType, self).save(**kwargs)
     
     @property
     def is_subgraph(self):
@@ -58,7 +66,7 @@ class Graph(NodeType):
         return self.nodes.filter(is_end_node=True)
         
     def create_node(self, nodetype, start=False, end=False):
-        if isinstance(nodetype, controller.NodeHandler):
+        if isinstance(nodetype, NodeHandler):
             nodetype = nodetype.node_type
         return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end)
         
@@ -88,8 +96,12 @@ class Graph(NodeType):
 
 
 class Guard(models.Model):
+    name = models.CharField(max_length=100)
     content_type = models.ForeignKey(ContentType)
     implementation = models.CharField(max_length=200)
+    
+    class Meta:
+        unique_together = ('content_type', 'implementation')
 
 
 class Node(models.Model):
@@ -108,7 +120,7 @@ class Node(models.Model):
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negate=negate, deadline=deadline)
         
     def receive_token(self, workflow, source=None):
-        flow_controller = controller.get_handler(self)
+        flow_controller = registry.get_handler(self)
         token = workflow.tokens.create(
             node=self, 
             source=source, 
@@ -146,12 +158,12 @@ class Node(models.Model):
                     edge.to_node.receive_token(workflow, source=self)
     
     def handle_deadline(self, token):
-        controller.get_handler(self).handle_deadline(token)
+        registry.get_handler(self).handle_deadline(token)
         deadline_reached.send(token)
         self.progress(token.workflow, deadline=True)
         
     def unlock(self, workflow):
-        controller.get_handler(self).unlock(self, workflow)
+        registry.get_handler(self).unlock(self, workflow)
 
 
 class Edge(models.Model):
@@ -164,7 +176,7 @@ class Edge(models.Model):
     def check_guard(self, workflow):
         if not self.guard_id:
             return True
-        return self.negate != controller.get_guard(self).check(workflow)
+        return self.negate != registry.get_guard(self).check(workflow)
 
 
 class Workflow(models.Model):

@@ -1,11 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 
-from ecs.workflow import controller
+from ecs.workflow.controller import registry
 from ecs.workflow.models import Workflow, Token, Node, NODE_TYPE_CATEGORY_ACTIVITY
 
 class BoundActivity(object):
     def __init__(self, node, workflow):
-        self.activity = controller.get_handler(node)
+        self.activity = registry.get_handler(node)
         self.workflow = workflow
         self.node = node
 
