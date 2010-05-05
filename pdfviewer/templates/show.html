@@ -4,14 +4,14 @@
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
-  <title>ECS PDF Viewer: id {{ id }}, page {{ page }}</title>
+  <title>ECS PDF Viewer: {{ id }}, Seite {{ page }}</title>
 </head>
 
 <body>
 
 <div class="pv_main">
   <div class="pv_top">
-    <span class="pv_title">id {{ id }}, page {{ page }}</span>
+    <span class="pv_title">{{ id }}, Seite {{ page }} ({{ pages }} Seiten)</span>
   </div>
 
   <div class="pv_pages">
@@ -19,8 +19,9 @@
       <li><span class="pv_nav_prev"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></span></li>
       <li>
         <ol>
-          <li><span class="pv_page pv_page_selected"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_512.png" style="height: 1076px; width: 760px;" alt="Seite 1 von 2" /></span></li>
-          <li><span class="pv_page"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_511.png" style="height: 1076px; width: 760px;" alt="Seite 2 von 2" /></span></li>
+        {% for image in images %}
+          <li><span class="pv_page{% ifequal image.page page %} pv_page_selected{% endifequal %}"><img src="{{ image.url }}" style="height: 1076px; width: 760px;" alt="Seite {{ image.page }} von {{ pages }}" /></span></li>
+        {% endfor %}
         </ol>
       </li>
       <li><span class="pv_nav_next"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></span></li>
@@ -37,8 +38,9 @@
     </div>
     <div class="pv_thumbs" style="height: 266px;">
       <ol>
-        <li><span class="pv_thumb pv_thumb_selected"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_512.png" style="height: 108px; width: 76px;" alt="Seite 1 von 2" /></span></li>
-        <li><span class="pv_thumb"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_511.png" style="height: 108px; width: 76px;" alt="Seite 2 von 2" /></span></li>
+      {% for thumb in thumbs %}
+        <li><span class="pv_thumb{% ifequal thumb.page page %} pv_thumb_selected{% endifequal %}"><img src="{{ thumb.url }}" style="height: 108px; width: 76px;" alt="Seite {{ thumb.page }} von {{ pages }}" /></span></li>
+      {% endfor %}
       </ol>
     </div>
   </div>
