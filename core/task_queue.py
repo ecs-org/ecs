@@ -30,12 +30,15 @@ def _eval_timetable(metrics):
 
 @task()
 def optimize_timetable_task(meeting=None, algorithm=None):
+    retval = False
     try:
         algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
         entries, users = meeting.timetable
         f = meeting.create_evaluation_func(_eval_timetable)
         meeting._apply_permutation(algo(entries, f))
+        retval = True
     finally:
         meeting.optimization_task_id = None
         meeting.save()
 
+    return retval
