@@ -37,11 +37,11 @@
         Klicken Sie <a href="http://www.mozilla-europe.org/de/firefox/">hier</a> um eine aktuelle Version zu installieren
     </div>
     <form class="login_screen" method="post" action="{% url django.contrib.auth.views.login %}">
-        <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
-        <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
-  
-    <p><input type="submit" value="login" /></p>
-    <input type="hidden" name="next" value="{{ next }}" />
+      {% csrf_token %}
+      <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
+      <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
+      <p><input type="submit" value="login" /></p>
+      <input type="hidden" name="next" value="{{ next }}" />
     </form>
 </div>
   <!--
