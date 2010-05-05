@@ -1,7 +1,6 @@
 # Django settings for ecs project.
 
 import os.path, platform
-
 PROJECT_DIR = os.path.dirname(__file__)
 
 ADMINS = (
@@ -9,6 +8,13 @@ ADMINS = (
 )
 MANAGERS = ADMINS
 
+# Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
+# (because we want 404 and 500 custom errors and log the error)
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
+
+
+# database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
 DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
 DATABASE_NAME = os.path.join(PROJECT_DIR, 'ecs.db')  # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
@@ -16,24 +22,20 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-# celery configuration
+# celery configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
+# Warning: second part on bottom of settings which set backend to internal if DEBUG=TRUE and host != ecsdev.ep3.at
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-CELERY_RESULT_BACKEND = 'amqp'  # we have to use amqp, because of the test cases
+CELERY_RESULT_BACKEND = 'database'  # do we have to use amqp, because of the test cases ?
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
 )
 
-# Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
-# (because we want 404 and 500 custom errors and log the error)
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-# use postgres if on host ecsdev.ep3.at depending username
+# use different settings if on host ecsdev.ep3.at depending username
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
@@ -55,11 +57,12 @@ if platform.node() == "ecsdev.ep3.at":
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
-else:
-    try:
-        from local_settings import *
-    except ImportError:
-        pass
+
+# use another different settings if local_settings.py exists
+try:
+    from local_settings import *
+except ImportError:
+    pass
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
@@ -175,15 +178,20 @@ INSTALLED_APPS = (
     #'ecs.tasks',
 )
 
+# use ghettoq as carrot backend, so we dont need any external brocker for testing
+if DEBUG or (platform.node != "ecsdev.ep3.at"):
+    CARROT_BACKEND = "ghettoq.taproot.Database"
+    INSTALLED_APPS += ("ghettoq", ) 
+
 # django-db-log
-# temporary for testing, cat 404 defaults to false
+# temporary for testing, catch 404 defaults to false
 DBLOG_CATCH_404_ERRORS = True
 
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
-# use django-nose as default test runner
-TEST_RUNNER = 'django_nose.run_tests'
+# use our utils.ecs_runner as default test runner
+TEST_RUNNER = 'utils.ecs_runner.run_tests'
 
 # FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
