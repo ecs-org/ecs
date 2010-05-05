@@ -1,7 +1,6 @@
 import random, itertools, math
 from celery.decorators import task
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
-from time import sleep
 
 def optimize_random(timetable, func):
     p = list(timetable)
@@ -31,8 +30,12 @@ def _eval_timetable(metrics):
 
 @task()
 def optimize_timetable_task(meeting=None, algorithm=None):
-    algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
-    entries, users = meeting.timetable
-    f = meeting.create_evaluation_func(_eval_timetable)
-    meeting._apply_permutation(algo(entries, f))
+    try:
+        algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
+        entries, users = meeting.timetable
+        f = meeting.create_evaluation_func(_eval_timetable)
+        meeting._apply_permutation(algo(entries, f))
+    finally:
+        meeting.optimization_task_id = None
+        meeting.save()
 
