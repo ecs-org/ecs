@@ -1,5 +1,7 @@
 <!-- pdfviewer show -->
 
+{% load pdfviewer %}
+
 {% url pdf_show id page|add:-1 as pv_url_prev %}
 {% url pdf_show id page|add:1 as pv_url_next %}
 
@@ -20,7 +22,9 @@
     </div>
     <div class="pv_pages">
       <ol>
-        <li><span class="pv_nav_prev"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></span></li>
+      {% if page|greater:1 %}
+        <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
+      {% endif %}
         <li>
           <ol>
           {% for image in images %}
@@ -28,7 +32,9 @@
           {% endfor %}
           </ol>
         </li>
-        <li><span class="pv_nav_next"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></span></li>
+      {% if page|less:pages %}
+        <li><span class="pv_nav_next"><a href="{{ pv_url_next}}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
+      {% endif %}
       </ol>
     </div>
   </div>
@@ -36,10 +42,14 @@
   <div class="pv_sidebar">
     <div class="pv_controls">
       <ol>
+      {% if page|greater:1 %}
         <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
+      {% endif %}
         <li>normal</li>
         <li>overview</li>
+      {% if page|less:pages %}
         <li><span class="pv_nav_next"><a href="{{ pv_url_next }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
+      {% endif %}
       </ol>
     </div>
     <div class="pv_thumbs" style="">
