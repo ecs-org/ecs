@@ -71,12 +71,27 @@
 
     $(document.body).getElements('.pv_page').addEvent('click', function(event) {
       event.stop();
+
+      var go_url_prev = function () {
+{% if page|greater:1 %}
+          window.location.href = '{{ pv_url_prev }}';
+{% endif %}
+      };
+
+      var go_url_next = function () {
+{% if page|less:pages %}
+          window.location.href = '{{ pv_url_next }}';
+{% endif %}
+      };
+
       var x = event.client.x;
       var mid_x = 12 + 760 / 2;
       if (x < mid_x) {
-          alert('page prev');
+        go_url_prev();
+        return;
       } else {
-          alert('page next');
+        go_url_next();
+        return;
       }
     });
 
