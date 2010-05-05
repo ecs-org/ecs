@@ -108,6 +108,7 @@ class TimetableMetrics(object):
 class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)
+    optimization_task_id = models.TextField(null=True)
     
     class Meta:
         app_label = 'core'

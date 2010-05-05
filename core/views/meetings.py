@@ -70,6 +70,7 @@ def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     return render(request, 'meetings/timetable/editor.html', {
         'meeting': meeting,
+        'running_optimization': bool(meeting.optimization_task_id),
     })
     
 def participation_editor(request, meeting_pk=None):
@@ -92,8 +93,10 @@ def participation_editor(request, meeting_pk=None):
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    retval = optimize_timetable_task.delay(meeting=meeting,algorithm=algorithm)
-    retval.wait()
+    if not meeting.optimization_task_id:
+        retval = optimize_timetable_task.delay(meeting=meeting,algorithm=algorithm)
+        meeting.optimization_task_id = retval.task_id
+        meeting.save()
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):

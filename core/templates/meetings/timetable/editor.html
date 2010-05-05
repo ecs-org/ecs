@@ -8,13 +8,18 @@
 {% endblock %}
 
 {% block content %}
+{% if running_optimization %}
+  <h1>Es läuft derzeit eine Optimierung!</h1>
+{% endif %}
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
-    <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
-    | <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}?break=yes">Pause hinzufügen</a>
-    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
-    <!--| <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> -->
-    | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
+    {% if not running_optimization %}
+        <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
+        | <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}?break=yes">Pause hinzufügen</a>
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
+        {% comment %}| <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
+    {% endif %}
     <div class="waiting_time">
     Wartezeit: 
         sum={{ meeting.metrics.waiting_time_total|simple_timedelta_format|default:'-' }},
@@ -27,17 +32,19 @@
     <ul id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}">
-            <div class="dragHandle">#{{ entry.pk }} <span style="color:#ffffff">DRAG ME</span></div>
+            <div class="dragHandle">#{{ entry.pk }} {% if not running_optimization %}<span style="color:#ffffff">DRAG ME</span>{% endif %}</div>
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
                 {% if entry.is_break %}Pause{% endif %}
             </h3>
-            <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
-            <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
-                <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
-                <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
-            </form>
+            {% if not running_optimization %}
+                <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
+                <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                    <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
+                    <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
+                </form>
+            {% endif %}
             {% if not entry.is_break %}
             <div>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
@@ -77,6 +84,11 @@
 {{ block.super }}
 <script type="text/javascript">
 window.addEvent('domready', function(){
+{% if running_optimization %}
+    setTimeout(function() {
+      window.location.reload();
+    }, 10000);
+{% else %}
     function getSortableIndex(el){
         return $('timetable').getChildren().indexOf(el);
     }
@@ -115,6 +127,7 @@ window.addEvent('domready', function(){
             }
         }
     });
+{% endif %}
 });
 </script>
 {% endblock %}
