@@ -7,7 +7,7 @@ def inspect_form_and_content_completeness(token):
     pass
 
 # UC-44
-@workflow.activity(model=SubmissionForm):
+@workflow.activity(model=SubmissionForm)
 def acknowledge_submission(token):
     pass
 
@@ -52,7 +52,7 @@ def assign_external_reviewer(token):
 def review_external(token):
     pass
 
-@workflow.guard(model=SubmissionForm):
+@workflow.guard(model=SubmissionForm)
 def is_marked_as_thesis_by_submitter(workflow):
     return bool(workflow.data.project_type_education_context)
     
