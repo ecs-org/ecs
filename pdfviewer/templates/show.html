@@ -1,15 +1,102 @@
-<!-- pdfviewer show -->
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+{% load pdfviewer %}
+
+{% url pdf_show id page|add:-1 as pv_url_prev %}
+{% url pdf_show id page|add:1 as pv_url_next %}
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
-  <title>PDF Viewer</title>
+  <title>ECS PDF Viewer: {{ id }}, Seite {{ page }}</title>
 </head>
 
 <body>
 
-<span class="pv_title">id {{ id }}, page {{ page }}'</span>
+<div class="pv">
+
+  <div class="pv_main" style="">
+    <div class="pv_header" style="">
+      <span class="pv_title">{{ id }}, Seite {{ page }} ({{ pages }} Seiten)</span>
+    </div>
+    <div class="pv_pages">
+      <ol>
+      {% if page|greater:1 %}
+        <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
+      {% endif %}
+        <li>
+          <ol>
+          {% for image in images %}
+            <li><span class="pv_page{% ifequal image.page page %} pv_page_selected{% endifequal %}"><img src="{{ image.url }}" style="height: 1076px; width: 760px;" alt="Seite {{ image.page }} von {{ pages }}" /></span></li>
+          {% endfor %}
+          </ol>
+        </li>
+      {% if page|less:pages %}
+        <li><span class="pv_nav_next"><a href="{{ pv_url_next}}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
+      {% endif %}
+      </ol>
+    </div>
+  </div>
+
+  <div class="pv_sidebar">
+    <div class="pv_controls">
+      <ol>
+      {% if page|greater:1 %}
+        <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
+      {% endif %}
+        <li>normal</li>
+        <li>overview</li>
+      {% if page|less:pages %}
+        <li><span class="pv_nav_next"><a href="{{ pv_url_next }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
+      {% endif %}
+      </ol>
+    </div>
+    <div class="pv_thumbs" style="">
+      <ol>
+      {% for thumb in thumbs %}
+        <li><span class="pv_thumb{% ifequal thumb.page page %} pv_thumb_selected{% endifequal %}">{{ thumb.page }}<a href="{% url pdf_show id thumb.page %}"><img src="{{ thumb.url }}" style="height: 108px; width: 76px;" alt="Seite {{ thumb.page }} von {{ pages }}" /></a></span></li>
+      {% endfor %}
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+<script type="text/javascript">
+  window.addEvent('domready', function(){
+
+    $(document.body).getElements('.pv_page').addEvent('click', function(event) {
+      event.stop();
+
+      var go_url_prev = function () {
+{% if page|greater:1 %}
+          window.location.href = '{{ pv_url_prev }}';
+{% endif %}
+      };
+
+      var go_url_next = function () {
+{% if page|less:pages %}
+          window.location.href = '{{ pv_url_next }}';
+{% endif %}
+      };
+
+      var x = event.client.x;
+      var mid_x = 12 + 760 / 2;
+      if (x < mid_x) {
+        go_url_prev();
+        return;
+      } else {
+        go_url_next();
+        return;
+      }
+    });
+
+  });
+</script>
 
 </body>
 

@@ -1,11 +1,11 @@
 from django.contrib.contenttypes.models import ContentType
 
-from ecs.workflow import controller
-from ecs.workflow.models import Workflow, Token, Node
+from ecs.workflow.controller import registry
+from ecs.workflow.models import Workflow, Token, Node, NODE_TYPE_CATEGORY_ACTIVITY
 
 class BoundActivity(object):
     def __init__(self, node, workflow):
-        self.activity = controller.get_handler(node)
+        self.activity = registry.get_handler(node)
         self.workflow = workflow
         self.node = node
 
@@ -26,7 +26,7 @@ class ObjectWorkflow(object):
         self.workflows = Workflow.objects.filter(content_type=ct, data_id=obj.pk)
 
     def _get_activity_tokens(self, *acts):
-        tokens = Token.objects.filter(workflow__in=self.workflows.values('pk'), consumed_at=None, node__node_type__is_activity=True).select_related('node', 'workflow')
+        tokens = Token.objects.filter(workflow__in=self.workflows.values('pk'), consumed_at=None, node__node_type__category=NODE_TYPE_CATEGORY_ACTIVITY).select_related('node', 'workflow')
         if acts:
             tokens = tokens.filter(node__node_type__in=[act.node_type for act in acts])
         return tokens

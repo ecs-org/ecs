@@ -1,33 +1,61 @@
-import datetime
+import datetime, uuid
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
-from ecs.workflow import controller
+from ecs.workflow.controller import registry, NodeHandler
 from ecs.workflow.signals import workflow_started, workflow_finished, token_created, token_consumed, token_unlocked, deadline_reached
 from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
+NODE_TYPE_CATEGORY_ACTIVITY = 1
+NODE_TYPE_CATEGORY_CONTROL = 2
+NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY = 3
+NODE_TYPE_CATEGORY_SUBGRAPH = 4
+
 class NodeType(models.Model):
+    CATEGORIES = (
+        (NODE_TYPE_CATEGORY_ACTIVITY, 'activity'),
+        (NODE_TYPE_CATEGORY_CONTROL, 'control'),
+        (NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY, 'dynamic activity'),
+        (NODE_TYPE_CATEGORY_SUBGRAPH, 'subgraph'),
+    )
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
-    is_activity = models.BooleanField(default=False)
+    category = models.PositiveIntegerField(choices=CATEGORIES, db_index=True)
     content_type = models.ForeignKey(ContentType, null=True)
-    controller = models.CharField(max_length=100)
+    implementation = models.CharField(max_length=200)
+    
+    class Meta:
+        unique_together = ('content_type', 'implementation')
+        
+    def save(self, **kwargs):
+        if not self.implementation and self.is_subgraph:
+            self.implementation = ".%s" % uuid.uuid4().hex
+        super(NodeType, self).save(**kwargs)
     
     @property
     def is_subgraph(self):
-        try:
-            self.graph
-            return True
-        except Graph.DoesNotExist:
-            return False
-            
+        return self.category == NODE_TYPE_CATEGORY_SUBGRAPH
+        
+    @property
+    def is_activity(self):
+        return self.category == NODE_TYPE_CATEGORY_ACTIVITY
+        
+    @property
+    def is_control(self):
+        return self.category == NODE_TYPE_CATEGORY_CONTROL
+        
     def __unicode__(self):
         return self.name
 
 class Graph(NodeType):
     auto_start = models.BooleanField()
+    
+    def save(self, **kwargs):
+        if not self.category:
+            self.category = NODE_TYPE_CATEGORY_SUBGRAPH
+        super(Graph, self).save(**kwargs)
     
     @property
     def start_nodes(self):
@@ -37,10 +65,10 @@ class Graph(NodeType):
     def end_nodes(self):
         return self.nodes.filter(is_end_node=True)
         
-    def create_node(self, node_type, start=False, end=False):
-        if hasattr(node_type, 'node_type'):
-            node_type = node_type.node_type
-        return Node.objects.create(graph=self, node_type=node_type, is_start_node=start, is_end_node=end)
+    def create_node(self, nodetype, start=False, end=False):
+        if isinstance(nodetype, NodeHandler):
+            nodetype = nodetype.node_type
+        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end)
         
     def start_workflow(self, **kwargs):
         return Workflow.objects.create(graph=self, **kwargs)
@@ -49,7 +77,9 @@ class Graph(NodeType):
     def dot(self):
         statements = ['N_Start [shape=point, label=Start]', 'N_End [shape=point, label=End]']
         for node in self.nodes.all():
-            shape = node.node_type.is_activity and 'box' or 'diamond'
+            shape = 'diamond'
+            if node.node_type.category == NODE_TYPE_CATEGORY_ACTIVITY:
+                shape = 'box'
             statements.append("N_%s [label=%s, shape=%s, style=rounded]" % (node.pk, node.node_type.name, shape))
             if node.is_end_node:
                 statements.append('N_%s -> N_End' % node.pk)
@@ -63,11 +93,16 @@ class Graph(NodeType):
                     label = ''
                 statements.append("N_%s -> N_%s%s" % (edge.from_node_id, edge.to_node_id, label))
         return "graph{\n\t%s;\n}" % ";\n\t".join(statements)
-        
+
 
 class Guard(models.Model):
+    name = models.CharField(max_length=100)
     content_type = models.ForeignKey(ContentType)
-    condition = models.CharField(max_length=200)
+    implementation = models.CharField(max_length=200)
+    
+    class Meta:
+        unique_together = ('content_type', 'implementation')
+
 
 class Node(models.Model):
     graph = models.ForeignKey(Graph, related_name='nodes')
@@ -81,11 +116,11 @@ class Node(models.Model):
 
     def add_edge(self, to, guard=None, negate=False, deadline=False):
         if guard:
-            guard = guard.obj
+            guard = guard.instance
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negate=negate, deadline=deadline)
         
     def receive_token(self, workflow, source=None):
-        flow_controller = controller.get_handler(self)
+        flow_controller = registry.get_handler(self)
         token = workflow.tokens.create(
             node=self, 
             source=source, 
@@ -123,12 +158,13 @@ class Node(models.Model):
                     edge.to_node.receive_token(workflow, source=self)
     
     def handle_deadline(self, token):
-        controller.get_handler(self).handle_deadline(token)
+        registry.get_handler(self).handle_deadline(token)
         deadline_reached.send(token)
         self.progress(token.workflow, deadline=True)
         
     def unlock(self, workflow):
-        controller.get_handler(self).unlock(self, workflow)
+        registry.get_handler(self).unlock(self, workflow)
+
 
 class Edge(models.Model):
     from_node = models.ForeignKey(Node, related_name='edges', null=True)
@@ -140,7 +176,7 @@ class Edge(models.Model):
     def check_guard(self, workflow):
         if not self.guard_id:
             return True
-        return self.negate != controller.get_guard(self).check(workflow)
+        return self.negate != registry.get_guard(self).check(workflow)
 
 
 class Workflow(models.Model):
@@ -225,3 +261,11 @@ class Token(models.Model):
         
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
+
+import sys
+if 'test' in sys.argv:
+    class Foo(models.Model):
+        flag = models.BooleanField(default=False)
+
+        class Meta:
+            app_label = 'workflow'
