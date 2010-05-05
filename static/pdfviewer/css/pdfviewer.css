@@ -12,6 +12,9 @@
   background: white;
 }
 
+.pv_top {
+}
+
 .pv_title {
   font-size: 14pt;
   margin: 10px;
@@ -20,6 +23,21 @@
 .pv_link a {
   text-decoration: none;
   color: #349ff8;
+}
+
+.pv_nav_prev img {
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.pv_nav_next img {
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
 }
 
 .pv_pages {
@@ -60,6 +78,7 @@
 }
 
 .pv_thumbs {
+  /* height set by js */
   color: black;
   background: #dfd;
 }
@@ -80,19 +99,3 @@
   border-style: solid;
   border-color: blue;
 }
-
-.pv_nav_prev img {
-  height: 16px;
-  width: 16px;
-  border: none;
-  margin-right: 10px;
-  cursor: pointer;
-}
-.pv_nav_next img {
-  height: 16px;
-  width: 16px;
-  border: none;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
