@@ -1,0 +1,98 @@
+/* pdfviewer.css */
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.pv_main {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  color: black;
+  background: white;
+}
+
+.pv_title {
+  font-size: 14pt;
+  margin: 10px;
+}
+
+.pv_link a {
+  text-decoration: none;
+  color: #349ff8;
+}
+
+.pv_pages {
+  float: left;
+  color: black;
+  background: #ddf;
+}
+
+.pv_page img {
+  /* height, width set by js */
+  border-width: thin;
+  border-style: solid;
+  border-color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.pv_page_selected img {
+  border-width: medium;
+  border-style: solid;
+  border-color: blue;
+}
+
+.pv_sidebar {
+  float: right;
+  color: black;
+  background: white;
+}
+
+.pv_controls {
+  color: black;
+  background: white;
+  border-width: thin;
+  border-style: solid;
+  border-color: black;
+}
+
+.pv_thumbs {
+  color: black;
+  background: #dfd;
+}
+
+.pv_thumb img {
+  /* height, width set by js */
+  border-width: thin;
+  border-style: solid;
+  border-color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.pv_thumb_selected img {
+  border-width: medium;
+  border-style: solid;
+  border-color: blue;
+}
+
+.pv_nav_prev img {
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.pv_nav_next img {
+  height: 16px;
+  width: 16px;
+  border: none;
+  margin-left: 10px;
+  cursor: pointer;
+}
+

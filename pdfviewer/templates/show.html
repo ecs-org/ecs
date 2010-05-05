@@ -4,12 +4,45 @@
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
-  <title>PDF Viewer</title>
+  <title>ECS PDF Viewer: id {{ id }}, page {{ page }}</title>
 </head>
 
 <body>
 
-<span class="pv_title">id {{ id }}, page {{ page }}'</span>
+<div class="pv_main">
+
+  <span class="title">id {{ id }}, page {{ page }}</span>
+
+  <div class="pv_pages">
+    <ol>
+      <li><span class="pv_nav_prev"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></span></li>
+      <li>
+        <ol>
+          <li><span class="pv_page pv_page_selected"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_512.png" style="height: 1076px; width: 760px;" alt="Seite 1 von 2" /></span></li>
+          <li><span class="pv_page"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_511.png" style="height: 1076px; width: 760px;" alt="Seite 2 von 2" /></span></li>
+        </ol>
+      </li>
+      <li><span class="pv_nav_next"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></span></li>
+    </ol>
+  </div>
+
+  <div class="pv_sidebar">
+    <div class="pv_controls">
+      <ol>
+        <li><span class="pv_nav_prev"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></span></li>
+        <li>overview</li>
+        <li><span class="pv_nav_next"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></span></li>
+      </ol>
+    </div>
+    <div class="pv_thumbs" style="height: 266px;">
+      <ol>
+        <li><span class="pv_thumb pv_thumb_selected"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_512.png" style="height: 108px; width: 76px;" alt="Seite 1 von 2" /></span></li>
+        <li><span class="pv_thumb"><img src="{{ MEDIA_URL }}pdfviewer/images/Meld_511.png" style="height: 108px; width: 76px;" alt="Seite 2 von 2" /></span></li>
+      </ol>
+    </div>
+  </div>
+
+</div>
 
 </body>
 
