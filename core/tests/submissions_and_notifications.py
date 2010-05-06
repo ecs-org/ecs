@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
+from ecs.utils.countries.models import Country
 from django.test import TestCase
+from django.db.models import Q
 
 from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from core.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
@@ -66,9 +68,7 @@ class SubmissionFormTest(TestCase):
             subject_duration_active="12 months",
             subject_duration_controls="36 months",
             subject_planned_total_duration="to short max_length!",
-            substance_registered_in_countries="",
             substance_preexisting_clinical_tries=True,
-            substance_p_c_t_countries="DE,US,AT",
             substance_p_c_t_phase="III",
             #substance_p_c_t_period="Anti-GD2-Phase I: 1989-1992, Phase III 2002",
             substance_p_c_t_period="to long",
@@ -157,6 +157,9 @@ class SubmissionFormTest(TestCase):
             submitter_agrees_to_publishing=False,
             )
         sform.save()
+        sform.substance_registered_in_countries = []
+        sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
+        sform.save()
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
         ek1.save()
@@ -221,9 +224,7 @@ def create_submission_form():
         subject_duration_active="12 months",
         subject_duration_controls="36 months",
         subject_planned_total_duration="to short max_length!",
-        substance_registered_in_countries="",
         substance_preexisting_clinical_tries=True,
-        substance_p_c_t_countries="DE,US,AT",
         substance_p_c_t_phase="III",
         #substance_p_c_t_period="Anti-GD2-Phase I: 1989-1992, Phase III 2002",
         substance_p_c_t_period="to long",
@@ -311,6 +312,9 @@ def create_submission_form():
         submitter_is_authorized_by_sponsor=False,
         submitter_agrees_to_publishing=False,
         )
+    sform.save()
+    sform.substance_registered_in_countries = []
+    sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
     sform.save()
     return sform
 
