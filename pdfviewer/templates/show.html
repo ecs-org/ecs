@@ -110,19 +110,15 @@
       go_url_zoom(new_zoom_index); 
     });
 
-    /* works on IE8, but not on firefox, body is probably not good anchor element for the event handler.. */
     $(document).addEvent('keydown', function(event) {
       event.stop();
       var code = event.code;
       var key = event.key;
-      if (code == 16) {
-        return;
-      }
-      if (code == 33) {
+      if (code == 33 || key == 'left') {
         go_url_prev();
         return;
       }
-      if (code == 34) {
+      if (code == 34 || key == 'right') {
         go_url_next();
         return;
       }
@@ -138,7 +134,6 @@
         alert('exit somehow..');
         return;
       }
-      alert('keydown code: ' + code + ', key: [' + key + ']');
     });
 
   });
