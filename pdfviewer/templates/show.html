@@ -50,14 +50,21 @@
   };
 
   var go_url_first = function() {
+  {% if page|greater:1 %}
     go_url('{{ pv_url_first }}');
+  {% endif %}
   };
 
   var go_url_last = function() {
+  {% if page|less:pages %}
     go_url('{{ pv_url_last }}');
+  {% endif %}
   };
 
   var go_url_zoom = function(zoom_index) {
+    if (zoom_index < 0 || zoom_index >= {{ zooms }}) {
+      return;
+    }
     var zoom_list = [
     {% for zoom in zoom_list %}
       '{{ zoom }}'{% if not forloop.last %},{% endif %}
@@ -86,9 +93,7 @@
       event.stop();
       var wheel = event.wheel;
       var new_zoom_index = {{ zoom_index }} - parseInt(wheel);
-      if (new_zoom_index >= 0 && new_zoom_index < parseInt({{ zooms }})) {
-        go_url_zoom(new_zoom_index);
-      }
+      go_url_zoom(new_zoom_index);
     });
 
     $(document.body).addEvent('contextmenu', function(event) {
@@ -105,13 +110,36 @@
       go_url_zoom(new_zoom_index); 
     });
 
-   /* works on IE8, but not on firefox, body is probably not good anchor element for the event handler.. */
-   $(document.body).addEvent('keydown', function(event) {
-     event.stop();
-     var code = event.code;
-     var key = event.key;
-     alert('keydown code: ' + code + ', key: [' + key + ']');
-   });
+    /* works on IE8, but not on firefox, body is probably not good anchor element for the event handler.. */
+    $(document).addEvent('keydown', function(event) {
+      event.stop();
+      var code = event.code;
+      var key = event.key;
+      if (code == 16) {
+        return;
+      }
+      if (code == 33) {
+        go_url_prev();
+        return;
+      }
+      if (code == 34) {
+        go_url_next();
+        return;
+      }
+      if (code == 36) {
+        go_url_first();
+        return;
+      }
+      if (code == 35) {
+        go_url_last();
+        return;
+      }
+      if (key == 'esc' || key== 'q') {
+        alert('exit somehow..');
+        return;
+      }
+      alert('keydown code: ' + code + ', key: [' + key + ']');
+    });
 
   });
 </script>
