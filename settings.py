@@ -61,6 +61,7 @@ if platform.node() == "ecsdev.ep3.at":
 # use another different settings if local_settings.py exists
 try:
     from local_settings import *
+    from djangotest_settings import *
 except ImportError:
     pass
 
