@@ -1157,5 +1157,35 @@
       "name": "technischer Sicherheitsbeauftragter", 
       "users": []
     }
+  },
+  {
+    "pk": 58, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "ExpR1", 
+      "name": "Expedited Review 1", 
+      "users": [],
+      "expedited_review": true
+    }
+  },
+  {
+    "pk": 59, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "ExpR2", 
+      "name": "Expedited Review 2", 
+      "users": [],
+      "expedited_review": true
+    }
+  },
+  {
+    "pk": 60, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "ExpR3", 
+      "name": "Expedited Review 3", 
+      "users": [],
+      "expedited_review": true
+    }
   }
 ]
