@@ -70,13 +70,13 @@ class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12)
     users = models.ManyToManyField(User, related_name='medical_categories')
+    expedited_review = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.abbrev)
-
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 if not reversion.is_registered(Amendment):
