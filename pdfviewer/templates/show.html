@@ -6,14 +6,14 @@
 
 {% load pdfviewer %}
 
-{% url pdf_show id page|add:-1 as pv_url_prev %}
-{% url pdf_show id page|add:1 as pv_url_next %}
-{% url pdf_show id 1 as pv_url_first %}
-{% url pdf_show id pages as pv_url_last %}
+{% url pdf_show id page|add:-1 zoom as pv_url_prev %}
+{% url pdf_show id page|add:1 zoom as pv_url_next %}
+{% url pdf_show id 1 zoom as pv_url_first %}
+{% url pdf_show id pages zoom as pv_url_last %}
 
 <head>
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}pdfviewer/css/pdfviewer.css" />
-  <title>ECS PDF Viewer: {{ id }}, Seite {{ page }}</title>
+  <title>ECS PDF Viewer: ID {{ id }}, Seite {{ page }}, Zoom {{ zoom }}</title>
 </head>
 
 <body>
@@ -22,47 +22,10 @@
 
   <div class="pv_main" style="">
     <div class="pv_header" style="">
-      <span class="pv_title">{{ id }}, Seite {{ page }} ({{ pages }} Seiten)</span>
+      <span class="pv_title">ID {{ id }}, Seite {{ page }} ({{ pages }} Seiten), Zoom {{ zoom }}</span>
     </div>
     <div class="pv_pages">
-      <ol>
-      {% if page|greater:1 %}
-        <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
-      {% endif %}
-        <li>
-          <ol>
-          {% for image in images %}
-            <li><span class="pv_page{% ifequal image.page page %} pv_page_selected{% endifequal %}"><img src="{{ image.url }}" style="height: 1076px; width: 760px;" alt="Seite {{ image.page }} von {{ pages }}" /></span></li>
-          {% endfor %}
-          </ol>
-        </li>
-      {% if page|less:pages %}
-        <li><span class="pv_nav_next"><a href="{{ pv_url_next}}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
-      {% endif %}
-      </ol>
-    </div>
-  </div>
-
-  <div class="pv_sidebar">
-    <div class="pv_controls">
-      <ol>
-      {% if page|greater:1 %}
-        <li><span class="pv_nav_prev"><a href="{{ pv_url_prev }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_left.png" alt="vorherige Seite" /></a></span></li>
-      {% endif %}
-        <li>normal view</li>
-        <li>overview 3x3</li>
-        <li>overview 5x5</li>
-      {% if page|less:pages %}
-        <li><span class="pv_nav_next"><a href="{{ pv_url_next }}"><img src="{{ MEDIA_URL }}pdfviewer/images/arrow_right.png" alt="nächste Seite" /></a></span></li>
-      {% endif %}
-      </ol>
-    </div>
-    <div class="pv_thumbs" style="">
-      <ol>
-      {% for thumb in thumbs %}
-        <li><span class="pv_thumb{% ifequal thumb.page page %} pv_thumb_selected{% endifequal %}">{{ thumb.page }}<a href="{% url pdf_show id thumb.page %}"><img src="{{ thumb.url }}" style="height: 108px; width: 76px;" alt="Seite {{ thumb.page }} von {{ pages }}" /></a></span></li>
-      {% endfor %}
-      </ol>
+      <span class="pv_page"><img src="{{ image.url }}" style="height: 1076px; width: 760px;" alt="Seite {{ image.page }} von {{ pages }}" /></span>
     </div>
   </div>
 
@@ -70,24 +33,38 @@
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
 <script type="text/javascript">
-  var go_url_prev = function () {
+  var go_url = function(url) {
+    window.location.href = url;
+  };
+
+  var go_url_prev = function() {
   {% if page|greater:1 %}
-    window.location.href = '{{ pv_url_prev }}';
+    go_url('{{ pv_url_prev }}');
   {% endif %}
   };
 
-  var go_url_next = function () {
+  var go_url_next = function() {
   {% if page|less:pages %}
-    window.location.href = '{{ pv_url_next }}';
+    go_url('{{ pv_url_next }}');
   {% endif %}
   };
 
-  var go_url_first = function () {
-    window.location.href = '{{ pv_url_first }}';
+  var go_url_first = function() {
+    go_url('{{ pv_url_first }}');
   };
 
-  var go_url_last = function () {
-    window.location.href = '{{ pv_url_last }}';
+  var go_url_last = function() {
+    go_url('{{ pv_url_last }}');
+  };
+
+  var go_url_zoom = function(zoom_index) {
+    var zoom_list = [
+    {% for zoom in zoom_list %}
+      '{{ zoom }}'{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    ];
+    var zoom = zoom_list[zoom_index];
+    go_url('/pdfviewer/{{ id }}/{{ page }}/' + zoom + '/');
   };
 
   window.addEvent('domready', function(){
@@ -108,7 +85,10 @@
     $(document.body).addEvent('mousewheel', function(event) {
       event.stop();
       var wheel = event.wheel;
-      alert('mouse wheel: ' + wheel);
+      var new_zoom_index = parseInt({{ zoom_index }}) - parseInt(wheel);
+      if (new_zoom_index >= 0 && new_zoom_index < parseInt({{ zooms }})) {
+        go_url_zoom(new_zoom_index);
+      }
     });
 
     $(document.body).addEvent('contextmenu', function(event) {
