@@ -13,12 +13,13 @@ from ecs.workflow.utils import make_dot
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--format', dest='format', action='store', default='dot', help="The output format type. Either a valid fixture format or 'dot'."),
+        make_option('--doit', dest='do_it', action='store_true', default=False, help=''),
+        make_option('--format', dest='format', action='store', help="The output format type. Either a valid fixture format or 'dot'."),
         make_option('--indent', dest='indent', action='store', type='int', help="Indention output with INDENT spaces"),
     )
 
     @transaction.commit_manually
-    def handle(self, **options):
+    def handle(self, do_it=False, **options):
         try:
             call_command('workflow_sync', quiet=True)
             
@@ -69,10 +70,13 @@ class Command(BaseCommand):
             self.output(g, **options)
 
         finally:
-            transaction.rollback()
+            if not do_it:
+                transaction.rollback()
+            else:
+                transaction.commit()
             
-    def output(self, g, format='dot', **options):
+    def output(self, g, format=None, **options):
         if format == 'dot':
             print make_dot(g)
-        else:
-            call_command('dumpdata', 'workflow', **options)
+        elif format is not None:
+            call_command('dumpdata', 'workflow', format=format, **options)
