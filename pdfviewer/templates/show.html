@@ -85,7 +85,7 @@
     $(document.body).addEvent('mousewheel', function(event) {
       event.stop();
       var wheel = event.wheel;
-      var new_zoom_index = parseInt({{ zoom_index }}) - parseInt(wheel);
+      var new_zoom_index = {{ zoom_index }} - parseInt(wheel);
       if (new_zoom_index >= 0 && new_zoom_index < parseInt({{ zooms }})) {
         go_url_zoom(new_zoom_index);
       }
@@ -93,7 +93,16 @@
 
     $(document.body).addEvent('contextmenu', function(event) {
       event.stop();
-      alert('contextmenu');
+      var shift = event.shift;
+      var delta = 1;
+      if (shift) {
+        delta = -delta;
+      }
+      var new_zoom_index = ({{ zoom_index }} + delta) % {{ zooms }};
+      if (new_zoom_index < 0) {
+        new_zoom_index += {{ zooms }};
+      }
+      go_url_zoom(new_zoom_index); 
     });
 
    /* works on IE8, but not on firefox, body is probably not good anchor element for the event handler.. */
