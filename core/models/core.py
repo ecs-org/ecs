@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.importlib import import_module
 
 import reversion
 
@@ -66,17 +65,28 @@ class NotificationAnswer(models.Model):
         app_label = 'core'
 
 
-class MedicalCategory(models.Model):
+class ExpeditedReviewCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12)
-    users = models.ManyToManyField(User, related_name='medical_categories')
-    expedited_review = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.abbrev)
+
+
+class MedicalCategory(models.Model):
+    name = models.CharField(max_length=60)
+    abbrev = models.CharField(max_length=12)
+    users = models.ManyToManyField(User, related_name='medical_categories')
+
+    class Meta:
+        app_label = 'core'
+
+    def __unicode__(self):
+        return u'%s (%s)' % (self.name, self.abbrev)
+
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 if not reversion.is_registered(Amendment):
@@ -88,3 +98,4 @@ if not reversion.is_registered(Amendment):
     reversion.register(Vote) 
     reversion.register(VoteReview) 
     reversion.register(MedicalCategory)
+    reversion.register(ExpeditedReviewCategory)
