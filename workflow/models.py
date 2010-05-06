@@ -48,9 +48,18 @@ class NodeType(models.Model):
         
     def __unicode__(self):
         return self.name
+        
+class GraphManager(models.Manager):
+    def create(self, **kwargs):
+        model = kwargs.pop('model', None)
+        if model:
+            kwargs['content_type'] = ContentType.objects.get_for_model(model)
+        return super(GraphManager, self).create(**kwargs)
 
 class Graph(NodeType):
     auto_start = models.BooleanField()
+    
+    objects = GraphManager()
     
     def save(self, **kwargs):
         if not self.category:
@@ -65,34 +74,13 @@ class Graph(NodeType):
     def end_nodes(self):
         return self.nodes.filter(is_end_node=True)
         
-    def create_node(self, nodetype, start=False, end=False):
+    def create_node(self, nodetype, start=False, end=False, name=''):
         if isinstance(nodetype, NodeHandler):
             nodetype = nodetype.node_type
-        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end)
+        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name)
         
     def start_workflow(self, **kwargs):
         return Workflow.objects.create(graph=self, **kwargs)
-        
-    @property
-    def dot(self):
-        statements = ['N_Start [shape=point, label=Start]', 'N_End [shape=point, label=End]']
-        for node in self.nodes.all():
-            shape = 'diamond'
-            if node.node_type.category == NODE_TYPE_CATEGORY_ACTIVITY:
-                shape = 'box'
-            statements.append("N_%s [label=%s, shape=%s, style=rounded]" % (node.pk, node.node_type.name, shape))
-            if node.is_end_node:
-                statements.append('N_%s -> N_End' % node.pk)
-            if node.is_start_node:
-                statements.append('N_Start -> N_%s' % node.pk)
-        for node in self.nodes.all():
-            for edge in node.edges.all():
-                if edge.guard_id:
-                    label = ' [label=%s%s]' % (edge.negate and '~' or '', edge.guard_id)
-                else:
-                    label = ''
-                statements.append("N_%s -> N_%s%s" % (edge.from_node_id, edge.to_node_id, label))
-        return "graph{\n\t%s;\n}" % ";\n\t".join(statements)
 
 
 class Guard(models.Model):
@@ -105,6 +93,7 @@ class Guard(models.Model):
 
 
 class Node(models.Model):
+    name = models.CharField(max_length=100, blank=True)
     graph = models.ForeignKey(Graph, related_name='nodes')
     node_type = models.ForeignKey(NodeType)
     outputs = models.ManyToManyField('self', related_name='inputs', through='Edge', symmetrical=False)

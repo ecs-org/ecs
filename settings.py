@@ -174,8 +174,8 @@ INSTALLED_APPS = (
     'ecs.docstash',
     'ecs.groupchooser',
     'ecs.pdfviewer',
-    #'ecs.workflow',
-    #'ecs.tasks',
+    'ecs.workflow',
+    'ecs.tasks',
 )
 
 # use ghettoq as carrot backend, so we dont need any external brocker for testing

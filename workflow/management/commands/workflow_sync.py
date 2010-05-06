@@ -1,7 +1,9 @@
 import datetime
+from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 
 from ecs.workflow.models import NodeType, Guard, NODE_TYPE_CATEGORY_ACTIVITY, NODE_TYPE_CATEGORY_CONTROL
 
@@ -16,7 +18,25 @@ def _format_model(model):
     return "all models"
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--dry-run', dest='dry-run', action='store_true', default=False, help="Don't change the db, just output what would be done"),
+        make_option('--quiet', dest='quiet', action='store_true', default=False, help="Suppress any output")
+    )
+
     def handle(self, **options):
+        if options['dry-run']:
+            self.do_dryrun(**options)
+        else:
+            self.do_sync(**options)
+
+    @transaction.commit_manually
+    def do_dryrun(self, **options):
+        try:
+            self.do_sync(**options)
+        finally:
+            transaction.rollback()
+    
+    def do_sync(self, quiet=False, **options):
         from ecs.workflow.controller import registry
         guards = set()
         for handler in registry.guards:
@@ -27,7 +47,7 @@ class Command(BaseCommand):
             )
             guards.add(guard)
             registry._guard_map[guard.pk] = handler
-            if created:
+            if created and not quiet:
                 print "Created guard '%s' for %s" % (handler.name, _format_model(handler.model))
 
         Guard.objects.exclude(pk__in=[g.pk for g in guards]).delete()
@@ -42,7 +62,7 @@ class Command(BaseCommand):
             )
             node_types.add(node_type)
             registry._node_type_map[node_type.pk] = handler
-            if created:
+            if created and not quiet:
                 print "Created activity '%s' for %s" % (handler.name, _format_model(handler.model))
 
         for handler in registry.controls:
@@ -54,6 +74,6 @@ class Command(BaseCommand):
             )
             node_types.add(node_type)
             registry._node_type_map[node_type.pk] = handler
-            if created:
+            if created and not quiet:
                 print "Created control '%s' for %s" % (handler.name, _format_model(handler.model))
         NodeType.objects.exclude(pk__in=[nt.pk for nt in node_types]).delete()

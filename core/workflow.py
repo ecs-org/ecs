@@ -1,63 +1,113 @@
 from ecs import workflow
 from ecs.core.models import Submission, SubmissionForm
 
+@workflow.activity(model=Submission)
+def change_submission_form(token):
+    pass
+
 # UC-11
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def inspect_form_and_content_completeness(token):
     pass
 
 # UC-44
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def acknowledge_submission(token):
     pass
 
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def filter_retrospective_thesis(token):
     pass
 
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def review_retrospective_thesis(token):
     pass
 
 # FIXME: does this really differ from 'review_retrospective_thesis' ?
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def rereview_retrospective_thesis(token):
     pass
 
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def assign_expedited_review_class(token):
     pass
 
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def assign_internal_review_class(token):
     pass
 
 # UC-12
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def assign_internal_reviewer(token):
     pass
 
 # UC-12 / UC-15 (reassign)
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def assign_external_reviewer(token):
     pass
 
 # UC-16
-@workflow.activity(model=SubmissionForm)
+@workflow.activity(model=Submission)
 def review_external(token):
     pass
 
-@workflow.guard(model=SubmissionForm)
+# UC-42 (placeholder)
+@workflow.activity(model=Submission)
+def review_legal_and_patient_data(token):
+    pass
+    
+# UC-42 (placeholder)
+@workflow.activity(model=Submission)
+def review_statistical_issues(token):
+    pass
+
+# UC-41 (placeholder)
+@workflow.activity(model=Submission)
+def review_insurance_issues(token):
+    pass
+
+# UC-12
+@workflow.activity(model=Submission)
+def review_scientific_issues(token):
+    pass
+
+# UC-14
+@workflow.activity(model=Submission)
+def contact_external_reviewer(token):
+    pass
+
+@workflow.activity(model=Submission)
+def do_external_review(token):
+    pass
+
+
+@workflow.control(model=Submission)
+def reject(token):
+    pass
+
+@workflow.control(model=Submission)
+def accept(token):
+    pass
+    
+@workflow.guard(model=Submission)
+def is_classified_for_external_review(workflow):
+    pass
+
+@workflow.guard(model=Submission)
+def is_accepted(workflow):
+    pass
+
+@workflow.guard(model=Submission)
 def is_marked_as_thesis_by_submitter(workflow):
     return bool(workflow.data.project_type_education_context)
     
-@workflow.guard(model=SubmissionForm)
+@workflow.guard(model=Submission)
 def is_thesis_and_retrospective(workflow):
-    submission = workflow.data.submission
+    submission = workflow.data
     return submission.thesis and submission.retrospective
 
