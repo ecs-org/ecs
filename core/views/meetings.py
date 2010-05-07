@@ -6,7 +6,7 @@ from django.utils import simplejson
 from django.contrib.auth.models import User
 from ecs.core.views.utils import render
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation
-from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet
+from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
 from ecs.utils.timedelta import parse_timedelta
 from ecs.core.task_queue import optimize_timetable_task
 
@@ -23,6 +23,19 @@ def meeting_list(request):
     return render(request, 'meetings/list.html', {
         #.filter(start__gte=datetime.datetime.now())
         'meetings': Meeting.objects.order_by('start')
+    })
+    
+def schedule_submission(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    form = SubmissionSchedulingForm(request.POST or None)
+    if form.is_valid():
+        kwargs = form.cleaned_data.copy()
+        meeting = kwargs.pop('meeting')
+        timetable_entry = meeting.add_entry(submission=submission, duration=datetime.timedelta(minutes=7.5), **kwargs)
+        return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return render(request, 'submissions/schedule.html', {
+        'submission': submission,
+        'form': form,
     })
 
 def add_timetable_entry(request, meeting_pk=None):

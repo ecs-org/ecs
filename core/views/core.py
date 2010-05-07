@@ -250,7 +250,7 @@ def submission_pdf(request, submission_form_pk=None):
 
 def submission_form_list(request):
     return render(request, 'submissions/list.html', {
-        'submission_forms': SubmissionForm.objects.all().order_by('project_title'),
+        'submission_forms': SubmissionForm.objects.select_related('submission').order_by('project_title'),
         'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.core.create_submission_form'),
     })
 

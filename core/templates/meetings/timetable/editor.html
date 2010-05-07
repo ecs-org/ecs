@@ -35,6 +35,7 @@
             <div class="dragHandle">#{{ entry.pk }} {% if not running_optimization %}<span style="color:#ffffff">DRAG ME</span>{% endif %}</div>
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+                {{ entry.title }}
                 {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
                 {% if entry.is_break %}Pause{% endif %}
             </h3>

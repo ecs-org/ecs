@@ -13,7 +13,7 @@ class MeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id',)
+        exclude = ('optimization_task_id', 'submissions')
 
 class TimetableEntryForm(forms.Form):
     duration = forms.CharField(required=False)
@@ -36,4 +36,8 @@ class ConstraintForm(forms.ModelForm):
 UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=0, exclude = ('meeting', 'user'), can_delete=True, form=ConstraintForm)
 
 ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=True)
+
+class SubmissionSchedulingForm(forms.Form):
+    meeting = forms.ModelChoiceField(Meeting.objects.all())
+    title = forms.CharField(required=False)
     

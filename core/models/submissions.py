@@ -14,11 +14,18 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    
+    def get_most_recent_form(self):
+        # FIXME: pick the last accepted SubmissionForm
+        return self.forms.order_by('-pk')[0]
 
     @property
     def project_title(self):
-        # FIXME: pick the last SubmissionForm
-        return self.forms.order_by('-pk')[0].project_title
+        return self.get_most_recent_form().project_title
+        
+    @property
+    def german_project_title(self):
+        return self.get_most_recent_form().german_project_title
         
     def save(self, **kwargs):
         if not self.ec_number:
