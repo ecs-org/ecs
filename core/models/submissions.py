@@ -43,7 +43,7 @@ class SubmissionForm(models.Model):
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
 
     project_title = models.TextField()
-    eudract_number = models.CharField(max_length=40, null=True)
+    eudract_number = models.CharField(max_length=60, null=True)
 
     class Meta:
         app_label = 'core'
@@ -51,22 +51,22 @@ class SubmissionForm(models.Model):
     # 1.4 (via self.documents)
 
     # 1.5
-    sponsor_name = models.CharField(max_length=80, null=True)
+    sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contactname = models.CharField(max_length=80, null=True)
     sponsor_address1 = models.CharField(max_length=60, null=True)
     sponsor_address2 = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
-    sponsor_city = models.CharField(max_length=40, null=True)
+    sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
 
-    invoice_name = models.CharField(max_length=80, null=True, blank=True)
+    invoice_name = models.CharField(max_length=100, null=True, blank=True)
     invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
-    invoice_city = models.CharField(max_length=40, null=True, blank=True)
+    invoice_city = models.CharField(max_length=80, null=True, blank=True)
     invoice_phone = models.CharField(max_length=30, null=True, blank=True)
     invoice_fax = models.CharField(max_length=30, null=True, blank=True)
     invoice_email = models.EmailField(null=True, blank=True)
@@ -126,12 +126,12 @@ class SubmissionForm(models.Model):
     subject_childbearing = models.BooleanField()
     
     # 2.11
-    subject_duration = models.CharField(max_length=20)
-    subject_duration_active = models.CharField(max_length=20)
-    subject_duration_controls = models.CharField(max_length=20)
+    subject_duration = models.CharField(max_length=120)
+    subject_duration_active = models.CharField(max_length=200)
+    subject_duration_controls = models.CharField(max_length=200)
 
     # 2.12
-    subject_planned_total_duration = models.CharField(max_length=20)
+    subject_planned_total_duration = models.CharField(max_length=80)
 
     # 3a
     substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms')
@@ -139,14 +139,14 @@ class SubmissionForm(models.Model):
     substance_p_c_t_countries = models.ManyToManyField('countries.Country')
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
-    substance_p_c_t_application_type = models.CharField(max_length=40, null=True, blank=True)
+    substance_p_c_t_application_type = models.CharField(max_length=80, null=True, blank=True)
     substance_p_c_t_gcp_rules = models.NullBooleanField(blank=True)
     substance_p_c_t_final_report = models.NullBooleanField(blank=True)
     
     # 3b (via NonTestedUsedDrugs)
     
     # 4.x
-    medtech_product_name = models.CharField(max_length=80, null=True, blank=True)
+    medtech_product_name = models.CharField(max_length=210, null=True, blank=True)
     medtech_manufacturer = models.CharField(max_length=80, null=True, blank=True)
     medtech_certified_for_exact_indications = models.NullBooleanField(blank=True)
     medtech_certified_for_other_indications = models.NullBooleanField(blank=True)
@@ -213,17 +213,17 @@ class SubmissionForm(models.Model):
     study_plan_secondary_objectives = models.TextField(null=True, blank=True)
 
     # 8.2
-    study_plan_alpha = models.CharField(max_length=40)
-    study_plan_power = models.CharField(max_length=40)
-    study_plan_statalgorithm = models.CharField(max_length=40)
-    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=40)
-    study_plan_dropout_ratio = models.CharField(max_length=40)
+    study_plan_alpha = models.CharField(max_length=80)
+    study_plan_power = models.CharField(max_length=80)
+    study_plan_statalgorithm = models.CharField(max_length=50)
+    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100)
+    study_plan_dropout_ratio = models.CharField(max_length=80)
     
     # 8.3
     study_plan_population_intention_to_treat  = models.BooleanField()
     study_plan_population_per_protocol  = models.BooleanField()
-    study_plan_abort_crit = models.CharField(max_length=40)
-    study_plan_planned_statalgorithm = models.CharField(max_length=40)
+    study_plan_abort_crit = models.CharField(max_length=200)
+    study_plan_planned_statalgorithm = models.TextField(null=True, blank=True)
 
     # 8.4
     study_plan_dataquality_checking = models.TextField()
@@ -235,13 +235,13 @@ class SubmissionForm(models.Model):
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
     study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
-    study_plan_dataprotection_dvr = models.CharField(max_length=12, blank=True)
+    study_plan_dataprotection_dvr = models.CharField(max_length=80, blank=True)
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
     submitter_name = models.CharField(max_length=80)
-    submitter_organisation = models.CharField(max_length=80)
-    submitter_jobtitle = models.CharField(max_length=80)
+    submitter_organisation = models.CharField(max_length=180)
+    submitter_jobtitle = models.CharField(max_length=100)
     submitter_is_coordinator = models.BooleanField()
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
