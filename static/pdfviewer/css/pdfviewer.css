@@ -23,21 +23,6 @@
   font-size: 14pt;
 }
 
-.pv_nav_prev img {
-  height: 16px;
-  width: 16px;
-  border: none;
-  margin-right: 10px;
-  cursor: pointer;
-}
-.pv_nav_next img {
-  height: 16px;
-  width: 16px;
-  border: none;
-  margin-left: 10px;
-  cursor: pointer;
-}
-
 .pv_pages {
   float: left;
   color: black;
@@ -53,52 +38,4 @@
   margin-right: 10px;
   margin-top: 5px;
   margin-bottom: 10px;
-}
-
-.pv_page_selected img {
-  border-width: medium;
-  border-style: solid;
-  border-color: blue;
-}
-
-.pv_sidebar {
-  float: right;
-  color: black;
-  background: white;
-}
-
-.pv_controls {
-  color: black;
-  background: white;
-  border-width: thin;
-  border-style: solid;
-  border-color: black;
-}
-
-.pv_thumbs {
-  /* height set by js */
-  color: black;
-  background: #dfd;
-}
-
-.pv_thumb img {
-  /* height, width set by js */
-  border-width: thin;
-  border-style: solid;
-  border-color: black;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 10px;
-}
-
-.pv_thumb_selected img {
-  border-width: medium;
-  border-style: solid;
-  border-color: blue;
-}
-
-.pv_link a {
-  text-decoration: none;
-  color: #349ff8;
 }
