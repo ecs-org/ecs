@@ -37,6 +37,9 @@ def show(request, id=1, page=1, zoom='1'):
     zoom_index = zoom_list.index(zoom)
     zooms = len(zoom_list)
 
+    height = 1076
+    width = 760
+
     images = [
         { 'page': 1, 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_512.png' }, 
         { 'page': 2, 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_511.png' },
@@ -52,5 +55,7 @@ def show(request, id=1, page=1, zoom='1'):
         'zoom_list': zoom_list,
         'zoom_index': zoom_index,
         'zooms': zooms,
+        'height': height,
+        'width': width,
         'image': image,
     })

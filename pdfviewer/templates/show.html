@@ -25,7 +25,7 @@
       <span class="pv_title">ID {{ id }}, Seite {{ page }} ({{ pages }} Seiten), Zoom {{ zoom }}</span>
     </div>
     <div class="pv_pages">
-      <span class="pv_page"><img src="{{ image.url }}" style="height: 1076px; width: 760px;" alt="Seite {{ image.page }} von {{ pages }}" /></span>
+      <span class="pv_page"><img src="{{ image.url }}" style="height: {{ height }}px; width: {{ width }}px;" alt="Seite {{ image.page }} von {{ pages }}" /></span>
     </div>
   </div>
 
@@ -79,7 +79,7 @@
     $(document.body).getElements('.pv_page').addEvent('click', function(event) {
       event.stop();
       var x = event.client.x;
-      var mid_x = 12 + 760 / 2;
+      var mid_x = {{ width }} / 2 + 12;
       if (x < mid_x) {
         go_url_prev();
         return;
