@@ -13,6 +13,7 @@ urlpatterns = patterns('',
 
     url(r'^core/', include('core.urls')),
     url(r'^docstash/', include('docstash.urls')),
+    url(r'^tasks/backlog/$', 'ecs.tasks.views.task_backlog'),
     url(r'^accounts/login/$', forceauth.exempt(login), {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
 
