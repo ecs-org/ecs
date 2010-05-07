@@ -22,10 +22,10 @@
 
   <div class="pv_main" style="">
     <div class="pv_header" style="">
-      <span class="pv_title">ID {{ id }}, Seite {{ page }} ({{ pages }} Seiten), Zoom {{ zoom }}</span>
+      <span class="pv_title">ID {{ id }}, Seite {{ page }} von {{ pages }}, Zoom {{ zoom }} ({{ zoom_pages }})</span>
     </div>
     <div class="pv_pages">
-      <span class="pv_page"><img src="{{ image.url }}" style="height: {{ height }}px; width: {{ width }}px;" alt="Seite {{ image.page }} von {{ pages }}" /></span>
+      <span class="pv_page"><img src="{{ image.url }}" style="height: {{ height }}px; width: {{ width }}px;" alt="Seite {{ page }} von {{ pages }}" /></span>
     </div>
   </div>
 
@@ -38,14 +38,16 @@
   };
 
   var go_url_prev = function() {
-  {% if page|greater:1 %}
-    go_url('{{ pv_url_prev }}');
+  {% if page|greater:prev_boundary %}
+    go_url('{% url pdf_show id page|add:zoom_pages_neg zoom %}');
   {% endif %}
   };
 
   var go_url_next = function() {
-  {% if page|less:pages %}
-    go_url('{{ pv_url_next }}');
+  {% if page|less:next_boundary %}
+    go_url('{% url pdf_show id page|add:zoom_pages zoom %}');
+  {% else %}
+    go_url_last()
   {% endif %}
   };
 
