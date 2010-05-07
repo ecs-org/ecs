@@ -1,0 +1,20 @@
+{% extends "core.html" %}
+
+{% block content %}
+<table>
+{% for task in tasks %}
+    <tr>
+        <td>{{ task.task_type }}</td>
+        <td>{{ task.workflow_token }}</td>
+        <td>{{ task.data }}</td>
+        <td>{{ task.created_at }}</td>
+        <td>{{ task.created_by }}</td>
+        <td>{{ task.closed_at }}</td>
+        <td>{{ task.closed_by }}</td>
+        <td>{{ task.assigned_at }}</td>
+        <td>{{ task.assigned_to }}</td>
+        <td>{{ task.accepted }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}
