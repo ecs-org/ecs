@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
+from django.utils.safestring import mark_safe
 
 from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
@@ -50,6 +51,14 @@ class SubmissionEditorForm(forms.ModelForm):
         model = Submission
 
 class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        readonly = kwargs.pop('readonly', False)
+        super(SubmissionFormForm, self).__init__(*args, **kwargs)
+        if readonly:
+            for field in self.fields.itervalues():
+                field.widget.attrs['readonly'] = 'readonly'
+                field.widget.attrs['disabled'] = 'disabled'
+
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)

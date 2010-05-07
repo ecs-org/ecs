@@ -42,6 +42,7 @@ def get_submission_formsets(data=None, instance=None):
     formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or None, prefix='investigatoremployee')
     return formsets
 
+
 def copy_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     
@@ -57,7 +58,22 @@ def copy_submission_form(request, submission_form_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
-# submissions
+def readonly_submission_form(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
+    formsets = get_submission_formsets(instance=submission_form)
+    documents = submission_form.documents.all().order_by('pk')
+    
+    context = {
+        'form': form,
+        'tabs': SUBMISSION_FORM_TABS,
+        'documents': documents,
+    }
+    for prefix, formset in formsets.iteritems():
+        context['%s_formset' % prefix] = formset
+    return render(request, 'submissions/form.html', context)
+
+
 @with_docstash_transaction
 def create_submission_form(request):
     if request.method == 'GET' and request.docstash.value:
@@ -118,6 +134,7 @@ def create_submission_form(request):
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
     return render(request, 'submissions/form.html', context)
+
 
 def view_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
