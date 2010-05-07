@@ -21,7 +21,8 @@ def create_meeting(request):
     
 def meeting_list(request):
     return render(request, 'meetings/list.html', {
-        'meetings': Meeting.objects.filter(start__gte=datetime.datetime.now()).order_by('start')
+        #.filter(start__gte=datetime.datetime.now())
+        'meetings': Meeting.objects.order_by('start')
     })
 
 def add_timetable_entry(request, meeting_pk=None):

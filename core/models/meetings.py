@@ -109,9 +109,13 @@ class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)
     optimization_task_id = models.TextField(null=True)
+    submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     
     class Meta:
         app_label = 'core'
+        
+    def __unicode__(self):
+        return "%s: %s" % (self.start, self.title)
         
     @cached_property
     def duration(self):
@@ -305,7 +309,7 @@ class TimetableEntry(models.Model):
     def medical_categories(self):
         if not self.submission:
             return MedicalCategory.objects.none()
-        return MedicalCategory.objects.filter(submission__timetable_entries=self)
+        return MedicalCategory.objects.filter(submissions__timetable_entries=self)
         
     @cached_property
     def users_by_medical_category(self):

@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 
-from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
@@ -44,6 +44,10 @@ class CompletionReportNotificationForm(ModelFormPickleMixin):
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
 
 ## submissions ##
+
+class SubmissionEditorForm(forms.ModelForm):
+    class Meta:
+        model = Submission
 
 class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
     substance_preexisting_clinical_tries = NullBooleanField(required=False)

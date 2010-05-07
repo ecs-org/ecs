@@ -10,7 +10,8 @@ from django.conf import settings
 
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, Submission, SubmissionForm, Investigator, MedicalCategory
-from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet
+from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS, NOTIFICATION_FORM_TABS
 from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
@@ -252,4 +253,17 @@ def submission_form_list(request):
         'submission_forms': SubmissionForm.objects.all().order_by('project_title'),
         'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.core.create_submission_form'),
     })
+
+
+def edit_submission(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
     
+    form = SubmissionEditorForm(request.POST or None, instance=submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
+    
+    return render(request, 'submissions/editor.html', {
+        'form': form,
+        'submission': submission,
+    })

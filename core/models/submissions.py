@@ -7,13 +7,13 @@ class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
 
     # medical categories
-    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions')
+    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
     expedited = models.NullBooleanField()
-    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions')
+    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True)
+    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
 
     @property
     def project_title(self):
