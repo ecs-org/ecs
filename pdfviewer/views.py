@@ -43,8 +43,8 @@ class ImageSet(object):
     def has_zoom(self, zoom):
         return self.zoom_list.count(zoom) > 0
 
-    def get_pages(self, zoom):
-        return len(self.images[zoom])
+    def get_pages(self):
+        return len(self.images['1'])
 
     def get_image(self, page, zoom):
         images = self.images[zoom]
@@ -75,7 +75,7 @@ def show(request, id=1, page=1, zoom='1'):
     zoom_pages = image_set.zoom_pages[zoom_index]
     zoom_pages_neg = -zoom_pages
 
-    pages = image_set.get_pages('1')
+    pages = image_set.get_pages()
     if pages == 0:
         return HttpResponse("Error: no pages found for parameter id = '%s'!" % id)
 
@@ -85,7 +85,8 @@ def show(request, id=1, page=1, zoom='1'):
     prev_boundary = zoom_pages
     next_boundary = pages - zoom_pages + 1
 
-    image = image_set.get_image(page, zoom)
+    zoom_page = (page - 1) / zoom_pages + 1
+    image = image_set.get_image(zoom_page, zoom)
 
     return render(request, 'show.html', {
         'id': id,
