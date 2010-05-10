@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.contrib.auth.models import User
 
 import reversion
 
@@ -14,6 +15,8 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    
+    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     
     def get_most_recent_form(self):
         # FIXME: pick the last accepted SubmissionForm
