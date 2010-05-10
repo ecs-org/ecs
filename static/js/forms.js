@@ -499,7 +499,7 @@
                 formSelector: '.investigator_tab',
                 removeButtonInject: 'top',
                 addButton: false,
-                removeButton: false,
+                removeButton: !readonly,
                 addButtonText: 'Weiteres Zentrum Hinzufügen',
                 removeButtonText: 'Dieses Zentrum Entfernen',
                 onFormSetup: function(form, index, added, formset){

@@ -127,17 +127,19 @@
                         </thead>
                         <tbody>
                         {% for form in investigatoremployee_formset.forms %}
-                            {% ifequal form.investigator_index.data|default:"0" investigator_index|stringformat:'s' %}
+                            {% ifequal form|form_value:'investigator_index'|default:0|add:0 investigator_index %}
                             <tr class="form">
                                 {% include "forms/tables/row.html" %}
                             </tr>
                             {% endifequal %}
                         {% empty %}
-                            {% with investigatoremployee_formset|empty_form as form %}
-                                <tr class="form template">
-                                    {% include "forms/tables/row.html" %}
-                                </tr>
-                            {% endwith %}
+                            {% if not readonly %}
+                                {% with investigatoremployee_formset|empty_form as form %}
+                                    <tr class="form template">
+                                        {% include "forms/tables/row.html" %}
+                                    </tr>
+                                {% endwith %}
+                            {% endif %}
                         {% endfor%}
                         </tbody>
                     </table>

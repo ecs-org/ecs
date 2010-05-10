@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
+from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.safestring import mark_safe
 
 from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
@@ -135,31 +136,34 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', Measure.objects.none())
-        super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
+class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
-MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=MeasureForm)
-RoutineMeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=RoutineMeasureForm)
+MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=1)
+RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=1)
 
+class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = Investigator
+        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
 
-class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', Investigator.objects.none())
-        super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
+class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
-InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
-                                           fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
+InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1) 
 
-class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
-        super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)
+class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
+    investigator_index = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
 
-    def add_fields(self, form, index):
-        super(BaseInvestigatorEmployeeFormSet, self).add_fields(form, index)
-        form.fields['investigator_index'] = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
+    class Meta:
+        model = InvestigatorEmployee
+        exclude = ('submission',)
 
-InvestigatorEmployeeFormSet = modelformset_factory(InvestigatorEmployee, formset=BaseInvestigatorEmployeeFormSet, extra=1, exclude = ('submission',))
+class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+
+InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 

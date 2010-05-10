@@ -17,6 +17,9 @@ class ReadonlyFormMixin(object):
 class ReadonlyFormSetMixin(object):
     def __init__(self, *args, **kwargs):
         readonly = kwargs.pop('readonly', False)
+        extra = kwargs.pop('extra', None)
+        if extra is not None:
+            self.extra = extra
         super(ReadonlyFormSetMixin, self).__init__(*args, **kwargs)
         if readonly:
             for form in self.forms:

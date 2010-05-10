@@ -27,19 +27,24 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     ]
     formsets = {}
     for name, formset_cls, initial in formset_classes:
-        kwargs = {'prefix': name, 'readonly': readonly}
+        kwargs = {'prefix': name, 'readonly': readonly, 'initial': []}
+        if readonly:
+            kwargs['extra'] = 0
         if instance:
             kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
     
     employees = []
     if instance:
-        for index, investigator in enumerate(formsets['investigator'].queryset):
-            for employee in investigator.investigatoremployee_set.all():
-                employee_dict = model_to_dict(employee, exclude=('id',))
+        for index, investigator in enumerate(instance.investigators.order_by('id')):
+            for employee in investigator.investigatoremployee_set.order_by('id'):
+                employee_dict = model_to_dict(employee, exclude=('id', 'submission'))
                 employee_dict['investigator_index'] = index
                 employees.append(employee_dict)
-    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or None, prefix='investigatoremployee')
+    kwargs = {'prefix': 'investigatoremployee', 'readonly': readonly}
+    if readonly:
+        kwargs['extra'] = 0
+    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or [], **kwargs)
     return formsets
 
 
@@ -68,6 +73,7 @@ def readonly_submission_form(request, submission_form_pk=None):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
+        'readonly': True,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
@@ -108,6 +114,7 @@ def create_submission_form(request):
             submission = request.docstash.get('submission') or Submission.objects.create()
             submission_form.submission = submission
             submission_form.save()
+            form.save_m2m()
             submission_form.documents = request.docstash['documents']
             
             formsets = formsets.copy()

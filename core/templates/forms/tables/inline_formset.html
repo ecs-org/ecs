@@ -29,11 +29,13 @@
         {% include "forms/tables/row.html" %}
     </tr>
     {% empty %}
-        {% with formset|empty_form as form %}
-            <tr class="form template">
-                {% include "forms/tables/row.html" %}
-            </tr>
-        {% endwith %}
+        {% if not readonly %}
+            {% with formset|empty_form as form %}
+                <tr class="form template">
+                    {% include "forms/tables/row.html" %}
+                </tr>
+            {% endwith %}
+        {% endif %}
     {% endfor%}
     </tbody>
 </table>
