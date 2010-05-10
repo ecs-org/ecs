@@ -75,7 +75,7 @@ def show(request, id=1, page=1, zoom='1'):
         return HttpResponse("Error: invalid parameter zoom = '%s'! Choose from %s" % (zoom, image_set.zoom_list))
     zoom_index = image_set.zoom_list.index(zoom)
     zoom_pages = image_set.zoom_pages[zoom_index]
-    zoom_pages_neg = -zoom_pages
+    zoom_list = JSONEncoder().encode(image_set.zoom_list);
 
     pages = image_set.get_pages()
     if pages == 0:
@@ -93,7 +93,7 @@ def show(request, id=1, page=1, zoom='1'):
         'zoom': zoom,
         'zoom_index': zoom_index,
         'zoom_pages': zoom_pages,
-        'zoom_list': image_set.zoom_list,
+        'zoom_list': zoom_list,
         'zooms': image_set.zooms,
         'height': image_set.height,
         'width': image_set.width,

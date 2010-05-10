@@ -37,6 +37,9 @@
         this.pages = {{ pages }};
         this.zoom = '{{ zoom }}';
         this.zoom_pages = {{ zoom_pages }};
+        this.zoom_list = {% autoescape off %}{{ zoom_list }}{% endautoescape %};
+        this.zooms = {{ zooms }};
+        this.zoom_index = {{ zoom_index }};
         this.width = {{ width }};
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
@@ -113,7 +116,16 @@
         }
         this.page = this.pages;
         this.set_image();
-      }
+      },
+
+      set_zoom: function(zoom_index) {
+        if (zoom_index < 0 || zoom_index >= this.zooms) {
+          return;
+        }
+        this.zoom = this.zoom_list[zoom_index];
+        this.zoom_index = zoom_index;
+        this.set_image();
+      },
 
     });
 
@@ -156,6 +168,13 @@
         alert('exit somehow..');
         return;
       }
+    });
+
+    $(document.body).addEvent('mousewheel', function(event) {
+      event.stop();
+      var wheel = event.wheel;
+      var new_zoom_index = pdf_viewer.zoom_index - parseInt(wheel);
+      pdf_viewer.set_zoom(new_zoom_index);
     });
 
   });
