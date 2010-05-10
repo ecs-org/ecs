@@ -26,14 +26,47 @@ class ImageSet(object):
             self.width = 760
             self.images = {
                 '1': {
-                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_512.png' },
-                    2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_511.png' },
+                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_51_0002.png' },
+                    2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_51_0001.png' },
                 },
                 '3x3': {
-                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_512.png' },
+                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_51_0002.png' },
                 },
                 '5x5': {
-                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_512.png' },
+                    1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_51_0002.png' },
+                },
+            }
+        elif id == 2:
+            self.zoom_list = [ '1', '3x3', '5x5' ]
+            self.zoom_pages = [ 1, 9, 25 ]
+            self.height = 1076
+            self.width = 760
+            self.images = {
+                '1': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
+                     2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0002.png' },
+                     3: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0003.png' },
+                     4: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0004.png' },
+                     5: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0005.png' },
+                     6: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0006.png' },
+                     7: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0007.png' },
+                     8: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0008.png' },
+                     9: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0009.png' },
+                    10: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0010.png' },
+                    11: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0011.png' },
+                    12: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0012.png' },
+                    13: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0013.png' },
+                    14: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0014.png' },
+                    15: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0015.png' },
+                    16: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0016.png' },
+                    17: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0017.png' },
+                    18: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0018.png' },
+                },
+                '3x3': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
+                },
+                '5x5': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
                 },
             }
         else:
