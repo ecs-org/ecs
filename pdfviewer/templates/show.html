@@ -53,9 +53,16 @@
 
       set_image: function() {
         var pv_page = $('pv_page');
-        // TODO check parameters zoom, page
         var z = this.images[this.zoom];
+        if (!$defined(z)) {
+          alert('error: no data for zoom: [' + this.zoom + ']');
+          return;
+        }
         var p = z[this.page];
+        if (!$defined(p)) {
+          alert('error: no data for zoom: [' + this.zoom + '], page: [' + this.page + ']');
+          return;
+        }
         var src = p['url'];
         var alt = 'Seite ' + this.page + ' von ' + this.pages;
         var img = new Element('img', { src: src, width: this.width, height: this.height, alt: alt });
