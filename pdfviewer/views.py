@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
+from json import JSONEncoder
+
 from ecs.core.views.utils import render, redirect_to_next_url
 
 
@@ -88,6 +90,8 @@ def show(request, id=1, page=1, zoom='1'):
     zoom_page = (page - 1) / zoom_pages + 1
     image = image_set.get_image(zoom_page, zoom)
 
+    images = JSONEncoder().encode(image_set.images)
+
     return render(request, 'show.html', {
         'id': id,
         'page': page,
@@ -103,4 +107,6 @@ def show(request, id=1, page=1, zoom='1'):
         'height': image_set.height,
         'width': image_set.width,
         'image': image,
+
+        'images': images,
     })
