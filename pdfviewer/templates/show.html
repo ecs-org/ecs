@@ -177,6 +177,20 @@
       pdf_viewer.set_zoom(new_zoom_index);
     });
 
+    $(document.body).addEvent('contextmenu', function(event) {
+      event.stop();
+      var shift = event.shift;
+      var delta = 1;
+      if (shift) {
+        delta = -delta;
+      }
+      var new_zoom_index = (pdf_viewer.zoom_index + delta) % pdf_viewer.zooms;
+      if (new_zoom_index < 0) {
+        new_zoom_index += pdf_viewer.zooms;
+      }
+      pdf_viewer.set_zoom(new_zoom_index); 
+    });
+
   });
 </script>
 
