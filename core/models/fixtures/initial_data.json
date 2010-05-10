@@ -13095,6 +13095,755 @@
       "sponsor_address2": "W\u00e4hringer G\u00fcrtel 18-20, 1090 Wien", 
       "german_statistical_info": "Da es sich um eine Pilotstudie handelt, ist eine formale Fallzahlberechnung schwierig. In den Kontrollen wird bei ca. 10% ein Auftreten von Hitzeintoleranz erwartet. Bei einer Fallzahl von 30 Kontrollen und 60 Patienten kann man mit einem exakten Test nach Fisher (zweiseitiges Signifikanzniveau 0,05) mit 80 % Power einen Unterschied zwischen einem Anteil in der Kontrollgruppe von 0,1 und einem Anteil in der Patientengruppe von 0,4 entdecken. Aus der klinischen Erfahrung wird bei mehr als  50 % der Patienten ein Auftreten von Hitzeintoleranz erwartet."
     }
+    },
+    {
+      "pk": 1, 
+      "model": "core.meeting", 
+      "fields": {
+        "start": "2010-05-10 15:31:47", 
+        "optimization_task_id": null, 
+        "title": "mai meeting"
+      }
+    },
+    {
+      "pk": 1, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 2, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 0
+      }
+    }, 
+    {
+      "pk": 2, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 3, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 1
+      }
+    }, 
+    {
+      "pk": 3, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 5, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 2
+      }
+    }, 
+    {
+      "pk": 4, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 6, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 3
+      }
+    }, 
+    {
+      "pk": 5, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 7, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 4
+      }
+    }, 
+    {
+      "pk": 6, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 8, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 5
+      }
+    }, 
+    {
+      "pk": 7, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 9, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 6
+      }
+    }, 
+    {
+      "pk": 8, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 10, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 7
+      }
+    }, 
+    {
+      "pk": 9, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 11, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 8
+      }
+    }, 
+    {
+      "pk": 10, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 13, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 9
+      }
+    }, 
+    {
+      "pk": 11, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 12, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 10
+      }
+    }, 
+    {
+      "pk": 12, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 14, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 11
+      }
+    }, 
+    {
+      "pk": 13, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 15, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 12
+      }
+    }, 
+    {
+      "pk": 14, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 16, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 13
+      }
+    }, 
+    {
+      "pk": 15, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 17, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 14
+      }
+    }, 
+    {
+      "pk": 16, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 19, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 15
+      }
+    }, 
+    {
+      "pk": 17, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 21, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 16
+      }
+    }, 
+    {
+      "pk": 18, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 25, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 17
+      }
+    }, 
+    {
+      "pk": 19, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 26, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 18
+      }
+    }, 
+    {
+      "pk": 20, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 28, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 19
+      }
+    }, 
+    {
+      "pk": 21, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 29, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 20
+      }
+    }, 
+    {
+      "pk": 22, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 30, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 21
+      }
+    }, 
+    {
+      "pk": 23, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 31, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 22
+      }
+    }, 
+    {
+      "pk": 24, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 32, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 23
+      }
+    }, 
+    {
+      "pk": 25, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 33, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 24
+      }
+    }, 
+    {
+      "pk": 26, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 34, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 25
+      }
+    }, 
+    {
+      "pk": 27, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 35, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 26
+      }
+    }, 
+    {
+      "pk": 28, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 36, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 27
+      }
+    }, 
+    {
+      "pk": 29, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 37, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 28
+      }
+    }, 
+    {
+      "pk": 30, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 38, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 29
+      }
+    }, 
+    {
+      "pk": 31, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 48, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 30
+      }
+    }, 
+    {
+      "pk": 32, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 49, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 31
+      }
+    }, 
+    {
+      "pk": 33, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 40, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 32
+      }
+    }, 
+    {
+      "pk": 34, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 41, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 33
+      }
+    }, 
+    {
+      "pk": 35, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 42, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 34
+      }
+    }, 
+    {
+      "pk": 36, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 44, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 35
+      }
+    }, 
+    {
+      "pk": 37, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 45, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 36
+      }
+    }, 
+    {
+      "pk": 38, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 46, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 37
+      }
+    }, 
+    {
+      "pk": 39, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 47, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 38
+      }
+    }, 
+    {
+      "pk": 40, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 52, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 39
+      }
+    }, 
+    {
+      "pk": 41, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 53, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 40
+      }
+    }, 
+    {
+      "pk": 42, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 54, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 41
+      }
+    }, 
+    {
+      "pk": 43, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 56, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 42
+      }
+    }, 
+    {
+      "pk": 44, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 57, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 43
+      }
+    }, 
+    {
+      "pk": 45, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 58, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 44
+      }
+    }, 
+    {
+      "pk": 46, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 60, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 45
+      }
+    }, 
+    {
+      "pk": 47, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 61, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 46
+      }
+    }, 
+    {
+      "pk": 48, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 63, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 47
+      }
+    }, 
+    {
+      "pk": 49, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 64, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 48
+      }
+    }, 
+    {
+      "pk": 50, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 65, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 49
+      }
+    }, 
+    {
+      "pk": 51, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 66, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 50
+      }
+    }, 
+    {
+      "pk": 52, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 67, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 51
+      }
+    }, 
+    {
+      "pk": 53, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 68, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 52
+      }
+    }, 
+    {
+      "pk": 54, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 69, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 53
+      }
+    }, 
+    {
+      "pk": 55, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 70, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 54
+      }
+    }, 
+    {
+      "pk": 56, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 72, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 55
+      }
+    }, 
+    {
+      "pk": 57, 
+      "model": "core.timetableentry", 
+      "fields": {
+        "is_break": false, 
+        "submission": 73, 
+        "title": "", 
+        "optimal_start": null, 
+        "duration_in_seconds": 450, 
+        "meeting": 1, 
+        "timetable_index": 56
+      }
     }
-
 ]
