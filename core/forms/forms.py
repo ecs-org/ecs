@@ -9,6 +9,7 @@ from ecs.core.models import Notification, CompletionReportNotification, Progress
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
+from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 
 
 def _unpickle(f, args, kwargs):
@@ -50,14 +51,7 @@ class SubmissionEditorForm(forms.ModelForm):
     class Meta:
         model = Submission
 
-class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        readonly = kwargs.pop('readonly', False)
-        super(SubmissionFormForm, self).__init__(*args, **kwargs)
-        if readonly:
-            for field in self.fields.itervalues():
-                field.widget.attrs['readonly'] = 'readonly'
-                field.widget.attrs['disabled'] = 'disabled'
+class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
 
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
@@ -117,14 +111,14 @@ DocumentFormSet = modelformset_factory(Document, formset=BaseDocumentFormSet, ex
 
 ## ##
 
-class BaseForeignParticipatingCenterFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
         super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
 
 ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=1, exclude=('submission_form',))
 
-class BaseNonTestedUsedDrugFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
         super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
@@ -141,7 +135,7 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Measure.objects.none())
         super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
@@ -150,7 +144,7 @@ MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra
 RoutineMeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=RoutineMeasureForm)
 
 
-class BaseInvestigatorFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Investigator.objects.none())
         super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
@@ -158,7 +152,7 @@ class BaseInvestigatorFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
 InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
                                            fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
 
-class BaseInvestigatorEmployeeFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
         super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)

@@ -16,7 +16,7 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 
 
-def get_submission_formsets(data=None, instance=None):
+def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
         # (prefix, formset_class, callable SubmissionForm -> initial data)
         ('measure', MeasureFormSet, lambda sf: sf.measures.filter(category='6.1')),
@@ -27,7 +27,7 @@ def get_submission_formsets(data=None, instance=None):
     ]
     formsets = {}
     for name, formset_cls, initial in formset_classes:
-        kwargs = {'prefix': name}
+        kwargs = {'prefix': name, 'readonly': readonly}
         if instance:
             kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
@@ -61,7 +61,7 @@ def copy_submission_form(request, submission_form_pk=None):
 def readonly_submission_form(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
-    formsets = get_submission_formsets(instance=submission_form)
+    formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
     
     context = {
@@ -71,7 +71,7 @@ def readonly_submission_form(request, submission_form_pk=None):
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
-    return render(request, 'submissions/form.html', context)
+    return render(request, 'submissions/readonly_form.html', context)
 
 
 @with_docstash_transaction
