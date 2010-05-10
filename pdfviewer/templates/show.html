@@ -39,16 +39,22 @@
         this.zoom_pages = {{ zoom_pages }};
         this.width = {{ width }};
         this.height = {{ height }};
-        this.update_title();
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.set_image();
+        this.prev_boundary = this.zoom_pages;
+        this.next_boundary = this.pages - this.zoom_pages + 1;
       },
 
       update_title: function() {
         var title = $('pv_title');
         var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages + ', Zoom ' + this.zoom + ' (' + this.zoom_pages + ')';
-        var title_info = new Element('span', { id: 'pv_title_info', html: info });
-        title.grab(title_info);
+        if (title.hasChild('pv_title_info')) {
+          var title_info = $('pv_title_info');
+          title_info.setProperties({ html: info });
+        } else {
+          var title_info = new Element('span', { id: 'pv_title_info', html: info });
+          title.grab(title_info);
+        }
       },
 
       set_image: function() {
@@ -65,13 +71,66 @@
         }
         var src = p['url'];
         var alt = 'Seite ' + this.page + ' von ' + this.pages;
-        var img = new Element('img', { src: src, width: this.width, height: this.height, alt: alt });
-        pv_page.grab(img);
+        {% comment %}Here we could add some cache of loaded images{% endcomment %}
+        if (pv_page.hasChild('pv_img')) {
+          var img = $('pv_img');
+          img.setProperties({ src: src, alt: alt });
+        } else {
+          var img = new Element('img', { id: 'pv_img', src: src, width: this.width, height: this.height, alt: alt });
+          pv_page.grab(img);
+        }
+        this.update_title();
+      },
+
+      set_prev: function() {
+        if (this.page <= this.prev_boundary) {
+          return;
+        }
+        this.page -= this.zoom_pages;
+        this.set_image();
+      },
+
+      set_next: function() {
+        if (this.page >= this.next_boundary) {
+          this.set_last();
+          return;
+        }
+        this.page += this.zoom_pages;
+        this.set_image();
+      },
+
+      set_first: function() {
+        if (this.page == 1) {
+          return;
+        }
+        this.page = 1;
+        this.set_image();
+      },
+
+      set_last: function() {
+        if (this.page = this.pages) {
+          return;
+        }
+        this.page = this.pages;
+        this.set_image();
       }
 
     });
 
     var pdf_viewer = new PdfViewer();
+
+    $(document.body).getElements('.pv_page').addEvent('click', function(event) {
+      event.stop();
+      var x = event.client.x;
+      var mid_x = pdf_viewer.width / 2 + 12;
+      if (x < mid_x) {
+        pdf_viewer.set_prev();
+        return;
+      } else {
+        pdf_viewer.set_next();
+        return;
+      }
+    });
 
   });
 </script>

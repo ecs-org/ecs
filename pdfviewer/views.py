@@ -84,12 +84,6 @@ def show(request, id=1, page=1, zoom='1'):
     if page < 1 or page > pages:
         return HttpResponse("Error: no page = '%s' at zoom = '%s'!" % (page, zoom))
 
-    prev_boundary = zoom_pages
-    next_boundary = pages - zoom_pages + 1
-
-    zoom_page = (page - 1) / zoom_pages + 1
-    image = image_set.get_image(zoom_page, zoom)
-
     images = JSONEncoder().encode(image_set.images)
 
     return render(request, 'show.html', {
@@ -99,14 +93,9 @@ def show(request, id=1, page=1, zoom='1'):
         'zoom': zoom,
         'zoom_index': zoom_index,
         'zoom_pages': zoom_pages,
-        'zoom_pages_neg': zoom_pages_neg,
-        'prev_boundary': prev_boundary,
-        'next_boundary': next_boundary,
         'zoom_list': image_set.zoom_list,
         'zooms': image_set.zooms,
         'height': image_set.height,
         'width': image_set.width,
-        'image': image,
-
         'images': images,
     })
