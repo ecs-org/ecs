@@ -378,8 +378,13 @@
         Extends: ecs.InlineFormSet,
     });
     
-    ecs.setupRichTextEditor = function(textArea){
+    ecs.setupRichTextEditor = function(textArea, readonly){
         var display = new Element('div', {'class': 'rte_display', html: textArea.value});
+        textArea.hide();
+        display.inject(textArea, 'after');
+        if(readonly){
+            return
+        }
         display.addEvent('click', function(e){
             textArea.show();
             var editable = textArea.retrieve('MooEditable');
@@ -405,8 +410,6 @@
                 display.show();
             }
         });
-        textArea.hide();
-        display.inject(textArea, 'after');
     };
     
     ecs.clearFormFields = function(context){
