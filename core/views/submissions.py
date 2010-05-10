@@ -9,6 +9,7 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
@@ -16,7 +17,7 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 
 
-def get_submission_formsets(data=None, instance=None):
+def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
         # (prefix, formset_class, callable SubmissionForm -> initial data)
         ('measure', MeasureFormSet, lambda sf: sf.measures.filter(category='6.1')),
@@ -27,19 +28,24 @@ def get_submission_formsets(data=None, instance=None):
     ]
     formsets = {}
     for name, formset_cls, initial in formset_classes:
-        kwargs = {'prefix': name}
+        kwargs = {'prefix': name, 'readonly': readonly, 'initial': []}
+        if readonly:
+            kwargs['extra'] = 0
         if instance:
             kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
     
     employees = []
     if instance:
-        for index, investigator in enumerate(formsets['investigator'].queryset):
-            for employee in investigator.investigatoremployee_set.all():
-                employee_dict = model_to_dict(employee, exclude=('id',))
+        for index, investigator in enumerate(instance.investigators.order_by('id')):
+            for employee in investigator.investigatoremployee_set.order_by('id'):
+                employee_dict = model_to_dict(employee, exclude=('id', 'submission'))
                 employee_dict['investigator_index'] = index
                 employees.append(employee_dict)
-    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or None, prefix='investigatoremployee')
+    kwargs = {'prefix': 'investigatoremployee', 'readonly': readonly}
+    if readonly:
+        kwargs['extra'] = 0
+    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or [], **kwargs)
     return formsets
 
 
@@ -58,20 +64,44 @@ def copy_submission_form(request, submission_form_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
-def readonly_submission_form(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html'):
+    if not submission_form:
+        submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
-    formsets = get_submission_formsets(instance=submission_form)
+    formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
     
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
+        'readonly': True,
     }
+    if extra_context:
+        context.update(extra_context)
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
-    return render(request, 'submissions/form.html', context)
+    return render(request, template, context)
+
+
+def retrospective_thesis_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
+        'retrospective_thesis_review_form': form,
+    })
+
+
+def executive_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = ExecutiveReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/executive.html', extra_context={
+        'executive_review_form': form,
+    })
 
 
 @with_docstash_transaction
@@ -108,6 +138,7 @@ def create_submission_form(request):
             submission = request.docstash.get('submission') or Submission.objects.create()
             submission_form.submission = submission
             submission_form.save()
+            form.save_m2m()
             submission_form.documents = request.docstash['documents']
             
             formsets = formsets.copy()

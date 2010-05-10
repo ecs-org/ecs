@@ -1,0 +1,16 @@
+{% extends "submissions/base_form.html" %}
+{% load core %} 
+
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
+{% block content %}
+    <div class="form main">
+        {{ block.super }}
+    </div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+{% endblock %}

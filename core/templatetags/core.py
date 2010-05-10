@@ -24,6 +24,15 @@ def get_field_info(formfield):
         return None
         
 @register.filter
+def form_value(form, fieldname):
+    if form.data:
+        return form._raw_value(fieldname)
+    try:
+        return form.initial[fieldname]
+    except KeyError:
+        return None
+        
+@register.filter
 def simple_timedelta_format(td):
     if not td.seconds:
         return "0"

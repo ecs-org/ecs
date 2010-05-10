@@ -196,6 +196,7 @@
             addButton: true,
             addButtonClass: 'add_row',
             addButtonText: 'add',
+            removeButton: true,
             removeButtonClass: 'delete_row',
             removeButtonText: 'remove',
             removeButtonInject: 'bottom',
@@ -261,18 +262,20 @@
             return this.forms.length;
         },
         setupForm: function(form, index, added){
-            var removeLink = new Element('a', {
-                html: this.options.removeButtonText,
-                'class': this.options.removeButtonClass,
-                events: {
-                    click: this.onRemoveButtonClick.bind(this)
+            if(this.options.removeButton){
+                var removeLink = new Element('a', {
+                    html: this.options.removeButtonText,
+                    'class': this.options.removeButtonClass,
+                    events: {
+                        click: this.onRemoveButtonClick.bind(this)
+                    }
+                });
+                if(this.isTable){
+                    form.getElement('td').grab(removeLink);
                 }
-            });
-            if(this.isTable){
-                form.getElement('td').grab(removeLink);
-            }
-            else{
-                removeLink.inject(form, this.options.removeButtonInject);
+                else{
+                    removeLink.inject(form, this.options.removeButtonInject);
+                }
             }
             if(added){
                 var idField = form.getElement('input[name$=-id]');
@@ -488,6 +491,75 @@
 
     };
     
+    ecs.setupInvestigatorFormSet = function(tabController, readonly){
+        var ifs = $('investigator_formset');
+        if(ifs){
+            var investigatorFormset = new ecs.InlineFormSet(ifs, {
+                prefix: 'investigator',
+                formSelector: '.investigator_tab',
+                removeButtonInject: 'top',
+                addButton: false,
+                removeButton: !readonly,
+                addButtonText: 'Weiteres Zentrum Hinzufügen',
+                removeButtonText: 'Dieses Zentrum Entfernen',
+                onFormSetup: function(form, index, added, formset){
+                    tabController.addTab('Zentrum ' + (index + 1) +  '', form);
+                    if(readonly){
+                        return;
+                    }
+                    var addButton = formset.createAddButton(ifs);
+                    addButton.inject(form, 'top');
+                },
+                onFormRemoved: function(form, index){
+                    var tab = tabController.getTabForElement(form);
+                    tabController.removeTab(tab);
+                }
+            });
+            if(readonly){
+                return;
+            }
+            // HACK
+            if(investigatorFormset.getFormCount() == 1){
+                investigatorFormset.forms[0].getElement('.delete_row').hide();
+            }
+            else{
+                investigatorFormset.forms.each(function(f){
+                    f.getElement('.delete_row').show();
+                });
+            }
+            
+            var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
+                prefix: 'investigatoremployee',
+                onFormAdded: function(form, index, added){
+                    var indexField = form.getElement('input[name$=-investigator_index]');
+                    indexField.value = investigatorFormset.getIndexForElement(form);
+                }
+            });
+            investigatorFormset.addEvent('formAdded', function(form, index){
+                form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
+                employeeFormSet.addContainer(form.getElement('.investigatoremployee_formset'));
+                // HACK
+                if(investigatorFormset.getFormCount() > 1){
+                    investigatorFormset.forms.each(function(f){
+                        f.getElement('.delete_row').show();
+                    });
+                }
+            });
+            investigatorFormset.addEvent('formRemoved', function(form, index){
+                employeeFormSet.removeContainer(form.getElement('.investigatoremployee_formset'));
+                // HACK
+                if(investigatorFormset.getFormCount() == 1){
+                    investigatorFormset.forms[0].getElement('.delete_row').hide();
+                }
+            });
+            investigatorFormset.addEvent('formIndexChanged', function(form, newIndex){
+                form.getElement('.investigatoremployee_formset').getElements('input[name$=-investigator_index]').each(function(indexField){
+                    indexField.value = newIndex;
+                });
+            });
+        }
+    };
+    
     window.addEvent('domready', function(){
         var tabHeaders = $$('.tab_headers')[0];
         if(tabHeaders){
@@ -498,67 +570,12 @@
                     tabController: tabController,
                     autosaveInterval: 120
                 });
-                var ifs = $('investigator_formset');
-                if(ifs){
-                    var investigatorFormset = new ecs.InlineFormSet(ifs, {
-                        prefix: 'investigator',
-                        formSelector: '.investigator_tab',
-                        removeButtonInject: 'top',
-                        addButton: false,
-                        addButtonText: 'Weiteres Zentrum Hinzufügen',
-                        removeButtonText: 'Dieses Zentrum Entfernen',
-                        onFormSetup: function(form, index, added, formset){
-                            tabController.addTab('Zentrum ' + (index + 1) +  '', form);
-                            var addButton = formset.createAddButton(ifs);
-                            addButton.inject(form, 'top');
-                        },
-                        onFormRemoved: function(form, index){
-                            var tab = tabController.getTabForElement(form);
-                            tabController.removeTab(tab);
-                        }
-                    });
-                    // HACK
-                    console.log(investigatorFormset.getFormCount());
-                    if(investigatorFormset.getFormCount() == 1){
-                        investigatorFormset.forms[0].getElement('.delete_row').hide();
-                    }
-                    else{
-                        investigatorFormset.forms.each(function(f){
-                            f.getElement('.delete_row').show();
-                        });
-                    }
-                    
-                    var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
-                        prefix: 'investigatoremployee',
-                        onFormAdded: function(form, index, added){
-                            var indexField = form.getElement('input[name$=-investigator_index]');
-                            indexField.value = investigatorFormset.getIndexForElement(form);
-                        }
-                    });
-                    investigatorFormset.addEvent('formAdded', function(form, index){
-                        form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
-                        employeeFormSet.addContainer(form.getElement('.investigatoremployee_formset'));
-                        // HACK
-                        if(investigatorFormset.getFormCount() > 1){
-                            investigatorFormset.forms.each(function(f){
-                                f.getElement('.delete_row').show();
-                            });
-                        }
-                    });
-                    investigatorFormset.addEvent('formRemoved', function(form, index){
-                        employeeFormSet.removeContainer(form.getElement('.investigatoremployee_formset'));
-                        // HACK
-                        if(investigatorFormset.getFormCount() == 1){
-                            investigatorFormset.forms[0].getElement('.delete_row').hide();
-                        }
-                    });
-                    investigatorFormset.addEvent('formIndexChanged', function(form, newIndex){
-                        form.getElement('.investigatoremployee_formset').getElements('input[name$=-investigator_index]').each(function(indexField){
-                            indexField.value = newIndex;
-                        });
-                    });
-                }
             }
+            var readonly = true;
+            if(document.getElement('.form.main').tagName == 'FORM'){
+                readonly = false;
+            }
+            ecs.setupInvestigatorFormSet(tabController, readonly);
         }
         ecs.setupFormFieldHelpers();
         
