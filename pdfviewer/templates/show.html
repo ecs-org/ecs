@@ -64,12 +64,12 @@
         var pv_page = $('pv_page');
         var z = this.images[this.zoom];
         if (!$defined(z)) {
-          alert('error: no data for zoom: [' + this.zoom + ']');
+          alert('error: no image data for zoom: [' + this.zoom + ']');
           return;
         }
         var p = z[this.page];
         if (!$defined(p)) {
-          alert('error: no data for zoom: [' + this.zoom + '], page: [' + this.page + ']');
+          alert('error: no image data for zoom: [' + this.zoom + '], page: [' + this.page + ']');
           return;
         }
         var src = p['url'];
@@ -164,8 +164,21 @@
         pdf_viewer.set_last();
         return;
       }
-      if (key == 'esc' || key== 'q') {
+      if (key == 'esc' || key == 'q') {
         alert('exit somehow..');
+        return;
+      }
+      if (key == '?' || code == 219) {
+        alert('PDF Viewer Hilfe\n\n' +
+              'Eine Seite vor oder zurück blättern:\n' +
+              '- auf linke oder rechte Hälfte einer Seite klicken\n' +
+              '- [Bild hoch] und [Bild runter] Tasten\n' +
+              '- Pfeiltasten [Links] und [Rechts]\n' +
+              'Erste Seite mit [Pos1] Taste\n' +
+              'Letzte Seite mit [Ende] Taste\n' +
+              'Ende mit [Esc] oder [q] Taste\n' +
+              'Mausrad um Zoomstufe zu ändern\n' +
+              'Maus [Rechtsklick] und [Shift-Rechtsklick] um Zoomstufe zu ändern\n');
         return;
       }
     });
