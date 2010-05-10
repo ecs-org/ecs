@@ -9,6 +9,7 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
@@ -63,8 +64,9 @@ def copy_submission_form(request, submission_form_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
-def readonly_submission_form(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html'):
+    if not submission_form:
+        submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
@@ -75,9 +77,31 @@ def readonly_submission_form(request, submission_form_pk=None):
         'documents': documents,
         'readonly': True,
     }
+    if extra_context:
+        context.update(extra_context)
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
-    return render(request, 'submissions/readonly_form.html', context)
+    return render(request, template, context)
+
+
+def retrospective_thesis_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
+        'retrospective_thesis_review_form': form,
+    })
+
+
+def executive_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = ExecutiveReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/executive.html', extra_context={
+        'executive_review_form': form,
+    })
 
 
 @with_docstash_transaction

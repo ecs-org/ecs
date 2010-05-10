@@ -41,7 +41,9 @@
             <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>
             (<a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">PDF</a>
             | <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>
-            | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Review</a>)
+            | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Review</a>
+            | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
+            | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">Thesis Review</a>)
         </div>
     {% endfor %}
 {% endif %}
