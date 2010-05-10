@@ -63,10 +63,11 @@ class ImageSet(object):
                     18: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0018.png' },
                 },
                 '3x3': {
-                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_3x3_0001.png' },
+                     2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_3x3_0002.png' },
                 },
                 '5x5': {
-                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_5x5_0001.png' },
                 },
             }
         else:
