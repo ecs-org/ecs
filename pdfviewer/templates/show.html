@@ -108,7 +108,7 @@
       },
 
       set_last: function() {
-        if (this.page = this.pages) {
+        if (this.page == this.pages) {
           return;
         }
         this.page = this.pages;
@@ -128,6 +128,32 @@
         return;
       } else {
         pdf_viewer.set_next();
+        return;
+      }
+    });
+
+    $(document).addEvent('keydown', function(event) {
+      event.stop();
+      var code = event.code;
+      var key = event.key;
+      if (code == 33 || key == 'left') {
+        pdf_viewer.set_prev();
+        return;
+      }
+      if (code == 34 || key == 'right') {
+        pdf_viewer.set_next();
+        return;
+      }
+      if (code == 36) {
+        pdf_viewer.set_first();
+        return;
+      }
+      if (code == 35) {
+        pdf_viewer.set_last();
+        return;
+      }
+      if (key == 'esc' || key== 'q') {
+        alert('exit somehow..');
         return;
       }
     });
