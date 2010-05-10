@@ -15,12 +15,10 @@
 
   <div class="pv_main" style="">
     <div class="pv_header" style="">
-      <span class="pv_title">ID {{ id }}, Seite {{ page }} von {{ pages }}, Zoom {{ zoom }} ({{ zoom_pages }})</span>
-      <br/>
       <span id="pv_title" class="pv_title"></span>
     </div>
     <div class="pv_pages">
-      <span class="pv_page"><img src="{{ image.url }}" style="height: {{ height }}px; width: {{ width }}px;" alt="Seite {{ page }} von {{ pages }}" /></span>
+      <span id="pv_page" class="pv_page"></span>
     </div>
   </div>
 
@@ -39,9 +37,11 @@
         this.pages = {{ pages }};
         this.zoom = '{{ zoom }}';
         this.zoom_pages = {{ zoom_pages }};
+        this.width = {{ width }};
+        this.height = {{ height }};
         this.update_title();
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
-        this.show_images();
+        this.set_image();
       },
 
       update_title: function() {
@@ -51,13 +51,16 @@
         title.grab(title_info);
       },
 
-      show_images: function() {
-        for (var zoom in this.images) {
-          for (image in this.images[zoom]) {
-            alert(zoom + ': ' + image + ': ' + this.images[zoom][image]['url']);
-          }
-        }
-      }    
+      set_image: function() {
+        var pv_page = $('pv_page');
+        // TODO check parameters zoom, page
+        var z = this.images[this.zoom];
+        var p = z[this.page];
+        var src = p['url'];
+        var alt = 'Seite ' + this.page + ' von ' + this.pages;
+        var img = new Element('img', { src: src, width: this.width, height: this.height, alt: alt });
+        pv_page.grab(img);
+      }
 
     });
 
