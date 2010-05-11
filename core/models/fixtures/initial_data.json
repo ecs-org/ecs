@@ -999,6 +999,24 @@
     }
   },
   {
+    "pk": 58, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Haemo", 
+      "name": "Hämatologie und Hämostaseologie", 
+      "users": []
+    }
+  },
+  {
+    "pk": 59, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Innere", 
+      "name": "Innere Medizin", 
+      "users": []
+    }
+  },
+  {
     "pk": 1, 
     "model": "core.submission", 
     "fields": {
