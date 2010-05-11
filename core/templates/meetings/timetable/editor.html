@@ -36,7 +36,7 @@
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
-                {% if entry.submission %}<a href="#">{{ entry.submission.project_title }}</a>{% endif %}
+                {% if entry.submission %}<a href="#">{{ entry.submission.project_title|smart_truncate:50 }}</a>{% endif %}
                 {% if entry.is_break %}Pause{% endif %}
             </h3>
             {% if not running_optimization %}

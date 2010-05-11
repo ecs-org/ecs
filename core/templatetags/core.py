@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+import re
 from django.template import Library
 
 from ecs.core import paper_forms
@@ -46,6 +48,13 @@ def simple_timedelta_format(td):
     if seconds:
         result.append("%ss" % seconds)
     return " ".join(result)
+    
+@register.filter
+def smart_truncate(s, n):
+    if len(s) <= n:
+        return s
+    return u"%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
+    
 
 @register.filter
 def empty_form(formset):
