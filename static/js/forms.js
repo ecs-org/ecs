@@ -2,15 +2,14 @@
     if(!window.console){
         window.console = {log: $empty};
     }
-    var ecs = window.ecs = {
+    var ecs = $extend(window.ecs, {
         datepickerInputSelector: '.DateField > input, .DateTimeField > input[name$=_0]',
-        messages: new Roar(),
         Element: {
             setClass: function(cls, set){
                 this[set ? 'addClass' : 'removeClass'](cls);
             }
         }
-    };
+    });
     Element.implement(ecs.Element);
 
     ecs.Tab = new Class({

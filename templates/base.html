@@ -144,6 +144,10 @@
                         dbug.firebug = true; if(window.location.href.indexOf("debug=true")>0) dbug.enable();
                     }
                  }
+                 
+                 var ecs = window.ecs = {
+                     messages: new Roar()
+                 };
                  </script>
             {% endblock %}
         </div>
