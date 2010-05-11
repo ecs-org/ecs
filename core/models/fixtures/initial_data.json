@@ -1105,6 +1105,24 @@
     }
   },
   {
+    "pk": 60, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Kinder", 
+      "name": "Kinder- und Jugendheilkunde", 
+      "users": []
+    }
+  },
+  {
+    "pk": 61, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Derma", 
+      "name": "Dermatologie", 
+      "users": []
+    }
+  },
+  {
     "pk": 1, 
     "model": "core.submission", 
     "fields": {
