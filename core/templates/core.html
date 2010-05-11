@@ -105,6 +105,11 @@
     if(typeof(accordionitem) === 'undefined') {
       var accordionitem = accordion_items['overview'];
     }
+    
+    // messages
+    {% load messages %}
+    {% fetch_messages as new_messages %}
+    var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
 
     window.addEvent('domready', function(){
 
@@ -128,7 +133,11 @@
         }});
       };
       feedback_triggers.addEvent('click', feedback_handler);
+      
+      // message popups
+      newMessages.each(function(msg){
+          ecs.messages.alert('Neue Nachricht', '<b>{subject}</b> von {sender}'.substitute(msg));
+      });
     });
-
   </script>
 {% endblock %}
