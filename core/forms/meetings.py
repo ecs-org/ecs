@@ -40,4 +40,5 @@ ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=T
 class SubmissionSchedulingForm(forms.Form):
     meeting = forms.ModelChoiceField(Meeting.objects.all())
     title = forms.CharField(required=False)
+    sponsor_invited = forms.BooleanField(required=False)
     
