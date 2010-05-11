@@ -1,0 +1,12 @@
+{% extends "core.html" %}
+
+{% block menuSelection %}messages{% endblock %}
+
+{% block content %}
+<form action="" method="post">
+    <table>
+    {{ form }}
+    </table>
+    <input type="submit" value="Senden" />
+</form>
+{% endblock %}

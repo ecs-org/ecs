@@ -20,9 +20,10 @@ urlpatterns = patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^feedback/', include('feedback.urls')),
+    url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^groupchooser/', include('ecs.groupchooser.urls')),
-    url(r'^pdfviewer/', include('pdfviewer.urls')),
+    url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
+    url(r'^messages/', include('ecs.messages.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),

@@ -1,0 +1,11 @@
+{% extends "core.html" %}
+
+{% block menuSelection %}messages{% endblock %}
+
+{% block content %}
+<h2>{{ message.subject }}</h2>
+von {{ message.sender  }} and {{ message.receiver }}
+<div>
+    {{ message.text|safe }}
+</div>
+{% endblock %}

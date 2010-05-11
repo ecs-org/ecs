@@ -48,9 +48,15 @@
         <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</a></li>
       </ul>
     </li>
-    <!--<li><a href="#">Konversationen</a></li>
-    <li><a href="#">zuletzt bearbeitet</a></li>
-    <li><a href="#">vorgemerkte Tätigkeiten</a></li>-->
+    <li>
+        <span class="togglers">Nachrichten</span>
+        <ul class="elements">
+            <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
+            <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
+            <li><a href="{% url ecs.messages.views.list_messages %}">Liste aller Nachrichten</a></li>
+            <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+        </ul>
+    </li>
   </ul>
 {% endblock %}
 
@@ -92,7 +98,8 @@
       'overview': -1,
       'submissions': 0,
       'notifications': 1,
-      'meetings': 2
+      'meetings': 2,
+      'messages': 3,
     };
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {

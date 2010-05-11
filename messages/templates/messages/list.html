@@ -1,0 +1,37 @@
+{% extends "core.html" %}
+
+{% block menuSelection %}messages{% endblock %}
+
+{% block content %}
+{{ message_list|length }} Nachrichten
+<table>
+    <tr>
+        <th>Timestamp</th>
+        <th>Subject</th>
+        <th>Unread</th>
+        <th>Einreichung</th>
+        {% block extra_message_table_headers %}
+            <th>From</th>
+            <th>To</th>
+        {% endblock %}
+        <th></th>
+    </tr>
+{% for message in message_list %}
+    <tr>
+        <td>{{ message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
+        <td><a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">{{ message.subject }}</a></td>
+        <td>{{ message.unread }}</td>
+        <td>{{ message.submission }}</td>
+        {% block extra_message_table_cells %}
+            <td>{{ message.sender }}</td>
+            <td>{{ message.receiver }}</td>
+        {% endblock %}
+        <td>
+            {% block message_actions %}
+                <a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">Lesen</a>
+            {% endblock %}
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

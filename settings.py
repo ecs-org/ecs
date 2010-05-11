@@ -176,6 +176,7 @@ INSTALLED_APPS = (
     'ecs.pdfviewer',
     'ecs.workflow',
     'ecs.tasks',
+    'ecs.messages',
 )
 
 # use ghettoq as carrot backend, so we dont need any external brocker for testing

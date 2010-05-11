@@ -1,0 +1,15 @@
+{% extends "messages/list.html" %}
+
+{% block content %}
+<h2>Outbox</h2>
+<a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a>
+{{ block.super }}
+{% endblock %}
+
+{% block extra_message_table_headers %}
+    <th>To</th>
+{% endblock %}
+
+{% block extra_message_table_cells %}
+    <td>{{ message.receiver }}</td>
+{% endblock %}
