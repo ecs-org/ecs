@@ -16,3 +16,12 @@ def task_backlog(request):
     return render(request, 'tasks/backlog.html', {
         'tasks': tasks,
     })
+
+def my_tasks(request):
+    tasks = Task.objects.filter(closed_at=None)
+    assigned_tasks = tasks #.filter(assigned_to=request.user)
+    open_tasks = tasks.filter(assigned_to=None)
+    return render(request, 'tasks/compact_list.html', {
+        'assigned_tasks': tasks,
+        'open_tasks': tasks,
+    })

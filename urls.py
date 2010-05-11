@@ -13,7 +13,6 @@ urlpatterns = patterns('',
 
     url(r'^core/', include('core.urls')),
     url(r'^docstash/', include('docstash.urls')),
-    url(r'^tasks/backlog/$', 'ecs.tasks.views.task_backlog'),
     url(r'^accounts/login/$', forceauth.exempt(login), {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
 
@@ -23,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^groupchooser/', include('ecs.groupchooser.urls')),
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
+    url(r'^tasks/', include('ecs.tasks.urls')),
     url(r'^messages/', include('ecs.messages.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),

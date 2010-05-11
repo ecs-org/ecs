@@ -1,0 +1,17 @@
+{% extends "shell.html" %}
+
+{% block htmlbody %}
+    <h2>Meine Tasks</h2>
+    {% for task in assigned_tasks %}
+    <div>
+        {{ task.task_type.name }} <a href="">Erledigt</a> | <a href="">Delegieren</a>
+    </div>
+    {% endfor %}
+
+    <h2>Offene Tasks</h2>
+    {% for task in open_tasks %}
+    <div>
+        {{ task.task_type.name }} <a href="">Erledigt</a> | <a href="">Delegieren</a>
+    </div>
+    {% endfor %}
+{% endblock %}
