@@ -22,8 +22,8 @@ class ImageSet(object):
         if id == 1:
             self.zoom_list = [ '1', '3x3', '5x5' ]
             self.zoom_pages = [ 1, 9, 25 ]
-            self.height = 1076
             self.width = 760
+            self.height = 1076
             self.images = {
                 '1': {
                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/Meld_51_0002.png' },
@@ -39,8 +39,8 @@ class ImageSet(object):
         elif id == 2:
             self.zoom_list = [ '1', '3x3', '5x5' ]
             self.zoom_pages = [ 1, 9, 25 ]
-            self.height = 1076
             self.width = 760
+            self.height = 1076
             self.images = {
                 '1': {
                      1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_0001.png' },
@@ -68,6 +68,36 @@ class ImageSet(object):
                 },
                 '5x5': {
                      1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/ecs-09-submission-form_5x5_0001.png' },
+                },
+            }
+        elif id == 3:
+            self.zoom_list = [ '1', '3x3', '5x5' ]
+            self.zoom_pages = [ 1, 9, 25 ]
+            self.width = 800
+            self.height = 1131
+            self.images = {
+                '1': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0001.png' },
+                     2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0002.png' },
+                     3: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0003.png' },
+                     4: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0004.png' },
+                     5: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0005.png' },
+                     6: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0006.png' },
+                     7: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0007.png' },
+                     8: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0008.png' },
+                     9: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0009.png' },
+                    10: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0010.png' },
+                    11: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0011.png' },
+                    12: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0012.png' },
+                    13: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0013.png' },
+                    14: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_0014.png' },
+                },
+                '3x3': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_3x3_0001.png' },
+                     2: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_3x3_0002.png' },
+                },
+                '5x5': {
+                     1: { 'url': settings.MEDIA_URL + 'pdfviewer/images/test-pdf-14-seitig_5x5_0001.png' },
                 },
             }
         else:
