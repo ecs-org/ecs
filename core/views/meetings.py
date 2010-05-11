@@ -108,7 +108,7 @@ def participation_editor(request, meeting_pk=None):
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.optimization_task_id:
-        retval = optimize_timetable_task.delay(meeting=meeting,algorithm=algorithm)
+        retval = optimize_timetable_task.delay(meeting_id=meeting.id,algorithm=algorithm)
         meeting.optimization_task_id = retval.task_id
         meeting.save()
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
