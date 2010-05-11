@@ -108,7 +108,7 @@ class Node(models.Model):
             guard = guard.instance
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negate=negate, deadline=deadline)
         
-    def receive_token(self, workflow, source=None):
+    def receive_token(self, workflow, source=None, trail=None):
         flow_controller = registry.get_handler(self)
         token = workflow.tokens.create(
             node=self, 
@@ -116,6 +116,8 @@ class Node(models.Model):
             deadline=flow_controller.get_deadline(self, workflow),
             locked=flow_controller.is_locked(self, workflow),
         )
+        if trail:
+            token.trail = trail
         token_created.send(token)
         flow_controller.receive_token(token)
         
@@ -125,31 +127,29 @@ class Node(models.Model):
             tokens = tokens.filter(locked=locked)
         return tokens
     
-    def peek_token(self, workflow, locked=None):
+    def get_token(self, workflow, locked=None):
         tokens = self.get_tokens(workflow, locked=locked)[:1]
         if tokens:
             return tokens[0]
         return None
     
-    def pop_token(self, workflow, locked=None):
-        token = self.peek_token(workflow, locked=locked)
-        if token:
+    def progress(self, *tokens, **kwargs):
+        assert tokens, "Node.progress() must be called with at least one Token instance"
+        deadline = kwargs.pop('deadline', False)
+        workflow = tokens[0].workflow
+        for token in tokens:
             token.consume()
-            return token
-        return None
-        
-    def progress(self, workflow, deadline=False):
         if self.is_end_node:
             workflow.finish(self)
         else:
             for edge in self.edges.filter(deadline=deadline).select_related('to_node'):
                 if edge.check_guard(workflow):
-                    edge.to_node.receive_token(workflow, source=self)
+                    edge.to_node.receive_token(workflow, source=self, trail=tokens)
     
     def handle_deadline(self, token):
         registry.get_handler(self).handle_deadline(token)
         deadline_reached.send(token)
-        self.progress(token.workflow, deadline=True)
+        self.progress(token, deadline=True)
         
     def unlock(self, workflow):
         registry.get_handler(self).unlock(self, workflow)
@@ -193,8 +193,7 @@ class Workflow(models.Model):
         self.save(force_update=True)
         workflow_finished.send(self)
         if self.parent:
-            self.parent.consume()
-            self.parent.node.progress(self.parent.workflow)
+            self.parent.node.progress(self.parent)
         
 
 class TokenManager(models.Manager):
@@ -214,7 +213,8 @@ class TokenQuerySet(models.query.QuerySet):
 class Token(models.Model):
     workflow = models.ForeignKey(Workflow, related_name='tokens')
     node = models.ForeignKey(Node, related_name='tokens')
-    source = models.ForeignKey(Node, related_name='sent_tokens', null=True)
+    trail = models.ManyToManyField('self', related_name='future', symmetrical=False)
+    source = models.ForeignKey(Node, related_name='sent_tokens', null=True) # denormalized: can be derived from trail
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
@@ -245,8 +245,19 @@ class Token(models.Model):
     def handle_deadline(self):
         if not self.deadline:
             return
-        self.consume()
         self.node.handle_deadline(self)
+    
+    @property
+    def activity_trail(self):
+        act_trail = set()
+        print "trail for", repr(self)
+        print self.trail.all()
+        for token in self.trail.select_related('node__node_type'):
+            if token.node.node_type.is_activity:
+                act_trail.add(token)
+            else:
+                act_trail.update(token.activity_trail)
+        return act_trail
         
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
