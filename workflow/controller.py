@@ -74,16 +74,15 @@ class Activity(NodeHandler):
             sender.workflow.do(self)
             
     def perform(self, node, workflow):
-        token = node.peek_token(workflow, locked=False)
+        token = node.get_token(workflow, locked=False)
         if not token:
-            if node.peek_token(workflow, locked=True):
+            if node.get_token(workflow, locked=True):
                 raise TokenRequired("Activities cannot be performed with locked tokens")
             raise TokenRequired("Activities cannot be performed without a token")
-        token.consume()
         try:
             return self(token)
         finally:
-            node.progress(workflow)
+            node.progress(token)
         
     def __repr__(self):
         return "<%s: %s>" % (self.__class__.__name__, self.name)
