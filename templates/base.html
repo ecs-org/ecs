@@ -1,157 +1,57 @@
-{% block htmltype %}
-<?xml version="1.0" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-{% endblock %}
+{% extends 'shell.html' %}
 
-{% load version_tag %} {% comment %} Loads ECS-Version Tag into Template {% endcomment %}
+{% load version_tag %}
 
-<html>
-    <head>
-
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-        
-        {% block htmlmeta %} {# Additional META tags should follow here #}
-        {% endblock %}
-        
-        <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
-    
-        
-        {% block htmlcss %} {# additional css, please block.super it  #}    
-            <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/base.css" />
-            <link rel="stylesheet" href="{{ MEDIA_URL}}css/datepicker.css" media="screen"/>
-            <link rel="stylesheet" href="{{ MEDIA_URL}}css/Roar.css" media="screen"/>
-        {% endblock %} 
-        
-        {% block jshead %} {# enqueue javasript, please block.super it #}
-        {% endblock %} 
-        
-    </head>
-
-    <body>
-        <div id="header">
-                        
+{% block htmlbody %}
+    <div id="header">
         {% block header %}
-            
             <div id="headertitle">
-            
-            <h1>
-            {% block headertitle %}
-            
-            {% endblock %}
-            </h1>
-            
+                <h1>{% block headertitle %}{% endblock %}</h1>
             </div>
-            
             <div id="headertext">
-            
-            {% block headertext %}
-            
-            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
-            
-            {% endblock %}
-            
+                {% block headertext %}
+                    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+                {% endblock %}
             </div>
-            
             <div id="headernav">
-            
-            {% block headernav %}
-            {% endblock %}
-              
+                {% block headernav %}
+                {% endblock %}
             </div>
-        
         {% endblock %}
-        
-        </div>
+    </div>
 
-                           
-        <div id="sidebar">
-            
-            {% block sidebar %}
-                
-    
-                <div id="logo">
-
-                    
+    <div id="sidebar">
+        {% block sidebar %}
+            <div id="logo">
                 {% block logo %}
-                
-                <img src="{{ MEDIA_URL }}/images/logo.png" alt="EC- Meduni Wien"/>
-                <small>{% current_version %}</small>
+                    <img src="{{ MEDIA_URL }}/images/logo.png" alt="EC- Meduni Wien"/>
+                    <small>{% current_version %}</small>
                 {% endblock %}
-                    
-                </div>
-                
-                <div id="account">
-                
-                {% block account %}
-                                    
-                {% endblock %}
-                    
-                </div>
-                
-                <div id="usertoolbar">
-                
-                {% block usertoolbar %}
-                
-                    
-                {% endblock %}
-                    
-                </div>
-                
-                <div id="usermenu">
-                
-                {% block usermenu %}
-                
-                {% endblock %}
-                    
-                </div>
-            
-        
-            {% endblock %} {# sidebar #}    
-            
-        </div>
-
-        
-        <div id="content">          
-                
-            <div class="innertube">
-                                        
-            {% block content %}
-                
-            {% endblock %} {# content #}    
-                
             </div>
-                        
-        </div>
-
-        <div id="footer">
-
-            {% block jsbottom %} {# enqueue additional javasript, please block.super it #}
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
-                 <script type="text/javascript">
-                 dbug = {
-                    logged: [], firebug: false, debug: false,
-                    log: function(msg) {this.logged.push(msg);},
-                    enable: function() { if(this.firebug) this.debug = true; this.log = console.debug; this.log('enabling dbug');
-                        db = this; this.logged.each(function(msg){db.log(msg)}); this.logged=[];
-                    },
-                    disable: function(){ if(this.firebug) this.debug = false; this.log = function(){this.logged.push(msg);}; }
-                 }
-                 if (typeof console != "undefined") { // safari, firebug
-                    if (typeof console.debug != "undefined") { // firebug
-                        dbug.firebug = true; if(window.location.href.indexOf("debug=true")>0) dbug.enable();
-                    }
-                 }
-                 
-                 var ecs = window.ecs = {
-                     messages: new Roar()
-                 };
-                 </script>
+            <div id="account">
+                {% block account %}
+                {% endblock %}
+            </div>
+            <div id="usertoolbar">
+                {% block usertoolbar %}
+                {% endblock %}
+            </div>
+            <div id="usermenu">
+                {% block usermenu %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+    
+    <div id="content">
+        <div class="innertube">
+            {% block content %}
             {% endblock %}
         </div>
-        
-    </body>
+    </div>
 
-</html>
+    <div id="footer">
+        {% block footer %}
+        {% endblock footer %}
+    </div>
+{% endblock %}
