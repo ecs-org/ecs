@@ -2,7 +2,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-import reversion
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
@@ -394,6 +393,10 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
     
+
+import reversion
+from ecs import workflow
+
 if not reversion.is_registered(Submission):
     reversion.register(Measure) 
     reversion.register(ForeignParticipatingCenter) 
@@ -402,3 +405,5 @@ if not reversion.is_registered(Submission):
     reversion.register(NonTestedUsedDrug) 
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
+    
+    workflow.register(Submission)

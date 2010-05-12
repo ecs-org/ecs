@@ -20,7 +20,7 @@ def register(model):
 def _post_save(sender, **kwargs):
     if sender not in __registry:
         return
-    if kwargs['created']:
+    if kwargs['created'] and not kwargs.get('raw'):
         from ecs.workflow.models import Workflow, Graph
         ct = ContentType.objects.get_for_model(sender)
         graphs = Graph.objects.filter(content_type=ct, auto_start=True)

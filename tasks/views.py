@@ -19,9 +19,12 @@ def task_backlog(request):
         'tasks': tasks,
     })
 
-def my_tasks(request):
+def my_tasks(request, submission_pk=None):
     tasks = Task.objects.filter(closed_at=None)
-    assigned_tasks = tasks #.filter(assigned_to=request.user)
+    if submission_pk is not None:
+        tasks = tasks.filter(content_type=ContentType.objects.get_for_model(Submission), data_id=submission_pk)
+    
+    assigned_tasks = tasks.filter(assigned_to=request.user)
     open_tasks = tasks.filter(assigned_to=None)
     return render(request, 'tasks/compact_list.html', {
         'assigned_tasks': tasks,

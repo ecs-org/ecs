@@ -129,6 +129,7 @@ class Registry(object):
         self._controls = {}
         self._node_type_map = {}
         self._guard_map = {}
+        self._handlers = {}
         self.loaded = False
 
     def clear_caches(self):
@@ -159,7 +160,7 @@ class Registry(object):
     def get_handler(self, node):
         self._load()
         try:
-            return self._node_type_map[node.node_type_id]
+            return self._handlers[node.node_type.implementation]
         except KeyError:
             if node.node_type.is_subgraph:
                 return self._controls['ecs.workflow.patterns.subgraph']
@@ -193,6 +194,7 @@ class Registry(object):
         def decorator(func):
             control = factory(func, **kwargs)
             self._controls[control.name] = control
+            self._handlers[control.name] = control
             return wraps(func)(control)
         return decorator
 
@@ -200,6 +202,7 @@ class Registry(object):
         def decorator(func):
             act = factory(func, model=model, **kwargs)
             self._activities[act.name] = act
+            self._handlers[act.name] = act
             return wraps(func)(act)
         return decorator
 

@@ -250,8 +250,6 @@ class Token(models.Model):
     @property
     def activity_trail(self):
         act_trail = set()
-        print "trail for", repr(self)
-        print self.trail.all()
         for token in self.trail.select_related('node__node_type'):
             if token.node.node_type.is_activity:
                 act_trail.add(token)
@@ -261,6 +259,7 @@ class Token(models.Model):
         
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
+
 
 import sys
 if 'test' in sys.argv:
