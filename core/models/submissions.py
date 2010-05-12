@@ -139,9 +139,9 @@ class SubmissionForm(models.Model):
     subject_planned_total_duration = models.CharField(max_length=80)
 
     # 3a
-    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms')
+    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms', blank=True)
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
-    substance_p_c_t_countries = models.ManyToManyField('countries.Country')
+    substance_p_c_t_countries = models.ManyToManyField('countries.Country', blank=True)
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
     substance_p_c_t_application_type = models.CharField(max_length=80, null=True, blank=True)
@@ -170,7 +170,7 @@ class SubmissionForm(models.Model):
     # 6.1 + 6.2 (via Measure)
 
     # 6.3
-    additional_therapy_info = models.TextField()
+    additional_therapy_info = models.TextField(blank=True)
 
     # 7.x
     german_project_title = models.TextField(null=True)
@@ -192,8 +192,8 @@ class SubmissionForm(models.Model):
     german_aftercare_info = models.TextField(null=True)
     german_payment_info = models.TextField(null=True)
     german_abort_info = models.TextField(null=True)
-    german_dataaccess_info = models.TextField(null=True)
-    german_financing_info = models.TextField(null=True)
+    german_dataaccess_info = models.TextField(null=True, blank=True)
+    german_financing_info = models.TextField(null=True, blank=True)
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
