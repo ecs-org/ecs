@@ -15,7 +15,8 @@ class UserProfile(models.Model):
     
 
 def _post_user_save(sender, **kwargs):
-    if kwargs['created'] and not kwargs.get('raw'): # 'raw' is passed during fixture loading
+    # FIXME: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299
+    if kwargs['created'] and not kwargs.get('raw'):
         UserProfile.objects.create(user=kwargs['instance'])
     
 post_save.connect(_post_user_save, sender=User)
