@@ -14034,5 +14034,38 @@
         "meeting": 1, 
         "timetable_index": 56
       }
+    },
+    {
+        "pk": 1, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 905, 
+            "thesis_review": false, 
+            "board_member": false
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 906, 
+            "thesis_review": false, 
+            "board_member": false
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 907, 
+            "thesis_review": false, 
+            "board_member": false
+        }
     }
 ]

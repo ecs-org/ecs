@@ -11,8 +11,10 @@ class Submission(models.Model):
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
+    # FIXME: why do we have two field for expedited_review?
     expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
+    # FIXME: why do we have two fields for external_review?
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
     
