@@ -1,20 +1,37 @@
 {% extends "shell.html" %}
 
 {% block htmlbody %}
+<div class="TaskList">
     <h2>Meine Tasks</h2>
     {% for task in assigned_tasks %}
     <div>
-        {{ task.task_type.name }} 
-        <a href="">Erledigt</a> 
-        | <a href="">Delegieren</a> 
-        | <a href="">Rückfrage</a>
+        {{ task.task_type }} 
+        <span class="actions">
+            <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> 
+            | <a href="" class="">Delegieren</a> 
+            | <a href="">Rückfrage</a>
+        </span>
     </div>
     {% endfor %}
-
+</div>
+<div class="TaskList">
     <h2>Offene Tasks</h2>
     {% for task in open_tasks %}
     <div>
-        {{ task.task_type.name }} <a href="">Annehmen</a> | <a href="">Delegieren</a>
+        {{ task.task_type.name }}
+        <span class="actions">
+            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
+            | <a href="">Delegieren</a>
+        </span>
     </div>
     {% endfor %}
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        
+    });
+</script>
 {% endblock %}

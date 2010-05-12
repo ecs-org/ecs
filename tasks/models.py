@@ -11,7 +11,14 @@ from ecs.workflow.signals import token_created, token_consumed
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
     workflow_node = models.OneToOneField(Node, null=True)
-    groups = models.ManyToManyField(Group, related_name='task_types')
+    groups = models.ManyToManyField(Group, related_name='task_types', blank=True)
+    
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        elif self.workflow_node_id:
+            return u'TaskType for %s' % self.workflow_node
+        return u'TaskType <Anonymous>'
     
 class TaskManager(models.Manager):
     def for_data(self, data):
@@ -37,6 +44,12 @@ class Task(models.Model):
     accepted = models.BooleanField(default=False)
     
     objects = TaskManager()
+    
+    @property
+    def locked(self):
+        if not self.workflow_token_id:
+            return False
+        return self.workflow_token.locked
     
     def close(self, user=None):
         self.closed_at = datetime.datetime.now()

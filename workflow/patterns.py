@@ -13,7 +13,7 @@ def generic(token):
 @control()
 def subgraph(token):
     node, workflow = token.node, token.workflow
-    subworkflow = node.node_type.graph.start_workflow(data=workflow.data, parent=token)
+    subworkflow = node.node_type.graph.create_workflow(data=workflow.data, parent=token)
     subworkflow.start()
 
 @control()

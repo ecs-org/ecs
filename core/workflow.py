@@ -88,23 +88,23 @@ def do_external_review(token):
 
 @workflow.control(model=Submission)
 def reject(token):
-    pass
+    workflow.patterns.generic(token)
 
 @workflow.control(model=Submission)
 def accept(token):
-    pass
+    workflow.patterns.generic(token)
     
 @workflow.guard(model=Submission)
 def is_classified_for_external_review(workflow):
-    pass
+    return workflow.data.external_reviewer is True
 
 @workflow.guard(model=Submission)
 def is_accepted(workflow):
-    pass
+    return True
 
 @workflow.guard(model=Submission)
 def is_marked_as_thesis_by_submitter(workflow):
-    return bool(workflow.data.project_type_education_context)
+    return bool(workflow.data.get_most_recent_form().project_type_education_context)
     
 @workflow.guard(model=Submission)
 def is_thesis_and_retrospective(workflow):

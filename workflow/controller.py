@@ -169,7 +169,7 @@ class Registry(object):
     def get_guard(self, edge):
         self._load()
         try:
-            return self._guard_map[edge.guard_id]
+            return self._guards[edge.guard.implementation]
         except KeyError:
             raise KeyError("Unknown guard: %s" % edge.guard)
             

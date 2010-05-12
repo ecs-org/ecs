@@ -79,8 +79,9 @@ class Graph(NodeType):
             nodetype = nodetype.node_type
         return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name)
         
-    def start_workflow(self, **kwargs):
-        return Workflow.objects.create(graph=self, **kwargs)
+    def create_workflow(self, **kwargs):
+        workflow = Workflow.objects.create(graph=self, **kwargs)
+        return workflow
 
 
 class Guard(models.Model):
@@ -101,7 +102,9 @@ class Node(models.Model):
     is_end_node = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u"%s (#%s)" % (self.node_type, self.pk)
+        if self.name:
+            return self.name
+        return u"Node: %s" % (self.node_type)
 
     def add_edge(self, to, guard=None, negate=False, deadline=False):
         if guard:
@@ -259,6 +262,9 @@ class Token(models.Model):
         
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
+        
+    def __unicode__(self):
+        return u"%sToken at %s" % (self.is_consumed and 'Consumed ' or '', self.node)
 
 
 import sys
