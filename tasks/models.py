@@ -68,6 +68,12 @@ class Task(models.Model):
             self.assign(user, commit=False)
         self.accepted = True
         self.save()
+        
+    @property
+    def trail(self):
+        if not self.workflow_token:
+            return set()
+        return Task.objects.filter(workflow_token__in=self.workflow_token.activity_trail)
 
 # workflow integration:
 def workflow_token_created(sender, **kwargs):

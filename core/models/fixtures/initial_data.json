@@ -594,110 +594,11 @@
     }
   },
   {
-    "pk": 13, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "KlPh", 
-      "name": "Klinische Pharmakologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 14, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Onko", 
-      "name": "Onkologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 15, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Infektio", 
-      "name": "Infektiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 16, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Kardio", 
-      "name": "Kardiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 17, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Angio", 
-      "name": "Angiologie", 
-      "users": []
-    }
-  }, 
-  {
     "pk": 18, 
     "model": "core.medicalcategory", 
     "fields": {
       "abbrev": "PsychAna", 
       "name": "Psychoanalyse", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 19, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Auge", 
-      "name": "Augenheilkunde", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 20, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Nuklear", 
-      "name": "Nuklearmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 21, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Labor", 
-      "name": "Labormedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 22, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Physiol", 
-      "name": "Physiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 23, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Anatomie", 
-      "name": "Anatomie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 24, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Zahn", 
-      "name": "Zahlheilkunde", 
       "users": []
     }
   }, 
@@ -711,47 +612,11 @@
     }
   }, 
   {
-    "pk": 26, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Patho", 
-      "name": "Pathologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 27, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Neuro", 
-      "name": "Neurologie", 
-      "users": []
-    }
-  }, 
-  {
     "pk": 28, 
     "model": "core.medicalcategory", 
     "fields": {
       "abbrev": "P\u00e4d", 
       "name": "P\u00e4diatrie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 29, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Derma", 
-      "name": "Dermatologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 30, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Radio", 
-      "name": "Radiologie", 
       "users": []
     }
   }, 
@@ -765,42 +630,6 @@
     }
   }, 
   {
-    "pk": 32, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Ortho", 
-      "name": "Orthop\u00e4die", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 33, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Uro", 
-      "name": "Urologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 34, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "NeuroChir", 
-      "name": "Neurochirurgie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 35, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Notfall", 
-      "name": "Notfallmedizin", 
-      "users": []
-    }
-  }, 
-  {
     "pk": 36, 
     "model": "core.medicalcategory", 
     "fields": {
@@ -810,74 +639,11 @@
     }
   }, 
   {
-    "pk": 37, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Psychol", 
-      "name": "Psychologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 38, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Pulmo", 
-      "name": "Pulmologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 39, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Endo", 
-      "name": "Endokrinologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 40, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Nepho", 
-      "name": "Nephrologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 41, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Gasto", 
-      "name": "Gastroenterologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 42, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Rheuma", 
-      "name": "Rheumatologie", 
-      "users": []
-    }
-  }, 
-  {
     "pk": 43, 
     "model": "core.medicalcategory", 
     "fields": {
       "abbrev": "Intensiv", 
       "name": "Intensivmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 44, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Chir", 
-      "name": "Chirugie", 
       "users": []
     }
   }, 
@@ -900,33 +666,6 @@
     }
   }, 
   {
-    "pk": 47, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Gyn", 
-      "name": "Gyn\u00e4gologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 48, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "HNO", 
-      "name": "Hals-Nasen-Ohrenkrankheiten", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 49, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "An\u00e4sth", 
-      "name": "An\u00e4sthesie", 
-      "users": []
-    }
-  }, 
-  {
     "pk": 50, 
     "model": "core.medicalcategory", 
     "fields": {
@@ -936,12 +675,419 @@
     }
   }, 
   {
+    "pk": 14, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Onko", 
+      "name": "Onkologie", 
+      "users": [
+        777, 
+        778, 
+        815
+      ]
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Infektio", 
+      "name": "Infektiologie", 
+      "users": [
+        783
+      ]
+    }
+  }, 
+  {
+    "pk": 59, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Innere", 
+      "name": "Innere Medizin", 
+      "users": [
+        784
+      ]
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Kardio", 
+      "name": "Kardiologie", 
+      "users": [
+        785, 
+        786, 
+        787, 
+        788, 
+        789
+      ]
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Angio", 
+      "name": "Angiologie", 
+      "users": [
+        790, 
+        791, 
+        792
+      ]
+    }
+  }, 
+  {
+    "pk": 38, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Pulmo", 
+      "name": "Pulmologie", 
+      "users": [
+        793, 
+        794
+      ]
+    }
+  }, 
+  {
+    "pk": 39, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Endo", 
+      "name": "Endokrinologie", 
+      "users": [
+        795, 
+        796, 
+        816, 
+        817
+      ]
+    }
+  }, 
+  {
+    "pk": 40, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Nepho", 
+      "name": "Nephrologie", 
+      "users": [
+        797, 
+        798, 
+        799
+      ]
+    }
+  }, 
+  {
+    "pk": 41, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Gasto", 
+      "name": "Gastroenterologie", 
+      "users": [
+        800, 
+        801, 
+        802, 
+        803
+      ]
+    }
+  }, 
+  {
+    "pk": 42, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Rheuma", 
+      "name": "Rheumatologie", 
+      "users": [
+        804, 
+        805
+      ]
+    }
+  }, 
+  {
+    "pk": 44, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Chir", 
+      "name": "Chirugie", 
+      "users": [
+        889, 
+        807, 
+        808, 
+        809, 
+        810, 
+        811, 
+        812, 
+        822, 
+        824, 
+        861
+      ]
+    }
+  }, 
+  {
+    "pk": 47, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Gyn", 
+      "name": "Gyn\u00e4gologie", 
+      "users": [
+        815, 
+        816, 
+        817, 
+        813, 
+        814
+      ]
+    }
+  }, 
+  {
+    "pk": 48, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "HNO", 
+      "name": "Hals-Nasen-Ohrenkrankheiten", 
+      "users": [
+        818, 
+        819, 
+        820
+      ]
+    }
+  }, 
+  {
+    "pk": 49, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "An\u00e4sth", 
+      "name": "An\u00e4sthesie", 
+      "users": [
+        821, 
+        822, 
+        823, 
+        824
+      ]
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Neuro", 
+      "name": "Neurologie", 
+      "users": [
+        825, 
+        826, 
+        827
+      ]
+    }
+  }, 
+  {
+    "pk": 37, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Psychol", 
+      "name": "Psychologie", 
+      "users": [
+        828, 
+        829, 
+        850, 
+        851
+      ]
+    }
+  }, 
+  {
+    "pk": 60, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Kinder", 
+      "name": "Kinder- und Jugendheilkunde", 
+      "users": [
+        830, 
+        831, 
+        832, 
+        833
+      ]
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Derma", 
+      "name": "Dermatologie", 
+      "users": [
+        834, 
+        835
+      ]
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Radio", 
+      "name": "Radiologie", 
+      "users": [
+        836, 
+        837, 
+        838, 
+        839, 
+        840
+      ]
+    }
+  }, 
+  {
+    "pk": 58, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Haemo", 
+      "name": "H\u00e4matologie und H\u00e4mostaseologie", 
+      "users": [
+        779, 
+        780, 
+        781, 
+        841
+      ]
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Ortho", 
+      "name": "Orthop\u00e4die", 
+      "users": [
+        842, 
+        843
+      ]
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Uro", 
+      "name": "Urologie", 
+      "users": [
+        844
+      ]
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "NeuroChir", 
+      "name": "Neurochirurgie", 
+      "users": [
+        845
+      ]
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Notfall", 
+      "name": "Notfallmedizin", 
+      "users": [
+        846, 
+        847
+      ]
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Auge", 
+      "name": "Augenheilkunde", 
+      "users": [
+        852, 
+        853, 
+        854
+      ]
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Nuklear", 
+      "name": "Nuklearmedizin", 
+      "users": [
+        855
+      ]
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Labor", 
+      "name": "Labormedizin", 
+      "users": [
+        856, 
+        857
+      ]
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Physiol", 
+      "name": "Physiologie", 
+      "users": [
+        848, 
+        849, 
+        858, 
+        862
+      ]
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Anatomie", 
+      "name": "Anatomie", 
+      "users": [
+        859, 
+        863
+      ]
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Zahn", 
+      "name": "Zahnheilkunde", 
+      "users": [
+        860, 
+        861
+      ]
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Patho", 
+      "name": "Pathologie", 
+      "users": [
+        864
+      ]
+    }
+  }, 
+  {
     "pk": 51, 
     "model": "core.medicalcategory", 
     "fields": {
       "abbrev": "Pfleger", 
       "name": "Gesundheits und Krankenpfleger", 
-      "users": []
+      "users": [
+        865, 
+        866, 
+        867
+      ]
     }
   }, 
   {
@@ -950,7 +1096,14 @@
     "fields": {
       "abbrev": "Recht", 
       "name": "Rechtsabteilung", 
-      "users": []
+      "users": [
+        868, 
+        869, 
+        870, 
+        871, 
+        872, 
+        873
+      ]
     }
   }, 
   {
@@ -959,7 +1112,28 @@
     "fields": {
       "abbrev": "Pharma", 
       "name": "Pharmazeuten", 
-      "users": []
+      "users": [
+        874, 
+        875, 
+        876
+      ]
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "KlPh", 
+      "name": "Klinische Pharmakologie", 
+      "users": [
+        892, 
+        771, 
+        772, 
+        773, 
+        774, 
+        775, 
+        776
+      ]
     }
   }, 
   {
@@ -968,7 +1142,11 @@
     "fields": {
       "abbrev": "Patient", 
       "name": "Patientenvertreter", 
-      "users": []
+      "users": [
+        877, 
+        878, 
+        879
+      ]
     }
   }, 
   {
@@ -977,7 +1155,10 @@
     "fields": {
       "abbrev": "BehindertOrg", 
       "name": "Benhindertenorganisation", 
-      "users": []
+      "users": [
+        880, 
+        881
+      ]
     }
   }, 
   {
@@ -986,7 +1167,12 @@
     "fields": {
       "abbrev": "Seel", 
       "name": "Seelsorger", 
-      "users": []
+      "users": [
+        884, 
+        885, 
+        886, 
+        887
+      ]
     }
   }, 
   {
@@ -995,25 +1181,10 @@
     "fields": {
       "abbrev": "techSec", 
       "name": "technischer Sicherheitsbeauftragter", 
-      "users": []
-    }
-  },
-  {
-    "pk": 58, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Haemo", 
-      "name": "Hämatologie und Hämostaseologie", 
-      "users": []
-    }
-  },
-  {
-    "pk": 59, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Innere", 
-      "name": "Innere Medizin", 
-      "users": []
+      "users": [
+        890, 
+        891
+      ]
     }
   },
   {
@@ -13863,5 +14034,38 @@
         "meeting": 1, 
         "timetable_index": 56
       }
+    },
+    {
+        "pk": 1, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 905, 
+            "thesis_review": false, 
+            "board_member": false
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 906, 
+            "thesis_review": false, 
+            "board_member": false
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "core.userprofile", 
+        "fields": {
+            "executive_board_member": false, 
+            "external_review": true, 
+            "user": 907, 
+            "thesis_review": false, 
+            "board_member": false
+        }
     }
 ]

@@ -18,6 +18,7 @@
   <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a>
   {% endcomment %}
   <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback"/></a>
+  <a href="" id="workflow_button" class="workflow_trigger">Workflow</a>
   </p> 
 {% endblock %}
 
@@ -138,6 +139,15 @@
       newMessages.each(function(msg){
           ecs.messages.alert('Neue Nachricht', '<b>{subject}</b> von {sender}'.substitute(msg));
       });
+      
+      // workflow popups
+      $('workflow_button').addEvent('click', function(){
+          new MooDialog.Iframe('{% url ecs.tasks.views.my_tasks %}', {
+              title: 'Workflow',
+              size: {width: 700, height: 400}
+          });
+          return false;
+      })
     });
   </script>
 {% endblock %}

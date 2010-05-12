@@ -4,7 +4,7 @@
     <thead>
     <tr>
         <th></th>
-        {% for field in formset.forms.0 %}
+        {% for field in formset|empty_form %}
             {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                 {% with field|get_field_info as field_info %}
                 <th class="label">

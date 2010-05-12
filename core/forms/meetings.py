@@ -4,7 +4,7 @@ from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
 from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation
-from ecs.core.forms.fields import DateTimeField
+from ecs.core.forms.fields import DateTimeField, TimeField
 
 
 class MeetingForm(forms.ModelForm):
@@ -26,8 +26,8 @@ class BaseConstraintFormSet(BaseModelFormSet):
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
         
 class ConstraintForm(forms.ModelForm):
-    start_time = forms.TimeField(label=u'Von (Uhrzeit)', required=True)
-    end_time = forms.TimeField(label=u'Bis (Uhrzeit)', required=True)
+    start_time = TimeField(label=u'Von (Uhrzeit)', required=True)
+    end_time = TimeField(label=u'Bis (Uhrzeit)', required=True)
     weight = forms.ChoiceField(label=u'Gewichtung', choices=((0.5, u'ungünstig'), (1.0, u'unmöglich')))
 
     class Meta:

@@ -9,13 +9,20 @@ DATE_TIME_INPUT_FORMATS = tuple("%s %s" % (date_format, time_format) for time_fo
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_INPUT_FORMATS)
+        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein.'})
         super(DateField, self).__init__(*args, **kwargs)
 
 class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
         kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
+        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie ein Datum im Format TT.MM.JJJJ und eine Uhrzeit im Format HH:MM ein.'})
         super(DateTimeField, self).__init__(*args, **kwargs)
+
+class TimeField(forms.TimeField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie eine Uhrzeit im Format HH:MM ein.'})
+        super(TimeField, self).__init__(*args, **kwargs)
 
 class InvestigatorChoiceMixin(object):
     def __init__(self, **kwargs):

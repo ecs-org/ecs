@@ -2,7 +2,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-import reversion
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
@@ -11,8 +10,10 @@ class Submission(models.Model):
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
+    # FIXME: why do we have two field for expedited_review?
     expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
+    # FIXME: why do we have two fields for external_review?
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
     
@@ -137,9 +138,9 @@ class SubmissionForm(models.Model):
     subject_planned_total_duration = models.CharField(max_length=80)
 
     # 3a
-    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms')
+    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms', blank=True)
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
-    substance_p_c_t_countries = models.ManyToManyField('countries.Country')
+    substance_p_c_t_countries = models.ManyToManyField('countries.Country', blank=True)
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
     substance_p_c_t_application_type = models.CharField(max_length=80, null=True, blank=True)
@@ -168,7 +169,7 @@ class SubmissionForm(models.Model):
     # 6.1 + 6.2 (via Measure)
 
     # 6.3
-    additional_therapy_info = models.TextField()
+    additional_therapy_info = models.TextField(blank=True)
 
     # 7.x
     german_project_title = models.TextField(null=True)
@@ -190,8 +191,8 @@ class SubmissionForm(models.Model):
     german_aftercare_info = models.TextField(null=True)
     german_payment_info = models.TextField(null=True)
     german_abort_info = models.TextField(null=True)
-    german_dataaccess_info = models.TextField(null=True)
-    german_financing_info = models.TextField(null=True)
+    german_dataaccess_info = models.TextField(null=True, blank=True)
+    german_financing_info = models.TextField(null=True, blank=True)
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
@@ -392,6 +393,10 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
     
+
+import reversion
+from ecs import workflow
+
 if not reversion.is_registered(Submission):
     reversion.register(Measure) 
     reversion.register(ForeignParticipatingCenter) 
@@ -400,3 +405,5 @@ if not reversion.is_registered(Submission):
     reversion.register(NonTestedUsedDrug) 
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
+    
+    workflow.register(Submission)
