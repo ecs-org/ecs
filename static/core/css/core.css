@@ -107,6 +107,12 @@ ul.tab_headers {
   border: 1px solid #ccc;  
 }
 
+/* content */
+
+#content ul {
+  margin: 0 0 20px 20px;
+}
+
 /* form layout hacks */
 
 .ui-tabs .ui-tabs-nav li a {
