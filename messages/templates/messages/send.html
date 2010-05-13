@@ -25,6 +25,7 @@
                 <span class="errors">{{ form.subject.errors }}</span>
             {% endif %}
         </li>
+        {% if form.receiver %}
         <li>
             <label for="id_receiver">Empfänger</label>
             {% if submission or task %}
@@ -45,6 +46,8 @@
             {% if form.receiver.errors %}
                 <span class="errors">{{ form.receiver.errors }}</span>
             {% endif %}
+        </li>
+        {% endif %}
         <li>
             <label for="id_text">Nachricht</label>
             {{ form.text }}
