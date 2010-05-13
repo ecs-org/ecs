@@ -11,10 +11,11 @@ from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, 
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
+from ecs.core import signals
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
+from ecs.utils.xhtml2pdf import xhtml2pdf
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -89,6 +90,7 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        signals.post_thesis_review.send(submission_form)
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
         'retrospective_thesis_review_form': form,
     })

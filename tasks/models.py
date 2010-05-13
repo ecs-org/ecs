@@ -35,11 +35,9 @@ class Task(models.Model):
     created_at = models.DateTimeField(default=datetime.datetime.now)
     created_by = models.ForeignKey(User, null=True, related_name='created_tasks')
 
-    closed_at = models.DateTimeField(null=True)
-    closed_by = models.ForeignKey(User, null=True, related_name='closed_tasks')
-
     assigned_at = models.DateTimeField(null=True)
     assigned_to = models.ForeignKey(User, null=True, related_name='tasks')
+    closed_at = models.DateTimeField(null=True)
     
     accepted = models.BooleanField(default=False)
     
@@ -51,19 +49,21 @@ class Task(models.Model):
             return False
         return self.workflow_token.locked
     
-    def close(self, user=None):
+    def close(self, commit=True):
         self.closed_at = datetime.datetime.now()
-        self.closed_by = user
-        self.save()
+        if commit:
+            self.save()
         
-    def done(self):
+    def done(self, user=None, commit=True):
+        if self.assigned_to_id != user.id:
+            self.assign(user)
         token = self.workflow_token
         if token:
             self.data.workflow.do(token)
         else:
-            self.close()
+            self.close(user=user, commit=commit)
         
-    def assign(self, user, check_authorization=True, commit=False):
+    def assign(self, user, check_authorization=True, commit=True):
         if user and check_authorization:
             groups = self.task_type.groups.all()
             if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
@@ -76,11 +76,12 @@ class Task(models.Model):
         if commit:
             self.save()
         
-    def accept(self, user=None):
+    def accept(self, user=None, commit=True):
         if user:
             self.assign(user, commit=False)
         self.accepted = True
-        self.save()
+        if commit:
+            self.save()
         
     @property
     def trail(self):

@@ -1,5 +1,6 @@
 from ecs import workflow
 from ecs.core.models import Submission, SubmissionForm
+from ecs.core.signals import post_thesis_review
 
 @workflow.activity(model=Submission)
 def change_submission_form(token):
@@ -10,18 +11,11 @@ def change_submission_form(token):
 def inspect_form_and_content_completeness(token):
     pass
 
-# UC-44
-@workflow.activity(model=Submission)
-def acknowledge_submission(token):
-    pass
+def _is_thesis_review_complete(wf):
+    return wf.data.thesis is not None and wf.data.retrospective is not None
 
 # UC-12
-@workflow.activity(model=Submission)
-def filter_retrospective_thesis(token):
-    pass
-
-# UC-12
-@workflow.activity(model=Submission)
+@workflow.activity(model=Submission, lock=_is_thesis_review_complete, signal=post_thesis_review)
 def review_retrospective_thesis(token):
     pass
 
@@ -29,21 +23,6 @@ def review_retrospective_thesis(token):
 # UC-12
 @workflow.activity(model=Submission)
 def rereview_retrospective_thesis(token):
-    pass
-
-# UC-12
-@workflow.activity(model=Submission)
-def assign_expedited_review_class(token):
-    pass
-
-# UC-12
-@workflow.activity(model=Submission)
-def assign_internal_review_class(token):
-    pass
-
-# UC-12
-@workflow.activity(model=Submission)
-def assign_internal_reviewer(token):
     pass
 
 # UC-12 / UC-15 (reassign)

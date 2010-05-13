@@ -1,7 +1,9 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
 from ecs.core.views import render, redirect_to_next_url
 from ecs.tasks.models import Task
+from ecs.tasks.forms import DelegateTaskForm
 
 def task_list(request, user=None, data=None):
     tasks = Task.objects.filter(closed_at=None)
@@ -27,10 +29,12 @@ def my_tasks(request):
         submission_pk = None
     if submission_pk:
         tasks = tasks.filter(content_type=ContentType.objects.get_for_model(Submission), data_id=submission_pk)
-    
-    assigned_tasks = tasks.filter(assigned_to=request.user)
+
+    accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)
+    assigned_tasks = tasks.filter(assigned_to=request.user, accepted=False)
     open_tasks = tasks.filter(assigned_to=None)
     return render(request, 'tasks/compact_list.html', {
+        'accepted_tasks': accepted_tasks,
         'assigned_tasks': assigned_tasks,
         'open_tasks': open_tasks,
     })
@@ -47,11 +51,15 @@ def decline_task(request, task_pk=None):
     
 def delegate_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
-    user = get_object_or_404(User, pk=user_pk)
-    task.assign(user)
-    return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+    form = DelegateTaskForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        task.assign(form.cleaned_data['user'])
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+    return render(request, 'tasks/delegate.html', {
+        'form': form,
+    })
     
 def do_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
-    task.done()
+    task.done(request.user)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))

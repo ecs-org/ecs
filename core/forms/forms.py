@@ -65,13 +65,6 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
-    # FIXME: the following fields do not belong here
-    #medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
-    #thesis = forms.NullBooleanField(required=False)
-    #retrospective = forms.NullBooleanField(required=False)
-    #expedited = forms.NullBooleanField(required=False)
-    #external_reviewer = forms.NullBooleanField(required=False)
-    #external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
 
     class Meta:
         model = SubmissionForm

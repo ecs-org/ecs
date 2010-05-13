@@ -1,15 +1,38 @@
 {% extends "shell.html" %}
 
+{% block htmlcss %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="" />
+{% endblock %}
+
 {% block htmlbody %}
+<ul>
+    <li><a href="">Für diese Studie</a></li>
+    <li><a href="">Alle</a></li>
+</ul>
 <div class="TaskList">
     <h2>Meine Tasks</h2>
-    {% for task in assigned_tasks %}
+    {% for task in accepted_tasks %}
     <div>
         {{ task.task_type }} 
         <span class="actions">
-            <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> 
-            | <a href="" class="">Delegieren</a> 
+            {% if not task.locked %}
+                <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> | 
+            {% endif %}
+            <a href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}" class="">Delegieren</a> 
             | <a href="">Rückfrage</a>
+        </span>
+    </div>
+    {% endfor %}
+</div>
+<div class="TaskList">
+    <h2>Mir zugewiesene Tasks</h2>
+    {% for task in assigned_tasks %}
+    <div>
+        {{ task.task_type.name }}
+        <span class="actions">
+            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
+            | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">Ablehnen</a>
         </span>
     </div>
     {% endfor %}
@@ -21,7 +44,7 @@
         {{ task.task_type.name }}
         <span class="actions">
             <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
-            | <a href="">Delegieren</a>
+            | <a href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}">Delegieren</a>
         </span>
     </div>
     {% endfor %}
