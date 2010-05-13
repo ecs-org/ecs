@@ -8,14 +8,54 @@ class Migration(SchemaMigration):
     
     def forwards(self, orm):
         
-        # Adding field 'Submission.sponsor_required_for_next_meeting'
-        db.add_column('core_submission', 'sponsor_required_for_next_meeting', self.gf('django.db.models.fields.BooleanField')(default=False, blank=True), keep_default=False)
+        # Adding model 'Checklist'
+        db.create_table('core_checklist', (
+            ('blueprint', self.gf('django.db.models.fields.related.ForeignKey')(related_name='results', to=orm['core.ChecklistBlueprint'])),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+        ))
+        db.send_create_signal('core', ['Checklist'])
+
+        # Adding model 'ChecklistBlueprint'
+        db.create_table('core_checklistblueprint', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('core', ['ChecklistBlueprint'])
+
+        # Adding model 'ChecklistAnswer'
+        db.create_table('core_checklistanswer', (
+            ('answer', self.gf('django.db.models.fields.NullBooleanField')(null=True)),
+            ('checklist', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Checklist'])),
+            ('question', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.ChecklistQuestion'])),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('comment', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal('core', ['ChecklistAnswer'])
+
+        # Adding model 'ChecklistQuestion'
+        db.create_table('core_checklistquestion', (
+            ('blueprint', self.gf('django.db.models.fields.related.ForeignKey')(related_name='questions', to=orm['core.ChecklistBlueprint'])),
+            ('text', self.gf('django.db.models.fields.CharField')(max_length=200)),
+            ('link', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('description', self.gf('django.db.models.fields.CharField')(max_length=200, null=True)),
+        ))
+        db.send_create_signal('core', ['ChecklistQuestion'])
     
     
     def backwards(self, orm):
         
-        # Deleting field 'Submission.sponsor_required_for_next_meeting'
-        db.delete_column('core_submission', 'sponsor_required_for_next_meeting')
+        # Deleting model 'Checklist'
+        db.delete_table('core_checklist')
+
+        # Deleting model 'ChecklistBlueprint'
+        db.delete_table('core_checklistblueprint')
+
+        # Deleting model 'ChecklistAnswer'
+        db.delete_table('core_checklistanswer')
+
+        # Deleting model 'ChecklistQuestion'
+        db.delete_table('core_checklistquestion')
     
     
     models = {
@@ -62,6 +102,32 @@ class Migration(SchemaMigration):
             'number': ('django.db.models.fields.CharField', [], {'max_length': '40'}),
             'order': ('django.db.models.fields.IntegerField', [], {}),
             'submissionform': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.SubmissionForm']"})
+        },
+        'core.checklist': {
+            'Meta': {'object_name': 'Checklist'},
+            'blueprint': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'results'", 'to': "orm['core.ChecklistBlueprint']"}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        'core.checklistanswer': {
+            'Meta': {'object_name': 'ChecklistAnswer'},
+            'answer': ('django.db.models.fields.NullBooleanField', [], {'null': 'True'}),
+            'checklist': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Checklist']"}),
+            'comment': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'question': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.ChecklistQuestion']"})
+        },
+        'core.checklistblueprint': {
+            'Meta': {'object_name': 'ChecklistBlueprint'},
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        'core.checklistquestion': {
+            'Meta': {'object_name': 'ChecklistQuestion'},
+            'blueprint': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'questions'", 'to': "orm['core.ChecklistBlueprint']"}),
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True'}),
+            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'link': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True'}),
+            'text': ('django.db.models.fields.CharField', [], {'max_length': '200'})
         },
         'core.completionreportnotification': {
             'Meta': {'object_name': 'CompletionReportNotification'},
