@@ -15464,5 +15464,139 @@
         "thesis_review": false, 
         "board_member": true
       }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistblueprint",
+      "fields": {
+        "name": "Checkliste Statistik"
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Ist das Studienziel ausreichend definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 2,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Ist das Design der Studie geeignet, das Studienziel zu erreichen?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 3,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Ist die Studienpopulation ausreichend definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 4,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Sind die Zielvariablen geeignet definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 5,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 6,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklist",
+      "fields": {
+        "blueprint": 1
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": true,
+        "checklist": 1,
+        "question": 1,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 2,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 2,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 3,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": true,
+        "checklist": 1,
+        "question": 3,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 4,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 4,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 5,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": null,
+        "checklist": 1,
+        "question": 5,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 6,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 6,
+        "comment": ""
+      }
     }
 ]
