@@ -88,6 +88,9 @@ class Task(models.Model):
         if not self.workflow_token:
             return set()
         return Task.objects.filter(workflow_token__in=self.workflow_token.activity_trail)
+        
+    def __unicode__(self):
+        return u"%s Task" % self.task_type
 
 # workflow integration:
 def workflow_token_created(sender, **kwargs):

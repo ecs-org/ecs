@@ -1,12 +1,58 @@
 {% extends "core.html" %}
+{% load core %}
 
 {% block menuSelection %}messages{% endblock %}
 
 {% block content %}
-<form action="" method="post">
-    <table>
-    {{ form }}
-    </table>
+<form action="" method="post" class="form main">
+    <ol>
+        {% if submission %}
+        <li>
+            <label>Studie</label>
+            <span>{{ submission.ec_number }} {{ submission.project_title|smart_truncate:50 }}</span>
+        </li>
+        {% endif %}
+        {% if task %}
+        <li>
+            <label>Task</label>
+            <span>{{ task }}</span>
+        </li>
+        {% endif %}
+        <li>
+            <label for="id_subject">Betreff</label>
+            {{ form.subject }}
+            {% if form.subject.errors %}
+                <span class="errors">{{ form.subject.errors }}</span>
+            {% endif %}
+        </li>
+        <li>
+            <label for="id_receiver">Empfänger</label>
+            {% if submission or task %}
+                <div class="input">
+                {% if submission %}
+                    <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.submitter }}) <br/>
+                {% endif %}
+                {% if task %}
+                    {% for t in task.trail %}
+                        <input type="radio" value="" name="receiver_type" /> {{ t.assigned_to }} ({{ t }}) <br/>
+                    {% endfor %}
+                {% endif %}
+                <input type="radio" value="" name="receiver_type" /> Andere {{ form.receiver }}
+                </div>
+            {% else %}
+                {{ form.receiver }}
+            {% endif %}
+            {% if form.receiver.errors %}
+                <span class="errors">{{ form.receiver.errors }}</span>
+            {% endif %}
+        <li>
+            <label for="id_text">Nachricht</label>
+            {{ form.text }}
+            {% if form.text.errors %}
+                <span class="errors">{{ form.text.errors }}</span>
+            {% endif %}
+        </li>
+    </ol>
     <input type="submit" value="Senden" />
 </form>
 {% endblock %}

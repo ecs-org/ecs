@@ -3,26 +3,30 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Submission
+from ecs.tasks.models import Task
 from ecs.messages.models import Message
 from ecs.messages.forms import SendMessageForm, ReplyToMessageForm
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
+    submission, task, reply_to = None, None, None
+
+    if submission_pk is not None:
+        submission = get_object_or_404(Submission, pk=submission_pk)
+    
     if reply_to_pk is not None:
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
         form = ReplyToMessageForm(request.POST or None, initial={
             'subject': 'Re: %s' % reply_to.subject,
             'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
         })
-    else:
-        reply_to = None
-        form = SendMessageForm(request.POST or None)
-
-    if submission_pk is not None:
-        submission = get_object_or_404(Submission, pk=submission_pk)
-    elif reply_to is not None:
         submission = reply_to.submission
     else:
-        submission = None
+        form = SendMessageForm(request.POST or None)
+        task_pk = request.GET.get('task')
+        if task_pk is not None:
+            task = get_object_or_404(Task, pk=task_pk)
+            # FIXME: filter by contenttype
+            submission = task.data
 
     if request.method == 'POST' and form.is_valid():
         message = form.save(commit=False)
@@ -36,6 +40,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
 
     return render(request, 'messages/send.html', {
         'submission': submission,
+        'task': task,
         'form': form,
     })
     

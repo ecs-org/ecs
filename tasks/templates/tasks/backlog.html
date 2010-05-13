@@ -9,6 +9,7 @@
 <div class="TaskBacklog">
     <table cellspacing="0">
         <tr>
+            <th>PK</th>
             <th>TaskType</th>
             <th colspan="3">Token</th>
             <th>Data</th>
@@ -23,6 +24,7 @@
         </tr>
         <tr>
             <th></th>
+            <th></th>
             <th>Id</th>
             <th>Node</th>
             <th>Workflow</th>
@@ -32,6 +34,7 @@
         </tr>
     {% for task in tasks %}
         <tr class="task{% if task.closed_at %} closed{% endif %}">
+            <td>{{ task.pk }}</td>
             <td>{{ task.task_type }}</td>
             <td>{{ task.workflow_token.pk }}</td>
             <td>{{ task.workflow_token.node_id }}</td>

@@ -214,6 +214,10 @@ ul.tab_headers {
   float: left;
 }
 
+.form.main ol li > div.input{
+  float: left;
+}
+
 .form.main ol li .notes {
   font-size: 0.9em;
   color: #666666;

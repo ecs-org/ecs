@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-
+import reversion
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True)
@@ -308,6 +308,11 @@ class SubmissionForm(models.Model):
     @property
     def measures_nonspecific(self):
         return self.measures.filter(category="6.2")
+        
+    @property
+    def submitter(self):
+        # FIXME: how do we get the creator of this instance from reversion?
+        return None
 
 class Investigator(models.Model):
     # FIXME: rename to `submission_form`
@@ -394,7 +399,6 @@ class ForeignParticipatingCenter(models.Model):
         app_label = 'core'
     
 
-import reversion
 from ecs import workflow
 
 if not reversion.is_registered(Submission):
