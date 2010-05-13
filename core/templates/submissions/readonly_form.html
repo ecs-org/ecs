@@ -1,6 +1,8 @@
 {% extends "submissions/base_form.html" %}
 {% load core %} 
 
+{% block workflow_query_params %}submission={{ submission_form.submission_id }}{% endblock %}
+
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
 {% endblock %}

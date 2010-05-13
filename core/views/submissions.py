@@ -77,6 +77,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
         'readonly': True,
+        'submission_form': submission_form,
     }
     if extra_context:
         context.update(extra_context)
