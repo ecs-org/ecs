@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-#from ecs.core.models.checklist import Checklist
 
 import reversion
 
@@ -48,8 +47,7 @@ class VoteReview(models.Model):
 class Vote(models.Model):
     votereview = models.ForeignKey(VoteReview)
     submissionform = models.ForeignKey('core.SubmissionForm', null=True)
-    #checklists = models.ManyToManyField(Checklist)
-    
+
     class Meta:
         app_label = 'core'
 

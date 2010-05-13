@@ -1,4 +1,4 @@
-#from ecs.core.models.checklist import ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
+from ecs.core.models.checklist import ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.core.models.core import Workflow, EthicsCommission, Amendment, VoteReview, Vote, SubmissionReview, NotificationAnswer, MedicalCategory, ExpeditedReviewCategory
 from ecs.core.models.documents import DocumentType, Document
 from ecs.core.models.submissions import SubmissionForm, Investigator, InvestigatorEmployee, Measure, NonTestedUsedDrug, ForeignParticipatingCenter, Submission

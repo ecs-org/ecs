@@ -15,7 +15,9 @@ class ChecklistBlueprint(models.Model):
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
-    text = models.TextField()
+    text = models.CharField(max_length=200)
+    description = models.CharField(max_length=200, null=True)
+    link = models.CharField(max_length=100, null=True)
 
     class Meta:
         app_label = 'core'
@@ -23,7 +25,7 @@ class ChecklistQuestion(models.Model):
 
 class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='results')
-    object = GenericForeignKey()  # to Submission, Notification, ..
+    object = GenericForeignKey()  # to Submission, Notification, Vote ..
 
     class Meta:
         app_label = 'core'
@@ -32,8 +34,8 @@ class Checklist(models.Model):
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist)
     question = models.ForeignKey(ChecklistQuestion)
-    answer = models.BooleanField(null=True)
-    comment = models.TextField()
+    answer = models.NullBooleanField(null=True)
+    comment = models.CharField(max_length=100)
 
     class Meta:
         app_label = 'core'
