@@ -177,6 +177,7 @@ INSTALLED_APPS = (
     'ecs.workflow',
     'ecs.tasks',
     'ecs.messages',
+    'ecs.dashboard',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'

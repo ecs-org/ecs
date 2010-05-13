@@ -9,9 +9,10 @@ import django
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/core/'}),
+    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
 
     url(r'^core/', include('core.urls')),
+    url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docstash/', include('docstash.urls')),
     url(r'^accounts/login/$', forceauth.exempt(login), {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
