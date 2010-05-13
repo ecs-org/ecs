@@ -77,7 +77,7 @@ def move_timetable_entry(request, meeting_pk=None):
     
 def users_by_medical_category(request):
     category = get_object_or_404(MedicalCategory, pk=request.POST.get('category'))
-    users = list(User.objects.filter(medical_categories=category).values('pk', 'username'))
+    users = list(User.objects.filter(medical_categories=category, ecs_profile__board_member=True).values('pk', 'username'))
     return HttpResponse(simplejson.dumps(users), content_type='text/json')
 
 def timetable_editor(request, meeting_pk=None):
