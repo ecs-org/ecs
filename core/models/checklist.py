@@ -23,7 +23,7 @@ class ChecklistQuestion(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
-        return self.text
+        return "%s" % self.text
 
 
 class Checklist(models.Model):
@@ -34,7 +34,7 @@ class Checklist(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
-        return "pk = %s" % self.pk
+        return "%s" % self.blueprint
 
 
 class ChecklistAnswer(models.Model):
@@ -47,4 +47,4 @@ class ChecklistAnswer(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
-        return "pk = %s" % self.pk
+        return "Answer to '%s'" % self.question
