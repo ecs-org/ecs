@@ -18,6 +18,7 @@ class Submission(models.Model):
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
     
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
+    sponsor_required_for_next_meeting = models.BooleanField(default=False)
     
     def get_most_recent_form(self):
         # FIXME: pick the last accepted SubmissionForm
