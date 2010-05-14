@@ -6,7 +6,7 @@
 
 {% for task in tasks %}
 <div>
-    <h4>{{ task.task_type.name }}</h4>
+    <span>{{ task.task_type.name }}</span>
     <span>Assigned to: {{ task.assigned_to }}</span>
     <span>Groups: {% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
     
