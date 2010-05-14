@@ -5,8 +5,8 @@
 
 {% block content %}
 
+<table>
 {% for thread in threads %}
-<table style="margin: 10px;">
 
     {% with thread.messages.0 as first_message %}
         <tr>
@@ -28,8 +28,10 @@
         </tr>
     {% endfor %}
 
-</table>
+    <tr><td colspan="5">&nbsp;</td</tr>
+
 {% endfor %}
+</table>
 
 {% endblock %}
 

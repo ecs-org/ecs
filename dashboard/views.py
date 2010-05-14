@@ -31,3 +31,4 @@ def read_message(request, message_pk):
     return render(request, 'dashboard/read_message.html', {
         'message': message,
     })
+
