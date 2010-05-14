@@ -1,28 +1,15 @@
 import re
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from ecs.core.views.utils import render
 from ecs.messages.models import Message
+from ecs.messages.utilitys import strip_subject, get_threads
 from ecs.tasks.models import Task
 
-
-def sort_by_thread(messages):
-    threads = {}
-    for message in messages:
-        subject = re.match('([Rr][Ee]:\s*)?(.*)', message.subject).group(2).strip()
-        try:
-            threads[subject].append(message)
-        except KeyError:
-            threads[subject] = [message]
-    
-    print [{'subject': x, 'messages': threads[x]} for x in threads]
-    
-    return [{'subject': x, 'messages': threads[x]} for x in threads]
-
-
 def view_dashboard(request):
-    messages = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-timestamp')
+    messages = Message.objects.select_related('sender', 'receiver').filter(Q(receiver=request.user)|Q(sender=request.user)).order_by('-timestamp')
     message_count = messages.count()
-    threads = sort_by_thread(messages)
+    threads = get_threads(messages)
     tasks = tasks = Task.objects.filter(closed_at=None)
     accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)
     assigned_tasks = tasks.filter(assigned_to=request.user, accepted=False)
