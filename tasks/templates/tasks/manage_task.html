@@ -1,0 +1,65 @@
+{% extends "shell.html" %}
+
+{% block htmlcss %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}tasks/css/tasks.css" />
+{% endblock %}
+
+{% block htmlbody %}
+
+<form action="" method="post">
+    <h2>{{ task }}</h2>
+    <ul>
+        <li>
+            <h3><input type="radio" name="action" id="id_action_complete" value="complete" /><label for="id_action_complete">Fertig / Abgeschlossen / Erledigt</label></h3>
+            <div>
+                
+            </div>
+        </li>
+        <li>
+            <h3><input type="radio" name="action" id="id_action_delegate" value="delegate" /><label for="id_action_complete">Delegieren</label></h3>
+            <div>
+                <label for="id_assign_to">An</label>{{ form.assign_to }}
+                {% if form.assign_to.errors %}
+                    <span class="errors">{{ form.assign_to.errors }}</span>
+                {% endif %}
+            </div>
+        </li>
+        <li>
+            <h3><input type="radio" name="action" id="id_action_message" value="message" /><label for="id_action_message">Frage an</label></h3>
+            {% if task.trail %}
+            <div>
+                <input type="radio" name="question_type" id="id_question_type_callback" value="callback" /><label for="id_question_type_callback">letzte(r) BearbeiterIn</label>
+                {{ form.callback_task }}
+                {% if form.callback_task.errors %}
+                    <span class="errors">{{ form.callback_task.errors }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div>
+                <input type="radio" name="question_type" id="id_question_type_somebody" value="somebody" /><label for="id_question_type_somebody">Person</label>
+                {{ form.receiver }}
+                {% if form.receiver.errors %}
+                    <span class="errors">{{ form.receiver.errors }}</span>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.question }}
+                {% if form.question.errors %}
+                    <span class="errors">{{ form.question.errors }}</span>
+                {% endif %}
+            </div>
+        </li>
+    </ul>
+    <input type="submit" value="Abschicken" />
+</form>
+
+{% endblock %}
+
+{% block jsbottom %}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        
+    });
+</script>
+{% endblock %}

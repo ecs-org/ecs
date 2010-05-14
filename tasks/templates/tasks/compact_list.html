@@ -10,7 +10,7 @@
     <h2>Meine Tasks</h2>
     {% for task in accepted_tasks %}
     <div>
-        {{ task.task_type }} 
+        <a href="{% url ecs.tasks.views.manage_task task_pk=task.pk %}">{{ task.task_type }}</a>
         <span class="actions">
             {% if not task.locked %}
                 <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> | 

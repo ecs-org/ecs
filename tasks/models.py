@@ -111,7 +111,8 @@ def node_saved(sender, **kwargs):
     node, created = kwargs['instance'], kwargs['created']
     if not created or not node.node_type.is_activity:
         return
-    task_type, created = TaskType.objects.get_or_create(workflow_node=node)
+    name = node.name or node.node_type.name or node.node_type.implementation
+    task_type, created = TaskType.objects.get_or_create(workflow_node=node, name=name)
         
 token_created.connect(workflow_token_created)
 token_consumed.connect(workflow_token_consumed)
