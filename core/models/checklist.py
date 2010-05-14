@@ -27,7 +27,7 @@ class ChecklistQuestion(models.Model):
 
 
 class Checklist(models.Model):
-    blueprint = models.ForeignKey(ChecklistBlueprint, related_name='results')
+    blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
     object = GenericForeignKey()  # to Submission, Notification, Vote ..
 
     class Meta:
@@ -38,7 +38,7 @@ class Checklist(models.Model):
 
 
 class ChecklistAnswer(models.Model):
-    checklist = models.ForeignKey(Checklist)
+    checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)
     answer = models.NullBooleanField(null=True)
     comment = models.CharField(max_length=100, null=True, blank=True)
