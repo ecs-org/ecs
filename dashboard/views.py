@@ -23,12 +23,17 @@ def view_dashboard(request):
     messages = Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-timestamp')
     message_count = messages.count()
     threads = sort_by_thread(messages)
-    tasks = Task.objects.filter(closed_at=None, assigned_to=request.user, accepted=True)
+    tasks = tasks = Task.objects.filter(closed_at=None)
+    accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)
+    assigned_tasks = tasks.filter(assigned_to=request.user, accepted=False)
+    open_tasks = tasks.filter(assigned_to=None)
     
     return render(request, 'dashboard/dashboard.html', {
         'threads': threads,
         'message_count': message_count,
-        'tasks': tasks,
+        'accepted_tasks': accepted_tasks,
+        'assigned_tasks': assigned_tasks,
+        'open_tasks': open_tasks,
     })
 
 def read_message(request, message_pk):

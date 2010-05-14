@@ -1,4 +1,4 @@
 <div class="dashboard_widget">
-    <h3>{% block name %}widget{% endblock %}</h3>
+    <h2>{% block name %}widget{% endblock %}</h2>
     {% block content %}{% endblock %}
 </div>
