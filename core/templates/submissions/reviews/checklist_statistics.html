@@ -1,0 +1,27 @@
+{% extends "submissions/readonly_form.html" %}
+{% load core %} 
+
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
+{% block tab_headers %}
+    <li><a href="#checklist_statistics_review_tab">Statistik Review</a></li>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    <div id="checklist_statistics_review_tab" class="tab">
+        <form action="" method="post">
+            <table>
+                {{ checklist_statistics_review_form }}
+            </table>
+            <input type="submit" value="Speichern" />
+        </form>
+    </div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+{% endblock %}
