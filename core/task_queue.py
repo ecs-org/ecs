@@ -1,6 +1,7 @@
 import random, itertools, math
 from celery.decorators import task
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
+from ecs.core.models import Meeting
 
 def optimize_random(timetable, func):
     p = list(timetable)
@@ -29,7 +30,8 @@ def _eval_timetable(metrics):
     return 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1) + 1000.0 / (math.sqrt(metrics._optimal_start_diff_squared_sum) + 1)
 
 @task()
-def optimize_timetable_task(meeting=None, algorithm=None):
+def optimize_timetable_task(meeting_id=None, algorithm=None):
+    meeting = Meeting.objects.get(id=meeting_id)
     retval = False
     try:
         algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)

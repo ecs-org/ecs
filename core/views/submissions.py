@@ -9,12 +9,13 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, ChecklistStatisticsReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.core import paper_forms
+from ecs.core import signals
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
+from ecs.utils.xhtml2pdf import xhtml2pdf
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -60,7 +61,7 @@ def copy_submission_form(request, submission_form_pk=None):
             'submission': submission_form.submission,
             'documents': list(submission_form.documents.all().order_by('pk')),
         })
-        docstash.name = "%s" % submission_form.project_title
+        docstash.name = "%s" % submission_form.project_title[:100] # FIXME: hard clipping is ugly
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
@@ -76,6 +77,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
         'readonly': True,
+        'submission_form': submission_form,
     }
     if extra_context:
         context.update(extra_context)
@@ -89,6 +91,7 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        signals.post_thesis_review.send(submission_form)
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
         'retrospective_thesis_review_form': form,
     })
@@ -101,6 +104,16 @@ def executive_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/executive.html', extra_context={
         'executive_review_form': form,
+    })
+
+
+def checklist_statistics_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = ChecklistStatisticsReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist_statistics.html', extra_context={
+        'checklist_statistics_review_form': form,
     })
 
 
@@ -124,7 +137,7 @@ def create_submission_form(request):
             'formsets': formsets,
             'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
         })
-        request.docstash.name = "%s" % request.POST.get('project_title', '')
+        request.docstash.name = "%s" % request.POST.get('project_title', '')[:100] # FIXME: hard clipping is ugly
 
         if autosave:
             return HttpResponse('autosave successfull')

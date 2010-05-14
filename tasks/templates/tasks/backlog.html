@@ -1,20 +1,55 @@
 {% extends "core.html" %}
 
+{% block htmlcss %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}tasks/css/tasks.css" />
+{% endblock %}
+
 {% block content %}
-<table>
-{% for task in tasks %}
-    <tr>
-        <td>{{ task.task_type }}</td>
-        <td>{{ task.workflow_token }}</td>
-        <td>{{ task.data }}</td>
-        <td>{{ task.created_at }}</td>
-        <td>{{ task.created_by }}</td>
-        <td>{{ task.closed_at }}</td>
-        <td>{{ task.closed_by }}</td>
-        <td>{{ task.assigned_at }}</td>
-        <td>{{ task.assigned_to }}</td>
-        <td>{{ task.accepted }}</td>
-    </tr>
-{% endfor %}
-</table>
+<div class="TaskBacklog">
+    <table cellspacing="0">
+        <tr>
+            <th>PK</th>
+            <th>TaskType</th>
+            <th colspan="3">Token</th>
+            <th>Data</th>
+            <th>Accepted</th>
+            <th>Locked</th>
+            <th>CreatedAt</th>
+            <th>CreatedBy</th>
+            <th>ClosedAt</th>
+            <th>ClosedBy</th>
+            <th>AssigendAt</th>
+            <th>AssigendBy</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Id</th>
+            <th>Node</th>
+            <th>Workflow</th>
+            <th></th><th></th><th></th>
+            <th></th><th></th><th></th>
+            <th></th><th></th><th></th>
+        </tr>
+    {% for task in tasks %}
+        <tr class="task{% if task.closed_at %} closed{% endif %}">
+            <td>{{ task.pk }}</td>
+            <td>{{ task.task_type }}</td>
+            <td>{{ task.workflow_token.pk }}</td>
+            <td>{{ task.workflow_token.node_id }}</td>
+            <td>{{ task.workflow_token.workflow_id }}</td>
+            <td>{{ task.data.ec_number }}</td>
+            <td>{{ task.accepted|yesno }}</td>
+            <td>{{ task.locked|yesno }}</td>
+            <td>{{ task.created_at|date:'d.m.Y H:i:s' }}</td>
+            <td>{{ task.created_by }}</td>
+            <td>{{ task.closed_at|date:'d.m.Y H:i:s' }}</td>
+            <td>{{ task.closed_by }}</td>
+            <td>{{ task.assigned_at|date:'d.m.Y H:i:s' }}</td>
+            <td>{{ task.assigned_to }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
 {% endblock %}

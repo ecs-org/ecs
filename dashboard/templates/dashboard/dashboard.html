@@ -1,0 +1,27 @@
+{% extends "core.html" %}
+
+{% block menuSelection %}overview{% endblock %}
+
+{% block htmltitle %}ECS Dashboard{% endblock %}
+
+{% block headertitle %}
+    <h1>Dashboard</h1>
+{% endblock %}
+
+{% block content %}
+    {% include "dashboard/messages.inc" %}
+    {% include "dashboard/tasks.inc" %}
+{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript">
+    function read_message(message_pk) {
+      new MooDialog.Iframe('/dashboard/message/'+message_pk+'/read/', {
+          title: 'Nachricht',
+          size: {width: 700, height: 400}
+      });
+    }
+  </script>
+{% endblock %}
+

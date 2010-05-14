@@ -12,7 +12,7 @@
     <form action="" method="post">
     {% for entry in meeting %}
         <div class="entry">
-            <h2>{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}: {{ entry.submission.project_title }}</h2>
+            <h2>{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}: {{ entry.submission.ec_number }} {{ entry.submission.project_title|smart_truncate:50 }}</h2>
             <ul>
             {% for cat in entry.medical_categories %}
             <li>

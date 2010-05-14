@@ -23,10 +23,12 @@ urlpatterns = patterns(
 
     url(r'^submission/(?P<submission_pk>\d+)/edit/', 'ecs.core.views.edit_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/schedule/', 'ecs.core.views.schedule_submission'),
+    url(r'^submission/(?P<submission_pk>\d+)/messages/send/', 'ecs.messages.views.send_message'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/pdf/$', 'ecs.core.views.submission_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/copy/$', 'ecs.core.views.copy_submission_form'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/readonly/$', 'ecs.core.views.readonly_submission_form'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/statistics/$', 'ecs.core.views.checklist_statistics_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/executive/$', 'ecs.core.views.executive_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/thesis/$', 'ecs.core.views.retrospective_thesis_review'),
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),

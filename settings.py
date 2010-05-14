@@ -176,7 +176,11 @@ INSTALLED_APPS = (
     'ecs.pdfviewer',
     'ecs.workflow',
     'ecs.tasks',
+    'ecs.messages',
+    'ecs.dashboard',
 )
+
+AUTH_PROFILE_MODULE = 'core.UserProfile'
 
 # use ghettoq as carrot backend, so we dont need any external brocker for testing
 if DEBUG or (platform.node != "ecsdev.ep3.at"):

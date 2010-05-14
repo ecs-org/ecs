@@ -9,20 +9,22 @@ import django
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/core/'}),
+    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
 
     url(r'^core/', include('core.urls')),
+    url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docstash/', include('docstash.urls')),
-    url(r'^tasks/backlog/$', 'ecs.tasks.views.task_backlog'),
     url(r'^accounts/login/$', forceauth.exempt(login), {'template_name': 'login.html'}),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^feedback/', include('feedback.urls')),
+    url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^groupchooser/', include('ecs.groupchooser.urls')),
-    url(r'^pdfviewer/', include('pdfviewer.urls')),
+    url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
+    url(r'^tasks/', include('ecs.tasks.urls')),
+    url(r'^messages/', include('ecs.messages.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),

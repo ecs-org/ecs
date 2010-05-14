@@ -1,0 +1,21 @@
+.TaskBacklog table{
+    border: 1px solid #cccccc;
+    border-left: none;
+}
+.TaskBacklog td,
+.TaskBacklog th{
+    text-align: left;
+    font-size: 13px;
+    padding: 3px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    border-left: 1px solid #cccccc;
+}
+
+.TaskBacklog th{
+    border-bottom: 1px solid #cccccc;
+}
+
+.TaskBacklog tr.closed td{
+    color: #999999;
+}

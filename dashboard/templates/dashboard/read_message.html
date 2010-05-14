@@ -1,0 +1,11 @@
+{% extends "shell.html" %}
+
+{% block menuSelection %}messages{% endblock %}
+
+{% block htmlbody %}
+<h2>{{ message.subject }}</h2>
+von {{ message.sender  }} and {{ message.receiver }}
+<div>
+    {{ message.text|safe }}
+</div>
+{% endblock %}

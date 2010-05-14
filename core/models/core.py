@@ -39,9 +39,6 @@ class Amendment(models.Model):
     class Meta:
         app_label = 'core'
 
-class Checklist(models.Model):
-    class Meta:
-        app_label = 'core'
 
 class VoteReview(models.Model):
     class Meta:
@@ -50,8 +47,7 @@ class VoteReview(models.Model):
 class Vote(models.Model):
     votereview = models.ForeignKey(VoteReview)
     submissionform = models.ForeignKey('core.SubmissionForm', null=True)
-    checklists = models.ManyToManyField(Checklist)
-    
+
     class Meta:
         app_label = 'core'
 
@@ -91,7 +87,6 @@ class MedicalCategory(models.Model):
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
 if not reversion.is_registered(Amendment):
     reversion.register(Amendment) 
-    reversion.register(Checklist) 
     reversion.register(EthicsCommission) 
     reversion.register(SubmissionReview) 
     reversion.register(NotificationAnswer) 

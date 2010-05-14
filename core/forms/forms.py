@@ -65,13 +65,6 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
-    # FIXME: the following fields do not belong here
-    #medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
-    #thesis = forms.NullBooleanField(required=False)
-    #retrospective = forms.NullBooleanField(required=False)
-    #expedited = forms.NullBooleanField(required=False)
-    #external_reviewer = forms.NullBooleanField(required=False)
-    #external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
 
     class Meta:
         model = SubmissionForm
@@ -150,7 +143,7 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
 InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1) 
 
@@ -163,7 +156,7 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
 
 class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
 InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 
