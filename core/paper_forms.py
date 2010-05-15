@@ -262,7 +262,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.4.2', 'submitter_is_main_investigator', u'Hauptprüfer/in (monozentrische Studie)'),
     FieldInfo('9.4.3', 'submitter_is_sponsor', u'Sponsor bzw. Vertreter/in des Sponsors'),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', u'vom Sponsor autorisierte Person/Organisation'),
-    FieldInfo(None, 'submitter_agrees_to_publishing', None),
+    FieldInfo(None, 'submitter_agrees_to_publishing', None, short_label=u'Einreicher stimmt der Veröffentlichung zu'),
 ))
 
 
