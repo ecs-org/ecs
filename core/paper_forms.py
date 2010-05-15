@@ -114,8 +114,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.5', 'invoice_fax', u'FAX'),
     FieldInfo('1.5.6', 'invoice_email', u'e-mail'),
     FieldInfo('1.5.7', 'invoice_uid', u'UID-Nummer'),
-    FieldInfo(None, 'invoice_uid_verified_level1', None),
-    FieldInfo(None, 'invoice_uid_verified_level2', None),
+    FieldInfo(None, 'invoice_uid_verified_level1', None, short_label=u'MWST Nr verifiziert (Stufe1)'),
+    FieldInfo(None, 'invoice_uid_verified_level2', None, short_label=u'MWST Nr verifiziert (Stufe2)'),
     # 2. Eckdaten der Studie
     # 2.1 Art des Projektes
     FieldInfo('2.1.1', 'project_type_non_reg_drug', u'Klinische Prüfung eines nicht registrierten Arzneimittels'),
