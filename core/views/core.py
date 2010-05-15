@@ -68,10 +68,12 @@ def create_notification(request, notification_type_pk=None):
         submit = request.POST.get('submit', False)
         autosave = request.POST.get('autosave', False)
         
+        form.errors # Trigger form validation early because we need to access cleaned_data in advance
         request.docstash.update({
             'form': form,
             'type_id': notification_type_pk,
             'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
+            'submission_forms': form.cleaned_data.get('submission_forms'),
         })
         request.docstash.name = "%s" % notification_type.name
         
