@@ -330,6 +330,10 @@ fieldset.disabled{
   text-indent: 0px;
 }
 
+.form.main ol li .rte_display blockquote{
+    margin-left: 2em;
+}
+
 .form.main ol li .paperform_number {
   color: #666666;
   font-size: 0.9em;
