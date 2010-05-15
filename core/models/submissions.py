@@ -341,7 +341,7 @@ class InvestigatorEmployee(models.Model):
     # TODO: check FIXME above
     submission = models.ForeignKey(Investigator)
 
-    sex = models.CharField(max_length=1, choices=[("m", "male"), ("f", "female"), ("?", "")])
+    sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
     title = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
