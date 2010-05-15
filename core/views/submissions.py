@@ -167,6 +167,7 @@ def create_submission_form(request):
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
+            request.docstash.delete()
             return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
@@ -206,7 +207,7 @@ def submission_pdf(request, submission_form_pk=None):
 def submission_form_list(request):
     return render(request, 'submissions/list.html', {
         'submission_forms': SubmissionForm.objects.select_related('submission').order_by('project_title'),
-        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form'),
+        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False),
     })
 
 
