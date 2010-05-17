@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 
 from ecs.core.views.utils import render, redirect_to_next_url
-from ecs.core.models import Document, Submission, SubmissionForm, Investigator
+from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, Checklist
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, ChecklistStatisticsReviewForm
@@ -109,7 +109,9 @@ def executive_review(request, submission_form_pk=None):
 
 def checklist_statistics_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = ChecklistStatisticsReviewForm(request.POST or None, instance=submission_form.submission)
+    blueprint = ChecklistBlueprint.objects.get(pk=1)  # blueprint checklist review
+    checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=request.user)
+    form = ChecklistStatisticsReviewForm(request.POST or None, instance=checklist)
     if request.method == 'POST' and form.is_valid():
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist_statistics.html', extra_context={

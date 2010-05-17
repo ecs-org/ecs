@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
-from ecs.core.models import Submission, TimetableEntry, Checklist, ChecklistAnswer
+from ecs.core.models import Submission, TimetableEntry, ChecklistBlueprint, Checklist, ChecklistAnswer, ChecklistQuestion
 
 
 class ExecutiveReviewForm(forms.ModelForm):
@@ -20,7 +20,6 @@ class RetrospectiveThesisReviewForm(forms.ModelForm):
 
 
 class ChecklistStatisticsReviewForm(forms.ModelForm):
-    # just a test
     class Meta:
-        model = ChecklistAnswer
-        fields = ()
+        model = Checklist
+        #fields = ('blueprint')

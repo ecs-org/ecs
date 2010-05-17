@@ -15536,7 +15536,9 @@
       "pk": 1,
       "model": "core.checklist",
       "fields": {
-        "blueprint": 1
+        "blueprint": 1,
+        "submission": 1,
+        "user": 898
       }
     },
     {

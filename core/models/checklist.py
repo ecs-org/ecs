@@ -2,6 +2,8 @@
 from django.db import models
 from django.contrib.contenttypes.generic import GenericForeignKey
 
+from ecs.core.models.submissions import Submission
+
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
@@ -28,7 +30,9 @@ class ChecklistQuestion(models.Model):
 
 class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
-    object = GenericForeignKey()  # to Submission, Notification, Vote ..
+    submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
+    #object = GenericForeignKey()  # Postponed
+    user = models.ForeignKey('auth.user')
 
     class Meta:
         app_label = 'core'
