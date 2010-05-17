@@ -11,18 +11,20 @@ def change_submission_form(token):
 def inspect_form_and_content_completeness(token):
     pass
 
-def _is_thesis_review_complete(wf):
+@workflow.activity(model=Submission)
+def acknowledge_signed_submission_form(token):
+    pass
+
+def _is_thesis_categorization_complete(wf):
     return wf.data.thesis is not None and wf.data.retrospective is not None
 
 # UC-12
-@workflow.activity(model=Submission, lock=_is_thesis_review_complete, signal=post_thesis_review)
-def review_retrospective_thesis(token):
+@workflow.activity(model=Submission, lock=_is_thesis_categorization_complete, signal=post_thesis_review)
+def categorize_retrospective_thesis(token):
     pass
 
-# FIXME: does this really differ from 'review_retrospective_thesis' ?
-# UC-12
 @workflow.activity(model=Submission)
-def rereview_retrospective_thesis(token):
+def review_retrospective_thesis(token):
     pass
 
 # UC-12 / UC-15 (reassign)
