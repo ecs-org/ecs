@@ -128,7 +128,6 @@ input, textarea, select {
     /* FIXME: this is a hack */
     font-size: 12px;
 }
-
 .form.main .field, .form.main .tab {
   background: #f9feff;
   min-width: 700px;
@@ -145,15 +144,12 @@ input, textarea, select {
   padding: 5px 0 10px 5px;
   line-break: normal;
 }
-
 .form.main, .form.main * {
   font-size: 9pt;
 }
-
 *html .form.main .field {
   width: 700px;
 }
-
 .form.main ol {
   padding: 10px 0;
   margin-top: 10px;
@@ -171,7 +167,6 @@ input, textarea, select {
   list-style-type: none;
   margin-bottom: 10px;
 }
-
 .form.main ol li input[type=text], .form.main ol li textarea {
 }
 .form.main ol li textarea {
@@ -189,14 +184,12 @@ input, textarea, select {
   text-align: right;
   float: left;
 }
-
 .form.main ol li label:after {
   content: ":";
 }
 .form.main th.label {
   text-align: left;
 }
-
 .form.main .errors ul li {
   margin-left: 220px;
   display: block;
@@ -222,17 +215,14 @@ input, textarea, select {
 .form.main ol li.BooleanField input {
   float: left;
 }
-
 .form.main ol li div.input{
   float: left;
 }
-
 .form.main ol li .notes {
   font-size: 0.9em;
   color: #666666;
   padding-left: 10px;
 }
-
 .form.main th.label .notes{
   display: block;
 }
@@ -273,7 +263,6 @@ div.inline_formset .form a.delete_row {
   top: 0px;
   left: 0px;
 }
-
 .form.main a.add_row, #meeting_constraint_editor a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
   width: 16px;
@@ -302,7 +291,6 @@ div.inline_formset .form a.delete_row {
 fieldset.disabled {
   display: none;
 }
-
 .form.main ol li .mooeditable-container {
   border: 1px solid #666666;
   margin-left: 240px;
@@ -336,11 +324,9 @@ fieldset.disabled {
   left: 0px;
   text-indent: 0px;
 }
-
 .form.main ol li .rte_display blockquote{
     margin-left: 2em;
 }
-
 .form.main ol li .paperform_number {
   color: #666666;
   font-size: 0.9em;
@@ -364,7 +350,6 @@ fieldset.disabled {
 	height: 1.4em;
 }
 
-
 .form.main ol li .datepicker_toggler {
   position: absolute;
   text-indent: -9999px; 
@@ -373,20 +358,22 @@ fieldset.disabled {
   width: 16px;
   margin-left: 5px;
 }
+.form .star {
+  margin: 0 5px 0 1px;
+  font-size: 14px;
+}
 
 /* documents */
 
 .doclist {
   border: 1px solid #666666;
 }
-
 .doclist h3 {
   font-size: 1em;
   background-image: url(/static/core/images/icon-triangle.png);
   background-repeat: no-repeat;
   padding-left: 24px;
 }
-
 .doclist div {
   display: block;
   margin-left: 2em;
@@ -401,7 +388,6 @@ table.notification th {
     text-align: right;
     padding-right: 1em;
 }
-
 table.notif_meta {
     border: 1px solid #cccccc;
     border-left: none;

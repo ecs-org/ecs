@@ -18,11 +18,11 @@
   <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a>
   {% endcomment %}
   <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
-  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}/core/images/workflow.png" alt="workflow" title="Workflow" /></a>
   </p> 
 {% endblock %}
 
 {% block usertoolbar %} 
+  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}/core/images/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
         
 {% block usermenu %}
@@ -50,13 +50,13 @@
       </ul>
     </li>
     <li>
-        <span class="togglers">Nachrichten</span>
-        <ul class="elements">
-            <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
-            <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
-            <li><a href="{% url ecs.messages.views.list_messages %}">Liste aller Nachrichten</a></li>
-            <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
-        </ul>
+      <span class="togglers">Nachrichten</span>
+      <ul class="elements">
+          <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
+          <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
+          <li><a href="{% url ecs.messages.views.list_messages %}">Liste aller Nachrichten</a></li>
+          <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+      </ul>
     </li>
   </ul>
 {% endblock %}
