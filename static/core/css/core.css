@@ -112,8 +112,17 @@ ul.tab_headers {
 #content ul {
   margin: 0 0 20px 20px;
 }
+input, textarea, select {
+  border: 1px solid #666;
+}
 
-/* form layout hacks */
+/* sidebar */
+
+.togglers {
+  cursor: pointer;
+}
+
+/* form layout */
 
 .ui-tabs .ui-tabs-nav li a {
     /* FIXME: this is a hack */
@@ -195,7 +204,7 @@ ul.tab_headers {
   color: #ff0000;
   padding: 2px;
 }
-.form.main table td > .errors li{
+.form.main table td .errors li{
 	margin: 0px;
 	float: none;
 }
@@ -214,7 +223,7 @@ ul.tab_headers {
   float: left;
 }
 
-.form.main ol li > div.input{
+.form.main ol li div.input{
   float: left;
 }
 
@@ -240,17 +249,15 @@ ul.tab_headers {
   display: block;
   color: #666;
 }
-
-
 .inline_formset .form {
-    position: relative;
-    padding-top: 20px;
+  position: relative;
+  padding-top: 20px;
 }
-tr.form > td{
-    vertical-align: top;
+tr.form td{
+  vertical-align: top;
 }
 .inline_formset .form a.delete_row,
-.investigator_tab > a.delete_row{
+.investigator_tab a.delete_row {
   background: url(/static/core/images/remove.png) no-repeat;
   height: 16px;
   width: 16px;
@@ -267,7 +274,7 @@ div.inline_formset .form a.delete_row {
   left: 0px;
 }
 
-.form.main a.add_row {
+.form.main a.add_row, #meeting_constraint_editor a.add_row {
   background: url(/static/core/images/add.png) no-repeat;
   width: 16px;
   height: 16px;
@@ -278,8 +285,8 @@ div.inline_formset .form a.delete_row {
   /* FIXME: margin is needed because tables still have cellspacing */
   margin-left: 2px;
 }
-.form.main .investigator_tab > a.add_row,
-.form.main .investigator_tab > a.delete_row{
+.form.main .investigator_tab a.add_row,
+.form.main .investigator_tab a.delete_row {
 	display: inline;
 	overflow: visible;
 	width: auto;
@@ -292,8 +299,8 @@ div.inline_formset .form a.delete_row {
   border-bottom: 0 none !important;
 }
 
-fieldset.disabled{
-    display: none;
+fieldset.disabled {
+  display: none;
 }
 
 .form.main ol li .mooeditable-container {
@@ -417,60 +424,53 @@ table.notif_meta th {
   list-style: none;
   background-color: #eeeeee;
 }
-
 #meeting_editor #userlist li{
   border-top: 1px solid #ffffff;
   padding: 5px;
 }
-
 #meeting_editor #userlist .info{
   background-color: #ffffff;
   font-size: 0.8em;
 }
-
 #meeting_editor #userlist .info .constraints{
   margin-bottom: 0px;
 }
-
 #meeting_editor #userlist .info .constraints li{
   padding: 0px;
 }
-
-
-#meeting_constraint_editor #constraint_formset{
+#meeting_constraint_editor {
   width: 800px;
 }
-#meeting_constraint_editor form ol li{
+#meeting_constraint_editor form ol li {
   width: 100px;
   float: left;
   clear: none;
   display: block;
   height: 50px;
 }
-#meeting_constraint_editor form ol{
+#meeting_constraint_editor form ol {
   margin: 0px;
   height: 50px;
 }
-#meeting_constraint_editor form ol li label{
+#meeting_constraint_editor form ol li label {
   width: auto;
   float: none;
   display: block;
   text-align: left;
 }
-#meeting_constraint_editor form ol li input[type=text]{
+#meeting_constraint_editor form ol li input[type=text] {
   width: 7em;
 }
-#meeting_constraint_editor form .inline_formset .form{
+#meeting_constraint_editor form .inline_formset .form {
   padding: 0px;
   clear: both;
 }
-#meeting_constraint_editor form .inline_formset .form a.delete_row{
-  width: 100px;
+#meeting_constraint_editor form .inline_formset .form a.delete_row { 
+  width: 40px;
   float: right;
   display: block;
 }
-
-#meeting_editor .constraint_status{
+#meeting_editor .constraint_status {
   width: 10px;
   height: 10px;
   text-indent: -20px;
@@ -478,13 +478,11 @@ table.notif_meta th {
   float: left;
   overflow: hidden;
 }
-
-#meeting_editor #userlist .constraints{
+#meeting_editor #userlist .constraints {
   list-style: none;
   margin-left: 0px;
 }
-
-#meeting_editor .entry{
+#meeting_editor .entry {
   border: 1px solid #eeeeee;
   margin: 3px;
   display: block;
@@ -493,11 +491,10 @@ table.notif_meta th {
   position: relative;
 }
 
-#meeting_editor .entry.break{
+#meeting_editor .entry.break {
   background-color: #ffffcc;
 }
-
-#meeting_editor .entry a.remove{
+#meeting_editor .entry a.remove {
   position: absolute;
   top: 0px;
   right: 0px;
@@ -514,40 +511,33 @@ table.notif_meta th {
   background-color:#cccccc;
   height:100%;
 }
-
 #meeting_editor .entry input.duration{
   width: 5em;
 }
-
 #meeting_editor .entry input.optimal_start{
   width: 5em;
 }
-
 #meeting_editor .entry h3{
   font-size: 1em;
 }
-
-#meeting_editor #timetable{
+#meeting_editor #timetable {
   list-style: none;
   width:550px;
   font-size:13px;
   margin: 0px;
 }
-
-#meeting_participation_editor form{
+#meeting_participation_editor form {
   float: none;
   display: inline;
 }
-
-#meeting_participation_editor .entry{
+#meeting_participation_editor .entry {
   clear: both;
 }
 
-#meeting_participation_editor .entry h2{
+#meeting_participation_editor .entry h2 {
   margin: 0px;
 }
-
-#meeting_participation_editor .entry a.remove{
+#meeting_participation_editor .entry a.remove {
   background: url(/static/core/images/remove.png) no-repeat;
   width: 16px;
   height: 16px;
@@ -557,7 +547,7 @@ table.notif_meta th {
   overflow: hidden;
   display: inline-block;
 }
-#meeting_participation_editor .entry a.add{
+#meeting_participation_editor .entry a.add {
   background: url(/static/core/images/add.png) no-repeat;
   width: 16px;
   height: 16px;
@@ -566,31 +556,57 @@ table.notif_meta th {
   display: inline-block;
 }
 #content #meeting_participation_editor .entry a.remove:hover,
-#content #meeting_participation_editor .entry a.add:hover{
+#content #meeting_participation_editor .entry a.add:hover  {
   text-decoration: none;
   border-bottom: 0px;
 }
 
-#meeting_participation_editor .entry .user_list > span{
+#meeting_participation_editor .entry .user_list > span {
   margin-right: 0.5em;
   padding: 2px;
   border: 1px solid #ccccff;
   background-color: #eeeeff;
 }
 
+/* constraint formset */
+
+#constraint_formset {
+  width: 800px;
+  margin-top: 20px;
+}
+#constraint_formset th {
+  text-align: left;
+  width: 200px;
+}
+#constraint_formset .label {
+  padding-bottom: 10px;
+}
+#constraint_formset th:first-child {
+  text-align: left;
+  width: 40px;
+}
+#constraint_formset td {
+  text-align: left;  
+}
+#constraint_formset td:first-child {
+  text-align: left;
+  width: 40px;
+}
+
+/* dashboard */
+
 .dashboard_widget {
-    border: 2px solid #D8E6EF;
-    padding: 10px;
-    background-color: #f5f5d2;
-    -moz-border-radius: 10px;
-    margin-bottom: 40px;
+  float: left;
+  border: 2px solid #D8E6EF;
+  padding: 10px;
+  background-color: #f5f5d2;
+  -moz-border-radius: 10px;
+  margin: 0 20px 40px 20px;
 }
-
 .dashboard_widget h3 {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
-
 .dashboard_widget td {
-    padding-left: 5px;
-    padding-right: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
