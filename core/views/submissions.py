@@ -63,6 +63,12 @@ def copy_submission_form(request, submission_form_pk=None):
         })
         docstash.name = "%s" % submission_form.project_title[:100] # FIXME: hard clipping is ugly
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
+    
+
+def copy_latest_submission_form(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    submission_form = submission.get_most_recent_form()
+    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html'):

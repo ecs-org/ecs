@@ -24,4 +24,11 @@
 
 {% block jsbottom %}
     {{ block.super }}
+    {% if executive_review_form.is_valid %}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.showWorkflowPopup();
+        });
+    </script>
+    {% endif %}
 {% endblock %}

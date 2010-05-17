@@ -142,13 +142,19 @@
       });
       
       // workflow popups
-      $('workflow_button').addEvent('click', function(){
+      
+      ecs.showWorkflowPopup = function(){
           new MooDialog.Iframe('{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}', {
               title: 'Workflow',
               size: {width: 700, height: 400}
-          });
+          });          
+      };
+      
+      $('workflow_button').addEvent('click', function(){
+          ecs.showWorkflowPopup();
           return false;
-      })
+      });
+      
     });
   </script>
 {% endblock %}

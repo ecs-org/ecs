@@ -217,7 +217,7 @@
             this.setOptions(options);
             this.forms = containers.getElements(this.options.formSelector).flatten();
             if(!this.forms.length){
-                console.log(this.options.prefix, this.forms);
+                return;
             }
             if(this.forms[0].hasClass(this.options.templateClass)){
                 this.template = this.forms.pop();

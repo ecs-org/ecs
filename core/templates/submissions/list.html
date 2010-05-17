@@ -18,7 +18,7 @@
     {% for submission_form in submission_forms %}
         {% ifchanged submission_form.submission %}
             <h3>{{ submission_form.submission.ec_number }}
-                <a href="{% url ecs.core.views.edit_submission submission_pk=submission_form.submission.pk %}">Bearbeiten</a>
+                <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission_form.submission.pk %}">Bearbeiten</a>
                  | <a href="{% url ecs.core.views.schedule_submission submission_pk=submission_form.submission.pk %}">Schedule</a>
             </h3>
             {% with submission_form.submission.medical_categories.all as categories %}
@@ -41,7 +41,7 @@
             <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>
             (<a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
             | <a href="{% url pdf_show 3 1 1 %}">View PDF</a>
-            | <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>
+            <!--| <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>-->
             | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Review</a>
             | <a href="{% url ecs.core.views.checklist_statistics_review submission_form_pk=submission_form.pk %}">Statistik Review</a>
             | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
