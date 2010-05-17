@@ -10,10 +10,10 @@ class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
     
 
-TASK_MANAGEMENT_CHOICES = ('delegate', 'message', 'complete')
-TASK_QUESTION_TYPE = ('callback', 'somebody')
+TASK_MANAGEMENT_CHOICES = ('delegate', 'message', 'complete', )
+TASK_QUESTION_TYPE = ('callback', 'somebody', 'related', )
 
-class CallbackTaskChoiceField(forms.ModelChoiceField):
+class TaskChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, task):
         return u"%s (%s)" % (task.assigned_to, task)
 
@@ -27,7 +27,8 @@ class ManageTaskForm(forms.Form):
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
         super(ManageTaskForm, self).__init__(*args, **kwargs)
-        self.fields['callback_task'] = CallbackTaskChoiceField(queryset=task.trail, required=False)
+        self.fields['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
+        self.fields['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
     
     def clean(self):
         cd = self.cleaned_data
@@ -43,5 +44,10 @@ class ManageTaskForm(forms.Form):
             elif question_type == 'somebody':
                 if not cd.get('receiver'):
                     self._errors['receiver'] = self.error_class([u'Sie müssen einen Benutzer auswählen.'])
+            elif question_type == 'related':
+                if not cd.get('related_task'):
+                    self._errors['related_task'] = self.error_class([u'Sie müssen einen Benutzer auswählen.'])
+            elif not question_type:
+                self._errors['question_type'] = self.error_class([u'Sie müssen einen Adressaten auswählen'])
 
-        return self.cleaned_data
+        return cd

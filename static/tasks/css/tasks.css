@@ -19,3 +19,22 @@
 .TaskBacklog tr.closed td{
     color: #999999;
 }
+
+#TaskForm li > h3{
+    font-size: 1em;
+    background-color: #eeeeee;
+}
+#TaskForm li > div{
+    margin-left: 4em;
+}
+#TaskForm li{
+    padding-bottom: 0.5em;
+}
+
+#TaskForm .errors{
+    color: #ff0000;
+}
+
+#TaskForm .lockInfo{
+    background-color: #ffff00;
+}

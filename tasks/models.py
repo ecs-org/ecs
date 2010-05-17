@@ -89,6 +89,12 @@ class Task(models.Model):
             return set()
         return Task.objects.filter(workflow_token__in=self.workflow_token.activity_trail)
         
+    @property
+    def related_tasks(self):
+        if not self.workflow_token:
+            return Task.objects.none()
+        return Task.objects.filter(workflow_token__workflow=self.workflow_token.workflow)
+        
     def __unicode__(self):
         return u"%s Task" % self.task_type
 

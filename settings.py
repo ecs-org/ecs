@@ -132,6 +132,7 @@ MIDDLEWARE_CLASSES = (
     'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
+	'ecs.workflow.middleware.WorkflowMiddleware',
 )   
 
 # debug toolbar config:

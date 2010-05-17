@@ -16,7 +16,8 @@ def acknowledge_signed_submission_form(token):
     pass
 
 def _is_thesis_categorization_complete(wf):
-    return wf.data.thesis is not None and wf.data.retrospective is not None
+    print "locked", (wf.data.thesis is not None) and (wf.data.retrospective is not None)
+    return (wf.data.thesis is not None) and (wf.data.retrospective is not None)
 
 # UC-12
 @workflow.activity(model=Submission, lock=_is_thesis_categorization_complete, signal=post_thesis_review)

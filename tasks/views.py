@@ -63,6 +63,8 @@ def manage_task(request, task_pk=None):
                 to = form.cleaned_data['callback_task'].assigned_to
             elif question_type == 'somebody':
                 to = form.cleaned_data['receiver']
+            elif question_type == 'related':
+                to = form.cleaned_data['related_task'].assigned_to
             message = Message.objects.create(
                 subject=u'Frage bzgl. %s' % task,
                 submission=task.data, 

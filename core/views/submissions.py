@@ -91,7 +91,7 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        signals.post_thesis_review.send(submission_form)
+        signals.post_thesis_review.send(submission_form.submission)
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
         'retrospective_thesis_review_form': form,
     })

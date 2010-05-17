@@ -17,6 +17,7 @@ register.filter('getitem', getitem)
 register.filter('type_name', lambda obj: type(obj).__name__)
 register.filter('startwith', lambda obj, start: obj.startswith(substr))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
+register.filter('contains', lambda obj, x: x in obj)
 
 @register.filter
 def get_field_info(formfield):
