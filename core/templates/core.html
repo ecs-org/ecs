@@ -143,11 +143,12 @@
       
       // workflow popups
       
-      ecs.showWorkflowPopup = function(){
-          new MooDialog.Iframe('{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}', {
+      ecs.showWorkflowPopup = function(options){
+          var url = '{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}';
+          var dialog = new MooDialog.Iframe(url, {
               title: 'Workflow',
               size: {width: 700, height: 400}
-          });          
+          });
       };
       
       $('workflow_button').addEvent('click', function(){

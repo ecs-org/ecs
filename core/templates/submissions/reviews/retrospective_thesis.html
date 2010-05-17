@@ -27,7 +27,7 @@
     {% if retrospective_thesis_review_form.is_valid %}
     <script type="text/javascript">
         window.addEvent('domready', function(){
-            ecs.showWorkflowPopup();
+            ecs.showWorkflowPopup({quickClose: true});
         });
     </script>
     {% endif %}
