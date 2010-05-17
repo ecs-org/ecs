@@ -15469,7 +15469,7 @@
       "pk": 1,
       "model": "core.checklistblueprint",
       "fields": {
-        "name": "Checkliste Statistik"
+        "name": "Statistik"
       }
     },
     {

@@ -6,17 +6,21 @@
 {% endblock %}
 
 {% block tab_headers %}
-    <li><a href="#checklist_statistics_review_tab">Statistik Review</a></li>
+    <li><a href="#checklist_review_tab">{{ checklist_name }} Review</a></li>
     {{ block.super }}
 {% endblock %}
 
 {% block content %}
     {{ block.super }}
-    <div id="checklist_statistics_review_tab" class="tab">
+    <div id="checklist_review_tab" class="tab">
         <form action="" method="post">
+
+	    <span class="checklist_name">Checkliste {{ checklist_name }}<span>
+
             <table>
-                {{ checklist_statistics_review_form }}
+                {{ checklist_review_form }}
             </table>
+
             <input type="submit" value="Speichern" />
         </form>
     </div>

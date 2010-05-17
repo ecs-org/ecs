@@ -9,7 +9,8 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, ChecklistStatisticsReviewForm
+from ecs.core.forms.checklist import make_checklist_form
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -113,18 +114,22 @@ def executive_review(request, submission_form_pk=None):
     })
 
 
-def checklist_statistics_review(request, submission_form_pk=None):
+def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    blueprint = ChecklistBlueprint.objects.get(pk=1)  # blueprint checklist review
+
+    blueprint = ChecklistBlueprint.objects.get(pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=request.user)
     if created:
         for question in blueprint.questions.all():
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
-    form = ChecklistStatisticsReviewForm(request.POST or None, instance=checklist)
+
+    form_class = make_checklist_form(checklist)
+    form = form_class()
     if request.method == 'POST' and form.is_valid():
         form.save()
-    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist_statistics.html', extra_context={
-        'checklist_statistics_review_form': form,
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist.html', extra_context={
+        'checklist_name': blueprint.name,
+        'checklist_review_form': form,
     })
 
 
