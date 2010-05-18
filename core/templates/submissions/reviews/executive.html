@@ -14,9 +14,13 @@
     {{ block.super }}
     <div id="executive_review_tab" class="tab">
         <form action="" method="post">
-            <table>
-                {{ executive_review_form }}
-            </table>
+            <ol>
+            {% for field_name in executive_review_form.fields %}
+                {% with executive_review_form|getitem:field_name as field %}
+                    {% include "forms/field.html" %}
+                {% endwith %}
+            {% endfor %}
+            </ol>
             <input type="submit" value="Speichern" />
         </form>
     </div>
