@@ -602,7 +602,8 @@ table.notif_meta th {
   padding: 10px;
   background-color: #f5f5d2;
   -moz-border-radius: 10px;
-  margin: 0 20px 40px 20px;
+  margin-right: 10px;
+  width: 336px;
 }
 .dashboard_widget h3 {
   margin-bottom: 10px;
@@ -610,4 +611,31 @@ table.notif_meta th {
 .dashboard_widget td {
   padding-left: 5px;
   padding-right: 5px;
+}
+.dashboard_widget .read {
+  display: inline-block;
+  width: 24px;
+  height: 20px;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url(/static/core/images/Mail_verified.png) no-repeat;
+}
+.dashboard_widget .unread {
+  display: inline-block;
+  width: 24px;
+  height: 20px;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url(/static/core/images/Email_warning.png) no-repeat;
+}
+.dashboard_widget .reply a {
+  display: inline-block;
+  width: 24px;
+  height: 20px;
+  text-indent: -9999px;
+  overflow: hidden;
+  background: url(/static/core/images/Mail_reply.png) no-repeat;
+}
+.dashboard_widget .reply a:hover {
+  border-bottom: none !important;
 }
