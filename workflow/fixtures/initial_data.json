@@ -1,0 +1,738 @@
+[
+    {
+        "pk": 1, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_statistical_issues", 
+            "name": "ecs.core.workflow.review_statistical_issues", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.acknowledge_signed_submission_form", 
+            "name": "ecs.core.workflow.acknowledge_signed_submission_form", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_scientific_issues", 
+            "name": "ecs.core.workflow.review_scientific_issues", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.change_submission_form", 
+            "name": "ecs.core.workflow.change_submission_form", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.assign_external_reviewer", 
+            "name": "ecs.core.workflow.assign_external_reviewer", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_retrospective_thesis", 
+            "name": "ecs.core.workflow.review_retrospective_thesis", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_legal_and_patient_data", 
+            "name": "ecs.core.workflow.review_legal_and_patient_data", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_insurance_issues", 
+            "name": "ecs.core.workflow.review_insurance_issues", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.inspect_form_and_content_completeness", 
+            "name": "ecs.core.workflow.inspect_form_and_content_completeness", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.categorize_retrospective_thesis", 
+            "name": "ecs.core.workflow.categorize_retrospective_thesis", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.review_external", 
+            "name": "ecs.core.workflow.review_external", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.do_external_review", 
+            "name": "ecs.core.workflow.do_external_review", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 1, 
+            "implementation": "ecs.core.workflow.contact_external_reviewer", 
+            "name": "ecs.core.workflow.contact_external_reviewer", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 2, 
+            "implementation": "ecs.workflow.patterns.synchronization", 
+            "name": "ecs.workflow.patterns.synchronization", 
+            "content_type": null, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 2, 
+            "implementation": "ecs.core.workflow.accept", 
+            "name": "ecs.core.workflow.accept", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 2, 
+            "implementation": "ecs.core.workflow.reject", 
+            "name": "ecs.core.workflow.reject", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 2, 
+            "implementation": "ecs.workflow.patterns.subgraph", 
+            "name": "ecs.workflow.patterns.subgraph", 
+            "content_type": null, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 2, 
+            "implementation": "ecs.workflow.patterns.generic", 
+            "name": "ecs.workflow.patterns.generic", 
+            "content_type": null, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 4, 
+            "implementation": ".787799d2314d465eb173423c9907fbff", 
+            "name": "", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "workflow.graph", 
+        "fields": {
+            "auto_start": true
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "workflow.guard", 
+        "fields": {
+            "implementation": "is_thesis_and_retrospective", 
+            "name": "is_thesis_and_retrospective", 
+            "content_type": 20
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "workflow.guard", 
+        "fields": {
+            "implementation": "is_classified_for_external_review", 
+            "name": "is_classified_for_external_review", 
+            "content_type": 20
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "workflow.guard", 
+        "fields": {
+            "implementation": "is_accepted", 
+            "name": "is_accepted", 
+            "content_type": 20
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "workflow.guard", 
+        "fields": {
+            "implementation": "is_marked_as_thesis_by_submitter", 
+            "name": "is_marked_as_thesis_by_submitter", 
+            "content_type": 20
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 9, 
+            "name": "Formal R.", 
+            "is_end_node": false, 
+            "is_start_node": true
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 18, 
+            "name": "Review Split", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 16, 
+            "name": "", 
+            "is_end_node": true, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 15, 
+            "name": "", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 10, 
+            "name": "Thesis Categorization", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 10, 
+            "name": "Executive Thesis Categorization", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 6, 
+            "name": "Retrospective Thesis R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 7, 
+            "name": "Legal+Patient R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 3, 
+            "name": "Executive R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 1, 
+            "name": "Statistical R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 8, 
+            "name": "Insurance R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 13, 
+            "name": "Contact External Reviewer", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 12, 
+            "name": "External R.", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 18, 
+            "name": "", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 14, 
+            "name": "", 
+            "is_end_node": true, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 14, 
+            "name": "Review Sync", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 18, 
+            "name": "", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "workflow.node", 
+        "fields": {
+            "graph": 19, 
+            "node_type": 2, 
+            "name": "Ack. Signed Submission", 
+            "is_end_node": false, 
+            "is_start_node": false
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": true, 
+            "guard": 3, 
+            "deadline": false, 
+            "to_node": 3, 
+            "from_node": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": 3, 
+            "deadline": false, 
+            "to_node": 4, 
+            "from_node": 1
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": true, 
+            "guard": 4, 
+            "deadline": false, 
+            "to_node": 6, 
+            "from_node": 4
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": 4, 
+            "deadline": false, 
+            "to_node": 5, 
+            "from_node": 4
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 18, 
+            "from_node": 4
+        }
+    }, 
+    {
+        "pk": 6, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 10, 
+            "from_node": 4
+        }
+    }, 
+    {
+        "pk": 7, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": true, 
+            "guard": 1, 
+            "deadline": false, 
+            "to_node": 6, 
+            "from_node": 5
+        }
+    }, 
+    {
+        "pk": 8, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": 1, 
+            "deadline": false, 
+            "to_node": 7, 
+            "from_node": 5
+        }
+    }, 
+    {
+        "pk": 9, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": 1, 
+            "deadline": false, 
+            "to_node": 5, 
+            "from_node": 6
+        }
+    }, 
+    {
+        "pk": 10, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": true, 
+            "guard": 1, 
+            "deadline": false, 
+            "to_node": 2, 
+            "from_node": 6
+        }
+    }, 
+    {
+        "pk": 11, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 8, 
+            "from_node": 2
+        }
+    }, 
+    {
+        "pk": 12, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 9, 
+            "from_node": 2
+        }
+    }, 
+    {
+        "pk": 13, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 11, 
+            "from_node": 2
+        }
+    }, 
+    {
+        "pk": 14, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": 2, 
+            "deadline": false, 
+            "to_node": 12, 
+            "from_node": 9
+        }
+    }, 
+    {
+        "pk": 15, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": true, 
+            "guard": 2, 
+            "deadline": false, 
+            "to_node": 17, 
+            "from_node": 9
+        }
+    }, 
+    {
+        "pk": 16, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 16, 
+            "from_node": 17
+        }
+    }, 
+    {
+        "pk": 17, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 17, 
+            "from_node": 13
+        }
+    }, 
+    {
+        "pk": 18, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 13, 
+            "from_node": 12
+        }
+    }, 
+    {
+        "pk": 19, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": true, 
+            "to_node": 9, 
+            "from_node": 13
+        }
+    }, 
+    {
+        "pk": 20, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 15, 
+            "from_node": 10
+        }
+    }, 
+    {
+        "pk": 21, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 16, 
+            "from_node": 11
+        }
+    }, 
+    {
+        "pk": 22, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 16, 
+            "from_node": 8
+        }
+    }, 
+    {
+        "pk": 23, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 15, 
+            "from_node": 18
+        }
+    }, 
+    {
+        "pk": 24, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 14, 
+            "from_node": 16
+        }
+    }, 
+    {
+        "pk": 25, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 14, 
+            "from_node": 7
+        }
+    }, 
+    {
+        "pk": 26, 
+        "model": "workflow.edge", 
+        "fields": {
+            "negate": false, 
+            "guard": null, 
+            "deadline": false, 
+            "to_node": 15, 
+            "from_node": 14
+        }
+    }
+]
