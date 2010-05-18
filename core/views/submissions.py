@@ -116,17 +116,23 @@ def executive_review(request, submission_form_pk=None):
 
 def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-
     blueprint = ChecklistBlueprint.objects.get(pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=request.user)
     if created:
-        for question in blueprint.questions.all():
+        print "submission_form_pk = %s, blueprint_pk = %s, checklist_pk = %s created.." % (submission_form_pk, blueprint_pk, checklist.pk)
+        for question in blueprint.questions.order_by('id'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
-
     form_class = make_checklist_form(checklist)
-    form = form_class()
+    form = form_class(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        i = 0
+        for question in blueprint.questions.order_by('id'):
+            i = i + 1
+            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+            answer.answer = form.cleaned_data['q%s' % i]
+            answer.comment = form.cleaned_data['c%s' % i]
+            answer.save()
+            print "saving %s" % answer
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist.html', extra_context={
         'checklist_name': blueprint.name,
         'checklist_review_form': form,
