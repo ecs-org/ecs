@@ -10,7 +10,7 @@ urlpatterns = patterns(
     '',
     # Example:
     # (r'^ecs/', include('ecs.foo.urls')),
-    url(r'^$', 'ecs.core.views.index'),
+    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/', 'permanent': True}),
 
     url(r'^notification/new/$', 'ecs.core.views.select_notification_creation_type'),
     url(r'^notification/new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_notification'),
