@@ -36,10 +36,6 @@
       <li id="id_description_error" class="fb_error">Beschreibung fehlt!</li>
   {% endif %}
       <li><textarea id="id_description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
-  {% if summary_error %}
-      <li id="id_summary_error" class="fb_error">Zusammenfassung fehlt!</li>
-  {% endif %}
-      <li><input id="id_summary" type="text" size="30" maxlength="80" name="summary" value="{{ summary }}" /></li>
       <li><input id="id_submit" type="submit" value="Abschicken" /></li>
     </ol>
   </div>
@@ -52,7 +48,6 @@
   {% if list %}
     {% for fb in list %}
     <li class="fb_list_item">
-      <span class="fb_summary">{% comment %}Does not add value for the user therefore disabled {{ fb.index }}.{% endcomment%} <a href="{% url feedback_details fb.id %}">{{ fb.summary|truncate:36 }}</a></span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
@@ -128,7 +123,6 @@
       });
 
       var description_handler = new Infohandler('id_description', 'text', 'Beschreibung {{ type|fb_type_of_your }}', {{ description_error|booljs }});
-      var summary_handler = new Infohandler('id_summary', 'value', 'Zusammenfassung', {{ summary_error|booljs }});
 
 
       /*

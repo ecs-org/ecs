@@ -29,14 +29,11 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
 
-    summary = ''
-    summary_error = False
     description = ''
     description_error = False
 
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
-        summary = request.POST['summary']
         id = request.POST['fb_id']
         if id:
             # me2 vote (via GET)
@@ -49,16 +46,14 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
                 fb.me_too_votes.remove(user)
         else:
             description_error = (description == '')
-            summary_error = (summary == '')
-            if not (description_error or summary_error):
+            if not (description_error):
                 feedbacktype = type
                 pub_date = datetime.datetime.now()
-                feedback = Feedback(id=None, feedbacktype=feedbacktype, summary=summary, description=description, origin=origin, pub_date=pub_date, user=user)
+                feedback = Feedback(id=None, feedbacktype=feedbacktype, description=description, origin=origin, pub_date=pub_date, user=user)
                 feedback.save()
                 return render(request, 'thanks.html', {
                     'type': type,
                     'description': description,
-                    'summary': summary,
                 })
 
     types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
@@ -89,7 +84,6 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         list.append({
             'index': index,
             'id': fb.id,
-            'summary': fb.summary,
             'description': fb.description,
             'me2': get_me2(fb),
             'count': get_count(fb),
@@ -112,8 +106,6 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         'items': items,
         'pages': pages,
         'origin': origin,
-        'summary': summary,
-        'summary_error': summary_error,
         'description': description,
         'description_error': description_error,
     })
