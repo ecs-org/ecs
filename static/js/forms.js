@@ -370,6 +370,11 @@
             else{
                 newForm.inject(container.getElements(this.options.formSelector).getLast(), 'after');
             }
+
+            newForm.getElements('textarea.flext').each(function(el) {
+                new Flext(el);
+            });
+
             this.fireEvent('formAdded', [newForm, index])
         },
         getIndexForElement: function(el){
