@@ -185,7 +185,7 @@ INSTALLED_APPS = (
 AUTH_PROFILE_MODULE = 'core.UserProfile'
 
 # use ghettoq as carrot backend, so we dont need any external brocker for testing
-if DEBUG or (platform.node != "ecsdev.ep3.at"):
+if DEBUG and (platform.node != "ecsdev.ep3.at"):
     CARROT_BACKEND = "ghettoq.taproot.Database"
     INSTALLED_APPS += ("ghettoq", ) 
 
