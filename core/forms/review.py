@@ -9,8 +9,8 @@ class ExecutiveReviewForm(forms.ModelForm):
 
     class Meta:
         model = Submission
-        fields = ('external_reviewer', 'external_reviewer_name', 'medical_categories', 
-            'expedited', 'expedited_review_categories', 'additional_reviewers', 'sponsor_required_for_next_meeting')
+        fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
+            'external_reviewer', 'external_reviewer_name', 'sponsor_required_for_next_meeting')
 
 
 class RetrospectiveThesisReviewForm(forms.ModelForm):
