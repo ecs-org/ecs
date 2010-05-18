@@ -114,6 +114,7 @@ ul.tab_headers {
 }
 input, textarea, select {
   border: 1px solid #666;
+  padding: 2px;
 }
 
 /* sidebar */
@@ -170,7 +171,7 @@ input, textarea, select {
 .form.main ol li input[type=text], .form.main ol li textarea {
 }
 .form.main ol li textarea {
-  height: 40px;
+  height: 4em;
   display: block;
   width: 30em;
 }
@@ -355,12 +356,18 @@ fieldset.disabled {
   text-indent: -9999px; 
   background: url(/static/core/images/calendar.png) no-repeat;
   height: 16px;
-  width: 16px;
+  width: 16px !important;
   margin-left: 5px;
 }
 .form .star {
   margin: 0 5px 0 1px;
   font-size: 14px;
+}
+.form #id_start_1 {
+  margin-left: 30px;
+}
+.form textarea#id_project_title, .form textarea#id_german_summary {
+  height: 5.5em;
 }
 
 /* documents */
