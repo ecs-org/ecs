@@ -98,6 +98,7 @@ class SubmissionForm(models.Model):
     project_type_questionnaire = models.BooleanField()
     project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
     project_type_misc = models.TextField(null=True, blank=True)
+    project_type_psychological_study = models.BooleanField()
     
     # 2.2
     # FIXME: use fixed set of choices ?

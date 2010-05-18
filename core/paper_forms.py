@@ -129,12 +129,13 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.4.3', 'project_type_medical_device_performance_evaluation', u'Leistungsbewertungsprüfung (In-vitro-Diagnostika)'),
     FieldInfo('2.1.5', 'project_type_basic_research', u'Nicht-therapeutische biomedizinische Forschung am Menschen (Grundlagenforschung)'),
     FieldInfo('2.1.6', 'project_type_genetic_study', u'Genetische Untersuchung'),
-    FieldInfo('2.1.7', 'project_type_register', u'Register'), # new
-    FieldInfo('2.1.8', 'project_type_biobank', u'Biobank'), # new
-    FieldInfo('2.1.9', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
-    FieldInfo('2.1.10', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
-    FieldInfo('2.1.11', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'), # was: 2.17
-    FieldInfo('2.1.12', 'project_type_education_context', u'Dissertation / Diplomarbeit'), # was: 2.1.8 + 2.1.9
+    FieldInfo('2.1.7', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'),
+    FieldInfo('2.1.8/9', 'project_type_education_context', u'Dissertation / Diplomarbeit'),
+    FieldInfo('2.1.10', 'project_type_register', u'Register'), # new
+    FieldInfo('2.1.11', 'project_type_biobank', u'Biobank'), # new
+    FieldInfo('2.1.12', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
+    FieldInfo('2.1.13', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
+    FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=u'Psychologische Studie'), # new
     FieldInfo('2.2', 'specialism', u'Fachgebiet'),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', u'Prüfsubstanz(en)'),
