@@ -16,10 +16,10 @@
 
     {% for message in thread.messages %}
         <tr>
-            <td>{% if message.unread %}<span style="color:#ff0000;">[u]</span>{% else %}<span style="color:#00ff00;">[g]</span>{% endif %}</td>
+            <td>{% if message.unread %}<span class="unread">[u]</span>{% else %}<span class="read">[g]</span>{% endif %}</td>
             <td>[{{ message.sender }}] <a href="#" onclick="read_message('{{message.pk}}'); return false;">{{ message.subject }}</a></td>
             <td>{% if message.submission %}({{ message.submission }}){% endif %}</td>
-            <td><a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Re</a></td>
+            <td><span class="reply"><a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Re</a></span></td>
         </tr>
         <tr>
             <td></td>
