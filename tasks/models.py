@@ -96,7 +96,7 @@ class Task(models.Model):
         return Task.objects.filter(workflow_token__workflow=self.workflow_token.workflow)
         
     def __unicode__(self):
-        return u"%s Task" % self.task_type
+        return u"%s %s" % (self.data, self.task_type)
 
 # workflow integration:
 def workflow_token_created(sender, **kwargs):
