@@ -125,6 +125,10 @@ body {
   font-size: 1em;
   margin-bottom: 20px;
 }
+#content h3 {
+  font-size: 0.8em;
+  margin-bottom: 20px;
+}
 #content p {
   margin-bottom: 20px;
 }

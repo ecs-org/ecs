@@ -113,7 +113,7 @@ ul.tab_headers {
   margin: 0 0 20px 20px;
 }
 input, textarea, select {
-  border: 1px solid #666;
+  border: 1px solid #999;
   padding: 2px;
 }
 
@@ -185,9 +185,11 @@ input, textarea, select {
   text-align: right;
   float: left;
 }
+/*
 .form.main ol li label:after {
   content: ":";
 }
+*/
 .form.main th.label {
   text-align: left;
 }
@@ -311,7 +313,7 @@ fieldset.disabled {
   margin-bottom: 10px;
   min-height: 4em;
   background-color: #fff;
-  border: 1px solid #666;
+  border: 1px solid #999;
 }
 .form.main ol li .rte_display p {
   margin: 0 !important;
@@ -360,7 +362,7 @@ fieldset.disabled {
   margin-left: 5px;
 }
 .form .star {
-  margin: 0 5px 0 1px;
+  margin: 0 5px 0 3px;
   font-size: 14px;
 }
 .form #id_start_1 {
@@ -368,6 +370,12 @@ fieldset.disabled {
 }
 .form textarea#id_project_title, .form textarea#id_german_summary {
   height: 5.5em;
+}
+.form input#id_title {
+  width: 20em;
+}
+.form td.15em textarea {
+  width: 15em;
 }
 
 /* documents */
