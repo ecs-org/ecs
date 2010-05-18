@@ -58,7 +58,7 @@
       <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
     {% endifequal %}
       <br/>
-      <span class="fb_description">{{ fb.description|truncate:43 }}</span>
+      <div class="fb_description">{{ fb.description|wordwrap:40|truncate:80 }}</div>
       <br/>
       <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
     </li>
