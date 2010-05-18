@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^feedback/', include('ecs.feedback.urls')),
-    url(r'^groupchooser/', include('ecs.groupchooser.urls')),
+    url(r'^userswitcher/', include('ecs.userswitcher.urls')),
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
     url(r'^tasks/', include('ecs.tasks.urls')),
     url(r'^messages/', include('ecs.messages.urls')),
