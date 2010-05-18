@@ -375,6 +375,10 @@
                 new Flext(el);
             });
 
+            newForm.getElements('textarea.maxlength').each(function(el) {
+                el.addEvent('keypress', maxlength);
+            });
+
             this.fireEvent('formAdded', [newForm, index])
         },
         getIndexForElement: function(el){
