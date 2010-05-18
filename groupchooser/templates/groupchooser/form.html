@@ -1,7 +1,5 @@
 <form id="groupchooser_form" method="post" action="{% url ecs.groupchooser.views.choose %}?url={{ url }}">
-    <table>
-        {{ form }}
-    </table>
+    {{ form.group }}
     <script type="text/javascript">
         document.getElementById('id_group').onchange = function(){
             this.form.submit();
