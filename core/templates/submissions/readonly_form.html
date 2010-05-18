@@ -3,8 +3,8 @@
 
 {% block workflow_query_params %}submission={{ submission_form.submission_id }}{% endblock %}
 
-{% block headertitle %}
-  <div id="info" style="display: none;"></div>
+{% block headertext %}
+  {{ submission_form.submission.ec_number }}
 {% endblock %}
 
 {% block content %}
