@@ -8,7 +8,7 @@ Vaga Icons:
 
 calendar.png
 
-Human Icons:
-------------
+Quartz Icon Pack
+----------------
 
-emblem-people.png - used for feedback.png
+Mail_compose, Mail_forward, Mail_reply, Mail_new, Mail_open, Mails, Mail_add, Mail_verified, Mail_delete, Email, Email_warning
