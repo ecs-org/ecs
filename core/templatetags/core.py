@@ -52,6 +52,8 @@ def simple_timedelta_format(td):
     
 @register.filter
 def smart_truncate(s, n):
+    if not s:
+        return u""
     if len(s) <= n:
         return s
     return u"%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
