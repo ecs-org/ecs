@@ -13,6 +13,7 @@ from subprocess import Popen, PIPE
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm
@@ -62,8 +63,9 @@ class Command(BaseCommand):
         else:
             print '\033[32mDone.\033[0m'
 
+    @transaction.commit_on_success
     def _import_doc(self, filename):
-        regex = re.match('(\d{2,4})_(\d{4}).doc', os.path.basename(filename))
+        regex = re.match('(\d{2,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
         try:
             ec_number = '%s/%04d' % (regex.group(2), int(regex.group(1)))
         except IndexError:
@@ -114,12 +116,10 @@ class Command(BaseCommand):
             except KeyError:
                 pass
 
-        create_data['submission'] = Submission.objects.create()
+        create_data['submission'] = Submission.objects.create(ec_number=ec_number)
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
             if not key in create_data:
                 create_data[key] = value
-
-        create_data['ec_number'] = ec_number
 
         SubmissionForm.objects.create(**create_data)
 
@@ -158,7 +158,7 @@ class Command(BaseCommand):
         if not os.path.isdir(path):
             self._abort('"%s" is not a directory' % path)
 
-        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{2,4}_\d{4}.doc', f)]   # get all word documents in an existing directory
+        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{2,4}_\d{4}(_.*)?.doc', f)]   # get all word documents in an existing directory
         files = [f for f in files if os.path.isfile(f)]   # only take existing files
         if not files:
             self._abort('No documents found in path "%s"' % path)
