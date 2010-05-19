@@ -15477,7 +15477,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Ist das Studienziel ausreichend definiert?",
+        "text": "1. Ist das Studienziel ausreichend definiert?",
         "link": "",
         "description": ""
       }
@@ -15487,7 +15487,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Ist das Design der Studie geeignet, das Studienziel zu erreichen?",
+        "text": "2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?",
         "link": "",
         "description": ""
       }
@@ -15497,7 +15497,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Ist die Studienpopulation ausreichend definiert?",
+        "text": "3. Ist die Studienpopulation ausreichend definiert?",
         "link": "",
         "description": ""
       }
@@ -15507,7 +15507,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Sind die Zielvariablen geeignet definiert?",
+        "text": "4. Sind die Zielvariablen geeignet definiert?",
         "link": "",
         "description": ""
       }
@@ -15517,7 +15517,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?",
+        "text": "5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?",
         "link": "",
         "description": ""
       }
@@ -15527,7 +15527,7 @@
       "model": "core.checklistquestion",
       "fields": {
         "blueprint": 1,
-        "text": "Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?",
+        "text": "6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?",
         "link": "",
         "description": ""
       }

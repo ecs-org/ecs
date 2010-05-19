@@ -1,5 +1,5 @@
 from ecs import workflow
-from ecs.core.models import Submission, SubmissionForm
+from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint
 from ecs.core.signals import post_thesis_review
 
 @workflow.activity(model=Submission)
@@ -16,7 +16,6 @@ def acknowledge_signed_submission_form(token):
     pass
 
 def _is_thesis_categorization_complete(wf):
-    print "locked", (wf.data.thesis is not None) and (wf.data.retrospective is not None)
     return (wf.data.thesis is not None) and (wf.data.retrospective is not None)
 
 # UC-12
@@ -36,6 +35,10 @@ def assign_external_reviewer(token):
 # UC-16
 @workflow.activity(model=Submission)
 def review_external(token):
+    pass
+    
+@workflow.activity(model=Submission, vary_on=ChecklistBlueprint)
+def review_with_checklist(token):
     pass
 
 # UC-42 (placeholder)

@@ -4,13 +4,11 @@
 {% block workflow_query_params %}submission={{ submission_form.submission_id }}{% endblock %}
 
 {% block headertext %}
-  {{ submission_form.submission.ec_number }}
+  {{ submission_form.submission.ec_number }} {{ submission_form.project_title }}
 {% endblock %}
 
 {% block content %}
-    <div class="form main">
-        {{ block.super }}
-    </div>
+    {{ block.super }}
 {% endblock %}
 
 {% block jsbottom %}

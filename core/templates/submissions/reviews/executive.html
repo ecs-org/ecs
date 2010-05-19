@@ -12,17 +12,19 @@
 
 {% block content %}
     {{ block.super }}
-    <div id="executive_review_tab" class="tab">
-        <form action="" method="post">
-            <ol>
-            {% for field_name in executive_review_form.fields %}
-                {% with executive_review_form|getitem:field_name as field %}
-                    {% include "forms/field.html" %}
-                {% endwith %}
-            {% endfor %}
-            </ol>
-            <input type="submit" value="Speichern" />
-        </form>
+    <div class="form main">
+      <div id="executive_review_tab" class="tab">
+          <form action="" method="post">
+              <ol>
+              {% for field_name in executive_review_form.fields %}
+                  {% with executive_review_form|getitem:field_name as field %}
+                      {% include "forms/field.html" %}
+                  {% endwith %}
+              {% endfor %}
+              </ol>
+              <input type="submit" value="Speichern" />
+          </form>
+      </div>
     </div>
 {% endblock %}
 
