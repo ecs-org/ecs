@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from ecs.core.views.utils import render
 from ecs.messages.models import Message
-from ecs.messages.utilitys import strip_subject, get_threads
+from ecs.messages.utilities import strip_subject, get_threads
 from ecs.tasks.models import Task
 
 def view_dashboard(request):
