@@ -10,6 +10,10 @@ def test_import():
 class CoreUrlsTest(LoginTestCase):
     def test_index(self):
         response = self.client.get('/core/')
+        self.failUnlessEqual(response.status_code, 302)
+
+    def test_index(self):
+        response = self.client.get('/dashboard/')
         self.failUnlessEqual(response.status_code, 200)
         
     def test_submission_form_new(self):

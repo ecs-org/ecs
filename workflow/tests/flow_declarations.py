@@ -1,5 +1,5 @@
 from ecs import workflow
-from ecs.workflow.models import Foo
+from ecs.workflow.models import Foo, FooReview
 from django.dispatch import Signal
 
 workflow.register(Foo)
@@ -24,3 +24,6 @@ def E(token): pass
 @workflow.guard(model=Foo)
 def GUARD(workflow):
     return workflow.data.flag
+    
+@workflow.activity(model=Foo, vary_on=FooReview)
+def V(token): pass

@@ -46,6 +46,9 @@ class Submission(models.Model):
             from random import randint
             self.ec_number = "EK-%s" % randint(10000, 100000)
         super(Submission, self).save(**kwargs)
+        
+    def __unicode__(self):
+        return self.ec_number
 
     class Meta:
         app_label = 'core'

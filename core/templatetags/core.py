@@ -21,7 +21,7 @@ register.filter('contains', lambda obj, x: x in obj)
 
 @register.filter
 def get_field_info(formfield):
-    if formfield:
+    if formfield and hasattr(formfield.form, '_meta'):
         return paper_forms.get_field_info(model=formfield.form._meta.model, name=formfield.name)
     else:
         return None

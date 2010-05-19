@@ -37,20 +37,26 @@ class ObjectWorkflow(object):
     activities = property(_get_activities)
     activitiy_tokens = property(_get_activity_tokens)
 
-    def get(self, activity):
-        token = self.get_token(activity)
+    def get(self, activity, data=None):
+        token = self.get_token(activity, data=data)
         return BoundActivity(token.node, token.workflow)
 
-    def get_token(self, activity):
+    def get_token(self, activity, data=None):
         if isinstance(activity, Token):
             return activity
         try:
-            return self._get_activity_tokens(activity)[:1].get()
+            tokens = self._get_activity_tokens(activity)
+            if data:
+                data_ct = ContentType.objects.get_for_model(type(data))
+                tokens = tokens.filter(node__data_id=data.pk, node__data_ct=data_ct)
+            else:
+                tokens = tokens.filter(node__node_type__data_type=None)
+            return tokens[:1].get()
         except Token.DoesNotExist:
-            raise KeyError("no token for activity %s" % activity)
+            raise KeyError("no token for activity %s with data '%s'" % (activity, data))
 
-    def do(self, activity):
-        self.get(activity).perform()
+    def do(self, activity, data=None):
+        self.get(activity, data=data).perform()
 
     def unlock(self, activity):
         for workflow in self.workflows:

@@ -4,8 +4,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_statistical_issues", 
             "name": "ecs.core.workflow.review_statistical_issues", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_statistical_issues", 
             "content_type": 20, 
             "description": null
         }
@@ -15,8 +16,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.acknowledge_signed_submission_form", 
             "name": "ecs.core.workflow.acknowledge_signed_submission_form", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.acknowledge_signed_submission_form", 
             "content_type": 20, 
             "description": null
         }
@@ -26,8 +28,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_scientific_issues", 
             "name": "ecs.core.workflow.review_scientific_issues", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_scientific_issues", 
             "content_type": 20, 
             "description": null
         }
@@ -37,8 +40,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.change_submission_form", 
             "name": "ecs.core.workflow.change_submission_form", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.change_submission_form", 
             "content_type": 20, 
             "description": null
         }
@@ -48,8 +52,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.assign_external_reviewer", 
             "name": "ecs.core.workflow.assign_external_reviewer", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.assign_external_reviewer", 
             "content_type": 20, 
             "description": null
         }
@@ -59,8 +64,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_retrospective_thesis", 
             "name": "ecs.core.workflow.review_retrospective_thesis", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_retrospective_thesis", 
             "content_type": 20, 
             "description": null
         }
@@ -70,8 +76,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_legal_and_patient_data", 
             "name": "ecs.core.workflow.review_legal_and_patient_data", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_legal_and_patient_data", 
             "content_type": 20, 
             "description": null
         }
@@ -81,8 +88,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_insurance_issues", 
             "name": "ecs.core.workflow.review_insurance_issues", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_insurance_issues", 
             "content_type": 20, 
             "description": null
         }
@@ -92,8 +100,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.inspect_form_and_content_completeness", 
             "name": "ecs.core.workflow.inspect_form_and_content_completeness", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.inspect_form_and_content_completeness", 
             "content_type": 20, 
             "description": null
         }
@@ -103,8 +112,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.categorize_retrospective_thesis", 
             "name": "ecs.core.workflow.categorize_retrospective_thesis", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.categorize_retrospective_thesis", 
             "content_type": 20, 
             "description": null
         }
@@ -114,8 +124,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.review_external", 
             "name": "ecs.core.workflow.review_external", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.review_external", 
             "content_type": 20, 
             "description": null
         }
@@ -125,8 +136,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.do_external_review", 
             "name": "ecs.core.workflow.do_external_review", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.do_external_review", 
             "content_type": 20, 
             "description": null
         }
@@ -136,8 +148,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 1, 
-            "implementation": "ecs.core.workflow.contact_external_reviewer", 
             "name": "ecs.core.workflow.contact_external_reviewer", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.contact_external_reviewer", 
             "content_type": 20, 
             "description": null
         }
@@ -147,8 +160,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 2, 
-            "implementation": "ecs.workflow.patterns.synchronization", 
             "name": "ecs.workflow.patterns.synchronization", 
+            "data_type": null, 
+            "implementation": "ecs.workflow.patterns.synchronization", 
             "content_type": null, 
             "description": null
         }
@@ -158,8 +172,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 2, 
-            "implementation": "ecs.core.workflow.accept", 
             "name": "ecs.core.workflow.accept", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.accept", 
             "content_type": 20, 
             "description": null
         }
@@ -169,8 +184,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 2, 
-            "implementation": "ecs.core.workflow.reject", 
             "name": "ecs.core.workflow.reject", 
+            "data_type": null, 
+            "implementation": "ecs.core.workflow.reject", 
             "content_type": 20, 
             "description": null
         }
@@ -180,8 +196,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 2, 
-            "implementation": "ecs.workflow.patterns.subgraph", 
             "name": "ecs.workflow.patterns.subgraph", 
+            "data_type": null, 
+            "implementation": "ecs.workflow.patterns.subgraph", 
             "content_type": null, 
             "description": null
         }
@@ -191,8 +208,9 @@
         "model": "workflow.nodetype", 
         "fields": {
             "category": 2, 
-            "implementation": "ecs.workflow.patterns.generic", 
             "name": "ecs.workflow.patterns.generic", 
+            "data_type": null, 
+            "implementation": "ecs.workflow.patterns.generic", 
             "content_type": null, 
             "description": null
         }
@@ -201,9 +219,10 @@
         "pk": 19, 
         "model": "workflow.nodetype", 
         "fields": {
-            "category": 4, 
-            "implementation": ".787799d2314d465eb173423c9907fbff", 
+            "category": 3, 
             "name": "", 
+            "data_type": null, 
+            "implementation": ".b991eb74611f4954bbc04da301b74d2f", 
             "content_type": 20, 
             "description": null
         }
@@ -255,10 +274,12 @@
         "pk": 1, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 9, 
+            "data_ct": 56, 
             "name": "Formal R.", 
+            "data_id": 9, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 9, 
             "is_start_node": true
         }
     }, 
@@ -266,10 +287,12 @@
         "pk": 2, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 18, 
+            "data_ct": 56, 
             "name": "Review Split", 
+            "data_id": 18, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 18, 
             "is_start_node": false
         }
     }, 
@@ -277,10 +300,12 @@
         "pk": 3, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 16, 
+            "data_ct": 56, 
             "name": "", 
+            "data_id": 16, 
+            "graph": 19, 
             "is_end_node": true, 
+            "node_type": 16, 
             "is_start_node": false
         }
     }, 
@@ -288,10 +313,12 @@
         "pk": 4, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 15, 
+            "data_ct": 56, 
             "name": "", 
+            "data_id": 15, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 15, 
             "is_start_node": false
         }
     }, 
@@ -299,10 +326,12 @@
         "pk": 5, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 10, 
+            "data_ct": 56, 
             "name": "Thesis Categorization", 
+            "data_id": 10, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 10, 
             "is_start_node": false
         }
     }, 
@@ -310,10 +339,12 @@
         "pk": 6, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 10, 
+            "data_ct": 56, 
             "name": "Executive Thesis Categorization", 
+            "data_id": 10, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 10, 
             "is_start_node": false
         }
     }, 
@@ -321,10 +352,12 @@
         "pk": 7, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 6, 
+            "data_ct": 56, 
             "name": "Retrospective Thesis R.", 
+            "data_id": 6, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 6, 
             "is_start_node": false
         }
     }, 
@@ -332,10 +365,12 @@
         "pk": 8, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 7, 
+            "data_ct": 56, 
             "name": "Legal+Patient R.", 
+            "data_id": 7, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 7, 
             "is_start_node": false
         }
     }, 
@@ -343,10 +378,12 @@
         "pk": 9, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 3, 
+            "data_ct": 56, 
             "name": "Executive R.", 
+            "data_id": 3, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 3, 
             "is_start_node": false
         }
     }, 
@@ -354,10 +391,12 @@
         "pk": 10, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 1, 
+            "data_ct": 56, 
             "name": "Statistical R.", 
+            "data_id": 1, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 1, 
             "is_start_node": false
         }
     }, 
@@ -365,10 +404,12 @@
         "pk": 11, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 8, 
+            "data_ct": 56, 
             "name": "Insurance R.", 
+            "data_id": 8, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 8, 
             "is_start_node": false
         }
     }, 
@@ -376,10 +417,12 @@
         "pk": 12, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 13, 
+            "data_ct": 56, 
             "name": "Contact External Reviewer", 
+            "data_id": 13, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 13, 
             "is_start_node": false
         }
     }, 
@@ -387,10 +430,12 @@
         "pk": 13, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 12, 
+            "data_ct": 56, 
             "name": "External R.", 
+            "data_id": 12, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 12, 
             "is_start_node": false
         }
     }, 
@@ -398,10 +443,12 @@
         "pk": 14, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 18, 
+            "data_ct": 56, 
             "name": "", 
+            "data_id": 18, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 18, 
             "is_start_node": false
         }
     }, 
@@ -409,10 +456,12 @@
         "pk": 15, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 14, 
+            "data_ct": 56, 
             "name": "", 
+            "data_id": 14, 
+            "graph": 19, 
             "is_end_node": true, 
+            "node_type": 14, 
             "is_start_node": false
         }
     }, 
@@ -420,10 +469,12 @@
         "pk": 16, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 14, 
+            "data_ct": 56, 
             "name": "Review Sync", 
+            "data_id": 14, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 14, 
             "is_start_node": false
         }
     }, 
@@ -431,10 +482,12 @@
         "pk": 17, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 18, 
+            "data_ct": 56, 
             "name": "", 
+            "data_id": 18, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 18, 
             "is_start_node": false
         }
     }, 
@@ -442,10 +495,12 @@
         "pk": 18, 
         "model": "workflow.node", 
         "fields": {
-            "graph": 19, 
-            "node_type": 2, 
+            "data_ct": 56, 
             "name": "Ack. Signed Submission", 
+            "data_id": 2, 
+            "graph": 19, 
             "is_end_node": false, 
+            "node_type": 2, 
             "is_start_node": false
         }
     }, 

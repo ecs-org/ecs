@@ -492,10 +492,10 @@
                 }
             }
             if(notes.length){
-                field.grab(new Element('span', {
+                (new Element('span', {
                     'class': 'notes',
                     'html': notes.join(', ')
-                }));
+                })).inject(input, 'after');
             }
         });
         /*

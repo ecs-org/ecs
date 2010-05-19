@@ -59,7 +59,6 @@
     {% endifequal %}
       <br/>
       <div class="fb_description">{{ fb.description|wordwrap:40|truncate:80 }}</div>
-      <br/>
       <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
     </li>
     {% endfor %}
