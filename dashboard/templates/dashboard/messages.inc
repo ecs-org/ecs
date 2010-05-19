@@ -4,7 +4,7 @@
 {% block name %}Nachrichten ({{ message_count }}){% endblock %}
 
 {% block content %}
-
+<a class="popup" href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a>
 <table>
 {% for thread in threads %}
 
