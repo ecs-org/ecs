@@ -2,9 +2,23 @@
 from django.db import models
 from django.contrib.auth.models import User
 import reversion
+import datetime
 
 class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True)
+    ec_number = models.CharField(max_length=50, null=True, blank=True) # 2010/0345
+
+    def get_ec_number_display(self):
+        try:
+            year, ec_number = self.ec_number.split('/')
+        except ValueError:
+            return self.ec_number
+
+        ec_number = ec_number.lstrip('0')
+        if datetime.datetime.now().year == int(year):
+            return ec_number
+        else:
+            return '%s/%s' % (ec_number, year)
+    get_ec_number_display.short_description = 'EC-Number'
 
     # medical categories
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
@@ -48,7 +62,7 @@ class Submission(models.Model):
         super(Submission, self).save(**kwargs)
         
     def __unicode__(self):
-        return self.ec_number
+        return self.get_ec_number_display()
 
     class Meta:
         app_label = 'core'
