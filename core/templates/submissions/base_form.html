@@ -19,7 +19,9 @@
 {% endblock %}
 
 {% block content %}
+      <div class="main form">
         <div id="tabs">
+          {% block tabs %}
             {% for tab, fieldsets in tabs %}
                 {% ifnotequal tab "Zentrum" %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
@@ -75,6 +77,7 @@
                 </div>
                 {% endifnotequal %}
             {% endfor %}
+          {% endblock %}
         </div>
 
         {{ investigator_formset.management_form }}
@@ -148,6 +151,7 @@
             {% endwith %}
         {% endfor%}
         </div>
+     </div>
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}
