@@ -58,7 +58,7 @@ class Command(BaseCommand):
                 category=NODE_TYPE_CATEGORY_ACTIVITY, 
                 implementation=handler.name, 
                 content_type=_get_ct_or_none(handler.model), 
-                defaults={'name': handler.name}
+                defaults={'name': handler.name, 'data_type': _get_ct_or_none(handler.vary_on)}
             )
             node_types.add(node_type)
             registry._node_type_map[node_type.pk] = handler
@@ -70,7 +70,7 @@ class Command(BaseCommand):
                 category=NODE_TYPE_CATEGORY_CONTROL,
                 implementation=handler.name,
                 content_type=_get_ct_or_none(handler.model),
-                defaults={'name': handler.name}
+                defaults={'name': handler.name, 'data_type': _get_ct_or_none(handler.vary_on)}
             )
             node_types.add(node_type)
             registry._node_type_map[node_type.pk] = handler

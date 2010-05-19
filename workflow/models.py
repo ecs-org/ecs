@@ -10,21 +10,32 @@ from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
 NODE_TYPE_CATEGORY_CONTROL = 2
-NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY = 3
-NODE_TYPE_CATEGORY_SUBGRAPH = 4
+NODE_TYPE_CATEGORY_SUBGRAPH = 3
+
+class NodeTypeManager(models.Manager):
+    def create(self, **kwargs):
+        model = kwargs.pop('model', None)
+        if model:
+            kwargs['content_type'] = ContentType.objects.get_for_model(model)
+        data_type = kwargs.get('data_type', None)
+        if isinstance(data_type, models.base.ModelBase):
+            kwargs['data_type'] = ContentType.objects.get_for_model(data_type)
+        return super(NodeTypeManager, self).create(**kwargs)
 
 class NodeType(models.Model):
     CATEGORIES = (
         (NODE_TYPE_CATEGORY_ACTIVITY, 'activity'),
         (NODE_TYPE_CATEGORY_CONTROL, 'control'),
-        (NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY, 'dynamic activity'),
         (NODE_TYPE_CATEGORY_SUBGRAPH, 'subgraph'),
     )
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     category = models.PositiveIntegerField(choices=CATEGORIES, db_index=True)
-    content_type = models.ForeignKey(ContentType, null=True)
+    content_type = models.ForeignKey(ContentType, null=True, related_name='workflow_node_types')
     implementation = models.CharField(max_length=200)
+    data_type = models.ForeignKey(ContentType, null=True)
+    
+    objects = NodeTypeManager()
     
     class Meta:
         unique_together = ('content_type', 'implementation')
@@ -47,6 +58,8 @@ class NodeType(models.Model):
         return self.category == NODE_TYPE_CATEGORY_CONTROL
         
     def __unicode__(self):
+        if self.data:
+            return "%s (%s)" % (self.name, self.data)
         return self.name
         
 class GraphManager(models.Manager):
@@ -74,10 +87,15 @@ class Graph(NodeType):
     def end_nodes(self):
         return self.nodes.filter(is_end_node=True)
         
-    def create_node(self, nodetype, start=False, end=False, name=''):
+    def create_node(self, nodetype, start=False, end=False, name='', data=None):
         if isinstance(nodetype, NodeHandler):
             nodetype = nodetype.node_type
-        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name)
+        if nodetype.data_type:
+            if not isinstance(data, nodetype.data_type.model_class()):
+                raise TypeError("nodes of type %s require data of type %s, got: %s" % (nodetype, nodetype.data_type.model_class(), type(data)))
+        elif data:
+            raise TypeError("nodes of type %s may not carry data" % nodetype)
+        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name, data=data or nodetype)
         
     def create_workflow(self, **kwargs):
         workflow = Workflow.objects.create(graph=self, **kwargs)
@@ -97,6 +115,9 @@ class Node(models.Model):
     name = models.CharField(max_length=100, blank=True)
     graph = models.ForeignKey(Graph, related_name='nodes')
     node_type = models.ForeignKey(NodeType)
+    data_id = models.PositiveIntegerField(null=True)
+    data_ct = models.ForeignKey(ContentType, null=True)
+    data = GenericForeignKey(ct_field='data_ct', fk_field='data_id')
     outputs = models.ManyToManyField('self', related_name='inputs', through='Edge', symmetrical=False)
     is_start_node = models.BooleanField(default=False)
     is_end_node = models.BooleanField(default=False)
@@ -167,7 +188,7 @@ class Edge(models.Model):
     
     def check_guard(self, workflow):
         if not self.guard_id:
-            return True
+            return not self.negate
         return self.negate != registry.get_guard(self).check(workflow)
 
 
@@ -272,5 +293,11 @@ if 'test' in sys.argv:
     class Foo(models.Model):
         flag = models.BooleanField(default=False)
 
+        class Meta:
+            app_label = 'workflow'
+            
+    class FooReview(models.Model):
+        name = models.CharField(max_length=30)
+        
         class Meta:
             app_label = 'workflow'

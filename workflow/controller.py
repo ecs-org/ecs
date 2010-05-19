@@ -9,11 +9,18 @@ from django.conf import settings
 from ecs.utils import cached_property
 from ecs.workflow.exceptions import TokenRequired
 
+#class NodeHandlerBase(type):
+#    def __new__(cls, name, bases, attrs):
+#        return super(NodeHandlerBase, cls).__new__(name, bases, attrs)
+
+def _get_full_name(func):
+    return "%s.%s" % (func.__module__, func.__name__)
 
 class NodeHandler(object):
-    def __init__(self, func, model=None, deadline=None, lock=None, signal=None):
-        self.name = "%s.%s" % (func.__module__, func.__name__)
+    def __init__(self, func, model=None, deadline=None, lock=None, signal=None, vary_on=None):
+        self.name = _get_full_name(func)
         self.model = model
+        self.vary_on = vary_on
         self.func = func
         self.deadline = deadline
         self.lock = lock
@@ -198,19 +205,19 @@ class Registry(object):
             return wraps(func)(control)
         return decorator
 
-    def activity(self, model=None, factory=Activity, **kwargs):
+    def activity(self, factory=Activity, **kwargs):
         def decorator(func):
-            act = factory(func, model=model, **kwargs)
+            act = factory(func, **kwargs)
             self._activities[act.name] = act
             self._handlers[act.name] = act
             return wraps(func)(act)
         return decorator
 
-    def guard(self, model=None, factory=Guard, **kwargs):
+    def guard(self, factory=Guard, **kwargs):
         def decorator(func):
-            guard = factory(func, model=model, **kwargs)
+            guard = factory(func, **kwargs)
             self._guards[guard.name] = guard
             return wraps(func)(guard)
         return decorator
-
+        
 registry = Registry()

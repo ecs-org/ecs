@@ -6,7 +6,7 @@ from django.core import management
 from ecs.workflow.models import Graph, Node
 from ecs.workflow.exceptions import TokenRequired
 # test only models:
-from ecs.workflow.models import Foo, Token
+from ecs.workflow.models import Foo, FooReview, Token
 from ecs import workflow
 
 from ecs.workflow.tests import flow_declarations
@@ -317,3 +317,24 @@ class FlowTest(TestCase):
         self.failUnlessEqual(c_token.activity_trail, set([a_token]))
         self.failUnlessEqual(e_token.activity_trail, set([b_token, c_token]))
 
+    def test_parametrization(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        
+        r0 = FooReview.objects.create(name='R0')
+        r1 = FooReview.objects.create(name='R1')
+        n_v0 = g.create_node(flow_declarations.V, data=r0, start=True)
+        n_v1 = g.create_node(flow_declarations.V, data=r1, end=True)        
+        n_v0.add_edge(n_v1)
+        
+        obj = Foo.objects.create()
+        self.assertActivitiesEqual(obj, [flow_declarations.V])
+
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V)
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r1)
+        obj.workflow.do(flow_declarations.V, data=r0)
+        self.assertActivitiesEqual(obj, [flow_declarations.V])
+
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r0)
+        obj.workflow.do(flow_declarations.V, data=r1)
+        self.assertActivitiesEqual(obj, [])
+        
