@@ -73,3 +73,8 @@ def empty_form(formset):
     form = formset.form(**defaults)
     formset.add_fields(form, 0)
     return form
+
+@register.filter
+def class_for_field(field):
+    return 'wide' if field.field.max_length > 50 else 'narrow'
+

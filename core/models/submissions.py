@@ -384,8 +384,8 @@ class Measure(models.Model):
     
     #FIXME: category should not be nullable
     category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
-    type = models.CharField(max_length=30)
-    count = models.TextField()
+    type = models.CharField(max_length=150)
+    count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
     
