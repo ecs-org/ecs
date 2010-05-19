@@ -216,19 +216,31 @@
         }
     }, 
     {
-        "pk": 19, 
+        "pk": 20, 
         "model": "workflow.nodetype", 
         "fields": {
-            "category": 3, 
-            "name": "", 
-            "data_type": null, 
-            "implementation": ".b991eb74611f4954bbc04da301b74d2f", 
+            "category": 1, 
+            "name": "ecs.core.workflow.review_with_checklist", 
+            "data_type": 27, 
+            "implementation": "ecs.core.workflow.review_with_checklist", 
             "content_type": 20, 
             "description": null
         }
     }, 
     {
-        "pk": 19, 
+        "pk": 21, 
+        "model": "workflow.nodetype", 
+        "fields": {
+            "category": 3, 
+            "name": "", 
+            "data_type": null, 
+            "implementation": ".6137ae9b8c3e45e49316684c8171d193", 
+            "content_type": 20, 
+            "description": null
+        }
+    }, 
+    {
+        "pk": 21, 
         "model": "workflow.graph", 
         "fields": {
             "auto_start": true
@@ -277,7 +289,7 @@
             "data_ct": 56, 
             "name": "Formal R.", 
             "data_id": 9, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 9, 
             "is_start_node": true
@@ -290,7 +302,7 @@
             "data_ct": 56, 
             "name": "Review Split", 
             "data_id": 18, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 18, 
             "is_start_node": false
@@ -303,7 +315,7 @@
             "data_ct": 56, 
             "name": "", 
             "data_id": 16, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": true, 
             "node_type": 16, 
             "is_start_node": false
@@ -316,7 +328,7 @@
             "data_ct": 56, 
             "name": "", 
             "data_id": 15, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 15, 
             "is_start_node": false
@@ -329,7 +341,7 @@
             "data_ct": 56, 
             "name": "Thesis Categorization", 
             "data_id": 10, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 10, 
             "is_start_node": false
@@ -342,7 +354,7 @@
             "data_ct": 56, 
             "name": "Executive Thesis Categorization", 
             "data_id": 10, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 10, 
             "is_start_node": false
@@ -355,7 +367,7 @@
             "data_ct": 56, 
             "name": "Retrospective Thesis R.", 
             "data_id": 6, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 6, 
             "is_start_node": false
@@ -368,7 +380,7 @@
             "data_ct": 56, 
             "name": "Legal+Patient R.", 
             "data_id": 7, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 7, 
             "is_start_node": false
@@ -381,7 +393,7 @@
             "data_ct": 56, 
             "name": "Executive R.", 
             "data_id": 3, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 3, 
             "is_start_node": false
@@ -394,7 +406,7 @@
             "data_ct": 56, 
             "name": "Statistical R.", 
             "data_id": 1, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 1, 
             "is_start_node": false
@@ -407,7 +419,7 @@
             "data_ct": 56, 
             "name": "Insurance R.", 
             "data_id": 8, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 8, 
             "is_start_node": false
@@ -420,7 +432,7 @@
             "data_ct": 56, 
             "name": "Contact External Reviewer", 
             "data_id": 13, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 13, 
             "is_start_node": false
@@ -433,7 +445,7 @@
             "data_ct": 56, 
             "name": "External R.", 
             "data_id": 12, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 12, 
             "is_start_node": false
@@ -446,7 +458,7 @@
             "data_ct": 56, 
             "name": "", 
             "data_id": 18, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 18, 
             "is_start_node": false
@@ -459,7 +471,7 @@
             "data_ct": 56, 
             "name": "", 
             "data_id": 14, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": true, 
             "node_type": 14, 
             "is_start_node": false
@@ -472,7 +484,7 @@
             "data_ct": 56, 
             "name": "Review Sync", 
             "data_id": 14, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 14, 
             "is_start_node": false
@@ -485,7 +497,7 @@
             "data_ct": 56, 
             "name": "", 
             "data_id": 18, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 18, 
             "is_start_node": false
@@ -498,7 +510,7 @@
             "data_ct": 56, 
             "name": "Ack. Signed Submission", 
             "data_id": 2, 
-            "graph": 19, 
+            "graph": 21, 
             "is_end_node": false, 
             "node_type": 2, 
             "is_start_node": false
