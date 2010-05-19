@@ -12,19 +12,21 @@
 
 {% block content %}
     {{ block.super }}
-    <div id="checklist_review_tab" class="tab">
-        <form action="" method="post">
-
-	    <span class="checklist_name">Checkliste {{ checklist_name }}<span>
-            <ol>
-            {% for field_name in checklist_review_form.fields %}
-                {% with checklist_review_form|getitem:field_name as field %}
-                    {% include "forms/field.html" %}
-                {% endwith %}
-            {% endfor %}
-            </ol>
-            <input type="submit" value="Speichern" />
-        </form>
+    <div class="form main">
+      <div id="checklist_review_tab" class="tab">
+          <form action="" method="post">
+  
+  	    <span class="checklist_name">Checkliste {{ checklist_name }}<span>
+              <ol>
+              {% for field_name in checklist_review_form.fields %}
+                  {% with checklist_review_form|getitem:field_name as field %}
+                      {% include "forms/field.html" %}
+                  {% endwith %}
+              {% endfor %}
+              </ol>
+              <input type="submit" value="Speichern" />
+          </form>
+      </div>
     </div>
 {% endblock %}
 
