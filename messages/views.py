@@ -37,7 +37,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         if reply_to:
             message.receiver = reply_to.sender
         message.save()
-        return redirect_to_next_url(request, reverse('ecs.messages.views.outbox'))
+        return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
 
     return render(request, 'messages/send.html', {
         'submission': submission,

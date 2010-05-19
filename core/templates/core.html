@@ -163,6 +163,9 @@
       
       ecs.showWorkflowPopup = function(options){
           var url = '{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}';
+          if(options && options.url){
+              url = options.url;
+          }
           var dialog = new MooDialog.Iframe(url, {
               title: 'Workflow',
               size: {width: 700, height: 400}

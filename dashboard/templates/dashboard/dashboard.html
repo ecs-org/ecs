@@ -18,12 +18,17 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
-    function read_message(message_pk) {
-      new MooDialog.Iframe('/dashboard/message/'+message_pk+'/read/', {
-          title: 'Nachricht',
-          size: {width: 700, height: 400}
-      });
-    }
+    window.addEvent('domready', function(){
+        $$('a.popup').each(function(link){
+            link.addEvent('click', function(){
+                new MooDialog.Iframe(link.href, {
+                    title: 'Nachricht',
+                    size: {width: 700, height: 400}
+                });
+                return false;
+            });
+        });
+    });
   </script>
 {% endblock %}
 

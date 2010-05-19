@@ -9,12 +9,9 @@
         <h2>Meine Tasks</h2>
         {% for task in accepted_tasks %}
         <div>
-            <a href="{% url ecs.tasks.views.manage_task task_pk=task.pk %}">{{ task }}</a>
+            <a class="popup" href="{% url ecs.tasks.views.manage_task task_pk=task.pk %}">{{ task }}</a>
             <span class="actions">
-                {% if not task.locked %}
-                    <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> | 
-                {% endif %}
-                <a href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}" class="">Delegieren</a> 
+                <a class="popup" href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}" class="">Delegieren</a> 
             </span>
         </div>
         {% endfor %}
@@ -27,8 +24,8 @@
         <div>
             {{ task }}
             <span class="actions">
-                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
-                | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">Ablehnen</a>
+                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}?next={{ request.path }}">Annehmen</a> 
+                | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}?next={{ request.path }}">Ablehnen</a>
             </span>
         </div>
         {% endfor %}
@@ -41,8 +38,8 @@
         <div>
             {{ task }}
             <span class="actions">
-                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
-                | <a href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}">Delegieren</a>
+                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}?next={{ request.path }}">Annehmen</a> 
+                | <a class="popup" href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}">Delegieren</a>
             </span>
         </div>
         {% endfor %}
