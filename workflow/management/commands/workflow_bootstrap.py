@@ -6,7 +6,7 @@ from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 
-from ecs.workflow.models import Graph
+from ecs.workflow.models import Graph, NodeType
 from ecs.core.models import Submission
 from ecs.workflow import patterns
 from ecs.workflow.utils import make_dot
@@ -14,13 +14,18 @@ from ecs.workflow.utils import make_dot
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('--doit', dest='do_it', action='store_true', default=False, help=''),
+        make_option('--clean', dest='clean', action='store_true', default=False, help=''),
         make_option('--format', dest='format', action='store', help="The output format type. Either a valid fixture format or 'dot'."),
         make_option('--indent', dest='indent', action='store', type='int', help="Indention output with INDENT spaces"),
     )
 
     @transaction.commit_manually
-    def handle(self, do_it=False, **options):
+    def handle(self, do_it=False, clean=False, **options):
         try:
+            if clean:
+                for model in (Graph, NodeType):
+                    model.objects.all().delete()
+            
             call_command('workflow_sync', quiet=True)
             
             from ecs.core import workflow as cwf
