@@ -17,7 +17,10 @@ def get_threads(messages):
         replies = list(message.replies.all())
         while replies:
             thread += replies
-            replies = sum([list(reply.replies.all()) for reply in replies], [])
+
+            # flatten 2-dimensional lists to 1-dimensional
+            # [[1,2,3], [4,5,6]] => [1,2,3,4,5,6]
+            replies = sum([list(reply.replies.all()) for reply in replies], []) 
 
         for message in thread:
             if message in messages:
