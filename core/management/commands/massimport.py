@@ -10,6 +10,7 @@ import BeautifulSoup
 import chardet
 import simplejson
 from subprocess import Popen, PIPE
+from optparse import make_option
 
 from django.core.management.base import BaseCommand
 
@@ -17,6 +18,12 @@ from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--submission_dir', '-d', action='store', dest='submission_dir', help='import doc files of submissions from a directory'),
+        make_option('--submission', '-s', action='store', dest='submission', help='import doc file of submission'),
+        make_option('--timetable', '-t', action='store', dest='timetable', help='import timetable'),
+    )
+
     def __init__(self, *args, **kwargs):
         self.filecount = 0
         self.importcount = 0
@@ -107,13 +114,11 @@ class Command(BaseCommand):
 
         SubmissionForm.objects.create(**create_data)
 
-    def handle(self, *args, **kwargs):
-        self._ask_for_confirmation()
-        if len(args) < 1:
-            sys.stderr.write('Usage: %s %s [path]\n' % (sys.argv[0], sys.argv[1]))
-            sys.exit(1)
+    def _import_timetable(file):
+        raise NotImplemented
 
-        path = os.path.expanduser(sys.argv[2])
+    def _import_dir(directory):
+        path = os.path.expanduser(directory)
         if not os.path.isdir(path):
             self._abort('"%s" is not a directory' % path)
 
@@ -143,5 +148,20 @@ class Command(BaseCommand):
 
         self._print_stat()
         sys.exit(0)
+
+    def handle(self, *args, **kwargs):
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable']] if x])
+        if options_count is not 1:
+            self._abort('please specifiy one of -d/-s/-t')
+
+        self._ask_for_confirmation()
+
+        if kwargs['submission_dir']:
+            self._import_dir(kwargs['submission_dir'])
+        elif kwargs['submission']:
+            self._import_doc(kwargs['submission'])
+        elif kwargs['timetable']
+            self._import_timetable(kwargs['timetable'])
+
 
 
