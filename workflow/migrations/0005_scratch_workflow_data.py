@@ -7,6 +7,7 @@ from django.db import models
 class Migration(DataMigration):
     
     def forwards(self, orm):
+        orm.TaskType.objects.all().delete()
         orm.Graph.objects.all().delete()
     
     def backwards(self, orm):
