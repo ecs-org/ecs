@@ -23,7 +23,10 @@
             link.addEvent('click', function(){
                 new MooDialog.Iframe(link.href, {
                     title: 'Nachricht',
-                    size: {width: 700, height: 400}
+                    size: {width: 700, height: 400},
+                    onClose: function(){
+                        window.location.reload();
+                    }
                 });
                 return false;
             });
