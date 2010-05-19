@@ -6,25 +6,30 @@ def strip_subject(subject):
 
 
 def get_threads(messages):
-    threads = []
+    # FIXME: this function fails, if the message timestamps are not correct
+    messages = sorted(messages, key=lambda m: m.timestamp)
 
-    messages = list(messages)
+    threads = []
 
     while messages:
         message = messages[0]
         thread = [message]
-        while message.reply_to:
-            thread.append(message.reply_to)
-            message = message.reply_to
+        replies = list(message.replies.all())
+        while replies:
+            thread += replies
+            replies = sum([list(reply.replies.all()) for reply in replies], [])
 
         for message in thread:
             if message in messages:
                 messages.remove(message)
 
-        threads.append({
+        thread = sorted(thread, key=lambda m: m.timestamp, reverse=True)
+
+        threads.insert(0, {
             'subject': strip_subject(thread[0].subject),
             'messages': thread,
         })
+
 
     return threads
 
