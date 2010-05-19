@@ -55,7 +55,7 @@ class Task(models.Model):
             self.save()
         
     def done(self, user=None, commit=True):
-        if self.assigned_to_id != user.id:
+        if user and self.assigned_to_id != user.id:
             self.assign(user)
         token = self.workflow_token
         if token:
