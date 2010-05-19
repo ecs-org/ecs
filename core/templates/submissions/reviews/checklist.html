@@ -12,7 +12,10 @@
 
 {% block content %}
     {{ block.super }}
-    <div class="form main">
+{% endblock %}
+
+{% block tabs %}
+    {{ block.super }}
       <div id="checklist_review_tab" class="tab">
           <form action="" method="post">
   	    <span class="checklist_name">Checkliste {{ checklist_name }}<span>
@@ -26,7 +29,6 @@
               <input type="submit" value="Speichern" />
           </form>
       </div>
-    </div>
 {% endblock %}
 
 {% block jsbottom %}

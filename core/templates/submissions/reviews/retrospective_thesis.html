@@ -12,7 +12,10 @@
 
 {% block content %}
     {{ block.super }}
-    <div class="form main">
+{% endblock %}
+
+{% block tabs %}
+    {{ block.super }}
       <div id="thesis_review_tab" class="tab">
           <form action="" method="post">
               <ol>
@@ -25,7 +28,6 @@
               <input type="submit" value="Speichern" />
           </form>
       </div>
-    </div>
 {% endblock %}
 
 {% block jsbottom %}
