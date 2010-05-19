@@ -13,6 +13,7 @@ from subprocess import Popen, PIPE
 from optparse import make_option
 
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm
@@ -22,6 +23,7 @@ class Command(BaseCommand):
         make_option('--submission_dir', '-d', action='store', dest='submission_dir', help='import doc files of submissions from a directory'),
         make_option('--submission', '-s', action='store', dest='submission', help='import doc file of submission'),
         make_option('--timetable', '-t', action='store', dest='timetable', help='import timetable'),
+        make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
     )
 
     def __init__(self, *args, **kwargs):
@@ -61,7 +63,14 @@ class Command(BaseCommand):
         else:
             print '\033[32mDone.\033[0m'
 
+    @transaction.commit_on_success
     def _import_doc(self, filename):
+        regex = re.match('(\d{2,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
+        try:
+            ec_number = '%s/%04d' % (regex.group(2), int(regex.group(1)))
+        except IndexError:
+            ec_number = re.match('(.*).doc', os.path.basename(filename)).group(1)
+
         antiword = Popen(['antiword', '-x', 'db', filename], stdout=PIPE, stderr=PIPE)
         docbook, standard_error = antiword.communicate()
         if antiword.returncode:
@@ -107,31 +116,18 @@ class Command(BaseCommand):
             except KeyError:
                 pass
 
-        create_data['submission'] = Submission.objects.create()
+        create_data['submission'] = Submission.objects.create(ec_number=ec_number)
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
             if not key in create_data:
                 create_data[key] = value
 
         SubmissionForm.objects.create(**create_data)
 
-    def _import_timetable(file):
-        raise NotImplemented
-
-    def _import_dir(directory):
-        path = os.path.expanduser(directory)
-        if not os.path.isdir(path):
-            self._abort('"%s" is not a directory' % path)
-
-        files = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.doc')]   # get all word documents in an existing directory
-        files = [f for f in files if os.path.isfile(f)]   # only take existing files
-        if not files:
-            self._abort('No documents found in path "%s"' % path)
-
+    def _import_files(self, files):
         self.filecount = len(files)
         self._print_progress()
         warnings = ''
         for f in files:
-            # FIXME: dont use an external command
             try:
                 self._import_doc(f)
             except Exception, e:
@@ -149,19 +145,48 @@ class Command(BaseCommand):
         self._print_stat()
         sys.exit(0)
 
+
+    def _import_file(self, filename):
+        filename = os.path.expanduser(filename)
+        if not os.path.isfile(filename):
+            self._abort('"%s" does not exist' % filename)
+
+        self._import_files([filename])
+
+    def _import_dir(self, directory):
+        path = os.path.expanduser(directory)
+        if not os.path.isdir(path):
+            self._abort('"%s" is not a directory' % path)
+
+        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{2,4}_\d{4}(_.*)?.doc', f)]   # get all word documents in an existing directory
+        files = [f for f in files if os.path.isfile(f)]   # only take existing files
+        if not files:
+            self._abort('No documents found in path "%s"' % path)
+
+        self._import_files(files)
+
+    def _import_timetable(self, filename):
+        raise NotImplemented
+
+    def _import_participants(self, filename):
+        raise NotImplemented
+
+
     def handle(self, *args, **kwargs):
-        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable']] if x])
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['participants']] if x])
         if options_count is not 1:
-            self._abort('please specifiy one of -d/-s/-t')
+            self._abort('please specifiy one of -d/-s/-t/-p')
 
         self._ask_for_confirmation()
 
         if kwargs['submission_dir']:
             self._import_dir(kwargs['submission_dir'])
         elif kwargs['submission']:
-            self._import_doc(kwargs['submission'])
-        elif kwargs['timetable']
+            self._import_file(kwargs['submission'])
+        elif kwargs['timetable']:
             self._import_timetable(kwargs['timetable'])
+        elif kwargs['participants']:
+            self._import_participants(kwargs['participants'])
 
 
 
