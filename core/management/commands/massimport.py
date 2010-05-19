@@ -29,7 +29,7 @@ class Command(BaseCommand):
         sys.exit(1)
 
     def _warn(self, message):
-        sys.stderr.write('\n\033[33m%s\033[0m\n' % message)
+        sys.stderr.write('\033[33m%s\033[0m' % message)
         sys.stderr.flush()
 
     def _ask_for_confirmation(self):
@@ -48,7 +48,7 @@ class Command(BaseCommand):
         sys.stdout.flush()
 
     def _print_stat(self):
-        print '\n== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
+        print '== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
         if self.failcount:
             self._abort('Failed to import %d files' % self.failcount)
         else:
@@ -124,16 +124,22 @@ class Command(BaseCommand):
 
         self.filecount = len(files)
         self._print_progress()
+        warnings = ''
         for f in files:
             # FIXME: dont use an external command
             try:
                 self._import_doc(f)
             except Exception, e:
-                self._warn('== %s ==\n%s' % (os.path.basename(f), e))
+                warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
                 self.failcount += 1
             finally:
                 self.importcount += 1
                 self._print_progress()
+
+        print ''
+        if warnings:
+            print ''
+            self._warn(warnings)
 
         self._print_stat()
         sys.exit(0)
