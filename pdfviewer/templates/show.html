@@ -43,6 +43,8 @@
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.zooms = this.zoom_list.length;
+        this.offset_x = 9;
+        this.offset_y = 28;
         this.zoom_delta = 1;
         this.subpages = 0;
         this.subpages_x = 0;
@@ -98,8 +100,8 @@
           $('pv_cursor').setStyle('visibility', 'hidden');
         } else {
           $('pv_cursor').setStyles({
-            top: 28 + this.subpage_y * this.subpage_height,
-            left: 9 + this.subpage_x * this.subpage_width,
+            top: this.offset_y + this.subpage_y * this.subpage_height,
+            left: this.offset_x + this.subpage_x * this.subpage_width,
             width: this.subpage_width,
             height: this.subpage_height,
             visibility: 'visible'
@@ -208,7 +210,7 @@
       event.stop();
       if (pdf_viewer.zoom == '1') {
         var x = event.client.x;
-        var mid_x = pdf_viewer.width / 2 + 12;
+        var mid_x = pdf_viewer.offset_x + parseInt(pdf_viewer.width / 2);
         if (x < mid_x) {
           pdf_viewer.set_prev();
         } else {
@@ -216,6 +218,24 @@
         }
         return;
       }
+      var x = event.client.x - pdf_viewer.offset_x;
+      var y = event.client.y - pdf_viewer.offset_y;
+      var subpage_x = parseInt(x / pdf_viewer.subpage_width);
+      var subpage_y = parseInt(y / pdf_viewer.subpage_height);
+      var subpage = subpage_y * pdf_viewer.subpages_x + subpage_x + 1;
+      var subpage_delta = subpage - pdf_viewer.subpage;
+      if (subpage_delta == 0) {
+        return;
+      }
+      pdf_viewer.page += (subpage - pdf_viewer.subpage);
+      for (var i=0; i<pdf_viewer.zooms; i++) {
+        if (pdf_viewer.zoom_list[i] == '1') {
+	  break;
+	}
+      }
+      pdf_viewer.zoom_index = i;
+      pdf_viewer.calculate();
+      pdf_viewer.set_image();
     });
 
     $(document).addEvent('keydown', function(event) {
