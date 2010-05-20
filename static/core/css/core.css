@@ -678,3 +678,11 @@ table.notif_meta th {
 #content .overview h2{
     font-size: ;
 }
+
+
+.checklist_field { 
+    visibility: visible; 
+}
+.checklist_field_hidden { 
+    visibility: hidden; 
+}

@@ -18,12 +18,14 @@
     {{ block.super }}
       <div id="checklist_review_tab" class="tab">
           <form action="" method="post">
-  	    <span class="checklist_name">Checkliste {{ checklist_name }}<span>
+            <span class="checklist_name">Checkliste {{ checklist_name }}<span>
               <ol>
               {% for field_name in checklist_review_form.fields %}
+                <div id="div_id_{{field_name}}" class="checklist_field{% if checklist_hidden|getitem:field_name %}_hidden{% endif %}">
                   {% with checklist_review_form|getitem:field_name as field %}
-                      {% include "forms/field.html" %}
+                     {% include "forms/field.html" %}
                   {% endwith %}
+                </div>
               {% endfor %}
               </ol>
               <input type="submit" value="Speichern" />
@@ -33,4 +35,20 @@
 
 {% block jsbottom %}
     {{ block.super }}
+    <script type="text/javascript">
+      window.addEvent('domready', function(){
+        var questions = $('checklist_review_tab').getElements('.NullBooleanField>select');
+        questions.addEvent('change', function(event) {
+          questions.each(function(question) {
+            var val = 'checklist_field';
+            if (question.value != 3) {
+              val += '_hidden';
+            }
+            var id_a = question.id.replace(/q/, 'c');
+            var id_div = 'div_' + id_a;
+            $(id_div).setAttribute('class', val);
+          });
+        });
+      });
+    </script>
 {% endblock %}
