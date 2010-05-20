@@ -6,7 +6,6 @@ from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.messages.models import Message
 from ecs.messages.forms import SendMessageForm, ReplyToMessageForm
-from ecs.messages.utilities import strip_subject
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
     submission, task, reply_to = None, None, None
@@ -16,14 +15,16 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
     
     if reply_to_pk is not None:
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
+        thread = reply_to.thread or reply_to
         form = ReplyToMessageForm(request.POST or None, initial={
-            'subject': 'Re: %s' % strip_subject(reply_to.subject),
+            'subject': 'Re: %s' % thread.subject,
             'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
         })
         submission = reply_to.submission
     else:
         form = SendMessageForm(request.POST or None)
         task_pk = request.GET.get('task')
+        thread = None
         if task_pk is not None:
             task = get_object_or_404(Task, pk=task_pk)
             # FIXME: filter by contenttype
@@ -34,6 +35,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         message.sender = request.user
         message.submission = submission
         message.reply_to = reply_to
+        message.thread = thread
         if reply_to:
             message.receiver = reply_to.sender
         message.save()

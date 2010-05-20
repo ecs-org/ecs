@@ -1,19 +1,15 @@
 {% extends "dashboard/dashboard_widget.inc" %}
 {% load humanize %}
 
-{% block name %}Nachrichten ({{ message_count }}){% endblock %}
+{% block name %}{{ title|default:'Nachrichten' }} ({{ threads.total_message_count }}){% endblock %}
 
 {% block content %}
 <a class="popup" href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a>
 <table>
 {% for thread in threads %}
-
-    {% with thread.messages.0 as first_message %}
-        <tr>
-            <td colspan="4">Thread: {{ thread.subject }} ({{ first_message.timestamp|naturalday:'d.m.Y' }}, {{ first_message.timestamp|date:'H:i'}})</td>
-        </tr>
-    {% endwith %}
-
+    <tr>
+        <td colspan="4">Thread: {{ thread.subject }} ({{ thread.timestamp|naturalday:'d.m.Y' }}, {{ thread.timestamp|date:'H:i'}})</td>
+    </tr>
     {% for message in thread.messages %}
         <tr>
             <td>{% if message.unread %}<span class="unread">[u]</span>{% else %}<span class="read">[g]</span>{% endif %}</td>

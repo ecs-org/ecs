@@ -9,10 +9,19 @@
 {% endblock %}
 
 {% block content %}
-  <div class="form main">
-    {% include "dashboard/messages.inc" %}
-    {% include "dashboard/tasks.inc" %}
-  </div>
+    <div class="form main">
+        {% with 'Outgoing Threads' as title %}
+            {% with outgoing_threads as threads %}
+                {% include "dashboard/messages.inc" %}
+            {% endwith %}
+        {% endwith %}
+        {% with 'Incoming Threads' as title %}
+            {% with incoming_threads as threads %}
+                {% include "dashboard/messages.inc" %}
+            {% endwith %}        
+        {% endwith %}
+        {% include "dashboard/tasks.inc" %}
+    </div>
 {% endblock %}
 
 {% block jsbottom %}
