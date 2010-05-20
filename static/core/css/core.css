@@ -346,6 +346,13 @@ fieldset.disabled {
 .form.main li.max40 input{ width: 200px;}
 .form.main li.max60 input{ width: 340px;}
 
+.form .wide {
+  width: 16em;
+}
+.form .narrow {
+  width: 10em;
+}
+
 /* specific formset styles */
 
 #measure_formset textarea,
