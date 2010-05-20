@@ -190,7 +190,8 @@ class Command(BaseCommand):
         self._import_files(documents, dont_exit_on_fail=True)
 
         title = re.match('(.*).doc', os.path.basename(filename)).group(1)
-        meeting, created = Meeting.objects.get_or_create(title=title, start=start)
+        Meeting.objects.filter(title=title).delete()
+        meeting = Meeting.objects.create(title=title, start=start)
 
         ec_numbers = ['%s/%04d' % (a[1], int(a[0])) for a in y]
         submission_count = len(ec_numbers)
@@ -206,8 +207,6 @@ class Command(BaseCommand):
 
         if fail_count:
             self._abort('failed to assign %d submissions to the meeting' % fail_count)
-
-
 
     def _import_participants(self, filename):
         raise NotImplemented
