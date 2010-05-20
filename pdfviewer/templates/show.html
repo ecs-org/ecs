@@ -35,23 +35,41 @@
         this.id = '{{ id }}';
         this.page = {{ page }};
         this.pages = {{ pages }};
-        this.zoom = '{{ zoom }}';
-        this.zoom_pages = {{ zoom_pages }};
-        this.zoom_list = {% autoescape off %}{{ zoom_list }}{% endautoescape %};
-        this.zooms = {{ zooms }};
         this.zoom_index = {{ zoom_index }};
-        this.zoom_delta = 1;
+        this.zoom_list = {% autoescape off %}{{ zoom_list }}{% endautoescape %};
+        this.zoom_pages = {% autoescape off %}{{ zoom_pages }}{% endautoescape %};
         this.width = {{ width }};
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
+        this.zooms = this.zoom_list.length;
+        this.zoom_delta = 1;
+        this.subpages = 0;
+        this.bigpages = 0;
+        this.bigpage = 0;
+        this.subpage = 0;
+        this.prev_boundary = 0;
+        this.next_boundary = 0;
+        this.calculate();
         this.set_image();
-        this.prev_boundary = this.zoom_pages;
-        this.next_boundary = this.pages - this.zoom_pages + 1;
+      },
+
+      calculate: function() {
+        this.zoom = this.zoom_list[this.zoom_index];
+        this.subpages = this.zoom_pages[this.zoom_index];
+        this.bigpages = parseInt((this.pages - 1) / this.subpages) + 1;
+        this.bigpage = parseInt((this.page - 1) / this.subpages) + 1;
+        this.subpage = this.page - (this.bigpage - 1) * this.subpages;
+        this.prev_boundary = this.subpages;
+        this.next_boundary = this.pages - this.subpages + 1;
       },
 
       update_title: function() {
         var title = $('pv_title');
-        var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages + ', Zoom ' + this.zoom + ' (' + this.zoom_pages + ')';
+        var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages;
+        if (this.zoom != '1') {
+          info += ' (Übersichtsseite ' + this.bigpage + ', Unterseite ' + this.subpage + ')';
+        }
+        info += ', Zoom ' + this.zoom;
         if (!title.hasChild('pv_title_info')) {
           title.grab(new Element('span', { id: 'pv_title_info', html: info }));
           title.grab(new Element('span', { id: 'pv_title_status', html: ' lädt .. ' }));
@@ -61,7 +79,7 @@
       },
 
       image_loaded: function() {
-	$('pv_title_status').setProperties({ html: '' });
+        $('pv_title_status').setProperties({ html: '' });
       },
 
       set_image: function() {
@@ -71,13 +89,13 @@
           alert('error: no image data for zoom: [' + this.zoom + ']');
           return;
         }
-        var p = z[this.page];
+        var p = z[this.bigpage];
         if (!$defined(p)) {
-          alert('error: no image data for zoom: [' + this.zoom + '], page: [' + this.page + ']');
+          alert('error: no image data for zoom: [' + this.zoom + '], bigpage: [' + this.bigpage + ']');
           return;
         }
         var src = p['url'];
-        var alt = 'Seite ' + this.page + ' von ' + this.pages;
+        var alt = 'Seite ' + this.bigpage + ' von ' + this.bigpages;
         if (!pv_page.hasChild('pv_img')) {
           pv_page.grab(new Element('img', { id: 'pv_img', src: src, width: this.width, height: this.height, alt: alt }));
         } else {
@@ -90,7 +108,8 @@
         if (this.page <= this.prev_boundary) {
           return;
         }
-        this.page -= this.zoom_pages;
+        this.page -= this.subpages;
+        this.bigpage -= 1;
         this.set_image();
       },
 
@@ -99,7 +118,8 @@
           this.set_last();
           return;
         }
-        this.page += this.zoom_pages;
+        this.page += this.subpages;
+        this.bigpage += 1;
         this.set_image();
       },
 
@@ -108,6 +128,8 @@
           return;
         }
         this.page = 1;
+        this.bigpage = 1;
+        this.subpage = 1;
         this.set_image();
       },
 
@@ -116,6 +138,8 @@
           return;
         }
         this.page = this.pages;
+        this.bigpage = this.bigpages;
+        this.subpage = this.pages - (this.bigpages - 1) * this.subpages;
         this.set_image();
       },
 
@@ -123,10 +147,25 @@
         if (zoom_index < 0 || zoom_index >= this.zooms) {
           return;
         }
-        this.zoom = this.zoom_list[zoom_index];
         this.zoom_index = zoom_index;
+        this.calculate();
         this.set_image();
       },
+
+      cycle_zoom: function() {
+        if (this.zooms == 1) {
+          return;
+        }
+        var new_zoom_index = this.zoom_index + this.zoom_delta;
+        if (new_zoom_index >= this.zooms) {
+          this.zoom_delta = -1;
+          new_zoom_index = this.zooms - 2;
+        } else if (new_zoom_index < 0) {
+          this.zoom_delta = 1;
+          new_zoom_index = 1;
+        }
+        this.set_zoom(new_zoom_index); 
+      }
 
     });
 
@@ -140,13 +179,14 @@
 
     $('pv_page').addEvent('click', function(event) {
       event.stop();
-      var x = event.client.x;
-      var mid_x = pdf_viewer.width / 2 + 12;
-      if (x < mid_x) {
-        pdf_viewer.set_prev();
-        return;
-      } else {
-        pdf_viewer.set_next();
+      if (pdf_viewer.zoom == '1') {
+        var x = event.client.x;
+        var mid_x = pdf_viewer.width / 2 + 12;
+        if (x < mid_x) {
+          pdf_viewer.set_prev();
+        } else {
+          pdf_viewer.set_next();
+        }
         return;
       }
     });
@@ -179,17 +219,22 @@
         //alert('exit somehow..');
         return;
       }
+      if (key == 'enter') {
+        event.stop();
+	pdf_viewer.cycle_zoom();
+        return;
+      }
       if (key == '?' || code == 219) {
         event.stop();
         alert('PDF Viewer Hilfe\n\n' +
               'Eine Seite vor oder zurück blättern:\n' +
-              '- auf linke oder rechte Hälfte einer Seite klicken\n' +
-              '- [Bild hoch] und [Bild runter] Tasten\n' +
-              '- Pfeiltasten [Links] und [Rechts]\n' +
+              '* [Bild hoch] und [Bild runter] Tasten\n' +
+              '* Pfeiltasten [Links] und [Rechts]\n' +
+              '* Einzelansicht (Zoomstufe \'1\'): auf linke oder rechte Hälfte einer Seite klicken\n' +
               'Erste Seite mit [Pos1] Taste\n' +
               'Letzte Seite mit [Ende] Taste\n' +
-              '[Mausrad] um Zoomstufe zu ändern\n' +
-              'Maus [Rechtsklick] um Zoomstufe zu ändern (auf-/absteigend)\n');
+              '[Mausrad], um Zoomstufe zu ändern\n' +
+              'Maus [Rechtsklick] oder [Enter], um Zoomstufe zu ändern (auf-/absteigend)\n');
         return;
       }
     });
@@ -203,18 +248,7 @@
 
     $(document.body).addEvent('contextmenu', function(event) {
       event.stop();
-      if (pdf_viewer.zooms == 1) {
-        return;
-      }
-      var new_zoom_index = pdf_viewer.zoom_index + pdf_viewer.zoom_delta;
-      if (new_zoom_index >= pdf_viewer.zooms) {
-        pdf_viewer.zoom_delta = -1;
-        new_zoom_index = pdf_viewer.zooms - 2;
-      } else if (new_zoom_index < 0) {
-        pdf_viewer.zoom_delta = 1;
-        new_zoom_index = 1;
-      }
-      pdf_viewer.set_zoom(new_zoom_index); 
+      pdf_viewer.cycle_zoom();
     });
 
   });
