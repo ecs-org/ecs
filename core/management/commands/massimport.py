@@ -11,12 +11,14 @@ import chardet
 import simplejson
 from subprocess import Popen, PIPE
 from optparse import make_option
+from datetime import datetime, date
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission, SubmissionForm
+from ecs.core.models import Submission, SubmissionForm, Meeting
+
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
@@ -24,6 +26,7 @@ class Command(BaseCommand):
         make_option('--submission', '-s', action='store', dest='submission', help='import doc file of submission'),
         make_option('--timetable', '-t', action='store', dest='timetable', help='import timetable'),
         make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
+        make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
     )
 
     def __init__(self, *args, **kwargs):
@@ -146,8 +149,6 @@ class Command(BaseCommand):
             self._warn(warnings)
 
         self._print_stat()
-        sys.exit(0)
-
 
     def _import_file(self, filename):
         filename = os.path.expanduser(filename)
@@ -168,8 +169,32 @@ class Command(BaseCommand):
 
         self._import_files(files)
 
-    def _import_timetable(self, filename):
-        raise NotImplemented
+    def _import_timetable(self, filename, start):
+        try:
+            year, month, day = start.split('-')
+        except ValueError:
+            self.abort('please specify a date')
+
+        filename = os.path.expanduser(filename)
+        antiword = Popen(['antiword', '-x', 'db', filename], stdout=PIPE, stderr=PIPE)
+        docbook, standard_error = antiword.communicate()
+        if antiword.returncode:
+            self._abort('Cant read file')
+
+        s = BeautifulSoup.BeautifulStoneSoup(docbook)
+        x=s.findAll(text=re.compile("EK Nr."))
+        y=[a.next.strip().split("/") for a in x]
+        documents = [os.path.join(os.path.dirname(filename), '%s_%s.doc' % (x[0], x[1])) for x in y]
+
+        self._import_files(documents)
+
+        title = re.match('(.*).doc', os.path.basename(filename)).group(1)
+        meeting = Meeting.objects.get_or_create(title=title, start=start)
+
+        ec_numbers = ['%s/%04d' % (a[1], int(a[0])) for a in y]
+        print ec_numbers
+
+
 
     def _import_participants(self, filename):
         raise NotImplemented
@@ -187,9 +212,10 @@ class Command(BaseCommand):
         elif kwargs['submission']:
             self._import_file(kwargs['submission'])
         elif kwargs['timetable']:
-            self._import_timetable(kwargs['timetable'])
+            self._import_timetable(kwargs['timetable'], kwargs['date'])
         elif kwargs['participants']:
             self._import_participants(kwargs['participants'])
 
+        sys.exit(0)
 
 
