@@ -119,6 +119,9 @@
       },
 
       image_loaded: function() {
+        if (this.fullscreen_mode) {
+          return;
+	}
         $('pv_title_status').setProperties({ html: '' });
       },
 
