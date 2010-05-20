@@ -192,7 +192,19 @@ class Command(BaseCommand):
         meeting = Meeting.objects.get_or_create(title=title, start=start)
 
         ec_numbers = ['%s/%04d' % (a[1], int(a[0])) for a in y]
-        print ec_numbers
+        submission_count = len(ec_numbers)
+        fail_count = 0
+        for ec_number in ec_numbers:
+            try:
+                Submission.objects.get(ec_number=ec_number)
+                meeting.add_entry(title=submission.name, submission=submission)
+            except Submission.DoesNotExist:
+                fail_count += 1
+
+        print '== %s/%s submission assigned to meeting ==' % (submission_count-fail_count, submission_count)
+
+        if fail_count:
+            self._abort('failed to assign %d submissions to the meeting' % fail_count)
 
 
 
