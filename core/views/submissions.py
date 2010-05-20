@@ -131,9 +131,17 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
             answer.answer = form.cleaned_data['q%s' % i]
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
+    hidden = { }
+    i = 0
+    for question in blueprint.questions.order_by('text'):
+        i = i + 1
+        answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+        hidden['q%s' % i] = False
+        hidden['c%s' % i] = answer.answer is not False
     return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist.html', extra_context={
         'checklist_name': blueprint.name,
         'checklist_review_form': form,
+        'checklist_hidden': hidden,
     })
 
 
