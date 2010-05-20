@@ -43,7 +43,7 @@
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.zooms = this.zoom_list.length;
-	this.fullscreen_mode = this.detect_fullscreen();
+        this.fullscreen_mode = this.detect_fullscreen();
         this.offset_x = 9;
         this.offset_y = this.fullscreen_mode ? 5 : 28;
         this.zoom_delta = 1;
@@ -85,7 +85,7 @@
       },
 
       update_title: function() {
-	if (this.fullscreen_mode) {
+        if (this.fullscreen_mode) {
           return;
         }
         var title = $('pv_title');
@@ -121,7 +121,7 @@
       image_loaded: function() {
         if (this.fullscreen_mode) {
           return;
-	}
+        }
         $('pv_title_status').setProperties({ html: '' });
       },
 
@@ -256,11 +256,39 @@
       var key = event.key;
       if (code == 33 || key == 'left') {
         event.stop();
+        if (code == 33) {
+          var y = $(window).pageYOffset;
+          var wy = $(window).getSize().y;
+          if (y > 0) {
+            if (y - wy >= 0) {
+              $(window).scrollTo(0, y - wy);
+            } else {
+              $(window).scrollTo(0, 0);
+            }
+            return;
+          } else {
+            if (pdf_viewer.page > pdf_viewer.prev_boundary) {
+              $(window).scrollTo(0, pdf_viewer.height - wy);
+            }
+          }
+        }
         pdf_viewer.set_prev();
         return;
       }
       if (code == 34 || key == 'right') {
         event.stop();
+        if (code == 34) {
+          var y = $(window).pageYOffset;
+          var wy = $(window).getSize().y;
+          if (y + wy < pdf_viewer.height) {
+            $(window).scrollTo(0, y + wy);
+            return;
+          } else {
+            if (pdf_viewer.page < pdf_viewer.next_boundary) {
+              $(window).scrollTo(0, 0);
+            }
+          }
+        }
         pdf_viewer.set_next();
         return;
       }
@@ -326,7 +354,7 @@
         }
         if (title.hasChild('pv_title_status')) {
           $('pv_title_status').dispose();   
-	}
+        }
         return;
       } else {
         pdf_viewer.fullscreen_mode = false;
