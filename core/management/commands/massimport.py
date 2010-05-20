@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission, SubmissionForm, Meeting
+from ecs.core.models import Submission, SubmissionForm, Meeting, Participation
 
 
 class Command(BaseCommand):
@@ -210,7 +210,7 @@ class Command(BaseCommand):
         if fail_count:
             self._abort('failed to assign %d submissions to the meeting' % fail_count)
 
-    @transaction.commit_manually
+    @transaction.commit_on_success
     def _import_participants(self, filename):
         filename = os.path.expanduser(filename)
         try:
@@ -252,25 +252,30 @@ class Command(BaseCommand):
                 sid = transaction.savepoint()
                 user = User.objects.get(Q(username=username)|Q(username__startswith=username)|Q(username__endswith=username))
 
+                failed_ec_numbers = []
                 for ec_number in ec_numbers:
                     try:
                         ec_number = '%04d' % int(ec_number)
                     except ValueError, e:
-                        warnings += '== %s ==\n%s\n\n' % (username, e)
+                        failed_ec_numbers.append(ec_number)
                         continue
 
                     try:
                         rofl = transaction.savepoint()
-                        submission = Submission.objects.get(ec_number__endswith=ec_number)
-                    except (Submission.DoesNotExist), e:
+                        t_entry = meeting.timetable_entries.get(submission__ec_number__endswith=ec_number)
+                        Participation.objects.create(entry=t_entry, user=user)
+                    except Exception, e:
                         transaction.savepoint_rollback(rofl)
-                        #warnings += '== %s (%s) ==\n%s\n\n' % (username, ec_number, e)
+                        failed_ec_numbers.append(ec_number)
                         continue
                     else:
                         transaction.savepoint_commit(rofl)
 
+                if failed_ec_numbers:
+                    raise Exception('No sumbssions with ec_number: %s' % (', '.join(failed_ec_numbers)))
 
-            except (User.DoesNotExist, User.MultipleObjectsReturned), e:
+
+            except Exception, e:
                 transaction.savepoint_rollback(sid)
                 warnings += '== %s ==\n%s\n\n' % (username, e)
                 self.failcount += 1
