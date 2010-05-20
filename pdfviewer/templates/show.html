@@ -15,10 +15,10 @@
 
   <div class="pv_main" style="">
     <div class="pv_header" style="">
-      <span id="pv_title" class="pv_title"></span>
+      <div id="pv_title" class="pv_title"></div>
     </div>
     <div class="pv_pages">
-      <span id="pv_page" class="pv_page"></span>
+      <div id="pv_page" class="pv_page"></div>
     </div>
   </div>
 
@@ -40,6 +40,7 @@
         this.zoom_list = {% autoescape off %}{{ zoom_list }}{% endautoescape %};
         this.zooms = {{ zooms }};
         this.zoom_index = {{ zoom_index }};
+        this.zoom_delta = 1;
         this.width = {{ width }};
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
@@ -51,13 +52,16 @@
       update_title: function() {
         var title = $('pv_title');
         var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages + ', Zoom ' + this.zoom + ' (' + this.zoom_pages + ')';
-        if (title.hasChild('pv_title_info')) {
-          var title_info = $('pv_title_info');
-          title_info.setProperties({ html: info });
+        if (!title.hasChild('pv_title_info')) {
+          title.grab(new Element('span', { id: 'pv_title_info', html: info }));
+          title.grab(new Element('span', { id: 'pv_title_status', html: ' lädt .. ' }));
         } else {
-          var title_info = new Element('span', { id: 'pv_title_info', html: info });
-          title.grab(title_info);
+          $('pv_title_info').setProperties({ html: info });
         }
+      },
+
+      image_loaded: function() {
+	$('pv_title_status').setProperties({ html: '' });
       },
 
       set_image: function() {
@@ -74,13 +78,10 @@
         }
         var src = p['url'];
         var alt = 'Seite ' + this.page + ' von ' + this.pages;
-        {% comment %}Here we could add some cache of loaded images{% endcomment %}
-        if (pv_page.hasChild('pv_img')) {
-          var img = $('pv_img');
-          img.setProperties({ src: src, alt: alt });
+        if (!pv_page.hasChild('pv_img')) {
+          pv_page.grab(new Element('img', { id: 'pv_img', src: src, width: this.width, height: this.height, alt: alt }));
         } else {
-          var img = new Element('img', { id: 'pv_img', src: src, width: this.width, height: this.height, alt: alt });
-          pv_page.grab(img);
+          $('pv_img').setProperties({ src: src, alt: alt });
         }
         this.update_title();
       },
@@ -129,9 +130,15 @@
 
     });
 
+
     var pdf_viewer = new PdfViewer();
 
-    $(document.body).getElements('.pv_page').addEvent('click', function(event) {
+
+    $('pv_img').addEvent('load', function(event) {
+      pdf_viewer.image_loaded();
+    });
+
+    $('pv_page').addEvent('click', function(event) {
       event.stop();
       var x = event.client.x;
       var mid_x = pdf_viewer.width / 2 + 12;
@@ -181,9 +188,8 @@
               '- Pfeiltasten [Links] und [Rechts]\n' +
               'Erste Seite mit [Pos1] Taste\n' +
               'Letzte Seite mit [Ende] Taste\n' +
-              'Ende mit [Esc] oder [q] Taste\n' +
               '[Mausrad] um Zoomstufe zu ändern\n' +
-              'Maus [Rechtsklick] um Zoomstufe zu ändern\n');
+              'Maus [Rechtsklick] um Zoomstufe zu ändern (auf-/absteigend)\n');
         return;
       }
     });
@@ -197,9 +203,17 @@
 
     $(document.body).addEvent('contextmenu', function(event) {
       event.stop();
-      var shift = event.shift;
-      var delta = 1;
-      var new_zoom_index = (pdf_viewer.zoom_index + delta) % pdf_viewer.zooms;
+      if (pdf_viewer.zooms == 1) {
+        return;
+      }
+      var new_zoom_index = pdf_viewer.zoom_index + pdf_viewer.zoom_delta;
+      if (new_zoom_index >= pdf_viewer.zooms) {
+        pdf_viewer.zoom_delta = -1;
+        new_zoom_index = pdf_viewer.zooms - 2;
+      } else if (new_zoom_index < 0) {
+        pdf_viewer.zoom_delta = 1;
+        new_zoom_index = 1;
+      }
       pdf_viewer.set_zoom(new_zoom_index); 
     });
 
