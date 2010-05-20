@@ -39,14 +39,12 @@
     </div>
 {% endif %}
 
-{% if scheduled_submissions %}
+{% for meeting, submissions in meetings %}
     <div class="overview">
-        <h2>Eingereichte Studien mit Sitzungszuordnung</h2>
-        {% with scheduled_submissions as submissions %}
-            {% include 'submissions/list.inc' %}
-        {% endwith %}
+        <h2>Studien für die Sitzung am {{ meeting.start|date:'d.m.Y' }}{% if meeting.title %} ({{ meeting.title }}){% endif %}</h2>
+        {% include 'submissions/list.inc' %}
     </div>
-{% endif %}
+{% endfor %}
 
 
 {% endblock %}

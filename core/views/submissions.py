@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 
 from ecs.core.views.utils import render, redirect_to_next_url
-from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
+from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer, Meeting
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.checklist import make_checklist_form
@@ -234,9 +234,10 @@ def submission_pdf(request, submission_form_pk=None):
 
 def submission_form_list(request):
     submissions = Submission.objects.order_by('ec_number')
+    meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
     return render(request, 'submissions/list.html', {
-        'scheduled_submissions': submissions.exclude(meetings__isnull=True),
         'unscheduled_submissions': submissions.filter(meetings__isnull=True),
+        'meetings': meetings,
         'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False),
     })
 
