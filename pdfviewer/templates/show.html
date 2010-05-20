@@ -227,11 +227,15 @@
       if (subpage_delta == 0) {
         return;
       }
-      pdf_viewer.page += (subpage - pdf_viewer.subpage);
+      var page = pdf_viewer.page + subpage_delta;
+      if (page > pdf_viewer.pages) {
+        return;
+      }
+      pdf_viewer.page = page;
       for (var i=0; i<pdf_viewer.zooms; i++) {
         if (pdf_viewer.zoom_list[i] == '1') {
-	  break;
-	}
+          break;
+        }
       }
       pdf_viewer.zoom_index = i;
       pdf_viewer.calculate();

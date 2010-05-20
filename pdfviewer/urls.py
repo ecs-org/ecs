@@ -7,4 +7,5 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'ecs.pdfviewer.views.show'),
     url(r'^(?P<id>\d+)/(?P<page>\d+)/(?P<zoom>[^/]+)/$', 'ecs.pdfviewer.views.show', name='pdf_show'),
+    url(r'^demo/$', 'ecs.pdfviewer.views.demo'),
 )

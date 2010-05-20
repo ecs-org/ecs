@@ -161,3 +161,8 @@ def show(request, id=1, page=1, zoom='1'):
         'width': image_set.width,
         'images': images,
     })
+
+
+def demo(request):
+    return render(request, 'demo.html', {})
+
