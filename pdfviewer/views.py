@@ -21,7 +21,7 @@ class ImageSet(object):
     def __init__(self, id):
         if id == 1:
             self.zoom_list = [ '1', '3x3', '5x5' ]
-            self.zoom_pages = [ 1, 9, 25 ]
+            self.zoom_pages = [ [1,1], [3,3], [5,5] ]
             self.width = 760
             self.height = 1076
             self.images = {
@@ -38,7 +38,7 @@ class ImageSet(object):
             }
         elif id == 2:
             self.zoom_list = [ '1', '3x3', '5x5' ]
-            self.zoom_pages = [ 1, 9, 25 ]
+            self.zoom_pages = [ [1,1], [3,3], [5,5] ]
             self.width = 760
             self.height = 1076
             self.images = {
@@ -72,7 +72,7 @@ class ImageSet(object):
             }
         elif id == 3:
             self.zoom_list = [ '1', '3x3', '5x5' ]
-            self.zoom_pages = [ 1, 9, 25 ]
+            self.zoom_pages = [ [1,1], [3,3], [5,5] ]
             self.width = 800
             self.height = 1131
             self.images = {
@@ -102,7 +102,7 @@ class ImageSet(object):
             }
         else:
             self.zoom_list = [ '1' ]
-            self.zoom_pages = [ 1 ]
+            self.zoom_pages = [ [1,1] ]
             self.images = [ ]
         self.zooms = len(self.zoom_list)
 

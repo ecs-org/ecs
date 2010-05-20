@@ -19,6 +19,7 @@
     </div>
     <div class="pv_pages">
       <div id="pv_page" class="pv_page"></div>
+      <div id="pv_cursor" class="pv_cursor"></div>
     </div>
   </div>
 
@@ -44,9 +45,15 @@
         this.zooms = this.zoom_list.length;
         this.zoom_delta = 1;
         this.subpages = 0;
+        this.subpages_x = 0;
+        this.subpages_y = 0;
         this.bigpages = 0;
         this.bigpage = 0;
         this.subpage = 0;
+        this.subpage_x = 0;
+        this.subpage_y = 0;
+        this.subpage_width = 0;
+        this.subpage_height = 0;
         this.prev_boundary = 0;
         this.next_boundary = 0;
         this.calculate();
@@ -55,10 +62,16 @@
 
       calculate: function() {
         this.zoom = this.zoom_list[this.zoom_index];
-        this.subpages = this.zoom_pages[this.zoom_index];
+        this.subpages_x = this.zoom_pages[this.zoom_index][0];
+        this.subpages_y = this.zoom_pages[this.zoom_index][1];
+        this.subpages = this.subpages_x * this.subpages_y;
         this.bigpages = parseInt((this.pages - 1) / this.subpages) + 1;
         this.bigpage = parseInt((this.page - 1) / this.subpages) + 1;
         this.subpage = this.page - (this.bigpage - 1) * this.subpages;
+        this.subpage_y = parseInt((this.subpage - 1) / this.subpages_x);
+        this.subpage_x = this.subpage - this.subpage_y * this.subpages_x - 1;
+        this.subpage_width = parseInt(this.width / this.subpages_x);
+        this.subpage_height = parseInt(this.height / this.subpages_y);
         this.prev_boundary = this.subpages;
         this.next_boundary = this.pages - this.subpages + 1;
       },
@@ -70,11 +83,27 @@
           info += ' (Übersichtsseite ' + this.bigpage + ', Unterseite ' + this.subpage + ')';
         }
         info += ', Zoom ' + this.zoom;
+        var status = ' lädt ..';
         if (!title.hasChild('pv_title_info')) {
           title.grab(new Element('span', { id: 'pv_title_info', html: info }));
-          title.grab(new Element('span', { id: 'pv_title_status', html: ' lädt .. ' }));
+          title.grab(new Element('span', { id: 'pv_title_status', html: status }));
         } else {
           $('pv_title_info').setProperties({ html: info });
+          $('pv_title_status').setProperties({ html: status });
+        }
+      },
+
+      set_cursor: function() {
+        if (this.zoom == '1') {
+          $('pv_cursor').setStyle('visibility', 'hidden');
+        } else {
+          $('pv_cursor').setStyles({
+            top: 28 + this.subpage_y * this.subpage_height,
+            left: 9 + this.subpage_x * this.subpage_width,
+            width: this.subpage_width,
+            height: this.subpage_height,
+            visibility: 'visible'
+          });
         }
       },
 
@@ -102,6 +131,7 @@
           $('pv_img').setProperties({ src: src, alt: alt });
         }
         this.update_title();
+        this.set_cursor();
       },
 
       set_prev: function() {
@@ -166,7 +196,6 @@
         }
         this.set_zoom(new_zoom_index); 
       }
-
     });
 
 
@@ -221,7 +250,7 @@
       }
       if (key == 'enter') {
         event.stop();
-	pdf_viewer.cycle_zoom();
+        pdf_viewer.cycle_zoom();
         return;
       }
       if (key == '?' || code == 219) {
