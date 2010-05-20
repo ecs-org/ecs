@@ -15,6 +15,8 @@ from datetime import datetime, date
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.contrib.auth.models import User
+from django.db.models import Q
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm, Meeting
@@ -208,8 +210,87 @@ class Command(BaseCommand):
         if fail_count:
             self._abort('failed to assign %d submissions to the meeting' % fail_count)
 
+    @transaction.commit_manually
     def _import_participants(self, filename):
-        raise NotImplemented
+        filename = os.path.expanduser(filename)
+        try:
+            fd = open(filename, 'r')
+        except IOError:
+            self.abort('Cant open file %s' % filename)
+
+        lines = [x.strip() for x in fd.readlines() if x.strip() and not x.strip().startswith('#')]  #filter out empty lines and commented lines
+        fd.close()
+        try:
+            dataset = [(x.split(' ', 1)[0], x.split(' ', 1)[1].split(',')) for x in lines]
+        except IndexError:
+            self._abort('Syntax Error')
+
+        while True:
+            sys.stderr.write(' pk | title\n================\n')
+            sys.stderr.write('\n'.join('%3d | %s' % (meeting.pk, meeting.title) for meeting in Meeting.objects.all()))
+            try:
+                meeting_pk = raw_input('\n\nWhich meeting(pk)? ')
+            except KeyboardInterrupt:
+                sys.stderr.write('\n')
+                self._abort('quit')
+
+            try:
+                meeting = Meeting.objects.get(pk=meeting_pk)
+                break
+            except (Meeting.DoesNotExist, ValueError):
+                self._warn('Meeting "%s" does not exist\n\n' % meeting_pk)
+
+        print meeting
+        print ''
+
+        self.filecount = len(dataset)
+        self._print_progress()
+        warnings = ''
+        for (username, ec_numbers) in dataset:
+            username = username.lower()
+            try:
+                sid = transaction.savepoint()
+                user = User.objects.get(Q(username=username)|Q(username__startswith=username)|Q(username__endswith=username))
+
+                for ec_number in ec_numbers:
+                    try:
+                        ec_number = '%04d' % int(ec_number)
+                    except ValueError, e:
+                        warnings += '== %s ==\n%s\n\n' % (username, e)
+                        continue
+
+                    try:
+                        rofl = transaction.savepoint()
+                        submission = Submission.objects.get(ec_number__endswith=ec_number)
+                    except (Submission.DoesNotExist), e:
+                        transaction.savepoint_rollback(rofl)
+                        #warnings += '== %s (%s) ==\n%s\n\n' % (username, ec_number, e)
+                        continue
+                    else:
+                        transaction.savepoint_commit(rofl)
+
+
+            except (User.DoesNotExist, User.MultipleObjectsReturned), e:
+                transaction.savepoint_rollback(sid)
+                warnings += '== %s ==\n%s\n\n' % (username, e)
+                self.failcount += 1
+            else:
+                transaction.savepoint_commit(sid)
+            finally:
+                self.importcount += 1
+                self._print_progress()
+
+        print ''
+        if warnings:
+            print ''
+            self._warn(warnings)
+
+        print '== %d/%d participants imported ==' % (self.importcount - self.failcount, self.filecount)
+        if self.failcount:
+            self._abort('Failed to import %d participants' % self.failcount)
+        else:
+            print '\033[32mDone.\033[0m'
+
 
 
     def handle(self, *args, **kwargs):
