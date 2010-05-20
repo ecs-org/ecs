@@ -35,10 +35,11 @@ class Command(BaseCommand):
         self.failcount = 0
         super(Command, self).__init__(*args, **kwargs)
 
-    def _abort(self, message):
+    def _abort(self, message, dont_exit=False):
         sys.stderr.write('\033[31mERROR: %s\033[0m\n' % message)
         sys.stderr.flush()
-        sys.exit(1)
+        if not dont_exit:
+            sys.exit(1)
 
     def _warn(self, message):
         sys.stderr.write('\033[33m%s\033[0m' % message)
@@ -59,10 +60,10 @@ class Command(BaseCommand):
         sys.stdout.write('\r[%s%s%s] %3d/%3d ' % (('='*(a-1)), ('>' if not self.importcount == self.filecount else '='), (' '*b), self.importcount, self.filecount))
         sys.stdout.flush()
 
-    def _print_stat(self):
+    def _print_stat(self, dont_exit_on_fail=False):
         print '== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
         if self.failcount:
-            self._abort('Failed to import %d files' % self.failcount)
+            self._abort('Failed to import %d files' % self.failcount, dont_exit=dont_exit_on_fail)
         else:
             print '\033[32mDone.\033[0m'
 
@@ -129,7 +130,7 @@ class Command(BaseCommand):
 
         SubmissionForm.objects.create(**create_data)
 
-    def _import_files(self, files):
+    def _import_files(self, files, dont_exit_on_fail=False):
         self.filecount = len(files)
         self._print_progress()
         warnings = ''
@@ -148,7 +149,7 @@ class Command(BaseCommand):
             print ''
             self._warn(warnings)
 
-        self._print_stat()
+        self._print_stat(dont_exit_on_fail=dont_exit_on_fail)
 
     def _import_file(self, filename):
         filename = os.path.expanduser(filename)
@@ -186,18 +187,18 @@ class Command(BaseCommand):
         y=[a.next.strip().split("/") for a in x]
         documents = [os.path.join(os.path.dirname(filename), '%s_%s.doc' % (x[0], x[1])) for x in y]
 
-        self._import_files(documents)
+        self._import_files(documents, dont_exit_on_fail=True)
 
         title = re.match('(.*).doc', os.path.basename(filename)).group(1)
-        meeting = Meeting.objects.get_or_create(title=title, start=start)
+        meeting, created = Meeting.objects.get_or_create(title=title, start=start)
 
         ec_numbers = ['%s/%04d' % (a[1], int(a[0])) for a in y]
         submission_count = len(ec_numbers)
         fail_count = 0
         for ec_number in ec_numbers:
             try:
-                Submission.objects.get(ec_number=ec_number)
-                meeting.add_entry(title=submission.name, submission=submission)
+                submission = Submission.objects.get(ec_number=ec_number)
+                meeting.add_entry(submission=submission, duration_in_seconds=450)
             except Submission.DoesNotExist:
                 fail_count += 1
 
