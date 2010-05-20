@@ -125,7 +125,7 @@ class Command(BaseCommand):
 
         create_data['submission'] = submission
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
-            if not key in create_data:
+            if not key in create_data or not create_data[key].isdigit():
                 create_data[key] = value
 
         SubmissionForm.objects.create(**create_data)
