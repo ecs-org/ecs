@@ -317,18 +317,18 @@
         pdf_viewer.fullscreen_mode = true;
         pdf_viewer.offset_y = 5;
         pdf_viewer.set_cursor();
-        //...
         var title = $('pv_title');
         if (title.hasChild('pv_title_info')) {
           $('pv_title_info').dispose();
-          $('pv_title_szatus').dispose();   
         }
+        if (title.hasChild('pv_title_status')) {
+          $('pv_title_status').dispose();   
+	}
         return;
       } else {
         pdf_viewer.fullscreen_mode = false;
         pdf_viewer.offset_y = 28;
         pdf_viewer.set_cursor();
-        //..
         pdf_viewer.update_title();
         return;
       }
