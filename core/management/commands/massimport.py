@@ -116,7 +116,10 @@ class Command(BaseCommand):
             except KeyError:
                 pass
 
-        create_data['submission'] = Submission.objects.create(ec_number=ec_number)
+        Submission.objects.filter(ec_number=ec_number).delete()
+        submission = Submission.objects.create(ec_number=ec_number)
+
+        create_data['submission'] = submission
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
             if not key in create_data:
                 create_data[key] = value

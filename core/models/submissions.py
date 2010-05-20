@@ -5,7 +5,7 @@ import reversion
 import datetime
 
 class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True) # 2010/0345
+    ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # 2010/0345
 
     def get_ec_number_display(self):
         try:
