@@ -158,8 +158,7 @@
           return;
         }
         this.page = 1;
-        this.bigpage = 1;
-        this.subpage = 1;
+        this.calculate();
         this.set_image();
       },
 
@@ -168,8 +167,7 @@
           return;
         }
         this.page = this.pages;
-        this.bigpage = this.bigpages;
-        this.subpage = this.pages - (this.bigpages - 1) * this.subpages;
+        this.calculate();
         this.set_image();
       },
 
