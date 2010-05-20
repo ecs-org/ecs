@@ -272,7 +272,7 @@ class Command(BaseCommand):
                         transaction.savepoint_commit(rofl)
 
                 if failed_ec_numbers:
-                    raise Exception('No sumbssions with ec_number: %s' % (', '.join(failed_ec_numbers)))
+                    warnings += '== %s ==\nNo sumbssions with ec_number: %s\n\n' % (username, ', '.join(failed_ec_numbers))
 
 
             except Exception, e:
