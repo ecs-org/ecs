@@ -206,7 +206,7 @@
       pdf_viewer.image_loaded();
     });
 
-    $('pv_page').addEvent('click', function(event) {
+    $$('#pv_page', '#pv_cursor').addEvent('click', function(event) {
       event.stop();
       if (pdf_viewer.zoom == '1') {
         var x = event.client.x;
