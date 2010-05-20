@@ -224,9 +224,6 @@
       var subpage_y = parseInt(y / pdf_viewer.subpage_height);
       var subpage = subpage_y * pdf_viewer.subpages_x + subpage_x + 1;
       var subpage_delta = subpage - pdf_viewer.subpage;
-      if (subpage_delta == 0) {
-        return;
-      }
       var page = pdf_viewer.page + subpage_delta;
       if (page > pdf_viewer.pages) {
         return;
