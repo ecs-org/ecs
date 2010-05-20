@@ -338,3 +338,22 @@ class FlowTest(TestCase):
         obj.workflow.do(flow_declarations.V, data=r1)
         self.assertActivitiesEqual(obj, [])
         
+    def test_disable_autostart(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        n_a = g.create_node(flow_declarations.A, start=True)
+        
+        obj = Foo.objects.create()
+        self.assertActivitiesEqual(obj, [flow_declarations.A])
+        
+        with workflow.autostart_disabled():
+            obj = Foo.objects.create()
+            self.assertActivitiesEqual(obj, [])
+        
+        @workflow.autostart_disabled()
+        def foo():
+            return Foo.objects.create()
+            
+        obj = foo()
+        self.assertActivitiesEqual(obj, [])
+            
+
