@@ -43,8 +43,9 @@
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.zooms = this.zoom_list.length;
+	this.fullscreen_mode = this.detect_fullscreen();
         this.offset_x = 9;
-        this.offset_y = 28;
+        this.offset_y = this.fullscreen_mode ? 5 : 28;
         this.zoom_delta = 1;
         this.subpages = 0;
         this.subpages_x = 0;
@@ -60,6 +61,11 @@
         this.next_boundary = 0;
         this.calculate();
         this.set_image();
+      },
+
+      detect_fullscreen: function() {
+        var fs = $(window).fullScreen;
+        return fs;
       },
 
       calculate: function() {
@@ -79,6 +85,9 @@
       },
 
       update_title: function() {
+	if (this.fullscreen_mode) {
+          return;
+        }
         var title = $('pv_title');
         var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages;
         if (this.zoom != '1') {
@@ -299,6 +308,31 @@
       pdf_viewer.cycle_zoom();
     });
 
+    $(window).addEvent('resize', function(event) {
+      var fullscreen = pdf_viewer.detect_fullscreen();
+      if (fullscreen == pdf_viewer.fullscreen_mode) {
+         return;
+      }
+      if (fullscreen) {
+        pdf_viewer.fullscreen_mode = true;
+        pdf_viewer.offset_y = 5;
+        pdf_viewer.set_cursor();
+        //...
+        var title = $('pv_title');
+        if (title.hasChild('pv_title_info')) {
+          $('pv_title_info').dispose();
+          $('pv_title_szatus').dispose();   
+        }
+        return;
+      } else {
+        pdf_viewer.fullscreen_mode = false;
+        pdf_viewer.offset_y = 28;
+        pdf_viewer.set_cursor();
+        //..
+        pdf_viewer.update_title();
+        return;
+      }
+    });
   });
 </script>
 
