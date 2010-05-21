@@ -138,7 +138,7 @@ class DocStashData(models.Model):
     stash = models.ForeignKey(DocStash, related_name='data')
     value = PickledObjectField(compress=True)
     modtime = models.DateTimeField(default=datetime.datetime.now)
-    name = models.CharField(max_length=120, blank=True)
+    name = models.TextField(blank=True)
     
     class Meta:
         unique_together = ('version', 'stash')

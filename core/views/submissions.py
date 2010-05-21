@@ -62,7 +62,7 @@ def copy_submission_form(request, submission_form_pk=None):
             'submission': submission_form.submission,
             'documents': list(submission_form.documents.all().order_by('pk')),
         })
-        docstash.name = "%s" % submission_form.project_title[:100] # FIXME: hard clipping is ugly
+        docstash.name = "%s" % submission_form.project_title
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
     
 
@@ -165,7 +165,7 @@ def create_submission_form(request):
             'formsets': formsets,
             'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
         })
-        request.docstash.name = "%s" % request.POST.get('project_title', '')[:100] # FIXME: hard clipping is ugly
+        request.docstash.name = "%s" % request.POST.get('project_title', '')
 
         if autosave:
             return HttpResponse('autosave successfull')
