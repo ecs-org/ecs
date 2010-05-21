@@ -43,6 +43,7 @@
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.zooms = this.zoom_list.length;
+        this.zoom_1_index = this.zoom_list.indexOf('1');
         this.loading = false;
         this.fullscreen_mode = this.detect_fullscreen();
         this.offset_x = 9;
@@ -247,12 +248,7 @@
         return;
       }
       pdf_viewer.page = page;
-      for (var i=0; i<pdf_viewer.zooms; i++) {
-        if (pdf_viewer.zoom_list[i] == '1') {
-          break;
-        }
-      }
-      pdf_viewer.zoom_index = i;
+      pdf_viewer.zoom_index = pdf_viewer.zoom_1_index;
       pdf_viewer.calculate();
       pdf_viewer.set_image();
     });
