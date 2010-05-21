@@ -343,7 +343,6 @@ class SubmissionForm(models.Model):
         return None
 
 class Investigator(models.Model):
-    # FIXME: rename to `submission_form`
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
@@ -364,9 +363,7 @@ class Investigator(models.Model):
 
 
 class InvestigatorEmployee(models.Model):
-    # FIXME: rename to `investigator`
-    # TODO: check FIXME above
-    submission = models.ForeignKey(Investigator)
+    investigator = models.ForeignKey(Investigator)
 
     sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
     title = models.CharField(max_length=40)

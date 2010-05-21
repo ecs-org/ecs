@@ -41,7 +41,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     if instance:
         for index, investigator in enumerate(instance.investigators.order_by('id')):
             for employee in investigator.investigatoremployee_set.order_by('id'):
-                employee_dict = model_to_dict(employee, exclude=('id', 'submission'))
+                employee_dict = model_to_dict(employee, exclude=('id', 'investigator'))
                 employee_dict['investigator_index'] = index
                 employees.append(employee_dict)
     kwargs = {'prefix': 'investigatoremployee', 'readonly': readonly}
@@ -188,7 +188,7 @@ def create_submission_form(request):
                 investigator.submission_form = submission_form
                 investigator.save()
             for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
-                employee.submission = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]  # TODO rename employee.submission to employee.investigator
+                employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
                 employee.save()
 
             for formset in formsets.itervalues():

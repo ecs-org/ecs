@@ -152,7 +152,7 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
 
     class Meta:
         model = InvestigatorEmployee
-        exclude = ('submission',)
+        exclude = ('investigator',)
 
 class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
