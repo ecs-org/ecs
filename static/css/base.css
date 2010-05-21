@@ -139,9 +139,6 @@ body {
 #content a:hover {
   border-bottom: 1px solid #2b558e;
 }
-#content form {
-  float: left;
-}
 
 
 /* header */

@@ -43,8 +43,9 @@
         this.height = {{ height }};
         this.images = {% autoescape off %}{{ images }}{% endautoescape %};
         this.zooms = this.zoom_list.length;
+        this.fullscreen_mode = this.detect_fullscreen();
         this.offset_x = 9;
-        this.offset_y = 28;
+        this.offset_y = this.fullscreen_mode ? 5 : 28;
         this.zoom_delta = 1;
         this.subpages = 0;
         this.subpages_x = 0;
@@ -60,6 +61,11 @@
         this.next_boundary = 0;
         this.calculate();
         this.set_image();
+      },
+
+      detect_fullscreen: function() {
+        var fs = $(window).fullScreen;
+        return fs;
       },
 
       calculate: function() {
@@ -79,6 +85,9 @@
       },
 
       update_title: function() {
+        if (this.fullscreen_mode) {
+          return;
+        }
         var title = $('pv_title');
         var info = 'ID ' + this.id + ', Seite ' + this.page + ' von ' + this.pages;
         if (this.zoom != '1') {
@@ -110,6 +119,9 @@
       },
 
       image_loaded: function() {
+        if (this.fullscreen_mode) {
+          return;
+        }
         $('pv_title_status').setProperties({ html: '' });
       },
 
@@ -206,7 +218,7 @@
       pdf_viewer.image_loaded();
     });
 
-    $('pv_page').addEvent('click', function(event) {
+    $$('#pv_page', '#pv_cursor').addEvent('click', function(event) {
       event.stop();
       if (pdf_viewer.zoom == '1') {
         var x = event.client.x;
@@ -224,9 +236,6 @@
       var subpage_y = parseInt(y / pdf_viewer.subpage_height);
       var subpage = subpage_y * pdf_viewer.subpages_x + subpage_x + 1;
       var subpage_delta = subpage - pdf_viewer.subpage;
-      if (subpage_delta == 0) {
-        return;
-      }
       var page = pdf_viewer.page + subpage_delta;
       if (page > pdf_viewer.pages) {
         return;
@@ -247,11 +256,39 @@
       var key = event.key;
       if (code == 33 || key == 'left') {
         event.stop();
+        if (code == 33) {
+          var y = $(window).pageYOffset;
+          var wy = $(window).getSize().y;
+          if (y > 0) {
+            if (y - wy >= 0) {
+              $(window).scrollTo(0, y - wy);
+            } else {
+              $(window).scrollTo(0, 0);
+            }
+            return;
+          } else {
+            if (pdf_viewer.page > pdf_viewer.prev_boundary) {
+              $(window).scrollTo(0, pdf_viewer.height - wy);
+            }
+          }
+        }
         pdf_viewer.set_prev();
         return;
       }
       if (code == 34 || key == 'right') {
         event.stop();
+        if (code == 34) {
+          var y = $(window).pageYOffset;
+          var wy = $(window).getSize().y;
+          if (y + wy < pdf_viewer.height) {
+            $(window).scrollTo(0, y + wy);
+            return;
+          } else {
+            if (pdf_viewer.page < pdf_viewer.next_boundary) {
+              $(window).scrollTo(0, 0);
+            }
+          }
+        }
         pdf_viewer.set_next();
         return;
       }
@@ -302,6 +339,31 @@
       pdf_viewer.cycle_zoom();
     });
 
+    $(window).addEvent('resize', function(event) {
+      var fullscreen = pdf_viewer.detect_fullscreen();
+      if (fullscreen == pdf_viewer.fullscreen_mode) {
+         return;
+      }
+      if (fullscreen) {
+        pdf_viewer.fullscreen_mode = true;
+        pdf_viewer.offset_y = 5;
+        pdf_viewer.set_cursor();
+        var title = $('pv_title');
+        if (title.hasChild('pv_title_info')) {
+          $('pv_title_info').dispose();
+        }
+        if (title.hasChild('pv_title_status')) {
+          $('pv_title_status').dispose();   
+        }
+        return;
+      } else {
+        pdf_viewer.fullscreen_mode = false;
+        pdf_viewer.offset_y = 28;
+        pdf_viewer.set_cursor();
+        pdf_viewer.update_title();
+        return;
+      }
+    });
   });
 </script>
 

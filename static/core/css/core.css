@@ -107,6 +107,28 @@ ul.tab_headers {
   border: 1px solid #ccc;  
 }
 
+/* headernav readonly */
+
+.readonly input, .readonly textarea, .readonly select {
+  color: #333;
+  background: #e4e4e4;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.readonly .tab_headers li a {
+  border: 1px solid #bbb;
+  background: #e4e4e4;
+  color: #333;
+}
+.readonly li.readonly_review a {
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.readonly li.readonly_review.active a {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+
 /* content */
 
 #content ul {
@@ -153,7 +175,7 @@ input, textarea, select {
 }
 .form.main ol {
   padding: 10px 0;
-  margin-top: 10px;
+  
   display: block;
 }
 /*
@@ -527,6 +549,7 @@ table.notif_meta th {
 }
 #meeting_editor .entry h3{
   font-size: 1em;
+  margin-bottom: 2px;
 }
 #meeting_editor #timetable {
   list-style: none;
@@ -609,7 +632,7 @@ table.notif_meta th {
   padding: 10px;
   background-color: #f5f5d2;
   -moz-border-radius: 10px;
-  margin-right: 10px;
+  margin: 0 10px 10px 0;
   width: 336px;
 }
 .dashboard_widget h3 {
@@ -647,45 +670,39 @@ table.notif_meta th {
   border-bottom: none !important;
 }
 
-#content ol.submission_list{
+#content ol.submission_list {
     list-style: none;
     font-size: 10pt;
     margin-bottom: 2em;
 }
-#content ol.submission_list h3{
+#content ol.submission_list h3 {
     margin-bottom: 5px;
     font-size: 11pt;
     font-weight: normal;
 }
-
-#content ol.submission_list h3 .ecnr{
+content ol.submission_list h3 .ecnr {
     float: left;
     display: inline-block;
     width: 80px;
     font-weight: bold;
     margin-left: -80px;
 }
-
-#content ol.submission_list li{
+#content ol.submission_list li {
     padding: 0.5em;
     padding-left: 80px;
 }
 
-#content ol.submission_list li.even{
+#content ol.submission_list li.even {
     background-color: #eeeeee;
 }
-
-#content ol.submission_list li .actions{
+content ol.submission_list li .actions {
     margin-bottom: 5px;
 }
-
-#content ol.submission_list li .info{
+#content ol.submission_list li .info {
 }
-
-#content .overview h2{
+#content .overview h2 {
     font-size: ;
 }
-
 
 .checklist_field { 
     visibility: visible; 
