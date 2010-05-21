@@ -226,7 +226,7 @@ class Command(BaseCommand):
 
         while True:
             sys.stderr.write(' pk | title\n================\n')
-            sys.stderr.write('\n'.join('%3d | %s' % (meeting.pk, meeting.title) for meeting in Meeting.objects.all()))
+            sys.stderr.write('\n'.join('%3d | %s' % (meeting.pk, meeting.title) for meeting in Meeting.objects.all()if not meeting.title.endswith('ohne Teilnehmer')))
             try:
                 meeting_pk = raw_input('\n\nWhich meeting(pk)? ')
             except KeyboardInterrupt:
@@ -295,6 +295,14 @@ class Command(BaseCommand):
         else:
             print '\033[32mDone.\033[0m'
 
+        sys.stdout.write('Splitting meeting... ')
+        Meeting.objects.filter(title='%s ohne Teilnehmer' % (meeting.title)).delete()
+        meeting_ohne = Meeting.objects.create(title='%s ohne Teilnehmer' % (meeting.title), start=meeting.start)
+        for t_entry in meeting.timetable_entries.all():
+            if not t_entry.participations.count():
+                t_entry.meeting = meeting_ohne
+                t_entry.save()
+        sys.stdout.write('\033[32mdone\033[0m\n')
 
 
     def handle(self, *args, **kwargs):
