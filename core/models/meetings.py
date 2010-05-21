@@ -324,11 +324,11 @@ class TimetableEntry(models.Model):
 
     @cached_property
     def is_retrospective(self):
-        return self.submission.thesis
+        return self.submission.retrospective
     
     @cached_property
     def is_thesis(self):
-        return self.submission.retrospective
+        return self.submission.thesis
         
     @cached_property
     def is_expedited(self):
