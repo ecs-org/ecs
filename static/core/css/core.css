@@ -107,6 +107,27 @@ ul.tab_headers {
   border: 1px solid #ccc;  
 }
 
+/* headernav readonly */
+
+.readonly input, .readonly textarea, .readonly select {
+  color: #333;
+  background: #e4e4e4;
+}
+.readonly .tab_headers li a {
+  border: 1px solid #bbb;
+  background: #e4e4e4;
+  color: #333;
+}
+.readonly li.readonly_review a {
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.readonly li.readonly_review.active a {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+
 /* content */
 
 #content ul {
@@ -153,7 +174,7 @@ input, textarea, select {
 }
 .form.main ol {
   padding: 10px 0;
-  margin-top: 10px;
+  
   display: block;
 }
 /*
