@@ -40,7 +40,7 @@
   margin-bottom: 10px;
 }
 
-.pv_cursor {
+.pv_cursor_0 {
   border-width: 2px;
   border-style: solid;
   border-color: blue;
@@ -50,5 +50,16 @@
   width: 0px;
   height: 0px;
   z-index: 1;
-  visibility: hidden;
+}
+
+.pv_cursor_1 {
+  border-width: 2px;
+  border-style: solid;
+  border-color: blue;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 0px;
+  height: 0px;
+  z-index: 1;
 }

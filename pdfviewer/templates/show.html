@@ -13,13 +13,14 @@
 
 <div class="pv">
 
-  <div class="pv_main" style="">
+  <div id="pv_main" class="pv_main" style="">
     <div class="pv_header" style="">
       <div id="pv_title" class="pv_title"></div>
     </div>
     <div class="pv_pages">
       <div id="pv_page" class="pv_page"></div>
-      <div id="pv_cursor" class="pv_cursor"></div>
+      <div id="pv_cursor_0" class="pv_cursor_0"></div>
+      <div id="pv_cursor_1" class="pv_cursor_1"></div>
     </div>
   </div>
 
@@ -46,6 +47,7 @@
         this.zoom_1_index = this.zoom_list.indexOf('1');
         this.loading = false;
         this.fullscreen_mode = this.detect_fullscreen();
+        this.cursor = 0;
         this.offset_x = 9;
         this.offset_y = this.fullscreen_mode ? 5 : 28;
         this.zoom_delta = 1;
@@ -110,16 +112,20 @@
       },
 
       set_cursor: function() {
+        var cursor = $('pv_cursor_' + this.cursor);
+        cursor.fade('out');
+        this.cursor = (this.cursor + 1) % 2;
+        cursor = $('pv_cursor_' + this.cursor);
         if (this.zoom == '1') {
-          $('pv_cursor').setStyle('visibility', 'hidden');
+          cursor.fade('hide');
         } else {
-          $('pv_cursor').setStyles({
-            top: this.offset_y + this.subpage_y * this.subpage_height,
-            left: this.offset_x + this.subpage_x * this.subpage_width,
-            width: this.subpage_width,
-            height: this.subpage_height,
-            visibility: 'visible'
+          cursor.setStyles({
+            'top': this.offset_y + this.subpage_y * this.subpage_height,
+            'left': this.offset_x + this.subpage_x * this.subpage_width,
+            'width': this.subpage_width,
+            'height': this.subpage_height
           });
+          cursor.fade('show');
         }
       },
 
@@ -151,8 +157,8 @@
         } else {
           $('pv_img').setProperties({ src: src, alt: alt });
         }
-        this.update_title();
         this.set_cursor();
+        this.update_title();
       },
 
       set_prev: function() {
@@ -225,16 +231,15 @@
       pdf_viewer.image_loaded();
     });
 
-    $$('#pv_page', '#pv_cursor').addEvent('click', function(event) {
+    var click_handler = function(event) {
       event.stop();
-      if (pdf_viewer.zoom == '1') {
-        var x = event.client.x;
-        var mid_x = pdf_viewer.offset_x + parseInt(pdf_viewer.width / 2);
-        if (x < mid_x) {
-          pdf_viewer.set_prev();
-        } else {
-          pdf_viewer.set_next();
-        }
+      var x = event.client.x;
+      if (x < pdf_viewer.offset_x) {
+        pdf_viewer.set_prev();
+        return;
+      }
+      if (x > pdf_viewer.offset_x + pdf_viewer.width) {
+        pdf_viewer.set_next();
         return;
       }
       var x = event.client.x - pdf_viewer.offset_x;
@@ -245,13 +250,19 @@
       var subpage_delta = subpage - pdf_viewer.subpage;
       var page = pdf_viewer.page + subpage_delta;
       if (page > pdf_viewer.pages) {
+        pdf_viewer.set_last();
         return;
       }
       pdf_viewer.page = page;
+      pdf_viewer.calculate();
+      pdf_viewer.set_cursor();
       pdf_viewer.zoom_index = pdf_viewer.zoom_1_index;
       pdf_viewer.calculate();
       pdf_viewer.set_image();
-    });
+    };
+    $(document).addEvent('click', click_handler);
+    $('pv_cursor_0').addEvent('click', click_handler);
+    $('pv_cursor_1').addEvent('click', click_handler);
 
     $(document).addEvent('keydown', function(event) {
       var code = event.code;
