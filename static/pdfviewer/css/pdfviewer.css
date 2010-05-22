@@ -63,3 +63,26 @@
   height: 0px;
   z-index: 1;
 }
+
+.pv_area_left {
+  position: absolute;
+  background-color: transparent;
+  top: 0px;
+  left: 0px;
+  width: 0px;
+  height: 0px;
+  opacity: 0.3;
+  z-index: 2;
+}
+
+.pv_area_right {
+  position: absolute;
+  background-color: transparent;
+  top: 0px;
+  left: 0px;
+  width: 0px;
+  height: 0px;
+  opacity: 0.3;
+  z-index: 2;
+}
+

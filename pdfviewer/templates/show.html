@@ -19,9 +19,13 @@
     </div>
     <div class="pv_pages">
       <div id="pv_page" class="pv_page"></div>
-      <div id="pv_cursor_0" class="pv_cursor_0"></div>
-      <div id="pv_cursor_1" class="pv_cursor_1"></div>
     </div>
+
+    <div id="pv_cursor_0" class="pv_cursor_0"></div>
+    <div id="pv_cursor_1" class="pv_cursor_1"></div>
+    <div></div>
+    <div id="pv_area_left" class="pv_area_left"></div>
+    <div id="pv_area_right" class="pv_area_right"></div>
   </div>
 
 </div>
@@ -63,6 +67,19 @@
         this.subpage_height = 0;
         this.prev_boundary = 0;
         this.next_boundary = 0;
+        var width = parseInt(this.width * 0.10);
+        var height = this.height;
+        $('pv_area_left').setStyles({
+          'top': this.offset_y,
+          'width': width,
+          'height': height
+	});
+        $('pv_area_right').setStyles({
+	  'top': this.offset_y,
+	  'left': 2 * this.offset_x + this.width - width,
+          'width': width,
+          'height': height
+	});
         this.calculate();
         this.set_image();
       },
@@ -368,14 +385,46 @@
         if (title.hasChild('pv_title_status')) {
           $('pv_title_status').dispose();   
         }
+        $('pv_area_left').setStyle('top', pdf_viewer.offset_y);
+        $('pv_area_right').setStyle('top', pdf_viewer.offset_y);
         return;
       } else {
         pdf_viewer.fullscreen_mode = false;
         pdf_viewer.offset_y = 28;
         pdf_viewer.set_cursor();
         pdf_viewer.update_title();
+        $('pv_area_left').setStyle('top', pdf_viewer.offset_y);
+        $('pv_area_right').setStyle('top', pdf_viewer.offset_y);
         return;
       }
+    });
+
+    var area_left = $('pv_area_left');
+    area_left.addEvent('mouseover', function(event) {
+      event.stop();
+      area_left.tween('background-color', 'transparent', 'green');
+    });
+    area_left.addEvent('mouseout', function(event) {
+      event.stop();
+      area_left.tween('background-color', 'green', 'transparent');
+    });
+    area_left.addEvent('click', function(event) {
+      event.stop();
+      pdf_viewer.set_prev();
+    });
+
+    var area_right = $('pv_area_right');
+    area_right.addEvent('mouseover', function(event) {
+      event.stop();
+      area_right.tween('background-color', 'transparent', 'green');
+    });
+    area_right.addEvent('mouseout', function(event) {
+      event.stop();
+      area_right.tween('background-color', 'green', 'transparent');
+    });
+    area_right.addEvent('click', function(event) {
+      event.stop();
+      pdf_viewer.set_next();
     });
   });
 </script>
