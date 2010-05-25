@@ -7,8 +7,6 @@ import sys
 import os
 import re
 import BeautifulSoup
-import chardet
-import simplejson
 from subprocess import Popen, PIPE
 from optparse import make_option
 from datetime import datetime, date
