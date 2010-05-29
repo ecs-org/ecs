@@ -35,10 +35,10 @@ CELERY_IMPORTS = (
     'ecs.core.task_queue',
 )
 
+import getpass
+user = getpass.getuser()
 # use different settings if on host ecsdev.ep3.at depending username
-if platform.node() == "ecsdev.ep3.at":
-    import getpass
-    user = getpass.getuser()
+if platform.node() == "ecsdev.ep3.at" and not user.startswith('bb'):
     DBPWD_DICT = {}
     assert user in DBPWD_DICT, " ".join(("did not find",user,"in DBPWD_DICT"))
 
