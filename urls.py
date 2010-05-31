@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^userswitcher/', include('ecs.userswitcher.urls')),
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
+    url(r'^mediaserver/', include('ecs.mediaserver.urls')),
     url(r'^tasks/', include('ecs.tasks.urls')),
     url(r'^messages/', include('ecs.messages.urls')),
 

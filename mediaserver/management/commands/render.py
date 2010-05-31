@@ -15,8 +15,9 @@ class Command(BaseCommand):
         for pdf_name in args:
             try:
                 fd = open(pdf_name, 'r')
+                fd.close()
             except IOError:
                 raise CommandError('File "%s" does not exist' % pdf_name)
-            #
+            render(pdf_name)
             print 'Successfully rendered PDF document "%s"' % pdf_name
 
