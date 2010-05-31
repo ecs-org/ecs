@@ -77,7 +77,7 @@ class ImageSet(object):
                 },
                 '3x3': {
                      1: { 'url': '/mediaserver/2/1/3x3/' },
-                     2: { 'url': '/mediaserver/2/1/3x3/' },
+                     2: { 'url': '/mediaserver/2/2/3x3/' },
                 },
                 '5x5': {
                      1: { 'url': '/mediaserver/2/1/5x5/' },
