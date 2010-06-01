@@ -12,11 +12,15 @@ class RenderSet(object):
             self.height = 1076
         self.zooms = len(self.zoom_list)
 
-    def get_bigpages(self, zoom, pages):
+    def get_subpages(self, zoom, pages):
         zoom_index = self.zoom_list.index(zoom)
         subpages_x = self.zoom_pages[zoom_index][0]
         subpages_y = self.zoom_pages[zoom_index][1]
         subpages = subpages_x * subpages_y
+        return subpages
+
+    def get_bigpages(self, zoom, pages):
+        subpages = self.get_subpages(zoom, pages)
         bigpages = (pages - 1) / subpages + 1
         return bigpages
 
