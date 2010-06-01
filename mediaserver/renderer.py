@@ -56,14 +56,14 @@ class Renderer(object):
                         '-geometry %sx%s+0+0 ' % (w, h) + \
                         '-tile %s ' % zoom
                     for page in image_set.images[zoom]:
-                        png_ni_name = '%s_%s_%04d_ni.png ' % (pdf_fname, zoom, page)
+                        png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
                         im_cmd += '%s ' % png_ni_name
                     png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, bigpage)                        
                     im_cmd += png_name
                     print im_cmd
                     os.system(im_cmd)
                     for page in image_set.images[zoom]:
-                        png_ni_name = '%s_%s_%04d_ni.png ' % (pdf_fname, zoom, page)
+                        png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
                         rm_cmd = 'rm %s' % png_ni_name
                         print rm_cmd
                         os.system(rm_cmd)
