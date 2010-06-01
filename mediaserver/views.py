@@ -15,9 +15,7 @@ def get_image_data(id, bigpage, zoom):
         filename = 'ecs-09-submission-form'
     else:
         filename = 'test-pdf-14-seitig'
-    if zoom != '1':
-        filename += '_' + zoom
-    filename += '_%04d.png' % bigpage
+    filename += '_%s_%04d.png' % (zoom, bigpage)
 
     path = os.path.join('static', 'mediaserver', 'images', filename)
     image_data = open(path, 'r').read()
