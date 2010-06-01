@@ -30,7 +30,7 @@ class Renderer(object):
             os.system(gs_cmd)
             if zoom == '1':
                 for page in image_set.images[zoom]:
-                    png_ni_name = '%s_%s_%04d_ni.png ' % (pdf_fname, zoom, page)
+                    png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
                     png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, page)
                     im_cmd = 'convert -interlace PNG %s %s' % (png_ni_name, png_name)
                     print im_cmd
