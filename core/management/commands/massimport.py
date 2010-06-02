@@ -10,6 +10,7 @@ import BeautifulSoup
 from subprocess import Popen, PIPE
 from optparse import make_option
 from datetime import datetime, date
+import platform
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -18,6 +19,46 @@ from django.db.models import Q
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm, Meeting, Participation
+
+
+class ProgressBar():
+    def __init__(self, minimum=0, maximum=100, barwidth=None):
+        self.minimum = minimum
+        self.maximum = maximum
+        self._mode = 'ansi'
+        
+        if platform.platform().lower().startswith('win'):
+            self._mode = 'win'
+
+        if not barwidth and not self._mode == 'win':
+            import termios, fcntl, struct, sys
+            s = struct.pack("HHHH", 0, 0, 0, 0)
+            fd_stdout = sys.stdout.fileno()
+            x = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, s)
+            geometry = struct.unpack("HHHH", x)
+            self.barwidth = geometry[1]
+        elif barwidth and not self._mode == 'win':
+            self.barwidth = barwidth
+        else:
+            self.barwidth = None
+
+    def update(self, current):
+        if not self.barwidth:
+            sys.stdout.write(
+                '.' if not current % 10 == 0 else '%d/%s' % (current, self.maximum)
+            )
+            sys.stdout.flush()
+            return
+        
+        a = int(round(float(self.barwidth-14)/(self.maximum - self.minimum)*current))
+        b = (self.barwidth-14) - a
+        
+        sys.stdout.write('\r[%s%s%s] %4d/%4d ' % (
+            ('='*(a-1)),
+            ('>' if not current == self.maximum else '='),
+            (' '*b), current, self.maximum
+        ))
+        sys.stdout.flush()
 
 
 class Command(BaseCommand):
@@ -52,13 +93,6 @@ class Command(BaseCommand):
         print ''
         if not userinput.lower() == 'yes':
             self._abort('confirmation failed')
-
-    def _print_progress(self):  # MAGIC
-        BARWIDTH = 70
-        a = int(round(float(BARWIDTH)/self.filecount*self.importcount))
-        b = BARWIDTH - a
-        sys.stdout.write('\r[%s%s%s] %3d/%3d ' % (('='*(a-1)), ('>' if not self.importcount == self.filecount else '='), (' '*b), self.importcount, self.filecount))
-        sys.stdout.flush()
 
     def _print_stat(self, dont_exit_on_fail=False):
         print '== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
@@ -131,7 +165,10 @@ class Command(BaseCommand):
 
     def _import_files(self, files, dont_exit_on_fail=False):
         self.filecount = len(files)
-        self._print_progress()
+        
+        pb = ProgressBar(maximum=self.filecount)
+        pb.update(self.importcount)
+
         warnings = ''
         for f in files:
             try:
@@ -141,7 +178,7 @@ class Command(BaseCommand):
                 self.failcount += 1
             finally:
                 self.importcount += 1
-                self._print_progress()
+                pb.update(self.importcount)
 
         print ''
         if warnings:
@@ -241,7 +278,9 @@ class Command(BaseCommand):
         print ''
 
         self.filecount = len(dataset)
-        self._print_progress()
+        
+        pb = ProgressBar(maximum=self.filecount)
+        pb.update(0)
         warnings = ''
         for (username, ec_numbers) in dataset:
             username = username.lower()
@@ -280,7 +319,7 @@ class Command(BaseCommand):
                 transaction.savepoint_commit(sid)
             finally:
                 self.importcount += 1
-                self._print_progress()
+                pb.update(self.importcount)
 
         print ''
         if warnings:
