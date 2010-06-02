@@ -7,8 +7,24 @@
   {{ submission_form.submission.ec_number }} {{ submission_form.project_title }}
 {% endblock %}
 
+{% block headernav %}
+  <div class="readonly">
+    <ul class="tab_headers">
+    {% block tab_headers %}
+        {% for tab, fieldsets in tabs %}
+            {% ifnotequal tab "Zentrum" %}
+            <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+            {% endifnotequal %}
+        {% endfor %}
+    {% endblock %}
+    </ul>
+  </div>
+{% endblock %}
+
 {% block content %}
+  <div class="readonly">
     {{ block.super }}
+  </div>
 {% endblock %}
 
 {% block tabs %}
