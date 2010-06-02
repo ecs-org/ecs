@@ -1,4 +1,3 @@
-import cStringIO
 import pyPdf
 
 
@@ -6,14 +5,9 @@ class Analyzer(object):
     def sniff(self, pdf_name):
         self.valid = False
         self.pages = 0
-
-        with open(pdf_name, 'r') as f:
-            pdf_data = f.read()
-
-        pdf_data = str(pdf_data)
-
         try:
-            pdf = pyPdf.PdfFileReader(cStringIO.StringIO(pdf_data))
+            f = file(pdf_name, 'r')
+            pdf = pyPdf.PdfFileReader(f)
         except:
             print 'error reading pdf file "%s"' % pdf_name
             return
