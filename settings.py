@@ -111,9 +111,14 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    #'django.template.loaders.app_directories.load_template_source',
+    #'django.template.loaders.eggs.load_template_source',
 )
+
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR, 'templates'),
+)
+
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth", # FIXME: replace with "django.contrib.auth.context_processors.auth" for django 1.2 
@@ -144,13 +149,6 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
 ROOT_URLCONF = 'ecs.urls'
-
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',

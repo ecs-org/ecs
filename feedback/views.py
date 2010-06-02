@@ -51,7 +51,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
                 pub_date = datetime.datetime.now()
                 feedback = Feedback(id=None, feedbacktype=feedbacktype, description=description, origin=origin, pub_date=pub_date, user=user)
                 feedback.save()
-                return render(request, 'thanks.html', {
+                return render(request, 'feedback/thanks.html', {
                     'type': type,
                     'description': description,
                 })
@@ -98,7 +98,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     else:
         pages = 0
 
-    return render(request, 'input.html', {
+    return render(request, 'feedback/input.html', {
         'type': type,
         'types': types,
         'list': list,
@@ -119,7 +119,7 @@ def feedback_details(request, id=0):
     fb = Feedback.objects.get(id=id)
     type = fb.feedbacktype
     me2_votes = fb.me_too_votes.all()
-    return render(request, 'details.html', {
+    return render(request, 'feedback/details.html', {
         'id': id,
         'fb': fb,
         'type': type,
@@ -137,7 +137,7 @@ def feedback_origins(request):
     types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
     list = [ { 'origin': origin, 'stats': [ (type, Feedback.objects.filter(feedbacktype=type, origin=origin).count()) for type in types ] } for origin in origins ]
 
-    return render(request, 'origins.html', {
+    return render(request, 'feedback/origins.html', {
         'types': types,
         'list': list
     })
@@ -148,5 +148,5 @@ def feedback_main(request):
         return HttpResponse("Error: you need to be logged in!")
     else:
         user = request.user
-    return render(request, 'main.html', {
+    return render(request, 'feedback/main.html', {
     })

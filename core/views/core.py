@@ -12,12 +12,6 @@ from ecs.utils.xhtml2pdf import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 
-def demo(request):
-    return render(request, 'demo-django.html', {})
-
-def index(request):
-    return render(request, 'index.html', {})
-
 # documents
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)

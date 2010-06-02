@@ -37,7 +37,7 @@ def show(request, id=1, page=1, zoom='1'):
 
     images_json = JSONEncoder().encode(image_set.images)
 
-    return render(request, 'show.html', {
+    return render(request, 'pdfviewer/show.html', {
         'id': id,
         'page': page,
         'pages': pages,
@@ -51,5 +51,5 @@ def show(request, id=1, page=1, zoom='1'):
 
 
 def demo(request):
-    return render(request, 'demo.html', {})
+    return render(request, 'pdfviewer/demo.html', {})
 
