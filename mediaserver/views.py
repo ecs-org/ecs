@@ -2,12 +2,8 @@
 
 import os.path
 
-from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
-from django.core.servers.basehttp import FileWrapper
-
-from ecs.core.views.utils import render, redirect_to_next_url
 
 
 def get_image_data(id, bigpage, zoom):
@@ -17,7 +13,7 @@ def get_image_data(id, bigpage, zoom):
         filename = 'test-pdf-14-seitig'
     filename += '_%s_%04d.png' % (zoom, bigpage)
 
-    path = os.path.join('static', 'mediaserver', 'images', filename)
+    path = os.path.join(settings.MEDIA_ROOT, 'mediaserver', 'images', filename)
     image_data = open(path, 'r').read()
     return image_data
     
