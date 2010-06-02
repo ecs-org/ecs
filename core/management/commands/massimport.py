@@ -25,7 +25,6 @@ PLATFORM = 'unix'
 if platform.platform().lower().startswith('win'):
     PLATFORM = 'win'
 
-
 class ProgressBar():
     def __init__(self, minimum=0, maximum=100, barwidth=None):
         self.minimum = minimum
