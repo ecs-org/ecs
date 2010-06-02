@@ -94,13 +94,6 @@ class Command(BaseCommand):
         if not userinput.lower() == 'yes':
             self._abort('confirmation failed')
 
-    def _print_progress(self):  # MAGIC
-        BARWIDTH = 70
-        a = int(round(float(BARWIDTH)/self.filecount*self.importcount))
-        b = BARWIDTH - a
-        sys.stdout.write('\r[%s%s%s] %3d/%3d ' % (('='*(a-1)), ('>' if not self.importcount == self.filecount else '='), (' '*b), self.importcount, self.filecount))
-        sys.stdout.flush()
-
     def _print_stat(self, dont_exit_on_fail=False):
         print '== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
         if self.failcount:
@@ -285,7 +278,9 @@ class Command(BaseCommand):
         print ''
 
         self.filecount = len(dataset)
-        self._print_progress()
+        
+        pb = ProgressBar(maximum=self.filecount)
+        pb.update(0)
         warnings = ''
         for (username, ec_numbers) in dataset:
             username = username.lower()
@@ -324,7 +319,7 @@ class Command(BaseCommand):
                 transaction.savepoint_commit(sid)
             finally:
                 self.importcount += 1
-                self._print_progress()
+                pb.update(self.importcount)
 
         print ''
         if warnings:
