@@ -4,25 +4,25 @@ from ecs.mediaserver.storage import Storage
 
 class Renderer(object):
     def render(self, pdf_name, image_set):
+        cm_per_inch = 2.54
+        din_a4_x = 21.0
+        din_a4_y = 29.7
         storage = Storage()
         pages = image_set.pages  # TODO use PyPDF to get page number
         background = '#dddddd'
         for zoom in image_set.images:
             print '%s: ' % zoom,
-            if zoom == '1':  # TODO calc from zoom dimensions
-                res_x = 96.762
-                res_y = 96.725
-            elif zoom == '3x3':
-                res_x = 32.173
-                res_y = 32.242
-            elif zoom == '5x5':
-                res_x = 19.352
-                res_y = 19.345
+            width = image_set.render_set.width
+            height = image_set.render_set.height
+            subpages_x = image_set.render_set.get_subpages_x(zoom, pages)
+            subpages_y = image_set.render_set.get_subpages_y(zoom, pages)
+            res_x = (width / (din_a4_x / cm_per_inch)) / subpages_x
+            res_y = (height / (din_a4_y / cm_per_inch)) / subpages_y
             pdf_fname, _ = os.path.splitext(os.path.basename(pdf_name))
             gs_cmd = \
                 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=4 ' + \
                 '-dPDFFitPage -dTextAlphaBits=4 -sPAPERSIZE=a4 ' + \
-                '-r%sx%s ' % (res_x, res_y) + \
+                '-r%.5fx%.5f ' % (res_x, res_y) + \
                 '-dFirstPage=1 -dLastPage=%s ' % pages + \
                 '-sOutputFile=%s_%s_%%04d_ni.png ' % (pdf_fname, zoom) + \
                 pdf_name
@@ -43,17 +43,13 @@ class Renderer(object):
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
                 bigpage_set = range(1, bigpages + 1)
                 subpages = image_set.render_set.get_subpages(zoom, pages)
-                if zoom == '3x3':  # TODO calc
-                    w = 266
-                    h = 377
-                else:
-                    w = 160
-                    h = 226
+                w = width / subpages_x
+                h = height / subpages_y
                 for bigpage in bigpage_set:
                     im_cmd = \
                         'montage -interlace PNG ' + \
                         '-background \%s ' % background  + \
-                        '-geometry %sx%s+0+0 ' % (w, h) + \
+                        '-geometry %dx%d+0+0 ' % (w, h) + \
                         '-tile %s ' % zoom
                     page_set = range((bigpage - 1) * subpages + 1, min(bigpage * subpages, pages) + 1)
                     for page in page_set:
