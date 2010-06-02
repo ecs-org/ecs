@@ -198,7 +198,8 @@ DBLOG_CATCH_404_ERRORS = True
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
 # use our utils.ecs_runner as default test runner
-TEST_RUNNER = 'utils.ecs_runner.run_tests'
+TEST_RUNNER = 'ecs.utils.ecs_runner.run_tests'
+SOUTH_TESTS_MIGRATE = False
 
 # FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
