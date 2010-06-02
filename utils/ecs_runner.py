@@ -11,9 +11,10 @@ def run_tests(test_labels, *args, **kwargs):
     """Django test runner allowing testing of ecs.
 
     All tasks are run locally, not in a worker.
-        TEST_RUNNER = "utils.ecs_runner.run_tests"
+        TEST_RUNNER = "ecs.utils.ecs_runner.run_tests"
 
     """
-
+    import nose
+    print "nose.__version__ == %s" % nose.__version__
     settings.CELERY_ALWAYS_EAGER = True
     return run_tests_orig(test_labels, *args, **kwargs)

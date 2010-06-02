@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class LoginTestCase(TestCase):
     def setUp(self):
+        print "LoginTestCase.setUp()"
         user = User(username='unittest')
         user.set_password('password')
         user.save()
