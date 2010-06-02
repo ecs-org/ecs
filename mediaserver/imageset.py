@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from ecs.mediaserver.renderset import RenderSet
 
 

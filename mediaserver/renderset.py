@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 class RenderSet(object):
     def __init__(self, id):
         if id == 1:

@@ -28,5 +28,4 @@ def get_image(request, id=1, bigpage=1, zoom='1'):
     id = int(id)
     bigpage = int(bigpage)
 
-    response = HttpResponse(get_image_data(id, bigpage, zoom), mimetype='image/png')
-    return response
+    return HttpResponse(get_image_data(id, bigpage, zoom), mimetype='image/png')

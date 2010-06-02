@@ -1,7 +1,7 @@
-#!/usr/bin/env python2.4
 # -*- coding: utf-8 -*-
 
 from django.conf.urls.defaults import *
+
 
 urlpatterns = patterns(
     '',

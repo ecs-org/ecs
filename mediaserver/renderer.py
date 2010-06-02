@@ -1,15 +1,18 @@
+# -*- coding: utf-8 -*-
+
 import os
 
 from ecs.mediaserver.storage import Storage
+
 
 class Renderer(object):
     def render(self, pdf_name, image_set):
         cm_per_inch = 2.54
         din_a4_x = 21.0
         din_a4_y = 29.7
-        storage = Storage()
-        pages = image_set.pages  # TODO use PyPDF to get page number
         background = '#dddddd'
+        storage = Storage()
+        pages = image_set.pages
         for zoom in image_set.images:
             print '%s: ' % zoom,
             width = image_set.render_set.width
