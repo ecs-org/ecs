@@ -21,23 +21,23 @@ from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm, Meeting, Participation
 
 
+PLATFORM = 'unix'
+if platform.platform().lower().startswith('win'):
+    PLATFORM = 'win'
+
 class ProgressBar():
     def __init__(self, minimum=0, maximum=100, barwidth=None):
         self.minimum = minimum
         self.maximum = maximum
-        self._mode = 'ansi'
-        
-        if platform.platform().lower().startswith('win'):
-            self._mode = 'win'
 
-        if not barwidth and not self._mode == 'win':
+        if not barwidth and not PLATFORM == 'win':
             import termios, fcntl, struct, sys
             s = struct.pack("HHHH", 0, 0, 0, 0)
             fd_stdout = sys.stdout.fileno()
             x = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, s)
             geometry = struct.unpack("HHHH", x)
             self.barwidth = geometry[1]
-        elif barwidth and not self._mode == 'win':
+        elif barwidth and not PLATFORM == 'win':
             self.barwidth = barwidth
         else:
             self.barwidth = None
@@ -70,20 +70,21 @@ class Command(BaseCommand):
         make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
     )
 
-    def __init__(self, *args, **kwargs):
-        self.filecount = 0
-        self.importcount = 0
-        self.failcount = 0
-        super(Command, self).__init__(*args, **kwargs)
-
     def _abort(self, message, dont_exit=False):
-        sys.stderr.write('\033[31mERROR: %s\033[0m\n' % message)
+        if PLATFORM == 'win':
+            sys.stderr.write('%s' % message)
+        else:
+            sys.stderr.write('\033[31mERROR: %s\033[0m\n' % message)
         sys.stderr.flush()
+        
         if not dont_exit:
             sys.exit(1)
 
     def _warn(self, message):
-        sys.stderr.write('\033[33m%s\033[0m' % message)
+        if PLATFORM == 'win':
+            sys.stderr.write('%s' % message)
+        else:
+            sys.stderr.write('\033[33m%s\033[0m' % message)
         sys.stderr.flush()
 
     def _ask_for_confirmation(self):
@@ -94,10 +95,10 @@ class Command(BaseCommand):
         if not userinput.lower() == 'yes':
             self._abort('confirmation failed')
 
-    def _print_stat(self, dont_exit_on_fail=False):
-        print '== %d/%d documents imported ==' % (self.importcount - self.failcount, self.filecount)
-        if self.failcount:
-            self._abort('Failed to import %d files' % self.failcount, dont_exit=dont_exit_on_fail)
+    def _print_stat(self, importcount, failcount, filecount, dont_exit_on_fail=False):
+        print '== %d/%d documents imported ==' % (importcount - failcount, filecount)
+        if failcount:
+            self._abort('Failed to import %d files' % failcount, dont_exit=dont_exit_on_fail)
         else:
             print '\033[32mDone.\033[0m'
 
@@ -164,28 +165,29 @@ class Command(BaseCommand):
         SubmissionForm.objects.create(**create_data)
 
     def _import_files(self, files, dont_exit_on_fail=False):
-        self.filecount = len(files)
+        failcount = 0
+        importcount = 0
+    
+        pb = ProgressBar(maximum=len(files))
+        pb.update(importcount)
         
-        pb = ProgressBar(maximum=self.filecount)
-        pb.update(self.importcount)
-
         warnings = ''
         for f in files:
             try:
                 self._import_doc(f)
             except Exception, e:
                 warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
-                self.failcount += 1
+                failcount += 1
             finally:
-                self.importcount += 1
-                pb.update(self.importcount)
+                importcount += 1
+                pb.update(importcount)
 
         print ''
         if warnings:
             print ''
             self._warn(warnings)
 
-        self._print_stat(dont_exit_on_fail=dont_exit_on_fail)
+        self._print_stat(importcount, failcount, len(files),dont_exit_on_fail=dont_exit_on_fail)
 
     def _import_file(self, filename):
         filename = os.path.expanduser(filename)
@@ -276,24 +278,27 @@ class Command(BaseCommand):
 
         print meeting
         print ''
-
-        self.filecount = len(dataset)
         
-        pb = ProgressBar(maximum=self.filecount)
-        pb.update(0)
-        warnings = ''
+        importcount = 0
+        failcount = 0
+        
+        pb = ProgressBar(maximum=len(dataset))
+        pb.update(importcount)
+        
+        failed_users = []
+        failed_submissions = []
+        
         for (username, ec_numbers) in dataset:
             username = username.lower()
             try:
                 sid = transaction.savepoint()
                 user = User.objects.get(Q(username=username)|Q(username__startswith=username)|Q(username__endswith=username))
 
-                failed_ec_numbers = []
                 for ec_number in ec_numbers:
                     try:
                         ec_number = '%04d' % int(ec_number)
                     except ValueError, e:
-                        failed_ec_numbers.append(ec_number)
+                        failed_submissions.append(ec_number)
                         continue
 
                     try:
@@ -302,33 +307,30 @@ class Command(BaseCommand):
                         Participation.objects.create(entry=t_entry, user=user)
                     except Exception, e:
                         transaction.savepoint_rollback(rofl)
-                        failed_ec_numbers.append(ec_number)
+                        failed_submissions.append(ec_number)
                         continue
                     else:
                         transaction.savepoint_commit(rofl)
 
-                if failed_ec_numbers:
-                    warnings += '== %s ==\nNo sumbssions with ec_number: %s\n\n' % (username, ', '.join(failed_ec_numbers))
-
-
             except Exception, e:
                 transaction.savepoint_rollback(sid)
-                warnings += '== %s ==\n%s\n\n' % (username, e)
-                self.failcount += 1
+                failed_users.append(username)
+                failcount += 1
             else:
                 transaction.savepoint_commit(sid)
             finally:
-                self.importcount += 1
-                pb.update(self.importcount)
+                importcount += 1
+                pb.update(importcount)
+        
+        if failed_users:
+            self._warn('\nCould not find users: %s\n' % (' '.join(failed_users)))
+        
+        if failed_submissions:
+            self._warn('\nCould not find submissions: %s\n' % (' '.join(failed_submissions)))
 
-        print ''
-        if warnings:
-            print ''
-            self._warn(warnings)
-
-        print '== %d/%d participants imported ==' % (self.importcount - self.failcount, self.filecount)
-        if self.failcount:
-            self._abort('Failed to import %d participants' % self.failcount)
+        print '== %d/%d participants imported ==' % (importcount - failcount, len(dataset))
+        if failcount:
+            self._abort('Failed to import %d participants' % failcount)
         else:
             print '\033[32mDone.\033[0m'
 
