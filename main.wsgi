@@ -32,6 +32,9 @@ def application(environ, start_response):
 
 import os,sys,site
 
+# rewire stdout to stderr, because writing to stdout as wsgi is considered an error
+sys.stdout = sys.stderr
+
 # Remember original sys.path.
 prev_sys_path = list(sys.path)
 
