@@ -7,6 +7,11 @@ from ecs.mediaserver.storage import Storage
 
 class Renderer(object):
     def render(self, pdf_name, image_set):
+        compress = True
+        if compress:
+            opt_compress = '-compress Zip -quality 100 '
+        else:
+            opt_compress = ''
         cm_per_inch = 2.54
         din_a4_x = 21.0
         din_a4_y = 29.7
@@ -35,7 +40,7 @@ class Renderer(object):
                 for page in image_set.images[zoom]:
                     png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
                     png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, page)
-                    im_cmd = 'convert -interlace PNG %s %s' % (png_ni_name, png_name)
+                    im_cmd = 'convert %s-interlace PNG %s %s' % (opt_compress, png_ni_name, png_name)
                     print im_cmd
                     os.system(im_cmd)
                     rm_cmd = 'rm %s' % png_ni_name
@@ -50,7 +55,7 @@ class Renderer(object):
                 h = height / subpages_y
                 for bigpage in bigpage_set:
                     im_cmd = \
-                        'montage -interlace PNG ' + \
+                        'montage %s-interlace PNG ' % opt_compress + \
                         '-background \%s ' % background  + \
                         '-geometry %dx%d+0+0 ' % (w, h) + \
                         '-tile %s ' % zoom
