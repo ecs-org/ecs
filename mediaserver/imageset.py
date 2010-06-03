@@ -23,4 +23,4 @@ class ImageSet(object):
         for zoom in self.render_set.zoom_list:
             bigpages = self.render_set.get_bigpages(zoom, self.pages)
             page_set = range(1, bigpages + 1)
-            self.images[zoom] = dict([(p, { 'url': '/mediaserver/%s/%s/%s' % (id, p, zoom)}) for p in page_set])
+            self.images[zoom] = dict([(p, { 'url': '/mediaserver/%s/%s/%s/' % (id, p, zoom)}) for p in page_set])
