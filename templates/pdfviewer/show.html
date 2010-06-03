@@ -250,7 +250,7 @@
 
     var click_handler = function(event) {
       event.stop();
-      var x = event.client.x + window.pageXOffset;
+      var x = event.page.x;
       if (x < pdf_viewer.offset_x) {
         pdf_viewer.set_prev();
         return;
@@ -259,8 +259,8 @@
         pdf_viewer.set_next();
         return;
       }
-      var x = event.client.x + window.pageXOffset - pdf_viewer.offset_x;
-      var y = event.client.y + window.pageYOffset - pdf_viewer.offset_y;
+      var x = event.page.x - pdf_viewer.offset_x;
+      var y = event.page.y - pdf_viewer.offset_y;
       var subpage_x = parseInt(x / pdf_viewer.subpage_width);
       var subpage_y = parseInt(y / pdf_viewer.subpage_height);
       var subpage = subpage_y * pdf_viewer.subpages_x + subpage_x + 1;
