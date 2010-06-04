@@ -10,8 +10,8 @@ class PageData(object):
         self.png_data = open(png_name, 'r').read()  # TODO check with larger files
         self.png_time = time.time()
 
-    def get_data(self):
-        return (self.png_name, self.png_data, self.png_time)
+    def __str__(self):
+        return '(%s, length %d, %s)' % (self.png_name, len(self.png_data), time.ctime(self.png_time))
 
 
 class Storage(object):
@@ -25,8 +25,7 @@ class Storage(object):
     def store_page(self, png_name, id, bigpage, zoom):
         key = self.get_key(id, bigpage, zoom)
         print 'store page "%s" as "%s"' % (png_name, key)
-        page_data = PageData(png_name)
-        return self.mc.set(key, page_data.get_data())
+        return self.mc.set(key, PageData(png_name))
 
     def load_page(self, id, bigpage, zoom):
         key = self.get_key(id, bigpage, zoom)
