@@ -23,5 +23,7 @@
 {% block menuSelection %}meetings{% endblock %}
 {% block jsbottom %}
     {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
+    <script type="text/javascript">
+        window.addEvent('domready', ecs.setupForms);
+    </script>
 {% endblock %}

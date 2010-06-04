@@ -63,9 +63,9 @@
 {% block menuSelection %}notifications{% endblock %}
 {% block jsbottom %}
     {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/forms.js"></script>
     <script type="text/javascript">
         window.addEvent('domready', function(){
+            ecs.setupForms();
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.autosave(true);
                 return false;
@@ -101,7 +101,6 @@
             }
             submissionFormsSelect.addEvent('change', loadSubmissionFormData);
             loadSubmissionFormData();
-
 
         });
     </script>

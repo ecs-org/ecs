@@ -108,7 +108,62 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 
 # sprint 6 sources
-sprint6_bundle = sprint5_bundle
+sprint6_bundle = minimal_ecs_service+ """ 
+django:inst:all:pypi:django==1.1.1
+south:inst:all:pypi:south==0.7
+django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
+werkzeug:inst:all:pypi:werkzeug
+django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
+django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
+django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
+nose:inst:all:pypi:nose
+docutils:inst:all:pypi:docutils
+django-reversion:inst:all:pypi:django-reversion
+django-db-log:inst:all:pypi:django-db-log
+# docstash now uses django-picklefield
+django-picklefield:inst:all:pypi:django-picklefield
+django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
+
+# needed for deployment: massimport
+antiword:req:apt:apt-get:antiword
+antiword:req:mac:macports:antiword
+# antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
+beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+
+# pisa
+pyPDF:inst:all:pypi:pyPDF
+html5lib:inst:all:pypi:html5lib
+reportlab:req:apt:apt-get:libfreetype6-dev
+reportlab:inst:!win:pypi:reportlab
+reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
+pisa:inst:all:pypi:pisa
+
+# celery 
+amqplib:inst:all:pypi:amqplib
+carrot:inst:all:pypi:carrot
+importlib:inst:all:pypi:importlib
+python-dateutil:inst:all:pypi:python-dateutil
+anyjson:inst:all:pypi:anyjson
+billard:inst:all:pypi:billiard
+django-picklefield:inst:all:pypi:django-picklefield
+celery:req:apt:apt-get:rabbitmq-server
+celery:req:mac:macports:rabbitmq-server
+celery:inst:all:pypi:celery
+# use ghettoq if development instead rabbitmq
+ghettoq:inst:all:pypi:ghettoq
+
+# media server rendering (includes mockcache for easier testing)
+ghostscript:req:apt:apt-get:ghostscript
+ghostscript:req:mac:macports:ghostscript
+memcachedb:req:apt:apt-get:memcachedb
+# FIXME: there is no memcachedb macport yet
+python-memcached:req:mac:macports:memcached
+python-memcached:inst:all:pypi:python-memcached
+mockcache:inst:all:pypi:mockcache
+python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
+python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
+python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
+"""
 
 # In addition to application packages, packages needed for development
 developer_packages= """

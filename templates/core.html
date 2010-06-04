@@ -1,28 +1,32 @@
 {% extends 'base.html' %}
+{% load compress %}
 
 {% block htmlcss %}
-  {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}core/css/core.css" />
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" media="screen" />
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/core.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/dashboard.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
+    {% endcompress %}
 {% endblock %}
 
 {% block account %} 
-  <a href=""><img src="{{ MEDIA_URL }}core/images/user.png" alt="user"/></a> 
+  <a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a> 
   {{ user.get_full_name|default:user.username }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
   {% load userswitcher %}
   {% userswitcher %}
   <p>
   {% comment %}
-  <a href=""><img src="{{ MEDIA_URL }}core/images/search.png" alt="search"/></a> 
-  <a href=""><img src="{{ MEDIA_URL }}core/images/help.png" alt="help"/></a>
+  <a href=""><img src="{{ MEDIA_URL }}images/core/search.png" alt="search"/></a> 
+  <a href=""><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
   {% endcomment %}
   <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
   </p> 
 {% endblock %}
 
 {% block usertoolbar %} 
-  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}/core/images/workflow.png" alt="workflow" title="Workflow" /></a>
+  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
         
 {% block usermenu %}
@@ -68,12 +72,20 @@
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript" src="{{ MEDIA_URL}}/js/flext.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL}}/MooEditable/Source/MooEditable/MooEditable.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/Overlay.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.js"></script>
-  <script type="text/javascript" src="{{ MEDIA_URL }}/MooDialog/Source/MooDialog.Iframe.js"></script>
+    {{ block.super }}
+    {% compress js %}
+        <script type="text/javascript" src="{{ MEDIA_URL}}js/flext.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/Overlay.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Iframe.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
+    {% endcompress %}
+
   <script type="text/javascript">
     function get_origin() {
       {% comment %}

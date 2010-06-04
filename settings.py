@@ -111,7 +111,7 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
-    #'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.app_directories.load_template_source',
     #'django.template.loaders.eggs.load_template_source',
 )
 
@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     'djangodblog',
     'celery',
     'ecs.utils.countries',
+    'compressor',
 
     'ecs.core',
     'ecs.utils',
@@ -195,9 +196,13 @@ DBLOG_CATCH_404_ERRORS = True
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
-# use our utils.ecs_runner as default test runner
+# use our ecs.utils.ecs_runner as default test runner
 TEST_RUNNER = 'ecs.utils.ecs_runner.run_tests'
 SOUTH_TESTS_MIGRATE = False
 
 # FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
+
+# django_compressor settings
+COMPRESS = True
+COMPRESS_JS_FILTERS = []

@@ -1,38 +1,3 @@
-/* 
- * core.css 
- */
-
-/* jQuery ui tabs widget */
-
-.ui-tabs .ui-tabs-hide .ui-tabs-panel {
-  display: none;
-  padding: 0px;
-}
-.ui-tabs-nav {
-  height: 3em;
-  display: block;
-  padding: 0px;
-}
-
-div#ecs-core-tabs {
-  height: 3em;
-  border: none;
-  padding: 0px;
-}
-
-
-/* jQuery ui selectables (generalized list views) */
-#ecs-core-selectable1 .ui-selecting  { background: #FECA40; }
-#ecs-core-selectable1 .ui-selected  { background: #F39814; color: white; }
-#ecs-core-selectable1  { list-style-type: none; margin: 0; padding: 0; }
-#ecs-core-selectable1 li  { margin: 3px; padding: 0.4em; height: 18px; }
-
-#ecs-core-selectable2 .ui-selecting  { background: #FECA40; }
-#ecs-core-selectable2 .ui-selected  { background: #F39814; color: white; }
-#ecs-core-selectable2  { list-style-type: none; margin: 0; padding: 0; }
-#ecs-core-selectable2 li  { margin: 3px; padding: 0.4em; height: 18px; }
-
-
 /* headernav */
 
 .tab_headers li {
@@ -57,16 +22,16 @@ ul.tab_headers {
   background: #ff8000;
 }
 .tab_headers li a.delete_row{
-	border: none;
-	background: url(/static/core/images/remove.png) no-repeat;
-	width: 16px;
-	height: 16px;
-	padding: 0px;
-	position: relative;
-	top: 3px;
-	display: inline-block;
-	overflow: hidden;
-	text-indent: -1000px;
+    border: none;
+    background: url(/static/images/core/remove.png) no-repeat;
+    width: 16px;
+    height: 16px;
+    padding: 0px;
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    overflow: hidden;
+    text-indent: -1000px;
 }
 .tab_headers .errors a {
   background: #fb6464;
@@ -223,8 +188,8 @@ input, textarea, select {
   padding: 2px;
 }
 .form.main table td .errors li{
-	margin: 0px;
-	float: none;
+    margin: 0px;
+    float: none;
 }
 .form.main ol li.BooleanField {
   padding-left: 240px;
@@ -273,7 +238,7 @@ tr.form td{
 }
 .inline_formset .form a.delete_row,
 .investigator_tab a.delete_row {
-  background: url(/static/core/images/remove.png) no-repeat;
+  background: url(/static/images/core/remove.png) no-repeat;
   height: 16px;
   width: 16px;
   display: inline-block;
@@ -289,7 +254,7 @@ div.inline_formset .form a.delete_row {
   left: 0px;
 }
 .form.main a.add_row, #meeting_constraint_editor a.add_row {
-  background: url(/static/core/images/add.png) no-repeat;
+  background: url(/static/images/core/add.png) no-repeat;
   width: 16px;
   height: 16px;
   display: inline-block;
@@ -301,12 +266,12 @@ div.inline_formset .form a.delete_row {
 }
 .form.main .investigator_tab a.add_row,
 .form.main .investigator_tab a.delete_row {
-	display: inline;
-	overflow: visible;
-	width: auto;
-	text-indent: 0px;
-	padding-left: 20px;
-	padding-right: 10px;
+    display: inline;
+    overflow: visible;
+    width: auto;
+    text-indent: 0px;
+    padding-left: 20px;
+    padding-right: 10px;
 }
 
 #content a.delete_row:hover, #content a.add_row:hover {
@@ -379,13 +344,13 @@ fieldset.disabled {
 
 #measure_formset textarea,
 #routinemeasure_formset textarea{
-	height: 1.4em;
+    height: 1.4em;
 }
 
 .form.main ol li .datepicker_toggler {
   position: absolute;
   text-indent: -9999px; 
-  background: url(/static/core/images/calendar.png) no-repeat;
+  background: url(/static/images/core/calendar.png) no-repeat;
   height: 16px;
   width: 16px !important;
   margin-left: 5px;
@@ -414,7 +379,7 @@ fieldset.disabled {
 }
 .doclist h3 {
   font-size: 1em;
-  background-image: url(/static/core/images/icon-triangle.png);
+  background-image: url(/static/images/core/icon-triangle.png);
   background-repeat: no-repeat;
   padding-left: 24px;
 }
@@ -422,7 +387,7 @@ fieldset.disabled {
   display: block;
   margin-left: 2em;
   padding-left: 24px;
-  background-image: url(/static/core/images/icon-doc.png);
+  background-image: url(/static/images/core/icon-doc.png);
   background-repeat: no-repeat; 
 }
 
@@ -446,228 +411,6 @@ table.notif_meta td, table.notif_meta th {
 table.notif_meta th {
     text-align: left;
     border-bottom: 1px solid #cccccc;
-}
-
-/* meeting editor */
-
-#meeting_editor #userlist{
-  list-style: none;
-  background-color: #eeeeee;
-}
-#meeting_editor #userlist li{
-  border-top: 1px solid #ffffff;
-  padding: 5px;
-}
-#meeting_editor #userlist .info{
-  background-color: #ffffff;
-  font-size: 0.8em;
-}
-#meeting_editor #userlist .info .constraints{
-  margin-bottom: 0px;
-}
-#meeting_editor #userlist .info .constraints li{
-  padding: 0px;
-}
-#meeting_constraint_editor {
-  width: 800px;
-}
-#meeting_constraint_editor form ol li {
-  width: 100px;
-  float: left;
-  clear: none;
-  display: block;
-  height: 50px;
-}
-#meeting_constraint_editor form ol {
-  margin: 0px;
-  height: 50px;
-}
-#meeting_constraint_editor form ol li label {
-  width: auto;
-  float: none;
-  display: block;
-  text-align: left;
-}
-#meeting_constraint_editor form ol li input[type=text] {
-  width: 7em;
-}
-#meeting_constraint_editor form .inline_formset .form {
-  padding: 0px;
-  clear: both;
-}
-#meeting_constraint_editor form .inline_formset .form a.delete_row { 
-  width: 40px;
-  float: right;
-  display: block;
-}
-#meeting_editor .constraint_status {
-  width: 10px;
-  height: 10px;
-  text-indent: -20px;
-  display: block;
-  float: left;
-  overflow: hidden;
-}
-#meeting_editor #userlist .constraints {
-  list-style: none;
-  margin-left: 0px;
-}
-#meeting_editor .entry {
-  border: 1px solid #eeeeee;
-  margin: 3px;
-  display: block;
-  height:55px;
-  background-color:#ffffff;
-  position: relative;
-}
-
-#meeting_editor .entry.break {
-  background-color: #ffffcc;
-}
-#meeting_editor .entry a.remove {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  text-indent: -200px;
-  overflow: hidden;
-  background: url(/static/core/images/remove.png) no-repeat;
-}
-#meeting_editor .entry .dragHandle{
-  float:left;
-  width:50px;
-  background-color:#cccccc;
-  height:100%;
-}
-#meeting_editor .entry input.duration{
-  width: 5em;
-}
-#meeting_editor .entry input.optimal_start{
-  width: 5em;
-}
-#meeting_editor .entry h3{
-  font-size: 1em;
-  margin-bottom: 2px;
-}
-#meeting_editor #timetable {
-  list-style: none;
-  width:550px;
-  font-size:13px;
-  margin: 0px;
-}
-#meeting_participation_editor form {
-  float: none;
-  display: inline;
-}
-#meeting_participation_editor .entry {
-  clear: both;
-}
-
-#meeting_participation_editor .entry h2 {
-  margin: 0px;
-}
-#meeting_participation_editor .entry a.remove {
-  background: url(/static/core/images/remove.png) no-repeat;
-  width: 16px;
-  height: 16px;
-  position: relative;
-  top: 3px;
-  text-indent: -200px;
-  overflow: hidden;
-  display: inline-block;
-}
-#meeting_participation_editor .entry a.add {
-  background: url(/static/core/images/add.png) no-repeat;
-  width: 16px;
-  height: 16px;
-  text-indent: -200px;
-  overflow: hidden;
-  display: inline-block;
-}
-#content #meeting_participation_editor .entry a.remove:hover,
-#content #meeting_participation_editor .entry a.add:hover  {
-  text-decoration: none;
-  border-bottom: 0px;
-}
-
-#meeting_participation_editor .entry .user_list > span {
-  margin-right: 0.5em;
-  padding: 2px;
-  border: 1px solid #ccccff;
-  background-color: #eeeeff;
-}
-
-/* constraint formset */
-
-#constraint_formset {
-  width: 800px;
-  margin-top: 20px;
-}
-#constraint_formset th {
-  text-align: left;
-  width: 200px;
-}
-#constraint_formset .label {
-  padding-bottom: 10px;
-}
-#constraint_formset th:first-child {
-  text-align: left;
-  width: 40px;
-}
-#constraint_formset td {
-  text-align: left;  
-}
-#constraint_formset td:first-child {
-  text-align: left;
-  width: 40px;
-}
-
-/* dashboard */
-
-.dashboard_widget {
-  float: left;
-  border: 2px solid #D8E6EF;
-  padding: 10px;
-  background-color: #f5f5d2;
-  -moz-border-radius: 10px;
-  margin: 0 10px 10px 0;
-  width: 336px;
-}
-.dashboard_widget h3 {
-  margin-bottom: 10px;
-}
-.dashboard_widget td {
-  padding-left: 5px;
-  padding-right: 5px;
-}
-.dashboard_widget .read {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/core/images/Mail_verified.png) no-repeat;
-}
-.dashboard_widget .unread {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/core/images/Email_warning.png) no-repeat;
-}
-.dashboard_widget .reply a {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/core/images/Mail_reply.png) no-repeat;
-}
-.dashboard_widget .reply a:hover {
-  border-bottom: none !important;
 }
 
 #content ol.submission_list {

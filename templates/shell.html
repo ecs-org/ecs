@@ -1,3 +1,4 @@
+{% load compress %}
 {% block htmltype %}
 <?xml version="1.0" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -9,38 +10,24 @@
         {% block htmlmeta %}{% endblock %}
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
-            <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/base.css" />
-            <link rel="stylesheet" href="{{ MEDIA_URL}}css/datepicker.css" media="screen"/>
-            <link rel="stylesheet" href="{{ MEDIA_URL}}css/Roar.css" media="screen"/>
+            {% compress css %}
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/ecs/base.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/Roar.css" />
+            {% endcompress %}
         {% endblock %}         
         {% block jshead %}{% endblock %}
     </head>
     <body>
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
-             <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-             <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
-             <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
-             <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
-             <script type="text/javascript">
-             dbug = {
-                logged: [], firebug: false, debug: false,
-                log: function(msg) {this.logged.push(msg);},
-                enable: function() { if(this.firebug) this.debug = true; this.log = console.debug; this.log('enabling dbug');
-                    db = this; this.logged.each(function(msg){db.log(msg)}); this.logged=[];
-                },
-                disable: function(){ if(this.firebug) this.debug = false; this.log = function(){this.logged.push(msg);}; }
-             }
-             if (typeof console != "undefined") { // safari, firebug
-                if (typeof console.debug != "undefined") { // firebug
-                    dbug.firebug = true; if(window.location.href.indexOf("debug=true")>0) dbug.enable();
-                }
-             }
-             
-             var ecs = window.ecs = {
-                 messages: new Roar()
-             };
-             </script>
+            {% compress js %}
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/dbug.js"></script>
+             {% endcompress %}
         {% endblock %}
     </body>
 </html>
