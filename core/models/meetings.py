@@ -242,6 +242,7 @@ class TimetableEntry(models.Model):
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
     sponsor_invited = models.BooleanField(default=False)
     optimal_start = models.TimeField(null=True)
+    is_open = models.BooleanField(default=True)
     
     class Meta:
         app_label = 'core'
@@ -337,6 +338,34 @@ class TimetableEntry(models.Model):
     @property
     def is_batch_processed(self):
         return self.is_thesis or self.is_expedited or self.is_retrospective
+        
+    @property
+    def next(self):
+        try:
+            return self.meeting[self.index + 1]
+        except IndexError:
+            return None
+    
+    @property
+    def previous(self):
+        try:
+            return self.meeting[self.index - 1]
+        except IndexError:
+            return None
+        
+    @property
+    def next_open(self):
+        entries = self.meeting.timetable_entries.filter(timetable_index__gt=self.index).filter(is_open=True).order_by('timetable_index')[:1]
+        if entries:
+            return entries[0]
+        return None
+        
+    @property
+    def previous_open(self):
+        entries = self.meeting.timetable_entries.filter(timetable_index__lt=self.index).filter(is_open=True).order_by('-timetable_index')[:1]
+        if entries:
+            return entries[0]
+        return None
 
 def _timetable_entry_delete_post_delete(sender, **kwargs):
     entry = kwargs['instance']
