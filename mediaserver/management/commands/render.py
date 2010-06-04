@@ -23,8 +23,8 @@ class Command(BaseCommand):
         print 'Rendering %s file(s) ..' % len(args)
         for pdf_name in args:
             try:
-                fd = open(pdf_name, 'r')
-                fd.close()
+                f = open(pdf_name, 'rb')
+                f.close()
             except IOError:
                 raise CommandError('File "%s" does not exist' % pdf_name)
 

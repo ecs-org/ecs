@@ -7,7 +7,9 @@ import time
 class PageData(object):
     def __init__(self, png_name):
         self.png_name = png_name
-        self.png_data = open(png_name, 'r').read()  # TODO check with larger files
+        f = open(png_name, 'rb')
+        self.png_data = f.read()
+        f.close()
         self.png_time = time.time()
 
     def __str__(self):
