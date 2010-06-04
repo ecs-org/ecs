@@ -6,6 +6,7 @@ from ecs.mediaserver.renderset import RenderSet
 class ImageSet(object):
 
     def __init__(self, id, pages=0):
+        self.id = id
         if id == 0:
             self.render_set = RenderSet(1)
             self.pages = pages

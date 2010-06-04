@@ -1,25 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import email.utils
-import os.path
 import time
 
 from django.http import HttpResponse
 from django.conf import settings
 
+from ecs.mediaserver.storage import Storage
+
 
 def get_image_data(id, bigpage, zoom):
-    if id == 1:
-        filename = 'ecs-09-submission-form'
-    else:
-        filename = 'test-pdf-14-seitig'
-    filename += '_%s_%04d.png' % (zoom, bigpage)
-
-    filepath = os.path.join(settings.MEDIA_ROOT, 'mediaserver', 'images', filename)
-    image_data = open(filepath, 'r').read()
+    storage = Storage()
+    png_name, png_data, png_time = sotrage.load_page(id, bigpage, zoom)
     expires = email.utils.formatdate(time.time() + 30 * 24 * 3600, usegmt=True)
-    last_modified = email.utils.formatdate(os.path.getmtime(filepath), usegmt=True)
-    return (image_data, expires, last_modified)
+    last_modified = email.utils.formatdate(png_time, usegmt=True)
+    return (png_data, expires, last_modified)
 
 
 def get_image(request, id=1, bigpage=1, zoom='1'):

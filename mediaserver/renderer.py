@@ -46,7 +46,10 @@ class Renderer(object):
                     rm_cmd = 'rm %s' % png_ni_name
                     print rm_cmd
                     os.system(rm_cmd)
-                    storage.store(png_name, page, zoom)  # TODO remove png
+                    rc = storage.store_page(png_name, image_set.id, page, zoom)
+                    if not rc:
+                        print "error: storage failed"
+                        return False
             else:
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
                 bigpage_set = range(1, bigpages + 1)
@@ -72,4 +75,8 @@ class Renderer(object):
                         rm_cmd = 'rm %s' % png_ni_name
                         print rm_cmd
                         os.system(rm_cmd)
-                    storage.store(png_name, bigpage, zoom)  # TODO remove png
+                    rc = storage.store_page(png_name, image_set.id, bigpage, zoom)
+                    if not rc:
+                        print "error: storage failed"
+                        return False
+        return True
