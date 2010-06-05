@@ -171,3 +171,47 @@
   text-align: left;
   width: 40px;
 }
+
+#meeting_assistant{
+    position: relative;
+}
+
+#meeting_assistant fieldset .meta{
+    display: block;
+    color: #666666;
+    font-size: 0.8em;
+}
+
+#meeting_assistant .buttons a{
+    display: block;
+    float: left;
+    width: 120px;
+    border: 1px solid #cccccc;
+    margin: 10px;
+}
+
+#meeting_assistant .buttons a.selected{
+    background-color: #ccffcc;
+}
+
+#meeting_assistant .buttons a .details{
+    display: block;
+    font-size: 0.8em;
+}
+
+#meeting_assistant form{
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+#meeting_assistant .left{
+    left: 0px;
+    width: 200px;
+    position: absolute;
+}
+
+#meeting_assistant .right{
+    right: 0px;
+    width: 200px;
+    position: absolute;
+}

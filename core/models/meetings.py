@@ -232,6 +232,10 @@ class Meeting(models.Model):
     def sort_timetable(self, func):
         perm = func(tuple(self))
         self._apply_permutation(perm)
+    
+    @property
+    def open_tops(self):
+        return self.timetable_entries.filter(is_open=True)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')

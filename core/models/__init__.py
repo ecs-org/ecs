@@ -5,3 +5,4 @@ from ecs.core.models.submissions import SubmissionForm, Investigator, Investigat
 from ecs.core.models.notifications import NotificationType, Notification, ReportNotification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models.meetings import Meeting, TimetableEntry, Participation, Constraint
 from ecs.core.models.profiles import UserProfile
+from ecs.core.models.voting import Vote

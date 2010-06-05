@@ -1,14 +1,16 @@
 import datetime
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.contrib.auth.models import User
 from ecs.core.views.utils import render
-from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation
+from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
-from ecs.utils.timedelta import parse_timedelta
+from ecs.core.forms.voting import VoteForm
 from ecs.core.task_queue import optimize_timetable_task
+from ecs.utils.timedelta import parse_timedelta
+
 
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
@@ -129,4 +131,44 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'constraint_formset': constraint_formset,
     })
         
+def meeting_assistant(request, meeting_pk=None, top_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not top_pk:
+        try:
+            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk, 'top_pk': meeting[0].pk}))
+        except IndexError:
+            # FIXME: real message page
+            raise Http404("This meeting has not TOPs.")
+    top = get_object_or_404(TimetableEntry, pk=top_pk)
+    submission = top.submission
     
+    def next_top_redirect():
+        if top.next_open:
+            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.next_open.pk}))
+        else:
+            # FIXME: handle this case
+            return HttpResponse("This was the last open TOP")
+
+    if request.POST.get('autosave'):
+        return next_top_redirect()
+        
+    if submission:
+        try:
+            vote = top.vote
+        except Vote.DoesNotExist:
+            vote = None
+        form = VoteForm(request.POST or None, instance=vote)
+        if form.is_valid():
+            vote = form.save(commit=False)
+            vote.top = top
+            vote.save()
+            top.is_open = False
+            top.save()
+            return next_top_redirect()
+    return render(request, 'meetings/assistant.html', {
+        'submission': submission,
+        'top': top,
+        'vote': vote,
+        'form': form,
+    })
+
