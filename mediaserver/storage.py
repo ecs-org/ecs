@@ -30,7 +30,7 @@ class Storage(object):
         self.mc = memcache.Client(['%s:%d' % (host, port_memcachedb)], debug=0)
 
     def get_key(self, id, bigpage, zoom):
-        return '%s:%s:%s:%s' % (self.ns, id, bigpage, zoom)
+        return str('%s:%s:%s:%s' % (self.ns, id, bigpage, zoom))
 
     def store_page(self, png_name, id, bigpage, zoom):
         key = self.get_key(id, bigpage, zoom)
