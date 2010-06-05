@@ -13,8 +13,9 @@ def get_image_data(id, bigpage, zoom):
     storage = Storage()
     page_data = storage.load_page(id, bigpage, zoom)
     if page_data is None:
+        print 'cache miss'
         return (None, None, None)
-    print "Loaded ", page_data
+    print 'cache hit: loaded %s' % page_data
     png_data = page_data.png_data
     png_time = page_data.png_time
     expires = email.utils.formatdate(time.time() + 30 * 24 * 3600, usegmt=True)
