@@ -6,16 +6,51 @@ from ecs.mediaserver.storage import Storage
 
 
 class Renderer(object):
-    def render(self, pdf_name, image_set):
-        compress = True
-        if compress:
-            opt_compress = '-compress Zip -quality 100 '
-        else:
-            opt_compress = ''
+    def render_pages(self, pdf_name, pages, zoom, res_x, res_y, pdf_fname):
+        cmd = \
+            'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=4 ' + \
+            '-dPDFFitPage -dTextAlphaBits=4 -sPAPERSIZE=a4 ' + \
+            '-r%.5fx%.5f ' % (res_x, res_y) + \
+            '-dFirstPage=1 -dLastPage=%s ' % pages + \
+            '-sOutputFile=%s_%s_%%04d_ni.png ' % (pdf_fname, zoom) + \
+            pdf_name
+        print cmd
+        os.system(cmd)
+
+    def render_interlaced(self, png_ni_name, png_name, cmd_compress, cmd_interlace):
+        cmd = 'convert %s%s%s %s' % (cmd_compress, cmd_interlace, png_ni_name, png_name)
+        print cmd
+        os.system(cmd)
+
+    def render_bigpage(self, png_ni_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace):
+        cmd = \
+            'montage %s%s' % (cmd_compress, cmd_interlace) + \
+            '-background \%s ' % background  + \
+            '-geometry %dx%d+0+0 ' % (w, h) + \
+            '-tile %s ' % zoom + \
+            '%s%s' % (png_ni_names, png_name)
+        print cmd
+        os.system(cmd)
+
+    def remove_file(self, file_name):
+        print 'removing "%s"' % file_name
+        os.remove(file_name)
+
+    def render(self, pdf_name, image_set, opt_compress, opt_interlace):
         cm_per_inch = 2.54
         din_a4_x = 21.0
         din_a4_y = 29.7
         background = '#dddddd'
+        if opt_compress:
+            cmd_compress = '-compress Zip -quality 100 '  # keep blank at end
+        else:
+            cmd_compress = ''
+        if opt_interlace:
+            cmd_interlace = '-interlace PNG '  # keep blank at end
+        else:
+            cmd_interlace = ''
+        print 'opt_compress: %s' % opt_compress
+        print 'opt_interlace: %s' % opt_interlace
         storage = Storage()
         pages = image_set.pages
         for zoom in image_set.images:
@@ -27,28 +62,20 @@ class Renderer(object):
             res_x = (width / (din_a4_x / cm_per_inch)) / subpages_x
             res_y = (height / (din_a4_y / cm_per_inch)) / subpages_y
             pdf_fname, _ = os.path.splitext(os.path.basename(pdf_name))
-            gs_cmd = \
-                'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=png16m -dGraphicsAlphaBits=4 ' + \
-                '-dPDFFitPage -dTextAlphaBits=4 -sPAPERSIZE=a4 ' + \
-                '-r%.5fx%.5f ' % (res_x, res_y) + \
-                '-dFirstPage=1 -dLastPage=%s ' % pages + \
-                '-sOutputFile=%s_%s_%%04d_ni.png ' % (pdf_fname, zoom) + \
-                pdf_name
-            print gs_cmd
-            os.system(gs_cmd)
+            self.render_pages(pdf_name, pages, zoom, res_x, res_y, pdf_fname)
             if zoom == '1':
                 for page in image_set.images[zoom]:
                     png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
-                    png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, page)
-                    im_cmd = 'convert %s-interlace PNG %s %s' % (opt_compress, png_ni_name, png_name)
-                    print im_cmd
-                    os.system(im_cmd)
-                    rm_cmd = 'rm %s' % png_ni_name
-                    print rm_cmd
-                    os.system(rm_cmd)
-                    rc = storage.store_page(png_name, image_set.id, page, zoom)
+                    if opt_interlace:
+                        png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, page)
+                        self.render_interlaced(png_ni_name, png_name, cmd_compress, cmd_interlace)
+                        self.remove_file(png_ni_name)
+                        image_name = png_name
+                    else:
+                        image_name = png_ni_name
+                    rc = storage.store_page(image_name, image_set.id, page, zoom)                  
                     if not rc:
-                        print "error: storage failed"
+                        print 'error: storage failed'
                         return False
             else:
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
@@ -57,26 +84,21 @@ class Renderer(object):
                 w = width / subpages_x
                 h = height / subpages_y
                 for bigpage in bigpage_set:
-                    im_cmd = \
-                        'montage %s-interlace PNG ' % opt_compress + \
-                        '-background \%s ' % background  + \
-                        '-geometry %dx%d+0+0 ' % (w, h) + \
-                        '-tile %s ' % zoom
-                    page_set = range((bigpage - 1) * subpages + 1, min(bigpage * subpages, pages) + 1)
+                    page_first = (bigpage - 1) * subpages + 1
+                    page_last = min(bigpage * subpages, pages)
+                    page_set = range(page_first, page_last + 1)
+                    png_ni_names = ''
+                    for page in page_set:
+                        png_ni_names += '%s_%s_%04d_ni.png ' % (pdf_fname, zoom, page)
+                    if opt_interlace:
+                        png_name = '%s_%s_big_%04d.png' % (pdf_fname, zoom, bigpage)
+                    else:
+                        png_name = '%s_%s_big_%04d_ni.png' % (pdf_fname, zoom, bigpage)
+                    self.render_bigpage(png_ni_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace)
                     for page in page_set:
                         png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
-                        im_cmd += '%s ' % png_ni_name
-                    png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, bigpage)                        
-                    im_cmd += png_name
-                    print im_cmd
-                    os.system(im_cmd)
-                    for page in page_set:
-                        png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
-                        rm_cmd = 'rm %s' % png_ni_name
-                        print rm_cmd
-                        os.system(rm_cmd)
+                        self.remove_file(png_ni_name)
                     rc = storage.store_page(png_name, image_set.id, bigpage, zoom)
                     if not rc:
-                        print "error: storage failed"
-                        return False
+                        print 'error: storage failed'
         return True

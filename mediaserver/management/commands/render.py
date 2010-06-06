@@ -13,7 +13,8 @@ class Command(BaseCommand):
     args = '<submission.pdf notification.pdf ...>'
     help = 'renders the specified PDF documents to images'
     option_list = BaseCommand.option_list + (
-        make_option('--dir', '-d', action='store_true', dest='dir', help='working directory for reading and writing files'),
+        make_option('--nc', action='store_true', dest='nc', default=False, help='do NOT use zlib compression for the PNG images'),
+        make_option('--ni', action='store_true', dest='ni', default=False, help='do NOT use Adam7 interlacing for the PNG images'),
     )
 
     def handle(self, *args, **options):
@@ -37,8 +38,11 @@ class Command(BaseCommand):
            
             image_set = ImageSet(0, pages)
 
+            opt_compress = not options['nc']
+            opt_interlace = not options['ni']
+
             renderer = Renderer()
-            renderer.render(pdf_name, image_set)
+            renderer.render(pdf_name, image_set, opt_compress, opt_interlace)
 
         print 'done'
 

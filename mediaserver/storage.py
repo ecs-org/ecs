@@ -35,9 +35,10 @@ class Storage(object):
     def store_page(self, png_name, id, bigpage, zoom):
         key = self.get_key(id, bigpage, zoom)
         print 'storing page "%s" as "%s"' % (png_name, key)
-        return self.mc.set(key, PageData(png_name))
+        page_data = PageData(png_name)
+        return self.mc.set(key, page_data)
 
     def load_page(self, id, bigpage, zoom):
         key = self.get_key(id, bigpage, zoom)
         print 'loading page "%s"' % key
-        return  self.mc.get(key)
+        return self.mc.get(key)
