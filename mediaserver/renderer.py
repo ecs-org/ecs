@@ -12,29 +12,41 @@ class Renderer(object):
             '-dPDFFitPage -dTextAlphaBits=4 -sPAPERSIZE=a4 ' + \
             '-r%.5fx%.5f ' % (res_x, res_y) + \
             '-dFirstPage=1 -dLastPage=%s ' % pages + \
-            '-sOutputFile=%s_%s_%%04d_ni.png ' % (pdf_fname, zoom) + \
+            '-sOutputFile=%s_%s_%%04d.png ' % (pdf_fname, zoom) + \
             pdf_name
         print cmd
         os.system(cmd)
 
-    def render_interlaced(self, png_ni_name, png_name, cmd_compress, cmd_interlace):
-        cmd = 'convert %s%s%s %s' % (cmd_compress, cmd_interlace, png_ni_name, png_name)
+    def render_page(self, png_name_in, png_name, cmd_compress, cmd_interlace):
+        cmd = 'convert %s%s%s %s' % (cmd_compress, cmd_interlace, png_name_in, png_name)
         print cmd
         os.system(cmd)
 
-    def render_bigpage(self, png_ni_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace):
+    def render_bigpage(self, png_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace):
         cmd = \
             'montage %s%s' % (cmd_compress, cmd_interlace) + \
             '-background \%s ' % background  + \
             '-geometry %dx%d+0+0 ' % (w, h) + \
             '-tile %s ' % zoom + \
-            '%s%s' % (png_ni_names, png_name)
+            '%s%s' % (png_names, png_name)
         print cmd
         os.system(cmd)
 
     def remove_file(self, file_name):
         print 'removing "%s"' % file_name
         os.remove(file_name)
+
+    def get_name(self, pdf_fname, page, zoom, is_bigpage=False, opt_compress=False, opt_interlace=False):
+        if is_bigpage:
+            big = '_big'
+        else:
+            big = ''
+        suffix = ''
+        if opt_interlace:
+            suffix += '_a7'
+        if opt_compress:
+            suffix += '_z'
+        return '%s_%s%s_%04d%s.png' % (pdf_fname, zoom, big, page, suffix)
 
     def render(self, pdf_name, image_set, opt_compress, opt_interlace):
         cm_per_inch = 2.54
@@ -51,6 +63,7 @@ class Renderer(object):
             cmd_interlace = ''
         print 'opt_compress: %s' % opt_compress
         print 'opt_interlace: %s' % opt_interlace
+        errors = 0
         storage = Storage()
         pages = image_set.pages
         for zoom in image_set.images:
@@ -65,18 +78,16 @@ class Renderer(object):
             self.render_pages(pdf_name, pages, zoom, res_x, res_y, pdf_fname)
             if zoom == '1':
                 for page in image_set.images[zoom]:
-                    png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
-                    if opt_interlace:
-                        png_name = '%s_%s_%04d.png' % (pdf_fname, zoom, page)
-                        self.render_interlaced(png_ni_name, png_name, cmd_compress, cmd_interlace)
-                        self.remove_file(png_ni_name)
-                        image_name = png_name
-                    else:
-                        image_name = png_ni_name
-                    rc = storage.store_page(image_name, image_set.id, page, zoom)                  
+                    png_name = self.get_name(pdf_fname, page, zoom)
+                    if opt_compress or opt_interlace:
+                        png_name_in = png_name
+                        png_name = self.get_name(pdf_fname, page, zoom, False, opt_compress, opt_interlace)
+                        self.render_page(png_name_in, png_name, cmd_compress, cmd_interlace)
+                        self.remove_file(png_name_in)
+                    rc = storage.store_page(png_name, image_set.id, page, zoom)
                     if not rc:
                         print 'error: storage failed'
-                        return False
+                        errors += 1
             else:
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
                 bigpage_set = range(1, bigpages + 1)
@@ -87,18 +98,20 @@ class Renderer(object):
                     page_first = (bigpage - 1) * subpages + 1
                     page_last = min(bigpage * subpages, pages)
                     page_set = range(page_first, page_last + 1)
-                    png_ni_names = ''
+                    png_names = ''
                     for page in page_set:
-                        png_ni_names += '%s_%s_%04d_ni.png ' % (pdf_fname, zoom, page)
-                    if opt_interlace:
-                        png_name = '%s_%s_big_%04d.png' % (pdf_fname, zoom, bigpage)
-                    else:
-                        png_name = '%s_%s_big_%04d_ni.png' % (pdf_fname, zoom, bigpage)
-                    self.render_bigpage(png_ni_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace)
+                        png_names += self.get_name(pdf_fname, page, zoom) + ' '
+                    png_name = self.get_name(pdf_fname, bigpage, zoom, True, opt_compress, opt_interlace)
+                    self.render_bigpage(png_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace)
                     for page in page_set:
-                        png_ni_name = '%s_%s_%04d_ni.png' % (pdf_fname, zoom, page)
-                        self.remove_file(png_ni_name)
+                        name = self.get_name(pdf_fname, page, zoom)
+                        self.remove_file(name)
                     rc = storage.store_page(png_name, image_set.id, bigpage, zoom)
                     if not rc:
                         print 'error: storage failed'
-        return True
+                        errors += 1
+        if errors > 0:
+            print '%d error(s)' % errors
+            return False
+        else:
+            return True
