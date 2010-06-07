@@ -72,8 +72,10 @@ class Renderer(object):
             height = image_set.render_set.height
             subpages_x = image_set.render_set.get_subpages_x(zoom, pages)
             subpages_y = image_set.render_set.get_subpages_y(zoom, pages)
-            res_x = (width / (din_a4_x / cm_per_inch)) / subpages_x
-            res_y = (height / (din_a4_y / cm_per_inch)) / subpages_y
+            w = width / subpages_x
+            h = height / subpages_y
+            res_x = w / (din_a4_x / cm_per_inch)
+            res_y = h / (din_a4_y / cm_per_inch)
             pdf_fname, _ = os.path.splitext(os.path.basename(pdf_name))
             self.render_pages(pdf_name, pages, zoom, res_x, res_y, pdf_fname)
             if zoom == '1':
