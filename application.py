@@ -116,6 +116,7 @@ werkzeug:inst:all:pypi:werkzeug
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
+unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
 nose:inst:all:pypi:nose
 docutils:inst:all:pypi:docutils
 django-reversion:inst:all:pypi:django-reversion

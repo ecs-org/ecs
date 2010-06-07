@@ -22,26 +22,28 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-# celery configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
-# Warning: second part on bottom of settings which set backend to internal if DEBUG=TRUE and host != ecsdev.ep3.at
+# celery configuration defaults
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-CELERY_RESULT_BACKEND = 'database'  # do we have to use amqp, because of the test cases ?
+# per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
+CARROT_BACKEND = "ghettoq.taproot.Database"
+CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
 )
 
+
 import getpass
 user = getpass.getuser()
 # use different settings if on host ecsdev.ep3.at depending username
-if platform.node() == "ecsdev.ep3.at" and not user.startswith('bb'):
-    DBPWD_DICT = {}
-    assert user in DBPWD_DICT, " ".join(("did not find",user,"in DBPWD_DICT"))
+DBPWD_DICT = {}
 
+if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
+    # Use Postgresql as Django Database; Database User=current user, password like in dict
     DATABASE_ENGINE = 'postgresql_psycopg2'
     DATABASE_HOST = '127.0.0.1'
     DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
@@ -49,10 +51,11 @@ if platform.node() == "ecsdev.ep3.at" and not user.startswith('bb'):
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
     
-    # rabbit mq users and db users are the same (also passwords)
+    # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
     BROKER_USER = user
     BROKER_PASSWORD = DBPWD_DICT[user]
     BROKER_VHOST = user
+    CARROT_BACKEND = ""
     
     if user == "testecs":
         DEBUG = False
@@ -184,9 +187,8 @@ INSTALLED_APPS = (
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'
 
-# use ghettoq as carrot backend, so we dont need any external brocker for testing
-if DEBUG and (platform.node() != "ecsdev.ep3.at"):
-    CARROT_BACKEND = "ghettoq.taproot.Database"
+# include ghettoq in installed apps if we use it as carrot backend, so we dont need any external brocker for testing
+if CARROT_BACKEND == "ghettoq.taproot.Database":
     INSTALLED_APPS += ("ghettoq", ) 
 
 # django-db-log
