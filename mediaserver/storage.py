@@ -4,6 +4,10 @@ import memcache
 import time
 
 
+class SetData(object):
+    def __init__(self, pages):
+        self.pages = pages
+
 class PageData(object):
     def __init__(self, png_name):
         crit_size = 200 * 1024
@@ -29,16 +33,30 @@ class Storage(object):
         host = '127.0.0.1'
         self.mc = memcache.Client(['%s:%d' % (host, port_memcachedb)], debug=0)
 
-    def get_key(self, id, bigpage, zoom):
+    def get_set_key(self, id):
+        return str('%s:%s' % (self.ns, id))
+
+    def store_set(self, pages, id):
+        set_key = self.get_set_key(id)
+        print 'storing set "%s" as "%s"' % (id, set_key)
+        set_data = SetData(pages)
+        return self.mc.set(set_key, set_data)
+
+    def load_set(self, id):
+        set_key = self.get_set_key(id)
+        print 'loading set "%s"' % set_key
+        return self.mc.get(set_key)
+
+    def get_page_key(self, id, bigpage, zoom):
         return str('%s:%s:%s:%s' % (self.ns, id, bigpage, zoom))
 
     def store_page(self, png_name, id, bigpage, zoom):
-        key = self.get_key(id, bigpage, zoom)
-        print 'storing page "%s" as "%s"' % (png_name, key)
+        page_key = self.get_page_key(id, bigpage, zoom)
+        print 'storing page "%s" as "%s"' % (png_name, page_key)
         page_data = PageData(png_name)
-        return self.mc.set(key, page_data)
+        return self.mc.set(page_key, page_data)
 
     def load_page(self, id, bigpage, zoom):
-        key = self.get_key(id, bigpage, zoom)
-        print 'loading page "%s"' % key
-        return self.mc.get(key)
+        page_key = self.get_page_key(id, bigpage, zoom)
+        print 'loading page "%s"' % page_key
+        return self.mc.get(page_key)

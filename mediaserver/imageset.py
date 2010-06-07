@@ -1,25 +1,33 @@
 # -*- coding: utf-8 -*-
 
 from ecs.mediaserver.renderset import RenderSet
+from ecs.mediaserver.storage import SetData, Storage
 
 
 class ImageSet(object):
 
     def __init__(self, id, pages=0):
         self.id = id
-        if id == 0:
-            self.render_set = RenderSet(1)
+        
+        self.render_set = RenderSet(1)  # TODO move to storage
+        
+        storage = Storage()
+        # TODO nove out of constructor!
+        if pages > 0:
             self.pages = pages
-        elif id == 1:
-            self.render_set = RenderSet(1)
-            self.pages = 18
-        elif id == 2:
-            self.render_set = RenderSet(1)
-            self.pages = 14
+            set_data = SetData(self.pages)
+            retval = storage.store_set(self.pages, id)
+            if not retval:
+                print 'error: can not store set "%s"' % id
+                return
         else:
-            self.render_set = RenderSet(2)
-            self.pages = 14
+            set_data = storage.load_set(id)
+            if set_data is None:
+                print 'error: can not load set "%s"' % id
+                return
+            self.pages = set_data.pages
 
+        # TODO replace with pages_list, e.g. (14,2,1)
         self.images = { }
         for zoom in self.render_set.zoom_list:
             bigpages = self.render_set.get_bigpages(zoom, self.pages)

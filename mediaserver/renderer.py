@@ -86,8 +86,8 @@ class Renderer(object):
                         png_name = self.get_name(pdf_fname, page, zoom, False, opt_compress, opt_interlace)
                         self.render_page(png_name_in, png_name, cmd_compress, cmd_interlace)
                         self.remove_file(png_name_in)
-                    rc = storage.store_page(png_name, image_set.id, page, zoom)
-                    if not rc:
+                    retval = storage.store_page(png_name, image_set.id, page, zoom)
+                    if not retval:
                         print 'error: storage failed'
                         errors += 1
             else:
@@ -108,8 +108,8 @@ class Renderer(object):
                     for page in page_set:
                         name = self.get_name(pdf_fname, page, zoom)
                         self.remove_file(name)
-                    rc = storage.store_page(png_name, image_set.id, bigpage, zoom)
-                    if not rc:
+                    retval = storage.store_page(png_name, image_set.id, bigpage, zoom)
+                    if not retval:
                         print 'error: storage failed'
                         errors += 1
         if errors > 0:
