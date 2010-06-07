@@ -112,18 +112,20 @@ sprint6_bundle = minimal_ecs_service+ """
 django:inst:all:pypi:django==1.1.1
 south:inst:all:pypi:south==0.7
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
-werkzeug:inst:all:pypi:werkzeug
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
-django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
-unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
-nose:inst:all:pypi:nose
-docutils:inst:all:pypi:docutils
 django-reversion:inst:all:pypi:django-reversion
-django-db-log:inst:all:pypi:django-db-log
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
+docutils:inst:all:pypi:docutils
+
+#debugging
+werkzeug:inst:all:pypi:werkzeug
+django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
+django-db-log:inst:all:pypi:django-db-log
+
+# simple testing
+nose:inst:all:pypi:nose
 
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
@@ -166,24 +168,30 @@ python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 """
 
+
+# software quality testing packages
+quality_packages= """
+#django-nose is in main app
+#nose is in main app
+unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
+coverage:inst:!win:pypi:coverage
+nose-xcover:inst:!win:http://github.com/cmheisel/nose-xcover/tarball/master
+coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
+logilab-common:inst:all:pypi:logilab-common\>=0.49.0
+logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
+pylint:inst:all:pypi:pylint
+django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
+"""
+
 # In addition to application packages, packages needed for development
-developer_packages= """
+developer_packages=  """
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 docutils:inst:all:pypi:docutils
 sphinx:inst:all:pypi:sphinx
-nose:inst:all:pypi:nose
-coverage:inst:!win:pypi:coverage
-coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
 fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
-logilab-common:inst:all:pypi:logilab-common\>=0.49.0
-logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
-pylint:inst:all:pypi:pylint
-
-
 simplejson:inst:all:pypi:simplejson
-
 # antiword is needed for ecs/core/management/fakeimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
@@ -195,13 +203,15 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #pyasn1:inst:all:pypi:pyasn1
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
+
 # Environments
 ###############
 
 testing_bundle = sprint5_bundle
 default_bundle = sprint6_bundle
 future_bundle = sprint6_bundle
-developer_bundle = package_merge((default_bundle, developer_packages))
+developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
+quality_bundle = package_merge((default_bundle, quality_packages))
 
 package_bundles = {
     'default': default_bundle,
@@ -211,6 +221,8 @@ package_bundles = {
     'sprint5': sprint5_bundle,
     'sprint6': sprint6_bundle,
     'developer': developer_bundle,
+    'quality': quality_bundle,
+    'qualityaddon': quality_packages,
 }
 
 
