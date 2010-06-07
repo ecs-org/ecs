@@ -39,12 +39,16 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
                 task=task,
                 submission=submission,
             )
-        message = form.save(commit=False)
-        message.sender = request.user
-        message.reply_to = reply_to
-        message.thread = thread
+        message = Message(
+            sender=request.user, 
+            reply_to=reply_to, 
+            thread=thread, 
+            text=form.cleaned_data['text'],
+        )
         if reply_to:
             message.receiver = reply_to.sender
+        else:
+            message.receiver = form.cleaned_data['receiver']
         message.save()
         return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
 

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from ecs.messages.models import Message
+from ecs.messages.models import Message, Thread
 
 class MessageTest(TestCase):
     def setUp(self):
@@ -50,11 +50,11 @@ class MessageTest(TestCase):
         self.client.logout()
 
     def test_reply_message(self):
-        message = Message.objects.create(subject='foo', text='bar', sender=self.alice, receiver=self.bob)
+        thread = Thread.objects.create(subject='foo', sender=self.alice, receiver=self.bob)
+        message = thread.add_message(self.alice, text="text")
 
         self.client.login(username='bob', password='...')
         response = self.client.post(reverse('ecs.messages.views.send_message', kwargs={'reply_to_pk': message.pk}), {
-            'subject': 'REPLY SUBJECT',
             'text': 'REPLY TEXT',
         })
         self.failUnlessEqual(response.status_code, 302)

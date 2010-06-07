@@ -17,7 +17,7 @@ class ThreadManager(models.Manager):
         return self.all().by_user(*users)
 
     def create(self, **kwargs):
-        text = kwargs.pop('text')
+        text = kwargs.pop('text', None)
         thread = super(ThreadManager, self).create(**kwargs)
         if text:
             thread.add_message(kwargs['sender'], text)
