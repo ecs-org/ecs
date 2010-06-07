@@ -2,16 +2,14 @@ import re
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from ecs.core.views.utils import render
-from ecs.messages.models import Message
+from ecs.messages.models import Message, Thread
 from ecs.tasks.models import Task
 
 def view_dashboard(request):
-    messages = Message.objects.select_related('sender', 'receiver').order_by('-timestamp')
-    message_count = messages.by_user(request.user).count()
-    threads = messages.threads()
+    message_count = Message.objects.by_user(request.user).count()
     
-    outgoing_threads = threads.filter(sender=request.user)
-    incoming_threads = threads.filter(receiver=request.user)
+    outgoing_threads = request.user.outgoing_threads.order_by('-timestamp')
+    incoming_threads = request.user.incoming_threads.order_by('-timestamp')
 
     tasks = tasks = Task.objects.filter(closed_at=None)
     accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)

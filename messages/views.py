@@ -4,7 +4,7 @@ from django.db.models import Q
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
-from ecs.messages.models import Message
+from ecs.messages.models import Message, Thread
 from ecs.messages.forms import SendMessageForm, ReplyToMessageForm
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
@@ -15,12 +15,12 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
     
     if reply_to_pk is not None:
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
-        thread = reply_to.thread or reply_to
+        thread = reply_to.thread
         form = ReplyToMessageForm(request.POST or None, initial={
             'subject': 'Re: %s' % thread.subject,
             'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
         })
-        submission = reply_to.submission
+        submission = thread.submission
     else:
         form = SendMessageForm(request.POST or None)
         task_pk = request.GET.get('task')
@@ -31,9 +31,16 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
             submission = task.data
 
     if request.method == 'POST' and form.is_valid():
+        if not thread:
+            thread = Thread.objects.create(
+                subject=form.cleaned_data['subject'],
+                sender=request.user, 
+                receiver=form.cleaned_data['receiver'],
+                task=task,
+                submission=submission,
+            )
         message = form.save(commit=False)
         message.sender = request.user
-        message.submission = submission
         message.reply_to = reply_to
         message.thread = thread
         if reply_to:
@@ -45,6 +52,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         'submission': submission,
         'task': task,
         'form': form,
+        'thread': thread,
     })
     
 def inbox(request):

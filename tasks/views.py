@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from ecs.core.views import render, redirect_to_next_url
 from ecs.core.models import Submission
-from ecs.messages.models import Message
+from ecs.messages.models import Thread
 from ecs.tasks.models import Task
 from ecs.tasks.forms import DelegateTaskForm, ManageTaskForm
 
@@ -65,7 +65,7 @@ def manage_task(request, task_pk=None):
                 to = form.cleaned_data['receiver']
             elif question_type == 'related':
                 to = form.cleaned_data['related_task'].assigned_to
-            message = Message.objects.create(
+            message = Thread.objects.create(
                 subject=u'Frage bzgl. %s' % task,
                 submission=task.data, 
                 task=task,

@@ -16,6 +16,7 @@
             <span>{{ task }}</span>
         </li>
         {% endif %}
+        {% if form.subject %}
         <li>
             <label for="id_subject">Betreff</label>
             {{ form.subject }}
@@ -23,6 +24,7 @@
                 <span class="errors">{{ form.subject.errors }}</span>
             {% endif %}
         </li>
+        {% endif %}
         {% if form.receiver %}
         <li>
             <label for="id_receiver">Empfänger</label>

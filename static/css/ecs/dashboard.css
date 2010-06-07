@@ -32,6 +32,9 @@
   overflow: hidden;
   background: url(/static/images/core/Email_warning.png) no-repeat;
 }
+#content .dashboard_widget .unread:hover{
+  border-bottom: none;
+}
 .dashboard_widget .reply a {
   display: inline-block;
   width: 24px;
