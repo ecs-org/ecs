@@ -6,12 +6,13 @@
 import sys
 import os
 import re
-import BeautifulSoup
+import math
+import platform
 from subprocess import Popen, PIPE
 from optparse import make_option
 from datetime import datetime, date
-import platform
 
+import BeautifulSoup
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.contrib.auth.models import User
@@ -26,23 +27,22 @@ if platform.platform().lower().startswith('win'):
     PLATFORM = 'win'
 
 class ProgressBar():
-    def __init__(self, minimum=0, maximum=100, barwidth=None):
+    def __init__(self, minimum=0, maximum=100):
         self.minimum = minimum
         self.maximum = maximum
-
-        if not barwidth and not PLATFORM == 'win':
-            import termios, fcntl, struct, sys
-            s = struct.pack("HHHH", 0, 0, 0, 0)
-            fd_stdout = sys.stdout.fileno()
-            x = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, s)
-            geometry = struct.unpack("HHHH", x)
-            self.barwidth = geometry[1]
-        elif barwidth and not PLATFORM == 'win':
-            self.barwidth = barwidth
-        else:
-            self.barwidth = None
+        self.barwidth = None
 
     def update(self, current):
+        if not PLATFORM == 'win':
+            try:
+                import termios, fcntl, struct
+                s = struct.pack("HHHH", 0, 0, 0, 0)
+                fd_stdout = sys.stderr.fileno()
+                x = fcntl.ioctl(fd_stdout, termios.TIOCGWINSZ, s)
+                self.barwidth = struct.unpack("HHHH", x)[1]
+            except:
+                self.barwidth = None
+    
         if not self.barwidth:
             sys.stdout.write(
                 '.' if not current % 10 == 0 else '%d/%s' % (current, self.maximum)
@@ -53,12 +53,12 @@ class ProgressBar():
         a = int(round(float(self.barwidth-14)/(self.maximum - self.minimum)*current))
         b = (self.barwidth-14) - a
         
-        sys.stdout.write('\r[%s%s%s] %4d/%4d ' % (
+        sys.stderr.write('\r[%s%s%s] %4d/%4d ' % (
             ('='*(a-1)),
             ('>' if not current == self.maximum else '='),
             (' '*b), current, self.maximum
         ))
-        sys.stdout.flush()
+        sys.stderr.flush()
 
 
 class Command(BaseCommand):
@@ -68,6 +68,7 @@ class Command(BaseCommand):
         make_option('--timetable', '-t', action='store', dest='timetable', help='import timetable'),
         make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
         make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
+        make_option('--analyze', '-a', action='store', dest='analyze_dir', help='analyze a bunch of doc files'),
     )
 
     def _abort(self, message, dont_exit=False):
@@ -87,24 +88,8 @@ class Command(BaseCommand):
             sys.stderr.write('\033[33m%s\033[0m' % message)
         sys.stderr.flush()
 
-    def _ask_for_confirmation(self):
-        print "DISCLAIMER: This tool is NOT for production purposes!" # right
-        print "Only use this for testing. You have been warned."
-        userinput = raw_input('Do you want to continue? (yes/NO): ')
-        print ''
-        if not userinput.lower() == 'yes':
-            self._abort('confirmation failed')
-
-    def _print_stat(self, importcount, failcount, filecount, dont_exit_on_fail=False):
-        print '== %d/%d documents imported ==' % (importcount - failcount, filecount)
-        if failcount:
-            self._abort('Failed to import %d files' % failcount, dont_exit=dont_exit_on_fail)
-        else:
-            print '\033[32mDone.\033[0m'
-
-    @transaction.commit_on_success
-    def _import_doc(self, filename):
-        regex = re.match('(\d{2,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
+    def _parse_doc(self, filename):
+        regex = re.match('(\d{1,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
         try:
             ec_number = '%s/%04d' % (regex.group(2), int(regex.group(1)))
         except IndexError:
@@ -144,26 +129,35 @@ class Command(BaseCommand):
             if text:
                 data.append((nr, text,))
 
-        fields = dict([(x.number, x.name,) for x in paper_forms.get_field_info_for_model(SubmissionForm) if x.number])
+        fields = dict([(x.number, x.name,) for x in paper_forms.get_field_info_for_model(SubmissionForm) if x.number and x.name])
     
-        create_data = {}
+        submissionform_data = {}
         for entry in data:
             try:
                 key = fields[entry[0]]
                 if key and not re.match(u'UNKNOWN:', entry[1]):
-                    create_data[key] = entry[1]
+                    submissionform_data[key] = entry[1]
             except KeyError:
                 pass
 
-        submission, created = Submission.objects.get_or_create(ec_number=ec_number)
+        submission_data = {
+            'ec_number': ec_number,
+        }
 
-        create_data['submission'] = submission
+        return (submission_data, submissionform_data)
+
+    @transaction.commit_on_success
+    def _import_doc(self, filename):
+        submission_data, submissionform_data = self._parse_doc(filename)
+        submission, created = Submission.objects.get_or_create(**submission_data)
+        submissionform_data['submission'] = submission
+        
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
-            if not key in create_data or not create_data[key].isdigit():
-                create_data[key] = value
+            if not key in submissionform_data or not submissionform_data[key].isdigit():
+                submissionform_data[key] = value
 
-        SubmissionForm.objects.create(**create_data)
-
+        SubmissionForm.objects.create(**submissionform_data)
+    
     def _import_files(self, files, dont_exit_on_fail=False):
         failcount = 0
         importcount = 0
@@ -186,8 +180,67 @@ class Command(BaseCommand):
         if warnings:
             print ''
             self._warn(warnings)
+        
+        print '== %d/%d documents imported ==' % (importcount - failcount, len(files))
+        if failcount:
+            self._abort('Failed to import %d files' % failcount, dont_exit=dont_exit_on_fail)
+        else:
+            print '\033[32mDone.\033[0m'
+    
+    def _analyze_dir(self, directory):
+        path = os.path.expanduser(directory)
+        if not os.path.isdir(path):
+            self._abort('"%s" is not a directory' % path)
 
-        self._print_stat(importcount, failcount, len(files),dont_exit_on_fail=dont_exit_on_fail)
+        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{1,4}_\d{4}(_.*)?.doc', f)]
+        files = [f for f in files if os.path.isfile(f)]
+        if not files:
+            self._abort('No documents found in path "%s"' % path)
+
+        data = {}
+        for field in paper_forms.get_field_info_for_model(SubmissionForm):
+            if field.number and field.name:
+                data[field.name] = []
+
+        failcount = 0
+        importcount = 0
+        
+        pb = ProgressBar(maximum=len(files))
+        pb.update(importcount)
+        
+        failed = []
+        for f in files:
+            try:
+                submission_data, submissionform_data = self._parse_doc(f)
+                for key in submissionform_data:
+                    data[key].append(submissionform_data[key])
+                
+            except Exception, e:
+                failed.append(os.path.basename(f))
+                failcount += 1
+            finally:
+                importcount += 1
+                pb.update(importcount)
+
+        sys.stderr.write('\n')
+        if failed:
+            
+            self._warn('Failed to analyze %d files: %s' % (len(failed), ' '.join(failed)))
+            sys.stderr.write('\n')
+        
+        for key in data:
+            count = len(data[key])
+            minimum = maximum = arithmetic_mean = geometric_mean = 0
+            if not count == 0:
+                minimum = min([len(x) for x in data[key]])
+                maximum = max([len(x) for x in data[key]])
+                arithmetic_mean = float(sum([len(x) for x in data[key]]))/count
+                #geometric_mean = math.pow(reduce(lambda x,y: x*len(y), data[key], 1), (float(1)/count))
+
+
+            #print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f geometric_mean=%.2f' % (key, count, minimum, maximum, arithmetic_mean, geometric_mean)
+            print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f' % (key, count, minimum, maximum, arithmetic_mean)
+        
 
     def _import_file(self, filename):
         filename = os.path.expanduser(filename)
@@ -201,7 +254,7 @@ class Command(BaseCommand):
         if not os.path.isdir(path):
             self._abort('"%s" is not a directory' % path)
 
-        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{2,4}_\d{4}(_.*)?.doc', f)]   # get all word documents in an existing directory
+        files = [os.path.join(path, f) for f in os.listdir(path) if re.match('\d{1,4}_\d{4}(_.*)?.doc', f)]   # get all word documents in an existing directory
         files = [f for f in files if os.path.isfile(f)]   # only take existing files
         if not files:
             self._abort('No documents found in path "%s"' % path)
@@ -345,11 +398,9 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **kwargs):
-        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['participants']] if x])
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['participants'], kwargs['analyze_dir']] if x])
         if options_count is not 1:
-            self._abort('please specifiy one of -d/-s/-t/-p')
-
-        self._ask_for_confirmation()
+            self._abort('please specifiy one of -d/-s/-t/-p/-a')
 
         if kwargs['submission_dir']:
             self._import_dir(kwargs['submission_dir'])
@@ -359,6 +410,8 @@ class Command(BaseCommand):
             self._import_timetable(kwargs['timetable'], kwargs['date'])
         elif kwargs['participants']:
             self._import_participants(kwargs['participants'])
+        elif kwargs['analyze_dir']:
+            self._analyze_dir(kwargs['analyze_dir'])
 
         sys.exit(0)
 
