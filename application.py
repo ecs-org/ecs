@@ -126,6 +126,7 @@ django-db-log:inst:all:pypi:django-db-log
 
 # simple testing
 nose:inst:all:pypi:nose
+django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
 
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
