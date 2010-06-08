@@ -169,8 +169,6 @@ class Registry(object):
         try:
             return self._handlers[node.node_type.implementation]
         except KeyError:
-            if node.node_type.is_subgraph:
-                return self._controls['ecs.workflow.patterns.subgraph']
             raise KeyError("Missing FlowHandler for NodeType %s" % node.node_type)
 
     def get_guard(self, edge):
