@@ -11,6 +11,7 @@ import platform
 from subprocess import Popen, PIPE
 from optparse import make_option
 from datetime import datetime, date
+from mpmath import mp, mpf
 
 import BeautifulSoup
 from django.core.management.base import BaseCommand
@@ -228,18 +229,49 @@ class Command(BaseCommand):
             self._warn('Failed to analyze %d files: %s' % (len(failed), ' '.join(failed)))
             sys.stderr.write('\n')
         
+        
+        def guess_type(values):
+            number_count = str_count = decimal_count = 0
+        
+            for v in values:
+                if re.match(r'\d+(\.\d+)?', v):
+                    number_count += 1
+                    if re.match(r'\d+\.\d+', v):
+                        decimal_count += 1
+                else:
+                    str_count += 1
+            
+            if number_count > str_count and decimal_count:
+                return 'DECIMAL'
+            elif number_count > str_count and not decimal_count:
+                return 'INTEGER'
+            else:
+                return 'STRING'
+        
         for key in data:
             count = len(data[key])
-            minimum = maximum = arithmetic_mean = geometric_mean = 0
+            minimum = 0
+            maximum = 0
+            arithmetic_mean = 0
+            geometric_mean = 0
+            standard_deviation = 0
+            optimum = 0
+            guessed_type = 'NODATA'
             if not count == 0:
-                minimum = min([len(x) for x in data[key]])
-                maximum = max([len(x) for x in data[key]])
-                arithmetic_mean = float(sum([len(x) for x in data[key]]))/count
-                #geometric_mean = math.pow(reduce(lambda x,y: x*len(y), data[key], 1), (float(1)/count))
+                lengths = [len(x) for x in data[key]]
+                values = data[key]
+                
+                minimum = min(lengths)
+                maximum = max(lengths)
+                arithmetic_mean = mpf(sum(lengths))/count
+                geometric_mean = mp.power(reduce(lambda x,y: x*y, lengths, 1), (mp.mpf(1)/count))
+                standard_deviation = mp.sqrt(sum([mp.power(arithmetic_mean-x, 2) for x in lengths])/count)
+                optimum = min(maximum, int(mp.ceil(arithmetic_mean+3*standard_deviation)))
+                
+                guessed_type = guess_type(values)
 
 
-            #print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f geometric_mean=%.2f' % (key, count, minimum, maximum, arithmetic_mean, geometric_mean)
-            print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f' % (key, count, minimum, maximum, arithmetic_mean)
+            print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f geometric_mean=%.2f standard_deviation=%.2f optimum=%d guessed_type=%s' % (key, count, minimum, maximum, arithmetic_mean, geometric_mean, standard_deviation, optimum, guessed_type)
         
 
     def _import_file(self, filename):

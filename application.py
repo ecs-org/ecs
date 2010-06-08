@@ -198,6 +198,7 @@ antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
+mpmath:inst:all:pypi:mpmath
 """
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0
