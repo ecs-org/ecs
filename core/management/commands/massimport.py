@@ -104,12 +104,12 @@ class Command(BaseCommand):
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
     
         # look for paragraphs where a number is inside (x.y[.z])
-        y = s.findAll('para', text=re.compile("[0-9]+\.[0-9]+(\.[0-9]+)*[^:]*:"), role='bold')
+        y = s.findAll('para', text=re.compile(r'[0-9]+(\.[0-9]+)+\.?\s+'), role='bold')
 
         data = []
         for a in y:
             # get number (fixme: works only for the first line, appends other lines unmodified)
-            match = re.match('[^0-9]*([0-9]+\.[0-9]+(\.[0-9]+)*).*',a,re.MULTILINE)
+            match = re.match(r'[^0-9]*([0-9]+\.[0-9]+(\.[0-9]+)*).*',a,re.MULTILINE)
             if not match:
                 continue
             nr = match.group(1)
@@ -151,12 +151,16 @@ class Command(BaseCommand):
     def _import_doc(self, filename):
         submission_data, submissionform_data = self._parse_doc(filename)
         submission, created = Submission.objects.get_or_create(**submission_data)
-        submissionform_data['submission'] = submission
         
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
             if not key in submissionform_data or not submissionform_data[key].isdigit():
                 submissionform_data[key] = value
-
+        
+        for key in submissionform_data.keys():
+            if hasattr(SubmissionForm, key):
+                del submissionform_data[key]
+        
+        submissionform_data['submission'] = submission
         SubmissionForm.objects.create(**submissionform_data)
     
     def _import_files(self, files, dont_exit_on_fail=False):

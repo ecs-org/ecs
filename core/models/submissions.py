@@ -101,7 +101,7 @@ class SubmissionForm(models.Model):
     invoice_phone = models.CharField(max_length=30, null=True, blank=True)
     invoice_fax = models.CharField(max_length=30, null=True, blank=True)
     invoice_email = models.EmailField(null=True, blank=True)
-    invoice_uid = models.CharField(max_length=30, null=True, blank=True) # 24? need to check
+    invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
     invoice_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
     # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
@@ -254,7 +254,7 @@ class SubmissionForm(models.Model):
     # 8.3
     study_plan_population_intention_to_treat  = models.BooleanField()
     study_plan_population_per_protocol  = models.BooleanField()
-    study_plan_abort_crit = models.CharField(max_length=200)
+    study_plan_abort_crit = models.CharField(max_length=265)
     study_plan_planned_statalgorithm = models.TextField(null=True, blank=True)
 
     # 8.4
@@ -267,7 +267,7 @@ class SubmissionForm(models.Model):
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
     study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
-    study_plan_dataprotection_dvr = models.CharField(max_length=80, blank=True)
+    study_plan_dataprotection_dvr = models.CharField(max_length=180, blank=True)
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
