@@ -158,12 +158,12 @@ class SubmissionForm(models.Model):
     subject_childbearing = models.BooleanField()
     
     # 2.11
-    subject_duration = models.CharField(max_length=120)
+    subject_duration = models.CharField(max_length=200)
     subject_duration_active = models.CharField(max_length=200)
     subject_duration_controls = models.CharField(max_length=200)
 
     # 2.12
-    subject_planned_total_duration = models.CharField(max_length=80)
+    subject_planned_total_duration = models.CharField(max_length=250)
 
     # 3a
     substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms', blank=True)
@@ -171,7 +171,7 @@ class SubmissionForm(models.Model):
     substance_p_c_t_countries = models.ManyToManyField('countries.Country', blank=True)
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
-    substance_p_c_t_application_type = models.CharField(max_length=80, null=True, blank=True)
+    substance_p_c_t_application_type = models.CharField(max_length=145, null=True, blank=True)
     substance_p_c_t_gcp_rules = models.NullBooleanField(blank=True)
     substance_p_c_t_final_report = models.NullBooleanField(blank=True)
     
@@ -188,7 +188,7 @@ class SubmissionForm(models.Model):
     medtech_departure_from_regulations = models.TextField(null=True, blank=True)
     
     # 5.x
-    insurance_name = models.CharField(max_length=60, null=True, blank=True)
+    insurance_name = models.CharField(max_length=125, null=True, blank=True)
     insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
