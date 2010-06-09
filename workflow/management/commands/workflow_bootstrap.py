@@ -1,4 +1,4 @@
-import datetime
+import datetime, sys
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -29,7 +29,12 @@ class Command(BaseCommand):
             call_command('workflow_sync', quiet=True)
             
             from ecs.core import workflow as cwf
-            
+
+            try:
+                Graph.objects.get(model=Submission, auto_start=True)
+            except Graph.MultipleObjectsReturned:
+                raise CommandError("There is more than one graph for Submission with auto_start=True.")
+
             g = Graph.objects.create(model=Submission, auto_start=True)
 
             initial_review = g.create_node(cwf.inspect_form_and_content_completeness, start=True, name="Formal R.")

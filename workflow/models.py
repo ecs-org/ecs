@@ -1,4 +1,4 @@
-import datetime, uuid
+import datetime
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
@@ -37,12 +37,9 @@ class NodeType(models.Model):
     
     objects = NodeTypeManager()
     
-    class Meta:
-        unique_together = ('content_type', 'implementation')
-        
     def save(self, **kwargs):
         if not self.implementation and self.is_subgraph:
-            self.implementation = ".%s" % uuid.uuid4().hex
+            self.implementation = 'ecs.workflow.patterns.subgraph'
         super(NodeType, self).save(**kwargs)
     
     @property
@@ -58,8 +55,8 @@ class NodeType(models.Model):
         return self.category == NODE_TYPE_CATEGORY_CONTROL
         
     def __unicode__(self):
-        if self.data:
-            return "%s (%s)" % (self.name, self.data)
+        if self.data_type:
+            return "%s(%s)" % (self.name, self.data_type)
         return self.name
         
 class GraphManager(models.Manager):

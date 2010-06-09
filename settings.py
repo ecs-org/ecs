@@ -183,6 +183,7 @@ INSTALLED_APPS = (
     'ecs.tasks',
     'ecs.messages',
     'ecs.dashboard',
+    'ecs.bootstrap',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'
