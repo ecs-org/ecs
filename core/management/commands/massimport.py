@@ -104,12 +104,12 @@ class Command(BaseCommand):
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
     
         # look for paragraphs where a number is inside (x.y[.z])
-        y = s.findAll('para', text=re.compile(r'[0-9]+(\.[0-9]+)+\.?\s+'), role='bold')
+        y = s.findAll('para', text=re.compile(r'\d+(\.\d+)+\.?\s+'), role='bold')
 
         data = []
         for a in y:
             # get number (fixme: works only for the first line, appends other lines unmodified)
-            match = re.match(r'[^0-9]*([0-9]+\.[0-9]+(\.[0-9]+)*).*',a,re.MULTILINE)
+            match = re.match(r'\D*(\d+(\.\d+)+).*',a,re.MULTILINE)
             if not match:
                 continue
             nr = match.group(1)
@@ -119,7 +119,12 @@ class Command(BaseCommand):
                 text= "\n".join(parent.string.splitlines()[2:])
             else:
                 try:
-                    text=unicode(a.findParent().find('emphasis', role='bold').contents[0])
+                    b = a.findParent().find('emphasis', role='bold')
+                    if not b:
+                        b = a.findParent().findNextSibling('para').findChild('emphasis', role='bold')
+                    
+                    text=unicode(b.contents[0])
+
                     # get parent (para), then get text inside emphasis bold, because every user entry in the word document is bold
                 except AttributeError:
                     # have some trouble, but put all data instead inside for inspection
@@ -156,6 +161,7 @@ class Command(BaseCommand):
             if not key in submissionform_data or not submissionform_data[key].isdigit():
                 submissionform_data[key] = value
         
+        # TODO: do not ignore this and fix it
         for key in submissionform_data.keys():
             if hasattr(SubmissionForm, key):
                 del submissionform_data[key]
@@ -249,6 +255,10 @@ class Command(BaseCommand):
             else:
                 return 'STRING'
         
+        fields = dict([(x.name, x.number,) for x in paper_forms.get_field_info_for_model(SubmissionForm) if x.number and x.name])
+        
+        not_imported_fields = []
+        low_covered_fields = []
         for key in data:
             count = len(data[key])
             minimum = 0
@@ -270,9 +280,19 @@ class Command(BaseCommand):
                 optimum = min(maximum, int(mp.ceil(arithmetic_mean+3*standard_deviation)))
                 
                 guessed_type = guess_type(values)
+                
+                if count < len(data) * 80 / 100:   # covering is lower than 80%
+                    low_covered_fields.append(fields[key])
+                
+            else:
+                not_imported_fields.append(fields[key])
 
 
             print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f geometric_mean=%.2f standard_deviation=%.2f optimum=%d guessed_type=%s' % (key, count, minimum, maximum, arithmetic_mean, geometric_mean, standard_deviation, optimum, guessed_type)
+            
+        print '\n=== REPORT ==='
+        print 'Not imported fields(%d): %s' % (len(not_imported_fields), ' '.join(not_imported_fields))
+        print 'Low covered fields(%d): %s' % (len(low_covered_fields), ' '.join(low_covered_fields))
         
 
     def _import_file(self, filename):
