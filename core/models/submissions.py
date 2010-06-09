@@ -92,7 +92,7 @@ class SubmissionForm(models.Model):
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
 
-    invoice_name = models.CharField(max_length=120, null=True, blank=True)
+    invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)

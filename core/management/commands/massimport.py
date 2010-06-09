@@ -186,11 +186,8 @@ class Command(BaseCommand):
             print ''
             self._warn(warnings)
         
-        print '== %d/%d documents imported ==' % (importcount - failcount, len(files))
         if failcount:
             self._abort('Failed to import %d files' % failcount, dont_exit=dont_exit_on_fail)
-        else:
-            print '\033[32mDone.\033[0m'
     
     def _analyze_dir(self, directory):
         path = os.path.expanduser(directory)
@@ -330,7 +327,7 @@ class Command(BaseCommand):
             except Submission.DoesNotExist:
                 fail_count += 1
 
-        print '== %s/%s submission assigned to meeting ==' % (submission_count-fail_count, submission_count)
+        print '== %s/%s submissions assigned to meeting ==' % (submission_count-fail_count, submission_count)
 
         if fail_count:
             self._abort('failed to assign %d submissions to the meeting' % fail_count)
