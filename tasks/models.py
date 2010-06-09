@@ -11,7 +11,14 @@ from ecs.workflow.signals import token_created, token_consumed
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
     workflow_node = models.OneToOneField(Node, null=True)
-    groups = models.ManyToManyField(Group, related_name='task_types')
+    groups = models.ManyToManyField(Group, related_name='task_types', blank=True)
+    
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        elif self.workflow_node_id:
+            return u'TaskType for %s' % self.workflow_node
+        return u'TaskType <Anonymous>'
     
 class TaskManager(models.Manager):
     def for_data(self, data):
@@ -28,29 +35,35 @@ class Task(models.Model):
     created_at = models.DateTimeField(default=datetime.datetime.now)
     created_by = models.ForeignKey(User, null=True, related_name='created_tasks')
 
-    closed_at = models.DateTimeField(null=True)
-    closed_by = models.ForeignKey(User, null=True, related_name='closed_tasks')
-
     assigned_at = models.DateTimeField(null=True)
     assigned_to = models.ForeignKey(User, null=True, related_name='tasks')
+    closed_at = models.DateTimeField(null=True)
     
     accepted = models.BooleanField(default=False)
     
     objects = TaskManager()
     
-    def close(self, user=None):
+    @property
+    def locked(self):
+        if not self.workflow_token_id:
+            return False
+        return self.workflow_token.locked
+    
+    def close(self, commit=True):
         self.closed_at = datetime.datetime.now()
-        self.closed_by = user
-        self.save()
+        if commit:
+            self.save()
         
-    def done(self):
+    def done(self, user=None, commit=True):
+        if user and self.assigned_to_id != user.id:
+            self.assign(user)
         token = self.workflow_token
         if token:
             self.data.workflow.do(token)
         else:
-            self.close()
+            self.close(user=user, commit=commit)
         
-    def assign(self, user, check_authorization=True, commit=False):
+    def assign(self, user, check_authorization=True, commit=True):
         if user and check_authorization:
             groups = self.task_type.groups.all()
             if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
@@ -63,11 +76,27 @@ class Task(models.Model):
         if commit:
             self.save()
         
-    def accept(self, user=None):
+    def accept(self, user=None, commit=True):
         if user:
             self.assign(user, commit=False)
         self.accepted = True
-        self.save()
+        if commit:
+            self.save()
+        
+    @property
+    def trail(self):
+        if not self.workflow_token:
+            return set()
+        return Task.objects.filter(workflow_token__in=self.workflow_token.activity_trail)
+        
+    @property
+    def related_tasks(self):
+        if not self.workflow_token:
+            return Task.objects.none()
+        return Task.objects.filter(workflow_token__workflow=self.workflow_token.workflow)
+        
+    def __unicode__(self):
+        return u"%s %s" % (self.data, self.task_type)
 
 # workflow integration:
 def workflow_token_created(sender, **kwargs):
@@ -88,7 +117,8 @@ def node_saved(sender, **kwargs):
     node, created = kwargs['instance'], kwargs['created']
     if not created or not node.node_type.is_activity:
         return
-    task_type, created = TaskType.objects.get_or_create(workflow_node=node)
+    name = node.name or node.node_type.name or node.node_type.implementation
+    task_type, created = TaskType.objects.get_or_create(workflow_node=node, name=name)
         
 token_created.connect(workflow_token_created)
 token_consumed.connect(workflow_token_consumed)

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+import re
 from django.template import Library
 
 from ecs.core import paper_forms
@@ -15,12 +17,22 @@ register.filter('getitem', getitem)
 register.filter('type_name', lambda obj: type(obj).__name__)
 register.filter('startwith', lambda obj, start: obj.startswith(substr))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
+register.filter('contains', lambda obj, x: x in obj)
 
 @register.filter
 def get_field_info(formfield):
-    if formfield:
+    if formfield and hasattr(formfield.form, '_meta'):
         return paper_forms.get_field_info(model=formfield.form._meta.model, name=formfield.name)
     else:
+        return None
+        
+@register.filter
+def form_value(form, fieldname):
+    if form.data:
+        return form._raw_value(fieldname)
+    try:
+        return form.initial[fieldname]
+    except KeyError:
         return None
         
 @register.filter
@@ -37,6 +49,15 @@ def simple_timedelta_format(td):
     if seconds:
         result.append("%ss" % seconds)
     return " ".join(result)
+    
+@register.filter
+def smart_truncate(s, n):
+    if not s:
+        return u""
+    if len(s) <= n:
+        return s
+    return u"%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
+    
 
 @register.filter
 def empty_form(formset):
@@ -52,3 +73,8 @@ def empty_form(formset):
     form = formset.form(**defaults)
     formset.add_fields(form, 0)
     return form
+
+@register.filter
+def class_for_field(field):
+    return 'wide' if field.field.max_length > 50 else 'narrow'
+

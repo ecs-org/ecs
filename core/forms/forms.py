@@ -1,13 +1,16 @@
-# -*- coding: utf-8 -*
+# -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
+from django.forms.formsets import BaseFormSet, formset_factory
+from django.utils.safestring import mark_safe
 
-from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
+from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 
 
 def _unpickle(f, args, kwargs):
@@ -45,7 +48,12 @@ class CompletionReportNotificationForm(ModelFormPickleMixin):
 
 ## submissions ##
 
-class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
+class SubmissionEditorForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+
+class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
+
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
@@ -57,13 +65,6 @@ class SubmissionFormForm(ModelFormPickleMixin, forms.ModelForm):
     
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
-    # FIXME: the following fields do not belong here
-    #medical_categories = forms.ModelMultipleChoiceField(MedicalCategory.objects.all(), label=u'Medizinische Kategorien')
-    #thesis = forms.NullBooleanField(required=False)
-    #retrospective = forms.NullBooleanField(required=False)
-    #expedited = forms.NullBooleanField(required=False)
-    #external_reviewer = forms.NullBooleanField(required=False)
-    #external_reviewer_name = forms.ModelChoiceField(User.objects.all(), required=False)
 
     class Meta:
         model = SubmissionForm
@@ -104,14 +105,14 @@ DocumentFormSet = modelformset_factory(Document, formset=BaseDocumentFormSet, ex
 
 ## ##
 
-class BaseForeignParticipatingCenterFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
         super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
 
 ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=1, exclude=('submission_form',))
 
-class BaseNonTestedUsedDrugFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
         super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
@@ -128,31 +129,34 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', Measure.objects.none())
-        super(BaseMeasureFormSet, self).__init__(*args, **kwargs)
+class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
-MeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=MeasureForm)
-RoutineMeasureFormSet = modelformset_factory(Measure, formset=BaseMeasureFormSet, extra=1, form=RoutineMeasureForm)
+MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=1)
+RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=1)
 
+class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = Investigator
+        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
 
-class BaseInvestigatorFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', Investigator.objects.none())
-        super(BaseInvestigatorFormSet, self).__init__(*args, **kwargs)
+class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
-InvestigatorFormSet = modelformset_factory(Investigator, formset=BaseInvestigatorFormSet, extra=1, 
-                                           fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)) 
+InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1) 
 
-class BaseInvestigatorEmployeeFormSet(ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', InvestigatorEmployee.objects.none())
-        super(BaseInvestigatorEmployeeFormSet, self).__init__(*args, **kwargs)
+class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
+    investigator_index = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
 
-    def add_fields(self, form, index):
-        super(BaseInvestigatorEmployeeFormSet, self).add_fields(form, index)
-        form.fields['investigator_index'] = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
+    class Meta:
+        model = InvestigatorEmployee
+        exclude = ('investigator',)
 
-InvestigatorEmployeeFormSet = modelformset_factory(InvestigatorEmployee, formset=BaseInvestigatorEmployeeFormSet, extra=1, exclude = ('submission',))
+class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
+
+InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 

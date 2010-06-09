@@ -1,0 +1,15 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Neues Meeting
+{% endblock %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data" class="form tabbed main">
+    {{ form }}
+    <input type="submit" value="Submit" name="submit"/>    
+</form>
+{% endblock %}

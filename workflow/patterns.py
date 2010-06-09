@@ -8,13 +8,12 @@ from ecs.workflow import control
 
 @control()
 def generic(token):
-    token.consume()
-    token.node.progress(token.workflow)
+    token.node.progress(token)
     
 @control()
 def subgraph(token):
     node, workflow = token.node, token.workflow
-    subworkflow = node.node_type.graph.start_workflow(data=workflow.data, parent=token)
+    subworkflow = node.node_type.graph.create_workflow(data=workflow.data, parent=token)
     subworkflow.start()
 
 @control()
@@ -29,9 +28,7 @@ def synchronization(token):
                 expected_inputs.remove(t.source)
                 synchronized_tokens.add(t)
         if not expected_inputs:
-            for t in synchronized_tokens:
-                t.consume()
-            node.progress(workflow)
+            node.progress(*synchronized_tokens)
 
 # FIXME: we need a cancelling discriminator
 #@control()

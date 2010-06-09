@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+{% load feedback %}
+
+{% url feedback_input type page origin as fb_url %}
+{% url feedback_input type page|add:-1 origin as fb_url_prev %}
+{% url feedback_input type page|add:1 origin as fb_url_next %}
+
+<head>
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}feedback/css/feedback.css" />
+  <title>ECS Feedback Eingabe</title>
+</head>
+
+<body>
+
+<span class="fb_title">{% comment %}Feedback: {% endcomment %}{{ type|fb_motivate }}</span>
+
+<form action="{{ fb_url }}" method="post" enctype="multipart/form-data" class="main" id="id_form">
+
+  <div class="fb_new">
+    <ol class="fb_types">
+  {% for t in types %}
+    {% ifequal type t %}
+      <li class="fb_type_{{ t }} fb_type_selected">{{ t|fb_type }}</li>
+    {% else %}
+      <li class="fb_type_{{ t }}"><a href="{% url feedback_input t 1 origin %}">{{ t|fb_type }}</a></li>
+    {% endifequal %}
+  {% endfor %}
+    </ol>
+    <ol class="fb_form">
+  {% if description_error %}
+      <li id="id_description_error" class="fb_error">Beschreibung fehlt!</li>
+  {% endif %}
+      <li><textarea id="id_description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
+      <li><input id="id_submit" type="submit" value="Abschicken" /></li>
+    </ol>
+  </div>
+
+  <input id="id_fb" type="hidden" name="fb_id" />
+
+  <ol class="fb_old">
+    <li class="fb_list_top">{{ type|fb_type_many }} anderer Benutzer</li>
+
+  {% if list %}
+    {% for fb in list %}
+    <li class="fb_list_item">
+    {% ifequal fb.me2 'yours' %}
+      <span class="fb_yours">(von Ihnen)</span>
+    {% endifequal %}
+    {% ifequal fb.me2 'u2' %}
+      <span class="fb_u2"><a href="#" id="id_{{ fb.id }}">Sie auch!</a></span>
+    {% endifequal %}
+    {% ifequal fb.me2 'me2' %}
+      <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
+    {% endifequal %}
+      <br/>
+      <div class="fb_description">{{ fb.description|wordwrap:40|truncate:80 }}</div>
+      <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
+    </li>
+    {% endfor %}
+    <li class="fb_list_bottom">
+    {% if page|greater:1 %}
+      <span class="fb_nav_prev"><a href="{{ fb_url_prev }}"><img src="{{ MEDIA_URL }}feedback/images/arrow_left.png" alt="vorheriger Eintrag" /></a></span>
+    {% endif %}
+    {% if page|less:pages %}
+      <span class="fb_nav_next"><a href="{{ fb_url_next }}"><img src="{{ MEDIA_URL }}feedback/images/arrow_right.png" alt="nächster Eintrag" /></a></span>
+    {% endif %}
+      <span class="fb_nav_info">Seite {{ page }} von {{ pages }} ({{ items }} {{ type|fb_type_items:items }} insgesamt)</span>
+    </li>
+  {% else %}
+    <li class="fb_nolist">
+      {{ type|fb_type_none}} {{ type|fb_type_many }}.
+    </li>
+  {% endif %}
+  </ol>
+
+</form>
+
+<div class="fb_js">
+  <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+  <script type="text/javascript">
+    window.addEvent('domready', function(){
+       
+      /*
+       * pre-input information display 
+       */
+
+      var Infohandler = new Class({
+        initialize: function(id, valfield, info, error) {
+          this.clicked = false;
+
+          var infohandler = this;
+          var field = $(id);
+
+          if (field.get(valfield) == '') {
+            field.set(valfield, info);
+
+            field.addEvent('click', function(event) {
+              event.stop();
+              if (infohandler.clicked) { // already cleaned
+                return;
+              }
+              infohandler.clicked = true;
+              field.set(valfield, '');
+              if (error) {
+                $(id + '_error').fade('out');
+              }
+            });
+
+            $('id_submit').addEvent('click', function(event) {
+              if (!infohandler.clicked) {
+                field.set(valfield, '');
+              }
+              // event propagates..
+            });
+          }
+        }
+      });
+
+      var description_handler = new Infohandler('id_description', 'text', 'Beschreibung {{ type|fb_type_of_your }}', {{ description_error|booljs }});
+
+
+      /*
+       *  me2
+       */
+
+      $(document.body).getElements('.fb_me2').addEvent('click', function(event) {
+        event.stop();
+        var id = $(event.target).get('id').substr(3);
+        $('id_fb').set('value', id);
+        $('id_form').submit();
+      });
+      $(document.body).getElements('.fb_u2').addEvent('click', function(event) {
+        event.stop();
+        var id = - $(event.target).get('id').substr(3);
+        $('id_fb').set('value', id);
+        $('id_form').submit();
+      });
+
+    });
+  </script>
+</div>
+
+</body>
+
+</html>

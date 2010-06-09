@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load compress %}
+
+{% block htmlcss %}
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/core.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/meetings.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/dashboard.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
+        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
+    {% endcompress %}
+{% endblock %}
+
+{% block account %} 
+  <a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a> 
+  {{ user.get_full_name|default:user.username }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
+  {% load userswitcher %}
+  {% userswitcher %}
+  <p>
+  {% comment %}
+  <a href=""><img src="{{ MEDIA_URL }}images/core/search.png" alt="search"/></a> 
+  <a href=""><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
+  {% endcomment %}
+  <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
+  </p> 
+{% endblock %}
+
+{% block usertoolbar %} 
+  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
+{% endblock %}
+        
+{% block usermenu %}
+  <ul>
+    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">Übersicht</a></li>
+    <li>
+      <span class="togglers">Studien</span>
+      <ul class="elements">
+	<li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
+        <li><a href="{% url ecs.core.views.create_submission_form %}">neuer Antrag</a></li>
+      </ul>
+    </li>
+    <li>
+      <span class="togglers">Studien Meldungen</span>
+      <ul class="elements">
+	<li><a href="{% url ecs.core.views.notification_list %}">Offene Meldungen</a></li>
+        <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
+      </ul>
+    </li>
+    <li>
+      <span class="togglers">Sitzungen</span>
+      <ul class="elements">
+        <li><a href="{% url ecs.core.views.meeting_list %}">Sitzungen</a></li>
+        <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</a></li>
+      </ul>
+    </li>
+    <li>
+      <span class="togglers">Demo</span>
+      <ul class="elements">
+          <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
+          <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
+          <li><a href="{% url ecs.messages.views.list_messages %}">Liste aller Nachrichten</a></li>
+          <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.pdfviewer.views.demo %}">PDF Viewer</a></li>
+      </ul>
+    </li>
+  </ul>
+{% endblock %}
+
+{% block headernav %}
+    {% block header_actions %}
+    {% endblock %}
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    {% compress js %}
+        <script type="text/javascript" src="{{ MEDIA_URL}}js/flext.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/Overlay.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Iframe.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
+        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
+    {% endcompress %}
+
+  <script type="text/javascript">
+    function get_origin() {
+      {% comment %}
+      // TODO either inject origin from application page or develop an URL scheme which allows solid inference by algorithm
+      //
+      // Counter example:
+      // When used on the "new submission" page the code turns 
+      //
+      //   http://ecsdev.ep3.at:8081/core/submission_form/new/6c8a98e534294bdf8ba558a037fcb9f8/
+      //
+      // into 
+      //
+      //   http-3A-2F-2Fecsdev.ep3.at-3A8081-2Fcore-2Fsubmission_form-2Fnew-2F6c8a98e534294bdf8ba558a037fcb9f8-2F
+      //
+      // where the feedback is grouped by this origin string but the id 6c8a98e534294bdf8ba558a037fcb9f8 will
+      // prevent usable grouping. => we replace the volatile <hex id> with static 'id' string
+      {% endcomment %}
+      var re_id_axe = /[0-9a-f]{32}/;
+      var x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
+      return x;
+    }
+
+    var accordionitem_name = '{% block menuSelection %}overview{% endblock %}';
+    var accordion_items = {
+      'overview': -1,
+      'submissions': 0,
+      'notifications': 1,
+      'meetings': 2,
+      'messages': 3,
+    };
+    var accordionitem = accordion_items[accordionitem_name];
+    if(typeof(accordionitem) === 'undefined') {
+      var accordionitem = accordion_items['overview'];
+    }
+    
+    function maxlength(e) {
+      if (e.control || e.alt || e.meta ||
+          e.key === 'up' || e.key === 'down' || e.key === 'left' || e.key === 'right' ||
+          e.key === 'backspace' || e.key === 'delete' || e.key === 'esc') {
+        return true;
+      }
+
+      var max = e.target.className.match(/maxlength-(\d*)/)[1];
+      return (e.target.value.length < max);
+    }
+
+    window.addEvent('domready', function(){
+
+      $$('textarea.maxlength').each(function(el) {
+        el.addEvent('keypress', maxlength);
+      });
+
+      // accordions
+      var toggles = $$('.togglers');
+      var content = $$('.elements');      
+
+      $$('#usermenu .elements').show();
+      var AccordionObject = new Accordion(toggles, content, { display: accordionitem });
+
+      // feedback system
+      var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
+      var feedback_handler = function(event) { 
+        event.stop();
+        var url = '/feedback/input/i/1/' + get_origin() + '/';
+        new MooDialog.Iframe(url, {
+          title: 'Feedback von {{ user.get_full_name }}',
+          size: {
+          width: 700,
+          height: 400
+        }});
+      };
+      feedback_triggers.addEvent('click', feedback_handler);
+      
+      // message popups
+      {% load messages %}
+      {% fetch_messages as new_messages %}
+      {% fetch_tasks as new_tasks %}
+      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      var newTasks = [{% for task in new_tasks %}{'__unicode__': '{{ task }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      newMessages.each(function(msg){
+          ecs.messages.alert('Neue Nachricht', '<b>{subject}</b> von {sender}'.substitute(msg));
+      });
+      newTasks.each(function(task){
+          ecs.messages.alert('Neuer Task', '<b>{__unicode__}</b>'.substitute(task));
+      });
+      
+      // workflow popups
+      
+      ecs.showWorkflowPopup = function(options){
+          var url = '{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}';
+          if(options && options.url){
+              url = options.url;
+          }
+          var dialog = new MooDialog.Iframe(url, {
+              title: 'Workflow',
+              size: {width: 700, height: 400}
+          });
+      };
+      
+      $('workflow_button').addEvent('click', function(){
+          ecs.showWorkflowPopup();
+          return false;
+      });
+      
+    });
+
+  </script>
+{% endblock %}

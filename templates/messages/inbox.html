@@ -1,0 +1,18 @@
+{% extends "messages/list.html" %}
+
+{% block content %}
+<h2>Inbox</h2>
+{{ block.super }}
+{% endblock %}
+
+{% block message_actions %}
+    {{ block.super }} | <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Antworten</a>
+{% endblock %}
+
+{% block extra_message_table_headers %}
+    <th>From</th>
+{% endblock %}
+
+{% block extra_message_table_cells %}
+    <td>{{ message.sender }}</td>
+{% endblock %}

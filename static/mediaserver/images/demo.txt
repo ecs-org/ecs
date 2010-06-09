@@ -1,0 +1,9 @@
+Intermediate Solution to initialize the PDF viewer demo 
+-------------------------------------------------------
+
+To fill the memcachedb with the two demo sets, issue:
+
+  ./manage.py render static/mediaserver/images/ecs-09-submission-form.pdf 1
+  ./manage.py render static/mediaserver/images/test-pdf-14-seitig.pdf 2
+
+or whereever you keep the above mentioned PDF docs

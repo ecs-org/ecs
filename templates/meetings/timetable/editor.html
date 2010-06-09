@@ -1,0 +1,134 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Neues Meeting
+{% endblock %}
+
+{% block content %}
+{% if running_optimization %}
+  <h1>Es läuft derzeit eine Optimierung!</h1>
+{% endif %}
+<div id="meeting_editor">
+    <h2>{{ meeting.start|date:'d.m.Y H:i' }}: {{ meeting.title }}</h2>
+    {% if not running_optimization %}
+        <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
+        | <a href="{% url ecs.core.views.add_timetable_entry meeting_pk=meeting.pk %}?break=yes">Pause hinzufügen</a>
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
+        {% comment %}| <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
+    {% endif %}
+    <div class="waiting_time">
+    Wartezeit: 
+        sum={{ meeting.metrics.waiting_time_total|simple_timedelta_format|default:'-' }},
+        avg={{ meeting.metrics.waiting_time_avg|simple_timedelta_format|default:'-' }}, 
+        max={{ meeting.metrics.waiting_time_max|simple_timedelta_format|default:'-' }}, 
+        min={{ meeting.metrics.waiting_time_min|simple_timedelta_format|default:'-' }},
+        var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
+    </div>
+    <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
+    <ul id="timetable">
+    {% for entry in meeting %}
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}">
+            <div class="dragHandle">#{{ entry.pk }} {% if not running_optimization %}<span style="color:#ffffff">DRAG ME</span>{% endif %}</div>
+            <h3>
+                {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+                {{ entry.title }}
+                {% if entry.submission %}<a href="#">{{ entry.submission.ec_number }}{{ entry.submission.project_title|smart_truncate:50 }}</a>{% endif %}
+                {% if entry.is_break %}Pause{% endif %}
+            </h3>
+            {% if not running_optimization %}
+                <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
+                <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                    <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
+                    <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
+                </form>
+            {% endif %}
+            {% if not entry.is_break %}
+            <div>Teilnehmer: 
+                {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <div style="position:absolute;right:0px;top:0px; width:200px">
+        <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
+        <ul id="userlist">
+            {% for user in meeting.users_with_constraints %}
+                <li><span class="user">{{ user }}</span>
+                    <div class="info">
+                    {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
+                        {% if waiting_time %}
+                            <div class="waiting_time">Wartezeit: {{ waiting_time|simple_timedelta_format }}</div>
+                        {% endif %}
+                    {% endwith %}
+                    {% if user.constraints %}
+                        <ul class="constraints">
+                            {% for constraint in user.constraints %}
+                                <li><span class="constraint_status">{{ meeting.metrics.constraint_violations|getitem:constraint|yesno:'1,0' }}</span>{{ constraint.start_time }} - {{ constraint.end_time }} ({{ constraint.weight }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <a href="{% url ecs.core.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+window.addEvent('domready', function(){
+{% if running_optimization %}
+    setTimeout(function() {
+      window.location.reload();
+    }, 10000);
+{% else %}
+    function getSortableIndex(el){
+        return $('timetable').getChildren().indexOf(el);
+    }
+    var dndInfo = {
+        startIndex: null
+    };
+    $$('.constraint_status').each(function(span){
+        var color = '#ff0000';
+        if(parseFloat(span.innerHTML) == 0){
+            color = '#00ff00';
+        }
+        span.setStyle('background-color', color);
+    });
+    $$('.entry form input').each(function(input){
+        input.addEvent('keydown', function(e){
+            if(e.code == 13){ // enter
+                input.getParent('form').submit();
+            }
+        });
+    });
+    new Sortables('timetable', {
+        clone: true,
+        opacity: 0.5,
+        revert: true,
+        handle: '.dragHandle',
+        onStart: function(el, clone){
+            clone.setStyle('z-index', 100);
+            dndInfo.startIndex = getSortableIndex(clone);
+        },
+        onComplete: function(el){
+            var toIndex = getSortableIndex(el);
+            var fromIndex = dndInfo.startIndex;
+            dndInfo.startIndex = null;
+            if(fromIndex != toIndex && fromIndex !== null){
+                window.location.href = '{% url ecs.core.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
+            }
+        }
+    });
+{% endif %}
+});
+</script>
+{% endblock %}

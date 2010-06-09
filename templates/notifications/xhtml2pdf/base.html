@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<style type="text/css">
+      @page {
+      size: a4;
+      margin: 1cm;
+      margin-bottom: 3cm;
+      @frame footer {
+      -pdf-frame-content: footer;
+      bottom: 2cm;
+      margin-left: 1cm;
+      margin-right: 1cm;
+      height: 1cm;
+      }
+      @frame footerpage {
+      -pdf-frame-content: footerpage;
+      bottom: 2cm;
+      margin-left: 18cm;
+      margin-right: 1cm;
+      height: 1cm;
+      }
+      }
+      div.header { text-align:center; width:18cm; border:1px solid #000 }
+      th, td {
+        padding: 2px;
+      }
+      body {
+        font-family: "Times New Roman", "Times", Serif;
+      }
+      p {
+        padding: 2px 0;
+      }
+    </style>
+</head>
+<body>
+
+<div class="header"><b><br>MITTEILUNG<br/></b>
+  Formular für die Meldung von Amendments, SUSARs und für sonstige Mitteilungen an österreichische Ethik-Kommissionen.
+<br>
+  Version 5.1 vom 25.08.2006 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Bitte immer die <i>aktuelle</i> Version verwenden (http://ethikkommissionen.at/)
+</div>
+
+<p align="center" style="margin-top: 0.14cm; margin-bottom: 0.28cm"> an folgende österreichische
+Ethik-Kommissionen: </p>
+
+<table border=1>
+  <tr>
+    <td align=left valign=top><span style="font-size:small">Adresse der Ethikkommission (optional)</span><br/>An die<br/>Ethikkommission<br/>der Medizinischen Universität Wien<br/>Borschkegasse 8b<br/>1090 Wien<br/></td>
+    <td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
+  </tr>
+</table>
+
+<center>
+<table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
+<col width="215"><col width="84"><col width="84"><col width="195">
+<tr><th width="215" height="24">Ethik-Kommission</th><th width="84">EK-Nummer</th>
+<th width="84">Datum des Votums</th><th width="195">Prüfer</th></tr>
+{% for investigator in notification.investigators.all %}
+<tr>
+  <td>{{ investigator.ethics_commission.name }}</td>
+  <td>{{ investigator.submission.submission.ec_number }}</td>
+  <td>{{ investigator.submission.date_of_protocol }}<!-- TODO: date_of_vote? -->
+  <td>{{ investigator.name }}</td>
+</tr>
+{% endfor %}
+</table>
+</center>
+
+{% block headitem %}
+<p><b>1. {{ notification.type.name }}</b></p>
+{% endblock %}
+
+<p><b>2. Angaben zum Forschungsprojekt</b></p>
+
+<p style="margin-left: 2cm; text-indent: -2cm">
+2.1. Projekttitel (Kurzbezeichnung):<br>
+<b>{% for submission in notification.submission_forms.all %}
+{{ submission.project_title }}{% if not forloop.last %}, {% endif %}
+{% endfor %}</b>
+</p>
+<p style="margin-left: 2cm; text-indent: -2cm">
+2.2. Protokollnummer (falls vorhanden):<br>
+<b>{% for submission in notification.submission_forms.all %}
+{{ submission.protocol_number|default_if_none:"unbekannt" }}{% if not forloop.last %}, {% endif %}
+{% endfor %}</b>
+</p>
+
+{% block mainitem %}
+<p style="margin-left: 1cm; text-indent: -1cm">
+<b>3. Begründung/Stellungnahme/Mitteilung</b><br>
+<b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
+{% endblock %}
+
+{% block documents %}
+{% if notification.documents.all %}
+<p style="margin-top: 0.2cm; margin-bottom: 0.2cm">
+<b>4. Anlagen</b></p>
+
+<ol>
+  {% for doc in notification.documents.all %}
+  <li>{{ doc.file }}</li>
+  {% endfor %}
+</ol>
+{% endif %}
+{% endblock %}
+
+
+<p style="margin-top: 1cm; margin-bottom: 2cm">
+<b>{% if notification.documents.all %} 5. {% else %} 4. {% endif %} Unterschrift</b></p>
+
+<table><tr><td align=left width=200>Unterschrift (Prüfer/in bzw. Antragsteller/in)</td><td align=center>Datum</td></tr></table>
+
+<!-- footer -->
+    <div id="footer">
+      Meldungsformular - Österreichische Ethikkommissionen, Version 5.1, 25.08.2006
+    </div>
+    <div id="footerpage">
+      Seite <pdf:pagenumber>
+    </div>
+
+</body>
+</html>

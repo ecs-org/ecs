@@ -8,7 +8,6 @@ import reversion
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
-    model = models.CharField(max_length=80, default='ecs.core.models.Notification')
     
     class Meta:
         app_label = 'core'

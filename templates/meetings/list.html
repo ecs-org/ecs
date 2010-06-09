@@ -1,0 +1,28 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+<h1>Liste aller Meetings</h1>
+{% endblock %}
+
+{% block headernav %}
+{% endblock %}
+
+{% block content %}
+
+<h2>Meetings</h2>
+<ul>
+    {% for meeting in meetings %}
+        <li>
+            {{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}
+                (<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
+                | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
+                | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>)
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
+
+{% block menuSelection %}meetings{% endblock %}

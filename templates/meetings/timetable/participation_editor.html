@@ -1,0 +1,126 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Teilnehmer für {{ meeting.start|date:'d.m.Y H:i' }}
+{% endblock %}
+
+{% block content %}
+<div id="meeting_participation_editor">
+    <form action="" method="post">
+    {% for entry in meeting %}
+        <div class="entry">
+            <h2>{{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}: {{ entry.submission.ec_number }} {{ entry.submission.project_title|smart_truncate:50 }}</h2>
+            <ul>
+            {% for cat in entry.medical_categories %}
+            <li>
+                <span class="category">{{ cat }}:</span>
+                <span id="users_{{ entry.pk }}_{{ cat.pk }}" class="user_list">
+                {% for user in entry.users_by_medical_category|getitem:cat %}
+                    <span>{{ user }}<input type="hidden" name="users_{{ entry.pk }}_{{ cat.pk }}" value="{{ user.pk }}" /></span>
+                {% endfor %}
+                </span>
+            </li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+    <span class="button"><input type="submit" value="Speichern"></span>
+    </form>
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+window.addEvent('domready', function(){
+    ecs.setupForms();
+    // FIXME: generalize this widget
+    ecs.InlineListEditor = new Class({
+        Implements: [Options],
+        options: {
+            template: ''
+        },
+        initialize: function(container, options){
+            this.container = $(container);
+            this.setOptions(options);
+            this.container.getElements('span').each(function(el){
+                this.setupItem(el);
+            }, this);
+
+            this.editorElement = new Element('span', {'class': 'inline_editor'});
+            this.addLink = new Element('a', {'class': 'add', html: 'add', events: { click: this.showEditor.bind(this)}});
+            var okLink = new Element('a', {'class': 'ok', html: 'ok', events: {click: this.okClicked.bind(this)}});
+            var cancelLink = new Element('a', {'class': 'cancel', html: 'cancel', events: {click: this.cancelClicked.bind(this)}});
+            
+            this.selectBox = new Element('select');
+            this.editorElement.appendChild(this.selectBox);
+            this.editorElement.appendChild(okLink);
+            this.editorElement.appendChild(cancelLink);
+            
+            this.loaded = false;
+            this.data = [];
+            this.values = [];
+            
+            this.container.grab(this.addLink);
+        },
+        setupItem: function(el){
+            (new Element('a', {'class': 'remove', html: 'remove', events: {click: function(){
+                el.dispose();
+            }}})).inject(el, 'top');
+        },
+        okClicked: function(){
+            var option = this.data[this.selectBox.selectedIndex];
+            var span = new Element('span', {html: option.username + '<input type="hidden" name="' + this.container.id + '" value="' + option.pk + '"/>'});
+            this.setupItem(span);
+            span.inject(this.addLink, 'before');
+            this.values.push(option);
+            this.hideEditor();
+        },
+        cancelClicked: function(){
+            this.hideEditor();
+        },
+        load: function(callback){
+            if(this.loaded){
+                if(callback){
+                    callback.apply(this);
+                }
+                return;
+            }
+            var request = new Request.JSON({
+                url: '/core/users/by_medical_category/',
+                data: {'category': this.container.id.split('_')[2]},
+                onSuccess: (function(options){
+                    this.data = options;
+                    options.each(function(option){
+                        this.selectBox.grab(new Element('option', {value: option.pk, html: option.username}));
+                    }, this);
+                    this.editorElement.inject(this.addLink, 'after');
+                    this.loaded = true;
+                    if(callback){
+                        callback.apply(this);
+                    }
+                }).bind(this)
+            });
+            request.send();
+        },
+        hideEditor: function(){
+            this.editorElement.dispose();
+            this.addLink.show();
+        },
+        showEditor: function(){
+            this.load(function(){
+                this.addLink.hide();
+                this.editorElement.inject(this.addLink, 'after');
+            });
+        }
+        
+    });
+    $$('.user_list').each(function(list){
+        new ecs.InlineListEditor(list);
+    });
+});
+</script>
+{% endblock %}

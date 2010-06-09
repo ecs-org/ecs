@@ -1,0 +1,455 @@
+/* headernav */
+
+.tab_headers li {
+  display: inline;
+  line-height: 30px;
+}
+ul.tab_headers {
+}
+.tab_headers li a {
+  text-decoration: none;
+  padding: 3px 5px;
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.tab_headers .active a {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+.tab_headers .active.errors a {
+  color: #fff;
+  background: #ff8000;
+}
+.tab_headers li a.delete_row{
+    border: none;
+    background: url(/static/images/core/remove.png) no-repeat;
+    width: 16px;
+    height: 16px;
+    padding: 0px;
+    position: relative;
+    top: 3px;
+    display: inline-block;
+    overflow: hidden;
+    text-indent: -1000px;
+}
+.tab_headers .errors a {
+  background: #fb6464;
+  color: #fff !important;
+  border: 1px solid #ff0000;
+}
+.header_actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 20px 10px 0 0;
+  display: block;
+  width: 105px;
+  text-align: center;
+}
+.header_actions a {
+  float: right;
+  padding: 3px;
+  margin-bottom: 5px;
+  display: block;
+  height: 20px;
+  width: 90px;
+  cursor: pointer;
+  z-index: 100;
+  color: #333;
+  text-decoration: none;
+}
+.button_save {
+  background: #84cefb;
+  border: 1px solid #ccc;  
+}
+.button_validate {
+  background: #84cefb;
+  border: 1px solid #ccc;  
+}
+.button_submit {
+  background: #84cefb;
+  border: 1px solid #ccc;  
+}
+
+/* headernav readonly */
+
+.readonly input, .readonly textarea, .readonly select {
+  color: #333;
+  background: #e4e4e4;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.readonly .tab_headers li a {
+  border: 1px solid #bbb;
+  background: #e4e4e4;
+  color: #333;
+}
+.readonly li.readonly_review a {
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.readonly li.readonly_review.active a {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+
+/* content */
+
+#content ul {
+  margin: 0 0 20px 20px;
+}
+input, textarea, select {
+  border: 1px solid #999;
+  padding: 2px;
+}
+
+/* sidebar */
+
+.togglers {
+  cursor: pointer;
+}
+
+/* form layout */
+
+.ui-tabs .ui-tabs-nav li a {
+    /* FIXME: this is a hack */
+    font-size: 12px;
+}
+.form.main .field, .form.main .tab {
+  background: #f9feff;
+  min-width: 700px;
+  display: block;
+}
+.form.main #tabs {
+  border: 1px solid #eee;
+  clear: both;
+  margin-bottom: 20px;
+}
+.form.main .field h3, .form.main.form.main .tab h3 {
+  font-size: 12pt;
+  letter-spacing: 1px;
+  padding: 5px 0 10px 5px;
+  line-break: normal;
+}
+.form.main, .form.main * {
+  font-size: 9pt;
+}
+*html .form.main .field {
+  width: 700px;
+}
+.form.main ol {
+  padding: 10px 0;
+  
+  display: block;
+}
+/*
+.form.main ol:last-child {
+  padding: 10px 0;
+  border-bottom: none;
+}
+*/
+.form.main ol li {
+  display: block;
+  clear: both;
+  list-style-type: none;
+  margin-bottom: 10px;
+}
+.form.main ol li input[type=text], .form.main ol li textarea {
+}
+.form.main ol li textarea {
+  height: 4em;
+  display: block;
+  width: 30em;
+}
+.form.main ol li.focus {
+  background-color: #eeeeff;
+}
+.form.main ol li label {
+  width: 220px;
+  padding: 0 10px;
+  margin-bottom: 10px;
+  text-align: right;
+  float: left;
+}
+/*
+.form.main ol li label:after {
+  content: ":";
+}
+*/
+.form.main th.label {
+  text-align: left;
+}
+.form.main .errors ul li {
+  margin-left: 220px;
+  display: block;
+  float: left;
+  color: #ff0000;
+  padding: 2px;
+}
+.form.main table td .errors li{
+    margin: 0px;
+    float: none;
+}
+.form.main ol li.BooleanField {
+  padding-left: 240px;
+}
+.form.main ol li.BooleanField label {
+  float: none;
+  padding-left: 1em;
+  text-align: left;
+}
+.form.main ol li.BooleanField label:after {
+  content: none;
+}
+.form.main ol li.BooleanField input {
+  float: left;
+}
+.form.main ol li div.input{
+  float: left;
+}
+.form.main ol li .notes {
+  font-size: 0.9em;
+  color: #666666;
+  padding-left: 10px;
+}
+.form.main th.label .notes{
+  display: block;
+}
+.form.main ol li .help_text {
+  margin: 0 0 10px 230px;
+  display: block;
+  color: #666;
+  padding-left: 10px;
+}
+.form.main ol li.BooleanField .help_text {
+  clear: both;
+  margin: 10px 0 0 20px;
+  height: 15px;
+  display: block;
+  color: #666;
+}
+.inline_formset .form {
+  position: relative;
+  padding-top: 20px;
+}
+tr.form td{
+  vertical-align: top;
+}
+.inline_formset .form a.delete_row,
+.investigator_tab a.delete_row {
+  background: url(/static/images/core/remove.png) no-repeat;
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  text-indent: -9999px;
+}
+div.inline_formset .form a.delete_row {
+  display: block;
+  height: 20px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.form.main a.add_row, #meeting_constraint_editor a.add_row {
+  background: url(/static/images/core/add.png) no-repeat;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  text-indent: -9999px;
+  /* FIXME: margin is needed because tables still have cellspacing */
+  margin-left: 2px;
+}
+.form.main .investigator_tab a.add_row,
+.form.main .investigator_tab a.delete_row {
+    display: inline;
+    overflow: visible;
+    width: auto;
+    text-indent: 0px;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+#content a.delete_row:hover, #content a.add_row:hover {
+  border-bottom: 0 none !important;
+}
+
+fieldset.disabled {
+  display: none;
+}
+.form.main ol li .mooeditable-container {
+  border: 1px solid #666666;
+  margin-left: 240px;
+  overflow: hidden;
+}
+.form.main ol li .mooeditable-ui-toolbar .toolbar-item,
+.form.main ol li .mooeditable-ui-toolbar .toolbar-separator {
+  margin-left: 0px;
+}
+.form.main ol li .mooeditable-iframe{
+}
+.form.main ol li .rte_display {
+  display: block;
+  width: 350px;
+  margin-left: 240px;
+  padding: 0.5em;
+  margin-bottom: 10px;
+  min-height: 4em;
+  background-color: #fff;
+  border: 1px solid #999;
+}
+.form.main ol li .rte_display p {
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 14pt;
+  display: block;
+}
+.form.main ol li .rte_display * {
+  margin: 0px;
+  padding: 0px;
+  left: 0px;
+  text-indent: 0px;
+}
+.form.main ol li .rte_display blockquote{
+    margin-left: 2em;
+}
+.form.main ol li .paperform_number {
+  color: #666666;
+  font-size: 0.9em;
+}
+.form.main ol li .paperform_number:before {
+  content: "[";
+}
+.form.main ol li .paperform_number:after {
+  content: "]";
+}
+
+.form.main li.max10 input{ width: 60px;}
+.form.main li.max20 input{ width: 100px;}
+.form.main li.max40 input{ width: 200px;}
+.form.main li.max60 input{ width: 340px;}
+
+.form .wide {
+  width: 16em;
+}
+.form .narrow {
+  width: 10em;
+}
+
+/* specific formset styles */
+
+#measure_formset textarea,
+#routinemeasure_formset textarea{
+    height: 1.4em;
+}
+
+.form.main ol li .datepicker_toggler {
+  position: absolute;
+  text-indent: -9999px; 
+  background: url(/static/images/core/calendar.png) no-repeat;
+  height: 16px;
+  width: 16px !important;
+  margin-left: 5px;
+}
+.form .star {
+  margin: 0 5px 0 3px;
+  font-size: 14px;
+}
+.form #id_start_1 {
+  margin-left: 30px;
+}
+.form textarea#id_project_title, .form textarea#id_german_summary {
+  height: 5.5em;
+}
+.form input#id_title {
+  width: 20em;
+}
+.form td.15em textarea {
+  width: 15em;
+}
+
+/* documents */
+
+.doclist {
+  border: 1px solid #666666;
+}
+.doclist h3 {
+  font-size: 1em;
+  background-image: url(/static/images/core/icon-triangle.png);
+  background-repeat: no-repeat;
+  padding-left: 24px;
+}
+.doclist div {
+  display: block;
+  margin-left: 2em;
+  padding-left: 24px;
+  background-image: url(/static/images/core/icon-doc.png);
+  background-repeat: no-repeat; 
+}
+
+/* notifications */
+
+table.notification th {
+    text-align: right;
+    padding-right: 1em;
+}
+table.notif_meta {
+    border: 1px solid #cccccc;
+    border-left: none;
+    border-collapse: collapse;
+    margin-bottom: 1em;
+    width: 100%;
+}
+table.notif_meta td, table.notif_meta th {
+    border-left: 1px solid #cccccc;
+    padding: 0.2em;
+}
+table.notif_meta th {
+    text-align: left;
+    border-bottom: 1px solid #cccccc;
+}
+
+#content ol.submission_list {
+    list-style: none;
+    font-size: 10pt;
+    margin-bottom: 2em;
+}
+#content ol.submission_list h3 {
+    margin-bottom: 5px;
+    font-size: 11pt;
+    font-weight: normal;
+}
+content ol.submission_list h3 .ecnr {
+    float: left;
+    display: inline-block;
+    width: 80px;
+    font-weight: bold;
+    margin-left: -80px;
+}
+#content ol.submission_list li {
+    padding: 0.5em;
+    padding-left: 80px;
+}
+
+#content ol.submission_list li.even {
+    background-color: #eeeeee;
+}
+content ol.submission_list li .actions {
+    margin-bottom: 5px;
+}
+#content ol.submission_list li .info {
+}
+#content .overview h2 {
+    font-size: ;
+}
+
+.checklist_field { 
+    visibility: visible; 
+}
+.checklist_field_hidden { 
+    visibility: hidden; 
+}

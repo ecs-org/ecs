@@ -4,10 +4,6 @@ from django.contrib.auth.models import User
 
 import reversion
 
-class Workflow(models.Model):
-    class Meta:
-        app_label = 'core'
-
 class EthicsCommission(models.Model):
     name = models.CharField(max_length=120)
     address_1 = models.CharField(max_length=120)
@@ -26,43 +22,6 @@ class EthicsCommission(models.Model):
     
     def __unicode__(self):
         return self.name
-
-
-# FIXME: Amendment is unused
-class Amendment(models.Model):
-    # FIXME: rename to `submission_form`
-    submissionform = models.ForeignKey('core.SubmissionForm')
-    order = models.IntegerField()
-    number = models.CharField(max_length=40)
-    date = models.DateField()
-    
-    class Meta:
-        app_label = 'core'
-
-class Checklist(models.Model):
-    class Meta:
-        app_label = 'core'
-
-class VoteReview(models.Model):
-    class Meta:
-        app_label = 'core'
-
-class Vote(models.Model):
-    votereview = models.ForeignKey(VoteReview)
-    submissionform = models.ForeignKey('core.SubmissionForm', null=True)
-    checklists = models.ManyToManyField(Checklist)
-    
-    class Meta:
-        app_label = 'core'
-
-class SubmissionReview(models.Model):
-    class Meta:
-        app_label = 'core'
-
-
-class NotificationAnswer(models.Model):
-    class Meta:
-        app_label = 'core'
 
 
 class ExpeditedReviewCategory(models.Model):
@@ -89,13 +48,7 @@ class MedicalCategory(models.Model):
 
 
 # Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-if not reversion.is_registered(Amendment):
-    reversion.register(Amendment) 
-    reversion.register(Checklist) 
+if not reversion.is_registered(EthicsCommission):
     reversion.register(EthicsCommission) 
-    reversion.register(SubmissionReview) 
-    reversion.register(NotificationAnswer) 
-    reversion.register(Vote) 
-    reversion.register(VoteReview) 
     reversion.register(MedicalCategory)
     reversion.register(ExpeditedReviewCategory)

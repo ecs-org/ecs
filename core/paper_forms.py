@@ -114,8 +114,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.5', 'invoice_fax', u'FAX'),
     FieldInfo('1.5.6', 'invoice_email', u'e-mail'),
     FieldInfo('1.5.7', 'invoice_uid', u'UID-Nummer'),
-    FieldInfo(None, 'invoice_uid_verified_level1', None),
-    FieldInfo(None, 'invoice_uid_verified_level2', None),
+    FieldInfo(None, 'invoice_uid_verified_level1', None, short_label=u'MWST Nr verifiziert (Stufe1)'),
+    FieldInfo(None, 'invoice_uid_verified_level2', None, short_label=u'MWST Nr verifiziert (Stufe2)'),
     # 2. Eckdaten der Studie
     # 2.1 Art des Projektes
     FieldInfo('2.1.1', 'project_type_non_reg_drug', u'Klinische Prüfung eines nicht registrierten Arzneimittels'),
@@ -129,12 +129,13 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.4.3', 'project_type_medical_device_performance_evaluation', u'Leistungsbewertungsprüfung (In-vitro-Diagnostika)'),
     FieldInfo('2.1.5', 'project_type_basic_research', u'Nicht-therapeutische biomedizinische Forschung am Menschen (Grundlagenforschung)'),
     FieldInfo('2.1.6', 'project_type_genetic_study', u'Genetische Untersuchung'),
-    FieldInfo('2.1.7', 'project_type_register', u'Register'), # new
-    FieldInfo('2.1.8', 'project_type_biobank', u'Biobank'), # new
-    FieldInfo('2.1.9', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
-    FieldInfo('2.1.10', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
-    FieldInfo('2.1.11', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'), # was: 2.17
-    FieldInfo('2.1.12', 'project_type_education_context', u'Dissertation / Diplomarbeit'), # was: 2.1.8 + 2.1.9
+    FieldInfo('2.1.7', 'project_type_misc', u'Sonstiges, bitte spezifizieren', help_text=u'z.B. Diätetik, Epidemiologie, etc.'),
+    FieldInfo('2.1.8/9', 'project_type_education_context', u'Dissertation / Diplomarbeit'),
+    FieldInfo('2.1.10', 'project_type_register', u'Register'), # new
+    FieldInfo('2.1.11', 'project_type_biobank', u'Biobank'), # new
+    FieldInfo('2.1.12', 'project_type_retrospective', u'Retrospektive Datenauswertung'), # new
+    FieldInfo('2.1.13', 'project_type_questionnaire', u'Fragebogen Untersuchung'), # new
+    FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=u'Psychologische Studie'), # new
     FieldInfo('2.2', 'specialism', u'Fachgebiet'),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', u'Prüfsubstanz(en)'),
@@ -262,7 +263,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.4.2', 'submitter_is_main_investigator', u'Hauptprüfer/in (monozentrische Studie)'),
     FieldInfo('9.4.3', 'submitter_is_sponsor', u'Sponsor bzw. Vertreter/in des Sponsors'),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', u'vom Sponsor autorisierte Person/Organisation'),
-    FieldInfo(None, 'submitter_agrees_to_publishing', None),
+    FieldInfo(None, 'submitter_agrees_to_publishing', None, short_label=u'Einreicher stimmt der Veröffentlichung zu'),
 ))
 
 

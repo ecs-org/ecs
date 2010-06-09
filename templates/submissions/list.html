@@ -1,0 +1,48 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+
+<h1>Liste aller Studien</h1>
+{% endblock %}
+
+{% block content %}
+
+{% if stashed_submission_forms%}
+<div class="overview">
+    <h2>Offene Studien</h2>
+    <ol class="submission_list">
+        {% for docstash in stashed_submission_forms %}
+            {% if docstash.current_value %}
+                <li class="{% cycle 'even' 'odd' %}">
+                    <h3><span class="ecnr">?</span>{{ docstash.current_name|default:"<i>Unbenannt</i>" }}</h3>
+                    <div class="actions"><a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">Bearbeiten</a></div>
+                    <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}
+
+{% if unscheduled_submissions %}
+    <div class="overview">
+        <h2>Eingereichte Studien ohne Sitzungszuordnung</h2>
+        {% with unscheduled_submissions as submissions %}
+            {% include 'submissions/list.inc' %}
+        {% endwith %}
+    </div>
+{% endif %}
+
+{% for meeting, submissions in meetings %}
+    <div class="overview">
+        <h2>Studien für die Sitzung am {{ meeting.start|date:'d.m.Y' }}{% if meeting.title %} ({{ meeting.title }}){% endif %}</h2>
+        {% include 'submissions/list.inc' %}
+    </div>
+{% endfor %}
+
+
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}

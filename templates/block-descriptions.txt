@@ -1,16 +1,18 @@
-gone: demo-html.html  : The original html page
-gone: demo-django.html: Should produce the same like demo-html.html but
-   is produced via extending base.html as django template 
-
-== base.html ==
-[main template]
+== minimal.html ==
+[minimal xhtml template]
   defines 
  * htmltype [doctype]
  * htmltitle [title of actual] 
  * htmlmeta [additional meta informations]
  * htmlcss [additional css]
+ * htmlbody [the body of the html document]
  * jshead [javascript laoded in header]
  * jsbottom [javascript loaded in footer]
+
+== base.html ==
+extends "minimal.html"
+[main template]
+  defines 
  * content [the main working place]
     
 == should be in header.html ==

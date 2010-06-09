@@ -1,0 +1,33 @@
+{% load compress %}
+{% block htmltype %}
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% endblock %}
+
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        {% block htmlmeta %}{% endblock %}
+        <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
+        {% block htmlcss %}
+            {% compress css %}
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/ecs/base.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/Roar.css" />
+            {% endcompress %}
+        {% endblock %}         
+        {% block jshead %}{% endblock %}
+    </head>
+    <body>
+        {% block htmlbody %}{% endblock %}
+        {% block jsbottom %}
+            {% compress js %}
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/dbug.js"></script>
+             {% endcompress %}
+        {% endblock %}
+    </body>
+</html>

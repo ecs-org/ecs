@@ -10,7 +10,7 @@ urlpatterns = patterns(
     '',
     # Example:
     # (r'^ecs/', include('ecs.foo.urls')),
-    url(r'^$', 'ecs.core.views.index'),
+    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/', 'permanent': True}),
 
     url(r'^notification/new/$', 'ecs.core.views.select_notification_creation_type'),
     url(r'^notification/new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_notification'),
@@ -21,9 +21,18 @@ urlpatterns = patterns(
 
     url(r'^document/(?P<document_pk>\d+)/download/$', 'ecs.core.views.download_document'),
 
+    url(r'^submission/(?P<submission_pk>\d+)/edit/', 'ecs.core.views.edit_submission'),
+    url(r'^submission/(?P<submission_pk>\d+)/start_workflow/', 'ecs.core.views.start_workflow'),
+    url(r'^submission/(?P<submission_pk>\d+)/copy_form/', 'ecs.core.views.copy_latest_submission_form'),
+    url(r'^submission/(?P<submission_pk>\d+)/schedule/', 'ecs.core.views.schedule_submission'),
+    url(r'^submission/(?P<submission_pk>\d+)/messages/send/', 'ecs.messages.views.send_message'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/pdf/$', 'ecs.core.views.submission_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/copy/$', 'ecs.core.views.copy_submission_form'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/readonly/$', 'ecs.core.views.readonly_submission_form'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/(?P<blueprint_pk>\d+)/$', 'ecs.core.views.checklist_review'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/review/executive/$', 'ecs.core.views.executive_review'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/review/thesis/$', 'ecs.core.views.retrospective_thesis_review'),
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
     
@@ -40,5 +49,6 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'ecs.core.views.meetings.edit_user_constraints'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/(?:(?P<top_pk>\d+)/)?$', 'ecs.core.views.meeting_assistant'),
 
 )

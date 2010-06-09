@@ -1,0 +1,54 @@
+{% extends "submissions/base_form.html" %}
+{% load core %} 
+
+{% block workflow_query_params %}submission={{ submission_form.submission_id }}{% endblock %}
+
+{% block headertext %}
+  {{ submission_form.submission.ec_number }} {{ submission_form.project_title }}
+{% endblock %}
+
+{% block headernav %}
+  <div class="readonly">
+    <ul class="tab_headers">
+    {% block tab_headers %}
+        {% for tab, fieldsets in tabs %}
+            {% ifnotequal tab "Zentrum" %}
+            <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+            {% endifnotequal %}
+        {% endfor %}
+    {% endblock %}
+    </ul>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="readonly">
+    {{ block.super }}
+  </div>
+{% endblock %}
+
+{% block tabs %}
+    {{ block.super }}
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript"> 
+        window.addEvent('domready', function(){
+            [
+                'id_project_type_misc', 
+                'id_pharma_checked_substance', 
+                'id_pharma_reference_substance', 
+                'id_substance_p_c_t_period',
+                'id_medtech_checked_product',
+                'id_medtech_reference_substance',
+                'id_medtech_technical_safety_regulations',
+                'id_medtech_departure_from_regulations',
+                'id_additional_therapy_info',
+        
+            ].each(function(id){
+                ecs.setupRichTextEditor($(id), true);
+            });
+        });
+    </script>
+{% endblock %}

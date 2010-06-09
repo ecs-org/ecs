@@ -1,0 +1,42 @@
+{% extends "submissions/readonly_form.html" %}
+{% load core %} 
+
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
+{% block tab_headers %}
+    <li class="readonly_review"><a href="#thesis_review_tab">Thesis Review</a></li>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+{% endblock %}
+
+{% block tabs %}
+    {{ block.super }}
+      <div id="thesis_review_tab" class="tab">
+          <form action="" method="post">
+              <ol>
+              {% for field_name in retrospective_thesis_review_form.fields %}
+                  {% with retrospective_thesis_review_form|getitem:field_name as field %}
+                      {% include "forms/field.html" %}
+                  {% endwith %}
+              {% endfor %}
+              </ol>
+              <input type="submit" value="Speichern" />
+          </form>
+      </div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    {% if retrospective_thesis_review_form.is_valid %}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.showWorkflowPopup({quickClose: true});
+        });
+    </script>
+    {% endif %}
+{% endblock %}

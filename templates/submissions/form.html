@@ -1,0 +1,69 @@
+{% extends "submissions/base_form.html" %}
+{% load core %} 
+
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
+{% block header_actions %}
+    {{ block.super }}
+    <div class="header_actions">
+      <a href="" id="save-button" class="button_save">Speichern</a>
+      <a href="" id="validate-button" class="button_validate">Validieren</a>
+      <a href="" id="submit-button" class="button_submit">Einreichen</a>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data" class="form tabbed main">
+        {{ block.super }}
+        <input type="submit" name="validate" value="validate" class="hidden" />
+        <input type="submit" name="submit" value="submit" class="hidden" />
+    </form>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript"> 
+        window.addEvent('domready', function(){
+            var formsets = [
+                '{{ measure_formset.prefix }}', 
+                '{{ routinemeasure_formset.prefix }}', 
+                '{{ nontesteduseddrug_formset.prefix }}', 
+                '{{ foreignparticipatingcenter_formset.prefix }}', 
+            ].map(function(prefix){
+                return new ecs.InlineFormSet($(prefix + '_formset'), {
+                    prefix: prefix
+                });
+            });
+            
+            $('save-button').addEvent('click', function(){
+                ecs.mainForm.autosave(true);
+                return false;
+            });
+            $('validate-button').addEvent('click', function(){
+                ecs.mainForm.submit('validate');
+                return false;
+            });
+            $('submit-button').addEvent('click', function(){
+                ecs.mainForm.submit('submit');
+                return false;
+            });
+            
+            [
+                'id_project_type_misc', 
+                'id_pharma_checked_substance', 
+                'id_pharma_reference_substance', 
+                'id_substance_p_c_t_period',
+                'id_medtech_checked_product',
+                'id_medtech_reference_substance',
+                'id_medtech_technical_safety_regulations',
+                'id_medtech_departure_from_regulations',
+                'id_additional_therapy_info',
+                
+            ].each(function(id){
+                ecs.setupRichTextEditor($(id));
+            });
+        });
+    </script>
+{% endblock %}

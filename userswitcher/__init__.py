@@ -1,0 +1,1 @@
+SESSION_KEY = 'userswitcher-user_pk'

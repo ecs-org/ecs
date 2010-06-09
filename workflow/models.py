@@ -1,4 +1,4 @@
-import datetime, uuid
+import datetime
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
@@ -10,28 +10,36 @@ from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
 NODE_TYPE_CATEGORY_CONTROL = 2
-NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY = 3
-NODE_TYPE_CATEGORY_SUBGRAPH = 4
+NODE_TYPE_CATEGORY_SUBGRAPH = 3
+
+class NodeTypeManager(models.Manager):
+    def create(self, **kwargs):
+        model = kwargs.pop('model', None)
+        if model:
+            kwargs['content_type'] = ContentType.objects.get_for_model(model)
+        data_type = kwargs.get('data_type', None)
+        if isinstance(data_type, models.base.ModelBase):
+            kwargs['data_type'] = ContentType.objects.get_for_model(data_type)
+        return super(NodeTypeManager, self).create(**kwargs)
 
 class NodeType(models.Model):
     CATEGORIES = (
         (NODE_TYPE_CATEGORY_ACTIVITY, 'activity'),
         (NODE_TYPE_CATEGORY_CONTROL, 'control'),
-        (NODE_TYPE_CATEGORY_DYNAMIC_ACTIVITY, 'dynamic activity'),
         (NODE_TYPE_CATEGORY_SUBGRAPH, 'subgraph'),
     )
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
     category = models.PositiveIntegerField(choices=CATEGORIES, db_index=True)
-    content_type = models.ForeignKey(ContentType, null=True)
+    content_type = models.ForeignKey(ContentType, null=True, related_name='workflow_node_types')
     implementation = models.CharField(max_length=200)
+    data_type = models.ForeignKey(ContentType, null=True)
     
-    class Meta:
-        unique_together = ('content_type', 'implementation')
-        
+    objects = NodeTypeManager()
+    
     def save(self, **kwargs):
         if not self.implementation and self.is_subgraph:
-            self.implementation = ".%s" % uuid.uuid4().hex
+            self.implementation = 'ecs.workflow.patterns.subgraph'
         super(NodeType, self).save(**kwargs)
     
     @property
@@ -47,6 +55,8 @@ class NodeType(models.Model):
         return self.category == NODE_TYPE_CATEGORY_CONTROL
         
     def __unicode__(self):
+        if self.data_type:
+            return "%s(%s)" % (self.name, self.data_type)
         return self.name
         
 class GraphManager(models.Manager):
@@ -74,13 +84,19 @@ class Graph(NodeType):
     def end_nodes(self):
         return self.nodes.filter(is_end_node=True)
         
-    def create_node(self, nodetype, start=False, end=False, name=''):
+    def create_node(self, nodetype, start=False, end=False, name='', data=None):
         if isinstance(nodetype, NodeHandler):
             nodetype = nodetype.node_type
-        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name)
+        if nodetype.data_type:
+            if not isinstance(data, nodetype.data_type.model_class()):
+                raise TypeError("nodes of type %s require data of type %s, got: %s" % (nodetype, nodetype.data_type.model_class(), type(data)))
+        elif data:
+            raise TypeError("nodes of type %s may not carry data" % nodetype)
+        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name, data=data or nodetype)
         
-    def start_workflow(self, **kwargs):
-        return Workflow.objects.create(graph=self, **kwargs)
+    def create_workflow(self, **kwargs):
+        workflow = Workflow.objects.create(graph=self, **kwargs)
+        return workflow
 
 
 class Guard(models.Model):
@@ -96,19 +112,24 @@ class Node(models.Model):
     name = models.CharField(max_length=100, blank=True)
     graph = models.ForeignKey(Graph, related_name='nodes')
     node_type = models.ForeignKey(NodeType)
+    data_id = models.PositiveIntegerField(null=True)
+    data_ct = models.ForeignKey(ContentType, null=True)
+    data = GenericForeignKey(ct_field='data_ct', fk_field='data_id')
     outputs = models.ManyToManyField('self', related_name='inputs', through='Edge', symmetrical=False)
     is_start_node = models.BooleanField(default=False)
     is_end_node = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u"%s (#%s)" % (self.node_type, self.pk)
+        if self.name:
+            return self.name
+        return u"Node: %s" % (self.node_type)
 
     def add_edge(self, to, guard=None, negate=False, deadline=False):
         if guard:
             guard = guard.instance
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negate=negate, deadline=deadline)
         
-    def receive_token(self, workflow, source=None):
+    def receive_token(self, workflow, source=None, trail=None):
         flow_controller = registry.get_handler(self)
         token = workflow.tokens.create(
             node=self, 
@@ -116,6 +137,8 @@ class Node(models.Model):
             deadline=flow_controller.get_deadline(self, workflow),
             locked=flow_controller.is_locked(self, workflow),
         )
+        if trail:
+            token.trail = trail
         token_created.send(token)
         flow_controller.receive_token(token)
         
@@ -125,31 +148,29 @@ class Node(models.Model):
             tokens = tokens.filter(locked=locked)
         return tokens
     
-    def peek_token(self, workflow, locked=None):
+    def get_token(self, workflow, locked=None):
         tokens = self.get_tokens(workflow, locked=locked)[:1]
         if tokens:
             return tokens[0]
         return None
     
-    def pop_token(self, workflow, locked=None):
-        token = self.peek_token(workflow, locked=locked)
-        if token:
+    def progress(self, *tokens, **kwargs):
+        assert tokens, "Node.progress() must be called with at least one Token instance"
+        deadline = kwargs.pop('deadline', False)
+        workflow = tokens[0].workflow
+        for token in tokens:
             token.consume()
-            return token
-        return None
-        
-    def progress(self, workflow, deadline=False):
         if self.is_end_node:
             workflow.finish(self)
         else:
             for edge in self.edges.filter(deadline=deadline).select_related('to_node'):
                 if edge.check_guard(workflow):
-                    edge.to_node.receive_token(workflow, source=self)
+                    edge.to_node.receive_token(workflow, source=self, trail=tokens)
     
     def handle_deadline(self, token):
         registry.get_handler(self).handle_deadline(token)
         deadline_reached.send(token)
-        self.progress(token.workflow, deadline=True)
+        self.progress(token, deadline=True)
         
     def unlock(self, workflow):
         registry.get_handler(self).unlock(self, workflow)
@@ -164,7 +185,7 @@ class Edge(models.Model):
     
     def check_guard(self, workflow):
         if not self.guard_id:
-            return True
+            return not self.negate
         return self.negate != registry.get_guard(self).check(workflow)
 
 
@@ -193,8 +214,7 @@ class Workflow(models.Model):
         self.save(force_update=True)
         workflow_finished.send(self)
         if self.parent:
-            self.parent.consume()
-            self.parent.node.progress(self.parent.workflow)
+            self.parent.node.progress(self.parent)
         
 
 class TokenManager(models.Manager):
@@ -214,7 +234,8 @@ class TokenQuerySet(models.query.QuerySet):
 class Token(models.Model):
     workflow = models.ForeignKey(Workflow, related_name='tokens')
     node = models.ForeignKey(Node, related_name='tokens')
-    source = models.ForeignKey(Node, related_name='sent_tokens', null=True)
+    trail = models.ManyToManyField('self', related_name='future', symmetrical=False)
+    source = models.ForeignKey(Node, related_name='sent_tokens', null=True) # denormalized: can be derived from trail
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
@@ -245,16 +266,35 @@ class Token(models.Model):
     def handle_deadline(self):
         if not self.deadline:
             return
-        self.consume()
         self.node.handle_deadline(self)
+    
+    @property
+    def activity_trail(self):
+        act_trail = set()
+        for token in self.trail.select_related('node__node_type'):
+            if token.node.node_type.is_activity:
+                act_trail.add(token)
+            else:
+                act_trail.update(token.activity_trail)
+        return act_trail
         
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
+        
+    def __unicode__(self):
+        return u"%sToken at %s" % (self.is_consumed and 'Consumed ' or '', self.node)
+
 
 import sys
 if 'test' in sys.argv:
     class Foo(models.Model):
         flag = models.BooleanField(default=False)
 
+        class Meta:
+            app_label = 'workflow'
+            
+    class FooReview(models.Model):
+        name = models.CharField(max_length=30)
+        
         class Meta:
             app_label = 'workflow'

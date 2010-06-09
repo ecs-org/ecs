@@ -540,9 +540,661 @@
   }, 
   {
     "pk": 1, 
+    "model": "core.investigator", 
+    "fields": {
+      "specialist": "", 
+      "fax": "", 
+      "name": "Univ. Doz. Dr. Ruth Ladenstein", 
+      "submission_form": 1, 
+      "subject_count": 1, 
+      "mobile": "", 
+      "organisation": "Kinderspital St. Anna", 
+      "ethics_commission": 1, 
+      "phone": "", 
+      "jus_practicandi": false, 
+      "main": false, 
+      "email": "", 
+      "certified": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "core.notificationtype", 
+    "fields": {
+      "name": "SAE Bericht", 
+      "form": "ecs.core.forms.NotificationForm"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "core.notificationtype", 
+    "fields": {
+      "name": "Abschlussbericht", 
+      "form": "ecs.core.forms.CompletionReportNotificationForm"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "core.notificationtype", 
+    "fields": {
+      "name": "Zwischenbericht", 
+      "form": "ecs.core.forms.ProgressReportNotificationForm"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "core.notificationtype", 
+    "fields": {
+      "name": "Protokoll\u00e4nderung", 
+      "form": "ecs.core.forms.NotificationForm"
+    }
+  },
+  {
+    "pk": 18, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "PsychAna", 
+      "name": "Psychoanalyse", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "ImmunPatho", 
+      "name": "Immunpathologie", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "P\u00e4d", 
+      "name": "P\u00e4diatrie", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Transfus", 
+      "name": "Transfusionsmedizin", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "PysMed", 
+      "name": "Physikalischemedizin", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 43, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Intensiv", 
+      "name": "Intensivmedizin", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 45, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "plChir", 
+      "name": "Plastische Chirugie", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 46, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "HTChir", 
+      "name": "Herz-Thorax Chirugie", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 50, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Stats", 
+      "name": "Statistik", 
+      "users": []
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Onko", 
+      "name": "Onkologie", 
+      "users": [
+        777, 
+        778, 
+        815
+      ]
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Infektio", 
+      "name": "Infektiologie", 
+      "users": [
+        783
+      ]
+    }
+  }, 
+  {
+    "pk": 59, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Innere", 
+      "name": "Innere Medizin", 
+      "users": [
+        784
+      ]
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Kardio", 
+      "name": "Kardiologie", 
+      "users": [
+        785, 
+        786, 
+        787, 
+        788, 
+        789
+      ]
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Angio", 
+      "name": "Angiologie", 
+      "users": [
+        790, 
+        791, 
+        792
+      ]
+    }
+  }, 
+  {
+    "pk": 38, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Pulmo", 
+      "name": "Pulmologie", 
+      "users": [
+        793, 
+        794
+      ]
+    }
+  }, 
+  {
+    "pk": 39, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Endo", 
+      "name": "Endokrinologie", 
+      "users": [
+        795, 
+        796, 
+        816, 
+        817
+      ]
+    }
+  }, 
+  {
+    "pk": 40, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Nepho", 
+      "name": "Nephrologie", 
+      "users": [
+        797, 
+        798, 
+        799
+      ]
+    }
+  }, 
+  {
+    "pk": 41, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Gasto", 
+      "name": "Gastroenterologie", 
+      "users": [
+        800, 
+        801, 
+        802, 
+        803
+      ]
+    }
+  }, 
+  {
+    "pk": 42, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Rheuma", 
+      "name": "Rheumatologie", 
+      "users": [
+        804, 
+        805
+      ]
+    }
+  }, 
+  {
+    "pk": 44, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Chir", 
+      "name": "Chirugie", 
+      "users": [
+        889, 
+        807, 
+        808, 
+        809, 
+        810, 
+        811, 
+        812, 
+        822, 
+        824, 
+        861
+      ]
+    }
+  }, 
+  {
+    "pk": 47, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Gyn", 
+      "name": "Gyn\u00e4gologie", 
+      "users": [
+        815, 
+        816, 
+        817, 
+        813, 
+        814
+      ]
+    }
+  }, 
+  {
+    "pk": 48, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "HNO", 
+      "name": "Hals-Nasen-Ohrenkrankheiten", 
+      "users": [
+        818, 
+        819, 
+        820
+      ]
+    }
+  }, 
+  {
+    "pk": 49, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "An\u00e4sth", 
+      "name": "An\u00e4sthesie", 
+      "users": [
+        821, 
+        822, 
+        823, 
+        824
+      ]
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Neuro", 
+      "name": "Neurologie", 
+      "users": [
+        825, 
+        826, 
+        827
+      ]
+    }
+  }, 
+  {
+    "pk": 37, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Psychol", 
+      "name": "Psychologie", 
+      "users": [
+        828, 
+        829, 
+        850, 
+        851
+      ]
+    }
+  }, 
+  {
+    "pk": 60, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Kinder", 
+      "name": "Kinder- und Jugendheilkunde", 
+      "users": [
+        830, 
+        831, 
+        832, 
+        833
+      ]
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Derma", 
+      "name": "Dermatologie", 
+      "users": [
+        834, 
+        835
+      ]
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Radio", 
+      "name": "Radiologie", 
+      "users": [
+        836, 
+        837, 
+        838, 
+        839, 
+        840
+      ]
+    }
+  }, 
+  {
+    "pk": 58, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Haemo", 
+      "name": "H\u00e4matologie und H\u00e4mostaseologie", 
+      "users": [
+        779, 
+        780, 
+        781, 
+        841
+      ]
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Ortho", 
+      "name": "Orthop\u00e4die", 
+      "users": [
+        842, 
+        843
+      ]
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Uro", 
+      "name": "Urologie", 
+      "users": [
+        844
+      ]
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "NeuroChir", 
+      "name": "Neurochirurgie", 
+      "users": [
+        845
+      ]
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Notfall", 
+      "name": "Notfallmedizin", 
+      "users": [
+        846, 
+        847
+      ]
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Auge", 
+      "name": "Augenheilkunde", 
+      "users": [
+        852, 
+        853, 
+        854
+      ]
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Nuklear", 
+      "name": "Nuklearmedizin", 
+      "users": [
+        855
+      ]
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Labor", 
+      "name": "Labormedizin", 
+      "users": [
+        856, 
+        857
+      ]
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Physiol", 
+      "name": "Physiologie", 
+      "users": [
+        848, 
+        849, 
+        858, 
+        862
+      ]
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Anatomie", 
+      "name": "Anatomie", 
+      "users": [
+        859, 
+        863
+      ]
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Zahn", 
+      "name": "Zahnheilkunde", 
+      "users": [
+        860, 
+        861
+      ]
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Patho", 
+      "name": "Pathologie", 
+      "users": [
+        864
+      ]
+    }
+  }, 
+  {
+    "pk": 51, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Pfleger", 
+      "name": "Gesundheits und Krankenpfleger", 
+      "users": [
+        865, 
+        866, 
+        867
+      ]
+    }
+  }, 
+  {
+    "pk": 52, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Recht", 
+      "name": "Rechtsabteilung", 
+      "users": [
+        868, 
+        869, 
+        870, 
+        871, 
+        872, 
+        873
+      ]
+    }
+  }, 
+  {
+    "pk": 53, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Pharma", 
+      "name": "Pharmazeuten", 
+      "users": [
+        874, 
+        875, 
+        876
+      ]
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "KlPh", 
+      "name": "Klinische Pharmakologie", 
+      "users": [
+        892, 
+        771, 
+        772, 
+        773, 
+        774, 
+        775, 
+        776
+      ]
+    }
+  }, 
+  {
+    "pk": 54, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Patient", 
+      "name": "Patientenvertreter", 
+      "users": [
+        877, 
+        878, 
+        879
+      ]
+    }
+  }, 
+  {
+    "pk": 55, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "BehindertOrg", 
+      "name": "Benhindertenorganisation", 
+      "users": [
+        880, 
+        881
+      ]
+    }
+  }, 
+  {
+    "pk": 56, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "Seel", 
+      "name": "Seelsorger", 
+      "users": [
+        884, 
+        885, 
+        886, 
+        887
+      ]
+    }
+  }, 
+  {
+    "pk": 57, 
+    "model": "core.medicalcategory", 
+    "fields": {
+      "abbrev": "techSec", 
+      "name": "technischer Sicherheitsbeauftragter", 
+      "users": [
+        890, 
+        891
+      ]
+    }
+  },
+  {
+    "pk": 1, 
     "model": "core.submission", 
     "fields": {
-      "ec_number": "4321"
+      "retrospective": null, 
+      "ec_number": "4321", 
+      "expedited": null, 
+      "thesis": null, 
+      "external_reviewer": null, 
+      "external_reviewer_name": null, 
+      "medical_categories": [], 
+      "expedited_review_categories": []
     }
   }, 
   {
@@ -611,7 +1263,7 @@
       "project_type_medical_device_without_ce": false, 
       "invoice_phone": "", 
       "german_risks_info": "bla bla bla", 
-      "additional_therapy_info": "long blabla", 
+      "german_ethical_info": "bla bla bla", 
       "specialism": "P\u00e4diatrische Onkologie / Immunologie", 
       "study_plan_population_per_protocol": false, 
       "medtech_certified_for_other_indications": false, 
@@ -619,7 +1271,7 @@
       "german_payment_info": "bla bla bla", 
       "study_plan_controlled": false, 
       "study_plan_dataprotection_anonalgoritm": "Electronically generated unique patient number within SIOPEN-R-Net", 
-      "german_ethical_info": "bla bla bla", 
+      "additional_therapy_info": "long blabla", 
       "german_inclusion_exclusion_crit": "bla bla bla", 
       "medtech_technical_safety_regulations": "", 
       "study_plan_pilot_project": false, 
@@ -673,7 +1325,11 @@
       "study_plan_datamanagement": "Date entry and management through the SIOPEN-R-Net platform including the RDE system", 
       "german_primary_hypothesis": "bla bla bla", 
       "subject_childbearing": true, 
-      "substance_p_c_t_countries": ["DE", "US", "AT"], 
+      "substance_p_c_t_countries": [
+        "AT", 
+        "DE", 
+        "US"
+      ], 
       "study_plan_stratification": null, 
       "project_type_reg_drug_not_within_indication": false, 
       "project_type_medical_method": false, 
@@ -698,464 +1354,1610 @@
       "german_statistical_info": "bla bla bla"
     }
   }, 
-  {
-    "pk": 1, 
-    "model": "core.investigator", 
-    "fields": {
-      "specialist": "", 
-      "fax": "", 
-      "name": "Univ. Doz. Dr. Ruth Ladenstein", 
-      "submission_form": 1, 
-      "subject_count": 1, 
-      "mobile": "", 
-      "organisation": "Kinderspital St. Anna", 
-      "ethics_commission": 1, 
-      "phone": "", 
-      "jus_practicandi": false, 
-      "main": false, 
-      "email": "", 
-      "certified": false
+    {
+      "pk": 1, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": true, 
+        "user": 905, 
+        "thesis_review": false, 
+        "board_member": false
+      }
+    }, 
+    {
+      "pk": 2, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": true, 
+        "user": 906, 
+        "thesis_review": false, 
+        "board_member": false
+      }
+    }, 
+    {
+      "pk": 3, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": true, 
+        "user": 907, 
+        "thesis_review": false, 
+        "board_member": false
+      }
+    }, 
+    {
+      "pk": 4, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 830, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 5, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 831, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 6, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 832, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 7, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 833, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 8, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 834, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 9, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 835, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 10, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 836, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 11, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 837, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 12, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 838, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 13, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 839, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 14, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 840, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 15, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 841, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 16, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 842, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 17, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 843, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 18, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 844, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 19, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 845, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 20, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 846, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 21, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 847, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 22, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 848, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 23, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 849, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 24, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 850, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 25, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 851, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 26, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 852, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 27, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 854, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 28, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 853, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 29, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 855, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 30, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 856, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 31, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 857, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 32, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 782, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 33, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 783, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 34, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 784, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 35, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 785, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 36, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 786, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 37, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 787, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 38, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 771, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 39, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 772, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 40, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 773, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 41, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 774, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 42, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 775, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 43, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 776, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 44, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 777, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 45, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 778, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 46, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 779, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 47, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 780, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 48, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 781, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 49, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 858, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 50, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 859, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 51, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 860, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 52, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 861, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 53, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 862, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 54, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 863, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 55, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 864, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 56, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 865, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 57, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 866, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 58, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 867, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 59, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 868, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 60, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 869, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 61, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 870, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 62, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 871, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 63, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 872, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 64, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 873, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 65, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 874, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 66, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 875, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 67, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 879, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 68, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 880, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 69, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 881, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 70, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 882, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 71, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 883, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 72, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 884, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 73, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 885, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 74, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 886, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 75, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 887, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 76, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 888, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 77, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 889, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 78, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 890, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 79, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 891, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 80, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 892, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 81, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 893, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 82, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 894, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 83, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 895, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 84, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 896, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 85, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 897, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 86, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 788, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 87, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 789, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 88, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 790, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 89, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 791, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 90, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 792, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 91, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 793, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 92, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 794, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 93, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 795, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 94, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 796, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 95, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 797, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 96, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 798, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 97, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 799, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 98, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 800, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 99, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 801, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 100, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 802, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 101, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 803, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 102, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 815, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 103, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 816, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 104, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 817, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 105, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 818, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 106, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 819, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 107, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 820, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 108, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 804, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 109, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 805, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 110, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 806, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 111, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 807, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 112, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 808, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 113, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 809, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 114, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 810, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 115, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 811, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 116, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 812, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 117, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 813, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 118, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 814, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 119, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 821, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 120, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 822, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 121, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 823, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 122, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 824, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 123, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 825, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 124, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 826, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 125, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 827, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 126, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 828, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 127, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 829, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 128, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 876, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 129, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 877, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    }, 
+    {
+      "pk": 130, 
+      "model": "core.userprofile", 
+      "fields": {
+        "executive_board_member": false, 
+        "external_review": false, 
+        "user": 878, 
+        "thesis_review": false, 
+        "board_member": true
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistblueprint",
+      "fields": {
+        "name": "Statistik"
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "1. Ist das Studienziel ausreichend definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 2,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 3,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "3. Ist die Studienpopulation ausreichend definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 4,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "4. Sind die Zielvariablen geeignet definiert?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 5,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 6,
+      "model": "core.checklistquestion",
+      "fields": {
+        "blueprint": 1,
+        "text": "6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?",
+        "link": "",
+        "description": ""
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklist",
+      "fields": {
+        "blueprint": 1,
+        "submission": 1,
+        "user": 898
+      }
+    },
+    {
+      "pk": 1,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": true,
+        "checklist": 1,
+        "question": 1,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 2,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 2,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 3,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": true,
+        "checklist": 1,
+        "question": 3,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 4,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 4,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 5,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": null,
+        "checklist": 1,
+        "question": 5,
+        "comment": ""
+      }
+    },
+    {
+      "pk": 6,
+      "model": "core.checklistanswer",
+      "fields": {
+        "answer": false,
+        "checklist": 1,
+        "question": 6,
+        "comment": ""
+      }
+    },
+    {
+        "pk": 1, 
+        "model": "core.expeditedreviewcategory", 
+        "fields": {
+            "abbrev": "ExRC0", 
+            "name": "Expedited Review Category #0"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "core.expeditedreviewcategory", 
+        "fields": {
+            "abbrev": "ExRC1", 
+            "name": "Expedited Review Category #1"
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "core.expeditedreviewcategory", 
+        "fields": {
+            "abbrev": "ExRC2", 
+            "name": "Expedited Review Category #2"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "core.expeditedreviewcategory", 
+        "fields": {
+            "abbrev": "ExRC3", 
+            "name": "Expedited Review Category #3"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "core.expeditedreviewcategory", 
+        "fields": {
+            "abbrev": "ExRC4", 
+            "name": "Expedited Review Category #4"
+        }
     }
-  }, 
-  {
-    "pk": 4, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "model": "ecs.core.models.BaseNotificationForm", 
-      "name": "SAE Bericht", 
-      "form": "ecs.core.forms.NotificationForm"
-    }
-  }, 
-  {
-    "pk": 2, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "model": "ecs.core.models.BaseNotificationForm", 
-      "name": "Abschlussbericht", 
-      "form": "ecs.core.forms.CompletionReportNotificationForm"
-    }
-  }, 
-  {
-    "pk": 1, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "model": "ecs.core.models.BaseNotificationForm", 
-      "name": "Zwischenbericht", 
-      "form": "ecs.core.forms.ProgressReportNotificationForm"
-    }
-  }, 
-  {
-    "pk": 6, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "model": "ecs.core.models.Notification", 
-      "name": "Protokoll\u00e4nderung", 
-      "form": "ecs.core.forms.NotificationForm"
-    }
-  },
-  {
-    "pk": 13, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "KlPh", 
-      "name": "Klinische Pharmakologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 14, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Onko", 
-      "name": "Onkologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 15, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Infektio", 
-      "name": "Infektiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 16, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Kardio", 
-      "name": "Kardiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 17, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Angio", 
-      "name": "Angiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 18, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "PsychAna", 
-      "name": "Psychoanalyse", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 19, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Auge", 
-      "name": "Augenheilkunde", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 20, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Nuklear", 
-      "name": "Nuklearmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 21, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Labor", 
-      "name": "Labormedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 22, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Physiol", 
-      "name": "Physiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 23, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Anatomie", 
-      "name": "Anatomie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 24, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Zahn", 
-      "name": "Zahlheilkunde", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 25, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "ImmunPatho", 
-      "name": "Immunpathologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 26, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Patho", 
-      "name": "Pathologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 27, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Neuro", 
-      "name": "Neurologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 28, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "P\u00e4d", 
-      "name": "P\u00e4diatrie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 29, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Derma", 
-      "name": "Dermatologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 30, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Radio", 
-      "name": "Radiologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 31, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Transfus", 
-      "name": "Transfusionsmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 32, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Ortho", 
-      "name": "Orthop\u00e4die", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 33, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Uro", 
-      "name": "Urologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 34, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "NeuroChir", 
-      "name": "Neurochirurgie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 35, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Notfall", 
-      "name": "Notfallmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 36, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "PysMed", 
-      "name": "Physikalischemedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 37, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Psychol", 
-      "name": "Psychologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 38, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Pulmo", 
-      "name": "Pulmologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 39, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Endo", 
-      "name": "Endokrinologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 40, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Nepho", 
-      "name": "Nephrologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 41, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Gasto", 
-      "name": "Gastroenterologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 42, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Rheuma", 
-      "name": "Rheumatologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 43, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Intensiv", 
-      "name": "Intensivmedizin", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 44, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Chir", 
-      "name": "Chirugie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 45, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "plChir", 
-      "name": "Plastische Chirugie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 46, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "HTChir", 
-      "name": "Herz-Thorax Chirugie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 47, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Gyn", 
-      "name": "Gyn\u00e4gologie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 48, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "HNO", 
-      "name": "Hals-Nasen-Ohrenkrankheiten", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 49, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "An\u00e4sth", 
-      "name": "An\u00e4sthesie", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 50, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Stats", 
-      "name": "Statistik", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 51, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Pfleger", 
-      "name": "Gesundheits und Krankenpfleger", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 52, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Recht", 
-      "name": "Rechtsabteilung", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 53, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Pharma", 
-      "name": "Pharmazeuten", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 54, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Patient", 
-      "name": "Patientenvertreter", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 55, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "BehindertOrg", 
-      "name": "Benhindertenorganisation", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 56, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "Seel", 
-      "name": "Seelsorger", 
-      "users": []
-    }
-  }, 
-  {
-    "pk": 57, 
-    "model": "core.medicalcategory", 
-    "fields": {
-      "abbrev": "techSec", 
-      "name": "technischer Sicherheitsbeauftragter", 
-      "users": []
-    }
-  }
 ]

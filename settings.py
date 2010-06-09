@@ -22,26 +22,28 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-# celery configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
-# Warning: second part on bottom of settings which set backend to internal if DEBUG=TRUE and host != ecsdev.ep3.at
+# celery configuration defaults
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-CELERY_RESULT_BACKEND = 'database'  # do we have to use amqp, because of the test cases ?
+# per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
+CARROT_BACKEND = "ghettoq.taproot.Database"
+CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
 )
 
-# use different settings if on host ecsdev.ep3.at depending username
-if platform.node() == "ecsdev.ep3.at":
-    import getpass
-    user = getpass.getuser()
-    DBPWD_DICT = {}
-    assert user in DBPWD_DICT, " ".join(("did not find",user,"in DBPWD_DICT"))
 
+import getpass
+user = getpass.getuser()
+# use different settings if on host ecsdev.ep3.at depending username
+DBPWD_DICT = {}
+
+if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
+    # Use Postgresql as Django Database; Database User=current user, password like in dict
     DATABASE_ENGINE = 'postgresql_psycopg2'
     DATABASE_HOST = '127.0.0.1'
     DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
@@ -49,10 +51,11 @@ if platform.node() == "ecsdev.ep3.at":
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
     
-    # rabbit mq users and db users are the same (also passwords)
+    # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
     BROKER_USER = user
     BROKER_PASSWORD = DBPWD_DICT[user]
     BROKER_VHOST = user
+    CARROT_BACKEND = ""
     
     if user == "testecs":
         DEBUG = False
@@ -113,8 +116,13 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    #'django.template.loaders.eggs.load_template_source',
 )
+
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_DIR, 'templates'),
+)
+
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.auth", # FIXME: replace with "django.contrib.auth.context_processors.auth" for django 1.2 
@@ -129,10 +137,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.forceauth.ForceAuth',
-    'ecs.groupchooser.middleware.GroupChooserMiddleware',
+    'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
+	'ecs.workflow.middleware.WorkflowMiddleware',
 )   
 
 # debug toolbar config:
@@ -145,18 +154,12 @@ INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.
 
 ROOT_URLCONF = 'ecs.urls'
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR, 'templates'),
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.humanize',
     'django_extensions',
 
     'django.contrib.admin',
@@ -168,20 +171,26 @@ INSTALLED_APPS = (
     'djangodblog',
     'celery',
     'ecs.utils.countries',
+    'compressor',
 
     'ecs.core',
     'ecs.utils',
     'ecs.feedback',
     'ecs.docstash',
-    'ecs.groupchooser',
+    'ecs.userswitcher',
     'ecs.pdfviewer',
+    'ecs.mediaserver',
     'ecs.workflow',
     'ecs.tasks',
+    'ecs.messages',
+    'ecs.dashboard',
+    'ecs.bootstrap',
 )
 
-# use ghettoq as carrot backend, so we dont need any external brocker for testing
-if DEBUG or (platform.node != "ecsdev.ep3.at"):
-    CARROT_BACKEND = "ghettoq.taproot.Database"
+AUTH_PROFILE_MODULE = 'core.UserProfile'
+
+# include ghettoq in installed apps if we use it as carrot backend, so we dont need any external brocker for testing
+if CARROT_BACKEND == "ghettoq.taproot.Database":
     INSTALLED_APPS += ("ghettoq", ) 
 
 # django-db-log
@@ -191,8 +200,13 @@ DBLOG_CATCH_404_ERRORS = True
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
-# use our utils.ecs_runner as default test runner
-TEST_RUNNER = 'utils.ecs_runner.run_tests'
+# use our ecs.utils.ecs_runner as default test runner
+TEST_RUNNER = 'ecs.utils.ecs_runner.run_tests'
+SOUTH_TESTS_MIGRATE = False
 
 # FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
+
+# django_compressor settings
+COMPRESS = True
+COMPRESS_JS_FILTERS = []

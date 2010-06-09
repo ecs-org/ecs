@@ -1,30 +1,68 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-
+from django.contrib.auth.models import User
 import reversion
+import datetime
 
 class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True)
+    ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # 2010/0345
+
+    def get_ec_number_display(self):
+        try:
+            year, ec_number = self.ec_number.split('/')
+        except ValueError:
+            return self.ec_number
+
+        ec_number = ec_number.lstrip('0')
+        if datetime.datetime.now().year == int(year):
+            return ec_number
+        else:
+            return '%s/%s' % (ec_number, year)
+    get_ec_number_display.short_description = 'EC-Number'
 
     # medical categories
-    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions')
+    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
+    # FIXME: why do we have two field for expedited_review?
     expedited = models.NullBooleanField()
-    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions')
+    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
+    # FIXME: why do we have two fields for external_review?
     external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True)
+    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    
+    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
+    sponsor_required_for_next_meeting = models.BooleanField(default=False)
+    
+    def get_most_recent_form(self):
+        # FIXME: pick the last accepted SubmissionForm
+        try:
+            return self.forms.order_by('-pk')[0]
+        except (SubmissionForm.DoesNotExist, IndexError):
+            return None
 
     @property
     def project_title(self):
-        # FIXME: pick the last SubmissionForm
-        return self.forms.order_by('-pk')[0].project_title
+        sf = self.get_most_recent_form()
+        if not sf:
+            return None
+        return sf.project_title
+        
+    @property
+    def german_project_title(self):
+        sf = self.get_most_recent_form()
+        if not sf:
+            return None
+        return sf.german_project_title
         
     def save(self, **kwargs):
         if not self.ec_number:
             from random import randint
             self.ec_number = "EK-%s" % randint(10000, 100000)
         super(Submission, self).save(**kwargs)
+        
+    def __unicode__(self):
+        return self.get_ec_number_display()
 
     class Meta:
         app_label = 'core'
@@ -36,7 +74,7 @@ class SubmissionForm(models.Model):
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
 
     project_title = models.TextField()
-    eudract_number = models.CharField(max_length=40, null=True)
+    eudract_number = models.CharField(max_length=60, null=True)
 
     class Meta:
         app_label = 'core'
@@ -44,26 +82,26 @@ class SubmissionForm(models.Model):
     # 1.4 (via self.documents)
 
     # 1.5
-    sponsor_name = models.CharField(max_length=80, null=True)
+    sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contactname = models.CharField(max_length=80, null=True)
     sponsor_address1 = models.CharField(max_length=60, null=True)
     sponsor_address2 = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
-    sponsor_city = models.CharField(max_length=40, null=True)
+    sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
 
-    invoice_name = models.CharField(max_length=80, null=True, blank=True)
+    invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
-    invoice_city = models.CharField(max_length=40, null=True, blank=True)
-    invoice_phone = models.CharField(max_length=30, null=True, blank=True)
-    invoice_fax = models.CharField(max_length=30, null=True, blank=True)
+    invoice_city = models.CharField(max_length=80, null=True, blank=True)
+    invoice_phone = models.CharField(max_length=50, null=True, blank=True)
+    invoice_fax = models.CharField(max_length=45, null=True, blank=True)
     invoice_email = models.EmailField(null=True, blank=True)
-    invoice_uid = models.CharField(max_length=30, null=True, blank=True) # 24? need to check
+    invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
     invoice_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
     # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
@@ -86,6 +124,7 @@ class SubmissionForm(models.Model):
     project_type_questionnaire = models.BooleanField()
     project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
     project_type_misc = models.TextField(null=True, blank=True)
+    project_type_psychological_study = models.BooleanField()
     
     # 2.2
     # FIXME: use fixed set of choices ?
@@ -119,27 +158,27 @@ class SubmissionForm(models.Model):
     subject_childbearing = models.BooleanField()
     
     # 2.11
-    subject_duration = models.CharField(max_length=20)
-    subject_duration_active = models.CharField(max_length=20)
-    subject_duration_controls = models.CharField(max_length=20)
+    subject_duration = models.CharField(max_length=200)
+    subject_duration_active = models.CharField(max_length=200)
+    subject_duration_controls = models.CharField(max_length=200)
 
     # 2.12
-    subject_planned_total_duration = models.CharField(max_length=20)
+    subject_planned_total_duration = models.CharField(max_length=250)
 
     # 3a
-    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms')
+    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms', blank=True)
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True)
-    substance_p_c_t_countries = models.ManyToManyField('countries.Country')
+    substance_p_c_t_countries = models.ManyToManyField('countries.Country', blank=True)
     substance_p_c_t_phase = models.CharField(max_length=10, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
-    substance_p_c_t_application_type = models.CharField(max_length=40, null=True, blank=True)
+    substance_p_c_t_application_type = models.CharField(max_length=145, null=True, blank=True)
     substance_p_c_t_gcp_rules = models.NullBooleanField(blank=True)
     substance_p_c_t_final_report = models.NullBooleanField(blank=True)
     
     # 3b (via NonTestedUsedDrugs)
     
     # 4.x
-    medtech_product_name = models.CharField(max_length=80, null=True, blank=True)
+    medtech_product_name = models.CharField(max_length=210, null=True, blank=True)
     medtech_manufacturer = models.CharField(max_length=80, null=True, blank=True)
     medtech_certified_for_exact_indications = models.NullBooleanField(blank=True)
     medtech_certified_for_other_indications = models.NullBooleanField(blank=True)
@@ -149,7 +188,7 @@ class SubmissionForm(models.Model):
     medtech_departure_from_regulations = models.TextField(null=True, blank=True)
     
     # 5.x
-    insurance_name = models.CharField(max_length=60, null=True, blank=True)
+    insurance_name = models.CharField(max_length=125, null=True, blank=True)
     insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -158,7 +197,7 @@ class SubmissionForm(models.Model):
     # 6.1 + 6.2 (via Measure)
 
     # 6.3
-    additional_therapy_info = models.TextField()
+    additional_therapy_info = models.TextField(blank=True)
 
     # 7.x
     german_project_title = models.TextField(null=True)
@@ -180,8 +219,8 @@ class SubmissionForm(models.Model):
     german_aftercare_info = models.TextField(null=True)
     german_payment_info = models.TextField(null=True)
     german_abort_info = models.TextField(null=True)
-    german_dataaccess_info = models.TextField(null=True)
-    german_financing_info = models.TextField(null=True)
+    german_dataaccess_info = models.TextField(null=True, blank=True)
+    german_financing_info = models.TextField(null=True, blank=True)
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
@@ -206,17 +245,17 @@ class SubmissionForm(models.Model):
     study_plan_secondary_objectives = models.TextField(null=True, blank=True)
 
     # 8.2
-    study_plan_alpha = models.CharField(max_length=40)
-    study_plan_power = models.CharField(max_length=40)
-    study_plan_statalgorithm = models.CharField(max_length=40)
-    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=40)
-    study_plan_dropout_ratio = models.CharField(max_length=40)
+    study_plan_alpha = models.CharField(max_length=80)
+    study_plan_power = models.CharField(max_length=80)
+    study_plan_statalgorithm = models.CharField(max_length=50)
+    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100)
+    study_plan_dropout_ratio = models.CharField(max_length=80)
     
     # 8.3
     study_plan_population_intention_to_treat  = models.BooleanField()
     study_plan_population_per_protocol  = models.BooleanField()
-    study_plan_abort_crit = models.CharField(max_length=40)
-    study_plan_planned_statalgorithm = models.CharField(max_length=40)
+    study_plan_abort_crit = models.CharField(max_length=265)
+    study_plan_planned_statalgorithm = models.TextField(null=True, blank=True)
 
     # 8.4
     study_plan_dataquality_checking = models.TextField()
@@ -228,13 +267,13 @@ class SubmissionForm(models.Model):
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
     study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
-    study_plan_dataprotection_dvr = models.CharField(max_length=12, blank=True)
+    study_plan_dataprotection_dvr = models.CharField(max_length=180, blank=True)
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
     submitter_name = models.CharField(max_length=80)
-    submitter_organisation = models.CharField(max_length=80)
-    submitter_jobtitle = models.CharField(max_length=80)
+    submitter_organisation = models.CharField(max_length=180)
+    submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
@@ -297,9 +336,13 @@ class SubmissionForm(models.Model):
     @property
     def measures_nonspecific(self):
         return self.measures.filter(category="6.2")
+        
+    @property
+    def submitter(self):
+        # FIXME: how do we get the creator of this instance from reversion?
+        return None
 
 class Investigator(models.Model):
-    # FIXME: rename to `submission_form`
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
@@ -320,11 +363,9 @@ class Investigator(models.Model):
 
 
 class InvestigatorEmployee(models.Model):
-    # FIXME: rename to `investigator`
-    # TODO: check FIXME above
-    submission = models.ForeignKey(Investigator)
+    investigator = models.ForeignKey(Investigator)
 
-    sex = models.CharField(max_length=1, choices=[("m", "male"), ("f", "female"), ("?", "")])
+    sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
     title = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
@@ -354,8 +395,8 @@ class Measure(models.Model):
     
     #FIXME: category should not be nullable
     category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
-    type = models.CharField(max_length=30)
-    count = models.TextField()
+    type = models.CharField(max_length=150)
+    count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
     
@@ -382,6 +423,9 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
     
+
+from ecs import workflow
+
 if not reversion.is_registered(Submission):
     reversion.register(Measure) 
     reversion.register(ForeignParticipatingCenter) 
@@ -390,3 +434,5 @@ if not reversion.is_registered(Submission):
     reversion.register(NonTestedUsedDrug) 
     reversion.register(Investigator) 
     reversion.register(InvestigatorEmployee) 
+    
+    workflow.register(Submission)

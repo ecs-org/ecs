@@ -1,0 +1,46 @@
+{% extends "core.html" %}
+
+{% block menuSelection %}overview{% endblock %}
+
+{% block htmltitle %}ECS Dashboard{% endblock %}
+
+{% block headertitle %}
+    <h1>Dashboard</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="form main">
+        {% with 'Outgoing Threads' as title %}
+            {% with outgoing_threads as threads %}
+                {% include "dashboard/messages.inc" %}
+            {% endwith %}
+        {% endwith %}
+        {% with 'Incoming Threads' as title %}
+            {% with incoming_threads as threads %}
+                {% include "dashboard/messages.inc" %}
+            {% endwith %}        
+        {% endwith %}
+        {% include "dashboard/tasks.inc" %}
+    </div>
+{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript">
+    window.addEvent('domready', function(){
+        $$('a.popup').each(function(link){
+            link.addEvent('click', function(){
+                new MooDialog.Iframe(link.href, {
+                    title: 'Nachricht',
+                    size: {width: 700, height: 400},
+                    onClose: function(){
+                        window.location.reload();
+                    }
+                });
+                return false;
+            });
+        });
+    });
+  </script>
+{% endblock %}
+

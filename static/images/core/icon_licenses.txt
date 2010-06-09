@@ -1,0 +1,14 @@
+Aestetica Icons:
+----------------
+
+add.png, help.png, remove.png, search.png, user.png
+
+Vaga Icons:
+-----------
+
+calendar.png
+
+Quartz Icon Pack
+----------------
+
+Mail_compose, Mail_forward, Mail_reply, Mail_new, Mail_open, Mails, Mail_add, Mail_verified, Mail_delete, Email, Email_warning

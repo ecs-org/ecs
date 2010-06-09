@@ -1,0 +1,35 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Einschränken für {{ participant }} für die Sitzung am {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
+{% endblock %}
+
+{% block content %}
+<div id="meeting_constraint_editor">
+    <div>
+        <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zurück zum Zeitplan für dieses Meeting</a>
+    </div>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% with constraint_formset as formset %}
+            {% include "forms/tables/inline_formset.html" %}
+        {% endwith %}
+        <span class="button"><input type="submit" value="Submit" name="submit"/></span>
+    </form>
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+window.addEvent('domready', function(){
+    ecs.setupForms();
+    new ecs.InlineFormSet($('constraint_formset'), {
+        prefix: '{{ constraint_formset.prefix }}',
+        canDelete: true
+    });
+});
+</script>
+{% endblock %}

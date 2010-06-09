@@ -6,7 +6,7 @@ from django.core import management
 from ecs.workflow.models import Graph, Node
 from ecs.workflow.exceptions import TokenRequired
 # test only models:
-from ecs.workflow.models import Foo
+from ecs.workflow.models import Foo, FooReview, Token
 from ecs import workflow
 
 from ecs.workflow.tests import flow_declarations
@@ -156,7 +156,6 @@ class FlowTest(TestCase):
 
         self.assertActivitiesEqual(obj, [])
         
-        #print g.dot
         
     def test_generic_control(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
@@ -222,7 +221,6 @@ class FlowTest(TestCase):
         
         self.assertActivitiesEqual(obj, [])
         
-        #print g.dot
         
     def test_locks(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
@@ -282,4 +280,80 @@ class FlowTest(TestCase):
         obj.workflow.do(flow_declarations.E)
         self.assertActivitiesEqual(obj, [])
         
+    def test_trail(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        n_a = g.create_node(flow_declarations.A, start=True)
+        n_b = g.create_node(flow_declarations.B)
+        n_c = g.create_node(flow_declarations.C)
+        n_e = g.create_node(flow_declarations.E, end=True)
+        n_sync = g.create_node(workflow.patterns.synchronization)
+        n_a.add_edge(n_b)
+        n_a.add_edge(n_c)
+        n_b.add_edge(n_sync)
+        n_c.add_edge(n_sync)
+        n_sync.add_edge(n_e)
+        
+        obj = Foo.objects.create()        
+        obj.workflow.do(flow_declarations.A)
+        obj.workflow.do(flow_declarations.B)
+        obj.workflow.do(flow_declarations.C)
+        obj.workflow.do(flow_declarations.E)
+
+        a_token = Token.objects.get(node=n_a)
+        b_token = Token.objects.get(node=n_b)
+        c_token = Token.objects.get(node=n_c)
+        s_tokens = Token.objects.filter(node=n_sync)
+        e_token = Token.objects.get(node=n_e)
+        
+        self.failUnlessEqual(set(a_token.trail.all()), set([]))
+        self.failUnlessEqual(set(b_token.trail.all()), set([a_token]))
+        self.failUnlessEqual(set(c_token.trail.all()), set([a_token]))
+        self.failUnlessEqual(s_tokens.get(source=n_b).trail.get(), b_token)
+        self.failUnlessEqual(s_tokens.get(source=n_c).trail.get(), c_token)
+        self.failUnlessEqual(set(e_token.trail.all()), set(s_tokens))
+        
+        self.failUnlessEqual(a_token.activity_trail, set())
+        self.failUnlessEqual(b_token.activity_trail, set([a_token]))
+        self.failUnlessEqual(c_token.activity_trail, set([a_token]))
+        self.failUnlessEqual(e_token.activity_trail, set([b_token, c_token]))
+
+    def test_parametrization(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        
+        r0 = FooReview.objects.create(name='R0')
+        r1 = FooReview.objects.create(name='R1')
+        n_v0 = g.create_node(flow_declarations.V, data=r0, start=True)
+        n_v1 = g.create_node(flow_declarations.V, data=r1, end=True)        
+        n_v0.add_edge(n_v1)
+        
+        obj = Foo.objects.create()
+        self.assertActivitiesEqual(obj, [flow_declarations.V])
+
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V)
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r1)
+        obj.workflow.do(flow_declarations.V, data=r0)
+        self.assertActivitiesEqual(obj, [flow_declarations.V])
+
+        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r0)
+        obj.workflow.do(flow_declarations.V, data=r1)
+        self.assertActivitiesEqual(obj, [])
+        
+    def test_disable_autostart(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        n_a = g.create_node(flow_declarations.A, start=True)
+        
+        obj = Foo.objects.create()
+        self.assertActivitiesEqual(obj, [flow_declarations.A])
+        
+        with workflow.autostart_disabled():
+            obj = Foo.objects.create()
+            self.assertActivitiesEqual(obj, [])
+        
+        @workflow.autostart_disabled()
+        def foo():
+            return Foo.objects.create()
+            
+        obj = foo()
+        self.assertActivitiesEqual(obj, [])
+            
 

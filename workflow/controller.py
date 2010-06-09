@@ -9,11 +9,18 @@ from django.conf import settings
 from ecs.utils import cached_property
 from ecs.workflow.exceptions import TokenRequired
 
+#class NodeHandlerBase(type):
+#    def __new__(cls, name, bases, attrs):
+#        return super(NodeHandlerBase, cls).__new__(name, bases, attrs)
+
+def _get_full_name(func):
+    return "%s.%s" % (func.__module__, func.__name__)
 
 class NodeHandler(object):
-    def __init__(self, func, model=None, deadline=None, lock=None, signal=None):
-        self.name = "%s.%s" % (func.__module__, func.__name__)
+    def __init__(self, func, model=None, deadline=None, lock=None, signal=None, vary_on=None):
+        self.name = _get_full_name(func)
         self.model = model
+        self.vary_on = vary_on
         self.func = func
         self.deadline = deadline
         self.lock = lock
@@ -74,16 +81,15 @@ class Activity(NodeHandler):
             sender.workflow.do(self)
             
     def perform(self, node, workflow):
-        token = node.peek_token(workflow, locked=False)
+        token = node.get_token(workflow, locked=False)
         if not token:
-            if node.peek_token(workflow, locked=True):
+            if node.get_token(workflow, locked=True):
                 raise TokenRequired("Activities cannot be performed with locked tokens")
             raise TokenRequired("Activities cannot be performed without a token")
-        token.consume()
         try:
             return self(token)
         finally:
-            node.progress(workflow)
+            node.progress(token)
         
     def __repr__(self):
         return "<%s: %s>" % (self.__class__.__name__, self.name)
@@ -130,6 +136,7 @@ class Registry(object):
         self._controls = {}
         self._node_type_map = {}
         self._guard_map = {}
+        self._handlers = {}
         self.loaded = False
 
     def clear_caches(self):
@@ -160,16 +167,14 @@ class Registry(object):
     def get_handler(self, node):
         self._load()
         try:
-            return self._node_type_map[node.node_type_id]
+            return self._handlers[node.node_type.implementation]
         except KeyError:
-            if node.node_type.is_subgraph:
-                return self._controls['ecs.workflow.patterns.subgraph']
             raise KeyError("Missing FlowHandler for NodeType %s" % node.node_type)
 
     def get_guard(self, edge):
         self._load()
         try:
-            return self._guard_map[edge.guard_id]
+            return self._guards[edge.guard.implementation]
         except KeyError:
             raise KeyError("Unknown guard: %s" % edge.guard)
             
@@ -194,21 +199,23 @@ class Registry(object):
         def decorator(func):
             control = factory(func, **kwargs)
             self._controls[control.name] = control
+            self._handlers[control.name] = control
             return wraps(func)(control)
         return decorator
 
-    def activity(self, model=None, factory=Activity, **kwargs):
+    def activity(self, factory=Activity, **kwargs):
         def decorator(func):
-            act = factory(func, model=model, **kwargs)
+            act = factory(func, **kwargs)
             self._activities[act.name] = act
+            self._handlers[act.name] = act
             return wraps(func)(act)
         return decorator
 
-    def guard(self, model=None, factory=Guard, **kwargs):
+    def guard(self, factory=Guard, **kwargs):
         def decorator(func):
-            guard = factory(func, model=model, **kwargs)
+            guard = factory(func, **kwargs)
             self._guards[guard.name] = guard
             return wraps(func)(guard)
         return decorator
-
+        
 registry = Registry()

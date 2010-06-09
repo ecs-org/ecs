@@ -109,9 +109,13 @@ class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)
     optimization_task_id = models.TextField(null=True)
+    submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     
     class Meta:
         app_label = 'core'
+        
+    def __unicode__(self):
+        return "%s: %s" % (self.start, self.title)
         
     @cached_property
     def duration(self):
@@ -228,6 +232,10 @@ class Meeting(models.Model):
     def sort_timetable(self, func):
         perm = func(tuple(self))
         self._apply_permutation(perm)
+    
+    @property
+    def open_tops(self):
+        return self.timetable_entries.filter(is_open=True)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -236,7 +244,9 @@ class TimetableEntry(models.Model):
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
+    sponsor_invited = models.BooleanField(default=False)
     optimal_start = models.TimeField(null=True)
+    is_open = models.BooleanField(default=True)
     
     class Meta:
         app_label = 'core'
@@ -305,7 +315,7 @@ class TimetableEntry(models.Model):
     def medical_categories(self):
         if not self.submission:
             return MedicalCategory.objects.none()
-        return MedicalCategory.objects.filter(submission__timetable_entries=self)
+        return MedicalCategory.objects.filter(submissions__timetable_entries=self)
         
     @cached_property
     def users_by_medical_category(self):
@@ -319,11 +329,11 @@ class TimetableEntry(models.Model):
 
     @cached_property
     def is_retrospective(self):
-        return self.submission.thesis
+        return self.submission.retrospective
     
     @cached_property
     def is_thesis(self):
-        return self.submission.retrospective
+        return self.submission.thesis
         
     @cached_property
     def is_expedited(self):
@@ -332,6 +342,34 @@ class TimetableEntry(models.Model):
     @property
     def is_batch_processed(self):
         return self.is_thesis or self.is_expedited or self.is_retrospective
+        
+    @property
+    def next(self):
+        try:
+            return self.meeting[self.index + 1]
+        except IndexError:
+            return None
+    
+    @property
+    def previous(self):
+        try:
+            return self.meeting[self.index - 1]
+        except IndexError:
+            return None
+        
+    @property
+    def next_open(self):
+        entries = self.meeting.timetable_entries.filter(timetable_index__gt=self.index).filter(is_open=True).order_by('timetable_index')[:1]
+        if entries:
+            return entries[0]
+        return None
+        
+    @property
+    def previous_open(self):
+        entries = self.meeting.timetable_entries.filter(timetable_index__lt=self.index).filter(is_open=True).order_by('-timetable_index')[:1]
+        if entries:
+            return entries[0]
+        return None
 
 def _timetable_entry_delete_post_delete(sender, **kwargs):
     entry = kwargs['instance']
