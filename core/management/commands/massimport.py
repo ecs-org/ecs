@@ -119,13 +119,12 @@ class Command(BaseCommand):
                 text= "\n".join(parent.string.splitlines()[2:])
             else:
                 try:
-                    b = a.findParent().find('emphasis', role='bold')
+                    b = parent.find('emphasis', role='bold')
                     if not b:
-                        b = a.findParent().findNextSibling('para').findChild('emphasis', role='bold')
+                        b = parent.findNextSibling('para').findChild('emphasis', role='bold')
                     
                     text=unicode(b.contents[0])
 
-                    # get parent (para), then get text inside emphasis bold, because every user entry in the word document is bold
                 except AttributeError:
                     # have some trouble, but put all data instead inside for inspection
                     text="UNKNOWN:"+ unicode(a.findParent())
