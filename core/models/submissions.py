@@ -92,14 +92,14 @@ class SubmissionForm(models.Model):
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
 
-    invoice_name = models.CharField(max_length=100, null=True, blank=True)
+    invoice_name = models.CharField(max_length=120, null=True, blank=True)
     invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
     invoice_city = models.CharField(max_length=80, null=True, blank=True)
-    invoice_phone = models.CharField(max_length=30, null=True, blank=True)
-    invoice_fax = models.CharField(max_length=30, null=True, blank=True)
+    invoice_phone = models.CharField(max_length=50, null=True, blank=True)
+    invoice_fax = models.CharField(max_length=45, null=True, blank=True)
     invoice_email = models.EmailField(null=True, blank=True)
     invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
@@ -273,7 +273,7 @@ class SubmissionForm(models.Model):
     # 9.x
     submitter_name = models.CharField(max_length=80)
     submitter_organisation = models.CharField(max_length=180)
-    submitter_jobtitle = models.CharField(max_length=100)
+    submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
