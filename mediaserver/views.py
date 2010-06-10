@@ -104,6 +104,11 @@ def receive_pdf(request, jsessionid=''):
     return HttpResponse('receive signed PDF got [%s]' % request)
 
 
+def sign_pdf_demo(request):
+    url = request.build_absolute_uri('/mediaserver/signpdf')
+    return HttpResponse('<h1>Start the Online PDF Signing Demo</h1><a href="%s">start link</a>' % url)
+
+
 def sign_pdf(request):
     pdf_data , pdf_data_size, pdf_name = get_pdf_data()
     url = 'http://advancedcode.de:8180/pdf-as/Sign'

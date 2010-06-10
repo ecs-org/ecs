@@ -5,6 +5,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns(
     '',
+    url(r'^signpdfdemo$', 'ecs.mediaserver.views.sign_pdf_demo'),
     url(r'^signpdf$', 'ecs.mediaserver.views.sign_pdf'),
     url(r'^sendpdf$', 'ecs.mediaserver.views.send_pdf'),
     url(r'^signpdferror$', 'ecs.mediaserver.views.sign_pdf_error'),
