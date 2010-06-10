@@ -1,4 +1,4 @@
-from ecs.core.views.utils import render, redirect_to_next_url
+from ecs.core.views.utils import render, redirect_to_next_url, CsrfExemptBaseHandler
 from ecs.core.views.core import download_document
 from ecs.core.views.core import notification_list, view_notification, submission_data_for_notification, select_notification_creation_type, create_notification, notification_pdf
 from ecs.core.views.submissions import create_submission_form, copy_submission_form, view_submission_form, submission_pdf, submission_form_list, edit_submission, \
