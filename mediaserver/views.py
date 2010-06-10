@@ -57,7 +57,8 @@ def receive_pdf_is_authorized(request):
 
 
 def get_pdf_data():
-    pdf_name = 'Bericht.pdf'
+    #pdf_name = 'Bericht.pdf'
+    pdf_name = 'test-pdf-14-seitig.pdf'
     pdf_path = os.path.join(settings.MEDIA_ROOT, 'mediaserver', 'images', pdf_name)
     f = open(pdf_path, 'rb')
     pdf_data = f.read()
@@ -77,7 +78,15 @@ def send_pdf(request):
 
 @forceauth.exempt
 def sign_pdf_error(request):
-    return HttpResponse('got [%s]' % request.REQUEST)
+    if request.REQUEST.has_key('error'):
+        error = urllib.unquote_plus(request.REQUEST['error'])
+    else:
+        error = ''
+    if request.REQUEST.has_key('cause'):
+        cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
+    else:
+        cause = ''
+    return HttpResponse(u'signpdf: error=[%s], cause=[%s]' % (error, cause))
 
 
 @forceauth.exempt
@@ -102,7 +111,7 @@ def sign_pdf(request):
         'pdf-url': request.build_absolute_uri('/mediaserver/sendpdf'), 
         'pdf-id': '1956507909008215134',
         'invoke-app-url': request.build_absolute_uri('/mediaserver/receivepdf'),
-        'invoke-app-error-url': request.build_absolute_uri('/mediaserver/pdfsignerror'),
+        'invoke-app-error-url': request.build_absolute_uri('/mediaserver/signpdferror'),
         # session-id=9085B85B364BEC31E7D38047FE54577D
         'locale': 'de',
     }
