@@ -109,7 +109,7 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 # sprint 6 sources
 sprint6_bundle = minimal_ecs_service+ """ 
-django:inst:all:pypi:django==1.1.1
+django:inst:all:pypi:django==1.1.2
 south:inst:all:pypi:south==0.7
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
