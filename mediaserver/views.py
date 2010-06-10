@@ -57,7 +57,6 @@ def receive_pdf_is_authorized(request):
 
 
 def get_pdf_data():
-    #pdf_name = 'Bericht.pdf'
     pdf_name = 'test-pdf-14-seitig.pdf'
     pdf_path = os.path.join(settings.MEDIA_ROOT, 'mediaserver', 'images', pdf_name)
     f = open(pdf_path, 'rb')
@@ -90,10 +89,22 @@ def sign_pdf_error(request):
 
 
 @forceauth.exempt
-def receive_pdf(request):
+def receive_pdf(request, jsessionid=''):
     if receive_pdf_is_authorized(request) is False:
         return HttpResponseForbidden('<h1>Access denied</h1>')
     # ..
+    print 'receivepdf jsessionid="%s"' % jsessionid
+    if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
+       pdf_url = request.REQUEST['pdf-url']
+       pdf_id = request.REQUEST['pdf-id']
+       num_bytes = request.REQUEST['num-bytes']
+       pdfas_session_id = request.REQUEST['pdfas-session-id']
+       print 'pdf-url: [%s]' % pdf_url
+       print 'pdf-id: [%s]' % pdf_id
+       print 'num-bytes: [%s]' % num_bytes
+       print 'pdfas-session-id: [%s]' % pdfas_session_id
+       url = 'http://advancedcode.de:8180/pdf-as/%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (pdf_url, pdf_id, num_bytes, pdfas_session_id)
+       return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
     return HttpResponse('receive signed PDF got [%s]' % request)
 
 
@@ -102,7 +113,7 @@ def sign_pdf(request):
     url = 'http://advancedcode.de:8180/pdf-as/Sign'
     values = {
         'preview': 'false',
-        'connector': 'bku',
+        'connector': 'moc',  # undocumented feature!
         'mode': 'textual',
         'sig_type': 'SIGNATURBLOCK_DE',
         'inline': 'false',
