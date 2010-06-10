@@ -99,10 +99,6 @@ def receive_pdf(request, jsessionid=''):
        pdf_id = request.REQUEST['pdf-id']
        num_bytes = request.REQUEST['num-bytes']
        pdfas_session_id = request.REQUEST['pdfas-session-id']
-       print 'pdf-url: [%s]' % pdf_url
-       print 'pdf-id: [%s]' % pdf_id
-       print 'num-bytes: [%s]' % num_bytes
-       print 'pdfas-session-id: [%s]' % pdfas_session_id
        url = 'http://advancedcode.de:8180/pdf-as/%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (pdf_url, pdf_id, num_bytes, pdfas_session_id)
        return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
     return HttpResponse('receive signed PDF got [%s]' % request)
