@@ -16,33 +16,50 @@
   padding-left: 5px;
   padding-right: 5px;
 }
-.dashboard_widget .read {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/images/core/Mail_verified.png) no-repeat;
+.dashboard_widget .messages{
+    list-style: none;
 }
-.dashboard_widget .unread {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/images/core/Email_warning.png) no-repeat;
+
+.dashboard_widget .messages > li{
+    clear: both;
+    height: 60px;
+    position: relative;
+    margin: 0px;
+    padding-right: 30px;
+    padding-left: 30px;
+    overflow: hidden;
 }
-#content .dashboard_widget .unread:hover{
-  border-bottom: none;
+
+.dashboard_widget .messages > li.odd{
+    background-color: #ffffff;
 }
-.dashboard_widget .reply a {
-  display: inline-block;
-  width: 24px;
-  height: 20px;
-  text-indent: -9999px;
-  overflow: hidden;
-  background: url(/static/images/core/Mail_reply.png) no-repeat;
+.dashboard_widget .messages > li.even{
+    background-color: #eeeeee;
 }
-.dashboard_widget .reply a:hover {
-  border-bottom: none !important;
+
+.dashboard_widget .messages > li.unread{
+    background-image: url(/static/images/core/Email_warning.png);
+    background-repeat: no-repeat;
+    background-position: 0px 20px;
+}
+.dashboard_widget .messages > li .head{
+    display: block;
+    height: 20px;
+    margin-left: -30px;
+}
+.dashboard_widget .messages > li .title{
+    display: block;
+}
+
+.dashboard_widget .actions{
+    width: 30px;
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+.dashboard_widget .actions a{
+    font-size: 16px;
+    width: 30px;
+    display: inline-block;
 }

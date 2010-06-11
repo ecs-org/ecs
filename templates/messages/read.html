@@ -3,9 +3,19 @@
 {% block menuSelection %}messages{% endblock %}
 
 {% block htmlbody %}
-<h2>{{ message.subject }}</h2>
-von {{ message.sender  }} an {{ message.receiver }}
-<div>
-    {{ message.text|safe }}
+<div class="message_display">
+    <h2>{{ message.subject }}</h2>
+    <div><b>Von:</b> {{ message.sender  }}</div>
+    <div><b>An:</b> {{ message.receiver }}</div>
+    <div><b>Datum:</b> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</div>
+    <div><b>Betreff:</b> 
+        {% if message.thread.submission %}
+            {{ message.thread.submission.ec_number }} -
+        {% endif %}
+        {{ message.thread.subject }}
+    </div>
+    <div style="border-top: 1px solid #999999">
+        {{ message.text|safe }}
+    </div>
 </div>
 {% endblock %}

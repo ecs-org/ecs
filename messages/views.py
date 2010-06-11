@@ -1,6 +1,8 @@
+import datetime
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponse
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
@@ -39,17 +41,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
                 task=task,
                 submission=submission,
             )
-        message = Message(
-            sender=request.user, 
-            reply_to=reply_to, 
-            thread=thread, 
-            text=form.cleaned_data['text'],
-        )
-        if reply_to:
-            message.receiver = reply_to.sender
-        else:
-            message.receiver = form.cleaned_data['receiver']
-        message.save()
+        message = thread.add_message(request.user, text=form.cleaned_data['text'])
         return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
 
     return render(request, 'messages/send.html', {
@@ -82,4 +74,13 @@ def read_message(request, message_pk=None):
     return render(request, 'messages/read.html', {
         'message': message,
     })
-    
+
+def bump_message(request, message_pk=None):
+    message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
+    message.thread.add_message(request.user, message.text)
+    return HttpResponse('OK')
+
+def close_thread(request, thread_pk=None):
+    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
+    thread.mark_closed_for_user(request.user)
+    return HttpResponse('PK')

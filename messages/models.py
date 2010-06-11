@@ -49,10 +49,13 @@ class Thread(models.Model):
     objects = ThreadManager()
 
     def mark_closed_for_user(self, user):
+        print user
         if user.id == self.sender_id:
+            print "sender"
             self.closed_by_sender = True
             self.save()
         elif user.id == self.receiver_id:
+            print "receiver"
             self.closed_by_receiver = True
             self.save()
 
@@ -73,8 +76,8 @@ class Thread(models.Model):
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
-    sender = models.ForeignKey(User, related_name='sent_messages')
-    receiver = models.ForeignKey(User, related_name='received_messages')
+    sender = models.ForeignKey(User, related_name='outgoing_messages')
+    receiver = models.ForeignKey(User, related_name='incoming_messages')
     reply_to = models.ForeignKey('self', null=True, related_name='replies')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     unread = models.BooleanField(default=True)

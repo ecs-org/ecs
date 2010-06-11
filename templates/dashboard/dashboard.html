@@ -9,25 +9,70 @@
 {% endblock %}
 
 {% block content %}
-    <div class="form main">
-        {% with 'Outgoing Threads' as title %}
-            {% with outgoing_threads as threads %}
-                {% include "dashboard/messages.inc" %}
-            {% endwith %}
-        {% endwith %}
-        {% with 'Incoming Threads' as title %}
-            {% with incoming_threads as threads %}
-                {% include "dashboard/messages.inc" %}
-            {% endwith %}        
-        {% endwith %}
-        {% include "dashboard/tasks.inc" %}
-    </div>
+    <div id="dashboard"></div>
 {% endblock %}
 
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
+    var Widget = new Class({
+        initialize: function(url){
+            this.url = null;
+            this.element = new Element('div', {'class': 'dashboard_widget'});
+            this.element.inject($('dashboard'));
+            this.load(url);
+        },
+        load: function(url){
+            var request = new Request.HTML({
+                url: url || this.url,
+                method: 'get',
+                update: this.element
+            });
+            if(url){
+                this.url = url;
+            }
+            request.addEvent('success', this.onSuccess.bind(this));
+            request.send();
+        },
+        onSuccess: function(){
+            var self = this;
+            this.element.getElements('a').each(function(link){
+                if(!link.hasClass('widget')){
+                    return;
+                }
+                link.addEvent('click', function(){
+                    if(link.hasClass('popup')){
+                        new MooDialog.Iframe(link.href, {
+                            title: 'Nachricht',
+                            size: {width: 700, height: 400},
+                            onClose: function(){
+                                self.load();
+                            }
+                        });
+                    }
+                    else if(link.hasClass('api')){
+                        var request = new Request({
+                            url: link.href,
+                            onSuccess: function(){
+                                self.load();
+                            }
+                        });
+                        request.send();
+                        return false;
+                    }
+                    else{
+                        self.load(link.href);
+                        return false;
+                    }
+                    return false;
+                });
+            });
+        }
+    });
     window.addEvent('domready', function(){
+        new Widget('{% url ecs.dashboard.views.outgoing_message_widget %}');
+        new Widget('{% url ecs.dashboard.views.incoming_message_widget %}');
+
         $$('a.popup').each(function(link){
             link.addEvent('click', function(){
                 new MooDialog.Iframe(link.href, {

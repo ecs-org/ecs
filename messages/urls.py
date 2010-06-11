@@ -8,4 +8,6 @@ urlpatterns = patterns('ecs.messages.views',
     url(r'^send/(?:(?P<submission_pk>\d+)/)?$', 'send_message'),
     url(r'^message/(?P<message_pk>\d+)/read/$', 'read_message'),
     url(r'^message/(?P<reply_to_pk>\d+)/reply/$', 'send_message'),
+    url(r'^message/(?P<message_pk>\d+)/bump/$', 'bump_message'),
+    url(r'^thread/(?P<thread_pk>\d+)/close/$', 'close_thread'),
 )

@@ -4,7 +4,8 @@
 
 {% block htmlbody %}
 <h2>{{ message.subject }}</h2>
-von {{ message.sender  }} and {{ message.receiver }}
+<div><b>Von:</b> {{ message.sender  }}</div>
+<div><b>An:</b> {{ message.receiver }}</div>
 <div>
     {{ message.text|safe }}
 </div>
