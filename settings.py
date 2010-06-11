@@ -176,7 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'south',
+#    'south',                  # TODO: get it to work with django1.2
     'django_nose',
     'reversion',
     'djangodblog',
