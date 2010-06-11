@@ -1,10 +1,10 @@
-from piston.handler import BaseHandler
+from ecs.core.views import CsrfExemptBaseHandler
 from piston.doc import generate_doc
 from feedback.models import Feedback
 import datetime
 from reversion.models import Version
 
-class FeedbackHandler(BaseHandler):
+class FeedbackHandler(CsrfExemptBaseHandler):
     model = Feedback
     fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'username', 'email', 'pub_date')
     allowed_methods = ('GET', 'PUT', "POST")
@@ -27,7 +27,7 @@ class FeedbackHandler(BaseHandler):
             obj.save()
         return obj
 
-class FeedbackCreate(BaseHandler):
+class FeedbackCreate(CsrfExemptBaseHandler):
     model = Feedback
     fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'username', 'email', 'pub_date')
 
@@ -43,7 +43,7 @@ class FeedbackCreate(BaseHandler):
     def read(self, request):
         return Feedback.objects.all()
 
-class FeedbackSearch(BaseHandler):
+class FeedbackSearch(CsrfExemptBaseHandler):
     #model = Feedback
     #exclude = ()
     #fields = ('id', 'feedbacktype', 'summary', 'description', 'origin', 'qqqusername', 'email', 'pub_date')

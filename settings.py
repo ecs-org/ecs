@@ -15,12 +15,18 @@ TEMPLATE_DEBUG = DEBUG
 
 
 # database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
-DATABASE_ENGINE = 'sqlite3'    # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = os.path.join(PROJECT_DIR, 'ecs.db')  # Or path to database file if using sqlite3.
-DATABASE_USER = ''             # Not used with sqlite3.
-DATABASE_PASSWORD = ''         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+
+DATABASES = {}
+DATABASES['sqlite'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(PROJECT_DIR, 'ecs.db'),
+    'USER': '',
+    'PASSWORD': '',
+    'HOST': '',
+    'PORT': '',
+}
+DATABASES['default'] = DATABASES['sqlite']
+
 
 # celery configuration defaults
 BROKER_HOST = 'localhost'
@@ -42,14 +48,19 @@ user = getpass.getuser()
 # use different settings if on host ecsdev.ep3.at depending username
 DBPWD_DICT = {}
 
+for user in DBPWD_DICT:
+    DATABASES[user] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': user,
+        'USER': user,
+        'PASSWORD': DBPWD_DICT[user],
+        'HOST': '127.0.0.1',
+        'PORT': '',
+    }
+
 if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
     # Use Postgresql as Django Database; Database User=current user, password like in dict
-    DATABASE_ENGINE = 'postgresql_psycopg2'
-    DATABASE_HOST = '127.0.0.1'
-    DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
-    DATABASE_NAME = user
-    DATABASE_USER = user
-    DATABASE_PASSWORD = DBPWD_DICT[user]
+    DATBASES['default'] = DATABASES[user]
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
     BROKER_USER = user
@@ -63,7 +74,8 @@ if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
 
 # use another different settings if local_settings.py exists
 try:
-    from local_settings import *
+    from local_settings import local_db
+    DATABASES['default'] = local_db
 except ImportError:
     pass
 
@@ -164,7 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'south',
+#    'south',                  # TODO: get it to work with django1.2
     'django_nose',
     'reversion',
     'djangodblog',
