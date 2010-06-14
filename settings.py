@@ -42,11 +42,12 @@ user = getpass.getuser()
 # use different settings if on host ecsdev.ep3.at depending username
 DBPWD_DICT = {}
 
+DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at'
 if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
     # Use Postgresql as Django Database; Database User=current user, password like in dict
     DATABASE_ENGINE = 'postgresql_psycopg2'
     DATABASE_HOST = '127.0.0.1'
-    DEFAULT_FROM_EMAIL = 'noreply@ecsdev.ep3.at'
+    DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,)
     DATABASE_NAME = user
     DATABASE_USER = user
     DATABASE_PASSWORD = DBPWD_DICT[user]
@@ -60,6 +61,9 @@ if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 8823
 
 # use another different settings if local_settings.py exists
 try:

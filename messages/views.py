@@ -1,3 +1,5 @@
+import traceback
+
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -44,12 +46,15 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
             reply_to=reply_to, 
             thread=thread, 
             text=form.cleaned_data['text'],
+            smtp_delivery_state='new',
         )
         if reply_to:
             message.receiver = reply_to.sender
         else:
             message.receiver = form.cleaned_data['receiver']
+        
         message.save()
+                
         return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
 
     return render(request, 'messages/send.html', {
@@ -82,4 +87,3 @@ def read_message(request, message_pk=None):
     return render(request, 'messages/read.html', {
         'message': message,
     })
-    
