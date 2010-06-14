@@ -41,11 +41,13 @@ def demo_send_pdf(request):
     if request.REQUEST.has_key('pdf-id'):
         pdf_id = request.REQUEST['pdf-id']
     else:
-        pdf_id = ''
+        return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
+    # check pdf-id
     try:
         demo_store.remove(pdf_id)
     except ValueError:
-        return HttpResponseForbidden('<h1>Invalid pdf-id</h1>')
+        # TODO if too many invalid requests, someone might be trying to guess or brute force the pdf-id
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
     pdf_data, pdf_data_size, pdf_name = demo_get_pdf_data()
     return HttpResponse(pdf_data, mimetype='application/pdf')
 
@@ -60,7 +62,7 @@ def demo_sign_pdf_error(request):
         cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
     else:
         cause = ''
-    return HttpResponse('demo_sign_pdf_error: error=[%s], cause=[%s]' % (error, cause))
+    return HttpResponse('<h1>demo_sign_pdf_error: error=[%s], cause=[%s]</h1>' % (error, cause))
 
 
 @forceauth.exempt

@@ -38,7 +38,9 @@ class Command(BaseCommand):
         pages = analyzer.pages
         print '"%s" seems valid, having %s page(s)' % (pdf_name, pages)
            
-        image_set = ImageSet(id, pages)
+        image_set = ImageSet(id)
+        if image_set.store(pages) is False:
+            raise CommandError('Can not store pages for ImageSet "%s"' % id)
 
         opt_compress = not options['nc']
         opt_interlace = not options['ni']

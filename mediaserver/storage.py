@@ -8,6 +8,10 @@ class SetData(object):
     def __init__(self, pages):
         self.pages = pages
 
+    def __str__(self):
+        return '(%d page(s))' % self.pages
+
+
 class PageData(object):
     def __init__(self, png_name):
         crit_size = 200 * 1024
