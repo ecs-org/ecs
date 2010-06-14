@@ -99,7 +99,7 @@ def receive_pdf(request, jsessionid=''):
        pdf_id = request.REQUEST['pdf-id']
        num_bytes = request.REQUEST['num-bytes']
        pdfas_session_id = request.REQUEST['pdfas-session-id']
-       url = 'http://advancedcode.de:8180/pdf-as/%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (pdf_url, pdf_id, num_bytes, pdfas_session_id)
+       url = 'http://ecsdev.ep3.at:4780/pdf-as/%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (pdf_url, pdf_id, num_bytes, pdfas_session_id)
        return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
     return HttpResponse('receive signed PDF got [%s]' % request)
 
@@ -111,10 +111,10 @@ def sign_pdf_demo(request):
 
 def sign_pdf(request):
     pdf_data , pdf_data_size, pdf_name = get_pdf_data()
-    url = 'http://advancedcode.de:8180/pdf-as/Sign'
+    url = 'http://ecsdev.ep3.at:4780/pdf-as/Sign'
     values = {
         'preview': 'false',
-        'connector': 'moc',  # undocumented feature!
+        'connector': 'moc',  # undocumented feature! selects ONLINE CCE/BKU
         'mode': 'textual',
         'sig_type': 'SIGNATURBLOCK_DE',
         'inline': 'false',
