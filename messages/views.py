@@ -1,3 +1,4 @@
+import traceback
 import datetime
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
@@ -41,6 +42,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
                 task=task,
                 submission=submission,
             )
+
         message = thread.add_message(request.user, text=form.cleaned_data['text'])
         return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
 
