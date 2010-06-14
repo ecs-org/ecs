@@ -1,0 +1,3 @@
+The pdf is kept here to enable the pdf signing demo.
+Delete it once arbitrary docs can be signed.
+
