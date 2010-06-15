@@ -17,6 +17,7 @@ class Command(BaseCommand):
         make_option('--ni', action='store_true', dest='ni', default=False, help='do NOT use Adam7 interlacing for the PNG images'),
     )
 
+
     def handle(self, *args, **options):
         len_args = len(args)
         if len_args != 2:
@@ -37,15 +38,15 @@ class Command(BaseCommand):
             raise CommandError('File "%s" is not valid' % pdf_name)
         pages = analyzer.pages
         print '"%s" seems valid, having %s page(s)' % (pdf_name, pages)
-           
-        image_set = ImageSet(id)
-        if image_set.store(pages) is False:
-            raise CommandError('Can not store pages for ImageSet "%s"' % id)
 
         opt_compress = not options['nc']
         opt_interlace = not options['ni']
 
+        image_set = ImageSet(id)
+        if image_set.store('manage.py', pdf_name, pages, opt_compress, opt_interlace) is False:
+            raise CommandError('Can not store ImageSet "%s"' % id)
+
         renderer = Renderer()
-        renderer.render(pdf_name, image_set, opt_compress, opt_interlace)
+        renderer.render(image_set)
 
         print 'done'

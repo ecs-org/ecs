@@ -32,7 +32,7 @@ def show(request, id=1, page=1, zoom='1'):
     zoom_list_json = JSONEncoder().encode(render_set.zoom_list);
     zoom_pages_json = JSONEncoder().encode(render_set.zoom_pages);
 
-    pages = image_set.pages
+    pages = image_set.set_data.pages
 
     if page < 1 or page > pages:
         return HttpResponse('Error: no page = "%s" at zoom = "%s"!' % (page, zoom))

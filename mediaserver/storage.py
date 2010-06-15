@@ -5,11 +5,15 @@ import time
 
 
 class SetData(object):
-    def __init__(self, pages):
+    def __init__(self, origin, pdf_name, pages, opt_compress, opt_interlace):
+        self.origin = origin
+        self.pdf_name = pdf_name
         self.pages = pages
+        self.opt_compress = opt_compress
+        self.opt_interlace = opt_interlace
 
     def __str__(self):
-        return '(%d page(s))' % self.pages
+        return '(origin: %s, "%s", page(s): %d, compress: %s, interlace: %s)' % (self.origin, self.pdf_name, self.pages, self.opt_compress, self.opt_interlace)
 
 
 class PageData(object):
@@ -40,10 +44,9 @@ class Storage(object):
     def get_set_key(self, id):
         return str('%s:%s' % (self.ns, id))
 
-    def store_set(self, pages, id):
+    def store_set(self, id, set_data):
         set_key = self.get_set_key(id)
         print 'storing set "%s" as "%s"' % (id, set_key)
-        set_data = SetData(pages)
         return self.mc.set(set_key, set_data)
 
     def load_set(self, id):
@@ -54,7 +57,7 @@ class Storage(object):
     def get_page_key(self, id, bigpage, zoom):
         return str('%s:%s:%s:%s' % (self.ns, id, bigpage, zoom))
 
-    def store_page(self, png_name, id, bigpage, zoom):
+    def store_page(self, id, bigpage, zoom, png_name):
         page_key = self.get_page_key(id, bigpage, zoom)
         print 'storing page "%s" as "%s"' % (png_name, page_key)
         page_data = PageData(png_name)

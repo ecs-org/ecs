@@ -17,10 +17,12 @@ class Renderer(object):
         print cmd
         os.system(cmd)
 
+
     def render_page(self, png_name_in, png_name, cmd_compress, cmd_interlace):
         cmd = 'convert %s%s%s %s' % (cmd_compress, cmd_interlace, png_name_in, png_name)
         print cmd
         os.system(cmd)
+
 
     def render_bigpage(self, png_names, png_name, zoom, w, h, background, cmd_compress, cmd_interlace):
         cmd = \
@@ -32,9 +34,11 @@ class Renderer(object):
         print cmd
         os.system(cmd)
 
+
     def remove_file(self, file_name):
         print 'removing "%s"' % file_name
         os.remove(file_name)
+
 
     def get_name(self, pdf_fname, page, zoom, is_bigpage=False, opt_compress=False, opt_interlace=False):
         if is_bigpage:
@@ -48,11 +52,16 @@ class Renderer(object):
             suffix += '_z'
         return '%s_%s%s_%04d%s.png' % (pdf_fname, zoom, big, page, suffix)
 
-    def render(self, pdf_name, image_set, opt_compress, opt_interlace):
+
+    def render(self, image_set):
         cm_per_inch = 2.54
         din_a4_x = 21.0
         din_a4_y = 29.7
         background = '#dddddd'
+        pdf_name = image_set.set_data.pdf_name
+        pages = image_set.set_data.pages
+        opt_compress = image_set.set_data.opt_compress
+        opt_interlace = image_set.set_data.opt_interlace
         if opt_compress:
             cmd_compress = '-compress Zip -quality 100 '  # keep blank at end
         else:
@@ -65,7 +74,6 @@ class Renderer(object):
         print 'opt_interlace: %s' % opt_interlace
         errors = 0
         storage = Storage()
-        pages = image_set.pages
         for zoom in image_set.images:
             print '%s: ' % zoom,
             width = image_set.render_set.width
@@ -86,7 +94,7 @@ class Renderer(object):
                         png_name = self.get_name(pdf_fname, page, zoom, False, opt_compress, opt_interlace)
                         self.render_page(png_name_in, png_name, cmd_compress, cmd_interlace)
                         self.remove_file(png_name_in)
-                    retval = storage.store_page(png_name, image_set.id, page, zoom)
+                    retval = storage.store_page(image_set.id, page, zoom, png_name)
                     if not retval:
                         print 'error: storage failed'
                         errors += 1
@@ -108,7 +116,7 @@ class Renderer(object):
                     for page in page_set:
                         name = self.get_name(pdf_fname, page, zoom)
                         self.remove_file(name)
-                    retval = storage.store_page(png_name, image_set.id, bigpage, zoom)
+                    retval = storage.store_page(image_set.id, bigpage, zoom, png_name)
                     if not retval:
                         print 'error: storage failed'
                         errors += 1
@@ -117,3 +125,9 @@ class Renderer(object):
             return False
         else:
             return True
+
+
+    def rerender_bigpage(self, id, bigpage, zoom):
+        # id -> pdf_name, imageset, opt_compress, opt_interlace
+        return
+        
