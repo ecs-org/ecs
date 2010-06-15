@@ -4,11 +4,12 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage
 from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.messages.models import Message, Thread
-from ecs.messages.forms import SendMessageForm, ReplyToMessageForm
+from ecs.messages.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
     submission, task, reply_to = None, None, None
@@ -52,21 +53,6 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         'form': form,
         'thread': thread,
     })
-    
-def inbox(request):
-    return render(request, 'messages/inbox.html', {
-        'message_list': Message.objects.select_related('sender', 'receiver').filter(receiver=request.user).order_by('-timestamp'),
-    })
-
-def outbox(request):
-    return render(request, 'messages/outbox.html', {
-        'message_list': Message.objects.select_related('sender', 'receiver').filter(sender=request.user).order_by('-timestamp'),
-    })
-    
-def list_messages(request):
-    return render(request, 'messages/list.html', {
-        'message_list': Message.objects.select_related('sender', 'receiver').order_by('-timestamp'),
-    })    
 
 def read_message(request, message_pk=None):
     message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
@@ -85,4 +71,88 @@ def bump_message(request, message_pk=None):
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
-    return HttpResponse('PK')
+    return HttpResponse('OK')
+    
+def delegate_thread(request, thread_pk=None):
+    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
+    form = ThreadDelegationForm(request.POST or None)
+    if form.is_valid():
+        thread.delegate(request.user, form.cleaned_data['to'])
+        return HttpResponse("OK")
+    return render(request, 'messages/delegate_thread.html', {
+        'thread': thread,
+        'form': form,
+    })
+    
+def incoming_message_widget(request):
+    return message_widget(request, 
+        queryset=Message.objects.incoming(request.user).open(request.user),
+        template='messages/widgets/incoming_messages.inc',
+        user_sort='sender__username',
+        session_prefix='dashboard:incoming_messages',
+        page_size=4,
+        extra_context={
+            'incoming': True
+        }
+    )
+
+def outgoing_message_widget(request):
+    return message_widget(request, 
+        queryset=Message.objects.outgoing(request.user).open(request.user),
+        template='messages/widgets/outgoing_messages.inc',
+        user_sort='receiver__username',
+        session_prefix='dashboard:outgoing_messages',
+        page_size=4,
+    )
+
+def message_widget(request, queryset=None, template='messages/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4):
+    queryset = queryset.select_related('thread')
+
+    sort_session_key = '%s:sort' % session_prefix
+    sort = request.GET.get('sort', request.session.get(sort_session_key, '-timestamp'))
+    if sort:
+        if not sort in ('timestamp', '-timestamp', 'user', '-user'):
+            sort = None
+        if sort:
+            queryset = queryset.order_by(sort.replace('user', user_sort))
+    request.session[sort_session_key] = sort
+
+    page_session_key = 'dashboard:%s:page' % session_prefix
+    try:
+        page_num = int(request.GET.get('p', request.session.get(page_session_key, 1)))
+    except ValueError:
+        page_num = 1
+    paginator = Paginator(queryset, page_size)
+    try:
+        page = paginator.page(page_num)
+    except EmptyPage:
+        page_num = paginator.num_pages
+        page = paginator.page(page_num)
+    request.session[page_session_key] = page_num
+
+    context = {
+        'page': page,
+        'sort': sort,
+    }
+    if extra_context:
+        context.update(extra_context)
+    return render(request, template, context)
+
+def inbox(request):
+    return message_widget(request, 
+        template='messages/inbox.html',
+        queryset=Message.objects.incoming(request.user).select_related('sender', 'receiver', 'thread').order_by('-timestamp'),
+        session_prefix='messages:inbox',
+        user_sort='sender__username',
+        page_size=3,
+    )
+
+def outbox(request):
+    return message_widget(request, 
+        template='messages/outbox.html',
+        queryset=Message.objects.outgoing(request.user).select_related('sender', 'receiver', 'thread').order_by('-timestamp'),
+        session_prefix='messages:outbox',
+        user_sort='receiver__username',
+        page_size=3,
+    )
+

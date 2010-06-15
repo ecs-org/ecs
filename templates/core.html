@@ -1,17 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
 
-{% block htmlcss %}
-    {{ block.super }}
-    {% compress css %}
-        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/core.css" />
-        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/meetings.css" />
-        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/dashboard.css" />
-        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
-        <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
-    {% endcompress %}
-{% endblock %}
-
 {% block account %} 
   <a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a> 
   {{ user.get_full_name|default:user.username }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
@@ -59,7 +48,6 @@
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
           <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
-          <li><a href="{% url ecs.messages.views.list_messages %}">Liste aller Nachrichten</a></li>
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
           <li><a href="{% url ecs.pdfviewer.views.demo %}">PDF Viewer</a></li>
           <li><a href="{% url ecs.pdfsigner.views.demo %}">PDF Signer</a></li>

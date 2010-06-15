@@ -1,15 +1,23 @@
 {% extends "messages/list.html" %}
 
 {% block content %}
-<h2>Outbox</h2>
-<a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a>
+<h2>Outbox ({{ page.paginator.count }})</h2>
+<a class="widget popup" href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a> 
+| <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
+| <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
 {{ block.super }}
 {% endblock %}
 
 {% block extra_message_table_headers %}
-    <th>To</th>
+    <th>An</th>
 {% endblock %}
 
 {% block extra_message_table_cells %}
     <td>{{ message.receiver }}</td>
+{% endblock %}
+
+
+{% block message_actions %}
+    {{ block.super }}
+    | <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump">Bump</a>
 {% endblock %}

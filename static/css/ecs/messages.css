@@ -1,0 +1,15 @@
+.message_display .actions{
+    width: 30px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.message_display .actions a{
+    display: block;
+    font-size: 30px;
+}
+
+table.messages .threadstart{
+    border-top: 1px solid #cccccc;
+}

@@ -36,19 +36,20 @@
         },
         onSuccess: function(){
             var self = this;
-            this.element.getElements('a').each(function(link){
-                if(!link.hasClass('widget')){
-                    return;
-                }
+            this.element.getElements('a.widget').each(function(link){
                 link.addEvent('click', function(){
                     if(link.hasClass('popup')){
-                        new MooDialog.Iframe(link.href, {
+                        var popup = new MooDialog.Iframe(link.href, {
                             title: 'Nachricht',
                             size: {width: 700, height: 400},
                             onClose: function(){
                                 self.load();
                             }
                         });
+                        var win = popup.content.getFirst('iframe').contentWindow;
+                        win.close = function(){
+                            popup.close();
+                        };
                     }
                     else if(link.hasClass('api')){
                         var request = new Request({
@@ -70,8 +71,8 @@
         }
     });
     window.addEvent('domready', function(){
-        new Widget('{% url ecs.dashboard.views.outgoing_message_widget %}');
-        new Widget('{% url ecs.dashboard.views.incoming_message_widget %}');
+        new Widget('{% url ecs.messages.views.outgoing_message_widget %}');
+        new Widget('{% url ecs.messages.views.incoming_message_widget %}');
 
         $$('a.popup').each(function(link){
             link.addEvent('click', function(){

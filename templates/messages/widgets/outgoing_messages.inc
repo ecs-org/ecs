@@ -1,4 +1,4 @@
-{% extends 'dashboard/messages.inc' %}
+{% extends 'messages/widgets/messages.inc' %}
 
 {% block title %}Warten auf{% endblock %}
 

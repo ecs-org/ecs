@@ -15,30 +15,32 @@
         <a class="widget popup title" href="{% url ecs.messages.views.read_message message_pk=message.pk %}">{{ message.thread.subject|truncatewords:10 }}</a>
         <span class="bob">{% block bob %}{{ message.sender }} -&gt; {{ message.receiver }}{% endblock %}</span>
         <span class="actions">
-            {% ifequal message.sender request.user %}
+            {% if not incoming %}
                 <a class="widget api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"> ⟳ </a>
             {% else %}
-                <a class="widget popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Delegieren"> ↬ </a>
+                <a class="widget popup" href="{% url ecs.messages.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren"> ↬ </a>
                 <a class="widget popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"> ➥ </a>
-            {% endifequal %}
+            {% endif %}
             <a class="widget api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"> ✓ </a>
         </span>
     </li>
 {% endfor %}
 </ol>
 
-{% block more_link %}{% endblock %}
+<div class="paginator">
+    {% block more_link %}{% endblock %}
 
-{% if page.has_previous %}
-    <a class="widget" href="{{ request.path }}?p=1"> ⇤ </a>
-    <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"> ↩ </a>
-{% endif %}
+    {% if page.has_previous %}
+        <a class="widget" href="{{ request.path }}?p=1"> ⇤ </a>
+        <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"> ↩ </a>
+    {% endif %}
 
-{% if page.has_next %}
-    <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"> ↪ </a>
-    <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"> ⇥ </a>
-{% endif %}
+    {% if page.has_next %}
+        <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"> ↪ </a>
+        <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"> ⇥ </a>
+    {% endif %}
+    
+    {{ page.number }} von {{ page.paginator.num_pages }}
+</div>
 
-
-{{ page.number }} von {{ page.paginator.num_pages }}
 

@@ -6,6 +6,17 @@ from django.contrib.auth.models import User
 from ecs.messages.mail import send_mail
 
 
+MESSAGE_ORIGIN_ALICE = 1
+MESSAGE_ORIGIN_BOB = 2
+
+DELIVERY_STATES = (
+    ("new", "new"),
+    ("sent", "sent"),
+    ("failed", "failed"),
+    ("skipped", "skipped"),
+)
+
+
 class ThreadQuerySet(models.query.QuerySet):
     def by_user(self, *users):
         return self.filter(models.Q(sender__in=users) | models.Q(receiver__in=users))
@@ -29,14 +40,32 @@ class ThreadManager(models.Manager):
         
 class MessageQuerySet(models.query.QuerySet):
     def by_user(self, *users):
-        return self.filter(models.Q(sender__in=users) | models.Q(receiver__in=users))
+        return self.filter(models.Q(thread__sender__in=users) | models.Q(thread__receiver__in=users))
+        
+    def open(self, user):
+        return self.filter(models.Q(thread__closed_by_receiver=False, thread__receiver=user) | models.Q(thread__closed_by_sender=False, thread__sender=user))
+        
+    def outgoing(self, user):
+        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB))
+        
+    def incoming(self, user):
+        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
+        
+    
 
 class MessageManager(models.Manager):
     def get_query_set(self):
-        return ThreadQuerySet(self.model)
+        return MessageQuerySet(self.model)
 
     def by_user(self, *users):
         return self.all().by_user(*users)
+        
+    def incoming(self, user):
+        return self.all().incoming(user)
+        
+    def outgoing(self, user):
+        return self.all().outgoing(user)
+
 
 class Thread(models.Model):
     subject = models.CharField(max_length=100)
@@ -53,36 +82,44 @@ class Thread(models.Model):
     objects = ThreadManager()
 
     def mark_closed_for_user(self, user):
-        print user
         if user.id == self.sender_id:
-            print "sender"
             self.closed_by_sender = True
             self.save()
         elif user.id == self.receiver_id:
-            print "receiver"
             self.closed_by_receiver = True
             self.save()
 
     def add_message(self, user, text, reply_to=None):
         if user.id == self.receiver_id:
             receiver = self.sender
+            origin = MESSAGE_ORIGIN_BOB
         elif user.id == self.sender_id:
             receiver = self.receiver
+            origin = MESSAGE_ORIGIN_ALICE
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s." % (self.sender, self.receiver))
-        msg = self.messages.create(sender=user, receiver=receiver, text=text, reply_to=reply_to)
+        msg = self.messages.create(
+            sender=user, 
+            receiver=receiver, 
+            text=text, 
+            reply_to=reply_to, 
+            origin=origin,
+        )
         if self.closed_by_sender or self.closed_by_receiver:
             self.closed_by_sender = False
             self.closed_by_receiver = False
             self.save()
         return msg
 
-DELIVERY_STATES = (
-    ("new", "new"),
-    ("sent", "sent"),
-    ("failed", "failed"),
-    ("skipped", "skipped"),
-)
+    def delegate(self, from_user, to_user):
+        if from_user.id == self.sender_id:
+            self.sender = to_user
+        elif from_user.id == self.receiver_id:
+            self.receiver = to_user
+        else:
+            raise ValueError("Threads may only be delegated by the current sender or receiver")
+        self.save()
+
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
@@ -92,14 +129,15 @@ class Message(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     unread = models.BooleanField(default=True)
     text = models.TextField()
-    
-    objects = MessageManager()
+    origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
     
     smtp_delivery_state = models.CharField(max_length=1, 
                             choices=DELIVERY_STATES, default='new',
                             db_index=True)
     
     uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().hex, db_index=True)
+    
+    objects = MessageManager()
     
     @property
     def return_username(self):

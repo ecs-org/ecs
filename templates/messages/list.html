@@ -3,35 +3,91 @@
 {% block menuSelection %}messages{% endblock %}
 
 {% block content %}
-{{ message_list|length }} Nachrichten
-<table>
+
+<table class="messages">
     <tr>
-        <th>Timestamp</th>
-        <th>Subject</th>
-        <th>Unread</th>
-        <th>Einreichung</th>
+        <th>Datum</th>
+        <th>Betreff</th>
+        <th>Unglesen</th>
+        <th>Task</th>
         {% block extra_message_table_headers %}
-            <th>From</th>
-            <th>To</th>
+            <th>Von</th>
+            <th>An</th>
         {% endblock %}
         <th></th>
     </tr>
-{% for message in message_list %}
-    <tr>
+{% for message in page.object_list %}
+    <tr {% ifchanged message.thread %}class="threadstart"{% endifchanged %}>
         <td>{{ message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
-        <td><a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">{{ message.subject }}</a></td>
-        <td>{{ message.unread }}</td>
-        <td>{{ message.submission }}</td>
+        <td>
+            <a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">
+                {% if message.thread.submission %}{{ message.thread.submission.ec_number }} - {% endif %}
+                {{ message.thread.subject }}
+            </a>
+        </td>
+        <td>{{ message.unread|yesno }}</td>
+        <td>{{ message.thread.task|default:'-' }}</td>
         {% block extra_message_table_cells %}
             <td>{{ message.sender }}</td>
             <td>{{ message.receiver }}</td>
         {% endblock %}
         <td>
             {% block message_actions %}
-                <a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">Lesen</a>
+                <a class="popup" href="{% url ecs.messages.views.read_message message_pk=message.pk %}">Lesen</a>
+                {% if not message.thread.closed %}
+                | <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt">Erledigt</a>
+                {% endif %}
             {% endblock %}
         </td>
     </tr>
 {% endfor %}
 </table>
+
+<div class="paginator">
+    {% if page.has_previous %}
+        <a class="widget" href="{{ request.path }}?p=1"> ⇤ </a>
+        <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"> ↩ </a>
+    {% endif %}
+
+    {% if page.has_next %}
+        <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"> ↪ </a>
+        <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"> ⇥ </a>
+    {% endif %}
+
+
+    {{ page.number }} von {{ page.paginator.num_pages }}
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        // FIXME: if we keep the popup ui, this should be reusable (e.g. by dashboard)
+        window.addEvent('domready', function(){
+            $$('a.popup').each(function(link){
+                link.addEvent('click', function(){
+                    new MooDialog.Iframe(link.href, {
+                        title: 'Nachricht',
+                        size: {width: 700, height: 400},
+                        onClose: function(){
+                            window.location.reload();
+                        }
+                    });
+                    return false;
+                });
+            });
+            $$('a.api').each(function(link){
+                link.addEvent('click', function(){
+                    var request = new Request({
+                        url: link.href,
+                        onSuccess: function(){
+                            window.location.reload();
+                        }
+                    });
+                    request.send();
+                    return false;
+                });
+            });
+        });
+    </script>
 {% endblock %}

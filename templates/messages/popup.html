@@ -1,0 +1,21 @@
+{% extends "shell.html" %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        $$('a.api').each(function(link){
+            link.addEvent('click', function(){
+                var request = new Request({
+                    url: link.href,
+                    onSuccess: function(){
+                        window.close();
+                    }
+                });
+                request.send();
+                return false;
+            });
+        })
+    });
+</script>
+{% endblock %}

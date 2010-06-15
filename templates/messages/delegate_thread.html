@@ -1,0 +1,21 @@
+{% extends "shell.html" %}
+{% load core %}
+
+{% block htmlbody %}
+<form action="" method="post" class="form main">
+    <ol>
+        <li>
+            <label>Thread</label>
+            <span>{{ thread }}</span>
+        </li>
+        <li>
+            <label for="id_to">Delegieren an</label>
+            {{ form.to }}
+            {% if form.to.errors %}
+                <span class="errors">{{ form.to.errors }}</span>
+            {% endif %}
+        </li>
+    </ol>
+    <input type="submit" value="Delegieren" />
+</form>
+{% endblock %}

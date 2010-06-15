@@ -1,6 +1,4 @@
-{% extends "shell.html" %}
-
-{% block menuSelection %}messages{% endblock %}
+{% extends "messages/popup.html" %}
 
 {% block htmlbody %}
 <div class="message_display">
@@ -14,8 +12,37 @@
         {% endif %}
         {{ message.thread.subject }}
     </div>
+    <div class="actions">
+        {% ifequal message.sender request.user %}
+            <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"> ⟳ </a>
+        {% else %}
+            <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Delegieren"> ↬ </a>
+            <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"> ➥ </a>
+        {% endifequal %}
+        <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"> ✓ </a>
+    </div>
     <div style="border-top: 1px solid #999999">
         {{ message.text|safe }}
     </div>
 </div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        $$('a.api').each(function(link){
+            link.addEvent('click', function(){
+                var request = new Request({
+                    url: link.href,
+                    onSuccess: function(){
+                        window.close();
+                    }
+                });
+                request.send();
+                return false;
+            });
+        })
+    });
+</script>
 {% endblock %}

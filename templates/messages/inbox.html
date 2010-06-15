@@ -1,16 +1,20 @@
 {% extends "messages/list.html" %}
 
 {% block content %}
-<h2>Inbox</h2>
+<h2>Inbox ({{ page.paginator.count }})</h2>
+
+<a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
+| <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
+
 {{ block.super }}
 {% endblock %}
 
 {% block message_actions %}
-    {{ block.super }} | <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Antworten</a>
+    {{ block.super }} | <a class="popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Antworten</a>
 {% endblock %}
 
 {% block extra_message_table_headers %}
-    <th>From</th>
+    <th>Von</th>
 {% endblock %}
 
 {% block extra_message_table_cells %}

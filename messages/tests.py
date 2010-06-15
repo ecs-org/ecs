@@ -31,21 +31,21 @@ class MessageTest(TestCase):
         
         response = self.client.get(reverse('ecs.messages.views.outbox'))
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(message in response.context['message_list'])
+        self.failUnless(message in response.context['page'].object_list)
         response = self.client.get(reverse('ecs.messages.views.inbox'))
         self.failUnlessEqual(response.status_code, 200)
-        self.failIf(message in response.context['message_list'])
+        self.failIf(message in response.context['page'].object_list)
 
         self.client.logout()
         self.client.login(username='bob', password='...')
 
         response = self.client.get(reverse('ecs.messages.views.inbox'))
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(message in response.context['message_list'])
+        self.failUnless(message in response.context['page'].object_list)
 
         response = self.client.get(reverse('ecs.messages.views.outbox'))
         self.failUnlessEqual(response.status_code, 200)
-        self.failIf(message in response.context['message_list'])
+        self.failIf(message in response.context['page'].object_list)
 
         self.client.logout()
 
