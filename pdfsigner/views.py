@@ -42,7 +42,6 @@ def demo_send_pdf(request):
         pdf_id = request.REQUEST['pdf-id']
     else:
         return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-    # check pdf-id
     try:
         demo_store.remove(pdf_id)
     except ValueError:
@@ -75,17 +74,15 @@ def demo_receive_pdf(request, jsessionid=''):
        pdf_id = request.REQUEST['pdf-id']
        num_bytes = request.REQUEST['num-bytes']
        pdfas_session_id = request.REQUEST['pdfas-session-id']
-       pdfas_service = 'http://ecsdev.ep3.at:4780/pdf-as/'
-       url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (pdfas_service, pdf_url, pdf_id, num_bytes, pdfas_session_id)
+       url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
        return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
     return HttpResponse('demo_receive_pdf got [%s]' % request)
 
 
 def demo_sign_pdf(request):
     pdf_data , pdf_data_size, pdf_name = demo_get_pdf_data()
-    pdfas_service = 'http://ecsdev.ep3.at:4780/pdf-as/'
-    url_sign = '%sSign' % pdfas_service
-    pdf_id = '%s' % random.randint(1, 10e18)
+    url_sign = '%sSign' % settings.PDFAS_SERVICE
+    pdf_id = '%s' % random.randint(1, 10e17)
     demo_store.append(pdf_id)
     url_send = request.build_absolute_uri('demo_send_pdf')
     url_receive = request.build_absolute_uri('demo_receive_pdf')
@@ -115,4 +112,3 @@ def demo_sign_pdf(request):
 def demo(request):
     url = request.build_absolute_uri('demo_sign_pdf')
     return HttpResponse('<h1>Start the Online PDF Signing Demo</h1><a href="%s">start link</a>' % url)
-

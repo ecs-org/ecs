@@ -221,3 +221,6 @@ MEMCACHED_PORT = 11211
 
 MEMCACHEDB_HOST = '127.0.0.1'
 MEMCACHEDB_PORT = 21201
+
+# pdf-as settings
+PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
