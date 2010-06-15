@@ -89,7 +89,7 @@ class Migration(SchemaMigration):
             'receiver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'incoming_messages'", 'to': "orm['auth.User']"}),
             'reply_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'replies'", 'null': 'True', 'to': "orm['messages.Message']"}),
             'sender': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'outgoing_messages'", 'to': "orm['auth.User']"}),
-            'smtp_delivery_state': ('django.db.models.fields.CharField', [], {'default': "'new'", 'max_length': '1', 'db_index': 'True'}),
+            'smtp_delivery_state': ('django.db.models.fields.CharField', [], {'default': "'new'", 'max_length': '7', 'db_index': 'True'}),
             'text': ('django.db.models.fields.TextField', [], {}),
             'thread': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'messages'", 'to': "orm['messages.Thread']"}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),

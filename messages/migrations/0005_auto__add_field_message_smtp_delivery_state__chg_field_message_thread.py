@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding field 'Message.smtp_delivery_state'
-        db.add_column('messages_message', 'smtp_delivery_state', self.gf('django.db.models.fields.CharField')(default='new', max_length=1), keep_default=False)
+        db.add_column('messages_message', 'smtp_delivery_state', self.gf('django.db.models.fields.CharField')(default='new', max_length=7), keep_default=False)
 
         # Changing field 'Message.thread'
         db.alter_column('messages_message', 'thread_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['messages.Thread']))
@@ -94,7 +94,7 @@ class Migration(SchemaMigration):
             'receiver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'received_messages'", 'to': "orm['auth.User']"}),
             'reply_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'replies'", 'null': 'True', 'to': "orm['messages.Message']"}),
             'sender': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sent_messages'", 'to': "orm['auth.User']"}),
-            'smtp_delivery_state': ('django.db.models.fields.CharField', [], {'default': "'new'", 'max_length': '1'}),
+            'smtp_delivery_state': ('django.db.models.fields.CharField', [], {'default': "'new'", 'max_length': '7'}),
             'text': ('django.db.models.fields.TextField', [], {}),
             'thread': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'messages'", 'to': "orm['messages.Thread']"}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
