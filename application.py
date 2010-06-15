@@ -108,8 +108,8 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 
 # sprint 6 sources
-sprint6_bundle = minimal_ecs_service+ """ 
-django:inst:all:pypi:django==1.1.2
+sprint6_bundle = minimal_ecs_service+ """
+django:inst:all:pypi:django==1.2.1
 south:inst:all:pypi:south==0.7
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
@@ -126,13 +126,14 @@ django-db-log:inst:all:pypi:django-db-log
 
 # simple testing
 nose:inst:all:pypi:nose
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
+django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.2
 
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+mpmath:inst:all:pypi:mpmath
 
 # pisa
 pyPDF:inst:all:pypi:pyPDF
@@ -198,7 +199,6 @@ antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
-mpmath:inst:all:pypi:mpmath
 """
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0
