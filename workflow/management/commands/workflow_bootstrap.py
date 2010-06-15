@@ -31,9 +31,13 @@ class Command(BaseCommand):
             from ecs.core import workflow as cwf
 
             try:
-                Graph.objects.get(model=Submission, auto_start=True)
+                old_graph = Graph.objects.get(model=Submission, auto_start=True)
+                old_graph.auto_start = False
+                old_graph.save()
             except Graph.MultipleObjectsReturned:
                 raise CommandError("There is more than one graph for Submission with auto_start=True.")
+            except Graph.DoesNotExist:
+                pass
 
             g = Graph.objects.create(model=Submission, auto_start=True)
 
