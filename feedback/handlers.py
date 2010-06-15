@@ -2,7 +2,7 @@ from ecs.core.views import CsrfExemptBaseHandler
 from piston.doc import generate_doc
 from feedback.models import Feedback
 import datetime
-from reversion.models import Version
+#from reversion.models import Version
 
 class FeedbackHandler(CsrfExemptBaseHandler):
     model = Feedback
@@ -51,8 +51,8 @@ class FeedbackSearch(CsrfExemptBaseHandler):
 
     @classmethod
     def username(dummy, self):
-        version_list = Version.objects.get_for_object(self)
-        print version_list[-1].revision.user
+        #version_list = Version.objects.get_for_object(self)
+        #print version_list[-1].revision.user
         return "XXX"
 
     def read(self, request, type, origin, offsetdesc):
@@ -88,7 +88,8 @@ class FeedbackSearch(CsrfExemptBaseHandler):
                 ditem[k] = getattr(item, k, None)
                 ditem["metoo"] = 0
                 try:
-                    user = list(Version.objects.get_for_object(item))[-1].revision.user
+                    #user = list(Version.objects.get_for_object(item))[-1].revision.user
+                    user = item.user
                     ditem["username"] = user.username
                     ditem["email"] = user.email
                     if user == request.user:

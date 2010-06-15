@@ -3,10 +3,6 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-import reversion
-from reversion.models import Version
-
-
 class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'Idea'),('q','Question'),('p', 'Problem'),('l','Praise'))
     feedbacktype = models.CharField(choices=FEEDBACK_TYPES, max_length=1)
@@ -17,8 +13,4 @@ class Feedback(models.Model):
     pub_date = models.DateTimeField('date published')
     me_too_votes = models.ManyToManyField(User, null=True, blank=True)
 
-import reversion
 
-# disabled for now, because i dont know if we currently need reversion for feedback model
-#if not reversion.is_registered(Feedback):
-#    reversion.register(Feedback)

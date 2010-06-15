@@ -113,7 +113,6 @@ django:inst:all:pypi:django==1.2.1
 south:inst:all:pypi:south==0.7
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
-django-reversion:inst:all:pypi:django-reversion
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master

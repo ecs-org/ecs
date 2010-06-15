@@ -2,8 +2,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-import reversion
-
 class EthicsCommission(models.Model):
     name = models.CharField(max_length=120)
     address_1 = models.CharField(max_length=120)
@@ -47,8 +45,3 @@ class MedicalCategory(models.Model):
         return u'%s (%s)' % (self.name, self.abbrev)
 
 
-# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-if not reversion.is_registered(EthicsCommission):
-    reversion.register(EthicsCommission) 
-    reversion.register(MedicalCategory)
-    reversion.register(ExpeditedReviewCategory)

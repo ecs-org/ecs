@@ -142,7 +142,7 @@ TEMPLATE_DIRS = (
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth", # FIXME: replace with "django.contrib.auth.context_processors.auth" for django 1.2 
+    "django.contrib.auth.context_processors.auth"
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
@@ -157,8 +157,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'reversion.middleware.RevisionMiddleware',
-	'ecs.workflow.middleware.WorkflowMiddleware',
+    'ecs.workflow.middleware.WorkflowMiddleware',
 )   
 
 # debug toolbar config:
@@ -184,7 +183,6 @@ INSTALLED_APPS = (
 
     'south',
     'django_nose',
-    'reversion',
     'djangodblog',
     'celery',
     'ecs.utils.countries',

@@ -9,7 +9,6 @@ from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 
-import reversion
 
 #impediments = p.get_impediments(time, event.duration)
 #if impediments:
@@ -405,8 +404,3 @@ class Constraint(models.Model):
         return timedelta_to_seconds(self.duration)
    
 
-
-# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-#if not reversion.is_registered(Meeting):
-#    reversion.register(Meeting) 
-#    reversion.register(TimeTableEntry)

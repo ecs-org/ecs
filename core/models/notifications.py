@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 
-import reversion
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
@@ -65,8 +64,4 @@ class ProgressReportNotification(ReportNotification):
     class Meta:
         app_label = 'core'
 
-# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-if not reversion.is_registered(Notification):
-    reversion.register(Notification) 
-    reversion.register(CompletionReportNotification) 
-    reversion.register(ProgressReportNotification)
+

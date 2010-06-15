@@ -6,7 +6,6 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 
-import reversion
 
 class DocumentType(models.Model):
     name = models.CharField(max_length=100)
@@ -70,7 +69,4 @@ class Document(models.Model):
             self.uuid_document_revision = self.uuid_document
         return super(Document, self).save(**kwargs)
 
-# Register models conditionally to avoid `already registered` errors when this module gets loaded twice.
-if not reversion.is_registered(Document):
-    reversion.register(Document) 
 

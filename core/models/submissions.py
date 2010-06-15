@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.contrib.auth.models import User
-import reversion
 import datetime
 
 class Submission(models.Model):
@@ -425,14 +424,6 @@ class ForeignParticipatingCenter(models.Model):
     
 
 from ecs import workflow
+workflow.register(Submission)
 
-if not reversion.is_registered(Submission):
-    reversion.register(Measure) 
-    reversion.register(ForeignParticipatingCenter) 
-    reversion.register(Submission) 
-    reversion.register(SubmissionForm) 
-    reversion.register(NonTestedUsedDrug) 
-    reversion.register(Investigator) 
-    reversion.register(InvestigatorEmployee) 
-    
-    workflow.register(Submission)
+
