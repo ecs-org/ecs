@@ -82,7 +82,7 @@ def demo_receive_pdf(request, jsessionid=''):
 def demo_sign_pdf(request):
     pdf_data , pdf_data_size, pdf_name = demo_get_pdf_data()
     url_sign = '%sSign' % settings.PDFAS_SERVICE
-    pdf_id = '%s' % random.randint(1, 10e17)
+    pdf_id = '%s' % random.randint(1, int(1e17) - 1)
     demo_store.append(pdf_id)
     url_send = request.build_absolute_uri('demo_send_pdf')
     url_receive = request.build_absolute_uri('demo_receive_pdf')
