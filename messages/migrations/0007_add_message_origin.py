@@ -10,18 +10,12 @@ class Migration(SchemaMigration):
         
         # Adding field 'Message.origin'
         db.add_column('messages_message', 'origin', self.gf('django.db.models.fields.SmallIntegerField')(default=1), keep_default=False)
-
-        # Changing field 'Message.thread'
-        db.alter_column('messages_message', 'thread_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['messages.Thread']))
     
     
     def backwards(self, orm):
         
         # Deleting field 'Message.origin'
         db.delete_column('messages_message', 'origin')
-
-        # Changing field 'Message.thread'
-        db.alter_column('messages_message', 'thread_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['messages.Thread']))
     
     
     models = {
@@ -95,10 +89,12 @@ class Migration(SchemaMigration):
             'receiver': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'incoming_messages'", 'to': "orm['auth.User']"}),
             'reply_to': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'replies'", 'null': 'True', 'to': "orm['messages.Message']"}),
             'sender': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'outgoing_messages'", 'to': "orm['auth.User']"}),
+            'smtp_delivery_state': ('django.db.models.fields.CharField', [], {'default': "'new'", 'max_length': '1', 'db_index': 'True'}),
             'text': ('django.db.models.fields.TextField', [], {}),
             'thread': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'messages'", 'to': "orm['messages.Thread']"}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'unread': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'})
+            'unread': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'blank': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'default': "'d547c1cd878a42a9a619dc4d1e7c05a1'", 'max_length': '32', 'db_index': 'True'})
         },
         'messages.thread': {
             'Meta': {'object_name': 'Thread'},
