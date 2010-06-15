@@ -78,7 +78,10 @@ def delegate_thread(request, thread_pk=None):
     form = ThreadDelegationForm(request.POST or None)
     if form.is_valid():
         thread.delegate(request.user, form.cleaned_data['to'])
-        return HttpResponse("OK")
+        return render(request, 'messages/delegate_thread_response.html', {
+            'to': form.cleaned_data['to'],
+            'thread': thread,
+        })
     return render(request, 'messages/delegate_thread.html', {
         'thread': thread,
         'form': form,
