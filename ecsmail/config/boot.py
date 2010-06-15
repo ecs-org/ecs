@@ -1,4 +1,4 @@
-from config import settings
+from . import settings
 from lamson.routing import Router
 from lamson.server import Relay, SMTPReceiver
 from lamson import view, queue

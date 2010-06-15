@@ -1,7 +1,7 @@
 import logging
 import re
 from lamson.routing import route, route_like, stateless
-from config.settings import relay
+from ecsmail.config.settings import relay
 from lamson import view
 
 from django.conf import settings

@@ -1,4 +1,4 @@
-from config import settings
+from . import settings
 from lamson import view
 from lamson.routing import Router
 from lamson.server import Relay
@@ -7,7 +7,9 @@ import logging
 import logging.config
 import os
 
-logging.config.fileConfig("config/test_logging.conf")
+testroot = os.path.dirname(__file__)
+
+logging.config.fileConfig(os.path.join(testroot, "test_logging.conf"))
 
 # the relay host to actually send the final message to (set debug=1 to see what
 # the relay is saying to the log server).
@@ -22,9 +24,9 @@ Router.load(settings.handlers)
 Router.RELOAD=True
 Router.LOG_EXCEPTIONS=False
 
-view.LOADER = jinja2.Environment(
-    loader=jinja2.PackageLoader(settings.template_config['dir'], 
-                                settings.template_config['module']))
+# view.LOADER = jinja2.Environment(
+#     loader=jinja2.PackageLoader(settings.template_config['dir'], 
+#                                 settings.template_config['module']))
 
 # if you have pyenchant and enchant installed then the template tests will do
 # spell checking for you, but you need to tell pyenchant where to find itself

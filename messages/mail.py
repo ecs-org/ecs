@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives
 from time import gmtime, strftime
 
 def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently=False, message_html=None, **kwargs):
-    from config.settings import relay
+    from ecsmail.config.settings import relay
     from lamson.mail import MailResponse
     for recipient in recipient_list:
         mess = MailResponse(To=recipient, From=from_email, Subject=subject, Body=message, Html=message_html)

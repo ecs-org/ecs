@@ -1,4 +1,6 @@
 from nose.tools import *
+from lamson import testing
+testing.TEST_QUEUE = 'ecsmail/run/queue'
 from lamson.testing import *
 import os
 from lamson import server

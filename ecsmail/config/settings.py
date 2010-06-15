@@ -16,6 +16,6 @@ handlers = ['app.handlers.sample']
 
 router_defaults = {'host': '.+'}
 
-template_config = {'dir': 'app', 'module': 'templates'}
+# template_config = {'dir': 'app', 'module': 'templates'}
 
 # the config/boot.py will turn these values into variables set in settings
