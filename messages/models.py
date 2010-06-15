@@ -3,7 +3,7 @@ import traceback
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from ecs.messages.mail import send_mail, send_html_mail
+from ecs.messages.mail import send_mail
 
 
 class ThreadQuerySet(models.query.QuerySet):
@@ -109,7 +109,7 @@ class Message(models.Model):
     def return_address(self):
         return '%s@%s' % (self.return_username, settings.DEFAULT_FROM_DOMAIN)
     
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
             try:
                 send_mail(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
@@ -117,8 +117,8 @@ class Message(models.Model):
                                                                  from_email=self.return_address,
                           recipient_list=[self.receiver.email], fail_silently=False)
                 self.smtp_delivery_state='sent'
-                super(Message, self).save()
+                super(Message, self).save(*args, **kwargs)
             except:
                 traceback.print_exc()
                 self.smtp_delivery_state='failed'
-                super(Message, self).save()
+                super(Message, self).save(*args, **kwargs)
