@@ -131,7 +131,7 @@ class Message(models.Model):
     text = models.TextField()
     origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
     
-    smtp_delivery_state = models.CharField(max_length=1, 
+    smtp_delivery_state = models.CharField(max_length=7, 
                             choices=DELIVERY_STATES, default='new',
                             db_index=True)
     
