@@ -85,10 +85,25 @@ except ImportError:
     pass
 
 try:
-    from local_settings import local_db
-    DATABASES['default'] = local_db
+    import local_settings
+    local_db = {}
+    
+    if hasattr(local_settings, 'DATABASE_ENGINE'):
+        local_db['ENGINE'] = 'django.db.backends.%s' % local_settings.DATABASE_ENGINE
+
+    for key in ('NAME', 'USER', 'PASSWORD', 'HOST', 'PORT'):
+        if hasattr(local_settings, 'DATABASE_%s' % key):
+            local_db[key] = getattr(local_settings, 'DATABASE_%s' % key)
+    
+    if hasattr(local_settings, 'local_db'):
+        local_db = local_settings.local_db
+    
+    if local_db:
+        DATABASES['default'] = DATABASES['local'] = local_db
+    
 except ImportError:
     pass
+
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
