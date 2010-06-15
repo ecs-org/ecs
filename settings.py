@@ -17,7 +17,7 @@ TEMPLATE_DEBUG = DEBUG
 # database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
 
 DATABASES = {}
-DATABASES['sqlite'] = {
+DATABASES['default'] = {
     'ENGINE': 'django.db.backends.sqlite3',
     'NAME': os.path.join(PROJECT_DIR, 'ecs.db'),
     'USER': '',
@@ -25,8 +25,6 @@ DATABASES['sqlite'] = {
     'HOST': '',
     'PORT': '',
 }
-DATABASES['default'] = DATABASES['sqlite']
-
 
 # celery configuration defaults
 BROKER_HOST = 'localhost'
@@ -44,24 +42,22 @@ CELERY_IMPORTS = (
 
 DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at'
 
-if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
+if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
     # use different settings if on host ecsdev.ep3.at depending username
     DBPWD_DICT = {}
-
-    for u in DBPWD_DICT:
-        DATABASES[u] = {
+ 
+    if user in DBPWD_DICT:
+        DATABASES['default'] = {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': u,
-            'USER': u,
-            'PASSWORD': DBPWD_DICT[u],
+            'NAME': user,
+            'USER': user,
+            'PASSWORD': DBPWD_DICT[user],
             'HOST': '127.0.0.1',
             'PORT': '',
         }
-
-    # Use Postgresql as Django Database; Database User=current user, password like in dict
-    DATABASES['default'] = DATABASES[user]
+    
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,)
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
@@ -98,7 +94,7 @@ try:
         local_db = local_settings.local_db
     
     if local_db:
-        DATABASES['default'] = DATABASES['local'] = local_db
+        DATABASES['default'] = local_db
     
 except ImportError:
     pass
@@ -161,7 +157,7 @@ TEMPLATE_DIRS = (
 
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth"
+    "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
