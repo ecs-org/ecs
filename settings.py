@@ -214,3 +214,10 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 # django_compressor settings
 COMPRESS = True
 COMPRESS_JS_FILTERS = []
+
+# memcached(b) settings
+MEMCACHED_HOST = '127.0.0.1'
+MEMCACHED_PORT = 11211
+
+MEMCACHEDB_HOST = '127.0.0.1'
+MEMCACHEDB_PORT = 21201

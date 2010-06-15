@@ -3,6 +3,8 @@
 import memcache
 import time
 
+from django.conf import settings
+
 
 class SetData(object):
     def __init__(self, origin, pdf_name, pages, opt_compress, opt_interlace):
@@ -36,10 +38,7 @@ class PageData(object):
 class Storage(object):
     def __init__(self):
         self.ns = 'media'
-        port_memcached = 11211
-        port_memcachedb = 21201
-        host = '127.0.0.1'
-        self.mc = memcache.Client(['%s:%d' % (host, port_memcachedb)], debug=0)
+        self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=0)
 
     def get_set_key(self, id):
         return str('%s:%s' % (self.ns, id))
