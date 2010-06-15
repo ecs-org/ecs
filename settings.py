@@ -62,7 +62,7 @@ DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at'
 
 if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
     # Use Postgresql as Django Database; Database User=current user, password like in dict
-    DATBASES['default'] = DATABASES[user]
+    DATABASES['default'] = DATABASES[user]
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,)
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
@@ -79,6 +79,11 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 8823
 
 # use another different settings if local_settings.py exists
+try:
+    from local_settings import *
+except ImportError:
+    pass
+
 try:
     from local_settings import local_db
     DATABASES['default'] = local_db
