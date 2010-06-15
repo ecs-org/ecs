@@ -42,25 +42,24 @@ CELERY_IMPORTS = (
     'ecs.core.task_queue',
 )
 
-
-import getpass
-user = getpass.getuser()
-# use different settings if on host ecsdev.ep3.at depending username
-DBPWD_DICT = {}
-
-for user in DBPWD_DICT:
-    DATABASES[user] = {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': user,
-        'USER': user,
-        'PASSWORD': DBPWD_DICT[user],
-        'HOST': '127.0.0.1',
-        'PORT': '',
-    }
-
 DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at'
 
 if platform.node() == "ecsdev.ep3.at" and user in DBPWD_DICT:
+    import getpass
+    user = getpass.getuser()
+    # use different settings if on host ecsdev.ep3.at depending username
+    DBPWD_DICT = {}
+
+    for u in DBPWD_DICT:
+        DATABASES[u] = {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': u,
+            'USER': u,
+            'PASSWORD': DBPWD_DICT[u],
+            'HOST': '127.0.0.1',
+            'PORT': '',
+        }
+
     # Use Postgresql as Django Database; Database User=current user, password like in dict
     DATABASES['default'] = DATABASES[user]
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,)
