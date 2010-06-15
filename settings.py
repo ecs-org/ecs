@@ -62,7 +62,8 @@ if platform.node() == "ecsdev.ep3.at":
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
     BROKER_USER = user
-    BROKER_PASSWORD = DBPWD_DICT[user]
+    if user in DBPWD_DICT:
+        BROKER_PASSWORD = DBPWD_DICT[user]
     BROKER_VHOST = user
     CARROT_BACKEND = ""
     
