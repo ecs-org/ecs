@@ -9,6 +9,7 @@ class UserProfile(models.Model):
     board_member = models.BooleanField(default=False)
     executive_board_member = models.BooleanField(default=False)
     thesis_review = models.BooleanField(default=False)
+    internal = models.BooleanField(default=False)
     
     class Meta:
         app_label = 'core'

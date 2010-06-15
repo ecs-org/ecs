@@ -1769,7 +1769,8 @@
         "external_review": false, 
         "user": 771, 
         "thesis_review": false, 
-        "board_member": true
+        "board_member": true,
+        "internal": true
       }
     }, 
     {

@@ -1,9 +1,9 @@
 {% extends "core.html" %}
+{% load messages %}
 
 {% block menuSelection %}messages{% endblock %}
 
 {% block content %}
-
 <table class="messages">
     <tr>
         <th>Datum</th>
@@ -28,8 +28,8 @@
         <td>{{ message.unread|yesno }}</td>
         <td>{{ message.thread.task|default:'-' }}</td>
         {% block extra_message_table_cells %}
-            <td>{{ message.sender }}</td>
-            <td>{{ message.receiver }}</td>
+            <td>{{ message|sender_name:request.user }}</td>
+            <td>{{ message|receiver_name:request.user }}</td>
         {% endblock %}
         <td>
             {% block message_actions %}

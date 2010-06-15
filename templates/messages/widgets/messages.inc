@@ -1,4 +1,4 @@
-{% load humanize core %}
+{% load humanize core messages %}
 
 <h2>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h2>
 
@@ -13,7 +13,7 @@
             {{ message.timestamp|naturalday:'d.m.Y' }}, {{ message.timestamp|date:'H:i'}}
         </span>
         <a class="widget popup title" href="{% url ecs.messages.views.read_message message_pk=message.pk %}">{{ message.thread.subject|truncatewords:10 }}</a>
-        <span class="bob">{% block bob %}{{ message.sender }} -&gt; {{ message.receiver }}{% endblock %}</span>
+        <span class="user">{% block message_user %}{% endblock %}</span>
         <span class="actions">
             {% if not incoming %}
                 <a class="widget api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"> ⟳ </a>

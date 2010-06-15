@@ -3,8 +3,37 @@ from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
 from ecs.messages.models import Message
 from ecs.tasks.models import Task
+from ecs.core.models import UserProfile
 
 register = Library()
+
+def _username_for_message(message, attr, user):
+    target_user = getattr(message, attr)
+    # FIXME: those try/except blocks should go away when we can assume that every user has a profile
+    try:
+        mask = target_user.get_profile().internal
+    except UserProfile.DoesNotExist:
+        mask = False
+    try:
+        if user.get_profile().internal:
+            mask = False
+    except UserProfile.DoesNotExist:
+        pass
+    if mask:
+        groups = target_user.groups.all()
+        if message.thread.task:
+            groups &= message.task.task_type.groups.all()
+        if len(groups) == 1:
+            return groups[0].name
+    return target_user.username
+
+@register.filter
+def sender_name(message, user):
+    return _username_for_message(message, 'sender', user)
+    
+@register.filter
+def receiver_name(message, user):
+    return _username_for_message(message, 'receiver', user)
 
 class FetchMessagesNode(Node):
     def __init__(self, varname):

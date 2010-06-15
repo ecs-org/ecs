@@ -1,10 +1,11 @@
 {% extends "messages/popup.html" %}
+{% load messages %}
 
 {% block htmlbody %}
 <div class="message_display">
     <h2>{{ message.subject }}</h2>
-    <div><b>Von:</b> {{ message.sender  }}</div>
-    <div><b>An:</b> {{ message.receiver }}</div>
+    <div><b>Von:</b> {{ message|sender_name:request.user  }}</div>
+    <div><b>An:</b> {{ message|receiver_name:request.user }}</div>
     <div><b>Datum:</b> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</div>
     <div><b>Betreff:</b> 
         {% if message.thread.submission %}
