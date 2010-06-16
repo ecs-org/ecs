@@ -172,7 +172,7 @@ chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
-python-daemon:inst:all:pypi:python-daemon
+python-daemon:inst:all:pypi:python-daemon==1.5.5
 lamson:inst:all:pypi:lamson
 """
 
