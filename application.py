@@ -167,6 +167,13 @@ mockcache:inst:all:pypi:mockcache
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
+# lamson
+chardet:inst:all:pypi:chardet
+jinja2:inst:all:pypi:jinja2
+lockfile:inst:all:pypi:lockfile
+mock:inst:all:pypi:mock
+python-daemon:inst:all:pypi:python-daemon
+lamson:inst:all:pypi:lamson
 """
 
 
