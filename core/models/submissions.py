@@ -261,8 +261,8 @@ class SubmissionForm(models.Model):
     study_plan_datamanagement = models.TextField()
 
     # 8.5
-    study_plan_biometric_planning = models.CharField(max_length=120)
-    study_plan_statistics_implementation = models.CharField(max_length=120)
+    study_plan_biometric_planning = models.CharField(max_length=260)
+    study_plan_statistics_implementation = models.CharField(max_length=270)
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
     study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
