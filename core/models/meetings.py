@@ -109,6 +109,8 @@ class Meeting(models.Model):
     title = models.CharField(max_length=200, blank=True)
     optimization_task_id = models.TextField(null=True)
     submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
+    started = models.DateTimeField(null=True)
+    ended = models.DateTimeField(null=True)
     
     class Meta:
         app_label = 'core'
@@ -235,6 +237,11 @@ class Meeting(models.Model):
     @property
     def open_tops(self):
         return self.timetable_entries.filter(is_open=True)
+        
+    @property
+    def open_tops_with_vote(self):
+        return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
+        
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -252,7 +259,7 @@ class TimetableEntry(models.Model):
         #unique_together = (('meeting', 'timetable_index'),)
         
     def __unicode__(self):
-        return "%s, index=%s" % (self.title, self.timetable_index)
+        return "TOP %s" % (self.index + 1)
     
     
     def _get_duration(self):

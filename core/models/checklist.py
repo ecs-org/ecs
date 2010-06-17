@@ -39,6 +39,29 @@ class Checklist(models.Model):
 
     def __unicode__(self):
         return u"%s" % self.blueprint
+        
+    @property
+    def is_complete(self):
+        return self.answers.filter(answer=None).count() == 0
+        
+    @property
+    def is_positive(self):
+        return self.answers.filter(answer=False).count() == 0
+        
+    @property
+    def is_negative(self):
+        return not self.is_positive
+        
+    def get_answers_with_comments(self, answer=None):
+        return self.answers.exclude(comment=None).exclude(comment="").filter(answer=answer).order_by('question')
+        
+    @property
+    def has_positive_comments(self):
+        return self.get_answers_with_comments(True).exists()
+        
+    @property
+    def has_negative_comments(self):
+        return self.get_answers_with_comments(False).exists()
 
 
 class ChecklistAnswer(models.Model):

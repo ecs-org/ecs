@@ -4,10 +4,12 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.contrib.auth.models import User
+from django.utils.datastructures import SortedDict
+from django.db.models import Count
 from ecs.core.views.utils import render
-from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote
+from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
-from ecs.core.forms.voting import VoteForm
+from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.core.task_queue import optimize_timetable_task
 from ecs.utils.timedelta import parse_timedelta
 
@@ -130,45 +132,145 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'participant': user,
         'constraint_formset': constraint_formset,
     })
-        
-def meeting_assistant(request, meeting_pk=None, top_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    if not top_pk:
+    
+def meeting_assistant_quickjump(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
+    top = None
+    q = request.REQUEST.get('q', '').upper()
+    explict_top = 'TOP' in q
+    q = q.replace('TOP', '').strip()
+    
+    # if we don't explicitly look for a TOP, try an exact ec_number lookup
+    if not explict_top:
+        tops = meeting.timetable_entries.filter(submission__ec_number__iexact=q).order_by('timetable_index')
+        if len(tops) == 1:
+            top = tops[0]
+    # if we found no TOP yet, try an exact TOP index lookup
+    if not top:
         try:
-            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk, 'top_pk': meeting[0].pk}))
+            top = meeting.timetable_entries.get(timetable_index=int(q)-1)
+        except (ValueError, TimetableEntry.DoesNotExist):
+            pass
+    # if we found no TOP yet and don't explicitly look for a TOP, try a fuzzy ec_number lookup
+    if not top and not explict_top:
+        tops = meeting.timetable_entries.filter(submission__ec_number__icontains=q).order_by('timetable_index')
+        if len(tops) == 1:
+            top = tops[0]
+    if top:
+        return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
+    
+    return render(request, 'meetings/assistant/quickjump_error.html', {
+        'meeting': meeting,
+        'tops': tops,
+    })
+    
+def meeting_assistant(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if meeting.started:
+        if meeting.ended:
+            return render(request, 'meetings/assistant/error.html', {
+                'meeting': meeting,
+                'message': 'Diese Sitzung wurde beendet.',
+            })
+        try:
+            top_pk = request.session.get('meetings:%s:assistant:top_pk' % meeting.pk, None) or meeting[0].pk
+            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top_pk}))
         except IndexError:
-            # FIXME: real message page
-            raise Http404("This meeting has not TOPs.")
+            return render(request, 'meetings/assistant/error.html', {
+                'meeting': meeting,
+                'message': 'Dieser Sitzung sind keine TOPs zugeordnet.',
+            })
+    else:
+        return render(request, 'meetings/assistant/error.html', {
+            'meeting': meeting,
+            'message': 'Dieses Sitzung wurde noch nicht begonnen.',
+        })
+        
+def meeting_assistant_start(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
+    meeting.started = datetime.datetime.now()
+    meeting.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    
+def meeting_assistant_stop(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
+    if meeting.open_tops.count():
+        raise Http404("unfinished meetings cannot be stopped")
+    meeting.ended = datetime.datetime.now()
+    meeting.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+
+def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     top = get_object_or_404(TimetableEntry, pk=top_pk)
-    submission = top.submission
+    simple_save = request.POST.get('simple_save', False)
+    autosave = request.POST.get('autosave', False)
+    vote, form = None, None
     
     def next_top_redirect():
         if top.next_open:
-            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.next_open.pk}))
+            next_top = top.next_open
         else:
-            # FIXME: handle this case
-            return HttpResponse("This was the last open TOP")
-
-    if request.POST.get('autosave'):
-        return next_top_redirect()
-        
-    if submission:
+            try:
+                next_top = meeting.open_tops[0]
+            except IndexError:
+                return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
+    
+    if top.submission:
         try:
             vote = top.vote
         except Vote.DoesNotExist:
-            vote = None
-        form = VoteForm(request.POST or None, instance=vote)
+            pass
+        if simple_save:
+            form_cls = SaveVoteForm
+        else:
+            form_cls = VoteForm
+        form = form_cls(request.POST or None, instance=vote)
+        print autosave, form.is_valid()
         if form.is_valid():
             vote = form.save(commit=False)
             vote.top = top
             vote.save()
-            top.is_open = False
-            top.save()
+            if autosave:
+                return HttpResponse('OK')
+            if form.cleaned_data['close_top']:
+                top.is_open = False
+                top.save()
             return next_top_redirect()
-    return render(request, 'meetings/assistant.html', {
-        'submission': submission,
+    elif request.method == 'POST':
+        top.is_open = False
+        top.save()
+        return next_top_redirect()
+
+    last_top_cache_key = 'meetings:%s:assistant:top_pk' % meeting.pk
+    last_top = None
+    if last_top_cache_key in request.session:
+        last_top = TimetableEntry.objects.get(pk=request.session[last_top_cache_key])
+    request.session[last_top_cache_key] = top.pk
+    
+    checklist_review_states = SortedDict()
+    if top.submission:
+        for blueprint in ChecklistBlueprint.objects.order_by('name'):
+            checklist_review_states[blueprint] = None
+        for checklist in top.submission.checklists.select_related('blueprint'):
+            checklist_review_states[checklist.blueprint] = checklist
+
+    return render(request, 'meetings/assistant/top.html', {
+        'meeting': meeting,
+        'submission': top.submission,
         'top': top,
         'vote': vote,
         'form': form,
+        'last_top': last_top,
+        'checklist_review_states': checklist_review_states.items(),
     })
 
+def meeting_assistant_clear(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    Vote.objects.filter(top__meeting=meeting).delete()
+    meeting.timetable_entries.update(is_open=True)
+    meeting.started = None
+    meeting.ended = None
+    meeting.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))

@@ -49,6 +49,12 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'ecs.core.views.meetings.edit_user_constraints'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/(?:(?P<top_pk>\d+)/)?$', 'ecs.core.views.meeting_assistant'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/$', 'ecs.core.views.meeting_assistant'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/clear/$', 'ecs.core.views.meeting_assistant_clear'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/start/$', 'ecs.core.views.meeting_assistant_start'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/stop/$', 'ecs.core.views.meeting_assistant_stop'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/(?P<top_pk>\d+)/$', 'ecs.core.views.meeting_assistant_top'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/quickjump/$', 'ecs.core.views.meeting_assistant_quickjump'),
 
+    url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 )

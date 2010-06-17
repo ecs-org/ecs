@@ -1,0 +1,17 @@
+{% extends 'meetings/assistant/base.html' %}
+{% load core %}
+
+{% block meeting_assistant_body %}
+    {% if tops %}
+        Mehrere TOPs passen auf ihre Anfrage "<i>{{ request.REQUEST.q }}</i>":
+        <ul>
+            {% for top in tops %}
+                <li>
+                    <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.pk %}">{{ top }} {% if top.submission %} ({{ top.submission.ec_number }}){% endif %}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        Es konnte kein passendes TOP für "<i>{{ request.REQUEST.q }}</i>" gefunden werden.
+    {% endif %}
+{% endblock %}

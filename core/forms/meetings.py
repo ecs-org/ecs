@@ -13,7 +13,7 @@ class MeetingForm(forms.ModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
 
 class TimetableEntryForm(forms.Form):
     duration = forms.CharField(required=False)

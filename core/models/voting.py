@@ -2,18 +2,34 @@
 from django.db import models
 
 VOTE_RESULT_CHOICES = (
-    ('1a', u'1a Positiv'),
-    ('1b', u'1b Positiv - mit Ausbesserungen'),
-    ('2', u'2 Vertagt wegen Einsprüchen'),
-    ('3', u'3 Negativ'),
-    ('4', u'4 Vertagt'),
+    ('1', u'1 Positiv'),
+    ('1a', u'1a Positiv - mit Ausbesserungen'),
+    ('2', u'2 Vorbehaltich positiv'),
+    ('3', u'3 Vertagt (Einwände)'),
+    ('4', u'4 Negativ'),
+    ('5', u'5 Vertagt (Antragsteller)'),
+    ('5a', u'5a Zurückgezogen (Antragsteller)'),
+    ('5b', u'5b Nicht behandelt'),
+    #('5c', u'5c Lokale EK'),
 )
 
 class Vote(models.Model):
     top = models.OneToOneField('core.TimetableEntry', related_name='vote')
-    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES)
-    executive_review_required = models.BooleanField()
+    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True)
+    executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True)
     
     class Meta:
         app_label = 'core'
+        
+    @property
+    def positive(self):
+        return self.result in ('1', '1a', '2')
+        
+    @property
+    def negative(self):
+        return self.result in ('4', '5a')
+        
+    @property
+    def recessed(self):
+        return self.result in ('3', '5', '5b')
