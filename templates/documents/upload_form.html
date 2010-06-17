@@ -8,7 +8,7 @@
                 Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
             </a>
-	    <a href="{% url pdf_show doc.uuid_document_revision 1 1 %}">view</a>
+	    <a href="{% url pdf_show doc.uuid_document_revision 1 1 %}">Ansehen</a>
             <a href="" class="delete_document">delete</a>
             <input type="hidden" name="documents" value="{{ doc.pk }}" />
         </div>
