@@ -8,6 +8,12 @@ class Migration(SchemaMigration):
     
     def forwards(self, orm):
         
+        # Adding field 'Meeting.ended'
+        db.add_column('core_meeting', 'ended', self.gf('django.db.models.fields.DateTimeField')(null=True), keep_default=False)
+
+        # Adding field 'Meeting.started'
+        db.add_column('core_meeting', 'started', self.gf('django.db.models.fields.DateTimeField')(null=True), keep_default=False)
+
         # Changing field 'Vote.executive_review_required'
         db.alter_column('core_vote', 'executive_review_required', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True))
 
@@ -17,6 +23,12 @@ class Migration(SchemaMigration):
     
     def backwards(self, orm):
         
+        # Deleting field 'Meeting.ended'
+        db.delete_column('core_meeting', 'ended')
+
+        # Deleting field 'Meeting.started'
+        db.delete_column('core_meeting', 'started')
+
         # Changing field 'Vote.executive_review_required'
         db.alter_column('core_vote', 'executive_review_required', self.gf('django.db.models.fields.BooleanField')(blank=True))
 
@@ -360,7 +372,7 @@ class Migration(SchemaMigration):
             'study_plan_abort_crit': ('django.db.models.fields.CharField', [], {'max_length': '265'}),
             'study_plan_alpha': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
             'study_plan_alternative_hypothesis': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'study_plan_biometric_planning': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'study_plan_biometric_planning': ('django.db.models.fields.CharField', [], {'max_length': '260'}),
             'study_plan_blind': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
             'study_plan_controlled': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'study_plan_cross_over': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
@@ -389,7 +401,7 @@ class Migration(SchemaMigration):
             'study_plan_sample_frequency': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_secondary_objectives': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_statalgorithm': ('django.db.models.fields.CharField', [], {'max_length': '50'}),
-            'study_plan_statistics_implementation': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
+            'study_plan_statistics_implementation': ('django.db.models.fields.CharField', [], {'max_length': '270'}),
             'study_plan_stratification': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'subject_childbearing': ('django.db.models.fields.BooleanField', [], {'default': 'False', 'blank': 'True'}),
             'subject_count': ('django.db.models.fields.IntegerField', [], {}),
@@ -416,7 +428,7 @@ class Migration(SchemaMigration):
             'substance_p_c_t_final_report': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'substance_p_c_t_gcp_rules': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'substance_p_c_t_period': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'substance_p_c_t_phase': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'}),
+            'substance_p_c_t_phase': ('django.db.models.fields.CharField', [], {'max_length': '80', 'null': 'True', 'blank': 'True'}),
             'substance_preexisting_clinical_tries': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'existing_tries'", 'blank': 'True'}),
             'substance_registered_in_countries': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submission_forms'", 'blank': 'True', 'db_table': "'submission_registered_countries'", 'to': "orm['countries.Country']"})
         },
