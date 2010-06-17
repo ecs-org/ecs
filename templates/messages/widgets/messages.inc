@@ -2,9 +2,11 @@
 
 <h2>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h2>
 
+<div class="messages_header">
 <a class="widget popup" href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a> 
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
+</div>
 <ol class="messages">
 {% for message in page.object_list %}
     <li class="message {% cycle 'even' 'odd' %}{% if message.unread %} unread{% endif %}">
