@@ -84,6 +84,11 @@ ul.tab_headers {
   background: #e4e4e4;
   color: #333;
 }
+.readonly .tab_headers li.active a {
+  border: 1px solid #bbb;
+  background: #ccc;
+  color: #333;
+}
 .readonly li.readonly_review a {
   border: 1px solid #b7d4e5;
   background: #e2eaf0;
@@ -92,6 +97,10 @@ ul.tab_headers {
 .readonly li.readonly_review.active a {
   background: #2b558e;
   color: #e2eaf0;
+}
+#executive_review_tab select, #thesis_review_tab select, #checklist_review_tab select {
+  background: #fff !important;
+  color: #333;
 }
 
 /* content */
