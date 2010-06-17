@@ -40,6 +40,13 @@ class Submission(models.Model):
         except (SubmissionForm.DoesNotExist, IndexError):
             return None
 
+    def get_most_recent_vote(self):
+        from ecs.core.models import Vote
+        try:
+            return Vote.objects.filter(top__submission=self).order_by('-top__meeting__start')[0]
+        except (Vote.DoesNotExist, IndexError):
+            return None
+
     @property
     def project_title(self):
         sf = self.get_most_recent_form()

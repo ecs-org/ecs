@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.template import Context, loader
 from django.shortcuts import get_object_or_404
@@ -12,6 +12,7 @@ from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, 
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
+from ecs.core.forms.voting import VoteReviewForm
 from ecs.core import paper_forms
 from ecs.core import signals
 from ecs.docstash.decorators import with_docstash_transaction
@@ -116,7 +117,7 @@ def executive_review(request, submission_form_pk=None):
 
 def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    blueprint = ChecklistBlueprint.objects.get(pk=blueprint_pk)
+    blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=request.user)
     if created:
         for question in blueprint.questions.order_by('text'):
@@ -142,6 +143,19 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
         'checklist_name': blueprint.name,
         'checklist_review_form': form,
         'checklist_hidden': hidden,
+    })
+
+def vote_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    vote = submission_form.submission.get_most_recent_vote()
+    if not vote:
+        raise Http404("This SubmissionForm has no Vote yet.")
+    vote_form = VoteReviewForm(request.POST or None, instance=vote)
+    if request.method == 'POST' and vote_form.is_valid():
+        vote_form.save()
+    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/vote.html', extra_context={
+        'vote': vote,
+        'vote_form': vote_form,
     })
 
 

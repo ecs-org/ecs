@@ -15,9 +15,9 @@ VOTE_RESULT_CHOICES = (
 
 class Vote(models.Model):
     top = models.OneToOneField('core.TimetableEntry', related_name='vote')
-    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True)
+    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
     executive_review_required = models.NullBooleanField(blank=True)
-    text = models.TextField(blank=True)
+    text = models.TextField(blank=True, verbose_name=u'Kommentar')
     
     class Meta:
         app_label = 'core'

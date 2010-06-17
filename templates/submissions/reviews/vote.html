@@ -1,0 +1,32 @@
+{% extends "submissions/readonly_form.html" %}
+{% load core %} 
+
+{% block headertitle %}
+  <div id="info" style="display: none;"></div>
+{% endblock %}
+
+{% block tab_headers %}
+    <li class="readonly_review"><a href="#vote_review_tab">Vote Review</a></li>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    {{ block.super }}
+{% endblock %}
+
+{% block tabs %}
+    {{ block.super }}
+      <div id="vote_review_tab" class="tab">
+          <h2>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h2>
+          <form action="" method="post">
+              <ol>
+              {% for field_name in vote_form.fields %}
+                  {% with vote_form|getitem:field_name as field %}
+                      {% include "forms/field.html" %}
+                  {% endwith %}
+              {% endfor %}
+              </ol>
+              <input type="submit" value="Speichern" />
+          </form>
+      </div>
+{% endblock %}

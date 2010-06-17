@@ -16,3 +16,10 @@ class VoteForm(forms.ModelForm):
         
 class SaveVoteForm(VoteForm):
     result = ResultField(required=False)
+    
+
+class VoteReviewForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = ('result', 'text')
+    
