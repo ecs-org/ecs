@@ -98,6 +98,8 @@ class Renderer(object):
                     if not retval:
                         print 'error: storage failed'
                         errors += 1
+                    else:
+                        self.remove_file(png_name)
             else:
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
                 bigpage_set = range(1, bigpages + 1)
@@ -120,6 +122,8 @@ class Renderer(object):
                     if not retval:
                         print 'error: storage failed'
                         errors += 1
+                    else:
+                        self.remove_file(png_name)
         if errors > 0:
             print '%d error(s)' % errors
             return False
