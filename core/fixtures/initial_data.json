@@ -477,69 +477,6 @@
   }, 
   {
     "pk": 1, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Patienteninformation"
-    }
-  }, 
-  {
-    "pk": 2, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Covering Letter"
-    }
-  }, 
-  {
-    "pk": 3, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Versicherungsbest\u00e4tigung"
-    }
-  }, 
-  {
-    "pk": 4, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Investigator's Brochure"
-    }
-  }, 
-  {
-    "pk": 5, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "CRF"
-    }
-  }, 
-  {
-    "pk": 6, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "PI's Curriculum Vit\u00e6"
-    }
-  }, 
-  {
-    "pk": 7, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "U. gem\u00e4\u00df EU-Direktive 2001-20-EG"
-    }
-  }, 
-  {
-    "pk": 8, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Conflict of Interest"
-    }
-  }, 
-  {
-    "pk": 9, 
-    "model": "core.documenttype", 
-    "fields": {
-      "name": "Protokoll"
-    }
-  }, 
-  {
-    "pk": 1, 
     "model": "core.investigator", 
     "fields": {
       "specialist": "", 
@@ -557,38 +494,6 @@
       "certified": false
     }
   }, 
-  {
-    "pk": 4, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "name": "SAE Bericht", 
-      "form": "ecs.core.forms.NotificationForm"
-    }
-  }, 
-  {
-    "pk": 2, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "name": "Abschlussbericht", 
-      "form": "ecs.core.forms.CompletionReportNotificationForm"
-    }
-  }, 
-  {
-    "pk": 1, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "name": "Zwischenbericht", 
-      "form": "ecs.core.forms.ProgressReportNotificationForm"
-    }
-  }, 
-  {
-    "pk": 6, 
-    "model": "core.notificationtype", 
-    "fields": {
-      "name": "Protokoll\u00e4nderung", 
-      "form": "ecs.core.forms.NotificationForm"
-    }
-  },
   {
     "pk": 18, 
     "model": "core.medicalcategory", 
@@ -2920,45 +2825,5 @@
         "question": 6,
         "comment": ""
       }
-    },
-    {
-        "pk": 1, 
-        "model": "core.expeditedreviewcategory", 
-        "fields": {
-            "abbrev": "ExRC0", 
-            "name": "Expedited Review Category #0"
-        }
-    }, 
-    {
-        "pk": 2, 
-        "model": "core.expeditedreviewcategory", 
-        "fields": {
-            "abbrev": "ExRC1", 
-            "name": "Expedited Review Category #1"
-        }
-    }, 
-    {
-        "pk": 3, 
-        "model": "core.expeditedreviewcategory", 
-        "fields": {
-            "abbrev": "ExRC2", 
-            "name": "Expedited Review Category #2"
-        }
-    }, 
-    {
-        "pk": 4, 
-        "model": "core.expeditedreviewcategory", 
-        "fields": {
-            "abbrev": "ExRC3", 
-            "name": "Expedited Review Category #3"
-        }
-    }, 
-    {
-        "pk": 5, 
-        "model": "core.expeditedreviewcategory", 
-        "fields": {
-            "abbrev": "ExRC4", 
-            "name": "Expedited Review Category #4"
-        }
     }
 ]

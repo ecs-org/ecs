@@ -3,6 +3,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.utils.importlib import import_module
 
@@ -42,10 +43,26 @@ class Command(BaseCommand):
                     cycle = False
             if cycle:
                 raise CommandError("Cyclic dependencies: %s" % ", ".join(sorted(set(bootstrap_funcs.keys())-set(order))))
+        
+        def log_save(sender, **kwargs):
+            obj = kwargs['instance']
+            model = obj.__class__
+            action = kwargs.get('created', False) and "Create" or "Update"
+            print "    %s %s.%s pk=%s" % (action, model._meta.app_label, model.__name__, obj.pk)
+
+        def log_delete(sender, **kwargs):
+            obj = kwargs['instance']
+            model = obj.__class__
+            print "    Delete %s.%s pk=%s" % (model._meta.app_label, model.__name__, obj.pk)
+
+        post_save.connect(log_save)
+        post_delete.connect(log_delete)
+
         try:
             for name in order:
                 print "Bootstrapping %s." % name
-                bootstrap_funcs[name]()
+                func = bootstrap_funcs[name]
+                func()
         except:
             transaction.rollback()
             raise
@@ -55,5 +72,8 @@ class Command(BaseCommand):
                     transaction.rollback()
                 else:
                     transaction.commit()
+        finally:
+            post_save.disconnect(log_save)
+            post_delete.disconnect(log_delete)
                     
 

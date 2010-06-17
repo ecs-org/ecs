@@ -3,7 +3,6 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import call_command
-from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 
 from ecs.workflow.models import Graph, NodeType
@@ -64,23 +63,23 @@ class Command(BaseCommand):
             scientific_review_complete = g.create_node(patterns.generic)
             acknowledge_signed_submission_form = g.create_node(cwf.acknowledge_signed_submission_form, name="Ack. Signed Submission")
             
-            initial_review.add_edge(reject, guard=cwf.is_accepted, negate=True)
+            initial_review.add_edge(reject, guard=cwf.is_accepted, negated=True)
             initial_review.add_edge(accept, guard=cwf.is_accepted)
             #reject.add_edge(change_submission_form)
-            accept.add_edge(thesis_review2, guard=cwf.is_marked_as_thesis_by_submitter, negate=True)
+            accept.add_edge(thesis_review2, guard=cwf.is_marked_as_thesis_by_submitter, negated=True)
             accept.add_edge(thesis_review, guard=cwf.is_marked_as_thesis_by_submitter)
             accept.add_edge(acknowledge_signed_submission_form)
             accept.add_edge(statistical_review)
 
-            thesis_review.add_edge(thesis_review2, guard=cwf.is_thesis_and_retrospective, negate=True)
+            thesis_review.add_edge(thesis_review2, guard=cwf.is_thesis_and_retrospective, negated=True)
             thesis_review.add_edge(retro_thesis, guard=cwf.is_thesis_and_retrospective)
             thesis_review2.add_edge(thesis_review, guard=cwf.is_thesis_and_retrospective)
-            thesis_review2.add_edge(not_retrospective_thesis, guard=cwf.is_thesis_and_retrospective, negate=True)
+            thesis_review2.add_edge(not_retrospective_thesis, guard=cwf.is_thesis_and_retrospective, negated=True)
             not_retrospective_thesis.add_edge(legal_and_patient_review)
             not_retrospective_thesis.add_edge(scientific_review)
             not_retrospective_thesis.add_edge(insurance_review)
             scientific_review.add_edge(contact_external_reviewer, guard=cwf.is_classified_for_external_review)
-            scientific_review.add_edge(scientific_review_complete, guard=cwf.is_classified_for_external_review, negate=True)
+            scientific_review.add_edge(scientific_review_complete, guard=cwf.is_classified_for_external_review, negated=True)
             scientific_review_complete.add_edge(review_sync)
             do_external_review.add_edge(scientific_review_complete)
             #external_review.add_edge(contact_external_reviewer)
