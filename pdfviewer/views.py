@@ -11,7 +11,7 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.mediaserver.imageset import ImageSet
 
 
-def show(request, id=1, page=1, zoom='1'):
+def show(request, id='1', page=1, zoom='1'):
     if not request.user.is_authenticated():
         return HttpResponse('Error: you need to be logged in!')
     else:
@@ -19,7 +19,7 @@ def show(request, id=1, page=1, zoom='1'):
         if user is None:
             return HttpResponse('Error: user is None!')
 
-    id = int(id)
+    id = str(id)
     page = int(page)
 
     image_set = ImageSet(id)
