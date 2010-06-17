@@ -91,7 +91,7 @@ class Document(models.Model):
                 image_set = ImageSet(id)
                 opt_compress = True
                 opt_interlace = True
-                if image_set.store('save', self.file.name, self.pages, opt_compress, opt_interlace) is False:
+                if image_set.store('Document save', self.file.name, self.pages, opt_compress, opt_interlace) is False:
                     print 'Document save: can not store ImageSet "%s"' % id
                     return retval
                 renderer = Renderer()
