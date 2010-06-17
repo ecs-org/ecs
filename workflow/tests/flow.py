@@ -132,7 +132,7 @@ class FlowTest(TestCase):
         n_b = g.create_node(flow_declarations.B)
         n_c = g.create_node(flow_declarations.C)
         n_a.add_edge(n_b, guard=flow_declarations.GUARD)
-        n_a.add_edge(n_c, guard=flow_declarations.GUARD, negate=True)
+        n_a.add_edge(n_c, guard=flow_declarations.GUARD, negated=True)
         
         # self.GUARD => False
         obj = Foo.objects.create(flag=False)

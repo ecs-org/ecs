@@ -90,7 +90,7 @@ class Graph(NodeType):
     def end_nodes(self):
         return self.nodes.filter(is_end_node=True)
         
-    def create_node(self, nodetype, start=False, end=False, name='', data=None):
+    def _prep_nodetype(self, nodetype, data=None):
         if isinstance(nodetype, NodeHandler):
             nodetype = nodetype.node_type
         if nodetype.data_type:
@@ -98,7 +98,24 @@ class Graph(NodeType):
                 raise TypeError("nodes of type %s require data of type %s, got: %s" % (nodetype, nodetype.data_type.model_class(), type(data)))
         elif data:
             raise TypeError("nodes of type %s may not carry data" % nodetype)
+        return nodetype
+        
+    def create_node(self, nodetype=None, start=False, end=False, name='', data=None):
+        nodetype = self._prep_nodetype(nodetype, data)
         return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name, data=data or nodetype)
+        
+    def get_node(self, nodetype=None, start=False, end=False, name='', data=None):
+        nodetype = self._prep_nodetype(nodetype, data)
+        data = data or nodetype
+        return Node.objects.get(
+            graph=self, 
+            node_type=nodetype, 
+            is_start_node=start, 
+            is_end_node=end, 
+            name=name,
+            data_id=data.pk, 
+            data_ct=ContentType.objects.get_for_model(type(data)),
+        )
         
     def create_workflow(self, **kwargs):
         workflow = Workflow.objects.create(graph=self, **kwargs)
@@ -130,10 +147,15 @@ class Node(models.Model):
             return self.name
         return u"Node: %s" % (self.node_type)
 
-    def add_edge(self, to, guard=None, negate=False, deadline=False):
+    def add_edge(self, to, guard=None, negated=False, deadline=False):
         if guard:
             guard = guard.instance
-        return Edge.objects.create(from_node=self, to_node=to, guard=guard, negate=negate, deadline=deadline)
+        return Edge.objects.create(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
+    
+    def get_edge(self, to, guard=None, negated=False, deadline=False):
+        if guard:
+            guard = guard.instance
+        return Edge.objects.get(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
         
     def receive_token(self, workflow, source=None, trail=None):
         flow_controller = registry.get_handler(self)
@@ -187,12 +209,12 @@ class Edge(models.Model):
     to_node = models.ForeignKey(Node, related_name='incoming_edges', null=True)
     deadline = models.BooleanField(default=False)
     guard = models.ForeignKey(Guard, related_name='nodes', null=True)
-    negate = models.BooleanField(default=False)
+    negated = models.BooleanField(default=False)
     
     def check_guard(self, workflow):
         if not self.guard_id:
-            return not self.negate
-        return self.negate != registry.get_guard(self).check(workflow)
+            return not self.negated
+        return self.negated != registry.get_guard(self).check(workflow)
 
 
 class Workflow(models.Model):

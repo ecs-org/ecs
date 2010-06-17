@@ -51,7 +51,7 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
                 attrs['style'] = 'dotted'
             if edge.guard_id:
                 label = " ".join(edge.guard.implementation.rsplit('.', 1)[-1].split('_'))
-                add_node("E%s" % edge.pk, label='%s%s: %s' % (edge.negate and '~' or '', edge.guard_id, label), shape='plaintext')
+                add_node("E%s" % edge.pk, label='%s%s: %s' % (edge.negated and '~' or '', edge.guard_id, label), shape='plaintext')
                 add_edge(edge.from_node_id, "E%s" % edge.pk, arrowhead='none', **attrs)
                 add_edge("E%s" % edge.pk, edge.to_node_id, **attrs)
             else:
