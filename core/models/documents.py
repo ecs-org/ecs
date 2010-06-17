@@ -55,7 +55,7 @@ class Document(models.Model):
     file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
     original_file_name = models.CharField(max_length=100, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
-    mimetype = models.CharField(max_length=100, default='application/pdf')  # TODO always application/pdf because it is not updated according the actual file content
+    mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
 
     version = models.CharField(max_length=250)
@@ -66,6 +66,7 @@ class Document(models.Model):
         app_label = 'core'
 
     def clean(self):
+        # TODO check file contents and modify mimetype (now everything is assumed PDF and thus non-PDF will get invalidated below
         if str(self.mimetype) == 'application/pdf':
             analyzer = Analyzer()
             analyzer.sniff_file(self.file)
