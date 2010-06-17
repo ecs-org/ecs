@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
+
+import hashlib
 import os
+
 from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
+from django.core.exceptions import ValidationError
+
+from ecs.mediaserver.analyzer import Analyzer
 
 
 class DocumentType(models.Model):
@@ -49,7 +55,8 @@ class Document(models.Model):
     file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
     original_file_name = models.CharField(max_length=100, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
-    mimetype = models.CharField(max_length=100, default='application/pdf')
+    mimetype = models.CharField(max_length=100, default='application/pdf')  # TODO always application/pdf because it is not updated according the actual file content
+    pages = models.IntegerField(null=True, blank=True)
 
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
@@ -57,10 +64,17 @@ class Document(models.Model):
     
     class Meta:
         app_label = 'core'
-    
+
+    def clean(self):
+        if str(self.mimetype) == 'application/pdf':
+            analyzer = Analyzer()
+            analyzer.sniff_file(self.file)
+            if analyzer.valid is False:
+                raise ValidationError('invalid PDF')
+            self.pages = analyzer.pages
+
     def save(self, **kwargs):
         if self.file:
-            import hashlib
             s = self.file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
             m = hashlib.md5()
             m.update(s)
