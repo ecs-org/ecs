@@ -86,7 +86,7 @@ class Document(models.Model):
             self.uuid_document = m.hexdigest()
             self.uuid_document_revision = self.uuid_document
             retval = super(Document, self).save(**kwargs)
-            if str(self.mimetype) == 'application/pdf':
+            if str(self.mimetype) == 'application/pdf' and self.pages:
                 id = self.uuid_document_revision
                 image_set = ImageSet(id)
                 opt_compress = True
