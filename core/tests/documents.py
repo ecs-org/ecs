@@ -9,6 +9,7 @@ class DocumentsTest(LoginTestCase):
         doctype = DocumentType.objects.create(name="Test")
         pdf_file = open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb')
         doc = Document(version="1", date=datetime.date(2010, 03, 10), doctype=doctype, file=File(pdf_file))
+        doc.clean()
         doc.save()
         pdf_file.close()
         return doc
