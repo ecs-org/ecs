@@ -11,6 +11,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from ecs.mediaserver.analyzer import Analyzer
+from ecs.mediaserver.imageset import ImageSet
+from ecs.mediaserver.renderer import Renderer
 
 
 class DocumentType(models.Model):
@@ -49,6 +51,7 @@ class DocumentFileStorage(FileSystemStorage):
         # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
         return smart_str(os.path.normpath(name))
 
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=32)
     uuid_document_revision = models.SlugField(max_length=32)
@@ -82,6 +85,16 @@ class Document(models.Model):
             self.file.seek(0)
             self.uuid_document = m.hexdigest()
             self.uuid_document_revision = self.uuid_document
-        return super(Document, self).save(**kwargs)
-
+            retval = super(Document, self).save(**kwargs)
+            if str(self.mimetype) == 'application/pdf':
+                id = self.uuid_document_revision
+                image_set = ImageSet(id)
+                opt_compress = True
+                opt_interlace = True
+                if image_set.store('save', self.file.name, self.pages, opt_compress, opt_interlace) is False:
+                    print 'Document save: can not store ImageSet "%s"' % id
+                    return retval
+                renderer = Renderer()
+                renderer.render(image_set)
+            return retval
 
