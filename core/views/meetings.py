@@ -8,7 +8,7 @@ from django.utils.datastructures import SortedDict
 from django.db.models import Count
 from ecs.core.views.utils import render
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
-from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
+from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.core.task_queue import optimize_timetable_task
 from ecs.utils.timedelta import parse_timedelta
@@ -41,6 +41,18 @@ def schedule_submission(request, submission_pk=None):
         'submission': submission,
         'form': form,
     })
+    
+def add_free_timetable_entry(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    form = FreeTimetableEntryForm(request.POST or None)
+    if form.is_valid():
+        entry = meeting.add_entry(**form.cleaned_data)
+        return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return render(request, 'meetings/timetable/add_free_entry.html', {
+        'form': form,
+        'meeting': meeting,
+    })
+    
 
 def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -65,9 +77,7 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
     form = TimetableEntryForm(request.POST)
     if form.is_valid():
-        duration = form.cleaned_data['duration']
-        if duration:
-            entry.duration = parse_timedelta(duration)
+        entry.duration = form.cleaned_data['duration']
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
     return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))

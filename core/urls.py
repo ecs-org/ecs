@@ -45,6 +45,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/particiaptions/$', 'ecs.core.views.participation_editor'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/$', 'ecs.core.views.optimize_timetable'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/new/$', 'ecs.core.views.add_timetable_entry'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/add/$', 'ecs.core.views.add_free_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'ecs.core.views.move_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),

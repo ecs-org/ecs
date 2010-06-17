@@ -1,0 +1,15 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block content %}
+<h2>Neues Top für die Sitzung {{ meeting.title }} am {{ meeting.start|date:"d.m.Y" }}</h2>
+<form action="" method="post">
+    <ol>
+        {% for field in form %}
+            {% include "forms/field.html" %}
+        {% endfor %}
+    </ol>
+    <input type="submit" value="Speichern" />
+    <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a>
+</form>
+{% endblock %}

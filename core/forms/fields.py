@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*
 from django import forms
 
 from ecs.core.models import Investigator
+from ecs.utils.timedelta import parse_timedelta
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
 TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
@@ -23,6 +25,16 @@ class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie eine Uhrzeit im Format HH:MM ein.'})
         super(TimeField, self).__init__(*args, **kwargs)
+        
+class TimedeltaField(forms.CharField):
+    default_error_messages = {
+        'invalid': u'Bitte geben Sie eine gültige Zeitspanne an. Z.b. "10min" oder "1h 30min"',
+    }
+    def to_python(self, value):
+        try:
+            return parse_timedelta(super(TimedeltaField, self).to_python(value))
+        except ValueError:
+            raise ValidationError(self.error_messages['invalid'])
 
 class InvestigatorChoiceMixin(object):
     def __init__(self, **kwargs):

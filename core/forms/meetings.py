@@ -4,7 +4,7 @@ from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
 from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation
-from ecs.core.forms.fields import DateTimeField, TimeField
+from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
 
 class MeetingForm(forms.ModelForm):
@@ -16,9 +16,16 @@ class MeetingForm(forms.ModelForm):
         exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
 
 class TimetableEntryForm(forms.Form):
-    duration = forms.CharField(required=False)
+    duration = TimedeltaField()
     optimal_start = forms.TimeField(required=False)
 
+
+class FreeTimetableEntryForm(forms.Form):
+    title = forms.CharField(required=True, label=u'Titel')
+    duration = TimedeltaField(initial=u'1h 30min', label=u"Dauer")
+    is_break = forms.BooleanField(label=u"Pause", required=False)
+    optimal_start = TimeField(required=False, label=u'Ideale Startzeit (Uhrzeit)')
+    
 
 class BaseConstraintFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):

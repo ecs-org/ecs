@@ -3,18 +3,6 @@
 
 {% block meeting_assistant_body %}
     <form id="meeting_assistant_form" action="" method="post">
-    {% if top.is_break %}
-        <div style="font-size:80px;color:#cc0000;position:relative">PAUSE<div style="font-size:80px;color:#ff6600;position:absolute;left:-3px;top:-3px">PAUSE</div></div>
-        <span class="meta">
-            Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
-        </span>
-        <div class="buttons">
-            <a id="complete" href="">Fertig</a>
-        </div>
-    {% else %}
-        <input id="id_executive_review_required" type="hidden" name="executive_review_required" value="" />
-        <input id="id_close_top" type="hidden" name="close_top" value="1" />
-        <input id="id_simple_save" type="hidden" name="simple_save" value="" />
         <fieldset>
             <legend>{{ top }}, {{ submission.ec_number|default:top.title }}</legend>
             {{ submission.project_title|default:top.title }}
@@ -22,6 +10,18 @@
                 Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
             </span>
         </fieldset>
+    {% if not top.submission %}
+        {% if top.is_break %}
+            <div style="font-size:80px;color:#cc0000;position:relative">PAUSE<div style="font-size:80px;color:#ff6600;position:absolute;left:-3px;top:-3px">PAUSE</div></div>
+        {% else %}
+        {% endif %}
+        <div class="buttons">
+            <a id="complete" href="">Fertig</a>
+        </div>
+    {% else %}
+        <input id="id_executive_review_required" type="hidden" name="executive_review_required" value="" />
+        <input id="id_close_top" type="hidden" name="close_top" value="1" />
+        <input id="id_simple_save" type="hidden" name="simple_save" value="" />
         <fieldset>
             <legend>Votum</legend>
             <div>
@@ -82,7 +82,7 @@
         window.addEvent('domready', function(){
             ecs.setupForms();
             var meetingAssistantForm = $('meeting_assistant_form');
-            {% if top.is_break %}
+            {% if not top.submission %}
                 $('complete').addEvent('click', function(){
                     meetingAssistantForm.submit();
                     return false;

@@ -150,7 +150,7 @@ class Meeting(models.Model):
         else:
             kwargs['timetable_index'] = last_index + 1
         duration = kwargs.pop('duration', None)
-        if duration:
+        if duration is not None:
             kwargs['duration_in_seconds'] = duration.seconds
         entry = self.timetable_entries.create(**kwargs)
         self._clear_caches()

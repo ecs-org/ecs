@@ -69,9 +69,14 @@
   position: relative;
 }
 
+#meeting_editor .entry.free {
+  background-color: #ccffff;
+}
+
 #meeting_editor .entry.break {
   background-color: #ffffcc;
 }
+
 #meeting_editor .entry a.remove {
   position: absolute;
   top: 0px;
