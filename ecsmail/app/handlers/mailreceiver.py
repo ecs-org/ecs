@@ -1,7 +1,6 @@
 import logging
 import re
 from lamson.routing import route, route_like, stateless
-from ecsmail.config.settings import relay
 from lamson import view
 
 from django.conf import settings
@@ -10,6 +9,8 @@ from ecs.messages.models import Message
 @route("(address)@(host)", address=".+")
 @stateless
 def START(message, address=None, host=None):
+    from ecs.ecsmail.config.settings import relay
+    
     muuid = None
     if host == settings.DEFAULT_FROM_DOMAIN:
         logging.info('PREBLUB %s' % (address,))

@@ -1,4 +1,4 @@
-from . import settings
+from ecs.ecsmail.config import settings
 from lamson.routing import Router
 from lamson.server import Relay, SMTPReceiver
 from lamson import view, queue
@@ -6,7 +6,7 @@ import logging
 import logging.config
 # import jinja2
 
-logging.config.fileConfig("config/logging.conf")
+# logging.config.fileConfig("config/logging.conf")
 
 # the relay host to actually send the final message to
 settings.relay = Relay(host=settings.relay_config['host'], 

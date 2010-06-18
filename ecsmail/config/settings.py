@@ -12,7 +12,7 @@ relay_config = {'host': 'localhost', 'port': 8825}
 
 receiver_config = {'host': 'localhost', 'port': 8823}
 
-handlers = ['app.handlers.sample']
+handlers = ['app.handlers.mailreceiver']
 
 router_defaults = {'host': '.+'}
 
