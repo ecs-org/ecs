@@ -2,16 +2,19 @@
 {% load messages %}
 
 {% block content %}
-<h2>Inbox ({{ page.paginator.count }})</h2>
-
-<a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
-| <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
-
+<div class="messages_overview">
+  <div class="messages_header">
+    <h2>Inbox ({{ page.paginator.count }})</h2>
+    <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="sortieren" />
+    <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
+    | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
+  </div>
+</div>
 {{ block.super }}
 {% endblock %}
 
 {% block message_actions %}
-    {{ block.super }} | <a class="popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}">Antworten</a>
+    {{ block.super }} <a class="popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
 {% endblock %}
 
 {% block extra_message_table_headers %}

@@ -56,9 +56,23 @@ ol {
   display: inline-block;
   height: 20px;
 }
-.message_display img {
+.message_display img, .messages_overview img {
   vertical-align: middle;
 }
 table.messages .threadstart {
   border-top: 1px solid #cccccc;
 }
+.messages_header, .messages th, .messages td {
+  padding: 5px;
+}
+.messages th {
+  background: #eee;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  font-size: 11pt;
+}
+.messages td {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+

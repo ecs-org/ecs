@@ -33,9 +33,9 @@
           {% endblock %}
           <td>
               {% block message_actions %}
-                  <a class="popup" href="{% url ecs.messages.views.read_message message_pk=message.pk %}">Lesen</a>
+                  <a class="popup" href="{% url ecs.messages.views.read_message message_pk=message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
                   {% if not message.thread.closed %}
-                  | <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt">Erledigt</a>
+                  <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
                   {% endif %}
               {% endblock %}
           </td>
@@ -45,17 +45,17 @@
   
   <div class="paginator">
       {% if page.has_previous %}
-          <a class="widget" href="{{ request.path }}?p=1"> ⇤ </a>
-          <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"> ↩ </a>
+          <a class="widget" href="{{ request.path }}?p=1"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="Anfang" title="Anfang" /></a>
+          <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="zurück" title="zurück" /></a>
       {% endif %}
-  
-      {% if page.has_next %}
-          <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"> ↪ </a>
-          <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"> ⇥ </a>
-      {% endif %}
-  
-  
+
       {{ page.number }} von {{ page.paginator.num_pages }}
+      
+      {% if page.has_next %}
+          <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="weiter" title="weiter" /></a>
+          <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="Ende" title="Ende" /></a>
+      {% endif %}
+  
   </div>
 {% endblock %}
 
