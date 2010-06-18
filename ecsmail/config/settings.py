@@ -2,6 +2,8 @@
 import logging
 import os
 
+BOUNCES = 'run/bounces'
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'ecs.settings'
 os.environ['LAMSON_LOADED'] = 'True'
 
