@@ -12,7 +12,6 @@ from django.core.exceptions import ValidationError
 
 from ecs.mediaserver.analyzer import Analyzer
 from ecs.mediaserver.imageset import ImageSet
-from ecs.mediaserver.renderer import Renderer
 
 
 class DocumentType(models.Model):
@@ -29,6 +28,7 @@ def upload_document_to(instance=None, filename=None):
     # FIXME: handle file name collisions
     dirs = list(instance.uuid_document_revision[:6]) + [instance.uuid_document_revision]
     return os.path.join(settings.FILESTORE, *dirs)
+
 
 class DocumentFileStorage(FileSystemStorage):
     def get_available_name(self, name):
@@ -69,17 +69,18 @@ class Document(models.Model):
         app_label = 'core'
 
     def clean(self):
-        # TODO check file contents and modify mimetype (now everything is assumed PDF and thus non-PDF will get invalidated below
+        # TODO check file contents and modify mimetype
+        # (now everything is assumed PDF and thus non-PDF will get invalidated below)
         if str(self.mimetype) == 'application/pdf':
             analyzer = Analyzer()
             analyzer.sniff_file(self.file)
             if analyzer.valid is False:
-                raise ValidationError('invalid PDF')
+                raise ValidationError('invalid PDF')  # TODO add user-visible error message
             self.pages = analyzer.pages
 
     def save(self, **kwargs):
         if self.file:
-            s = self.file.read()  # TODO optimize for large files! check if correct for binary files (e.g. random bytes)
+            s = self.file.read()  # TODO optimize for large files!
             m = hashlib.md5()
             m.update(s)
             self.file.seek(0)
@@ -87,14 +88,6 @@ class Document(models.Model):
             self.uuid_document_revision = self.uuid_document
             retval = super(Document, self).save(**kwargs)
             if str(self.mimetype) == 'application/pdf' and self.pages:
-                id = self.uuid_document_revision
-                image_set = ImageSet(id)
-                opt_compress = True
-                opt_interlace = True
-                if image_set.store('Document save', self.file.name, self.pages, opt_compress, opt_interlace) is False:
-                    print 'Document save: can not store ImageSet "%s"' % id
-                    return retval
-                renderer = Renderer()
-                renderer.render(image_set)
+                image_set = ImageSet(self.pk)
+                image_set.store_document(self)
             return retval
-
