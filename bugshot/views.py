@@ -8,7 +8,7 @@ def shoot(request):
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
         "milestone":"Milestone 6", 
-        "sprint":"Sprint 6", 
+        # XXX deleted because only persons assigned to a sprint can be owner of this type of ticket "sprint":"Sprint 6", 
         "absoluteurl": request.POST.get('absoluteurl', ''),
     }, True)
 
