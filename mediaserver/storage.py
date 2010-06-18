@@ -7,6 +7,9 @@ from django.conf import settings
 
 
 class SetData(object):
+    # minimal data to create ImageSet.images data (mostly derived from <pages>)
+    # minimal data to to re-render PageData that was squeezed out
+    # thus memcache re-fill can avoid SQL lookups if SetData stayed within the cache
     def __init__(self, origin, pdf_name, pages, opt_compress, opt_interlace):
         self.origin = origin
         self.pdf_name = pdf_name
@@ -20,19 +23,25 @@ class SetData(object):
 
 class PageData(object):
     def __init__(self, png_name):
-        crit_size = 200 * 1024
+        self.crit_size = 200 * 1024
         self.png_name = png_name
+        self.png_data = None
+        self.png_data_size = None
+        self.png_time = None
+        self.load()
+
+    def __str__(self):
+        return '(%s, size %s, %s)' % (self.png_name, self.png_data_size, time.ctime(self.png_time))
+
+    def load(self):
         f = open(self.png_name, 'rb')
         self.png_data = f.read()
         f.close()
         self.png_data_size = len(self.png_data)
-        if self.png_data_size >= crit_size:
-            delta = (100.0 * (self.png_data_size - crit_size)) / crit_size
-            print "Warning: (len(%s): %d) >= (crit_size: %d) [+%0.2f%%]" % (self.png_name, self.png_data_size, crit_size, delta)
+        if self.png_data_size >= self.crit_size:
+            delta = (100.0 * (self.png_data_size - self.crit_size)) / self.crit_size
+            print "Warning: (len(%s): %d) >= (crit_size: %d) [+%0.2f%%]" % (self.png_name, self.png_data_size, self.crit_size, delta)
         self.png_time = time.time()
-
-    def __str__(self):
-        return '(%s, size %d, %s)' % (self.png_name, self.png_data_size, time.ctime(self.png_time))
 
 
 class Storage(object):
