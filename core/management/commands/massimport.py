@@ -126,6 +126,7 @@ class Command(BaseCommand):
                     text=unicode(b.contents[0])
 
                 except AttributeError:
+                    #print '\n%s' % nr
                     # have some trouble, but put all data instead inside for inspection
                     text="UNKNOWN:"+ unicode(a.findParent())
 
@@ -281,10 +282,10 @@ class Command(BaseCommand):
                 guessed_type = guess_type(values)
                 
                 if count < len(data) * 80 / 100:   # covering is lower than 80%
-                    low_covered_fields.append(fields[key])
+                    low_covered_fields.append('%s(%s)' % (fields[key], key))
                 
             else:
-                not_imported_fields.append(fields[key])
+                not_imported_fields.append('%s(%s)' % (fields[key], key))
 
 
             print '%s: count=%d minimum=%d maximum=%d arithmetic_mean=%.2f geometric_mean=%.2f standard_deviation=%.2f optimum=%d guessed_type=%s' % (key, count, minimum, maximum, arithmetic_mean, geometric_mean, standard_deviation, optimum, guessed_type)
