@@ -142,7 +142,7 @@ body {
   color: #2b558e;
 }
 #content a:hover {
-  border-bottom: 1px solid #2b558e;
+  text-decoration: underline;
 }
 
 
@@ -189,8 +189,7 @@ body {
 
 /* general links */
 
-#sidebar a, #sidebr a img {
+#sidebar a, #sidebar a img, #content a img {
   text-decoration: none;
   border: none !important;
 }
-

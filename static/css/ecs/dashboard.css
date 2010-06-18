@@ -21,6 +21,7 @@
 }
 .dashboard_widget .messages_header {
   margin-bottom: 5px;
+  font-size: 11pt;
 }
 .dashboard_widget .messages > li {
   clear: both;
@@ -40,7 +41,7 @@
   border-bottom: 1px solid #ccc;
 }
 .dashboard_widget .messages > li.unread {
-  background-image: url(/static/images/core/Email_warning.png);
+  background-image: url(/static/images/core/mail_new.png);
   background-repeat: no-repeat;
   background-position: 2px 30px;
 }
@@ -62,14 +63,18 @@
   display: block;
   position: absolute;
   right: 0px;
-  top: 0px;
+  top: 10px;
 }
 .dashboard_widget .actions a {
-  font-size: 16px;
   width: 30px;
   display: inline-block;
+  height: 20px;
+}
+.dashboard_widget img {
+  vertical-align: middle;
 }
 .paginator {
   margin-top: 5px;
   font-size: 10pt;
+  display: block;
 }

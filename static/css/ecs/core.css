@@ -21,17 +21,17 @@ ul.tab_headers {
   color: #fff;
   background: #ff8000;
 }
-.tab_headers li a.delete_row{
-    border: none;
-    background: url(/static/images/core/remove.png) no-repeat;
-    width: 16px;
-    height: 16px;
-    padding: 0px;
-    position: relative;
-    top: 3px;
-    display: inline-block;
-    overflow: hidden;
-    text-indent: -1000px;
+.tab_headers li a.delete_row {
+  border: none;
+  background: url(/static/images/core/remove.png) no-repeat;
+  width: 16px;
+  height: 16px;
+  padding: 0px;
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  overflow: hidden;
+  text-indent: -1000px;
 }
 .tab_headers .errors a {
   background: #fb6464;
