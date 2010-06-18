@@ -2,20 +2,22 @@
 {% load core %}
 
 {% block htmlbody %}
-<form action="" method="post" class="form main">
-    <ol>
-        <li>
-            <label>Thread</label>
-            <span>{{ thread.subject }}</span>
-        </li>
-        <li>
-            <label for="id_to">Delegieren an</label>
-            {{ form.to }}
-            {% if form.to.errors %}
-                <span class="errors">{{ form.to.errors }}</span>
-            {% endif %}
-        </li>
-    </ol>
-    <input type="submit" value="Delegieren" />
-</form>
+<div class="message_display">
+  <form action="" method="post" class="form message">
+      <ol>
+          <li>
+              <label>Thread</label>
+              <span>{{ thread.subject }}</span>
+          </li>
+          <li>
+              <label for="id_to">Delegieren an</label>
+              {{ form.to }}
+              {% if form.to.errors %}
+                  <span class="errors">{{ form.to.errors }}</span>
+              {% endif %}
+          </li>
+      </ol>
+      <input type="submit" value="Delegieren" />
+  </form>
+</div>
 {% endblock %}

@@ -135,7 +135,7 @@ input, textarea, select {
   clear: both;
   margin-bottom: 20px;
 }
-.form.main .field h3, .form.main.form.main .tab h3 {
+.form.main .field h3, .form.main .tab h3 {
   font-size: 12pt;
   letter-spacing: 1px;
   padding: 5px 0 10px 5px;
@@ -149,7 +149,6 @@ input, textarea, select {
 }
 .form.main ol {
   padding: 10px 0;
-  
   display: block;
 }
 /*
@@ -165,6 +164,9 @@ input, textarea, select {
   margin-bottom: 10px;
 }
 .form.main ol li input[type=text], .form.main ol li textarea {
+}
+.form.main ol li input[type=submit] {
+  float: right;
 }
 .form.main ol li textarea {
   height: 4em;

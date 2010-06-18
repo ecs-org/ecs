@@ -3,28 +3,30 @@
 
 {% block htmlbody %}
 <div class="message_display">
-    <h2>{{ message.subject }}</h2>
-    <div><b>Von:</b> {{ message|sender_name:request.user  }}</div>
-    <div><b>An:</b> {{ message|receiver_name:request.user }}</div>
-    <div><b>Datum:</b> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</div>
-    <div><b>Betreff:</b> 
-        {% if message.thread.submission %}
-            {{ message.thread.submission.ec_number }} -
-        {% endif %}
-        {{ message.thread.subject }}
-    </div>
-    <div class="actions">
-        {% ifequal message.sender request.user %}
-            <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"> ⟳ </a>
-        {% else %}
-            <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Delegieren"> ↬ </a>
-            <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"> ➥ </a>
-        {% endifequal %}
-        <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"> ✓ </a>
-    </div>
-    <div style="border-top: 1px solid #999999">
-        <pre>{{ message.text }}</pre>
-    </div>
+  <h2>{{ message.subject }}</h2>
+    <ol>
+      <li><strong>Von:</strong> {{ message|sender_name:request.user  }}</li>
+      <li><strong>An:</strong> {{ message|receiver_name:request.user }}</li>
+      <li><strong>Datum:</strong> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</li>
+      <li><strong>Betreff:</strong> 
+          {% if message.thread.submission %}
+              {{ message.thread.submission.ec_number }} -
+          {% endif %}
+          {{ message.thread.subject }}
+      </li>
+      <li class="actions">
+          {% ifequal message.sender request.user %}
+              <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+          {% else %}
+              <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
+              <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /> </a>
+          {% endifequal %}
+          <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
+      </li>
+      <li style="border-top: 1px solid #999999">
+          <pre>{{ message.text }}</pre>
+      </li>
+    </ol>
 </div>
 {% endblock %}
 

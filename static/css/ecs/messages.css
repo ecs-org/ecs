@@ -1,15 +1,64 @@
-.message_display .actions{
-    width: 30px;
-    position: absolute;
-    top: 0px;
-    right: 0px;
+ol {
+  margin: 0;
+  padding: 0;
 }
-
-.message_display .actions a{
-    display: block;
-    font-size: 30px;
+.form.message ol li {
+  display: block;
+  clear: both;
+  list-style-type: none;
+  margin-bottom: 10px;
+  font-size: 9pt;
 }
-
-table.messages .threadstart{
-    border-top: 1px solid #cccccc;
+.form.message ol li label {
+  display: block;
+  width: 100px;
+  margin: 0 10px 10px 0;
+  text-align: right;
+  float: left;
+}
+.form.message ol li textarea {
+  height: 16em;
+  display: block;
+  width: 30em;
+}
+.form.message input, .form.message textarea {
+  border: 1px solid #999;
+  padding: 2px;
+}
+.form.message input[type="submit"] {
+  float: right;
+  margin-right: 140px;
+  background: #333;
+  color: #fff;
+}
+.message_display {
+  padding: 20px;
+  height: 100%;
+  font-size: 9pt;
+}
+.message_display ol li {
+  list-style: none;
+}
+.message_display li {
+  margin-bottom: 5px;
+}
+.message_display .actions {
+  width: 30px;
+  position: absolute;
+  top: 30px;
+  right: 30px;
+}
+.message_display pre {
+  padding: 20px;
+}
+.message_display .actions a {
+  width: 30px;
+  display: inline-block;
+  height: 20px;
+}
+.message_display img {
+  vertical-align: middle;
+}
+table.messages .threadstart {
+  border-top: 1px solid #cccccc;
 }

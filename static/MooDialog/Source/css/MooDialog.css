@@ -2,7 +2,7 @@
 
 .MooDialog {
   top: 80px !important;
-	background: #eef5f8;
+	background: #fff !important;
 	color: black;
 	padding: 10px;
 	border-radius: 7px; 
@@ -27,11 +27,13 @@
 	background: #b7c4dc;
 	border-bottom: 1px solid #a1aec5;
 	font-weight: bold; 
-	text-shadow: 1px 1px 0 #fff;
 	color: black;
-	border-radius: 7px; 
-	-moz-border-radius: 7px; 
-	-webkit-border-radius: 7px; 
+	border-top-left-radius: 7px;
+  border-top-left-radius: 7px; 
+	-moz-border-radius-topleft: 7px;
+  -moz-border-radius-topright: 7px;
+	-webkit-border-top-left-radius: 7px;
+  -webkit-border-top-right-radius: 7px;  
 }
 
 .MooDialog .close {

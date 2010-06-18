@@ -189,7 +189,7 @@ body {
 
 /* general links */
 
-#sidebar a, #sidebar a img, #content a img {
+#sidebar a, a img {
   text-decoration: none;
   border: none !important;
 }
