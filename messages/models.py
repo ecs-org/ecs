@@ -11,6 +11,7 @@ MESSAGE_ORIGIN_BOB = 2
 
 DELIVERY_STATES = (
     ("new", "new"),
+    ("started", "started"),
     ("sent", "sent"),
     ("failed", "failed"),
     ("skipped", "skipped"),
@@ -82,6 +83,10 @@ class Thread(models.Model):
     objects = ThreadManager()
 
     def mark_closed_for_user(self, user):
+        for msg in self.messages.all():
+            msg.unread = False
+            msg.save()
+        
         if user.id == self.sender_id:
             self.closed_by_sender = True
             self.save()
@@ -150,13 +155,13 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
             try:
+                self.smtp_delivery_state='started'
                 send_mail(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
                                                                  message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
                                                                  from_email=self.return_address,
                           recipient_list=[self.receiver.email], fail_silently=False)
                 self.smtp_delivery_state='sent'
-                super(Message, self).save(*args, **kwargs)
             except:
                 traceback.print_exc()
                 self.smtp_delivery_state='failed'
-                super(Message, self).save(*args, **kwargs)
+        super(Message, self).save(*args, **kwargs)

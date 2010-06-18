@@ -1,0 +1,9 @@
+Hi {{user}},
+{% if mails %}
+Du hast {{ count }} ungelesene Nachricht{{ count|pluralize:"en" }}:
+{% for m in mails %}
+    * {{ m.thread.subject }} (von {{m.sender}})
+{% endfor %}
+{% else %}
+Du hast keine ungelesenen Nachrichten.
+{% endif %}Dein ECS
