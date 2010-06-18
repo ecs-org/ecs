@@ -12,3 +12,10 @@ Quartz Icon Pack
 ----------------
 
 Mail_compose, Mail_forward, Mail_reply, Mail_new, Mail_open, Mails, Mail_add, Mail_verified, Mail_delete, Email, Email_warning
+
+Fugue Icons
+-----------
+
+http://p.yusukekamiyamane.com/icons/attribution/
+Some Icons are Copyright © Yusuke Kamiyamane. All rights reserved. Licensed under a Creative Commons Attribution 3.0 license.
+
