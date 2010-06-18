@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ####################################################
 # Massimport for word documents of submissions
 # This is experimental; don't use it.
@@ -18,9 +19,11 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.core.files import File
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm, Meeting, Participation
+from ecs.core.models import Document, DocumentType
 
 
 PLATFORM = 'unix'
@@ -91,10 +94,30 @@ class Command(BaseCommand):
 
     def _parse_doc(self, filename):
         regex = re.match('(\d{1,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
+        basename = re.match('(.*).doc', os.path.basename(filename)).group(1)
         try:
             ec_number = '%s/%04d' % (regex.group(2), int(regex.group(1)))
         except IndexError:
-            ec_number = re.match('(.*).doc', os.path.basename(filename)).group(1)
+            ec_number = basename
+        
+        
+        documents = []
+        dirname = os.path.dirname(filename)
+        for document in os.listdir(dirname):
+            match = re.match(r'%s-((Patienteninformation)|(.*Lebenslauf).*)\.((doc)|(pdf))' % basename, document)
+            
+            if not match:
+                continue
+            
+            doctype_str = 'Patienteninformation' if match.group(2) else "PI's Curriculum Vit\xc3\xa6"
+            doctype = DocumentType.objects.get(name=doctype_str)
+
+            documents.append({
+                'title': match.group(1),
+                'mimetype': 'application/pdf' if match.group(6) else 'application/msword',
+                'filename': os.path.join(dirname, document),
+                'doctype': doctype,
+            })
 
         antiword = Popen(['antiword', '-x', 'db', filename], stdout=PIPE, stderr=PIPE)
         docbook, standard_error = antiword.communicate()
@@ -150,11 +173,11 @@ class Command(BaseCommand):
             'ec_number': ec_number,
         }
 
-        return (submission_data, submissionform_data)
+        return (submission_data, submissionform_data, documents)
 
     @transaction.commit_on_success
     def _import_doc(self, filename):
-        submission_data, submissionform_data = self._parse_doc(filename)
+        submission_data, submissionform_data, documents = self._parse_doc(filename)
         submission, created = Submission.objects.get_or_create(**submission_data)
         
         for key, value in (('subject_count', 1), ('subject_minage', 18), ('subject_maxage', 60)):
@@ -167,7 +190,20 @@ class Command(BaseCommand):
                 del submissionform_data[key]
         
         submissionform_data['submission'] = submission
-        SubmissionForm.objects.create(**submissionform_data)
+        submission_form = SubmissionForm.objects.create(**submissionform_data)
+        
+        for d in documents:
+            pdf_file = open(d['filename'], 'rb')
+            doc = Document(
+                version=d['title'],
+                date=datetime.now(),
+                doctype=d['doctype'],
+                mimetype=d['mimetype'],
+                file=File(pdf_file)
+            )
+            doc.save()
+            submission_form.documents.add(doc)
+        
     
     def _import_files(self, files, dont_exit_on_fail=False):
         failcount = 0
@@ -219,7 +255,7 @@ class Command(BaseCommand):
         failed = []
         for f in files:
             try:
-                submission_data, submissionform_data = self._parse_doc(f)
+                submission_data, submissionform_data, documents = self._parse_doc(f)
                 for key in submissionform_data:
                     data[key].append(submissionform_data[key])
                 
