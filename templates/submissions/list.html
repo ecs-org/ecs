@@ -16,7 +16,7 @@
         {% for docstash in stashed_submission_forms %}
             {% if docstash.current_value %}
                 <li class="{% cycle 'even' 'odd' %}">
-                    <h3><span class="ecnr">?</span>{{ docstash.current_name|default:"<i>Unbenannt</i>" }}</h3>
+                    <h3><span class="ecnr"> </span>{{ docstash.current_name|default:"<i>Unbenannt</i>" }}</h3>
                     <div class="actions"><a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">Bearbeiten</a></div>
                     <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
                 </li>
