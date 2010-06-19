@@ -30,7 +30,7 @@
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}
             {% if meetings %}
-                <div class="info">Sitzungen: {% for meeting in meetings %}<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">Sitzungen: {% for meeting in meetings %}<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
     </li>
