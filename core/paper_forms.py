@@ -144,7 +144,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.4.1', 'medtech_checked_product', u'Prüfprodukt(e)'),
     FieldInfo('2.4.2', 'medtech_reference_substance', u'Referenzprodukt'),
     FieldInfo('2.5', 'clinical_phase', u'Klinische Phase', help_text=u'unbedingt angeben, bei Medizinprodukten die am ehesten zutreffende Phase'),
-    FieldInfo('2.8', 'already_voted', u'Liegen bereits Voten anderer Ethikkommissionen vor?', help_text=u'Wenn ja, Voten beilegen!'),
+    FieldInfo('2.8', 'already_voted', u'Liegen bereits Voten anderer Ethikkommissionen vor?', help_text=u'Falls ja, laden sie die Voten über den Reiter Unterlagen hoch'),
     FieldInfo('2.9', 'subject_count', u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt', help_text=u'alle teilnehmenden Zentren'),
     # 2.10 Charakterisierung der Prüfungsteilnehmer/innen
     FieldInfo('2.10.1', 'subject_minage', u'Mindestalter'),
@@ -165,7 +165,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('3.2.3', 'substance_p_c_t_period', u'Zeitraum'),
     FieldInfo('3.2.4', 'substance_p_c_t_application_type', u'Anwendungsart(en)'),
     FieldInfo('3.2.5', 'substance_p_c_t_gcp_rules', u'Wurde(n), die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt?'),
-    FieldInfo('3.2.6', 'substance_p_c_t_final_report', u'Liegt ein Abschlußbericht vor?', help_text=u'Wenn ja, bitte legen Sie die Investigator´s Brochure, relevante Daten oder ein Gutachten des Arznei­mittelbeirates bei.'),
+    FieldInfo('3.2.6', 'substance_p_c_t_final_report', u'Liegt ein Abschlußbericht vor?', help_text=u"Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein Gutachten des Arzneimittelbeirates über den Reiter Unterlagen hoch"),
     # 4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt
     FieldInfo('4.1', 'medtech_product_name', u'Bezeichnung des Produktes'),
     FieldInfo('4.2', 'medtech_manufacturer', u'Hersteller'),
