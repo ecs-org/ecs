@@ -233,7 +233,7 @@ def view_submission_form(request, submission_form_pk=None):
 
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    response = render_pdf(request, 'submissions/xhtml2pdf/submission.html', {
+    response = render_pdf(request, 'submissions/xhtml2pdf/view.html', {
         'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
         'submission_form': submission_form,
         'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
