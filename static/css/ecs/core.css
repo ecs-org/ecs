@@ -120,6 +120,13 @@ input, textarea, select {
 .paginator img {
   vertical-align: middle;
 }
+#upload_button {
+  float: right;
+  background: #333;
+  color: #fff;
+  margin-top: 10px;
+  cursor: pointer;
+}
 
 /* sidebar */
 
@@ -144,7 +151,6 @@ input, textarea, select {
   margin-bottom: 20px;
 }
 .form.main .field h3, .form.main .tab h3 {
-  font-size: 12pt;
   letter-spacing: 1px;
   padding: 5px 0 10px 5px;
   line-break: normal;
@@ -394,11 +400,10 @@ fieldset.disabled {
 /* documents */
 
 .doclist {
-  border: 1px solid #666666;
+  background: #eee;
+  padding: 10px;
 }
 .doclist h3 {
-  font-size: 1em;
-  background-image: url(/static/images/core/icon-triangle.png);
   background-repeat: no-repeat;
   padding-left: 24px;
 }
@@ -406,7 +411,6 @@ fieldset.disabled {
   display: block;
   margin-left: 2em;
   padding-left: 24px;
-  background-image: url(/static/images/core/icon-doc.png);
   background-repeat: no-repeat; 
 }
 
@@ -439,7 +443,6 @@ table.notif_meta th {
 }
 #content ol.submission_list h3 {
     margin-bottom: 5px;
-    font-size: 11pt;
     font-weight: normal;
 }
 content ol.submission_list h3 .ecnr {

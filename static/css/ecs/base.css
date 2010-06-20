@@ -120,19 +120,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 #content h1 {
+  display: block;
   font-size: 1.4em;
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h2 {
-  font-size: 1.1em;
+  display: block;
+  font-size: 1.2em;
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h3 {
-  font-size: 0.9em;
-  margin-bottom: 20px;
-  font-weight: lighter;
+  display: block;
+  font-size: 1.1em;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
 }
 #content p {
   margin-bottom: 20px;
