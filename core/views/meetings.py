@@ -6,7 +6,7 @@ from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
-from ecs.core.views.utils import render
+from ecs.core.views.utils import render, render_pdf
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
@@ -284,3 +284,13 @@ def meeting_assistant_clear(request, meeting_pk=None):
     meeting.ended = None
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+
+
+def agenda_pdf(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    response = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
+        'meeting': meeting,
+    }, filename=('meeting_%s.pdf' % meeting.title))
+    return response
+
+

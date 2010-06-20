@@ -6,5 +6,5 @@ from ecs.core.views.submissions import create_submission_form, copy_submission_f
 from ecs.core.views.meetings import meeting_list, create_meeting, timetable_editor, add_timetable_entry, remove_timetable_entry, update_timetable_entry, \
     move_timetable_entry, optimize_timetable, participation_editor, users_by_medical_category, schedule_submission, add_free_timetable_entry
     
-from ecs.core.views.meetings import meeting_assistant, meeting_assistant_top, meeting_assistant_quickjump, meeting_assistant_clear, meeting_assistant_start, meeting_assistant_stop
+from ecs.core.views.meetings import meeting_assistant, meeting_assistant_top, meeting_assistant_quickjump, meeting_assistant_clear, meeting_assistant_start, meeting_assistant_stop, agenda_pdf
 from ecs.core.views.checklists import checklist_comments
