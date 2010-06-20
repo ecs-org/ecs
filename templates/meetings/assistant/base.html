@@ -12,6 +12,7 @@
 {% block content %}
 <div id="meeting_assistant">
     <div class="left">
+      <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
             <a href="{% url ecs.core.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Clear</a>
             {% if not meeting.started %}
@@ -21,31 +22,31 @@
                     | <a href="{% url ecs.core.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Stop</a>
                 {% endif %}
             {% endif %}
-            <div class="info">
-                <div>TOPs: {{ meeting|length }}</div>
-                <div>Offene TOPs: {{ open_top_count }}</div>
-                <div>Offene TOPs mit Votum: {{ meeting.open_tops_with_vote.count }}</div>
-                <div>
+            <ol class="info">
+                <li>TOPs: {{ meeting|length }}</li>
+                <li>Offene TOPs: {{ open_top_count }}</li>
+                <li>Offene TOPs mit Votum: {{ meeting.open_tops_with_vote.count }}</li>
+                <li>&nbsp;</li>
+                <li>
                     {% if meeting.started %}
                         Beginn: {{ meeting.started|date:'H:i' }} Uhr
                     {% else %}
                         Noch nicht begonnen.
                     {% endif%}
-                </div>
-                <div>
-                    Geplanter Beginn: {{ meeting.start|date:'H:i' }} Uhr
-                </div>
-                <div>
-                    Geplantes Ende: {{ meeting.end|date:'H:i' }} Uhr
-                </div>
+                </li>
+                <li>Geplanter Beginn: {{ meeting.start|date:'H:i' }} Uhr
+                </li>
+                <li>Geplantes Ende: {{ meeting.end|date:'H:i' }} Uhr
+                </li>
                 {% if meeting.ended %}
-                    <div>Ende: {{ meeting.ended|date:'H:i' }} Uhr</div>
+                    <li>Ende: {{ meeting.ended|date:'H:i' }} Uhr</li>
                 {% endif %}
-                <div>
+                <li>
                     Aktuelle Uhrzeit: <span id="clock">{% now "H:i" %}</span> Uhr
-                </div>
-            </div>
+                </li>
+            </ul>
             <div class="navigation">
+              <h4>Wechsle nach:</h4>
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
                         <form action="{% url ecs.core.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">

@@ -3,7 +3,7 @@
 
 {% block content %}
 <h2>Neues Top für die Sitzung {{ meeting.title }} am {{ meeting.start|date:"d.m.Y" }}</h2>
-<form action="" method="post">
+<form action="" method="post" class="form main">
     <ol>
         {% for field in form %}
             {% include "forms/field.html" %}

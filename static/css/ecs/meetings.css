@@ -1,19 +1,19 @@
-#meeting_editor #userlist{
+#meeting_editor #userlist {
   list-style: none;
   background-color: #eeeeee;
 }
-#meeting_editor #userlist li{
+#meeting_editor #userlist li {
   border-top: 1px solid #ffffff;
   padding: 5px;
 }
-#meeting_editor #userlist .info{
+#meeting_editor #userlist .info {
   background-color: #ffffff;
   font-size: 0.8em;
 }
-#meeting_editor #userlist .info .constraints{
+#meeting_editor #userlist .info .constraints {
   margin-bottom: 0px;
 }
-#meeting_editor #userlist .info .constraints li{
+#meeting_editor #userlist .info .constraints li {
   padding: 0px;
 }
 #meeting_constraint_editor {
@@ -68,15 +68,12 @@
   background-color:#ffffff;
   position: relative;
 }
-
 #meeting_editor .entry.free {
   background-color: #ccffff;
 }
-
 #meeting_editor .entry.break {
   background-color: #ffffcc;
 }
-
 #meeting_editor .entry a.remove {
   position: absolute;
   top: 0px;
@@ -88,20 +85,21 @@
   overflow: hidden;
   background: url(/static/images/core/remove.png) no-repeat;
 }
-#meeting_editor .entry .dragHandle{
+#meeting_editor .entry .dragHandle {
   float:left;
   width:50px;
   background-color:#cccccc;
   height:100%;
 }
-#meeting_editor .entry input.duration{
+#meeting_editor .entry input.duration {
   width: 5em;
 }
-#meeting_editor .entry input.optimal_start{
+#meeting_editor .entry input.optimal_start {
   width: 5em;
 }
-#meeting_editor .entry h3{
-  font-size: 1em;
+#meeting_editor .entry h3 {
+  padding: 0 !important;
+  border-bottom: none !important;
   margin-bottom: 2px;
 }
 #meeting_editor #timetable {
@@ -117,7 +115,6 @@
 #meeting_participation_editor .entry {
   clear: both;
 }
-
 #meeting_participation_editor .entry h2 {
   margin: 0px;
 }
@@ -177,86 +174,109 @@
   width: 40px;
 }
 
-#meeting_assistant{
-    position: relative;
-    width: 100%;
-}
+/* meeting_assistant */
 
-#meeting_assistant fieldset .meta{
-    display: block;
-    color: #666666;
-    font-size: 0.8em;
+#meeting_assistant ol li {
+  display: block;
+  clear: both;
+  list-style-type: none;
+  margin-bottom: 5px;
 }
-
-#meeting_assistant .buttons a{
-    display: block;
-    float: left;
-    width: 120px;
-    border: 1px solid #cccccc;
-    margin: 10px;
+#meeting_assistant {
+  position: relative;
+  width: 100%;
 }
-
-#meeting_assistant .buttons a.selected{
-    background-color: #ccffcc;
+#meeting_assistant .navigation a {
+  border: 1px solid #ccc;
+  background: #eee;
+  padding: 2px;
+  margin-bottom: 2px;
 }
-
-#meeting_assistant .buttons a .details{
-    display: block;
-    font-size: 0.8em;
+#meeting_assistant .meta {
+  display: block;
+  font-size: 0.8em;
 }
-
-#meeting_assistant #meeting_assistant_body{
-    margin-left: 200px;
-    margin-right: 200px;
+#meeting_assistant h3 {
+  padding: 5px;
 }
-
-#meeting_assistant .left{
-    left: 0px;
-    width: 200px;
-    position: absolute;
+#meeting_assistant .navigation h4 {
+  font-size: 10pt;
 }
-
-#meeting_assistant .right{
-    right: 0px;
-    top: 0px;
-    width: 200px;
-    position: absolute;
+#meeting_assistant .buttons a {
+  display: block;
+  float: left;
+  width: 120px;
+  border: 1px solid #ccc;
+  background: #eee;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
-
+#meeting_assistant .buttons a.selected {
+  background-color: #ccffcc;
+}
+#meeting_assistant .buttons a .details {
+  display: block;
+}
+#meeting_assistant #meeting_assistant_body {
+  margin-left: 200px;
+  margin-right: 200px;
+}
+#meeting_assistant_form {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+#meeting_assistant .left {
+  left: 0px;
+  width: 180px;
+  position: absolute;
+  padding: 10px;
+}
+#meeting_assistant .right {
+  right: 0px;
+  top: 0px;
+  width: 180px;
+  position: absolute;
+  padding: 10px;
+}
 #meeting_assistant .navigation,
-#meeting_assistant .info{
-    font-size: 0.8em;
+#meeting_assistant .info {
+  font-size: 0.8em;
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+  margin-top: 5px;
 }
-
-#meeting_assistant .navigation a{
-    display: block;
+#meeting_assistant .navigation a {
+  display: block;
 }
-
-#meeting_assistant .reviews li{
+#meeting_assistant .navigation form {
+  margin-top: 10px;
 }
-#meeting_assistant .reviews li.absent{
-    background-color: #cccccc;
+#meeting_assistant ul li {
+  list-style: none
 }
-
-#meeting_assistant .reviews li.positive{
-    background-color: #00ff00;
+#meeting_assistant .reviews li {
 }
-
-#meeting_assistant .reviews li.positive.comments{
-    background-color: #77ff00;
+#meeting_assistant .reviews li.absent {
+  background-color: #cccccc;
 }
-
-#meeting_assistant .reviews li.negative{
-    background-color: #ff0000;
+#meeting_assistant .reviews li.positive {
+  background-color: #00ff00;
 }
-
-#meeting_assistant .reviews li.negative.comments{
-    background-color: #ff7700;
+#meeting_assistant .reviews li.positive.comments {
+  background-color: #77ff00;
 }
-
-#meeting_assistant .reviews li.incomplete{
-    background-color: #cccccc;
+#meeting_assistant .reviews li.negative {
+  background-color: #ff0000;
 }
-
-
-
+#meeting_assistant .reviews li.negative.comments {
+  background-color: #ff7700;
+}
+#meeting_assistant .reviews li.incomplete {
+  background-color: #cccccc;
+}
