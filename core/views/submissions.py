@@ -5,7 +5,7 @@ from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 
-from ecs.core.views.utils import render, redirect_to_next_url
+from ecs.core.views.utils import render, redirect_to_next_url, render_pdf
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer, Meeting
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
@@ -17,7 +17,6 @@ from ecs.core import paper_forms
 from ecs.core import signals
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.utils.xhtml2pdf import xhtml2pdf
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -234,15 +233,11 @@ def view_submission_form(request, submission_form_pk=None):
 
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    html = render(request, 'submissions/xhtml2pdf/view.html', {
-            'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-            'submission_form': submission_form,
-            'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-            }).content
-    pdf = xhtml2pdf(html)
-    assert len(pdf) > 0
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=submission_%s.pdf' % submission_form_pk
+    response = render_pdf(request, 'submissions/xhtml2pdf/submission.html', {
+        'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
+        'submission_form': submission_form,
+        'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
+    }, filename=('submission_%s.pdf'%submission_form_pk))
     return response
 
 
@@ -276,3 +271,5 @@ def start_workflow(request, submission_pk=None):
     wf = Graph.objects.get().create_workflow(data=submission)
     wf.start()
     return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
+
+
