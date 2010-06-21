@@ -13,13 +13,20 @@ from ecs.ecsmail.persil import whitewash
 
 @route(".+")
 def IGNORE_BOUNCE(message):
+    print "JUST A SOFT BOUNCE", message
+    bounces = queue.Queue(lamsettings.BOUNCES)
+    bounces.push(message)
+    return START
+
+@route(".+")
+def NOTIFY_BOUNCE(message):
     print "REALLY HANDLING BOUNCE", message
     bounces = queue.Queue(lamsettings.BOUNCES)
     bounces.push(message)
     return START
 
 @route("(address)@(host)", address=".+")
-@bounce_to(soft=IGNORE_BOUNCE, hard=IGNORE_BOUNCE)
+@bounce_to(soft=IGNORE_BOUNCE, hard=NOTIFY_BOUNCE)
 @stateless
 def START(message, address=None, host=None):
     from ecs.ecsmail.config.settings import relay
@@ -42,20 +49,20 @@ def START(message, address=None, host=None):
             raise SMTPError(511)
         
         logging.info('REPLY %s %s %s %s %s' % ( muuid, m, address, host, type(message)))
-        if len(m.original) > 1024*1024:
+        if len(message.original) > 1024*1024:
             raise SMTPError(523)
         
-        if not m.base.parts:
-            body = m.body()
+        if not message.base.parts:
+            body = message.body()
         else:
             body = None
-            for part in m.walk():
-                if (not body) and (part.subtype == 'plain'):
+            for part in message.walk():
+                if (not body) and ('text/plain' in part.content_encoding['Content-Type']):
                     body = part.body
-                elif (not body) and ('html' in part.subtype):
+                elif (not body) and ('html' in part.content_encoding['Content-Type']):
                     body = whitewash(part.body)
             if not body:
-                body = m.body()
+                body = message.body()
 
         d = Message(
             sender=m.receiver,
