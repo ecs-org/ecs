@@ -8,7 +8,29 @@ from json import JSONEncoder
 
 from ecs.core.views.utils import render, redirect_to_next_url
 
+
+from ecs.core.models import Document
 from ecs.mediaserver.imageset import ImageSet
+from ecs.mediaserver.storage import Cache, SetData
+
+
+def load_refill_set(id):
+    try:
+        document = Document.objects.get(pk=id)
+    except DoesNotExist:
+        print 'database miss: document "%s"' % id
+        return None
+    print 'database hit: loaded document "%s"' % id
+    pdf_name = document.file.name
+    pages = document.pages
+    set_data = SetData('doc from db', pdf_name, pages)
+    cache = Cache()
+    if not cache.store_set(id, set_data):
+        print 'cache re-fill failed: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
+        return None
+    else:
+        print 'cache re-filled: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
+        return set_data
 
 
 def show(request, id='1', page=1, zoom='1'):
@@ -24,7 +46,10 @@ def show(request, id='1', page=1, zoom='1'):
 
     image_set = ImageSet(id)
     if image_set.load() is False:
-        return HttpResponse('Error: can not load ImageSet "%s"!' % id)
+        image_set.set_data = load_refill_set(id)
+        if image_set.set_data is None:
+            return HttpResponse('Error: can not load ImageSet "%s"!' % id)
+        image_set.init_images()
     render_set = image_set.render_set
     if not render_set.has_zoom(zoom):
         return HttpResponse('Error: invalid parameter zoom = "%s"! Choose from %s' % (zoom, render_set.zoom_list))

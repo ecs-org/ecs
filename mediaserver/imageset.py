@@ -54,3 +54,5 @@ def cache_and_render(document):
         return False
     renderer = Renderer()
     renderer.render(image_set)
+
+    

@@ -5,8 +5,6 @@ import time
 
 from django.conf import settings
 
-#from ecs.core.models import Document
-
 
 class SetData(object):
     # minimal data to create ImageSet.images data (mostly derived from <pages>)
@@ -73,5 +71,3 @@ class Cache(object):
     def load_page(self, id, bigpage, zoom):
         page_key = self.get_page_key(id, bigpage, zoom)
         return self.mc.get(page_key)
-
-    
