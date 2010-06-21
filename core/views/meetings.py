@@ -307,6 +307,13 @@ def agenda_htmlemail(request, meeting_pk=None):
              message=plainmail,
              message_html=htmlmail,
              from_email=settings.DEFAULT_FROM_EMAIL,
-             recipient_list=['enki@bbq.io'], fail_silently=False)
+             recipient_list=['frob@example.net'], fail_silently=False)
               
-    return HttpResponseRedirect('http://localhost:8000/core/meetings/')
+    return HttpResponseRedirect(reverse('ecs.core.views.meeting_list'))
+
+def timetable_htmlemailpart(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    response = render(request, 'meetings/email/timetable.html', {
+        'meeting': meeting,
+    })
+    return response
