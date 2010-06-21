@@ -46,17 +46,11 @@ class ImageSet(object):
         return True
 
 
-    def store_document(self, document):
-        if self.store('doc store', document.file.name, document.pages) is False:
-            print 'store_document: can not store ImageSet "%s"' % document.id
-            return False
-        renderer = Renderer()
-        renderer.render(self)
-
-
 def cache_and_render(document):
     id = document.pk
     image_set = ImageSet(id)
-    image_set.store_document(document)
-
-    
+    if image_set.store('doc save', document.file.name, document.pages) is False:
+        print 'cache_and_render: can not store ImageSet "%s"' % document.id
+        return False
+    renderer = Renderer()
+    renderer.render(image_set)
