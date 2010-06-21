@@ -17,7 +17,7 @@ from ecs.mediaserver.storage import Cache, SetData
 def load_refill_set(id):
     try:
         document = Document.objects.get(pk=id)
-    except DoesNotExist:
+    except Document.DoesNotExist:
         print 'database miss: document "%s"' % id
         return None
     print 'database hit: loaded document "%s"' % id
