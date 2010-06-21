@@ -40,8 +40,6 @@ CELERY_IMPORTS = (
     'ecs.core.task_queue',
 )
 
-DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at'
-
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
@@ -57,9 +55,7 @@ if platform.node() == "ecsdev.ep3.at":
             'HOST': '127.0.0.1',
             'PORT': '',
         }
-    
-    DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,)
-    
+        
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
     BROKER_USER = user
     if user in DBPWD_DICT:
@@ -71,8 +67,12 @@ if platform.node() == "ecsdev.ep3.at":
         DEBUG = False
         TEMPLATE_DEBUG = False
 
+DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at' #mails are only accepted for this domain.
+DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,) # unless we have a reply path, we send with this.
 EMAIL_HOST = 'localhost'
-EMAIL_PORT = 8823
+EMAIL_PORT = 8823 # these two should be the local lamson server (port 25 is totally cool)
+                  # put in another server and you'll run into problems.
+                  # since connections to the mailserver shouldn't block.
 
 # use another different settings if local_settings.py exists
 try:
