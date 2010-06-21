@@ -174,6 +174,7 @@ lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
 python-daemon:inst:all:pypi:python-daemon==1.5.5
 lamson:inst:all:pypi:lamson
+beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 """
 
 
