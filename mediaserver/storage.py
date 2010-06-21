@@ -29,7 +29,6 @@ class PageData(object):
         self.png_data = None
         self.png_data_size = None
         self.png_time = None
-        self.load_from_file()
 
     def __str__(self):
         return '(%s, size %s, %s)' % (self.png_name, self.png_data_size, time.ctime(self.png_time))
@@ -67,6 +66,7 @@ class Cache(object):
     def store_page(self, id, bigpage, zoom, png_name):
         page_key = self.get_page_key(id, bigpage, zoom)
         page_data = PageData(png_name)
+        page_data.load_from_file()
         return self.mc.set(page_key, page_data)
 
     def load_page(self, id, bigpage, zoom):
