@@ -9,7 +9,7 @@ from ecs.mediaserver.storage import Cache
 class Renderer(object):
     def render_pages(self, pdf_name, first_page, last_page, zoom, res_x, res_y, pdf_fname):
         args = [ \
-            'gs', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', \
+            'gs', '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', \
             '-dPDFFitPage', '-dTextAlphaBits=4', '-sPAPERSIZE=a4', \
             '-r%.5fx%.5f' % (res_x, res_y), \
             '-dFirstPage=%s' % first_page, '-dLastPage=%s' % last_page, \
