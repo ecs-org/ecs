@@ -5,12 +5,14 @@ import time
 
 from django.conf import settings
 
+#from ecs.core.models import Document
+
 
 class SetData(object):
     # minimal data to create ImageSet.images data (mostly derived from <pages>)
     # minimal data to to re-render PageData that was squeezed out
     # thus memcache re-fill can avoid SQL lookups if SetData stayed within the cache
-    def __init__(self, origin, pdf_name, pages, opt_compress, opt_interlace):
+    def __init__(self, origin, pdf_name, pages, opt_compress=True, opt_interlace=True):
         self.origin = origin
         self.pdf_name = pdf_name
         self.pages = pages
@@ -28,12 +30,12 @@ class PageData(object):
         self.png_data = None
         self.png_data_size = None
         self.png_time = None
-        self.load()
+        self.load_from_file()
 
     def __str__(self):
         return '(%s, size %s, %s)' % (self.png_name, self.png_data_size, time.ctime(self.png_time))
 
-    def load(self):
+    def load_from_file(self):
         f = open(self.png_name, 'rb')
         self.png_data = f.read()
         f.close()
@@ -44,9 +46,9 @@ class PageData(object):
         self.png_time = time.time()
 
 
-class Storage(object):
+class Cache(object):
     def __init__(self):
-        self.ns = 'media'
+        self.ns = 'media@%s' % settings.DATABASES['default']['NAME']
         self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=0)
 
     def get_set_key(self, id):
@@ -54,12 +56,10 @@ class Storage(object):
 
     def store_set(self, id, set_data):
         set_key = self.get_set_key(id)
-        print 'storing set "%s" as "%s"' % (id, set_key)
         return self.mc.set(set_key, set_data)
 
     def load_set(self, id):
         set_key = self.get_set_key(id)
-        print 'loading set "%s"' % set_key
         return self.mc.get(set_key)
 
     def get_page_key(self, id, bigpage, zoom):
@@ -67,11 +67,11 @@ class Storage(object):
 
     def store_page(self, id, bigpage, zoom, png_name):
         page_key = self.get_page_key(id, bigpage, zoom)
-        print 'storing page "%s" as "%s"' % (png_name, page_key)
         page_data = PageData(png_name)
         return self.mc.set(page_key, page_data)
 
     def load_page(self, id, bigpage, zoom):
         page_key = self.get_page_key(id, bigpage, zoom)
-        print 'loading page "%s"' % page_key
         return self.mc.get(page_key)
+
+    

@@ -4,6 +4,7 @@ import hashlib
 import os
 
 from django.db import models
+from django.db.models.signals import post_save
 from django.core.files.storage import FileSystemStorage
 from django.utils._os import safe_join
 from django.utils.encoding import smart_str
@@ -11,7 +12,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from ecs.mediaserver.analyzer import Analyzer
-from ecs.mediaserver.imageset import ImageSet
+from ecs.mediaserver.signals import document_post_save
 
 
 class DocumentType(models.Model):
@@ -71,7 +72,7 @@ class Document(models.Model):
     def clean(self):
         # TODO check file contents and modify mimetype
         # (now everything is assumed PDF and thus non-PDF will get invalidated below)
-        if str(self.mimetype) == 'application/pdf':
+        if file is not None and str(self.mimetype) == 'application/pdf':
             analyzer = Analyzer()
             analyzer.sniff_file(self.file)
             if analyzer.valid is False:
@@ -86,8 +87,7 @@ class Document(models.Model):
             self.file.seek(0)
             self.uuid_document = m.hexdigest()
             self.uuid_document_revision = self.uuid_document
-            retval = super(Document, self).save(**kwargs)
-            if str(self.mimetype) == 'application/pdf' and self.pages:
-                image_set = ImageSet(self.pk)
-                image_set.store_document(self)
-            return retval
+            return super(Document, self).save(**kwargs)
+
+
+post_save.connect(document_post_save, sender=Document)
