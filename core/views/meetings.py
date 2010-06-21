@@ -1,4 +1,5 @@
 import datetime
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
@@ -297,9 +298,15 @@ def agenda_pdf(request, meeting_pk=None):
 
 def agenda_htmlemail(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    htmlemail = unicode(render_html(request, 'meetings/email/agenda.html', {
+    htmlmail = unicode(render_html(request, 'meetings/email/agenda.html', {
         'meeting': meeting,
     }))
-    print type(htmlemail)
-    print whitewash(htmlemail)
+    plainmail = whitewash(htmlmail)
+    
+    send_mail(subject='Invitation to meeting', 
+             message=plainmail,
+             message_html=htmlmail,
+             from_email=settings.DEFAULT_FROM_EMAIL,
+             recipient_list=['enki@bbq.io'], fail_silently=False)
+              
     return HttpResponseRedirect('http://localhost:8000/core/meetings/')

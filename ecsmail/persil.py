@@ -1,7 +1,11 @@
 import re
 import copy
 import BeautifulSoup
-from BeautifulCleaner.bc import clean, removeElement
+from BeautifulCleaner.bc import Cleaner, removeElement
+
+class TotalCleaner(Cleaner):
+    style = True
+    whitelist_tags = set([])
 
 # http://code.activestate.com/recipes/148061/
 def wrap(text, width):
@@ -26,7 +30,7 @@ def whitewash(htmltext, puretext=True):
     else:
         doc = BeautifulSoup.BeautifulSoup(htmltext)
         
-    clean(doc)
+    TotalCleaner()(doc) # to kill the really bad tags first.
     for el in doc.findAll():
         removeElement(el)
     string = unicode(doc)
