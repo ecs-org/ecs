@@ -54,5 +54,5 @@ def cache_and_render(document):
         return False
     renderer = Renderer()
     renderer.render(image_set)
-
-    
+    cache = Cache()
+    print 'rendered key "%s", set "%s"' % (cache.get_set_key(image_set.id), image_set.set_data)

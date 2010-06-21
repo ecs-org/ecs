@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import getpass
 import memcache
 import time
 
@@ -46,11 +47,11 @@ class PageData(object):
 
 class Cache(object):
     def __init__(self):
-        self.ns = 'media@%s' % settings.DATABASES['default']['NAME']
+        self.ns = '%s.ms' % getpass.getuser()
         self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=0)
 
     def get_set_key(self, id):
-        return str('%s:%s' % (self.ns, id))
+        return str('%s.%s' % (self.ns, id))
 
     def store_set(self, id, set_data):
         set_key = self.get_set_key(id)
@@ -61,7 +62,7 @@ class Cache(object):
         return self.mc.get(set_key)
 
     def get_page_key(self, id, bigpage, zoom):
-        return str('%s:%s:%s:%s' % (self.ns, id, bigpage, zoom))
+        return str('%s.%s:%s:%s' % (self.ns, id, bigpage, zoom))
 
     def store_page(self, id, bigpage, zoom, png_name):
         page_key = self.get_page_key(id, bigpage, zoom)
