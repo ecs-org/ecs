@@ -293,7 +293,40 @@ def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     response = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
-    }, filename=('meeting_%s.pdf' % meeting.title))
+    }, filename=('agenda_%s.pdf' % meeting.title))
+    return response
+
+def timetable_pdf(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    
+    timetable = {}
+    for entry in meeting:
+        for user in entry.users:
+            if user in timetable:
+                timetable[user].append(entry)
+            else:
+                timetable[user] = [entry]
+    
+    timetable = sorted([{
+        'user': key,
+        'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
+    } for key in timetable], key=lambda x:x['user'])
+    
+    for row in timetable:
+        first_entry = row['entries'][0]
+        times = [{'start': first_entry.start, 'end': first_entry.end, 'index': first_entry.timetable_index}]
+        for entry in row['entries'][1:]:
+            if times[-1]['end'] == entry.start:
+                times[-1]['end'] = entry.end
+            else:
+                times.append({'start': entry.start, 'end': entry.end, 'index': entry.timetable_index})
+    
+        row['times'] = ', '.join(['%s - %s' % (x['start'].strftime('%H:%M'), x['end'].strftime('%H:%M')) for x in times])
+    
+    response = render_pdf(request, 'meetings/xhtml2pdf/timetable.html', {
+        'meeting': meeting,
+        'timetable': timetable,
+    }, filename=('timetable_%s.pdf' % meeting.title))
     return response
 
 def agenda_htmlemail(request, meeting_pk=None):
