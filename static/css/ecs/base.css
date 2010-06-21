@@ -135,7 +135,13 @@ body {
   display: block;
   font-size: 1.1em;
   padding: 10px;
+  margin-bottom: 10px;
   border-bottom: 1px solid #eee;
+}
+#content h4 {
+  display: block;
+  font-size: 1em;
+  margin-bottom: 10px;
 }
 #content p {
   margin-bottom: 20px;

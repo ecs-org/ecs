@@ -3,7 +3,7 @@
 import os
 import subprocess
 
-from ecs.mediaserver.storage import Storage
+from ecs.mediaserver.storage import Cache
 
 
 class Renderer(object):
@@ -85,7 +85,7 @@ class Renderer(object):
         print 'opt_compress: %s' % opt_compress
         print 'opt_interlace: %s' % opt_interlace
         errors = 0
-        storage = Storage()
+        cache = Cache()
         for zoom in image_set.images:
             if single_mode and zoom != the_zoom:
                 continue
@@ -119,9 +119,9 @@ class Renderer(object):
                         png_name = self.get_name(pdf_fname, page, '1', False, opt_compress, opt_interlace)
                         self.render_page(png_name_in, png_name, args_compress, args_interlace)
                         self.remove_file(png_name_in)
-                    retval = storage.store_page(image_set.id, page, '1', png_name)
+                    retval = cache.store_page(image_set.id, page, '1', png_name)
                     if not retval:
-                        print 'error: storage failed'
+                        print 'error: cache storage failed'
                         errors += 1
                     self.remove_file(png_name)
             else:
@@ -157,9 +157,9 @@ class Renderer(object):
                     self.render_bigpage(png_names, png_name, zoom, w, h, background, args_compress, args_interlace)
                     for name in png_names:
                         self.remove_file(name)
-                    retval = storage.store_page(image_set.id, bigpage, zoom, png_name)
+                    retval = cache.store_page(image_set.id, bigpage, zoom, png_name)
                     if not retval:
-                        print 'error: storage failed'
+                        print 'error: cache storage failed'
                         errors += 1
                     self.remove_file(png_name)
         if errors > 0:
