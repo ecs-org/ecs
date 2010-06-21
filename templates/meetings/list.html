@@ -18,7 +18,7 @@
             {{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}
                 (<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
                 | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
-                | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>)
+                | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
                 | <a href="{% url ecs.core.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
                 | <a href="{% url ecs.core.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>)
                 

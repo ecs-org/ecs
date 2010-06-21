@@ -15,9 +15,10 @@
       height: 1cm;
       }
       @frame footerpage {
+      text-align: right;
       -pdf-frame-content: footerpage;
       bottom: 2cm;
-      margin-left: 18cm;
+      margin-left: 1cm;
       margin-right: 1cm;
       height: 1cm;
       }
@@ -40,7 +41,9 @@
       {% block footer %}{% endblock %}
     </div>
     <div id="footerpage">
-      {% block footerpage %}Seite <pdf:pagenumber>{% endblock %}
+      <div align="right">
+        {% block footerpage %}Seite <pdf:pagenumber>{% endblock %}
+      </div>
     </div>
   </body>
 </html>
