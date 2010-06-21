@@ -123,6 +123,8 @@ class Renderer(object):
                     if not retval:
                         print 'error: cache storage failed'
                         errors += 1
+                    else:
+                        print 'cache fill: %s' % cache.get_page_key(image_set.id, page, '1')
                     self.remove_file(png_name)
             else:
                 bigpages = image_set.render_set.get_bigpages(zoom, pages)
@@ -161,6 +163,8 @@ class Renderer(object):
                     if not retval:
                         print 'error: cache storage failed'
                         errors += 1
+                    else:
+                        print 'cache fill: %s' % cache.get_page_key(image_set.id, bigpage, zoom)
                     self.remove_file(png_name)
         if errors > 0:
             print '%d error(s)' % errors

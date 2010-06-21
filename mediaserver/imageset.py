@@ -24,13 +24,15 @@ class ImageSet(object):
             self.images[zoom] = dict([(p, { 'url': '/mediaserver/%s/%s/%s/' % (self.id, p, zoom)}) for p in page_set])
 
 
-    def store(self, origin, pdf_name, pages):
+    def store(self, origin, pdf_name, pages, opt_compress=True, opt_interlace=True):
         cache = Cache()
-        self.set_data = SetData(origin, pdf_name, pages)
+        self.set_data = SetData(origin, pdf_name, pages, opt_compress, opt_interlace)
         retval = cache.store_set(self.id, self.set_data)
         if not retval:
             print 'cache fill failed: set "%s"' % cache.get_set_key(self.id)
             return False
+        else:
+            print 'cache fill: set "%s"' % cache.get_set_key(self.id)
         self.init_images()
         return True
 

@@ -3,7 +3,7 @@
 from django.db import models
 from django.test import TestCase
 
-from ecs.mediaserver.storage import Cache
+from ecs.mediaserver.storage import Cache, SetData
 
 
 class CacheTest(TestCase):
