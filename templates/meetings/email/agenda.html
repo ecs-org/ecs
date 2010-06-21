@@ -1,0 +1,35 @@
+{% extends 'xhtml2pdf/skeleton.html' %}
+
+{% block title %}Meeting Agenda{% endblock %}
+
+{% block content %}
+    {% load core %}
+    {% include 'xhtml2pdf/ec_head.inc' %}
+    <div align="center" style="font-weight:bold;font-size:large;">
+    Tagesordning<br />
+    f&uuml;r die Sitzung der Ethik-Kommission am<br />
+    {{ meeting.start|date:'d.m.Y, H:i' }} Uhr, sine tempore<br />
+    im B&uuml;ro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
+    </div>
+    
+    {% for entry in meeting %}
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
+            <div class="dragHandle">#{{ entry }}</div>
+            <h3>
+                {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+                {{ entry.title }}
+                {% if entry.submission %}
+                    <a href="#">{{ entry.submission.ec_number }}{{ entry.submission.project_title|smart_truncate:50 }}</a>
+                {% endif %}
+            </h3>
+            {% if not entry.is_break %}
+            <div>Teilnehmer: 
+                {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+
+{% endblock %}
+
+

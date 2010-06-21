@@ -1,0 +1,27 @@
+{% extends 'xhtml2pdf/skeleton.html' %}
+
+{% block title %}Timetable Agenda{% endblock %}
+
+{% block content %}
+{% load core %}
+
+<ul id="timetable">
+{% for entry in meeting %}
+    <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
+        <div class="dragHandle">#{{ entry }}</div>
+        <h3>
+            {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+            {{ entry.title }}
+            {% if entry.submission %}
+                <a href="#">{{ entry.submission.ec_number }}{{ entry.submission.project_title|smart_truncate:50 }}</a>
+            {% endif %}
+        </h3>
+        {% if not entry.is_break %}
+        <div>Teilnehmer: 
+            {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </div>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
