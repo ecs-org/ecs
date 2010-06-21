@@ -35,3 +35,4 @@ class Command(BaseCommand):
                                                              message=message,
                                                              from_email=settings.DEFAULT_FROM_EMAIL,
                       recipient_list=[user.email], fail_silently=False)
+            print 'MAIL SENT'

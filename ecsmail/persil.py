@@ -1,6 +1,7 @@
 import re
+import copy
 import BeautifulSoup
-from BeautifulCleaner.bc import clean
+from BeautifulCleaner.bc import clean, removeElement
 
 # http://code.activestate.com/recipes/148061/
 def wrap(text, width):
@@ -13,8 +14,18 @@ def wrap(text, width):
                   text.split(' ')
                  )
 
-def whitewash(htmltext):
-    doc = BeautifulSoup.BeautifulSoup(htmltext)
+def whitewash(htmltext, puretext=True):
+    if puretext:
+        hexentityMassage = copy.copy(BeautifulSoup.BeautifulSoup.MARKUP_MASSAGE)
+        hexentityMassage = [(re.compile('&#x([^;]+);'), 
+            lambda m: '&#%d' % int(m.group(1), 16))]
+
+        doc = BeautifulSoup.BeautifulSoup(htmltext,
+            convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES,
+            markupMassage=hexentityMassage)        
+    else:
+        doc = BeautifulSoup.BeautifulSoup(htmltext)
+        
     clean(doc)
     for el in doc.findAll():
         removeElement(el)

@@ -4,12 +4,15 @@ from piston.handler import BaseHandler
 
 from ecs.utils.xhtml2pdf import xhtml2pdf
 
-def render(request, template, context):
+def render_html(request, template, context):
     if isinstance(template, (tuple, list)):
         template = loader.select_template(template)
     if not isinstance(template, Template):
         template = loader.get_template(template)
-    return HttpResponse(template.render(RequestContext(request, context)))
+    return template.render(RequestContext(request, context))
+
+def render(request, template, context):
+    return HttpResponse(render_html(request, template, context))
 
 def redirect_to_next_url(request, default_url=None):
     next = request.REQUEST.get('next')

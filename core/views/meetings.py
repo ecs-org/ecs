@@ -6,13 +6,15 @@ from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
-from ecs.core.views.utils import render, render_pdf
+from ecs.core.views.utils import render, render_html, render_pdf
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.core.task_queue import optimize_timetable_task
 from ecs.utils.timedelta import parse_timedelta
 
+from ecs.messages.mail import send_mail
+from ecs.ecsmail.persil import whitewash
 
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
@@ -293,4 +295,11 @@ def agenda_pdf(request, meeting_pk=None):
     }, filename=('meeting_%s.pdf' % meeting.title))
     return response
 
-
+def agenda_htmlemail(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    htmlemail = unicode(render_html(request, 'meetings/email/agenda.html', {
+        'meeting': meeting,
+    }))
+    print type(htmlemail)
+    print whitewash(htmlemail)
+    return HttpResponseRedirect('http://localhost:8000/core/meetings/')
