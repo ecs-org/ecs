@@ -59,6 +59,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/quickjump/$', 'ecs.core.views.meeting_assistant_quickjump'),
     url(r'^meeting/(?P<meeting_pk>\d+)/agenda_pdf/$', 'ecs.core.views.agenda_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/agenda_htmlemail/$', 'ecs.core.views.agenda_htmlemail'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'ecs.core.views.timetable_htmlemailpart'),
 
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 )
