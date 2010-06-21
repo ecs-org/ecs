@@ -232,7 +232,7 @@ Voraussichtliche Gesamtdauer der Studie: <b> {{ submission_form.subject_planne
 Wenn <b>ja</b>, geben Sie an, in welchen: </p>
 
 <p style="margin-left: 0.63cm; text-indent: -0.63cm; margin-bottom: 0cm">
-<b> {{ submission_form.substance_registered_in_countries }} </b> </p>
+<b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
 
 <p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%">
 3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
@@ -244,7 +244,7 @@ an: </p>
 
 <p style="page-break-inside: avoid">3.2.1
  In welchen Staaten wurden
-die Prüfungen durchgeführt: <b> {{ submission_form.substance_p_c_t_countries }} </b> </p>
+die Prüfungen durchgeführt: <b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
 
 <p style="margin-bottom: 0cm; line-height: 100%">
  3.2.2 Phase: <b> {{ submission_form.substance_p_c_t_phase }} </b> (Wenn Studien in mehreren Phasen angeführt sind,
