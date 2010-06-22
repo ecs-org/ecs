@@ -15,11 +15,21 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
+    (function(){
+    var widgets = [];
+    
+    function reloadAll(){
+        widgets.each(function(widget){
+            widget.load();
+        });
+    }
+    
     var Widget = new Class({
         initialize: function(url){
             this.url = null;
             this.element = new Element('div', {'class': 'dashboard_widget'});
             this.element.inject($('dashboard'));
+            widgets.push(this);
             this.load(url);
         },
         load: function(url){
@@ -43,7 +53,7 @@
                             title: 'Nachricht',
                             size: {width: 700, height: 400},
                             onClose: function(){
-                                self.load();
+                                reloadAll();
                             }
                         });
                         var iframe = popup.content.getFirst('iframe')
@@ -57,7 +67,7 @@
                         var request = new Request({
                             url: link.href,
                             onSuccess: function(){
-                                self.load();
+                                reloadAll();
                             }
                         });
                         request.send();
@@ -89,6 +99,7 @@
             });
         });
     });
+    })();
   </script>
 {% endblock %}
 
