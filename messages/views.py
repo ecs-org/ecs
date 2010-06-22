@@ -88,8 +88,12 @@ def delegate_thread(request, thread_pk=None):
     })
     
 def incoming_message_widget(request):
+    qs = Message.objects.incoming(request.user).open(request.user)
+    submission_pk = request.GET.get('submission', None)
+    if submission_pk:
+        qs = qs.filter(thread__submission__pk=submission_pk)
     return message_widget(request, 
-        queryset=Message.objects.incoming(request.user).open(request.user),
+        queryset=qs,
         template='messages/widgets/incoming_messages.inc',
         user_sort='sender__username',
         session_prefix='dashboard:incoming_messages',
@@ -100,8 +104,12 @@ def incoming_message_widget(request):
     )
 
 def outgoing_message_widget(request):
+    qs = Message.objects.outgoing(request.user).open(request.user)
+    submission_pk = request.GET.get('submission', None)
+    if submission_pk:
+        qs = qs.filter(thread__submission__pk=submission_pk)
     return message_widget(request, 
-        queryset=Message.objects.outgoing(request.user).open(request.user),
+        queryset=qs,
         template='messages/widgets/outgoing_messages.inc',
         user_sort='receiver__username',
         session_prefix='dashboard:outgoing_messages',
@@ -158,4 +166,3 @@ def outbox(request):
         user_sort='receiver__username',
         page_size=3,
     )
-

@@ -39,7 +39,7 @@ class ProgressReportNotificationForm(NotificationForm):
         model = ProgressReportNotification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
 
-class CompletionReportNotificationForm(ModelFormPickleMixin):
+class CompletionReportNotificationForm(NotificationForm):
     completion_date = DateField(required=True)
 
     class Meta:

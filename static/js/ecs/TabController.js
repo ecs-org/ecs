@@ -52,6 +52,10 @@ ecs.TabController = new Class({
             if(window.location.hash == '#' + hash){
                 initialSelection = tab;
             }
+            if(!initialSelection && header.hasClass(this.options.selectedTabClass)){
+                initialSelection = tab;
+            }
+            header.removeClass(this.options.selectedTabClass);
             this.tabs.push(tab);
         }, this);
         this.selectTab(initialSelection || this.tabs[0], true);
