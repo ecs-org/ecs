@@ -72,16 +72,26 @@ def copy_latest_submission_form(request, submission_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
 
-def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', editable=()):
+def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
     vote = submission_form.submission.get_most_recent_vote()
-    retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission_form.submission, readonly=True)
-    executive_review_form = ExecutiveReviewForm(instance=submission_form.submission, readonly=True)
+    submission = submission_form.submission
+
+    retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission, readonly=True)
+    executive_review_form = ExecutiveReviewForm(instance=submission, readonly=True)
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
+
+    checklist_reviews = []
+    for checklist in submission.checklists.all():
+        if checklist_overwrite and checklist.blueprint in checklist_overwrite:
+            checklist_form = checklist_overwrite[checklist.blueprint]
+        else:
+            checklist_form = make_checklist_form(checklist)(readonly=True)
+        checklist_reviews.append((checklist.blueprint, checklist_form))
     
     context = {
         'form': form,
@@ -93,13 +103,14 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'retrospective_thesis_review_form': retrospective_thesis_review_form,
         'executive_review_form': executive_review_form,
         'vote_review_form': vote_review_form,
+        'checklist_reviews': checklist_reviews,
     }
     if extra_context:
         context.update(extra_context)
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
-    
+
 
 def retrospective_thesis_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -121,32 +132,20 @@ def executive_review(request, submission_form_pk=None):
 def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
-    checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=request.user)
+    checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, defaults={'user': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
     form_class = make_checklist_form(checklist)
     form = form_class(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        i = 0
-        for question in blueprint.questions.order_by('text'):
-            i = i + 1
+        for i, question in enumerate(blueprint.questions.order_by('text')):
             answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
             answer.answer = form.cleaned_data['q%s' % i]
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
-    hidden = { }
-    i = 0
-    for question in blueprint.questions.order_by('text'):
-        i = i + 1
-        answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-        hidden['q%s' % i] = False
-        hidden['c%s' % i] = answer.answer is not False
-    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/checklist.html', extra_context={
-        'checklist_name': blueprint.name,
-        'checklist_review_form': form,
-        'checklist_hidden': hidden,
-    })
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form})
+
 
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)

@@ -23,6 +23,11 @@
         <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
             <a href="#vote_review_tab">Votum</a>
         </li>
+        {% for blueprint, checklist_review_form in checklist_reviews %}
+            <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
+                <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
+            </li>
+        {% endfor %}
         <li>
             <a href="#messages-tab">Nachrichten</a>
         </li>
@@ -107,6 +112,13 @@
             {% endwith %}
         {% endblock %}
     </div>
+    {% for blueprint, checklist_review_form in checklist_reviews %}
+    <div id="checklist_{{ blueprint.pk }}_review_form" class="checklist_review_tab">
+        {% with checklist_review_form as review_form %}
+            {% include 'submissions/review_form.inc' %}
+        {% endwith %}
+    </div>
+    {% endfor %}
     <div id="messages-tab" class="tab">
         <h2>Nachrichten</h2>
         <div id="incoming_messages"></div>
@@ -135,6 +147,17 @@
         
             ].each(function(id){
                 ecs.setupRichTextEditor($(id), true);
+            });
+            
+            var updateChecklistCommentVisibility = function(select){
+                $(select.id.replace(/q/, 'c')).getParent('li').setClass('checklist_field_hidden', select.value != 3);
+            };
+            
+            $$('.checklist_review_tab').each(function(tabBody){
+                tabBody.getElements('.NullBooleanField>select').each(function(select){
+                    select.addEvent('change', updateChecklistCommentVisibility.bind(window, select));
+                    updateChecklistCommentVisibility(select);
+                });
             });
             
             var msgRequest = new Request.HTML({
