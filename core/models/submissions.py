@@ -347,6 +347,10 @@ class SubmissionForm(models.Model):
     def submitter(self):
         # FIXME: how do we get the creator of this instance from reversion?
         return None
+        
+    @property
+    def main_ethics_commission(self):
+        return self.investigators.get(main=True).ethics_commission
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')

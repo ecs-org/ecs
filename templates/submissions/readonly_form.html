@@ -11,6 +11,7 @@
   <div class="readonly">
     <ul class="tab_headers">
     {% block tab_headers %}
+        <li><a href="#status-tab">Status</a></li>
         {% for tab, fieldsets in tabs %}
             {% ifnotequal tab "Zentrum" %}
             <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
@@ -22,9 +23,45 @@
 {% endblock %}
 
 {% block content %}
-  <div class="readonly">
-    {{ block.super }}
-  </div>
+    <div class="readonly">
+        <div id="status-tab">
+            <h2>Status</h2>
+            <table>
+                <tr><th>Eingereicht am:</th><td>?</td></tr>
+                <tr><th>Eingereicht von:</th><td>?</td></tr>
+                <tr><th>Akzeptiert:</th><td>?</td></tr>
+                <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
+                <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
+                <tr><th>Leitethikkommission:</th><td>{{ submission_form.main_ethics_commission|default:'<i>Keine Angabe</i>' }}</td></tr>
+                <tr><th>Sitzungen:</th><td>
+                    <ul>
+                        {% for meeting in submission_form.submission.meetings.all %}
+                            <li><a>{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </td></tr>
+                <tr><th>Voten:</th><td>
+                    <ul>
+                        {% for top in submission_form.submission.timetable_entries.all %}
+                            {% if top.vote %}
+                                <li>{{ top.vote.result }} am {{ top.start|date:'d.m.Y' }}</li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </td></tr>
+                <tr><th>Kategorien:</th><td>
+                    {% for cat in submission_form.submission.medical_categories.all %}
+                        {{ cat }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td></tr>
+                <tr><th>Exedited Review:</th><td>{{ submission_form.submission.expedited|yesno }}</td></tr>
+                <tr><th>Dokumente:</th><td>
+                    {% include 'documents/compact_list.html' %}
+                </td></tr>
+            </table>
+        </div>
+        {{ block.super }}
+    </div>
 {% endblock %}
 
 {% block tabs %}
