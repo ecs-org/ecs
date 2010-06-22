@@ -7,7 +7,7 @@ from django.db import models
 class Migration(DataMigration):
     
     def forwards(self, orm):
-        orm.NotificationType.objects.filter(name=r"Protokoll\u00e4nderung").update(name=u"Protokolländerung")
+        orm.NotificationType.objects.filter(name=r"Protokoll\u00e4nderung").delete()
     
     
     def backwards(self, orm):
