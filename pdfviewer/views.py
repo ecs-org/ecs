@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
-from json import JSONEncoder
+from json import JSONEncoder, JSONDecoder
 
 from ecs.core.views.utils import render, redirect_to_next_url
 
@@ -13,6 +13,7 @@ from ecs.core.models import Document
 from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.storage import Cache, SetData
 
+from ecs.pdfviewer.models import Annotation
 
 def load_refill_set(id):
     try:
@@ -67,8 +68,13 @@ def show(request, id='1', page=1, zoom='1'):
 
     images_json = JSONEncoder().encode(image_set.images)
 
+    annotations = dict([(anno.uuid, JSONDecoder().decode(anno.layoutData)) for anno in Annotation.objects.filter(docid=id, page=page)])
+    
+    allAnno = JSONEncoder().encode(annotations)
+
     return render(request, 'pdfviewer/show.html', {
         'id': id,
+        'allAnno': allAnno,
         'page': page,
         'pages': pages,
         'zoom_index': zoom_index,
@@ -83,3 +89,15 @@ def show(request, id='1', page=1, zoom='1'):
 def demo(request):
     return render(request, 'pdfviewer/demo.html', {})
 
+def annotation(request, did, page, zoom):
+    if not request.POST:
+        return HttpResponse('POST only')
+        
+    print did, page, zoom, request.POST
+    anno = Annotation(uuid=request.POST['uuid'])
+    anno.layoutData = request.POST['layoutData']
+    anno.docid = Document.objects.get(id=did);
+    anno.page = page;
+    anno.save()
+    return HttpResponse('OK')
+    

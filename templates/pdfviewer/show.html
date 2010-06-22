@@ -9,7 +9,15 @@
   <title>ECS PDF Viewer</title>
 </head>
 
-<body>
+<body id='body'>
+
+    <div id='fulloverlay' class='dispnone' style='position: absolute; left:0; top:0; height:100%; width:100%; background-color:blue; opacity: .2; display: none; z-index: 2147483647;'>
+    </div>
+    <div class='drag dispnone' id='protodrag' style='position: absolute; height:30px; width:60px; min-width:20px; background-color: yellow; opacity: .5; display: none; z-index: 16777270;'>
+        <div class="handle" style="float: left; height:100%; width:50px; background-color: yellow;"></div>
+        <div class="resize" style="float: right; height:100%; width:10px; background-color: black;"></div>
+    </div>
+
 
 <div class="pv">
 
@@ -31,6 +39,14 @@
 </div>
 
 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/UUID.js"></script>
+
+<style type="text/css">
+	.dispnone {
+	    display: none;
+	}
+</style>
 
 <script type="text/javascript">
   window.addEvent('domready', function(){
@@ -427,6 +443,101 @@
       pdf_viewer.set_next();
     });
   });
+</script>
+
+<script type="text/javascript">
+    var allAnno = new Hash({{ allAnno|safe }});
+    screen.getDocumentHeight = function() {
+        return Math.max(
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight
+        );
+    };
+    function fixEl(el){
+        var newSize = el.getStyle('width').toInt() -
+                    el.getElements('.resize')[0].getStyle('width').toInt()
+        el.getElements('.handle')[0].setStyle('width', newSize);
+    }
+    function fixAndSaveEl(el){
+        fixEl(el);
+        var request = new Request.JSON({
+            url: 'annotation/',
+            data: {uuid: el.id, layoutData: JSON.encode(toSaveDict(el))},
+            // onSuccess: (function(options){
+            //     
+            // }).bind(this)
+        });
+        request.send();
+    }
+    function resizeDrag(el){
+    	el.makeDraggable({handle: el.getElements('.handle')[0]}).addEvent('complete', fixAndSaveEl);
+        el.makeResizable({handle: el.getElements('.resize')[0]}).addEvent('complete', fixAndSaveEl);
+        el.makeResizable({handle: el.getElements('.resize')[0]}).addEvent('drag', fixEl);
+        fixAndSaveEl(el);
+    }
+    function toSaveDict(el){
+        d = {
+             x     : el.getStyle('left').toInt(), 
+             y     : el.getStyle('top').toInt(), 
+             height: el.getStyle('height').toInt(), 
+             width : el.getStyle('width').toInt(),
+             // uuid  : el.id,
+            }
+        return d;
+    }
+
+    function createAnnotation(uuid, data){
+        var anno = $('protodrag').clone();
+        anno.id = uuid;
+        $('body').grab(anno, 'top');
+        anno.toggleClass('dispnone'); //setStyle('display', 'block');
+        anno.setStyle('left', data['x']);
+        anno.setStyle('top', data['y']);
+        anno.setStyle('height', data['height']);
+        anno.setStyle('width', data['width']);
+        
+    
+        resizeDrag(anno);
+    }
+
+    function createAnnotationFromClick(event){
+        var full = $('fulloverlay');
+        full.toggleClass('dispnone');
+        
+        var height = 30;
+        var data = {
+            'x'     : event.page.x,
+            'y'     : event.page.y - (height/2),
+            'height': height,
+            'width' : 40,
+        }
+        createAnnotation(Math.uuid(), data);
+    }
+    
+    $('fulloverlay').addEvent('mousedown', createAnnotationFromClick);
+    
+    function annotationMode(event){
+        var full = $('fulloverlay');
+        full.setStyle('height', screen.getDocumentHeight());
+        full.toggleClass('dispnone');
+    }
+
+    window.addEvent('domready', function(){
+        $('fulloverlay').setStyle('display', '');
+        $('protodrag').setStyle('display', '');
+        var myKeyboardEvents = new Keyboard({
+            defaultEventType: 'keydown', 
+            events:{
+                'a': annotationMode
+            }
+        });
+        
+        allAnno.getKeys().each(function(key){
+           createAnnotation(key, allAnno[key]);
+        });
+        console.log(allAnno);
+        myKeyboardEvents.activate();
+    });
 </script>
 
 </body>
