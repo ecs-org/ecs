@@ -10,6 +10,7 @@
     {{ meeting.start|date:'d.m.Y, H:i' }} Uhr, sine tempore<br />
     im B&uuml;ro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
     </div>
+    <pdf:spacer height="1.5cm" />
     
     {% for entry in meeting %}
         <span style="font-weight:bold;">#{{ entry }}</span>
@@ -28,6 +29,6 @@
     {% endfor %}
 {% endblock %}
 
-{% block footerpage %}{{ meeting.title }} TOP - {{ block.super }}{% endblock %}
+{% block footer %}{{ meeting.title }} {{ meeting.start|date:'d.m.Y' }} TOP{% endblock %}
 
 

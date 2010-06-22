@@ -291,9 +291,13 @@ def meeting_assistant_clear(request, meeting_pk=None):
 
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    filename = '%s-%s-Agenda.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    )
     response = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
-    }, filename=('agenda_%s.pdf' % meeting.title))
+    }, filename=filename)
+    
     return response
 
 def timetable_pdf(request, meeting_pk=None):
@@ -323,10 +327,13 @@ def timetable_pdf(request, meeting_pk=None):
     
         row['times'] = ', '.join(['%s - %s' % (x['start'].strftime('%H:%M'), x['end'].strftime('%H:%M')) for x in times])
     
+    filename = '%s-%s-Zeitfenster.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    )
     response = render_pdf(request, 'meetings/xhtml2pdf/timetable.html', {
         'meeting': meeting,
         'timetable': timetable,
-    }, filename=('timetable_%s.pdf' % meeting.title))
+    }, filename=filename)
     return response
 
 def agenda_htmlemail(request, meeting_pk=None):
@@ -350,3 +357,6 @@ def timetable_htmlemailpart(request, meeting_pk=None):
         'meeting': meeting,
     })
     return response
+
+
+
