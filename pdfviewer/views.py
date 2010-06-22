@@ -23,6 +23,9 @@ def load_refill_set(id):
     print 'database hit: loaded document "%s"' % id
     pdf_name = document.file.name
     pages = document.pages
+    if pages is None:
+        print 'document "%s" was stored without "pages" data' % id
+        return None
     set_data = SetData('doc from db', pdf_name, pages)
     cache = Cache()
     if not cache.store_set(id, set_data):
