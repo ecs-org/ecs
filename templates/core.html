@@ -140,7 +140,7 @@
       var feedback_handler = function(event) { 
         event.stop();
         var url = '/feedback/input/i/1/' + get_origin() + '/';
-        new MooDialog.Iframe(url, {
+        new ecs.Dialog(url, {
           title: 'Feedback von {{ user.get_full_name }}',
           size: {
           width: 700,
@@ -169,7 +169,7 @@
           if(options && options.url){
               url = options.url;
           }
-          var dialog = new MooDialog.Iframe(url, {
+          var dialog = new ecs.Dialog(url, {
               title: 'Workflow',
               size: {width: 700, height: 400}
           });

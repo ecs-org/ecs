@@ -49,7 +49,7 @@
             this.element.getElements('a.widget').each(function(link){
                 link.addEvent('click', function(){
                     if(link.hasClass('popup')){
-                        var popup = new MooDialog.Iframe(link.href, {
+                        var popup = new ecs.Dialog(link.href, {
                             title: 'Nachricht',
                             size: {width: 700, height: 400},
                             onClose: function(){
@@ -88,7 +88,7 @@
 
         $$('a.popup').each(function(link){
             link.addEvent('click', function(){
-                new MooDialog.Iframe(link.href, {
+                new ecs.Dialog(link.href, {
                     title: 'Nachricht',
                     size: {width: 700, height: 400},
                     onClose: function(){
