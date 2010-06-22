@@ -209,7 +209,7 @@ def create_submission_form(request):
                     instance.submission_form = submission_form
                     instance.save()
             request.docstash.delete()
-            return HttpResponseRedirect(reverse('ecs.core.views.view_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
         'form': form,
