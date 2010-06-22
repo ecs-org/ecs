@@ -15,11 +15,21 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
+    (function(){
+    var widgets = [];
+    
+    function reloadAll(){
+        widgets.each(function(widget){
+            widget.load();
+        });
+    }
+    
     var Widget = new Class({
         initialize: function(url){
             this.url = null;
             this.element = new Element('div', {'class': 'dashboard_widget'});
             this.element.inject($('dashboard'));
+            widgets.push(this);
             this.load(url);
         },
         load: function(url){
@@ -39,23 +49,25 @@
             this.element.getElements('a.widget').each(function(link){
                 link.addEvent('click', function(){
                     if(link.hasClass('popup')){
-                        var popup = new MooDialog.Iframe(link.href, {
+                        var popup = new ecs.Dialog(link.href, {
                             title: 'Nachricht',
                             size: {width: 700, height: 400},
                             onClose: function(){
-                                self.load();
+                                reloadAll();
                             }
                         });
-                        var win = popup.content.getFirst('iframe').contentWindow;
-                        win.close = function(){
-                            popup.close();
+                        var iframe = popup.content.getFirst('iframe')
+                        var makeClosable = function(i){
+                            iframe.contentWindow.close = popup.close.bind(popup);
                         };
+                        iframe.addEvent('load', makeClosable);
+                        makeClosable();
                     }
                     else if(link.hasClass('api')){
                         var request = new Request({
                             url: link.href,
                             onSuccess: function(){
-                                self.load();
+                                reloadAll();
                             }
                         });
                         request.send();
@@ -76,7 +88,7 @@
 
         $$('a.popup').each(function(link){
             link.addEvent('click', function(){
-                new MooDialog.Iframe(link.href, {
+                new ecs.Dialog(link.href, {
                     title: 'Nachricht',
                     size: {width: 700, height: 400},
                     onClose: function(){
@@ -87,6 +99,7 @@
             });
         });
     });
+    })();
   </script>
 {% endblock %}
 

@@ -33,3 +33,8 @@ class Vote(models.Model):
     @property
     def recessed(self):
         return self.result in ('3', '5', '5b')
+        
+    @property
+    def activates(self):
+        return self.result in ('1', '1a')
+    

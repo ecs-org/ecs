@@ -1,5 +1,5 @@
 from django import forms
-
+from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.models import Vote
 
 def ResultField(**kwargs):
@@ -18,7 +18,7 @@ class SaveVoteForm(VoteForm):
     result = ResultField(required=False)
     
 
-class VoteReviewForm(forms.ModelForm):
+class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Vote
         fields = ('result', 'text')

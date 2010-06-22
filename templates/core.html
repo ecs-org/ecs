@@ -49,7 +49,6 @@
           <li><a href="{% url ecs.messages.views.inbox %}">Inbox</a></li>
           <li><a href="{% url ecs.messages.views.outbox %}">Outbox</a></li>
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
-          <li><a href="{% url ecs.pdfviewer.views.demo %}">PDF Viewer</a></li>
           <li><a href="{% url ecs.pdfsigner.views.demo %}">PDF Signer</a></li>
       </ul>
     </li>
@@ -141,7 +140,7 @@
       var feedback_handler = function(event) { 
         event.stop();
         var url = '/feedback/input/i/1/' + get_origin() + '/';
-        new MooDialog.Iframe(url, {
+        new ecs.Dialog(url, {
           title: 'Feedback von {{ user.get_full_name }}',
           size: {
           width: 700,
@@ -170,7 +169,7 @@
           if(options && options.url){
               url = options.url;
           }
-          var dialog = new MooDialog.Iframe(url, {
+          var dialog = new ecs.Dialog(url, {
               title: 'Workflow',
               size: {width: 700, height: 400}
           });
