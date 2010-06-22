@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ecs import bootstrap
 from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission
 from ecs.workflow.models import Graph, Node, Edge
