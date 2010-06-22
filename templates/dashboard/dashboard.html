@@ -46,10 +46,12 @@
                                 self.load();
                             }
                         });
-                        var win = popup.content.getFirst('iframe').contentWindow;
-                        win.close = function(){
-                            popup.close();
+                        var iframe = popup.content.getFirst('iframe')
+                        var makeClosable = function(i){
+                            iframe.contentWindow.close = popup.close.bind(popup);
                         };
+                        iframe.addEvent('load', makeClosable);
+                        makeClosable();
                     }
                     else if(link.hasClass('api')){
                         var request = new Request({
