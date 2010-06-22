@@ -72,12 +72,16 @@ def copy_latest_submission_form(request, submission_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
 
-def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html'):
+def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', editable=()):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
+    vote = submission_form.submission.get_most_recent_vote()
+    retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission_form.submission, readonly=True)
+    executive_review_form = ExecutiveReviewForm(instance=submission_form.submission, readonly=True)
+    vote_review_form = VoteReviewForm(instance=vote, readonly=True)
     
     context = {
         'form': form,
@@ -85,13 +89,17 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'documents': documents,
         'readonly': True,
         'submission_form': submission_form,
+        'vote': vote,
+        'retrospective_thesis_review_form': retrospective_thesis_review_form,
+        'executive_review_form': executive_review_form,
+        'vote_review_form': vote_review_form,
     }
     if extra_context:
         context.update(extra_context)
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
-
+    
 
 def retrospective_thesis_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -99,9 +107,7 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     if request.method == 'POST' and form.is_valid():
         form.save()
         signals.post_thesis_review.send(submission_form.submission)
-    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/retrospective_thesis.html', extra_context={
-        'retrospective_thesis_review_form': form,
-    })
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'retrospective_thesis_review_form': form,})
 
 
 def executive_review(request, submission_form_pk=None):
@@ -109,9 +115,7 @@ def executive_review(request, submission_form_pk=None):
     form = ExecutiveReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
-    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/executive.html', extra_context={
-        'executive_review_form': form,
-    })
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'executive_review_form': form,})
 
 
 def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
@@ -149,13 +153,10 @@ def vote_review(request, submission_form_pk=None):
     vote = submission_form.submission.get_most_recent_vote()
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
-    vote_form = VoteReviewForm(request.POST or None, instance=vote)
-    if request.method == 'POST' and vote_form.is_valid():
-        vote_form.save()
-    return readonly_submission_form(request, submission_form=submission_form, template='submissions/reviews/vote.html', extra_context={
-        'vote': vote,
-        'vote_form': vote_form,
-    })
+    vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
+    if request.method == 'POST' and vote_review_form.is_valid():
+        vote_review_form.save()
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
 
 
 @with_docstash_transaction

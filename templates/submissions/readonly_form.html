@@ -11,10 +11,29 @@
   <div class="readonly">
     <ul class="tab_headers">
     {% block tab_headers %}
-        <li><a href="#status-tab">Status</a></li>
+        <li>
+            <a href="#status-tab">Status</a>
+        </li>
+        <li{% if not executive_review_form.readonly %} class="readonly_review active"{% endif %}>
+            <a href="#executive_review_tab">Executive Review</a>
+        </li>
+        <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
+            <a href="#retrospective_thesis_review_tab">Thesis Review</a>
+        </li>
+        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+            <a href="#vote_review_tab">Votum</a>
+        </li>
+        <li>
+            <a href="#messages-tab">Nachrichten</a>
+        </li>
+        <li>
+            <a href="#workflow-tab">Workflow</a>
+        </li>
         {% for tab, fieldsets in tabs %}
             {% ifnotequal tab "Zentrum" %}
-            <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+            <li>
+                <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+            </li>
             {% endifnotequal %}
         {% endfor %}
     {% endblock %}
@@ -24,47 +43,77 @@
 
 {% block content %}
     <div class="readonly">
-        <div id="status-tab">
-            <h2>Status</h2>
-            <table>
-                <tr><th>Eingereicht am:</th><td>?</td></tr>
-                <tr><th>Eingereicht von:</th><td>?</td></tr>
-                <tr><th>Akzeptiert:</th><td>?</td></tr>
-                <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
-                <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
-                <tr><th>Leitethikkommission:</th><td>{{ submission_form.main_ethics_commission|default:'<i>Keine Angabe</i>' }}</td></tr>
-                <tr><th>Sitzungen:</th><td>
-                    <ul>
-                        {% for meeting in submission_form.submission.meetings.all %}
-                            <li><a>{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </td></tr>
-                <tr><th>Voten:</th><td>
-                    <ul>
-                        {% for top in submission_form.submission.timetable_entries.all %}
-                            {% if top.vote %}
-                                <li>{{ top.vote.result }} am {{ top.start|date:'d.m.Y' }}</li>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                </td></tr>
-                <tr><th>Kategorien:</th><td>
-                    {% for cat in submission_form.submission.medical_categories.all %}
-                        {{ cat }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </td></tr>
-                <tr><th>Exedited Review:</th><td>{{ submission_form.submission.expedited|yesno }}</td></tr>
-                <tr><th>Dokumente:</th><td>
-                    {% include 'documents/compact_list.html' %}
-                </td></tr>
-            </table>
-        </div>
         {{ block.super }}
     </div>
 {% endblock %}
 
 {% block tabs %}
+    <div id="status-tab">
+        <h2>Status</h2>
+        <table>
+            <tr><th>Eingereicht am:</th><td>?</td></tr>
+            <tr><th>Eingereicht von:</th><td>?</td></tr>
+            <tr><th>Akzeptiert:</th><td>?</td></tr>
+            <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
+            <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
+            <tr><th>Leitethikkommission:</th><td>{{ submission_form.main_ethics_commission|default:'<i>Keine Angabe</i>' }}</td></tr>
+            <tr><th>Sitzungen:</th><td>
+                <ul>
+                    {% for meeting in submission_form.submission.meetings.all %}
+                        <li><a>{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </td></tr>
+            <tr><th>Voten:</th><td>
+                <ul>
+                    {% for top in submission_form.submission.timetable_entries.all %}
+                        {% if top.vote %}
+                            <li>{{ top.vote.result }} am {{ top.start|date:'d.m.Y' }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </td></tr>
+            <tr><th>Kategorien:</th><td>
+                {% for cat in submission_form.submission.medical_categories.all %}
+                    {{ cat }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td></tr>
+            <tr><th>Exedited Review:</th><td>{{ submission_form.submission.expedited|yesno }}</td></tr>
+            <tr><th>Dokumente:</th><td>
+                {% include 'documents/compact_list.html' %}
+            </td></tr>
+        </table>
+    </div>
+    <div id="executive_review_tab" class="tab">
+        {% block executive_review_tab_content %}
+            {% with executive_review_form as review_form %}
+                {% include 'submissions/review_form.inc' %}
+            {% endwith %}
+        {% endblock %}
+    </div>
+    <div id="retrospective_thesis_review_tab" class="tab">
+        {% block retrospective_thesis_review_tab_content %}
+            {% with retrospective_thesis_review_form as review_form %}
+                {% include 'submissions/review_form.inc' %}
+            {% endwith %}
+        {% endblock %}
+    </div>
+    <div id="vote_review_tab" class="tab">
+        {% block vote_review_tab_content %}
+            <h2>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h2>
+            {% with vote_review_form as review_form %}
+                {% include 'submissions/review_form.inc' %}
+            {% endwith %}
+        {% endblock %}
+    </div>
+    <div id="messages-tab" class="tab">
+        <h2>Nachrichten</h2>
+        <div id="incoming_messages"></div>
+        <div id="outgoing_messages"></div>
+    </div>
+    <div id="workflow-tab" class="tab">
+        <h2>Workflow</h2>
+    </div>
     {{ block.super }}
 {% endblock %}
 
@@ -86,6 +135,19 @@
             ].each(function(id){
                 ecs.setupRichTextEditor($(id), true);
             });
+            
+            var msgRequest = new Request.HTML({
+                url: '{% url ecs.messages.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}',
+                update: $('incoming_messages')
+            });
+            msgRequest.send();
+            
+            var msgRequest = new Request.HTML({
+                url: '{% url ecs.messages.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}',
+                update: $('outgoing_messages')
+            });
+            msgRequest.send();
+
         });
     </script>
 {% endblock %}
