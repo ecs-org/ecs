@@ -26,10 +26,10 @@ def document_types():
 @bootstrap.register()
 def notification_types():
     types = (
-        ("SAE Bericht", "ecs.core.forms.NotificationForm"),
-        ("Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
-        ("Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
-        ("Protokoll\u00e4nderung", "ecs.core.forms.NotificationForm"),
+        (u"SAE Bericht", "ecs.core.forms.NotificationForm"),
+        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
+        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
+        (u"Protokolländerung", "ecs.core.forms.NotificationForm"),
     )
     
     for name, form in types:
