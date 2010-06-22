@@ -56,6 +56,7 @@
             <tr><th>Akzeptiert:</th><td>?</td></tr>
             <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
             <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
+            <tr><th>Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
             <tr><th>Leitethikkommission:</th><td>{{ submission_form.main_ethics_commission|default:'<i>Keine Angabe</i>' }}</td></tr>
             <tr><th>Sitzungen:</th><td>
                 <ul>

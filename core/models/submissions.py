@@ -61,6 +61,13 @@ class Submission(models.Model):
             return None
         return sf.german_project_title
         
+    @property
+    def is_active(self):
+        vote = self.get_most_recent_vote()
+        if vote:
+            return vote.activates
+        return False
+        
     def save(self, **kwargs):
         if not self.ec_number:
             from random import randint
