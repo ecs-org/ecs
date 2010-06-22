@@ -237,7 +237,7 @@ def submission_pdf(request, submission_form_pk=None):
         'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
         'submission_form': submission_form,
         'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-    }, filename=('submission_%s.pdf'%submission_form_pk))
+    }, filename=('ek-%s-Einreichung.pdf'%submission_form.submission.ec_number.replace('/','-')))
     return response
 
 
