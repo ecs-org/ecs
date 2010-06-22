@@ -24,30 +24,6 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 pytz:inst:all:pypi:pytz
 """
 
-# sprint 4 Sources
-# * modified: south from 0.6.2 to 0.7 
-# * added pyPDF, html5lib, reportlab (libfreetype6-dev): (prerequisites for pisa) and pisa
-# * added django-db-log for logging of errors to database
-sprint4_bundle = minimal_ecs_service+ """ 
-django:inst:all:pypi:django==1.1.1
-south:inst:all:pypi:south==0.7
-django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
-werkzeug:inst:all:pypi:werkzeug
-django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
-django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/master
-nose:inst:all:pypi:nose
-docutils:inst:all:pypi:docutils
-django-reversion:inst:all:pypi:django-reversion
-pyPDF:inst:all:pypi:pyPDF
-html5lib:inst:all:pypi:html5lib
-reportlab:req:apt:apt-get:libfreetype6-dev
-reportlab:inst:!win:pypi:reportlab
-reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
-pisa:inst:all:pypi:pisa
-django-db-log:inst:all:pypi:django-db-log
-"""
-
 
 # sprint 5 sources
 sprint5_bundle = minimal_ecs_service+ """ 
@@ -118,20 +94,21 @@ django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
 docutils:inst:all:pypi:docutils
 
+# simple testing
+nose:inst:all:pypi:nose
+django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/master
+
 #debugging
 werkzeug:inst:all:pypi:werkzeug
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 django-db-log:inst:all:pypi:django-db-log
-
-# simple testing
-nose:inst:all:pypi:nose
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/master
 
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+# needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
 
 # pisa
@@ -167,12 +144,13 @@ mockcache:inst:all:pypi:mockcache
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
-# lamson
+
+# lamson mail server
 chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
-python-daemon:inst:all:pypi:python-daemon==1.5.5
+python-daemon:inst:!win:pypi:python-daemon==1.5.5
 lamson:inst:all:pypi:lamson
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 """
@@ -180,8 +158,7 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 
 # software quality testing packages
 quality_packages= """
-#django-nose is in main app
-#nose is in main app
+# nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
 coverage:inst:!win:pypi:coverage
 nose-xcover:inst:!win:http://github.com/cmheisel/nose-xcover/tarball/master
@@ -191,6 +168,7 @@ logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
 django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
 """
+
 
 # In addition to application packages, packages needed for development
 developer_packages=  """
@@ -213,6 +191,10 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
 
+# TODO: make system environment for sprint 6
+sprint6_ecs_machine = """apache, mod_wsgi, exim4"""
+
+
 # Environments
 ###############
 
@@ -222,11 +204,16 @@ future_bundle = sprint6_bundle
 developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 
+sprint5_wsgi = {"appname": "ecs", "appwsgi": "main.wsgi", "apacheconf": "apache.conf"}
+sprint6_wsgi = {"appname": "ecs", "appwsgi": "main.wsgi", "apacheconf": "apache.conf"}
+testing_wsgi = sprint5_wsgi
+default_wsgi = sprint6_wsgi
+future_wsgi  = sprint6_wsgi
+
 package_bundles = {
     'default': default_bundle,
     'testing': testing_bundle,
     'future': future_bundle,
-    'sprint4': sprint4_bundle,
     'sprint5': sprint5_bundle,
     'sprint6': sprint6_bundle,
     'developer': developer_bundle,
@@ -234,4 +221,71 @@ package_bundles = {
     'qualityaddon': quality_packages,
 }
 
+wsgi_bundles = {
+    'sprint5': sprint5_wsgi,
+    'sprint6': sprint6_wsgi,
+    'testing': testing_wsgi,
+    'default': default_wsgi,
+    'future' : future_wsgi
+}
+
+mainapp_upstart = {"app": "ecs-main", "base": "ecs", "template": "ecs-runner.upstart", "target": "/etc/init/%(user)s-ecs-runner.conf"}
+mediaserver_upstart = {"app": "mediaserver", "base": "ecs/mediaserver", "template": "mediaserver-runner.upstart", "target": "/etc/init/%(user)s-mediaserver.conf"}
+mailserver_upstart = {"app": "mailserver", "base": "ecs/ecsmail", "template": "lamson-runner.upstart", "target": "/etc/init/%(user)s-mailserver.conf"}
+signing_upstart = {"app": "signing", "base": "ecs/signing", "template": "ecs-tomcat.upstart", "target": "/etc/init/%(user)s-ecs-tomcat.conf"}
+
+"""
+class job:
+    def __init__(self, app, user, base, src, environment):
+        self.src    = os.abspath(src)
+        self.config = os.abspath(config)
+        self.environment = os.abspath(environment)
+        self.user = user
+        self.app = app
+        
+    def _get_config_pairs(self):
+        raise NotImplementedError
+
+    def _config_target(self, configsetpair):
+        return configpair[1]
+        
+    def _config_source(self, template):
+        return configpair[0]
+        return = os.path.join(self.src, self.app, configpair[0])
+    
+    def _generate_config_from_template(self, template):
+        target_conf = self._config_target(template)
+        template_conf = self._config_source(template)
+        context = {
+            'appdir': os.path.join(self.src, self.app),
+            'user': self.user,
+            'environment': self.environment
+        }
+        write_template(template_conf, target_conf, context)
+
+    def _link_config(self, template):
+        raise NotImplementedError
+        
+    def register(self):
+        for template in self._get_templates()
+            self._generate_from_template(self, template)
+            if os.path.exists (self._template_target(template):
+               if os.shutil.compare(self._template_target
+
+    def setup(self):
+    def register(self):
+    def stop(self):
+    def start(self):
+    def status(self):
+
+class wsgijob(job):
+    def __init__(self, user, base, environment):
+    def _template_target(self, template)
+        return = os.path.join(self.config, "upstart.conf", "-".join(self.app,template))
+       
+    
+class upstartjob(job):
+    def __init__(self, user, target, environment):
+"""
+    
 
