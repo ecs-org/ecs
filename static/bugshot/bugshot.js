@@ -13,12 +13,9 @@ window.BugShot = new Class({
     initialize: function(options){
         this.setOptions(options);
         this.disabled = false;
-        window.addEvent('keydown', (function(e){
-            if((e.meta || e.control) && e.code == 59){
+        window.addEvent('keypress', (function(e){
+            if((e.meta || e.control) && e.key == ':'){
                 this.shoot();
-            }
-            else{
-                return true;
             }
         }).bind(this));
         this.install();
