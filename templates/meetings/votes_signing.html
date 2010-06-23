@@ -15,9 +15,9 @@
 <ul>
   {% for vote in votes %}
     <li>
-      {{ vote }}
-        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=vote %}">Ansehen</a>
-        | <a href="">Signieren</a>)
+      {{ vote.pk }}
+        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=vote.pk %}">Ansehen</a>
+        | <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=vote.pk %}">Signieren</a>)
     </li>
   {% endfor %}
 </ul>

@@ -61,8 +61,9 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable_pdf/$', 'ecs.core.views.timetable_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/agenda_htmlemail/$', 'ecs.core.views.agenda_htmlemail'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'ecs.core.views.timetable_htmlemailpart'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_pdf/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_pdf'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_signing/$', 'ecs.core.views.vote_signing'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_sign'),
 
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 )
