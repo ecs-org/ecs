@@ -166,7 +166,7 @@ coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2
 logilab-common:inst:all:pypi:logilab-common\>=0.49.0
 logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
-django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
+#django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
 """
 
 
