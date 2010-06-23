@@ -3,6 +3,7 @@
 import hashlib
 import os
 import tempfile
+from uuid import uuid4
 
 from django.db import models
 from django.db.models.signals import post_save
@@ -28,9 +29,9 @@ class DocumentType(models.Model):
         return self.name
 
 def upload_document_to(instance=None, filename=None):
-    # file path is derived from the uuid_document_revision
-    # FIXME: handle file name collisions
-    dirs = list(instance.uuid_document_revision[:6]) + [instance.uuid_document_revision]
+    # the file path is derived from the document uuid. This should be
+    # random enough, so we do not have collisions in the next gogolplex years
+    dirs = list(instance.uuid_document[:6]) + [instance.uuid_document]
     return os.path.join(settings.FILESTORE, *dirs)
 
 
@@ -57,8 +58,8 @@ class DocumentFileStorage(FileSystemStorage):
 
 
 class Document(models.Model):
-    uuid_document = models.SlugField(max_length=32)
-    uuid_document_revision = models.SlugField(max_length=32)
+    uuid_document = models.SlugField(max_length=36)
+    hash = models.SlugField(max_length=32)
     file = models.FileField(null=True, upload_to=upload_document_to, storage=DocumentFileStorage())
     original_file_name = models.CharField(max_length=100, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
@@ -88,7 +89,8 @@ class Document(models.Model):
             tmp.close()
             self.file.seek(0)
             
-            self.uuid_document_revision = self.uuid_document = m.hexdigest()
+            self.hash = m.hexdigest()
+            self.uuid_document = str(uuid4())
             
             nu_file = stamp_pdf(filename, self.uuid_document)
             os.remove(filename)
