@@ -144,6 +144,7 @@ mockcache:inst:all:pypi:mockcache
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
+pdftk:req:apt:apt-get:pdftk
 
 # lamson mail server
 chardet:inst:all:pypi:chardet
