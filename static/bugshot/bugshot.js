@@ -13,8 +13,8 @@ window.BugShot = new Class({
     initialize: function(options){
         this.setOptions(options);
         this.disabled = false;
-        window.addEvent('keypress', (function(e){
-            if((e.meta || e.control) && e.key == ':'){
+        window.addEvent('keydown', (function(e){
+            if((e.meta || e.control) && e.code == 59){
                 this.shoot();
             }
             else{
