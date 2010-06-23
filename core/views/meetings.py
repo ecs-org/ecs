@@ -358,5 +358,12 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
-
-
+def vote_signing(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    votes = [ 'a', 'b', 'c' ]
+    response = render(request, 'meetings/vote_signing.html', {
+        'meeting': meeting,
+        'votes' : votes,
+    })
+    return response
+    
