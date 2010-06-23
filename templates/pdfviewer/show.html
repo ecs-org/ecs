@@ -447,7 +447,7 @@
 
 <script type="text/javascript">
     var allAnno = new Hash({{ allAnno|safe }});
-    screen.getDocumentHeight = function() {
+    getDocumentHeight = function() {
         return Math.max(
             document.documentElement.clientHeight,
             document.documentElement.scrollHeight
@@ -521,7 +521,7 @@
     
     function annotationMode(event){
         var full = $('fulloverlay');
-        full.setStyle('height', screen.getDocumentHeight());
+        full.setStyle('height', getDocumentHeight());
         full.toggleClass('dispnone');
     }
 
