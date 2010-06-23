@@ -16,7 +16,7 @@
   {% for vote in votes %}
     <li>
       {{ vote }}
-        (<a href="">Ansehen</a>
+        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=vote %}">Ansehen</a>
         | <a href="">Signieren</a>)
     </li>
   {% endfor %}

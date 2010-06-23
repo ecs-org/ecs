@@ -358,9 +358,18 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
+def vote_pdf(request, meeting_pk=None, vote_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_pk)
+    response = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
+        'vote': vote, 
+    }, filename=filename)
+    return response
+
 def vote_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    votes = [ 'a', 'b', 'c' ]
+    votes = [ 1, 2, 3, 4, 5 ]
     response = render(request, 'meetings/vote_signing.html', {
         'meeting': meeting,
         'votes' : votes,
