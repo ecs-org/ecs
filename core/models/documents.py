@@ -72,16 +72,6 @@ class Document(models.Model):
     class Meta:
         app_label = 'core'
 
-    def clean(self):
-        # TODO check file contents and modify mimetype
-        # (now everything is assumed PDF and thus non-PDF will get invalidated below)
-        if file is not None and str(self.mimetype) == 'application/pdf':
-            analyzer = Analyzer()
-            analyzer.sniff_file(self.file)
-            if analyzer.valid is False:
-                raise ValidationError('invalid PDF')  # TODO add user-visible error message
-            self.pages = analyzer.pages
-
     def save(self, **kwargs):
         if self.file:
             m = hashlib.md5()
@@ -105,6 +95,12 @@ class Document(models.Model):
 
             self.file.close()
             self.file = File(nu_file)
+            
+            #analyzer = Analyzer()
+            #analyzer.sniff_file(self.file)
+            #if analyzer.valid is False:
+            #    raise ValidationError('invalid PDF')  # TODO add user-visible error message
+            #self.pages = analyzer.pages
             
             return super(Document, self).save(**kwargs)
 

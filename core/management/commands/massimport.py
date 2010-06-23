@@ -104,7 +104,7 @@ class Command(BaseCommand):
         documents = []
         dirname = os.path.dirname(filename)
         for document in os.listdir(dirname):
-            match = re.match(r'%s-((Patienteninformation)|(.*Lebenslauf).*)\.((doc)|(pdf))' % basename, document)
+            match = re.match(r'%s-((Patienteninformation)|(.*Lebenslauf).*)\.pdf' % basename, document)
             
             if not match:
                 continue
@@ -114,7 +114,7 @@ class Command(BaseCommand):
 
             documents.append({
                 'title': match.group(1),
-                'mimetype': 'application/pdf' if match.group(6) else 'application/msword',
+                'mimetype': 'application/pdf',
                 'filename': os.path.join(dirname, document),
                 'doctype': doctype,
             })
@@ -218,8 +218,6 @@ class Command(BaseCommand):
             try:
                 self._import_doc(f)
             except Exception, e:
-                print e
-                traceback.print_exc()
                 warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
                 failcount += 1
             finally:
