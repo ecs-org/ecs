@@ -17,6 +17,14 @@ from ecs.utils.timedelta import parse_timedelta
 from ecs.messages.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 
+import os
+import tempfile
+from django.http import HttpResponseForbidden
+from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
+from ecs.utils import forceauth
+from ecs.utils.xhtml2pdf import xhtml2pdf
+
+
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
     if form.is_valid():
@@ -358,6 +366,7 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
+
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     votes = (
@@ -373,16 +382,88 @@ def votes_signing(request, meeting_pk=None):
     })
     return response
 
+
+def vote_filename(meeting, vote_pk):
+    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_pk)
+    return filename
+
+
 def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
-    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_pk)
+    filename = vote_filename(meeting, vote_pk)
     response = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
         'vote': vote, 
     }, filename=filename)
     return response
 
+
 def vote_sign(request, meeting_pk=None, vote_pk=None):
-    print 'sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    response = HttpResponse('OK.')
-    return response
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
+    pdf_name = vote_filename(meeting, vote_pk)
+    template = 'meetings/xhtml2pdf/vote.html'
+    context = {
+        'vote': vote,
+    }
+    html = render(request, template, context).content
+    pdf = xhtml2pdf(html)
+    pdf_len = len(pdf)
+    pdf_id = get_random_id()
+    f = file(pdf_id + '.pdf', 'wb')
+    t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+    t_name = t.name
+    t.write(pdf)
+    t.close()
+    id_set(pdf_id, 'vote sign:%s' % t_name)
+    return sign(request, pdf_id, pdf_len, pdf_name)
+
+
+@forceauth.exempt
+def vote_sign_send(request, meeting_pk=None, vote_pk=None):
+    print 'vote_sign_send meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
+    if request.REQUEST.has_key('pdf-id'):
+        pdf_id = request.REQUEST['pdf-id']
+    else:
+        return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
+    value = id_get(pdf_id)
+    if value is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+    a = value.split(':')
+    t_name = a[1]
+    pdf_data = file(t_name, 'rb')
+    return HttpResponse(pdf_data, mimetype='application/pdf')
+
+
+@forceauth.exempt
+def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    print 'vote_sign_receive meeting "%s", vote "%s", jsessionid "%s"' % (meeting_pk, vote_pk, jsessionid)
+    if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
+       pdf_url = request.REQUEST['pdf-url']
+       pdf_id = request.REQUEST['pdf-id']
+       num_bytes = request.REQUEST['num-bytes']
+       pdfas_session_id = request.REQUEST['pdfas-session-id']
+       url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
+       # LATER: grab pdf from url, store pdf
+       value = id_get(pdf_id)
+       if value is None:
+           return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+       a = value.split(':')
+       t_name = a[1]
+       os.remove(t_name)
+       id_delete(pdf_id)
+       return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
+    return HttpResponse('vote_sign__receive: got [%s]' % request)
+
+
+def vote_sign_error(request, meeting_pk=None, vote_pk=None):
+    print 'vote_sign_error meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
+    value = id_get(pdf_id)
+    if value is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+    a = value.split(':')
+    t_name = a[1]
+    os.remove(t_name)
+    id_delete(pdf_id)
+    return HttpResponse('error')
