@@ -17,6 +17,9 @@ window.BugShot = new Class({
             if((e.meta || e.control) && e.key == ':'){
                 this.shoot();
             }
+            else{
+                return true;
+            }
         }).bind(this));
         this.install();
     },
