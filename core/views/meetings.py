@@ -411,7 +411,6 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf = xhtml2pdf(html)
     pdf_len = len(pdf)
     pdf_id = get_random_id()
-    f = file(pdf_id + '.pdf', 'wb')
     t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
     t_name = t.name
     t.write(pdf)
@@ -453,7 +452,7 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
        t_name = a[1]
        os.remove(t_name)
        id_delete(pdf_id)
-       return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
+       return HttpResponse('<h1>Download your signed Vote</h1><a href="%s">download link (meeting "%s", vote "%s")</a>' % (url, meeting_pk, vote_pk))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 
