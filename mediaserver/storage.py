@@ -47,7 +47,7 @@ class PageData(object):
 class Cache(object):
     def __init__(self):
         self.ns = '%s.ms' % getpass.getuser()
-        self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=0)
+        self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=False)
 
     def get_set_key(self, id):
         return str('%s.%s' % (self.ns, id))

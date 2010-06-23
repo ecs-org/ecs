@@ -96,11 +96,11 @@ class Document(models.Model):
             self.file.close()
             self.file = File(nu_file)
             
-            #analyzer = Analyzer()
-            #analyzer.sniff_file(self.file)
-            #if analyzer.valid is False:
-            #    raise ValidationError('invalid PDF')  # TODO add user-visible error message
-            #self.pages = analyzer.pages
+            analyzer = Analyzer()
+            analyzer.sniff_file(self.file)
+            if analyzer.valid is False:
+                raise ValidationError('invalid PDF')  # TODO add user-visible error message
+            self.pages = analyzer.pages
             
             return super(Document, self).save(**kwargs)
 

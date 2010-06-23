@@ -5,6 +5,7 @@ from django.template import Context, loader
 import tempfile
 
 def stamp_pdf(filename, barcode_content):
+    # TODO: remove tempfile foo
     template = loader.get_template('xhtml2pdf/barcode.ps')
     barcode_ps = template.render(Context({'barcode': barcode_content}))
     
@@ -15,17 +16,11 @@ def stamp_pdf(filename, barcode_content):
         
         tmp_out = tempfile.NamedTemporaryFile(suffix='.pdf')
         
-        print 'gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=- %s | pdftk %s stamp - output %s' % (tmp.name, filename, tmp_out.name)
-        rofl = subprocess.Popen('gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=- %s | pdftk %s stamp - output %s' % (tmp.name, filename, tmp_out.name), stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        
-        pdf, err = rofl.communicate()
-        print '\n'
-        print err
+        p = subprocess.Popen('gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=- %s | pdftk %s stamp - output %s' % (tmp.name, filename, tmp_out.name), shell=True)
+        p.wait()
     
-    if rofl.returncode != 0:
-        raise ValueError('pdftk returned with errorcode %s' % rofl.returncode)
-    
-    print '\n\n\nYAYZ\n\n\n'
+    if p.returncode != 0:
+        raise ValueError('pdftk returned with errorcode %s' % p.returncode)
     
     return tmp_out
 
