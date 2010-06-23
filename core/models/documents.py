@@ -2,6 +2,7 @@
 
 import hashlib
 import os
+import tempfile
 
 from django.db import models
 from django.db.models.signals import post_save
@@ -10,7 +11,9 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.files import File
 
+from ecs.utils.pdfutils import stamp_pdf
 from ecs.mediaserver.analyzer import Analyzer
 from ecs.mediaserver.signals import document_post_save
 
@@ -81,13 +84,31 @@ class Document(models.Model):
 
     def save(self, **kwargs):
         if self.file:
-            s = self.file.read()  # TODO optimize for large files!
             m = hashlib.md5()
-            m.update(s)
+
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+            filename = tmp.name
+            buf = ''
+            while True:
+                buf = self.file.read(4096)  # we iterate over the file, so we
+                if not buf: break  # do not have to hold the whole thingy in
+                                    # ram
+                m.update(buf)
+                tmp.write(buf)
+            tmp.close()
             self.file.seek(0)
-            self.uuid_document = m.hexdigest()
-            self.uuid_document_revision = self.uuid_document
+            
+            self.uuid_document_revision = self.uuid_document = m.hexdigest()
+            
+            nu_file = stamp_pdf(filename, self.uuid_document)
+            os.remove(filename)
+
+            self.file.close()
+            self.file = File(nu_file)
+            
             return super(Document, self).save(**kwargs)
 
 
 post_save.connect(document_post_save, sender=Document)
+
+

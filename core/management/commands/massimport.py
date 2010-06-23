@@ -209,6 +209,7 @@ class Command(BaseCommand):
         failcount = 0
         importcount = 0
     
+        import traceback
         pb = ProgressBar(maximum=len(files))
         pb.update(importcount)
         
@@ -217,6 +218,8 @@ class Command(BaseCommand):
             try:
                 self._import_doc(f)
             except Exception, e:
+                print e
+                traceback.print_exc()
                 warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
                 failcount += 1
             finally:
