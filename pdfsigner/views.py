@@ -154,7 +154,7 @@ def demo_receive(request, jsessionid=None):
        num_bytes = request.REQUEST['num-bytes']
        pdfas_session_id = request.REQUEST['pdfas-session-id']
        url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-       id_remove(pdf_id)
+       id_delete(pdf_id)
        return HttpResponse('<h1>Download your signed PDF</h1><a href="%s">download link</a>' % url)
     return HttpResponse('demo_receive: got [%s]' % request)
 
