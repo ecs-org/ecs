@@ -396,7 +396,8 @@ def vote_filename(meeting, vote):
     vote_name = vote.get_ec_number()
     if vote_name is None:
         vote_name = 'id_%s' % vote.pk
-    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_name)
+    top = str(vote.top)
+    filename = '%s-%s-%s-Vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
     return filename.replace(' ', '_')
 
 def vote_context(meeting, vote):
