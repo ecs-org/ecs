@@ -392,15 +392,19 @@ def votes_signing(request, meeting_pk=None):
     return response
 
 
-def vote_filename(meeting, vote_pk):
-    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_pk)
-    return filename
+def vote_filename(meeting, vote):
+    vote_name = vote.get_ec_number()
+    if vote_name is None:
+        vote_name = 'id_%s' % vote.pk
+    filename = '%s-%s-%s-Vote.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), vote_name)
+    return filename.replace(' ', '_')
 
 
 def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
-    filename = vote_filename(meeting, vote_pk)
+    filename = vote_filename(meeting, vote)
+    print 'filename "%s"' % filename
     pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
         'vote': vote, 
     })

@@ -22,15 +22,21 @@ class Vote(models.Model):
     class Meta:
         app_label = 'core'
 
-    def __unicode__(self):
+    def get_ec_number(self):
         if self.top:
             top = self.top
             if top.submission:
                 submission = top.submission
                 if submission.ec_number:
                     ec_number = submission.ec_number
-                    return 'Votum %s' % ec_number
-        return "Votum ID %s" % self.pk
+                    return ec_number
+        return None
+
+    def __unicode__(self):
+        ec_number = self.get_ec_number()
+        if ec_number:
+            return 'Votum %s' % ec_number
+        return 'Votum ID %s' % self.pk
         
     @property
     def positive(self):
