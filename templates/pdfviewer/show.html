@@ -533,7 +533,6 @@
         anno.addClass('annotation');
         anno.id = uuid;
         $('body').grab(anno, 'top');
-        anno.toggleClass('dispnone'); //setStyle('display', 'block');
         anno.setStyle('left', data['x']);
         anno.setStyle('top', data['y']);
         anno.setStyle('height', data['height']);
@@ -584,6 +583,10 @@
             });
             $$('.MooDialog').setStyle('z-index', 2147483646);
         });
+        
+        saveEl(anno, function(){
+            anno.toggleClass('dispnone');
+        })
     
         resizeDrag(anno);
     }
