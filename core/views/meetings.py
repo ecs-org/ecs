@@ -381,7 +381,7 @@ def timetable_htmlemailpart(request, meeting_pk=None):
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.timetable_entries.all().order_by('id')
+    tops = meeting.timetable_entries.all().order_by('timetable_index')
     votes_dict = { }
     for top in tops:
         votes_dict[top] = Vote.objects.filter(top=top)
