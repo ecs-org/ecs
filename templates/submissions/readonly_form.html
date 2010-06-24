@@ -66,7 +66,7 @@
             <tr><th>Sitzungen:</th><td>
                 <ul>
                     {% for meeting in submission_form.submission.meetings.all %}
-                        <li><a>{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                        <li><a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
                     {% endfor %}
                 </ul>
             </td></tr>
