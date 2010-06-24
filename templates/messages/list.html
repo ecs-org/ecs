@@ -16,7 +16,7 @@
           {% endblock %}
           <th></th>
       </tr>
-  {% for message in page.object_list %}
+  {% for thread in page.object_list %}
       <tr {% ifchanged message.thread %}class="threadstart"{% endifchanged %}>
           <td>{{ message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>

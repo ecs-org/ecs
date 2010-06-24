@@ -2,8 +2,10 @@
 {% load messages %}
 
 {% block htmlbody %}
-<div class="message_display">
-  <h2>{{ message.subject }}</h2>
+<div class="message_display" style="overflow:auto">
+  <h2>{{ thread.subject }}</h2>
+  {% for message in page.object_list %}
+  <div class="item {% cycle 'even' 'odd' %}">
     <ol>
       <li><strong>Von:</strong> {{ message|sender_name:request.user  }}</li>
       <li><strong>An:</strong> {{ message|receiver_name:request.user }}</li>
@@ -27,6 +29,8 @@
           <pre>{{ message.text }}</pre>
       </li>
     </ol>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}
 

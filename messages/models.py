@@ -25,6 +25,15 @@ class ThreadQuerySet(models.query.QuerySet):
     def total_message_count(self):
         return Message.objects.filter(thread__in=self.values('pk')).count()
         
+    def incoming(self, user):
+        return self.filter(models.Q(sender=user, last_message__origin=MESSAGE_ORIGIN_BOB) | models.Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_ALICE))
+        
+    def outgoing(self, user):
+        return self.filter(models.Q(sender=user, last_message__origin=MESSAGE_ORIGIN_ALICE) | models.Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_BOB))
+        
+    def open(self, user):
+        return self.filter(models.Q(closed_by_receiver=False, receiver=user) | models.Q(closed_by_sender=False, sender=user))
+        
 class ThreadManager(models.Manager):
     def get_query_set(self):
         return ThreadQuerySet(self.model)
@@ -39,6 +48,16 @@ class ThreadManager(models.Manager):
             thread.add_message(kwargs['sender'], text)
         return thread
         
+    def incoming(self, user):
+        return self.all().incoming(user)
+        
+    def outgoing(self, user):
+        return self.all().outgoing(user)
+        
+    def open(self, user):
+        return self.all().open(user)
+        
+
 class MessageQuerySet(models.query.QuerySet):
     def by_user(self, *users):
         return self.filter(models.Q(thread__sender__in=users) | models.Q(thread__receiver__in=users))
@@ -76,6 +95,7 @@ class Thread(models.Model):
     sender = models.ForeignKey(User, related_name='outgoing_threads')
     receiver = models.ForeignKey(User, related_name='incoming_threads')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
+    last_message = models.OneToOneField('Message', null=True, related_name='head')
 
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
@@ -110,10 +130,10 @@ class Thread(models.Model):
             reply_to=reply_to, 
             origin=origin,
         )
-        if self.closed_by_sender or self.closed_by_receiver:
-            self.closed_by_sender = False
-            self.closed_by_receiver = False
-            self.save()
+        self.last_message = msg
+        self.closed_by_sender = False
+        self.closed_by_receiver = False
+        self.save()
         return msg
 
     def delegate(self, from_user, to_user):

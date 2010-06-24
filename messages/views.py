@@ -45,7 +45,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
             )
 
         message = thread.add_message(request.user, text=form.cleaned_data['text'])
-        return redirect_to_next_url(request, reverse('ecs.messages.views.read_message', kwargs={'message_pk': message.pk}))
+        return redirect_to_next_url(request, reverse('ecs.messages.views.read_thread', kwargs={'thread_pk': thread.pk}))
 
     return render(request, 'messages/send.html', {
         'submission': submission,
@@ -54,13 +54,27 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         'thread': thread,
     })
 
-def read_message(request, message_pk=None):
-    message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
-    if message.unread and message.receiver == request.user:
-        message.unread = False
-        message.save()
+def read_thread(request, thread_pk=None):
+    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
+    msg = thread.last_message 
+    if msg.unread and msg.receiver == request.user:
+        msg.unread = False
+        msg.save()
+    qs = thread.messages.order_by('-timestamp')
+    try:
+        page_num = int(request.GET.get('p', 1))
+    except ValueError:
+        page_num = 1
+    paginator = Paginator(qs, 4)
+    try:
+        page = paginator.page(page_num)
+    except EmptyPage:
+        page_num = paginator.num_pages
+        page = paginator.page(page_num)
+
     return render(request, 'messages/read.html', {
-        'message': message,
+        'thread': thread,
+        'page': page,
     })
 
 def bump_message(request, message_pk=None):
@@ -88,14 +102,14 @@ def delegate_thread(request, thread_pk=None):
     })
     
 def incoming_message_widget(request):
-    qs = Message.objects.incoming(request.user).open(request.user)
+    qs = Thread.objects.incoming(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
     if submission_pk:
-        qs = qs.filter(thread__submission__pk=submission_pk)
+        qs = qs.filter(submission__pk=submission_pk)
     return message_widget(request, 
         queryset=qs,
         template='messages/widgets/incoming_messages.inc',
-        user_sort='sender__username',
+        user_sort='last_message__sender__username',
         session_prefix='dashboard:incoming_messages',
         page_size=4,
         extra_context={
@@ -104,14 +118,14 @@ def incoming_message_widget(request):
     )
 
 def outgoing_message_widget(request):
-    qs = Message.objects.outgoing(request.user).open(request.user)
+    qs = Thread.objects.outgoing(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
     if submission_pk:
-        qs = qs.filter(thread__submission__pk=submission_pk)
+        qs = qs.filter(submission__pk=submission_pk)
     return message_widget(request, 
         queryset=qs,
         template='messages/widgets/outgoing_messages.inc',
-        user_sort='receiver__username',
+        user_sort='last_message__receiver__username',
         session_prefix='dashboard:outgoing_messages',
         page_size=4,
     )

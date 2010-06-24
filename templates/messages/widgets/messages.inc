@@ -9,22 +9,22 @@
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
 </div>
 <ol class="messages">
-{% for message in page.object_list %}
-    <li class="message {% cycle 'even' 'odd' %}{% if message.unread %} unread{% endif %}">
+{% for thread in page.object_list %}
+    <li class="message {% cycle 'even' 'odd' %}{% if thread.last_message.unread %} unread{% endif %}">
         <span class="head">
-            {% if message.thread.submission %}{{ message.thread.submission.ec_number }} - {% endif %}
-            {{ message.timestamp|naturalday:'d.m.Y' }}, {{ message.timestamp|date:'H:i'}}
+            {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
+            {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
         </span>
-        <a class="widget popup title" href="{% url ecs.messages.views.read_message message_pk=message.pk %}">{{ message.thread.subject|truncatewords:10 }}</a>
+        <a class="widget popup title" href="{% url ecs.messages.views.read_thread thread_pk=thread.pk %}">{{ thread.subject|truncatewords:10 }}</a>
         <span class="user">{% block message_user %}{% endblock %}</span>
         <span class="actions">
             {% if not incoming %}
-                <a class="widget api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+                <a class="widget api" href="{% url ecs.messages.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
             {% else %}
-                <a class="widget popup" href="{% url ecs.messages.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
-                <a class="widget popup" href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /></a>
+                <a class="widget popup" href="{% url ecs.messages.views.delegate_thread thread_pk=thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
+                <a class="widget popup" href="{% url ecs.messages.views.send_message reply_to_pk=thread.last_message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /></a>
             {% endif %}
-            <a class="widget api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
+            <a class="widget api" href="{% url ecs.messages.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
         </span>
     </li>
 {% endfor %}
