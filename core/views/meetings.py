@@ -403,13 +403,22 @@ def vote_filename(meeting, vote):
 def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
-    filename = vote_filename(meeting, vote)
-    pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
-        'vote': vote, 
-    })
+    pdf_name = vote_filename(meeting, vote)
+    top = str(vote.top)
+    ec_number = str(vote.get_ec_number())
+    print 'top "%s"' % top
+    print 'ec_number "%s"' % ec_number
+    print 'vote: "%s"' % vote
+    context = {
+        'meeting': meeting,
+        'vote': vote,
+        'top': top,
+        'ec_number': ec_number,
+    }
+    pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', context)
     # TODO get uuid
     # TODO stamp with barcode(uuid)
-    return pdf_response(pdf, filename=filename)
+    return pdf_response(pdf, filename=pdf_name)
 
 
 def vote_sign(request, meeting_pk=None, vote_pk=None):
@@ -418,8 +427,16 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
     pdf_name = vote_filename(meeting, vote)
     template = 'meetings/xhtml2pdf/vote.html'
+    top = str(vote.top)
+    ec_number = str(vote.get_ec_number())
+    print 'top "%s"' % top
+    print 'ec_number "%s"' % ec_number
+    print 'vote: "%s"' % vote
     context = {
+        'meeting': meeting,
         'vote': vote,
+        'top': top,
+        'ec_number': ec_number,
     }
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)
