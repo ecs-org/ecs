@@ -74,8 +74,9 @@ class Document(models.Model):
         app_label = 'core'
 
     def save(self, **kwargs):
+        """ TODO: handel other filetypes than PDFs"""
         if self.file:
-            if not self.uuid_document: # is uuid is given, dont stamp the pdf
+            if not self.uuid_document: # if uuid is given, dont stamp the pdf
                 tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
                 filename = tmp.name
                 buf = ''
