@@ -100,4 +100,11 @@ def annotation(request, did, page, zoom):
     anno.page = page;
     anno.save()
     return HttpResponse('OK')
-    
+
+def delete_annotation(request, did, page, zoom):
+    if not request.POST:
+        return HttpResponse('POST only')
+        
+    print did, page, zoom, request.POST
+    anno = Annotation.objects.filter(uuid=request.POST['uuid']).delete()
+    return HttpResponse('OK')
