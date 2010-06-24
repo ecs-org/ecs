@@ -17,8 +17,7 @@ from ecs.docstash.models import DocStash
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
     response = HttpResponse(doc.file, content_type=doc.mimetype)
-    ec_num = '_'.join(s['ec_number'] for s in Submission.objects.filter(forms__documents=doc).order_by('ec_number').values('ec_number'))
-    response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s-%s-%s" % (doc.doctype.name, doc.version, doc.date.strftime('%Y.%m.%d'), ec_num))
+    response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d')))
     return response
     
 # notifications
