@@ -204,7 +204,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.forceauth.ForceAuth',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
-    'djangodblog.middleware.DBLogMiddleware',
+    #'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'ecs.workflow.middleware.WorkflowMiddleware',
 )   
