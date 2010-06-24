@@ -75,34 +75,35 @@ class Document(models.Model):
 
     def save(self, **kwargs):
         if self.file:
-            m = hashlib.md5()
-
-            tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
-            filename = tmp.name
-            buf = ''
+            if not self.uuid_document: # is uuid is given, dont stamp the pdf
+                tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+                filename = tmp.name
+                buf = ''
+                while True:
+                    buf = self.file.read(4096)
+                    if not buf: break
+                    tmp.write(buf)
+                tmp.close()
+                self.file.close()
+                
+                self.uuid_document = str(uuid4())
+                self.file = File(stamp_pdf(filename, self.uuid_document))
+                os.remove(filename)
+            
+            m = hashlib.md5()        # update hash sum
             while True:
-                buf = self.file.read(4096)  # we iterate over the file, so we
-                if not buf: break  # do not have to hold the whole thingy in
-                                    # ram
+                buf = self.file.read(4096)
+                if not buf: break
                 m.update(buf)
-                tmp.write(buf)
-            tmp.close()
             self.file.seek(0)
-            
             self.hash = m.hexdigest()
-            self.uuid_document = str(uuid4())
             
-            nu_file = stamp_pdf(filename, self.uuid_document)
-            os.remove(filename)
-
-            self.file.close()
-            self.file = File(nu_file)
-            
-            analyzer = Analyzer()
+            analyzer = Analyzer()     # update page number
             analyzer.sniff_file(self.file)
             if analyzer.valid is False:
                 raise ValidationError('invalid PDF')  # TODO add user-visible error message
             self.pages = analyzer.pages
+        
         return super(Document, self).save(**kwargs)
 
 post_save.connect(document_post_save, sender=Document)
