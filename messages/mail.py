@@ -1,10 +1,11 @@
 import os
+from django.conf import settings
 from django.utils.encoding import force_unicode
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 from time import gmtime, strftime
 
 def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently=False, message_html=None, **kwargs):
-    from ecs.ecsmail.config.settings import relay
+    from ecs.ecsmail.config.boot import relay
     from lamson.mail import MailResponse
     print 'LAMSON SEND MAIL'
     for recipient in recipient_list:
@@ -33,7 +34,7 @@ def django_send_html_mail(subject, message, from_email, recipient_list,
 
 def send_mail(**kwargs):
     mylist = set(kwargs['recipient_list'])
-    bad = set([x for x in kwargs['recipient_list'] if x not in EMAIL_WHITELIST])
+    bad = set([x for x in kwargs['recipient_list'] if x not in settings.EMAIL_WHITELIST])
     if bad:
         print 'BAD EMAILS:', mylist, bad
         kwargs['recipient_list'] = list(mylist - bad)

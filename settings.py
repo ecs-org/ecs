@@ -99,6 +99,7 @@ if platform.node() == "ecsdev.ep3.at":
 
     RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
     RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx
+    EMAIL_PORT = 25
     
     # testecs does not show django debug messages
     if user == "testecs":
