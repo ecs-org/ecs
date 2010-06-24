@@ -3,9 +3,14 @@
 {% block title %}Antragsformular{% endblock %}
 
 {% block content %}
-    <div class="header"><br/>Antrag<br/>
-      <table ><tr><td style="border-top-style:none" align="left">Version 6.0 vom 03.07.2009</td><td align="right">Bitte immer die aktuelle Version verwenden (http://ethikkommissionen.at)!</td></tr></table>
+    <div style="text-align:center;padding-top:10px;padding-bottom:0px;width:18cm;border:1px solid #000;margin-bottom:5px;">
+        <div style="font-weigth:bold;font-size:170%;">Antrag</div>
+        <table border="0"><tr>
+            <td align="left">Version 6.0 vom 03.07.2009</td>
+            <td align="right">Bitte immer die aktuelle Version verwenden (http://ethikkommissionen.at)!</td>
+        </tr></table>
     </div>
+    
 
     <p><center>
       Dieses Formular soll für Einreichungen bei &ouml;sterreichischen Ethikkommissionen verwendet werden. <br/>
@@ -40,7 +45,7 @@
       {% endfor %}
     </table>
     <br/>
-    <div class="header"><br/>Teil A</div><br/>
+    <div class="header">Teil A</div>
     <b>1. Allgemeines</b> <br/>
     1.1. Projekttitel: <b> {{ submission_form.project_title }}</b><br/>
     <table border=0>
@@ -61,23 +66,23 @@
       <tr>
 	<td align=left valign=top style="width:5cm">1.4. Daten der beiliegenden Amendments:</td>
 	<td align=left valign=top>1.4.1. Nr.</td>
-	<td align=left valign=top><b>Wie</b></td>
+	<td align=left valign=top><b></b></td>
 	<td align=left valign=top>1.4.2. Datum:</td>
-	<td align=left valign=top><b>sind</b></td>
+	<td align=left valign=top><b></b></td>
       </tr>
       <tr>
 	<td align=left valign=top></td>
 	<td align=left valign=top>1.4.3. Nr.</td>
-	<td align=left valign=top><b>die</b></td>
+	<td align=left valign=top><b></b></td>
 	<td align=left valign=top>1.4.4. Datum:</td>
-	<td align=left valign=top><b>im</b></td>
+	<td align=left valign=top><b></b></td>
       </tr>
       <tr>
 	<td align=left valign=top></td>
 	<td align=left valign=top>1.4.5. Nr.</td>
-	<td align=left valign=top><b>Modell</b></td>
+	<td align=left valign=top><b></b></td>
 	<td align=left valign=top>1.4.6. Datum:</td>
-	<td align=left valign=top><b>kodiert?</b></td>
+	<td align=left valign=top><b></b></td>
       </tr>
     </table>
     1.5 Sponsor / Rechnungsempfänger (Kontaktperson in der Buchhaltung):<br/>
@@ -817,8 +822,7 @@ Antragstellers </p>
 erforderlich !!!</b></i> </p>
 
 {% for inv in submission_form.investigators.all %}
-<p align="center" style="margin-bottom: 0cm; border: 1.10pt double #000000; padding: 0.04cm 0cm; page-break-before: always">
- <b>Teil B</b> </p>
+<div class="header">Teil B</div>
 
 <p style="margin-left: 4.5cm; text-indent: -4.5cm; margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1.10pt double #000000; border-bottom: 1.10pt double #000000; border-left: none; border-right: none; padding: 0.21cm 0cm; page-break-after: avoid">
  <b>Studienkurzbezeichnung: {{ submission_form.project_title }} </b> </p>
