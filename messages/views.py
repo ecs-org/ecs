@@ -65,7 +65,7 @@ def read_thread(request, thread_pk=None):
         page_num = int(request.GET.get('p', 1))
     except ValueError:
         page_num = 1
-    paginator = Paginator(qs, 4)
+    paginator = Paginator(qs, 1000) # FIXME: do we really need pagination?
     try:
         page = paginator.page(page_num)
     except EmptyPage:
