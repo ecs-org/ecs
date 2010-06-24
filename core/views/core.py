@@ -24,7 +24,7 @@ def download_document(request, document_pk=None):
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
-        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification'),
+        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification', deleted=False),
     })
 
 def view_notification(request, notification_pk=None):
@@ -86,6 +86,8 @@ def create_notification(request, notification_type_pk=None):
             notification.submission_forms = submission_forms
             notification.investigators.add(*Investigator.objects.filter(submission_form__in=submission_forms))
             notification.documents = request.docstash['documents']
+
+            request.docstash.delete()
             return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
     return render(request, 'notifications/form.html', {
