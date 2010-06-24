@@ -68,7 +68,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
     class Meta:
         model = SubmissionForm
-        exclude = ('submission', 'documents', 'ethics_commissions', 'date_of_receipt')
+        exclude = ('submission', 'documents', 'ethics_commissions', 'date_of_receipt', 'pdf_document')
         
     def clean(self):
         cleaned_data = super(SubmissionFormForm, self).clean()
