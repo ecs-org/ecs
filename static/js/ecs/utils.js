@@ -194,14 +194,6 @@ ecs.setupForms = function(){
                 tabController: tabController,
                 autosaveInterval: 120
             });
-            var uploadButton = $('document_upload_button');
-            if(uploadButton){
-                uploadButton.addEvent('click', function(){
-                    mainForm.submit();
-                    return false;
-                });
-            }
-
         }
         var readonly = true;
         if(document.getElement('.form.main').tagName == 'FORM'){
@@ -210,7 +202,14 @@ ecs.setupForms = function(){
         ecs.setupInvestigatorFormSet(tabController, readonly);
     }
     ecs.setupFormFieldHelpers();
-    
+
+    var uploadButton = $('document_upload_button');
+    if(uploadButton){
+        uploadButton.addEvent('click', function(){
+            form.autosaveDisabled = true;
+        });
+    }
+
     /* FIXME: cleanup the following code */
     $$('form.main').getElements('input[type=submit].hidden').each(function(button){
         button.setStyle('display', 'none');
