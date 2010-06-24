@@ -2,6 +2,7 @@
 
 import os
 import random
+import time
 import urllib
 import urllib2
 
@@ -17,6 +18,19 @@ class IdStore(object):
     def __init__(self):
         print 'IdStore created'
         self.store = { }
+        self.dt_expired = 15 * 60
+
+    def is_expired(self, t):
+        dt = time.time() - t
+        print "dt = %s" % dt
+        return (dt > self.dt_expired)
+
+    def clean(self):
+        for id in self.store.keys():
+            t, value = self.store[id]
+            if self.is_expired(t):
+                print 'IdStore: id "%s" expired' % id
+                self.store.pop(id)
 
     def __del__(self):
         print 'IdStore deleted'
@@ -24,17 +38,21 @@ class IdStore(object):
     def set(self, id, value):
         print 'IdStore: set id "%s", value "%s"' % (id, value)
         if self.store.has_key(id):
-                print 'IdStore: error id "%s" already in store' % id
+            t, value = self.store[id]
+            if self.is_expired(t) is False:
+                print 'IdStore: error: id "%s" already in store' % id
                 return 0
-        self.store[id] = value
+        self.store[id] = (time.time(), value)
         return 1
 
     def get(self, id):
+        self.clean()
         print 'IdStore: get id "%s"' % id
         if self.store.has_key(id) is False:
-                print 'IdStore: error id "%s" is not in store' % id
-                return None
-        return self.store[id]
+            print 'IdStore: error: id "%s" is not in store' % id
+            return None
+        t, value = self.store[id]
+        return value
 
     def delete(self, id):
         print 'IdStore: delete "%s"' % id

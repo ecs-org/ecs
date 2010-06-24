@@ -17,9 +17,16 @@ from ecs.utils.timedelta import parse_timedelta
 from ecs.messages.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 
+
+import datetime
 import os
 import tempfile
+import urllib
+import urllib2
+
 from django.http import HttpResponseForbidden
+
+from ecs.core.models import Document
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 from ecs.utils import forceauth
 from ecs.utils.xhtml2pdf import xhtml2pdf
@@ -393,11 +400,13 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     filename = vote_filename(meeting, vote_pk)
-    
     pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
         'vote': vote, 
     })
+    # TODO get uuid
+    # TODO stamp with barcode(uuid)
     return pdf_response(pdf, filename=filename)
+
 
 def vote_sign(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -416,7 +425,7 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     t_name = t.name
     t.write(pdf)
     t.close()
-    id_set(pdf_id, 'vote sign:%s' % t_name)
+    id_set(pdf_id, 'vote sign:%s:%s' % (t_name, pdf_name))
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -445,25 +454,42 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
        num_bytes = request.REQUEST['num-bytes']
        pdfas_session_id = request.REQUEST['pdfas-session-id']
        url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-       # LATER: grab pdf from url, store pdf
        value = id_get(pdf_id)
        if value is None:
            return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
        a = value.split(':')
        t_name = a[1]
+       pdf_name = a[2]
        os.remove(t_name)
        id_delete(pdf_id)
-       return HttpResponse('<h1>Download your signed Vote</h1><a href="%s">download link (meeting "%s", vote "%s")</a>' % (url, meeting_pk, vote_pk))
+       # f is not seekable, so we have to store it as local file first
+       f = urllib2.urlopen(url)
+       t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+       t_name = t.name
+       t.write(f.read())
+       t.close()
+       f.close()
+       print 'wrote "%s" as "%s"' % (pdf_name, t_name)
+       t = open(t_name, 'rb')
+       d = datetime.datetime.now()
+       # TODO prevent barcode stamping (don't touch the signed pdf!)
+       document = Document(file=t, original_file_name=pdf_name, date=d)
+       document.save()
+       print 'stored "%s" as "%s"' % (pdf_name, document.pk)
+       t.close()
+       os.remove(t_name)
+       return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
-    print 'vote_sign_error meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    value = id_get(pdf_id)
-    if value is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-    a = value.split(':')
-    t_name = a[1]
-    os.remove(t_name)
-    id_delete(pdf_id)
-    return HttpResponse('error')
+    if request.REQUEST.has_key('error'):
+        error = urllib.unquote_plus(request.REQUEST['error'])
+    else:
+        error = ''
+    if request.REQUEST.has_key('cause'):
+        cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
+    else:
+        cause = ''
+    # no pdf id, no explicit cleaning possible
+    return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
