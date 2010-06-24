@@ -196,6 +196,7 @@ ecs.setupForms = function(){
             });
             $('document_upload_button').addEvent('click', function(){
                 form.submit();
+                return false;
             });
         }
         var readonly = true;
