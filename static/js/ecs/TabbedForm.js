@@ -7,6 +7,7 @@ ecs.TabbedForm = new Class({
     initialize: function(form, options){
         this.form = $(form);
         this.options = options;
+        this.autosaveDisabled = false;
         var tabController = this.tabs = options.tabController;
         tabController.getTabs().each(function(tab){
             if(tab.panel.getElement('.errors')){
@@ -33,7 +34,7 @@ ecs.TabbedForm = new Class({
     autosave: function(force){
         var currentData = this.form.toQueryString();
         console.log('start autosave ..', arguments);
-        if(force === true || (this.lastSave.data != currentData)){
+        if(!this.autosaveDisabled && (force === true || (this.lastSave.data != currentData))){
             this.lastSave.timestamp = new Date();
             this.lastSave.data = currentData;
             var request = new Request({
@@ -48,6 +49,7 @@ ecs.TabbedForm = new Class({
         }
     },
     submit: function(name){
+        this.autosaveDisabled = true;
         if(!name){
             return this.form.submit();
         }

@@ -194,6 +194,9 @@ ecs.setupForms = function(){
                 tabController: tabController,
                 autosaveInterval: 120
             });
+            $('document_upload_button').addEvent('click', function(){
+                form.submit();
+            });
         }
         var readonly = true;
         if(document.getElement('.form.main').tagName == 'FORM'){
