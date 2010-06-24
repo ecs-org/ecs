@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import tempfile
-
+from StringIO import StringIO
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.template import Context, loader
@@ -18,6 +18,7 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm
 from ecs.core import paper_forms
 from ecs.core import signals
+from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from django.core.files import File
@@ -44,7 +45,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     employees = []
     if instance:
         for index, investigator in enumerate(instance.investigators.order_by('id')):
-            for employee in investigator.investigatoremployee_set.order_by('id'):
+            for employee in investigator.employees.order_by('id'):
                 employee_dict = model_to_dict(employee, exclude=('id', 'investigator'))
                 employee_dict['investigator_index'] = index
                 employees.append(employee_dict)
@@ -294,4 +295,22 @@ def start_workflow(request, submission_pk=None):
     wf.start()
     return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
 
+def export_submission(request, submission_pk):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    submission_form = submission.get_most_recent_form()
+    serializer = Serializer()
+    buf = StringIO()
+    serializer.write(submission_form, buf)
+    response = HttpResponse(buf.getvalue(), mimetype='application/ecx')
+    response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.ec_number.replace('/', '-')
+    return response
 
+def import_submission_form(request):
+    print request.FILES
+    if 'file' in request.FILES:
+        serializer = Serializer()
+        submission_form = serializer.read(request.FILES['file'])
+        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+    return render(request, 'submissions/import.html', {
+    
+    })

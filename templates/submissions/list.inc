@@ -17,6 +17,7 @@
                  | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">Vote Review</a>
                  {% endif %}
              {% endwith %}
+             | <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}">Export</a>
         </div>
         {% with submission.medical_categories.all as categories %}
             {% if categories %}

@@ -1,0 +1,1 @@
+from ecs.core.serializer.base import Serializer
