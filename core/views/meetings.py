@@ -416,7 +416,7 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    pdf_name = vote_filename(meeting, vote_pk)
+    pdf_name = vote_filename(meeting, vote)
     template = 'meetings/xhtml2pdf/vote.html'
     context = {
         'vote': vote,
