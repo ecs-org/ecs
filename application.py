@@ -136,6 +136,8 @@ ghettoq:inst:all:pypi:ghettoq
 # media server rendering (includes mockcache for easier testing)
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
+ghostscript:reqexe:win:http://ghostscript.com/releases/gs871w32.exe
+
 memcachedb:req:apt:apt-get:memcachedb
 # FIXME: there is no memcachedb macport yet
 python-memcached:req:mac:macports:memcached
@@ -144,6 +146,9 @@ mockcache:inst:all:pypi:mockcache
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
+
+#barcode
+pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
 pdftk:req:apt:apt-get:pdftk
 
 # lamson mail server
@@ -205,11 +210,6 @@ future_bundle = sprint6_bundle
 developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 
-sprint5_wsgi = {"appname": "ecs", "appwsgi": "main.wsgi", "apacheconf": "apache.conf"}
-sprint6_wsgi = {"appname": "ecs", "appwsgi": "main.wsgi", "apacheconf": "apache.conf"}
-testing_wsgi = sprint5_wsgi
-default_wsgi = sprint6_wsgi
-future_wsgi  = sprint6_wsgi
 
 package_bundles = {
     'default': default_bundle,
@@ -220,14 +220,6 @@ package_bundles = {
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
-}
-
-wsgi_bundles = {
-    'sprint5': sprint5_wsgi,
-    'sprint6': sprint6_wsgi,
-    'testing': testing_wsgi,
-    'default': default_wsgi,
-    'future' : future_wsgi
 }
 
 mainapp_upstart = {"app": "ecs-main", "base": "ecs", "template": "ecs-runner.upstart", "target": "/etc/init/%(user)s-ecs-runner.conf"}
