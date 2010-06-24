@@ -27,12 +27,14 @@ class CsrfExemptBaseHandler(BaseHandler):
             del dct['csrfmiddlewaretoken']
         return super(CsrfExemptBaseHandler, self).flatten_dict(dct)
 
-def render_pdf(request, template, context, filename='Unnamed.pdf'):
-    html = render(request, template, context).content
-    pdf = xhtml2pdf(html)
+def pdf_response(pdf, filename='Unnamed.pdf'):
     assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=%s' % filename
     return response
+
+def render_pdf(request, template, context):
+    html = render(request, template, context).content
+    return xhtml2pdf(html)
 
 

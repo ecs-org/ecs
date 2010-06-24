@@ -85,6 +85,7 @@ class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     documents = models.ManyToManyField('core.Document')
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
+    pdf_document = models.ForeignKey('core.Document', related_name="submission_forms", null=True)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
