@@ -222,7 +222,7 @@ class Serializer(object):
             'type': 'SubmissionForm',
             'data': dump_model_instance(submission_form, zf),
         }
-        json = simplejson.dumps(data, cls=_JsonEncoder, indent='  ')
+        json = simplejson.dumps(data, cls=_JsonEncoder, indent=2)
         zf.writestr(DATA_JSON_NAME, json)
         
             
