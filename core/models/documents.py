@@ -103,9 +103,7 @@ class Document(models.Model):
             if analyzer.valid is False:
                 raise ValidationError('invalid PDF')  # TODO add user-visible error message
             self.pages = analyzer.pages
-            
-            return super(Document, self).save(**kwargs)
-
+        return super(Document, self).save(**kwargs)
 
 post_save.connect(document_post_save, sender=Document)
 

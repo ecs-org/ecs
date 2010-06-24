@@ -26,6 +26,7 @@ urlpatterns = patterns(
     url(r'^submission/(?P<submission_pk>\d+)/copy_form/', 'ecs.core.views.copy_latest_submission_form'),
     url(r'^submission/(?P<submission_pk>\d+)/schedule/', 'ecs.core.views.schedule_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/messages/send/', 'ecs.messages.views.send_message'),
+    url(r'^submission/(?P<submission_pk>\d+)/export/', 'ecs.core.views.export_submission'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/pdf/$', 'ecs.core.views.submission_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/copy/$', 'ecs.core.views.copy_submission_form'),
@@ -35,6 +36,7 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/thesis/$', 'ecs.core.views.retrospective_thesis_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/vote/$', 'ecs.core.views.vote_review'),
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
+    url(r'^submission_form/import/$', 'ecs.core.views.import_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
     
     url(r'^users/by_medical_category/$', 'ecs.core.views.users_by_medical_category'),

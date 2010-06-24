@@ -381,7 +381,7 @@ class Investigator(models.Model):
 
 
 class InvestigatorEmployee(models.Model):
-    investigator = models.ForeignKey(Investigator)
+    investigator = models.ForeignKey(Investigator, related_name='employees')
 
     sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
     title = models.CharField(max_length=40)
