@@ -1,3 +1,14 @@
+/* meeting list */
+
+#meeting_list ol {
+  list-style: none;
+}
+#meeting_list li {
+  margin-bottom: 10px;
+}
+
+/* meeting_editor */
+
 #meeting_editor #userlist {
   list-style: none;
   background-color: #eeeeee;

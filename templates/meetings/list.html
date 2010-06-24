@@ -3,31 +3,31 @@
 {% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
 
 {% block headertitle %}
-<h1>Liste aller Meetings</h1>
+Liste aller Sitzungen
 {% endblock %}
 
 {% block headernav %}
 {% endblock %}
 
 {% block content %}
-
-<h2>Meetings</h2>
-<ul>
-    {% for meeting in meetings %}
-        <li>
-            {{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<i>Unbenannt</i>" }}
-                (<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
-                | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
-                | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
-                | <a href="{% url ecs.core.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
-                | <a href="{% url ecs.core.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
-                | <a href="{% url ecs.core.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
-                | <a href="{% url ecs.core.views.votes_signing meeting_pk=meeting.pk %}">Signatur der Voten</a>)
-                
-        </li>
-    {% endfor %}
-</ul>
-
+<div id="meeting_list">
+  <h2>Sitzungen</h2>
+  <ol>
+      {% for meeting in meetings %}
+          <li>
+              <strong>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</strong><br />
+                  <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
+                  | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
+                  | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
+                  | <a href="{% url ecs.core.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
+                  | <a href="{% url ecs.core.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
+                  | <a href="{% url ecs.core.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
+                  | <a href="{% url ecs.core.views.votes_signing meeting_pk=meeting.pk %}">Signatur der Voten</a>
+                  
+          </li>
+      {% endfor %}
+  </ol>
+</div>
 {% endblock %}
 
 {% block menuSelection %}meetings{% endblock %}

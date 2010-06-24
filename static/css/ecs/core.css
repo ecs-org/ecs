@@ -416,6 +416,12 @@ fieldset.disabled {
 
 /* notifications */
 
+.notification_list ol {
+  list-style: none;
+}
+.notification_list li {
+  margin-bottom: 10px;
+}
 table.notification th {
     text-align: right;
     padding-right: 1em;

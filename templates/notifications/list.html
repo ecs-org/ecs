@@ -13,38 +13,42 @@
 {% block content %}
 
 {% if notifications %}
-<h2>Eingereichte Meldungen</h2>
-<ul>
-    {% for notification in notifications %}
-        <li>
-            <a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
-            für {% for submission_form in notification.submission_forms.all %}
-                <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </li>
-    {% endfor %}
-</ul>
+<div class="notification_list">
+  <h2>Eingereichte Meldungen</h2>
+    <ol>
+        {% for notification in notifications %}
+            <li>
+                <a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
+                für {% for submission_form in notification.submission_forms.all %}
+                    <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </li>
+        {% endfor %}
+    </ol>
+</div>
 {% endif %}
 
 {% if stashed_notifications %}
-<h2>Offene Meldungen</h2>
-<ul>
-    {% for docstash in stashed_notifications %}
-        {% if docstash.current_value %}
-            <li>
-                <a href="{% url ecs.core.views.create_notification notification_type_pk=docstash.current_value.type_id,docstash_key=docstash.key %}">
-                    {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
-                </a>
-                ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
-                {% if docstash.current_value.submission_forms %}
-                    für {% for submission_form in docstash.current_value.submission_forms %}
-                        <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                {% endif %}
-            </li>
-        {% endif %}
-    {% endfor %}     
-</ul>
+<div class="notification_list">
+  <h2>Offene Meldungen</h2>
+    <ol>
+        {% for docstash in stashed_notifications %}
+            {% if docstash.current_value %}
+                <li>
+                    <a href="{% url ecs.core.views.create_notification notification_type_pk=docstash.current_value.type_id,docstash_key=docstash.key %}">
+                        {{ docstash.current_name|default:"<em>Unbenannt</em>" }}
+                    </a>
+                    ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
+                    {% if docstash.current_value.submission_forms %}
+                        für {% for submission_form in docstash.current_value.submission_forms %}
+                            <a href="{% url ecs.core.views.view_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endfor %}     
+    </ol>
+</div>
 {% endif %}
 
 {% endblock %}
