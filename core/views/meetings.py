@@ -404,7 +404,6 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     filename = vote_filename(meeting, vote)
-    print 'filename "%s"' % filename
     pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
         'vote': vote, 
     })
