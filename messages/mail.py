@@ -31,8 +31,15 @@ def django_send_html_mail(subject, message, from_email, recipient_list,
         email.attach_alternative(message_html, "text/html")
     email.send()
 
-if os.environ.get('LAMSON_LOADED'):
-    send_mail = lamson_send_mail
-else:
-    send_mail = django_send_html_mail
+def send_mail(**kwargs):
+    mylist = set(kwargs['recipient_list'])
+    bad = set([x for x in kwargs['recipient_list'] if x not in EMAIL_WHITELIST])
+    if bad:
+        print 'BAD EMAILS:', mylist, bad
+        kwargs['recipient_list'] = list(mylist - bad)
+        
+    if os.environ.get('LAMSON_LOADED'):
+        lamson_send_mail(**kwargs)
+    else:
+        django_send_html_mail(**kwargs)
 

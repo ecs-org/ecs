@@ -67,14 +67,26 @@ if platform.node() == "ecsdev.ep3.at":
         DEBUG = False
         TEMPLATE_DEBUG = False
 
-DEFAULT_FROM_DOMAIN = 'ecsdev.ep3.at' #mails are only accepted for this domain.
-DEFAULT_FROM_EMAIL = 'noreply@%s' % (DEFAULT_FROM_DOMAIN,) # unless we have a reply path, we send with this.
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 8823 # these two should be the local lamson server (port 25 is totally cool)
-                  # put in another server and you'll run into problems.
-                  # since connections to the mailserver shouldn't block.
+ECSMAIL_PORT = 8823
+ECSMAIL_LOGSERVER_PORT = 8825
+BOUNCES = 'run/bounces'
+RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT}
+RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}
+HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
+ROUTER_DEFAULTS = {'host': '.+'}
+EMAIL_WHITELIST = {}
+AGENDA_RECIPIENT_LIST = {}
+ALLOWED_RELAY_HOSTS = ['127.0.0.1']
+FROM_DOMAIN = 'ecsdev.ep3.at' #mails are only accepted for this domain (and used for sending too).
+DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
 
-# use another different settings if local_settings.py exists
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
+                          # !with another server you'll run into problems!
+                          #   becauseconnections to the mailserver shouldn't block.
+                          # used both by django AND lamson for sending email
+
+# use different settings if local_settings.py exists
 try:
     from local_settings import *
 except ImportError:

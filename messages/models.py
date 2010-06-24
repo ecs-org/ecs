@@ -150,7 +150,7 @@ class Message(models.Model):
     
     @property
     def return_address(self):
-        return '%s@%s' % (self.return_username, settings.DEFAULT_FROM_DOMAIN)
+        return '%s@%s' % (self.return_username, settings.FROM_DOMAIN)
     
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':

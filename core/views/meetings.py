@@ -363,7 +363,7 @@ def agenda_htmlemail(request, meeting_pk=None):
              message=plainmail,
              message_html=htmlmail,
              from_email=settings.DEFAULT_FROM_EMAIL,
-             recipient_list=['frob@example.net'], fail_silently=False)
+             recipient_list=settings.AGENDA_RECIPIENT_LIST, fail_silently=False)
               
     return HttpResponseRedirect(reverse('ecs.core.views.meeting_list'))
 
