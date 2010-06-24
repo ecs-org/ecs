@@ -5,71 +5,110 @@
 {% block content %}
   {% include 'xhtml2pdf/ec_head.inc' %}
   <div align="center" style="font-weight:bold;font-size:large;">
-    Sitzung der Ethik-Kommission am {{ meeting.start }}, {{ top }}:
+    Sitzung der Ethik-Kommission am {{ meeting.start }}, {{ vote.top }}:
     <br />
   </div>
 
-<div style="font-weight: bold;">EK Nr:</div> {{ ec_number }} <br/>
-<div style="font-weight: bold;">Antragsteller:</div> Prof.Dr. Andreas Zuckermann
-<div style="font-weight: bold;">Sponsor/CRO:</div> Hoffmann-La Roche AG , Roche Austria GmbH 
-<div style="font-weight: bold;">Einreichende Institution:</div> Univ.Klin.f. Chirurgie, Klin.Abt.f. Herz-Thoraxchirurgie 
-<div style="font-weight: bold;">Projekttitel:</div> A prospective, open label, randomized, multicenter, multinational study evaluating the overall efficacy and safety including the effect on renal function of sirolimus (Rapamune®) replacing CNI in a standard care regimen of CNI, mycophenolate mofetil (MMF) and steroids in heart transplant patients  
+<span style="font-weight: bold;">EK Nr:</span> {{ ec_number }} <br/>
+<span style="font-weight: bold;">Antragsteller:</span> Prof.Dr. Andreas Zuckermann <br/>
+<span style="font-weight: bold;">Sponsor/CRO:</span> Hoffmann-La Roche AG , Roche Austria GmbH  <br/>
+<span style="font-weight: bold;">Einreichende Institution:</span> Univ.Klin.f. Chirurgie, Klin.Abt.f. Herz-Thoraxchirurgie  <br/>
+<span style="font-weight: bold;">Projekttitel:</span> A prospective, open label, randomized, multicenter, multinational study evaluating the overall efficacy and safety including the effect on renal function of sirolimus (Rapamune®) replacing CNI in a standard care regimen of CNI, mycophenolate mofetil (MMF) and steroids in heart transplant patients <br/>
 
 <div style="font-weight: bold;">Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:</div>
 
-  DokumentVersion/NrDatiert
-  Originalprotokoll: MT 18328 1.0 2005-04-15 
-  Patienteninfo./Einverständniserklrg.:  5.0/6.0 2005-08-19/2005-09-29 
-  Versicherungsbestätigung: Zürich Nr.07/74534-8, 07202843-0  2005-02-14 
-  Eudract-Nr.: 2005-001183-31  2005-08-29 
-  CRF's:  1 v 1.00 2005-06-28 
+<table border="1px">
+<tr>
+  <td><span style="font-weight: bold;">Dokument</span></td>
+  <td><span style="font-weight: bold;">Version/Nr</span></td>
+  <td><span style="font-weight: bold;">Datiert</span></td>
+</tr>
+<tr>
+  <td>Originalprotokoll: MT 18328</td><td>1.0</td><td>2005-04-15</td>
+</tr>
+<tr>
+  <td>Patienteninfo./Einverständniserklrg.:</td><td>5.0/6.0</td><td>2005-08-19/2005-09-29</td>
+</tr>
+<tr>
+  <td>Versicherungsbestätigung: Zürich Nr.07/74534-8, 07202843-0</td><td></td><td>2005-02-14</td>
+</tr>
+<tr>
+  <td>Eudract-Nr.:2005-001183-31</td><td></td><td>2005-08-29</td>
+</tr>
+<tr>
+  <td>CRF's:</td><td>1 v 1.00</td><td>2005-06-28</td>
+</tr>
+</table>
+
+<pdf:spacer height="1.0cm" />
 
 <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
 
-  Es besteht kein Einwand gegen die Durchführung der Studie.
-  •Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluß ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt.
-Achtung: Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.
+<pdf:spacer height="1.0cm" />
+
+<table border="1px">
+<tr>
+  <td width="5%">[&nbsp;&nbsp;]</td>
+  <td>Es besteht kein Einwand gegen die Durchführung der Studie.</td>
+</tr>
+<tr>
+  <td>[X]</td>
+  <td>Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluß ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt.
+    <div style="font-weight: bold; font-size:small;">
+  <span style="text-decoration: underline;">Achtung:</span> Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.
   •Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form. Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden. Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. 
-Achtung: Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.
-  •Der Antrag wird von der Ethik-Kommission abgelehnt.
-  •Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)
- 
-<div style="font-weight: bold;">Kommentare:</div>
+Achtung: Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.</div></td>
+</tr>
+<tr>
+  <td>[&nbsp;&nbsp;]</td>
+  <td> Der Antrag wird von der Ethik-Kommission abgelehnt.</td>
+</tr>
+<tr>
+  <td>[&nbsp;&nbsp;]</td>  
+  <td>Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)</td>
+</tr>
+</table> 
 
-<div style="font-weight: bold;">Zum Prüfplan:</div>
+<pdf:spacer height="1.0cm" />
 
-<div style="font-weight: bold;">Zur Patienteninformation:</div> In der Patienteninformation bezüglich einer allfälligen Schwangerschaft ist Name und Erreichbarkeit einer Kontaktperson bzw. des zuständigen Prüfarztes einzufügen.
-Der Patient ist darauf hinzweisen, dass einige der Herzbiopsien rein studienbezogen durchgeführt werden. 
+<span style="font-weight: bold;">Kommentare:</span> <br/>
 
-<div style="font-weight: bold;">Zur Versicherungsbestätigung:</div> entspricht
+<span style="font-weight: bold;">Zum Prüfplan:</span> <br/>
 
-<div style="font-weight: bold;">Andere:</div> Prof. Zuckermann stellt die Studie persönlich vor.
+<span style="font-weight: bold;">Zur Patienteninformation:</span> In der Patienteninformation bezüglich einer allfälligen Schwangerschaft ist Name und Erreichbarkeit einer Kontaktperson bzw. des zuständigen Prüfarztes einzufügen.
+Der Patient ist darauf hinzweisen, dass einige der Herzbiopsien rein studienbezogen durchgeführt werden. <br/>
+
+<span style="font-weight: bold;">Zur Versicherungsbestätigung:</span> entspricht <br/>
+
+<span style="font-weight: bold;">Andere:</span> Prof. Zuckermann stellt die Studie persönlich vor. <br/>
+
+<span style="font-weight: bold;">„CLOCKSTOP“:</span> Die in § 41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Einlangen der in diesem Votum geforderten Informationen gehemmt.<br/>
 
 
-<div style="font-weight: bold;">„CLOCKSTOP“:</div> Die in § 41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Einlangen der in diesem Votum geforderten Informationen gehemmt.
+<span style="font-weight: bold;">Nachtrag vom 7. Oktober 2005:</span> Die Antragsteller legen am 4.10.05 eine korrigierte Patienteninformation vor, die von der Ethik-Kommission akzeptiert wird.
+Begründung der Befürwortung des Antrages durch die Ethik-Kommission: Es handelt sich bei dem vorliegenden Projekt um eine relevante Fragestellung die mit geeigneter Methodik beantwortet werden soll. Die vorgenommene Bewertung des Nutzen/ Risikoverhältnisses wird von der Ethik-Kommission anerkannt. <br/>
 
-
-<div style="font-weight: bold;">Nachtrag vom 7. Oktober 2005:</div> Die Antragsteller legen am 4.10.05 eine korrigierte Patienteninformation vor, die von der Ethik-Kommission akzeptiert wird.
-Begründung der Befürwortung des Antrages durch die Ethik-Kommission: Es handelt sich bei dem vorliegenden Projekt um eine relevante Fragestellung die mit geeigneter Methodik beantwortet werden soll. Die vorgenommene Bewertung des Nutzen/ Risikoverhältnisses wird von der Ethik-Kommission anerkannt.
-
+<pdf:spacer height="1.0cm" />
 
 Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß AMG handelt.
+
+<pdf:spacer height="1.0cm" />
 
 Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäfts¬ordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: Univ.Prof.Dr. Gregor Wollenek
 
 <pdf:spacer height="2.0cm" />
 
-Univ.Prof.Dr. Ernst Singer<br/>
-Vorsitzender der Kommission<br/>
+Univ.Prof.Dr. Ernst Singer <br/>
+Vorsitzender der Kommission <br/>
 
 <pdf:spacer height="1.0cm" />
 
-<div style="font-weight: bold;">ACHTUNG:</div> Unter Berücksichtigung der „ICH-Guideline for Good Clinical Practice“ gilt dieser Beschluß ein Jahr ab Datum der Ausstellung. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit mittels Formular für „Meldungen“ rechtzeitig vorzulegen.
+<span style="font-weight: bold;">ACHTUNG:</span> Unter Berücksichtigung der „ICH-Guideline for Good Clinical Practice“ gilt dieser Beschluß ein Jahr ab Datum der Ausstellung. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit mittels Formular für „Meldungen“ rechtzeitig vorzulegen. <br/>
 
 <pdf:spacer height="1.0cm" />
 
 <div style="font-weight: bold;">Dieses Votum bezieht sich auf folgende Prüfzentren:</div>
-Ethik-Kommission der Med. Univ. Innsbruck, Univ.Prof.Dr.Herwig Antretter
+Ethik-Kommission der Med. Univ. Innsbruck, Univ.Prof.Dr.Herwig Antretter <br/>
 
 <pdf:spacer height="2.0cm" />
     

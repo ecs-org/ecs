@@ -408,7 +408,6 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     ec_number = str(vote.get_ec_number())
     print 'top "%s"' % top
     print 'ec_number "%s"' % ec_number
-    print 'vote: "%s"' % vote
     context = {
         'meeting': meeting,
         'vote': vote,
