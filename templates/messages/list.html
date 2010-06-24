@@ -17,25 +17,25 @@
           <th></th>
       </tr>
   {% for thread in page.object_list %}
-      <tr {% ifchanged message.thread %}class="threadstart"{% endifchanged %}>
-          <td>{{ message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
+      <tr>
+          <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>
-              <a href="{% url ecs.messages.views.read_message message_pk=message.pk %}">
-                  {% if message.thread.submission %}{{ message.thread.submission.ec_number }} - {% endif %}
-                  {{ message.thread.subject }}
+              <a class="popup" href="{% url ecs.messages.views.read_thread thread_pk=thread.pk %}">
+                  {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
+                  {{ thread.subject }}
               </a>
           </td>
-          <td>{{ message.unread|yesno }}</td>
-          <td>{{ message.thread.task|default:'-' }}</td>
+          <td>{{ thread.last_message.unread|yesno }}</td>
+          <td>{{ thread.task|default:'-' }}</td>
           {% block extra_message_table_cells %}
-              <td>{{ message|sender_name:request.user }}</td>
-              <td>{{ message|receiver_name:request.user }}</td>
+              <td>{{ thread.last_message|sender_name:request.user }}</td>
+              <td>{{ thread.last_message|receiver_name:request.user }}</td>
           {% endblock %}
           <td>
               {% block message_actions %}
-                  <a class="popup" href="{% url ecs.messages.views.read_message message_pk=message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
+                  <a class="popup" href="{% url ecs.messages.views.read_thread thread_pk=thread.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
                   {% if not message.thread.closed %}
-                  <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
+                  <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
                   {% endif %}
               {% endblock %}
           </td>

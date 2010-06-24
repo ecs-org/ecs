@@ -8,7 +8,7 @@ from ecs.core.models import UserProfile
 register = Library()
 
 def _username_for_message(message, attr, user):
-    target_user = getattr(message, attr)
+    target_user = getattr(message, attr, None)
     # FIXME: those try/except blocks should go away when we can assume that every user has a profile
     try:
         mask = target_user.get_profile().internal

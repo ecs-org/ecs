@@ -166,7 +166,7 @@ def message_widget(request, queryset=None, template='messages/widgets/messages.i
 def inbox(request):
     return message_widget(request, 
         template='messages/inbox.html',
-        queryset=Message.objects.incoming(request.user).select_related('sender', 'receiver', 'thread').order_by('-timestamp'),
+        queryset=Thread.objects.incoming(request.user).order_by('-last_message__timestamp'),
         session_prefix='messages:inbox',
         user_sort='sender__username',
         page_size=3,
@@ -175,7 +175,7 @@ def inbox(request):
 def outbox(request):
     return message_widget(request, 
         template='messages/outbox.html',
-        queryset=Message.objects.outgoing(request.user).select_related('sender', 'receiver', 'thread').order_by('-timestamp'),
+        queryset=Thread.objects.outgoing(request.user).order_by('-last_message__timestamp'),
         session_prefix='messages:outbox',
         user_sort='receiver__username',
         page_size=3,

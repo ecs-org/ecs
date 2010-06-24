@@ -19,12 +19,12 @@
 {% endblock %}
 
 {% block extra_message_table_cells %}
-    <td>{{ message|receiver_name:request.user }}</td>
+    <td>{{ thread.last_message|receiver_name:request.user }}</td>
 {% endblock %}
 
 
 {% block message_actions %}
     {{ block.super }}
-    <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+    <a class="api" href="{% url ecs.messages.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
 
 {% endblock %}
