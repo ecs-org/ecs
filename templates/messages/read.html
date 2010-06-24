@@ -20,7 +20,7 @@
           {% ifequal message.sender request.user %}
               <a class="api" href="{% url ecs.messages.views.bump_message message_pk=message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
           {% else %}
-              <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
+              <a href="{% url ecs.messages.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
               <a href="{% url ecs.messages.views.send_message reply_to_pk=message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /> </a>
           {% endifequal %}
           <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
