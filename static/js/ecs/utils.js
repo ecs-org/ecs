@@ -194,10 +194,14 @@ ecs.setupForms = function(){
                 tabController: tabController,
                 autosaveInterval: 120
             });
-            $('document_upload_button').addEvent('click', function(){
-                form.submit();
-                return false;
-            });
+            var uploadButton = $('document_upload_button');
+            if(uploadButton){
+                uploadButton.addEvent('click', function(){
+                    mainForm.submit();
+                    return false;
+                });
+            }
+
         }
         var readonly = true;
         if(document.getElement('.form.main').tagName == 'FORM'){
