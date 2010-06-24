@@ -33,17 +33,17 @@ body {
 }
 #headertitle {
   float: left;
-  width: 200px;
-  padding: 20px 0 0 10px;
-  height: 80px;
+  width: 220px;
+  padding: 5px 0 0 5px;
+  height: 65px;
   display: block;
   background: #d8e6ef;
   line-break: strict;
 }
 #headertext {
   float: left;
-  padding: 20px 10px 0 10px;
-  height: 60px;
+  padding: 5px 0 0 10px;
+  height: 65px;
   width: 60%;
   display: block;
   background: #d8e6ef;
