@@ -3,9 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import Context, loader
 from django.shortcuts import get_object_or_404
+from django.template.defaultfilters import slugify
 
 from ecs.core.views.utils import render, redirect_to_next_url
-from ecs.core.models import Document, Notification, NotificationType, SubmissionForm, Investigator
+from ecs.core.models import Document, Notification, NotificationType, SubmissionForm, Investigator, Submission
 from ecs.core.forms import DocumentFormSet
 from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
 from ecs.utils.xhtml2pdf import xhtml2pdf
@@ -105,8 +106,8 @@ def notification_pdf(request, notification_pk=None):
         'url': request.build_absolute_uri(),
     }))
     pdf = xhtml2pdf(html)
-    assert len(pdf) > 0
+    ec_num = '_'.join(s['ec_number'] for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=notification_%s.pdf' % notification_pk
+    response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s" % (ec_num, notification.type.name))
     return response
 
