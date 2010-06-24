@@ -48,7 +48,7 @@ class SerializerTest(TestCase):
             self.failUnlessEqual(getattr(a, attr), value)
             self.failUnlessEqual(getattr(b, attr), value)
             
-        get_doc_set = lambda x: set((doc.doctype, doc.version, doc.date, doc.file.read(), doc.mimetype) for doc in x.documents.all())
+        get_doc_set = lambda x: set((doc.doctype, doc.version, doc.date, doc.mimetype) for doc in x.documents.all())
         self.failUnlessEqual(get_doc_set(a), get_doc_set(b))
         
         get_measure_set = lambda x: set((m.category, m.type, m.period, m.total) for m in x.measures.all())
