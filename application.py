@@ -136,8 +136,7 @@ ghettoq:inst:all:pypi:ghettoq
 # media server rendering (includes mockcache for easier testing)
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
-ghostscript:reqexe:win:http://ghostscript.com/releases/gs871w32.exe
-
+ghostscript:req:win:exe:http://ghostscript.com/releases/gs871w32.exe
 memcachedb:req:apt:apt-get:memcachedb
 # FIXME: there is no memcachedb macport yet
 python-memcached:req:mac:macports:memcached
@@ -148,8 +147,9 @@ python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
 #barcode
-pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
 pdftk:req:apt:apt-get:pdftk
+pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
+pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
 # lamson mail server
 chardet:inst:all:pypi:chardet
