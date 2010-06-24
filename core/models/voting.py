@@ -23,6 +23,13 @@ class Vote(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
+        if self.top:
+            top = self.top
+            if top.submission:
+                submission = top.submission
+                if submission.ec_number:
+                    ec_number = submission.ec_number
+                    return 'Votum %s' % ec_number
         return "Votum ID %s" % self.pk
         
     @property
