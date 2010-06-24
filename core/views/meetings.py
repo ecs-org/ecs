@@ -7,7 +7,7 @@ from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
-from ecs.core.views.utils import render, render_html, render_pdf
+from ecs.core.views.utils import render, render_html, render_pdf, pdf_response
 from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
 from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
@@ -302,11 +302,11 @@ def agenda_pdf(request, meeting_pk=None):
     filename = '%s-%s-Agenda.pdf' % (
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
-    response = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
-        'meeting': meeting,
-    }, filename=filename)
     
-    return response
+    pdf = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
+        'meeting': meeting,
+    })
+    return pdf_response(pdf, filename=filename)
 
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -338,11 +338,12 @@ def timetable_pdf(request, meeting_pk=None):
     filename = '%s-%s-Zeitfenster.pdf' % (
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
-    response = render_pdf(request, 'meetings/xhtml2pdf/timetable.html', {
+    
+    pdf = render_pdf(request, 'meetings/xhtml2pdf/timetable.html', {
         'meeting': meeting,
         'timetable': timetable,
-    }, filename=filename)
-    return response
+    })
+    return pdf_response(pdf, filename=filename)
 
 def agenda_htmlemail(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -392,11 +393,11 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     filename = vote_filename(meeting, vote_pk)
-    response = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
+    
+    pdf = render_pdf(request, 'meetings/xhtml2pdf/vote.html', { 
         'vote': vote, 
-    }, filename=filename)
-    return response
-
+    })
+    return pdf_response(pdf, filename=filename)
 
 def vote_sign(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
