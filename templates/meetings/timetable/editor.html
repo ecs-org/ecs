@@ -37,7 +37,7 @@
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
                 {% if entry.submission %}
-                    {{ entry.submission.ec_number }}{{ entry.submission.project_title|smart_truncate:50 }}
+                    {{ entry.submission.ec_number }} {{ entry.submission.project_title|smart_truncate:50 }}
                 {% endif %}
             </h3>
             {% if not running_optimization %}
