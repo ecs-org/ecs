@@ -15,7 +15,6 @@ TEMPLATE_DEBUG = DEBUG
 
 
 # database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
-
 DATABASES = {}
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.sqlite3',
@@ -40,6 +39,28 @@ CELERY_IMPORTS = (
     'ecs.core.task_queue',
 )
 
+# lamson config
+ECSMAIL_PORT = 8823 # port ecsmail listens on (gets overridden on host ecsdev)
+ECSMAIL_LOGSERVER_PORT = 8825 # development server that logs to queue (for development only)
+FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
+
+# used both by django AND lamson for sending email
+# lamson and django should be on the same machine
+DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
+                          # !with another server you'll run into problems!
+                          # becauseconnections to the mailserver shouldn't block.
+# lamson config details
+# uses ECSMAIL_PORT, ECSMAIL_LOGSERVER_PORT, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
+BOUNCES = 'run/bounces' # bounce queue (relative to ecsmail/)
+RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
+RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}  
+HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
+ROUTER_DEFAULTS = {'host': '.+'}
+ALLOWED_RELAY_HOSTS = ['127.0.0.1']
+
+
 if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
@@ -62,29 +83,28 @@ if platform.node() == "ecsdev.ep3.at":
         BROKER_PASSWORD = DBPWD_DICT[user]
     BROKER_VHOST = user
     CARROT_BACKEND = ""
+
+
+    # lamson config different for shredder
+    if user == "shredder":
+        ECSMAIL_PORT = 8833
+        ECSMAIL_LOGSERVER_PORT = 8835
+        FROM_DOMAIN = "s.ecsdev.ep3.at"
+        DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
+    elif user == "testecs":
+        ECSMAIL_PORT = 8843
+        ECSMAIL_LOGSERVER_PORT = 8845
+        FROM_DOMAIN = "test.ecsdev.ep3.at"
+        DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
+
+    RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
+    RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx
     
+    # testecs does not show django debug messages
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
 
-ECSMAIL_PORT = 8823
-ECSMAIL_LOGSERVER_PORT = 8825
-BOUNCES = 'run/bounces'
-RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT}
-RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}
-HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
-ROUTER_DEFAULTS = {'host': '.+'}
-EMAIL_WHITELIST = {}
-AGENDA_RECIPIENT_LIST = {}
-ALLOWED_RELAY_HOSTS = ['127.0.0.1']
-FROM_DOMAIN = 'ecsdev.ep3.at' #mails are only accepted for this domain (and used for sending too).
-DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
-                          # !with another server you'll run into problems!
-                          #   becauseconnections to the mailserver shouldn't block.
-                          # used both by django AND lamson for sending email
 
 # use different settings if local_settings.py exists
 try:
@@ -264,3 +284,10 @@ MEMCACHEDB_PORT = 21201
 
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
+
+
+
+
+# FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
+EMAIL_WHITELIST = {}
+AGENDA_RECIPIENT_LIST = {}

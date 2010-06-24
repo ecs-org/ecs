@@ -28,11 +28,11 @@ def NOTIFY_BOUNCE(message):
 @bounce_to(soft=IGNORE_BOUNCE, hard=NOTIFY_BOUNCE)
 @stateless
 def START(message, address=None, host=None):
-    from ecs.ecsmail.config.settings import relay
+    from ecs.ecsmail.config.boot import relay
         
     muuid = None
     if host == settings.FROM_DOMAIN: # we acccept mail for this address
-        logging.info('PREBLUB %s' % (address,))
+        logging.info('FROM DOMAIN: %s' % (address,))
         mat = re.match('ecs-([^@]+)', address)
         m = None
         if mat:
@@ -45,11 +45,11 @@ def START(message, address=None, host=None):
                     pass
                 
         if not m:
-            raise SMTPError(511)
+            raise SMTPError(511) # Bad destination mailbox address
         
         logging.info('REPLY %s %s %s %s %s' % ( muuid, m, address, host, type(message)))
         if len(message.original) > 1024*1024:
-            raise SMTPError(523)
+            raise SMTPError(523) # 'Message length exceeds administrative limit.'
         
         if not message.base.parts:
             body = message.body()
@@ -77,5 +77,5 @@ def START(message, address=None, host=None):
         logging.info('RELAYING %s %s %s' % (message, address, host))
         relay.deliver(message)
     else:
-        raise SMTPError(571)
+        raise SMTPError(571) #Delivery not authorized, message refused
 
