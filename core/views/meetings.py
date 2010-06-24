@@ -384,9 +384,7 @@ def votes_signing(request, meeting_pk=None):
     tops = TimetableEntry.objects.filter(meeting=meeting)
     votes_dict = { }
     for top in tops:
-        print 'TOP "%s"' % top
         votes_dict[top] = Vote.objects.filter(top=top)
-    print 'votes_dict: "%s"' % votes_dict
     response = render(request, 'meetings/votes_signing.html', {
         'meeting': meeting,
         'votes_dict': votes_dict,
