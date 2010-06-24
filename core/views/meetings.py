@@ -375,18 +375,21 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     return response
 
 
+#
+#  votes signing
+#
+
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    votes = (
-        { 'pk': 1 }, 
-        { 'pk': 2 }, 
-        { 'pk': 3 }, 
-        { 'pk': 4 }, 
-        { 'pk': 5 },
-    )
+    tops = TimetableEntry.objects.filter(meeting=meeting)
+    votes_dict = { }
+    for top in tops:
+        print 'TOP "%s"' % top
+        votes_dict[top] = Vote.objects.filter(top=top)
+    print 'votes_dict: "%s"' % votes_dict
     response = render(request, 'meetings/votes_signing.html', {
         'meeting': meeting,
-        'votes' : votes,
+        'votes_dict': votes_dict,
     })
     return response
 

@@ -21,6 +21,9 @@ class Vote(models.Model):
     
     class Meta:
         app_label = 'core'
+
+    def __unicode__(self):
+        return "Votum ID %s" % self.pk
         
     @property
     def positive(self):
