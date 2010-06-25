@@ -21,7 +21,7 @@ Liste aller Voten des Meetings {{ meeting }}
         (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
         | <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Signieren</a>)
     {% else %}
-      Ohne Votum
+      ohne Votum
     {% endif %}
   </li>
 {% endfor %}
