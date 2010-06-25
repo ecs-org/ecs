@@ -409,16 +409,24 @@ def vote_filename(meeting, vote):
 
 
 def vote_context(meeting, vote):
-    vote_date = meeting.start.strftime('%d-%m-%Y')
-    top = str(vote.top)
+    top = vote.top
+    submission = None
+    form = None
+    if top:
+        submission = top.submission
+    if submission and submission.forms.count() > 0:
+        form = submission.forms.all()[0]
+    vote_date = meeting.start.strftime('%d.%m.%Y')
     ec_number = str(vote.get_ec_number())
     context = {
         'meeting': meeting,
         'vote': vote,
+        'submission': submission,
+        'form': form,
         'vote_date': vote_date,
-        'top': top,
         'ec_number': ec_number,
     }
+    print context
     return context
 
 
