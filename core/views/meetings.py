@@ -412,10 +412,13 @@ def vote_context(meeting, vote):
     top = vote.top
     submission = None
     form = None
+    documents = None
     if top:
         submission = top.submission
     if submission and submission.forms.count() > 0:
         form = submission.forms.all()[0]
+    if form:
+        documents = form.documents.all()
     vote_date = meeting.start.strftime('%d.%m.%Y')
     ec_number = str(vote.get_ec_number())
     context = {
@@ -423,6 +426,7 @@ def vote_context(meeting, vote):
         'vote': vote,
         'submission': submission,
         'form': form,
+        'documents': documents,
         'vote_date': vote_date,
         'ec_number': ec_number,
     }

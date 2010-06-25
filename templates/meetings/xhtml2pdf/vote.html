@@ -10,10 +10,10 @@
   </div>
 
 <span style="font-weight: bold;">EK Nr: {{ ec_number }}</span> <br/>
-<span style="font-weight: bold;">Antragsteller:</span> Prof.Dr. Andreas Zuckermann <br/>
-<span style="font-weight: bold;">Sponsor/CRO:</span> Hoffmann-La Roche AG , Roche Austria GmbH  <br/>
-<span style="font-weight: bold;">Einreichende Institution:</span> Univ.Klin.f. Chirurgie, Klin.Abt.f. Herz-Thoraxchirurgie  <br/>
-<span style="font-weight: bold;">Projekttitel:</span> A prospective, open label, randomized, multicenter, multinational study evaluating the overall efficacy and safety including the effect on renal function of sirolimus (Rapamune®) replacing CNI in a standard care regimen of CNI, mycophenolate mofetil (MMF) and steroids in heart transplant patients <br/>
+<span style="font-weight: bold;">Antragsteller:</span> {{ form.submitter_name}} <br/>
+<span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
+<span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
+<span style="font-weight: bold;">Projekttitel:</span> {{ form.project_title }} <br/>
 
 <pdf:spacer height="0.5cm" />
 
@@ -27,21 +27,15 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
   <td><span style="font-weight: bold;">Version/Nr</span></td>
   <td><span style="font-weight: bold;">Datiert</span></td>
 </tr>
+{% for document in documents %}
 <tr>
-  <td>Originalprotokoll: MT 18328</td><td>1.0</td><td>2005-04-15</td>
+  <td>{{ document.doctype }}:</td><td>{{ document.version }}</td><td>{{ document.date|date:"d.m.Y" }}</td>
 </tr>
+{% empty %}
 <tr>
-  <td>Patienteninfo./Einverständniserklrg.:</td><td>5.0/6.0</td><td>2005-08-19/2005-09-29</td>
+  <td colspan="3">(keine Unterlagen)</td>
 </tr>
-<tr>
-  <td>Versicherungsbestätigung: Zürich Nr.07/74534-8, 07202843-0</td><td></td><td>2005-02-14</td>
-</tr>
-<tr>
-  <td>Eudract-Nr.:2005-001183-31</td><td></td><td>2005-08-29</td>
-</tr>
-<tr>
-  <td>CRF's:</td><td>1 v 1.00</td><td>2005-06-28</td>
-</tr>
+{% endfor %}
 </table>
 
 <pdf:spacer height="0.5cm" />
