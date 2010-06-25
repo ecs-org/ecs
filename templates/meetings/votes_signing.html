@@ -13,13 +13,13 @@ Liste aller Voten des Meetings {{ meeting }}
 
 <h2>Voten des Meetings {{ meeting }}</h2>
 <ul>
-{% for top, vote in votes_list %}
+{% for d in votes_list|dictsort:'top' %}
   <li>
-    {{ top }}: 
-    {% if vote %}
-      {{ vote }}
-        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=vote.pk %}" target="_blank">Ansehen</a>
-        | <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=vote.pk %}" target="_blank">Signieren</a>)
+    {{ d.top }}: 
+    {% if d.vote %}
+      {{ d.vote }}
+        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
+        | <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Signieren</a>)
     {% else %}
       Ohne Votum
     {% endif %}

@@ -388,11 +388,11 @@ def votes_signing(request, meeting_pk=None):
         c = votes.count()
         assert(c < 2)
         if c is 0:
-            vote = None
+            vote = ''
         else:
             vote = votes[0]
-        votes_list.append((top, vote))
-    votes_list.sort()
+        votes_list.append({'top': str(top), 'vote': vote})
+    print 'votes_list: "%s"' % votes_list
     response = render(request, 'meetings/votes_signing.html', {
         'meeting': meeting,
         'votes_list': votes_list,
