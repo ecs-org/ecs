@@ -60,6 +60,10 @@ HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
 ROUTER_DEFAULTS = {'host': '.+'}
 ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 
+# FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
+EMAIL_WHITELIST = {}
+AGENDA_RECIPIENT_LIST = {}
+
 
 if platform.node() == "ecsdev.ep3.at":
     import getpass
@@ -100,6 +104,10 @@ if platform.node() == "ecsdev.ep3.at":
     RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
     RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx
     EMAIL_PORT = 25
+
+    # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
+    EMAIL_WHITELIST = {}
+    AGENDA_RECIPIENT_LIST = {}
     
     # testecs does not show django debug messages
     if user == "testecs":
@@ -286,9 +294,3 @@ MEMCACHEDB_PORT = 21201
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
 
-
-
-
-# FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
-EMAIL_WHITELIST = {}
-AGENDA_RECIPIENT_LIST = {}
