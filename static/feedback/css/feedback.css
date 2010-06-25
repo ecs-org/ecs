@@ -100,6 +100,9 @@ li.fb_list_item a {
 .fb_u2, .fb_me2, .fb_yours {
   float: right;
 }
+li.fb_list_item span.fb_u2 a {
+  color: #34ff00;
+}
 .fb_list_bottom {
   float: left;
   display: block;
