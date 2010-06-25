@@ -29,7 +29,6 @@ from django.http import HttpResponseForbidden
 from ecs.core.models import Document
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 from ecs.utils import forceauth
-from ecs.utils.datastructures import OrderedDict
 from ecs.utils.xhtml2pdf import xhtml2pdf
 
 
@@ -383,12 +382,19 @@ def timetable_htmlemailpart(request, meeting_pk=None):
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.timetable_entries.all()
-    votes_dict = OrderedDict()
+    votes_list = [ ]
     for top in tops:
-        votes_dict[top] = Vote.objects.filter(top=top)
+        votes = Vote.objects.filter(top=top)
+        c = votes.count()
+        assert(c < 2)
+        if c is 0:
+            vote = None
+        else:
+            vote = votes[0]
+        votes_list.append((top, vote))
     response = render(request, 'meetings/votes_signing.html', {
         'meeting': meeting,
-        'votes_dict': votes_dict,
+        'votes_list': votes_list,
     })
     return response
 
@@ -400,6 +406,7 @@ def vote_filename(meeting, vote):
     top = str(vote.top)
     filename = '%s-%s-%s-Vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
     return filename.replace(' ', '_')
+
 
 def vote_context(meeting, vote):
     vote_date = meeting.start.strftime('%d-%m-%Y')
