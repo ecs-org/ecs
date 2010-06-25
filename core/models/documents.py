@@ -12,7 +12,6 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.files import File
 
 from ecs.utils.pdfutils import stamp_pdf
 from ecs.mediaserver.analyzer import Analyzer
@@ -74,7 +73,7 @@ class Document(models.Model):
         app_label = 'core'
 
     def save(self, **kwargs):
-        """ TODO: handel other filetypes than PDFs"""
+        """ TODO: handel other filetypes than PDFs """
         if self.file:
             if not self.uuid_document: # if uuid is given, dont stamp the pdf
                 tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
@@ -88,7 +87,7 @@ class Document(models.Model):
                 self.file.close()
                 
                 self.uuid_document = str(uuid4())
-                self.file = File(stamp_pdf(filename, self.uuid_document))
+                self.file = stamp_pdf(filename, self.uuid_document)
                 os.remove(filename)
             
             m = hashlib.md5()        # update hash sum
