@@ -13,7 +13,7 @@ Liste aller Voten des Meetings {{ meeting }}
 
 <h2>Voten des Meetings {{ meeting }}</h2>
 <ul>
-{% for d in votes_list|dictsort:'top' %}
+{% for d in votes_list|dictsort:'top_index' %}
   <li>
     {{ d.top }}: 
     {% if d.vote %}
