@@ -29,6 +29,7 @@ from django.http import HttpResponseForbidden
 from ecs.core.models import Document
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 from ecs.utils import forceauth
+from ecs.utils.datastructures import OrderedDict
 from ecs.utils.xhtml2pdf import xhtml2pdf
 
 
@@ -381,8 +382,8 @@ def timetable_htmlemailpart(request, meeting_pk=None):
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.timetable_entries.all().order_by('timetable_index')
-    votes_dict = { }
+    tops = meeting.timetable_entries.all()
+    votes_dict = OrderedDict()
     for top in tops:
         votes_dict[top] = Vote.objects.filter(top=top)
     response = render(request, 'meetings/votes_signing.html', {
