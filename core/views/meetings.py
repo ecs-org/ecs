@@ -430,7 +430,6 @@ def vote_context(meeting, vote):
         'vote_date': vote_date,
         'ec_number': ec_number,
     }
-    print context
     return context
 
 
