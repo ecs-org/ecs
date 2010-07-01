@@ -182,13 +182,16 @@ ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 docutils:inst:all:pypi:docutils
 sphinx:inst:all:pypi:sphinx
-fudge:inst:all:pypi:fudge
+# fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 simplejson:inst:all:pypi:simplejson
 # antiword is needed for ecs/core/management/fakeimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
+#graphviz is required for manage.py graph_models
+# graphviz:req:apt:apt-get:graphviz-dev
+# graphviz:inst:apt:pypi:pygraphviz
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 # required for django_extensions unittests:
