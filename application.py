@@ -132,6 +132,7 @@ celery:req:mac:macports:rabbitmq-server
 celery:inst:all:pypi:celery
 # use ghettoq if development instead rabbitmq
 ghettoq:inst:all:pypi:ghettoq
+pyparsing:inst:all:pypi:pyparsing
 django-celery:inst:all:pypi:django-celery
 
 # media server rendering (includes mockcache for easier testing)
