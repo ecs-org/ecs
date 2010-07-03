@@ -241,7 +241,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djangodblog',
-    'celery',
+    'djcelery',
     'ecs.utils.countries',
     'compressor',
 
