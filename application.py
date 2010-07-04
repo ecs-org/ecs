@@ -227,17 +227,13 @@ package_bundles = {
     'qualityaddon': quality_packages,
 }
 
-mainapp_upstart = {"app": "ecs-main", "base": "ecs", "template": "ecs-runner.upstart", "target": "/etc/init/%(user)s-ecs-runner.conf"}
-mediaserver_upstart = {"app": "mediaserver", "base": "ecs/mediaserver", "template": "mediaserver-runner.upstart", "target": "/etc/init/%(user)s-mediaserver.conf"}
-mailserver_upstart = {"app": "mailserver", "base": "ecs/ecsmail", "template": "lamson-runner.upstart", "target": "/etc/init/%(user)s-mailserver.conf"}
-signing_upstart = {"app": "signing", "base": "ecs/signing", "template": "ecs-tomcat.upstart", "target": "/etc/init/%(user)s-ecs-tomcat.conf"}
-
-upstart_targets = {
-    'default': mainapp_upstart,
-    'mainapp': mainapp_upstart,
-    'mediaserver': mediaserver_upstart,
-    'mailserver_upstart': mailserver_upstart,
-    'signing_upstart': signing_upstart,
+upstart_flavors = {
+    'default': './manage.py runserver',
+    'mainapp': './manage.py runserver',
+    'mediaserver': './manage.py celeryd',
+    'logmailserver': './manage.py ecsmail log',
+    'mailserver': './manage.py ecsmail server',
+    'signing': 'true',   # how to do this?
 }
 
 
