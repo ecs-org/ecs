@@ -232,6 +232,15 @@ mediaserver_upstart = {"app": "mediaserver", "base": "ecs/mediaserver", "templat
 mailserver_upstart = {"app": "mailserver", "base": "ecs/ecsmail", "template": "lamson-runner.upstart", "target": "/etc/init/%(user)s-mailserver.conf"}
 signing_upstart = {"app": "signing", "base": "ecs/signing", "template": "ecs-tomcat.upstart", "target": "/etc/init/%(user)s-ecs-tomcat.conf"}
 
+upstart_targets = {
+    'default': mainapp_upstart,
+    'mainapp': mainapp_upstart,
+    'mediaserver': mediaserver_upstart,
+    'mailserver_upstart': mailserver_upstart,
+    'signing_upstart': signing_upstart,
+}
+
+
 """
 class job:
     def __init__(self, app, user, base, src, environment):
