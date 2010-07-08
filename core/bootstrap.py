@@ -5,6 +5,8 @@ from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
 from django.core.management.base import CommandError
 from django.core.management import call_command
+from django.contrib.auth.models import Group, User
+
 
 @bootstrap.register()
 def document_types():
@@ -137,5 +139,114 @@ def submission_workflow():
         for node_names, attrs in edges.iteritems():
             from_name, to_name = node_names
             node_instances[from_name].add_edge(node_instances[to_name], **attrs)
-            
+
+@bootstrap.register()
+def auth_groups():
+    groups = (
+        u'Presenter',
+        u'EC-Office',
+        u'EC-Meeting Secretary',
+        u'EC-Internal Review Group',
+        u'EC-Executive Board Group',
+        u'EC-Signing Group',
+        u'EC-Statistic Group',
+        u'EC-Notification Review Group',
+        u'EC-Insurance Reviewer',
+        u'EC-Thesis Review Group',
+        u'EC-Board Member',
+        u'External Reviewer',
+    )
+    
+    for group in groups:
+        Group.objects.get_or_create(name=group)
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+def auth_user_root():
+    root, created = User.objects.get_or_create(username='root')
+    root.first_name = 'System'
+    root.last_name = 'Administrator'
+    root.is_staff = True
+    root.is_superuser = True
+    root.email = 'nobody@example.notexisting.loc'
+    root.set_unusable_password()
+    root.save()
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+def auth_user_developers():
+    developers = (
+        ('wuxxin', u'Felix', u'Erkinger', u'wuxxin@ecsdev.ep3.at'),
+        ('mvw', 'Marc', 'van Woerkom', 'mvw@ecsdev.ep3.at'),
+        ('emulbreh', u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
+        ('natano', u'Martin', u'Natano', 'natano@natano.net'),
+    )
+    
+    for dev in developers:
+        user, created = User.objects.get_or_create(username=dev[0])
+        user.first_name = dev[1]
+        user.last_name = dev[2]
+        user.email = dev[3]
+        user.set_password(dev[4])
+        user.save()
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+def auth_user_testusers():
+    external_reviewer_group = Group.objects.get(name=u'External Reviewer')
+
+    testusers = (
+        (u'External Reviewer 1', external_reviewer_group),
+        (u'External Reviewer 2', external_reviewer_group),
+        (u'External Reviewer 3', external_reviewer_group),
+        (u'Presenter Testuser 1',),
+        (u'EC-Office Testuser 1',),
+        (u'EC-M. Secretary Testuser 1',),
+        (u'Internal R. Testuser 1',),
+        (u'Ex. Board Testuser 1',),
+        (u'EC-Signing Group Testuser 1',),
+        (u'EC-Statistic Group Testuser 1',),
+        (u'Notification R. Testuser 1',),
+        (u'Ins. R. Testuser 1',),
+        (u'Thesis R. Group Testuser 1',),
+        (u'EC-Board Member Testuser 1',),
+        (u'External Reviewer Testuser 1',),
+        (u'Presenter Testuser 2',),
+        (u'EC-Office Testuser 2',),
+        (u'Meeting Secretary Testuser 2',),
+        (u'Internal R. Group Testuser 2',),
+        (u'Ex. Board Testuser 2',),
+        (u'EC-Signing Group Testuser 2',),
+        (u'EC-Statistic Group Testuser 2',),
+        (u'Notification R. Testuser 2',),
+        (u'Ins. Reviewer Testuser 2',),
+        (u'Thesis R. Group Testuser 2',),
+        (u'EC-Board Member Testuser 2',),
+        (u'External Reviewer Testuser 2',),
+        (u'Presenter Testuser 3',),
+        (u'EC-Office Testuser 3',),
+        (u'Meeting Sec. Testuser 3',),
+        (u'Internal R. Group Testuser 3',),
+        (u'Ex. Board Group Testuser 3',),
+        (u'EC-Signing Group Testuser 3',),
+        (u'EC-Statistic Group Testuser 3',),
+        (u'Notification R. Testuser 3',),
+        (u'Ins. R. Testuser 3',),
+        (u'Thesis R. Group Testuser 3',),
+        (u'EC-Board Member Testuser 3',),
+        (u'External Reviewer Testuser 3',),
+    )
+
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+def auth_users():
+    board_members = ()
+
+    board_member_group = Group.objects.get(name=u'EC-Board Member')
+    for board_member in board_members:
+        user, created = User.objects.get_or_create(username=board_member[0])
+        user.first_name = board_member[1]
+        user.last_name = board_member[2]
+        user.email = board_member[3]
+        user.set_password(board_member[4])
+        user.save()
+        user.groups.add(board_member_group)
+
 
