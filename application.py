@@ -25,66 +25,8 @@ pytz:inst:all:pypi:pytz
 """
 
 
-# sprint 5 sources
-sprint5_bundle = minimal_ecs_service+ """ 
-django:inst:all:pypi:django==1.1.1
-south:inst:all:pypi:south==0.7
-django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
-werkzeug:inst:all:pypi:werkzeug
-django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
-django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/django-1.1
-nose:inst:all:pypi:nose
-docutils:inst:all:pypi:docutils
-django-reversion:inst:all:pypi:django-reversion
-django-db-log:inst:all:pypi:django-db-log
-# docstash now uses django-picklefield
-django-picklefield:inst:all:pypi:django-picklefield
-
-# needed for deployment: massimport
-antiword:req:apt:apt-get:antiword
-antiword:req:mac:macports:antiword
-# antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
-
-# pisa
-pyPDF:inst:all:pypi:pyPDF
-html5lib:inst:all:pypi:html5lib
-reportlab:req:apt:apt-get:libfreetype6-dev
-reportlab:inst:!win:pypi:reportlab
-reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
-pisa:inst:all:pypi:pisa
-
-# celery 
-amqplib:inst:all:pypi:amqplib
-carrot:inst:all:pypi:carrot
-importlib:inst:all:pypi:importlib
-python-dateutil:inst:all:pypi:python-dateutil
-anyjson:inst:all:pypi:anyjson
-billard:inst:all:pypi:billiard
-django-picklefield:inst:all:pypi:django-picklefield
-celery:req:apt:apt-get:rabbitmq-server
-celery:req:mac:macports:rabbitmq-server
-celery:inst:all:pypi:celery
-# use ghettoq if development instead rabbitmq
-ghettoq:inst:all:pypi:ghettoq
-
-# media server rendering (includes mockcache for easier testing)
-ghostscript:req:apt:apt-get:ghostscript
-ghostscript:req:mac:macports:ghostscript
-memcachedb:req:apt:apt-get:memcachedb
-# FIXME: there is no memcachedb macport yet
-python-memcached:req:mac:macports:memcached
-python-memcached:inst:all:pypi:python-memcached
-mockcache:inst:all:pypi:mockcache
-python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
-python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
-python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
-"""
-
-
-# sprint 6 sources
-sprint6_bundle = minimal_ecs_service+ """
+# sprint 7 sources
+sprint7_bundle = minimal_ecs_service+ """
 django:inst:all:pypi:django==1.2.1
 south:inst:all:pypi:south
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
@@ -145,10 +87,10 @@ python-memcached:req:mac:macports:memcached
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
-python-pil:inst:!win:http://effbot.org/media/downloads/PIL-1.1.7.tar.gz
+python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
-#barcode
+#barcode stamping
 pdftk:req:apt:apt-get:pdftk
 pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
 pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
@@ -187,7 +129,7 @@ sphinx:inst:all:pypi:sphinx
 # fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 simplejson:inst:all:pypi:simplejson
-# antiword is needed for ecs/core/management/fakeimport.py (were we load word-doc-type submission documents into the database)
+# antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
@@ -202,16 +144,16 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
 
-# TODO: make system environment for sprint 6
-sprint6_ecs_machine = """apache, mod_wsgi, exim4"""
+# TODO: make system environment for sprint 7
+sprint7_ecs_machine = """apache, mod_wsgi, exim4"""
 
 
 # Environments
 ###############
 
-testing_bundle = sprint5_bundle
-default_bundle = sprint6_bundle
-future_bundle = sprint6_bundle
+testing_bundle = sprint7_bundle
+default_bundle = sprint7_bundle
+future_bundle = sprint7_bundle
 developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 
@@ -220,8 +162,7 @@ package_bundles = {
     'default': default_bundle,
     'testing': testing_bundle,
     'future': future_bundle,
-    'sprint5': sprint5_bundle,
-    'sprint6': sprint6_bundle,
+    'sprint7': sprint7_bundle,
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
