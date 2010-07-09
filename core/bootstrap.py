@@ -59,7 +59,6 @@ def templates():
             if ext in ('.html', '.inc'):
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
-                print name
                 content = open(path, 'r').read()
                 tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
                 if not created and tpl.last_changed < datetime.datetime.fromtimestamp(os.path.getmtime(path)):
