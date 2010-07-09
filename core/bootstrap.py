@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime
 from ecs import bootstrap
-from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission
+from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
 from django.core.management.base import CommandError
@@ -615,10 +615,35 @@ def ethic_commissions():
         for key in comm.keys():
             setattr(ec, key, comm[key])
         ec.save()
-            
 
+@bootstrap.register()
+def checklist_blueprints():
+    blueprints = (
+        u'Statistik',
+    )
+    
+    for blueprint in blueprints:
+        #FIXME: we need a unique constraint on name for this to be idempotent
+        ChecklistBlueprint.objects.get_or_create(name=blueprint)
 
+@bootstrap.register()
+def checklist_questions(depends_on=('ecs.core.bootstrap.checklist_blueprints',)):
+    questions = {
+        ChecklistBlueprint.objects.get(name=u'Statistik'): (
+            u'1. Ist das Studienziel ausreichend definiert?',
+            u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
+            u'3. Ist die Studienpopulation ausreichend definiert?',
+            u'4. Sind die Zielvariablen geeignet definiert?',
+            u'5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?',
+            u'6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?',
+        ),
+    }
 
-
+    for blueprint in questions.keys():
+        #FIXME: there is no unique constraint, so this is not idempotent
+        for q in questions[blueprint]:
+            cq, created = ChecklistQuestion.objects.get_or_create(text=q)
+            cq.blueprint = cq.blueprint
+            cq.save()
 
 
