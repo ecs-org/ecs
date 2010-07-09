@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ecs import bootstrap
-from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission
+from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
 from django.core.management.base import CommandError
@@ -239,15 +239,14 @@ def auth_user_testusers():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_users():
     board_members = ()
-
-    board_member_group = Group.objects.get(name=u'EC-Board Member')
-    for board_member in board_members:
-        user, created = User.objects.get_or_create(username=board_member[0])
-        user.first_name = board_member[1]
-        user.last_name = board_member[2]
-        user.email = board_member[3]
-        user.set_password(board_member[4])
-        user.save()
-        user.groups.add(board_member_group)
+    
+    for cat in categories:
+        # FIXME: we need a unique constraint on abbrev for this to be idempotent
+        medcat, created = MedicalCategory.objects.get_or_create(abbrev=cat[0])
+        medcat.name = cat[1]
+        medcat.save()
+        for u in cat[2]:
+            user = User.objects.get(username=u)
+            medcat.users.add(user)
 
 
