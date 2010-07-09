@@ -11,17 +11,11 @@ class Migration(SchemaMigration):
         # Changing field 'Vote.submission'
         db.alter_column('core_vote', 'submission_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Submission']))
 
-        # Removing unique constraint on 'Vote', fields ['submission']
-        db.delete_unique('core_vote', ['submission_id'])
-
 
     def backwards(self, orm):
         
         # Changing field 'Vote.submission'
         db.alter_column('core_vote', 'submission_id', self.gf('django.db.models.fields.related.OneToOneField')(unique=True, null=True, to=orm['core.Submission']))
-
-        # Adding unique constraint on 'Vote', fields ['submission']
-        db.create_unique('core_vote', ['submission_id'])
 
 
     models = {
