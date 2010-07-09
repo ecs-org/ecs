@@ -242,11 +242,12 @@ def submission_pdf(request, submission_form_pk=None):
     filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.ec_number.replace('/','-')
     
     if not submission_form.pdf_document:
-        pdf = render_pdf(request, 'submissions/xhtml2pdf/view.html', {
+        pdf = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
             'submission_form': submission_form,
             'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         })
+        print "foo", pdf
         tmp = tempfile.NamedTemporaryFile()
         tmp.write(pdf)
         tmp.flush()

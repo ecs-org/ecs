@@ -310,7 +310,7 @@ def agenda_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
     
-    pdf = render_pdf(request, 'meetings/xhtml2pdf/agenda.html', {
+    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
     })
     return pdf_response(pdf, filename=filename)
@@ -346,7 +346,7 @@ def timetable_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
     
-    pdf = render_pdf(request, 'meetings/xhtml2pdf/timetable.html', {
+    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/timetable.html', {
         'meeting': meeting,
         'timetable': timetable,
     })
@@ -437,7 +437,7 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_name = vote_filename(meeting, vote)
-    template = 'meetings/xhtml2pdf/vote.html'
+    template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
     pdf = render_pdf(request, template, context)
     # TODO get uuid
@@ -450,7 +450,7 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
     pdf_name = vote_filename(meeting, vote)
-    template = 'meetings/xhtml2pdf/vote.html'
+    template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)

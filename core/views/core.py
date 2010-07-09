@@ -100,7 +100,7 @@ def create_notification(request, notification_type_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    template_names = ['notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
+    template_names = ['db/notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
     tpl = loader.select_template(template_names)
     html = tpl.render(Context({
         'notification': notification,

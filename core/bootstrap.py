@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os, datetime
 from ecs import bootstrap
 from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission
 from ecs.workflow.models import Graph, Node, Edge
@@ -44,6 +45,25 @@ def expedited_review_categories():
     for i in range(5):
         ExpeditedReviewCategory.objects.get_or_create(abbrev="ExRC%s" % i, name="Expedited Review Category #%s" % i)
 
+@bootstrap.register()
+def templates():
+    from dbtemplates.models import Template
+    basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
+    for dirpath, dirnames, filenames in os.walk(basedir):
+        if 'xhtml2pdf' not in dirpath:
+            continue
+        for filename in filenames:
+            if filename.startswith('.'):
+                continue
+            _, ext = os.path.splitext(filename)
+            if ext in ('.html', '.inc'):
+                path = os.path.join(dirpath, filename)
+                name = "db%s" % path.replace(basedir, '').replace('\\', '/')
+                content = open(path, 'r').read()
+                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
+                if not created and tpl.last_changed < datetime.datetime.fromtimestamp(os.path.getmtime(path)):
+                    tpl.content = content
+                    tpl.save()
 
 @bootstrap.register()
 def submission_workflow():
