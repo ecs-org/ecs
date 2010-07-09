@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import os, datetime
+import os, datetime, random
 from ecs import bootstrap
-from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion
+from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
+from ecs.utils.countries.models import Country
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
 from django.core.management.base import CommandError
@@ -270,7 +271,7 @@ def auth_users():
             medcat.users.add(user)
 
 @bootstrap.register()
-def ethic_commissions():
+def ethics_commissions():
     commissions = [{
         'city': u'Wien',
         'fax': None,
@@ -645,5 +646,187 @@ def checklist_questions():
         #FIXME: there is no unique constraint, so this is not idempotent
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_root'))
+def testsubmission():
+    submission, created = Submission.objects.get_or_create(ec_number='4321')
+    submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Kinder'))
+    
+    submission_form_data = {
+        'invoice_uid': u'',
+        'study_plan_abort_crit': u'Peto',
+        'medtech_product_name': u'',
+        'study_plan_statistics_implementation': u'Mag. rer.soc.oec. Ulrike P\u00f6tschger / Statistikerin',
+        'sponsor_fax': u'+43 1 4017070',
+        'substance_p_c_t_final_report': True,
+        'project_type_basic_research': False,
+        'medtech_ce_symbol': False,
+        'study_plan_alpha': u'0.05',
+        'project_type_reg_drug': False,
+        'study_plan_secondary_objectives': None,
+        'eudract_number': u'2006-001489-17',
+        'study_plan_dropout_ratio': u'0',
+        'german_protected_subjects_info': u'bla bla bla',
+        'project_type_genetic_study': False,
+        'study_plan_blind': None,
+        'study_plan_misc': None,
+        'project_type_retrospective': False,
+        'german_preclinical_results': u'bla bla bla',
+        'study_plan_biometric_planning': u'Mag. rer.soc.oec. Ulrike P\u00f6tschger / Statistikerin',
+        'invoice_uid_verified_level2': None,
+        'study_plan_placebo': False,
+        'submitter_jobtitle': u'OA am St. Anna Kinderspital',
+        'project_type_medical_device': False,
+        'german_aftercare_info': u'bla bla bla',
+        'german_recruitment_info': u'bla bla bla',
+        'study_plan_factorized': False,
+        'invoice_uid_verified_level1': None,
+        'project_type_medical_device_performance_evaluation': False,
+        'german_dataprotection_info': u'bla bla bla',
+        'german_concurrent_study_info': u'bla bla bla',
+        'study_plan_planned_statalgorithm': u'log rank test',
+        'submission': submission,
+        'medtech_reference_substance': u'',
+        'study_plan_statalgorithm': u'Lachin and Foulkes',
+        'subject_duration_active': u'12 months',
+        'submitter_is_coordinator': True,
+        'sponsor_name': u'CCRI',
+        'sponsor_email': u'helmut.gadner@stanna.at',
+        'subject_duration': u'48 months',
+        'pharma_reference_substance': u'1) R1 Randomisierung BUMEL - MAT/SCR',
+        'project_type_questionnaire': False,
+        'submitter_is_main_investigator': False,
+        'insurance_phone': u'50125',
+        'study_plan_population_intention_to_treat': False,
+        'submitter_name': u'Univ. Doz. Dr. Ruth Ladenstein',
+        'submitter_is_authorized_by_sponsor': False,
+        'medtech_manufacturer': u'',
+        'subject_planned_total_duration': u'8 months',
+        'project_type_medical_device_with_ce': False,
+        'submitter_is_sponsor': False,
+        'german_summary': u'bla bla bla',
+        'insurance_contract_number': u'WF-07218230-8',
+        'study_plan_power': u'0.80',
+        'sponsor_phone': u'+43 1 40170',
+        'subject_maxage': 21,
+        'subject_noncompetents': True,
+        'date_of_receipt': None,
+        'project_type_medical_device_without_ce': False,
+        'invoice_phone': u'',
+        'german_risks_info': u'bla bla bla',
+        'german_ethical_info': u'bla bla bla',
+        'specialism': u'P\u00e4diatrische Onkologie / Immunologie',
+        'study_plan_population_per_protocol': False,
+        'medtech_certified_for_other_indications': False,
+        'study_plan_parallelgroups': False,
+        'german_payment_info': u'bla bla bla',
+        'study_plan_controlled': False,
+        'study_plan_dataprotection_anonalgoritm': u'Electronically generated unique patient number within SIOPEN-R-Net',
+        'additional_therapy_info': u'long blabla',
+        'german_inclusion_exclusion_crit': u'bla bla bla',
+        'medtech_technical_safety_regulations': u'',
+        'study_plan_pilot_project': False,
+        'study_plan_number_of_groups': None,
+        'insurance_name': u'Z\u00fcrich Veresicherungs-Aktiengesellschaft',
+        'study_plan_null_hypothesis': None,
+        'clinical_phase': u'III',
+        'substance_preexisting_clinical_tries': True,
+        'substance_p_c_t_phase': u'III',
+        'subject_males': True,
+        'substance_p_c_t_period': u'Anti-GD2-Phase I: 1989-1992, Phase III 2002',
+        'german_benefits_info': u'bla bla bla',
+        'german_abort_info': u'bla bla bla',
+        'insurance_address_1': u'Schwarzenbergplatz 15',
+        'german_additional_info': u'bla bla bla',
+        'study_plan_primary_objectives': None,
+        'sponsor_contactname': None,
+        'study_plan_dataprotection_reason': u'',
+        'medtech_certified_for_exact_indications': False,
+        'sponsor_city': u'Wien',
+        'medtech_manual_included': False,
+        'submitter_agrees_to_publishing': True,
+        'study_plan_alternative_hypothesis': None,
+        'medtech_checked_product': u'',
+        'study_plan_sample_frequency': None,
+        'study_plan_dataquality_checking': u'National coordinators cross check in local audits patient file data with electronic data. In addition the RDE system holds electronic plausibility controls.',
+        'project_type_non_reg_drug': False,
+        'german_relationship_info': u'bla bla bla',
+        'project_title': u'High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)',
+        'invoice_fax': u'',
+        'sponsor_zip_code': u'1090',
+        'insurance_validity': u'01.10.2005 bis 01.10.2006',
+        'already_voted': True,
+        'subject_duration_controls': u'36 months',
+        'study_plan_dataprotection_dvr': u'',
+        'german_sideeffects_info': u'bla bla bla',
+        'subject_females': True,
+        'pharma_checked_substance': u'1) R1 Randomisierung CEM - MAT/SCR',
+        'project_type_misc': None,
+        'invoice_city': u'',
+        'german_financing_info': u'bla bla bla',
+        'project_type_register': False,
+        'german_dataaccess_info': u'bla bla bla',
+        'project_type_biobank': False,
+        'study_plan_observer_blinded': False,
+        'substance_p_c_t_application_type': u'IV in children',
+        'invoice_zip_code': u'',
+        'project_type_reg_drug_within_indication': False,
+        'invoice_email': u'',
+        'study_plan_datamanagement': u'Date entry and management through the SIOPEN-R-Net platform including the RDE system',
+        'german_primary_hypothesis': u'bla bla bla',
+        'subject_childbearing': True,
+        'study_plan_stratification': None,
+        'project_type_reg_drug_not_within_indication': False,
+        'project_type_medical_method': False,
+        'project_type_education_context': None,
+        'invoice_address1': u'',
+        'invoice_address2': u'',
+        'study_plan_equivalence_testing': False,
+        'subject_count': 175,
+        'substance_p_c_t_gcp_rules': True,
+        'subject_minage': 0,
+        'study_plan_randomized': False,
+        'study_plan_cross_over': False,
+        'german_consent_info': u'bla bla bla',
+        'medtech_departure_from_regulations': u'',
+        'german_project_title': u'bla bla bla',
+        'submitter_organisation': u'St. Anna Kinderspital',
+        'study_plan_multiple_test_correction_algorithm': u'',
+        'sponsor_address1': u'Kinderspitalg. 6',
+        'invoice_name': u'',
+        'invoice_contactname': None,
+        'sponsor_address2': u'',
+        'german_statistical_info': u'bla bla bla',
+    }
+    
+    
+    
+    submission_form = SubmissionForm.objects.create(**submission_form_data)
+    submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='AT'))
+    submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='DE'))
+    submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='US'))
+    
+    Investigator.objects.create(
+        name=u'Univ. Doz. Dr. Ruth Ladenstein',
+        submission_form=submission_form,
+        subject_count=1,
+        organisation=u'Kinderspital St. Anna',
+        ethics_commission=EthicsCommission.objects.get(name=u'Ethikkomission der Medizinischen Universit\u00e4t Wien')
+    )
+    
+    checklist, created = Checklist.objects.get_or_create(
+        submission=submission,
+        blueprint=ChecklistBlueprint.objects.get(name=u'Statistik'),
+        defaults={'user': User.objects.get(username='root')}
+    )
+    
+    for q in ChecklistQuestion.objects.all():
+        ca = ChecklistAnswer.objects.get_or_create(
+            question=q,
+            checklist=checklist,
+            defaults={
+                'answer': random.choice((True, False, None,))
+            }
+        )
 
 
