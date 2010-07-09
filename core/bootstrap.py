@@ -160,7 +160,7 @@ def auth_groups():
     for group in groups:
         Group.objects.get_or_create(name=group)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+@bootstrap.register()
 def auth_user_root():
     root, created = User.objects.get_or_create(username='root')
     root.first_name = 'System'
