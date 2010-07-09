@@ -28,5 +28,5 @@ class RendererTest(TestCase):
         print 'cache cleaned'
 
     def test_cmd(self):
-        pdf_fname = os.path.join('mediaserver', 'tests', self.pdf_name)
+        pdf_fname = os.path.join(os.path.dirname(__file__), self.pdf_name)
         management.call_command('render', pdf_fname, self.id_test)
