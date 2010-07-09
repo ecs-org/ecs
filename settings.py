@@ -190,6 +190,7 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
+    'dbtemplates.loader.load_template_source',
     #'django.template.loaders.eggs.load_template_source',
 )
 
@@ -244,6 +245,7 @@ INSTALLED_APPS = (
     'djcelery',
     'ecs.utils.countries',
     'compressor',
+    'dbtemplates',
 
     'ecs.core',
     'ecs.utils',
@@ -290,6 +292,8 @@ MEMCACHED_PORT = 11211
 
 MEMCACHEDB_HOST = '127.0.0.1'
 MEMCACHEDB_PORT = 21201
+
+#ECS_AUTO_PDF_BARCODE = True # default
 
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'

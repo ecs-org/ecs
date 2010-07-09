@@ -75,7 +75,7 @@ class Document(models.Model):
     def save(self, **kwargs):
         """ TODO: handel other filetypes than PDFs """
         if self.file:
-            if not self.uuid_document: # if uuid is given, dont stamp the pdf
+            if not self.uuid_document and getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): # if uuid is given, dont stamp the pdf
                 tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
                 filename = tmp.name
                 buf = ''
@@ -88,6 +88,7 @@ class Document(models.Model):
                 
                 self.uuid_document = str(uuid4())
                 self.file = stamp_pdf(filename, self.uuid_document)
+                    
                 os.remove(filename)
             
             m = hashlib.md5()        # update hash sum
