@@ -441,7 +441,7 @@ class Migration(DataMigration):
             'executive_review_required': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'result': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True'}),
-            'submission': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'submission'", 'unique': 'True', 'null': 'True', 'to': "orm['core.Submission']"}),
+            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'submission'", 'null': 'True', 'to': "orm['core.Submission']"}),
             'text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'top': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'vote'", 'unique': 'True', 'null': 'True', 'to': "orm['core.TimetableEntry']"})
         },

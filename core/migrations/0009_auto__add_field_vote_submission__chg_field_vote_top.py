@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding field 'Vote.submission'
-        db.add_column('core_vote', 'submission', self.gf('django.db.models.fields.related.OneToOneField')(related_name='submission', unique=True, null=True, to=orm['core.Submission']), keep_default=False)
+        db.add_column('core_vote', 'submission', self.gf('django.db.models.fields.related.ForeignKey')(related_name='submission', null=True, to=orm['core.Submission']), keep_default=False)
 
         # Changing field 'Vote.top'
         db.alter_column('core_vote', 'top_id', self.gf('django.db.models.fields.related.OneToOneField')(unique=True, null=True, to=orm['core.TimetableEntry']))
