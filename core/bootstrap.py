@@ -626,10 +626,10 @@ def checklist_blueprints():
         #FIXME: we need a unique constraint on name for this to be idempotent
         ChecklistBlueprint.objects.get_or_create(name=blueprint)
 
-@bootstrap.register()
-def checklist_questions(depends_on=('ecs.core.bootstrap.checklist_blueprints',)):
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
+def checklist_questions():
     questions = {
-        ChecklistBlueprint.objects.get(name=u'Statistik'): (
+        u'Statistik': (
             u'1. Ist das Studienziel ausreichend definiert?',
             u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
             u'3. Ist die Studienpopulation ausreichend definiert?',
@@ -639,11 +639,11 @@ def checklist_questions(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
         ),
     }
 
-    for blueprint in questions.keys():
+    for bp_name in questions.keys():
+        blueprint = ChecklistBlueprint.objects.get(name=bp_name)
+        print blueprint
         #FIXME: there is no unique constraint, so this is not idempotent
-        for q in questions[blueprint]:
-            cq, created = ChecklistQuestion.objects.get_or_create(text=q)
-            cq.blueprint = cq.blueprint
-            cq.save()
+        for q in questions[bp_name]:
+            cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
 
