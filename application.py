@@ -35,6 +35,7 @@ django-extensions:inst:all:http://github.com/django-extensions/django-extensions
 django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
 docutils:inst:all:pypi:docutils
+django-dbtemplates:inst:all:pypi:django-dbtemplates
 
 # simple testing
 nose:inst:all:pypi:nose
@@ -93,7 +94,7 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 #barcode stamping
 pdftk:req:apt:apt-get:pdftk
 pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
-pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
+#pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
 # lamson mail server
 chardet:inst:all:pypi:chardet
@@ -104,7 +105,6 @@ python-daemon:inst:!win:pypi:python-daemon==1.5.5
 lamson:inst:all:pypi:lamson
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 """
-
 
 # software quality testing packages
 quality_packages= """
