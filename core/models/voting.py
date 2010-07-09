@@ -14,7 +14,8 @@ VOTE_RESULT_CHOICES = (
 )
 
 class Vote(models.Model):
-    top = models.OneToOneField('core.TimetableEntry', related_name='vote')
+    submission = models.ForeignKey('core.Submission', related_name='votes')
+    top = models.OneToOneField('core.TimetableEntry', related_name='vote', null=True)
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=u'Kommentar')
@@ -37,6 +38,11 @@ class Vote(models.Model):
         if ec_number:
             return 'Votum %s' % ec_number
         return 'Votum ID %s' % self.pk
+        
+    def save(self, **kwargs):
+        if not self.submission_id and self.top_id:
+            self.submission = self.top.submission
+        return super(Vote, self).save(**kwargs)
         
     @property
     def positive(self):

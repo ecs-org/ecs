@@ -43,7 +43,7 @@ class Submission(models.Model):
     def get_most_recent_vote(self):
         from ecs.core.models import Vote
         try:
-            return Vote.objects.filter(top__submission=self).order_by('-top__meeting__start')[0]
+            return Vote.objects.filter(submission=self).order_by('-top__meeting__start')[0]
         except (Vote.DoesNotExist, IndexError):
             return None
 

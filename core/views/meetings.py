@@ -255,7 +255,6 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         else:
             form_cls = VoteForm
         form = form_cls(request.POST or None, instance=vote)
-        print autosave, form.is_valid()
         if form.is_valid():
             vote = form.save(commit=False)
             vote.top = top
