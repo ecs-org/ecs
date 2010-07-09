@@ -34,7 +34,7 @@ def pdf_response(pdf, filename='Unnamed.pdf'):
     return response
 
 def render_pdf(request, template, context):
-    html = render(request, template, context).content
+    html = render_html(request, template, context)
     return xhtml2pdf(html)
 
 
