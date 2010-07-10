@@ -174,9 +174,17 @@ upstart_flavors = {
     'mediaserver': './manage.py celeryd',
     'logmailserver': './manage.py ecsmail log',
     'mailserver': './manage.py ecsmail server',
-    'signing': 'true',   # how to do this?
+    'signing': 'true',   # FIXME: how to do this?
 }
 
+test_flavors = {
+    'default': './manage.py test',
+    'mainapp': './manage.py test',
+    'mediaserver': 'false',  # TODO: implement
+    'logmailserver': 'false', # TODO: implement
+    'mailserver': '.false', # TODO: implement
+    'signing': 'false', # TODO: implement
+}
 
 """
 class job:
