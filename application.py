@@ -40,6 +40,8 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 #search
 whoosh:inst:all:pypi:whoosh
 django-haystack:inst:all:pypi:http://github.com/toastdriven/django-haystack/tarball/master
+poppler:req:apt:apt-get:poppler-utils
+poppler:req:mac:macports:poppler
 
 # simple testing
 nose:inst:all:pypi:nose
