@@ -34,9 +34,11 @@ BROKER_VHOST = 'ecshost'
 # per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_RESULT_BACKEND = 'database'
+CELERY_RESULT_DBURI = 'sqlite://celery.db'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
+    'ecs.mediaserver.task_queue',
 )
 
 # lamson config
@@ -246,6 +248,7 @@ INSTALLED_APPS = (
     'ecs.utils.countries',
     'compressor',
     'dbtemplates',
+    'haystack',
 
     'ecs.core',
     'ecs.utils',
@@ -298,3 +301,6 @@ MEMCACHEDB_PORT = 21201
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
 
+HAYSTACK_SITECONF = 'ecs.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")

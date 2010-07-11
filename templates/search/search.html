@@ -1,0 +1,40 @@
+{% extends 'core.html' %}
+{% load highlight %}
+{% block content %}
+    <h2>
+        {% if document %}
+            Suche in: <i>{{ document }}</i>
+        {% else %}
+            Document Search
+        {% endif %}
+    </h2>
+
+    <form method="get" action=".">
+        <div>
+            {{ form.q }}
+            <input type="submit" value="Suchen">
+        </div>
+    </form>
+        {% if query %}
+            <h3>Results</h3>
+
+            {% for result in page.object_list %}
+                <p>
+                    <a href="/pdfviewer/{{ result.object.doc_id }}/{{ result.object.num }}/1/">{{ result.object.doc }} Seite {{ result.object.num }}</a>
+                    {% highlight result.object.text with request.GET.q class "highlight" %}
+                </p>
+            {% empty %}
+                <p>No results found.</p>
+            {% endfor %}
+
+            {% if page.has_previous or page.has_next %}
+                <div>
+                    {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+                    |
+                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+        {% endif %}
+{% endblock %}

@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-
 from ecs.mediaserver.renderer import Renderer
 from ecs.mediaserver.renderset import RenderSet
 from ecs.mediaserver.storage import Cache, SetData
-
 
 class ImageSet(object):
 
@@ -47,14 +45,3 @@ class ImageSet(object):
         self.init_images()
         return True
 
-
-def cache_and_render(document):
-    id = document.pk
-    image_set = ImageSet(id)
-    if image_set.store('doc save', document.file.name, document.pages) is False:
-        print 'cache_and_render: can not store ImageSet "%s"' % document.id
-        return False
-    renderer = Renderer()
-    renderer.render(image_set)
-    cache = Cache()
-    print 'rendered key "%s", set "%s"' % (cache.get_set_key(image_set.id), image_set.set_data)

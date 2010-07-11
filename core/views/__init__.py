@@ -7,3 +7,4 @@ from ecs.core.views.meetings import meeting_list, create_meeting, timetable_edit
     move_timetable_entry, optimize_timetable, participation_editor, users_by_medical_category, schedule_submission, add_free_timetable_entry
 from ecs.core.views.meetings import meeting_assistant, meeting_assistant_top, meeting_assistant_quickjump, meeting_assistant_clear, meeting_assistant_start, meeting_assistant_stop, agenda_pdf, agenda_htmlemail, timetable_htmlemailpart, timetable_pdf, vote_pdf, votes_signing, vote_sign, vote_sign_send, vote_sign_error, vote_sign_receive
 from ecs.core.views.checklists import checklist_comments
+from ecs.core.views.documents import document_search

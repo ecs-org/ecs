@@ -37,6 +37,10 @@ django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball
 docutils:inst:all:pypi:docutils
 django-dbtemplates:inst:all:pypi:django-dbtemplates
 
+#search
+whoosh:inst:all:pypi:whoosh
+django-haystack:inst:all:pypi:http://github.com/toastdriven/django-haystack/tarball/master
+
 # simple testing
 nose:inst:all:pypi:nose
 django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/master

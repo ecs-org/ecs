@@ -1,15 +1,8 @@
 from django.conf.urls.defaults import *
-
-import settings
-
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+from django.conf import settings
 
 urlpatterns = patterns(
     '',
-    # Example:
-    # (r'^ecs/', include('ecs.foo.urls')),
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/', 'permanent': True}),
 
     url(r'^notification/new/$', 'ecs.core.views.select_notification_creation_type'),
@@ -20,6 +13,8 @@ urlpatterns = patterns(
     url(r'^submission_data_for_notification/$', 'ecs.core.views.submission_data_for_notification'),
 
     url(r'^document/(?P<document_pk>\d+)/download/$', 'ecs.core.views.download_document'),
+    url(r'^document/(?P<document_pk>\d+)/search/$', 'ecs.core.views.document_search'),
+    url(r'^documents/search/$', 'ecs.core.views.document_search'),
 
     url(r'^submission/(?P<submission_pk>\d+)/edit/', 'ecs.core.views.edit_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/start_workflow/', 'ecs.core.views.start_workflow'),

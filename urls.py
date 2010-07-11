@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),
     url(r'^bugshot/', include('ecs.bugshot.urls')),
+    url(r'^search/', include('haystack.urls')),
 
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 )

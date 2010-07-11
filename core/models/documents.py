@@ -6,7 +6,7 @@ import tempfile
 from uuid import uuid4
 
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import FileSystemStorage
 from django.utils._os import safe_join
 from django.utils.encoding import smart_str
@@ -15,7 +15,6 @@ from django.core.exceptions import ValidationError
 
 from ecs.utils.pdfutils import stamp_pdf
 from ecs.mediaserver.analyzer import Analyzer
-from ecs.mediaserver.signals import document_post_save
 
 
 class DocumentType(models.Model):
@@ -71,6 +70,12 @@ class Document(models.Model):
     
     class Meta:
         app_label = 'core'
+        
+    def __unicode__(self):
+        t = "Sonstige Unterlagen"
+        if self.doctype_id:
+            t = self.doctype.name
+        return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def save(self, **kwargs):
         """ TODO: handel other filetypes than PDFs """
@@ -106,7 +111,27 @@ class Document(models.Model):
             self.pages = analyzer.pages
         
         return super(Document, self).save(**kwargs)
+        
+class Page(models.Model):
+    doc = models.ForeignKey(Document)
+    num = models.PositiveIntegerField()
+    text = models.TextField()
+    
+    class Meta:
+        app_label = 'core'
 
-post_save.connect(document_post_save, sender=Document)
+def _post_doc_save(sender, **kwargs):
+    from ecs.core.task_queue import extract_and_index_pdf_text
+    from ecs.mediaserver.task_queue import cache_and_render
+    doc = kwargs['instance']
+    doc.page_set.all().delete()
+    if doc.pages and doc.mimetype == 'application/pdf':
+        extract_and_index_pdf_text.delay(doc.pk)
+        cache_and_render.delay(doc.pk)
 
+def _post_page_delete(sender, **kwargs):
+    from haystack import site
+    site.get_index(Page).remove_object(kwargs['instance'])
 
+post_save.connect(_post_doc_save, sender=Document)
+post_delete.connect(_post_page_delete, sender=Page)
