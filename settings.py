@@ -34,7 +34,7 @@ BROKER_VHOST = 'ecshost'
 # per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_RESULT_BACKEND = 'database'
-CELERY_RESULT_DBURI = 'sqlite://celery.db'
+#CELERY_RESULT_DBURI = 'sqlite://celery.db'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
