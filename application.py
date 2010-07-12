@@ -185,6 +185,30 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 # TODO: make system environment for sprint 7
 sprint7_ecs_machine = """apache, mod_wsgi, exim4"""
 
+autovm_packages = """
+# ecs-main via wsgi
+apache2:req:apt:apt-get:apache2-mpm-prefork
+modwsgi:req:apt:apt-get:libapache2-mod-wsgi
+postgresql:req:apt:apt-get:postgresql
+exim:req:apt:apt-get:postfix- exim4
+# should install exim4 and config it instead of postfix; Later
+# needs mod_wsgi enabled
+# needs baseline environment
+# needs apache config snippet
+# needs apache wsgi snippet
+# needs ecs-main application celeryd upstart.conf
+# needs mediaserver application celeryd upstart.conf
+
+# this will go in application signing
+tomcat:req:apt:apt-get:tomcat6-user
+# needs installation of wars from signing into tomcat-user dir; needs modification of setting files
+# needs apache config snippets
+# needs tomcat user setup
+# needa apache proxy-ajp enabled
+# needs apache-tomcat upstart.conf
+#
+
+"""
 
 # Environments
 ###############
