@@ -73,6 +73,8 @@ amqplib:inst:all:pypi:amqplib
 carrot:inst:all:pypi:carrot
 importlib:inst:all:pypi:importlib
 python-dateutil:inst:all:pypi:python-dateutil
+mailer:inst:all:pypi:mailer
+sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
 billard:inst:all:pypi:billiard
 django-picklefield:inst:all:pypi:django-picklefield
