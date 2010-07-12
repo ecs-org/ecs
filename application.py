@@ -239,13 +239,9 @@ package_bundles = {
     'system': system_bundle,
 }
 
-upstart_flavors = {
-    'default': './manage.py runserver',
-    'mainapp': './manage.py runserver',
-    'mediaserver': './manage.py celeryd',
-    'logmailserver': './manage.py ecsmail log',
+upstart_targets = {
+    'mainapp_celery': './manage.py celeryd',
     'mailserver': './manage.py ecsmail server',
-    'signing': 'true',   # FIXME: how to do this?
 }
 
 test_flavors = {
