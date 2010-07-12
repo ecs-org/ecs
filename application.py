@@ -182,20 +182,28 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
 
-# TODO: make system environment for sprint 7
-sprint7_ecs_machine = """apache, mod_wsgi, exim4"""
-
-autovm_packages = """
+system_packages = """
 # ecs-main via wsgi
 apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:postfix- exim4
+"""
+
+"""
 # should install exim4 and config it instead of postfix; Later
 # needs mod_wsgi enabled
-# needs baseline environment
-# needs apache config snippet
-# needs apache wsgi snippet
+a2enmod wsgi #should be automatic active because is extra package
+# modify /etc/apache2/mods-enabled/wsgi.conf (is symlink, delete that, copy file from ../mods-available, edit it)
+ # where the empty python environment is taken from: For this server it is at user ecsdev directory baseline
+ WSGIPythonHome /home/ecsdev/baseline
+ # create a baseline python environment (this is a minimal virtual env)
+ ./bootstrap.py --baseline /home/ecsdev/baseline
+
+# needs apache config snippet (see apache.conf)
+# needs apache wsgi snippet (see main.wsgi)
+# these should not be generated inside the sourcedir, because main.wsgi is restarted if file is touched
+
 # needs ecs-main application celeryd upstart.conf
 # needs mediaserver application celeryd upstart.conf
 
@@ -218,7 +226,7 @@ default_bundle = sprint7_bundle
 future_bundle = sprint7_bundle
 developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
-
+system_bundle = package_merge((default_bundle, system_packages))
 
 package_bundles = {
     'default': default_bundle,
@@ -228,6 +236,7 @@ package_bundles = {
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
+    'system': system_bundle,
 }
 
 upstart_flavors = {
