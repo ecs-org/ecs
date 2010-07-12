@@ -1,5 +1,14 @@
 {% extends "shell.html" %}
 
+{% block htmlcss %}
+    {{ block.super }}
+    <style type="text/css">
+        body{
+            overflow: auto;
+        }
+    </style>
+{% endblock %}
+
 {% block htmlbody %}
     <div style="display:none;">
         <div id="annotation_editor" style="z-index: 2147483646; opacity: 1;">
@@ -40,7 +49,6 @@
 
 </div>
 
-<div id="search" style="display:none;position:absolute;top:40px;left:50%;z-index:100;margin-left:-250px;width:500px;height:400px;overflow:auto;border:3px solid #cccccc;background-color:#ffffff"></div>
 {% endblock %}
 
 {% block jsbottom %}
