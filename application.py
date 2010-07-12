@@ -206,16 +206,6 @@ a2enmod wsgi #should be automatic active because is extra package
 
 # needs ecs-main application celeryd upstart.conf
 # needs mediaserver application celeryd upstart.conf
-
-# this will go in application signing
-tomcat:req:apt:apt-get:tomcat6-user
-# needs installation of wars from signing into tomcat-user dir; needs modification of setting files
-# needs apache config snippets
-# needs tomcat user setup
-# needa apache proxy-ajp enabled
-# needs apache-tomcat upstart.conf
-#
-
 """
 
 # Environments
