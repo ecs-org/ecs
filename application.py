@@ -1,18 +1,48 @@
 # ecs
+"""
+# package lists format
+########################################
+
+general:
+ name:type:platform:resourcetype:resource[:additional]*
+ name=[a-zA-Z0-9-_]+
+ type=(req:inst|instbin)
+ platform=(all|[!]?win|[!]?mac|[!]?apt)
+ resourcetype=(pypi|http[s]?|ftp|file)
+ resource=url or packagelist seperated with space or comma
+ additional depends on command
+ 
+type=req
+ platform=apt:resourcetype=apt-get:resource=pkglist # can be space or comma seperated
+ resource={apt-packagename}[,{apt-packagename}]*
+ 
+ platform=mac:resourcetype=(macports|homebrew):resource=pkglist # can be space or comma seperated
+ resource={macports-packagename}[,{macports-packagename}]*
+
+ platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=unzip2scripts:additional=executable 
+ # executable to be checked if exists in path
+ 
+ platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=exe:additional=silentinstall parameter: additional=executable 
+ # executable to be checked if exists in path
+
+type=inst
+ platform=(all|[!]?win|[!]?mac|[!]?apt)
+ resourcetype=(http[s]?|ftp|file):resource=url
+ resourcetype=pypi:resource={pypiname}[(\>|\>=|==){version}]?
+ # WARNING: pypi version using > needs backslash !
+
+type=instbin
+ platform=win
+ resourcetype=(http[s]?|ftp|file)
+ 
+"""
 
 from deployment import package_merge
 
-# package lists
-########################################
-# name:{type=inst/req}:{platform=all|[!]?(win|apt|mac)}:{resourcetype=pypi|http[s]?|file|apt-get|macports}:{resource}
-# * resourcetype=pypi
-#   * resource={pypiname}[(\>|\>=|==){version}]?
-# * resourcetype=apt-get
-#   * resource={apt-packagename}[,{apt-packagename}]*
-# WARNING: pypi version using > needs backslash !
+# sprint 7 sources
+sprint7_bundle = """
 
-# SQL Adapter, and timezone service, may move into service 
-minimal_ecs_service = """
+# database bindings
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:inst:!win:pypi:psycopg2
@@ -21,12 +51,11 @@ pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:macports:sqlite3
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-py2.6.exe
+
+# timezone handling
 pytz:inst:all:pypi:pytz
-"""
 
-
-# sprint 7 sources
-sprint7_bundle = minimal_ecs_service+ """
+# django main
 django:inst:all:pypi:django==1.2.1
 south:inst:all:pypi:south
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
@@ -42,6 +71,7 @@ whoosh:inst:all:pypi:whoosh
 django-haystack:inst:all:pypi:http://github.com/toastdriven/django-haystack/tarball/master
 poppler:req:apt:apt-get:poppler-utils
 poppler:req:mac:macports:poppler
+poppler:req:win:ftp://ftp.gnome.org/Public/GNOME/binaries/win32/dependencies/poppler-dev_0.12.0-1_win32.zip:unzip2scripts:pdftotext.exe
 
 # simple testing
 nose:inst:all:pypi:nose
@@ -55,7 +85,7 @@ django-db-log:inst:all:pypi:django-db-log
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
-# antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
+antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzip2scripts:antiword.exe
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 # needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
@@ -89,7 +119,7 @@ django-celery:inst:all:pypi:django-celery
 # media server rendering (includes mockcache for easier testing)
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
-ghostscript:req:win:exe:http://ghostscript.com/releases/gs871w32.exe
+#ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe:--silent:gs.exe
 memcachedb:req:apt:apt-get:memcachedb
 # FIXME: there is no memcachedb macport yet
 python-memcached:req:mac:macports:memcached
@@ -101,7 +131,7 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 #barcode stamping
 pdftk:req:apt:apt-get:pdftk
-pdftk:req:win:unzip2script:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip
+pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzip2scripts:pdftk.exe
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
 # lamson mail server
@@ -140,7 +170,7 @@ simplejson:inst:all:pypi:simplejson
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
-# antiword:req:win:unzip2path:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip
+antiword:req:win:unzip2scripts:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:antiword.exe
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
 # graphviz:inst:apt:pypi:pygraphviz
