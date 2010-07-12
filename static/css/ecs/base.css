@@ -16,6 +16,10 @@ body {
 * html body { /*IE6 hack*/
   padding: 0 250px 0 0; /*Set value to (0 WidthOfFrameDiv 0 0)*/
 }
+
+body.popup{
+}
+
 .innertube {
   margin: 0 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
   float: left;

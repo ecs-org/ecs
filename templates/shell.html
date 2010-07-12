@@ -18,6 +18,7 @@
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/meetings.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/messages.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/dashboard.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/search.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}bugshot/bugshot.css" />
@@ -25,7 +26,7 @@
         {% endblock %}         
         {% block jshead %}{% endblock %}
     </head>
-    <body>
+    <body class="{% block htmlbody_class %}{% endblock %}">
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
             {% compress js %}

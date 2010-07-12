@@ -1,15 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+{% extends "shell.html" %}
 
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-
-<head>
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
-  <title>ECS PDF Viewer</title>
-</head>
-
-<body id='body'>
+{% block htmlbody %}
     <div style="display:none;">
         <div id="annotation_editor" style="z-index: 2147483646; opacity: 1;">
             <div style="margin-left:30px; margin-top:20px; margin-right:30px;">
@@ -49,10 +40,17 @@
 
 </div>
 
-<script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
+<div id="search" style="display:none;position:absolute;top:40px;left:50%;z-index:100;margin-left:-250px;width:500px;height:400px;overflow:auto;border:3px solid #cccccc;background-color:#ffffff"></div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL}}js/flext.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/Overlay.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Iframe.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}js/UUID.js"></script>
 
 <style type="text/css">
@@ -97,6 +95,8 @@
         this.prev_boundary = 0;
         this.next_boundary = 0;
         this.initializing = true;
+        this.key_nav_enabled = true;
+        this.search_pane = $('search');
         var width = parseInt(this.width * 0.10);
         var height = this.height;
         $('pv_area_left').setStyles({
@@ -286,6 +286,19 @@
           new_zoom_index = 1;
         }
         this.set_zoom(new_zoom_index); 
+      },
+      
+      toggle_search: function(){
+          this.key_nav_enabled = false;
+          var searchDialog = new ecs.Dialog('{% url ecs.core.views.document_search document_pk=id %}', {
+              size: {
+                  width: 500,
+                  height: 400
+              },
+              onClose: (function(){
+                  this.key_nav_enabled = true;
+              }).bind(this)
+          });
       }
     });
 
@@ -334,6 +347,9 @@
     $(document).addEvent('keydown', function(event) {
       var code = event.code;
       var key = event.key;
+      if(!pdf_viewer.key_nav_enabled){
+          return;
+      }
       if (code == 33 || key == 'left') {
         event.stop();
         if (code == 33) {
@@ -391,6 +407,10 @@
         event.stop();
         pdf_viewer.cycle_zoom();
         return;
+      }
+      if (key == 's'){
+          event.stop();
+          pdf_viewer.toggle_search();
       }
       if (key == '?' || code == 219) {
         event.stop();
@@ -652,6 +672,4 @@
     });
 </script>
 
-</body>
-
-</html>
+{% endblock %}

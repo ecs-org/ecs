@@ -20,7 +20,9 @@
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="/pdfviewer/{{ result.object.doc_id }}/{{ result.object.num }}/1/">{{ result.object.doc }} Seite {{ result.object.num }}</a>
+                    <a href="/pdfviewer/{{ result.object.doc_id }}/{{ result.object.num }}/1/">
+                        {% if not document %}{{ result.object.doc }} {% endif %}Seite {{ result.object.num }}:
+                    </a>
                     {% highlight result.object.text with request.GET.q class "highlight" %}
                 </p>
             {% empty %}

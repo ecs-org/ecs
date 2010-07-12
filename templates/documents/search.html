@@ -1,0 +1,54 @@
+{% extends 'shell.html' %}
+{% load highlight %}
+
+{% block htmlbody_class %}popup{% endblock %}
+
+{% block htmlbody %}
+<form method="get" action="" style="background-color:#eeeeff">
+    {{ form.q }}
+    <input type="submit" value="Suchen">
+</form>
+<div style="overflow:auto;height:360px">
+{% if query %}
+    {% if page.object_list %}
+        <ul class="results">
+        {% for result in page.object_list %}
+            <li>
+                <a class="page" href="/pdfviewer/{{ result.object.doc_id }}/{{ result.object.num }}/1/">
+                    {% if not document %}{{ result.object.doc }} {% endif %}Seite {{ result.object.num }}:
+                </a>
+                {% highlight result.object.text with query class "highlight" %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    {% if page.has_previous or page.has_next %}
+        <div>
+            {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+            |
+            {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+        </div>
+    {% endif %}
+{% else %}
+    Suchbegriffe werden mit UND verknüpft, exakte Phrasen mit Anführungszeichen, "-" Präfix um Begriffe auszuschließen.
+{% endif %}
+</div>
+
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+
+    <script type="text/javascript">
+    window.addEvent('domready', function(){
+        $('id_q').focus();
+        $$('a.page').each(function(link){
+            link.addEvent('click', function(){
+                window.parent.location.href = link.href;
+            });
+        });
+    });
+    </script>
+{% endblock %}
