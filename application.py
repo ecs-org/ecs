@@ -66,19 +66,13 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 
 #search
 whoosh:inst:all:pypi:whoosh
-<<<<<<< local
 django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:macports:poppler
 pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzip2scripts:pdftotext.exe
 # ftp://ftp.foolabs.com/pub/xpdf/xpdf-3.02pl4-win32.zip
 # ftp://ftp.gnome.org/Public/GNOME/binaries/win32/dependencies/poppler-dev_0.12.0-1_win32.zip:unzip2scripts:pdftotext.exe
-=======
-django-haystack:inst:all:pypi:http://github.com/toastdriven/django-haystack/tarball/master
-poppler:req:apt:apt-get:poppler-utils
-poppler:req:mac:macports:poppler
 pysolr:inst:all:pypi:pysolr
->>>>>>> other
 
 # simple testing
 nose:inst:all:pypi:nose
