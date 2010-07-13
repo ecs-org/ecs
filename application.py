@@ -1,16 +1,17 @@
-# ecs
+# ecs main application environment config
+
 """
 # package lists format
 ########################################
 
 general:
- name:type:platform:resourcetype:resource[:additional]*
+ name:type:platform:resourcetype:resource[:optional]*
  name=[a-zA-Z0-9-_]+
  type=(req:inst|instbin)
  platform=(all|[!]?win|[!]?mac|[!]?apt)
  resourcetype=(pypi|http[s]?|ftp|file)
  resource=url or packagelist seperated with space or comma
- additional depends on command
+ optional depends on command
  
 type=req
  platform=apt:resourcetype=apt-get:resource=pkglist # can be space or comma seperated
@@ -19,12 +20,9 @@ type=req
  platform=mac:resourcetype=(macports|homebrew):resource=pkglist # can be space or comma seperated
  resource={macports-packagename}[,{macports-packagename}]*
 
- platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=unzip2scripts:additional=executable 
+ platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=unzip2script:additional=executable 
  # executable to be checked if exists in path
  
- platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=exe:additional=silentinstall parameter: additional=executable 
- # executable to be checked if exists in path
-
 type=inst
  platform=(all|[!]?win|[!]?mac|[!]?apt)
  resourcetype=(http[s]?|ftp|file):resource=url
@@ -68,10 +66,12 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 
 #search
 whoosh:inst:all:pypi:whoosh
-django-haystack:inst:all:pypi:http://github.com/toastdriven/django-haystack/tarball/master
-poppler:req:apt:apt-get:poppler-utils
-poppler:req:mac:macports:poppler
-poppler:req:win:ftp://ftp.gnome.org/Public/GNOME/binaries/win32/dependencies/poppler-dev_0.12.0-1_win32.zip:unzip2scripts:pdftotext.exe
+django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
+pdftotext:req:apt:apt-get:poppler-utils
+pdftotext:req:mac:macports:poppler
+pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzip2scripts:pdftotext.exe
+# ftp://ftp.foolabs.com/pub/xpdf/xpdf-3.02pl4-win32.zip
+# ftp://ftp.gnome.org/Public/GNOME/binaries/win32/dependencies/poppler-dev_0.12.0-1_win32.zip:unzip2scripts:pdftotext.exe
 
 # simple testing
 nose:inst:all:pypi:nose
@@ -90,7 +90,7 @@ beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 # needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
 
-# pisa
+# pisa / pdf generation
 pyPDF:inst:all:pypi:pyPDF
 html5lib:inst:all:pypi:html5lib
 reportlab:req:apt:apt-get:libfreetype6-dev
@@ -116,10 +116,10 @@ ghettoq:inst:all:pypi:ghettoq
 pyparsing:inst:all:pypi:pyparsing
 django-celery:inst:all:pypi:django-celery
 
-# media server rendering (includes mockcache for easier testing)
+# pdf document server rendering (includes mockcache for easier testing)
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
-#ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe:--silent:gs.exe
+#ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe::gswin32c.exe
 memcachedb:req:apt:apt-get:memcachedb
 # FIXME: there is no memcachedb macport yet
 python-memcached:req:mac:macports:memcached
@@ -158,7 +158,7 @@ pylint:inst:all:pypi:pylint
 """
 
 
-# In addition to application packages, packages needed for development
+# In addition to application packages, packages needed or nice to have for development
 developer_packages=  """
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
@@ -170,7 +170,7 @@ simplejson:inst:all:pypi:simplejson
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
-antiword:req:win:unzip2scripts:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:antiword.exe
+antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzip2scripts:antiword.exe
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
 # graphviz:inst:apt:pypi:pygraphviz
@@ -187,7 +187,7 @@ system_packages = """
 apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
-exim:req:apt:apt-get:postfix- exim4
+exim:req:apt:apt-get:exim4
 """
 
 """
@@ -242,59 +242,3 @@ test_flavors = {
     'mailserver': '.false', # TODO: implement
     'signing': 'false', # TODO: implement
 }
-
-"""
-class job:
-    def __init__(self, app, user, base, src, environment):
-        self.src    = os.abspath(src)
-        self.config = os.abspath(config)
-        self.environment = os.abspath(environment)
-        self.user = user
-        self.app = app
-        
-    def _get_config_pairs(self):
-        raise NotImplementedError
-
-    def _config_target(self, configsetpair):
-        return configpair[1]
-        
-    def _config_source(self, template):
-        return configpair[0]
-        return = os.path.join(self.src, self.app, configpair[0])
-    
-    def _generate_config_from_template(self, template):
-        target_conf = self._config_target(template)
-        template_conf = self._config_source(template)
-        context = {
-            'appdir': os.path.join(self.src, self.app),
-            'user': self.user,
-            'environment': self.environment
-        }
-        write_template(template_conf, target_conf, context)
-
-    def _link_config(self, template):
-        raise NotImplementedError
-        
-    def register(self):
-        for template in self._get_templates()
-            self._generate_from_template(self, template)
-            if os.path.exists (self._template_target(template):
-               if os.shutil.compare(self._template_target
-
-    def setup(self):
-    def register(self):
-    def stop(self):
-    def start(self):
-    def status(self):
-
-class wsgijob(job):
-    def __init__(self, user, base, environment):
-    def _template_target(self, template)
-        return = os.path.join(self.config, "upstart.conf", "-".join(self.app,template))
-       
-    
-class upstartjob(job):
-    def __init__(self, user, target, environment):
-"""
-    
-
