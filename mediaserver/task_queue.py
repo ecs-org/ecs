@@ -10,6 +10,7 @@ def cache_and_render(document_pk):
     try:
         document = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
+        print("Warning, Document with pk %s does not exist" % str(document_pk))
         return
     image_set = ImageSet(document_pk)
     if image_set.store('doc save', document.file.name, document.pages) is False:

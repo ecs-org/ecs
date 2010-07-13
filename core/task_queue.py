@@ -53,8 +53,10 @@ def extract_and_index_pdf_text(document_pk=None):
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
+        print("Warning, Document with pk %s does not exist" % str(document_pk))
         return
     if not doc.pages or doc.mimetype != 'application/pdf':
+        print("Warning, doc.pages (%s) not set or doc.mimetype (%s) != 'application/pdf'" % (str(doc.pages), str(doc.mimetype))
         return
     for p in xrange(1, doc.pages + 1):
         cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-f", "%s" % p,  "-l",  "%s" % p,  "-q", doc.file.path, "-"]
