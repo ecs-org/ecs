@@ -66,6 +66,10 @@ ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 EMAIL_WHITELIST = {}
 AGENDA_RECIPIENT_LIST = {}
 
+HAYSTACK_SITECONF = 'ecs.search_sites'
+HAYSTACK_SEARCH_ENGINE = 'whoosh'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")
+HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url
 
 if platform.node() == "ecsdev.ep3.at":
     import getpass
@@ -115,6 +119,9 @@ if platform.node() == "ecsdev.ep3.at":
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
+
+    #HAYSTACK_SEARCH_ENGINE = "solr"
+    HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
 
 
 # use different settings if local_settings.py exists
@@ -300,7 +307,3 @@ MEMCACHEDB_PORT = 21201
 
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
-
-HAYSTACK_SITECONF = 'ecs.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")
