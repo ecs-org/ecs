@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import getpass
-import memcache
 import time
 
 from django.conf import settings
@@ -46,8 +45,16 @@ class PageData(object):
 
 class Cache(object):
     def __init__(self):
+        if settings.RENDERSTORAGE_LIB == 'memcache':
+            import memcache as memcache
+        elif settings.RENDERSTORAGE_LIB == 'mockcache' or settings.RENDERSTORAGE_LIB == '' :
+            import mockcache as memcache
+            print "Debug: Import mockcache as memcache"
+        else:
+            raise NotImplementedError('i do not know about %s as RENDERSTORAGE_LIB' % settings.RENDERSTORAGE_LIB)
+
         self.ns = '%s.ms' % getpass.getuser()
-        self.mc = memcache.Client(['%s:%d' % (settings.MEMCACHEDB_HOST, settings.MEMCACHEDB_PORT)], debug=False)
+        self.mc = memcache.Client(['%s:%d' % (settings.RENDERSTORAGE_HOST, settings.RENDERSTORAGE_PORT)], debug=False)
 
     def get_set_key(self, id):
         return str('%s.%s' % (self.ns, id))

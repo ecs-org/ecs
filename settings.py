@@ -25,6 +25,15 @@ DATABASES['default'] = {
     'PORT': '',
 }
 
+
+# mediaserver memcached(b) settings, RENDERSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
+# if set to mockcache, RENDERSTORAGE_HOST & PORT will be ignored
+# warning mockcache data is only visible inside same program, so seperate runner will NOT see entries
+RENDERSTORAGE_LIB  = 'mockcache'
+RENDERSTORAGE_HOST = '127.0.0.1'
+RENDERSTORAGE_PORT = 21201 # port of memcachedb
+
+
 # celery configuration defaults
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
@@ -94,6 +103,10 @@ if platform.node() == "ecsdev.ep3.at":
     BROKER_VHOST = user
     CARROT_BACKEND = ""
 
+    # on ecsdev we use memcachedb instead of mockcache
+    RENDERSTORAGE_LIB  = 'memcache'
+    RENDERSTORAGE_HOST = '127.0.0.1'
+    RENDERSTORAGE_PORT = 21201 # port of memcachedb
 
     # lamson config different for shredder
     if user == "shredder":
@@ -296,12 +309,6 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 COMPRESS = True
 COMPRESS_JS_FILTERS = []
 
-# memcached(b) settings
-MEMCACHED_HOST = '127.0.0.1'
-MEMCACHED_PORT = 11211
-
-MEMCACHEDB_HOST = '127.0.0.1'
-MEMCACHEDB_PORT = 21201
 
 #ECS_AUTO_PDF_BARCODE = True # default
 
