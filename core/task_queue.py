@@ -50,6 +50,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None):
 
 @task()
 def extract_and_index_pdf_text(document_pk=None):
+    print "indexing doc %s" % document_pk
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:

@@ -126,8 +126,8 @@ def _post_doc_save(sender, **kwargs):
     doc = kwargs['instance']
     doc.page_set.all().delete()
     if doc.pages and doc.mimetype == 'application/pdf':
-        extract_and_index_pdf_text.delay(doc.pk)
-        cache_and_render.delay(doc.pk)
+        extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
+        cache_and_render.apply_async(args=[doc.pk], countdown=3)
 
 def _post_page_delete(sender, **kwargs):
     from haystack import site
