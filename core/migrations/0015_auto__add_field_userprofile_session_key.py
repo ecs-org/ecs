@@ -136,6 +136,7 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '120'}),
             'phone': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
             'zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10'})
         },
         'core.expeditedreviewcategory': {
