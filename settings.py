@@ -234,7 +234,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'ecs.core.middleware.SingleLogin',
+    'ecs.core.middleware.SingleLogin',    # deactivate previous user sessions on login
     'ecs.utils.forceauth.ForceAuth',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     #'djangodblog.middleware.DBLogMiddleware',
@@ -316,3 +316,8 @@ COMPRESS_JS_FILTERS = []
 
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
+
+SESSION_COOKIE_AGE = 1800                # logout after 30 minutes of inactivity
+SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
