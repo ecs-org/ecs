@@ -2,8 +2,9 @@
 {% load compress %}
 
 {% block account %} 
-  <a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a> 
-  {{ user.get_full_name|default:user.username }} | {% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a>
+  <div class="user_icon"><a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
+  <div class="user_name">{{ user.get_full_name|default:user.username }}</div>
+  <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   {% load userswitcher %}
   {% userswitcher %}
   <p>
@@ -27,7 +28,7 @@
       <ul class="elements">
           <li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
-           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
+          <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
       </ul>
     </li>
     <li>

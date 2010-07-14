@@ -130,6 +130,23 @@ input, textarea, select {
 
 /* sidebar */
 
+#account {
+  font-size: 11pt;
+}
+.user_icon {
+  float: left;
+  width: 30px;
+}
+.user_name {
+  float: left;
+  width: 160px;
+  height: 40px;
+  border-bottom: 1px solid #ccc;
+}
+.user_options {
+  float: right;
+  margin: 5px 10px;
+}
 .togglers {
   cursor: pointer;
 }
@@ -472,7 +489,6 @@ content ol.submission_list li .actions {
 #content ol.submission_list li .info {
 }
 #content .overview h2 {
-    font-size: ;
 }
 
 .checklist_field { 

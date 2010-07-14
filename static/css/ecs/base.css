@@ -33,7 +33,7 @@ body.popup{
   z-index: 101;
   background: #d8e6ef;
   display: block;
-  border-top: 2px solid #2b558e;
+  border-top: 2px solid #2b558e !important;
 }
 #headertitle {
   float: left;
@@ -89,11 +89,11 @@ body.popup{
   overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
   color: #333;
   background: #f6f6e9;
-  border-top: 2px solid #2b558e;
+  border-top: 2px solid #2b558e !important;
 }
 
 #logo, #account, #usertoolbar, #usermenu {
-  width: 230px;
+  width: 200px;
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
@@ -114,7 +114,7 @@ body.popup{
 }
 
 #usermenu .elements {
-    display: none;
+  display: none;
 }
 
 
