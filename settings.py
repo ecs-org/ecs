@@ -133,7 +133,7 @@ if platform.node() == "ecsdev.ep3.at":
         DEBUG = False
         TEMPLATE_DEBUG = False
 
-    #HAYSTACK_SEARCH_ENGINE = "solr"
+    HAYSTACK_SEARCH_ENGINE = "solr"
     HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
 
 
