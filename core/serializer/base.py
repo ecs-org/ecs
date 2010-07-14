@@ -4,6 +4,7 @@ from StringIO import StringIO
 from django.utils import simplejson
 from django.db import models
 from django.core.files.base import File, ContentFile
+from django.utils.datastructures import SortedDict
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, \
     ForeignParticipatingCenter, Document, DocumentType, NonTestedUsedDrug
@@ -11,6 +12,42 @@ from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Invest
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
 DATE_FORMAT = '%Y-%m-%d'
 DATA_JSON_NAME = 'data.json'
+
+class FieldDocs(object):
+    value = True
+
+    def __init__(self, model, field):
+        self.model = model
+        self.field = field
+
+    def json_type(self):
+        if isinstance(self.field, models.BooleanField):
+            return "BOOLEAN"
+        elif isinstance(self.field, models.IntegerField):
+            return "INTEGER"
+        elif isinstance(self.field, (models.FloatField, models.DecimalField)):
+            return "FLOAT"
+        else:
+            return "STRING"
+            
+    def constraints(self):
+        c = []
+        if isinstance(self.field, models.DateTimeField):
+            c.append("RFC 3339")
+        elif isinstance(self.field, models.DateField):
+            c.append("ISO 8601 (YYYY-MM-DD)")
+        elif isinstance(self.field, models.CharField):
+            c.append("max. %s characters" % self.field.max_length)
+        elif isinstance(self.field, models.FileField):
+            c.append("valid internal zip file path")
+        if self.field.null:
+            c.append("null")
+        return c
+            
+    def paperform_info(self):
+        from ecs.core.paper_forms import get_field_info
+        return get_field_info(self.model, self.field.name)
+
 
 class ModelSerializer(object):
     exclude = ('id',)
@@ -139,6 +176,42 @@ class ModelSerializer(object):
         if commit:
             obj.save()
         return obj
+        
+    def get_field_docs(self, fieldname):
+        try:
+            field = self.model._meta.get_field(fieldname)
+            if isinstance(field, models.ForeignKey):
+                try:
+                    return _serializers[field.rel.to].docs()
+                except KeyError:
+                    print fieldname, self.model
+            if isinstance(field, models.ManyToManyField):
+                spec = _serializers[field.rel.to].docs()
+                spec['array'] = True
+                return spec
+            return FieldDocs(self.model, field)
+        except models.FieldDoesNotExist:
+            try:
+                model = getattr(self.model, fieldname).related.model
+                spec = _serializers[model].docs()
+                spec['array'] = True
+                return spec
+            except AttributeError:
+                raise
+        
+    def docs(self):
+        d = SortedDict()
+        for name in self.get_field_names():
+            prefix, key = self.split_prefix(name)
+            info = self.get_field_docs(name)
+            if prefix:
+                d.setdefault(prefix, {})
+                d[prefix][key] = info
+            else:
+                d[name] = info
+        d.keyOrder = list(sorted(d.keys()))
+        return d
+
 
 class DocumentTypeSerializer(object):
     def load(self, data, zf, commit=True):
@@ -146,6 +219,9 @@ class DocumentTypeSerializer(object):
             return DocumentType.objects.get(name=data)
         except DocumentType.DoesNotExist:
             raise ValueError("no such doctype: %s" % data)
+            
+    def docs(self):
+        return None
         
     def dump(self, obj, zf):
         return obj.name
@@ -157,6 +233,9 @@ class EthicsCommissionSerializer(object):
         except EthicsCommission.DoesNotExist:
             raise ValueError("no such ethicscommission: %s" % data)
             
+    def docs(self):
+        return None
+        
     def dump(self, obj, zf):
         return obj.pk
         
@@ -173,9 +252,10 @@ class SubmissionSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
-        follow = ('foreignparticipatingcenter_set', 'investigators', 'measures', 'documents', 'nontesteduseddrug_set')
+        follow = ('foreignparticipatingcenter_set', 'investigators', 'measures', 'documents', 'nontesteduseddrug_set'),
+        exclude = ('pdf_document', 'id'),
     ),
-    Submission: SubmissionSerializer(),
+    Submission: SubmissionSerializer(exclude=('id', 'external_reviewer_name')),
     Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form'), follow=('employees',)),
     InvestigatorEmployee: ModelSerializer(InvestigatorEmployee, exclude=('id', 'investigator')),
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
@@ -224,5 +304,7 @@ class Serializer(object):
         }
         json = simplejson.dumps(data, cls=_JsonEncoder, indent=2)
         zf.writestr(DATA_JSON_NAME, json)
-        
+    
+    def docs(self):
+        return _serializers[SubmissionForm].docs()
             
