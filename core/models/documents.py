@@ -126,6 +126,7 @@ def _post_doc_save(sender, **kwargs):
     doc = kwargs['instance']
     doc.page_set.all().delete()
     if doc.pages and doc.mimetype == 'application/pdf':
+        # FIXME: we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
         extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
         cache_and_render.apply_async(args=[doc.pk], countdown=3)
 
