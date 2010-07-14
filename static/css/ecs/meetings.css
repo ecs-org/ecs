@@ -112,6 +112,7 @@
   padding: 0 !important;
   border-bottom: none !important;
   margin-bottom: 2px;
+  font-size: 1em;
 }
 #meeting_editor #timetable {
   list-style: none;

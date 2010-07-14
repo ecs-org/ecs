@@ -54,7 +54,7 @@
 
 {% block tabs %}
     <div id="status-tab">
-        <h2>Status</h2>
+        <h3>Status</h3>
         <table>
             <tr><th>Eingereicht am:</th><td>?</td></tr>
             <tr><th>Eingereicht von:</th><td>?</td></tr>
@@ -106,7 +106,7 @@
     </div>
     <div id="vote_review_tab" class="tab">
         {% block vote_review_tab_content %}
-            <h2>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h2>
+            <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
             {% with vote_review_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
@@ -120,12 +120,12 @@
     </div>
     {% endfor %}
     <div id="messages-tab" class="tab">
-        <h2>Nachrichten</h2>
+        <h3>Nachrichten</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
     </div>
     <div id="workflow-tab" class="tab">
-        <h2>Workflow</h2>
+        <h3>Workflow</h3>
     </div>
     {{ block.super }}
 {% endblock %}

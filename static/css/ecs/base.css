@@ -125,19 +125,20 @@ body {
 }
 #content h1 {
   display: block;
-  font-size: 1.4em;
+  font-size: 1.6em;
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h2 {
   display: block;
-  font-size: 1.2em;
+  font-size: 1.4em;
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h3 {
   display: block;
-  font-size: 1.1em;
+  font-size: 1.2em;
+  font-weight: lighter;
   padding: 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #eee;

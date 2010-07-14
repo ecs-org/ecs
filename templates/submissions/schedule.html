@@ -8,17 +8,18 @@ Schedule {{ submission }}
 
 {% block content %}
 
-<h2>{{ submission.project_title }}</h2>
-<div>
-    {{ submission.german_project_title }}
+<div class="main form">
+  <h2>{{ submission.project_title }}</h2>
+  
+  <h3>{{ submission.german_project_title }}</h3>
+  
+  <form action="" method="post">
+      <table>
+          {{ form }}
+      </table>
+      <input type="submit" value="Speichern" />
+  </form>
 </div>
-<form action="" method="post">
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Speichern" />
-</form>
-
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}

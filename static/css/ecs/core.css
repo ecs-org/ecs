@@ -72,11 +72,11 @@ ul.tab_headers {
   border: 1px solid #ccc;  
 }
 
-/* headernav readonly */
+/* readonly */
 
-.readonly input, .readonly textarea, .readonly select {
-  color: #333;
-  background: #e4e4e4;
+.readonly input, .readonly textarea, .readonly select, .readonly .rte_display {
+  color: #333 !important;
+  background: #e4e4e4 !important;
   font-family: Arial, Helvetica, sans-serif;
 }
 .readonly .tab_headers li a {
