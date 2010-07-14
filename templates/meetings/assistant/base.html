@@ -14,9 +14,9 @@ Sitzungsassistent
     <div class="left">
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
-            <a href="{% url ecs.core.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Clear</a>
+            <div class="button"><a href="{% url ecs.core.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
             {% if not meeting.started %}
-                | <a href="{% url ecs.core.views.meeting_assistant_start meeting_pk=meeting.pk %}">Start</a>
+            <div class="button"><a href="{% url ecs.core.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
                     | <a href="{% url ecs.core.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Stop</a>
@@ -44,14 +44,17 @@ Sitzungsassistent
                 <li>
                     Aktuelle Uhrzeit: <span id="clock">{% now "H:i" %}</span> Uhr
                 </li>
-            </ul>
+            </ol>
             <div class="navigation">
               <h4>Wechsle nach:</h4>
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
+                    <div class="search">
                         <form action="{% url ecs.core.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">
-                            <input type="text" name="q"/><input type="submit" value="Suchen" />
+                            <input type="text" name="q" />
+                            <input type="submit" value="Suchen" />
                         </form>
+                    </div>
                     {% endblock %}
                 {% endif %}
             </div>
