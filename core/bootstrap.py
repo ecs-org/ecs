@@ -273,6 +273,7 @@ def auth_users():
 @bootstrap.register()
 def ethics_commissions():
     commissions = [{
+        'uuid': u'23d805c6b5f14d8b9196a12005fd2961',
         'city': u'Wien',
         'fax': None,
         'chairperson': None,
@@ -285,6 +286,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'1090',
     }, {
+        'uuid': u'7b51f38bde8a4161a0dc34647fc7e654',
         'city': u'Wien',
         'fax': u'(01) 21121-2103',
         'chairperson': u'Doz.Dr.Stefan Kudlacek',
@@ -297,6 +299,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1020',
     }, {
+        'uuid': u'85dc386061584fbe8549ce4e4d828fbd',
         'city': u'Wien',
         'fax': u'(01) 4000-99-87754, -87755, -87756',
         'chairperson': u'Dr.Karin Spacek',
@@ -309,6 +312,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1030',
     }, {
+        'uuid': u'd6a22c635a584521b107481ac18318f6',
         'city': u'Wien',
         'fax': u'(01) 79580-9730',
         'chairperson': u'Mag.Alexander Lang',
@@ -321,6 +325,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1030',
     }, {
+        'uuid': u'55ae93ec9df04d6abfc8d233ec5ccf8e',
         'city': u'Wien',
         'fax': u'(01) 599 88-4041',
         'chairperson': u'Prim.Dr.Boris Todoroff',
@@ -333,6 +338,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1060',
     }, {
+        'uuid': u'7cd6d52120b3474ba502931b9f60a5f3',
         'city': u'Wien',
         'fax': u'(01) 40114-5707',
         'chairperson': u'Prim.Dr.Dieter Volc',
@@ -345,6 +351,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1080',
     }, {
+        'uuid': u'a641339e597d4d7e8640e4c4e75c38be',
         'city': u'Wien',
         'fax': u'(01) 40400-1690',
         'chairperson': u'Univ.Prof.Dr.Ernst Singer',
@@ -357,6 +364,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1090',
     }, {
+        'uuid': u'7df9ebaf15434709b09c3def9a6c8769',
         'city': u'Wien',
         'fax': u'(01) 40170-765',
         'chairperson': u'Dr.Roland Lavaulx-Vrecourt',
@@ -369,6 +377,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1090',
     }, {
+        'uuid': u'f122f144616541d391fde2dcc761aff4',
         'city': u'Wien',
         'fax': u'(01) 408 4511-17',
         'chairperson': u'Univ.Prof.Dr.Gerhart Hitzenberger',
@@ -381,6 +390,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1090',
     }, {
+        'uuid': u'25b6744780434a3f96a1e43b405d3848',
         'city': u'Wien',
         'fax': None,
         'chairperson': u'Univ.Prof.Dr.Fritz Paschke',
@@ -393,6 +403,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1090',
     }, {
+        'uuid': u'd542994ced34403db841786a1c1ab892',
         'city': u'Wien',
         'fax': u'(01) 68009-9234',
         'chairperson': u'(erreichbar \u00fcber "Kontakt")',
@@ -405,6 +416,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1100',
     }, {
+        'uuid': u'5615dfbaf8c8445d960d1e2cd9c00dc3',
         'city': u'Wien',
         'fax': u'(01) 4865-631-343',
         'chairperson': u'OA Dr.Michael Peintinger',
@@ -417,6 +429,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1170',
     }, {
+        'uuid': u'4d3a2d5f138940f293ee87fe6ec1d5b2',
         'city': u'Wien',
         'fax': u'(01) 40422-510',
         'chairperson': u'DDr. Martin Bolz',
@@ -429,6 +442,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1180',
     }, {
+        'uuid': u'8d2950e3a0294f68bde647a54df6d823',
         'city': u'Wien',
         'fax': u'(01) 33111-379',
         'chairperson': u'Dr.Helmut K\u00f6berl',
@@ -441,6 +455,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-1200',
     }, {
+        'uuid': u'b17f32f604fa4452b5ff3a2baa9e0704',
         'city': u'St.P\u00f6lten',
         'fax': u'(02742) 9005 -12785',
         'chairperson': u'Mag.Robert Bruckner',
@@ -453,6 +468,7 @@ def ethics_commissions():
         'address_2': u'Landhausplatz 1, Haus 15B',
         'zip_code': u'A-3109',
     }, {
+        'uuid': u'6688ce16a3b84d42b1531389e6039891',
         'city': u'Linz',
         'fax': u'(0732) 7676-4418',
         'chairperson': u'Univ.Doz.Dr.Rainer Sch\u00f6fl',
@@ -465,6 +481,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-4010',
     }, {
+        'uuid': u'e4dcd05a31ad475ca72dea7b84ef030e',
         'city': u'Linz',
         'fax': u'0732/6921-25904 (Fischer) bzw. 0732/7720-215619 (Drda)',
         'chairperson': u'Univ.Prof.Prim.Dr.Johannes Fischer',
@@ -477,6 +494,7 @@ def ethics_commissions():
         'address_2': u'Wagner-Jauregg Weg 15',
         'zip_code': u'A-4020',
     }, {
+        'uuid': u'e269491bb9c040aaad6a5f11df343f38',
         'city': u'Linz',
         'fax': u'(0732) 1099',
         'chairperson': u'Prim.Univ.Prof.Dr.Kurt Lenz',
@@ -489,6 +507,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-4020',
     }, {
+        'uuid': u'1cca34032077445d95dabf7802fade28',
         'city': u'Linz',
         'fax': u'(0732) 7677-7865',
         'chairperson': u'Univ.Prof.Dr.Peter Siostrzonek',
@@ -501,6 +520,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-4020',
     }, {
+        'uuid': u'39cbb589ef044d27bceb6ee5ac796ae7',
         'city': u'Salzburg',
         'fax': u'(0662) 8042-2929',
         'chairperson': u'Mag.Thomas Russegger',
@@ -513,6 +533,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-5010',
     }, {
+        'uuid': u'280414583b894c809a9baa8134d7fe4b',
         'city': u'Innsbruck',
         'fax': u'(0512) 504-22295',
         'chairperson': u'Univ.Prof.DI Dr.Peter Lukas',
@@ -525,6 +546,7 @@ def ethics_commissions():
         'address_2': u'Innrain 43',
         'zip_code': u'A-6020',
     }, {
+        'uuid': u'183881da8200493aa7edd8bebeea75b9',
         'city': u'Bregenz',
         'fax': u'(05574) 58372',
         'chairperson': u'Mag.pharm.Dr.Helmut Grimm',
@@ -537,6 +559,7 @@ def ethics_commissions():
         'address_2': u'Rathausstrasse 15',
         'zip_code': u'A-6900',
     }, {
+        'uuid': u'95821eba88f34b2195f96e747d7f6b16',
         'city': u'Eisenstadt',
         'fax': u'05 7979 5306',
         'chairperson': u'PDir.DGKS Renate Peischl, MAS',
@@ -549,6 +572,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-7000',
     }, {
+        'uuid': u'6e7cfab5f8cd40df83c9de4fac9bb20f',
         'city': u'Graz',
         'fax': u'(0316) 877-3555, -805840',
         'chairperson': u'HR Dr.Odo Feenstra',
@@ -561,6 +585,7 @@ def ethics_commissions():
         'address_2': u'Friedrichgasse 9',
         'zip_code': u'A-8010',
     }, {
+        'uuid': u'75b5a9714f354a5b842aa01029148036',
         'city': u'Graz',
         'fax': None,
         'chairperson': u'Prim.Univ.Doz.Dr.G\u00fcnther Weber',
@@ -573,6 +598,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-8020',
     }, {
+        'uuid': u'9287fb0878b94f9f9d90b5582d1cefca',
         'city': u'Graz',
         'fax': None,
         'chairperson': u'Prof.Dr.Peter K\u00f6ltringer',
@@ -585,6 +611,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-8020',
     }, {
+        'uuid': u'e17ee744e4e840778f316cf3f79de6b4',
         'city': u'Graz',
         'fax': u'(0316) 385-4348',
         'chairperson': u'Univ.Prof.DI.Dr.Peter H. Rehak',
@@ -597,6 +624,7 @@ def ethics_commissions():
         'address_2': u'',
         'zip_code': u'A-8036',
     }, {
+        'uuid': u'ec9f179a52a04a7aa52446232c3fd4bd',
         'city': u'Klagenfurt',
         'fax': u'(0463) 538-23184',
         'chairperson': u'OA Dr.Gerhard Kober',
@@ -611,8 +639,7 @@ def ethics_commissions():
     }]
 
     for comm in commissions:
-        #FIXME: we need a unique constraint on name for this to be idempotent
-        ec, created = EthicsCommission.objects.get_or_create(name=comm['name'])
+        ec, created = EthicsCommission.objects.get_or_create(uuid=comm['uuid'])
         for key in comm.keys():
             setattr(ec, key, comm[key])
         ec.save()

@@ -1,4 +1,4 @@
-import os, datetime
+import os, datetime, uuid
 from StringIO import StringIO
 from django.test import TestCase
 from django.core.files.base import File
@@ -36,7 +36,7 @@ class SerializerTest(TestCase):
         for i in range(3):
             NonTestedUsedDrug.objects.create(submission_form=sf, generic_name="gn-%s" % i, preparation_form="pf-%s" % i, dosage="d-%s" % i)
         for i in range(2):
-            ec = EthicsCommission.objects.create(name="ethics-commission-%s" % i)
+            ec = EthicsCommission.objects.create(name="ethics-commission-%s" % i, uuid=uuid.uuid4().hex)
             investigator = Investigator.objects.create(submission_form=sf, main=bool(i), ethics_commission=ec, name="investigator-%s" % i, subject_count=3+i)
             for j in range(2):
                 investigator.employees.create(sex='m', surname='s-%s-%s' % (i, j), firstname='s-%s-%s' % (i, j))

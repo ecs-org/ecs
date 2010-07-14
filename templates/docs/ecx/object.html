@@ -1,0 +1,30 @@
+<div class="item">
+    <span class="key">{{ name }}</span>
+    {% if info.value %}
+        {{ info.json_type }}
+        {% for constraint in info.constraints %}{{ constraint }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        <span class="paperform">
+            ({{ info.paperform_info.number|default:'' }} {{ info.paperform_info.label }})
+        </span>
+        {% if info.choices %}
+        - choices:
+        <dl class="choices">
+            {% for val, name in info.choices %}
+            <dt><tt>{{ val }}</tt></dt>
+            <dd>{{ name }}</dd>
+            {% endfor %}
+        </dl>
+        {% endif %}
+    {% else %}
+        OBJECT{% if info.array %}[]{% endif %}
+        <div class="subset">
+        {% for name, info in info.items %}
+            {% if name != 'array' %}
+                {% with "docs/ecx/object.html" as object_template %}
+                    {% include object_template %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>

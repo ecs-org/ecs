@@ -9,18 +9,23 @@ from django.utils.datastructures import SortedDict
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, \
     ForeignParticipatingCenter, Document, DocumentType, NonTestedUsedDrug
 
-DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%SZ'
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'
 DATA_JSON_NAME = 'data.json'
 
 class FieldDocs(object):
     value = True
 
-    def __init__(self, model, field):
+    def __init__(self, model=None, field=None, constraint=None, json_type=None, choices=None):
         self.model = model
         self.field = field
+        self.constraint = constraint
+        self._json_type = json_type
+        self.choices = choices
 
     def json_type(self):
+        if self._json_type:
+            return self._json_type
         if isinstance(self.field, models.BooleanField):
             return "BOOLEAN"
         elif isinstance(self.field, models.IntegerField):
@@ -32,16 +37,18 @@ class FieldDocs(object):
             
     def constraints(self):
         c = []
+        if self.constraint:
+            c.append(self.constraint)
         if isinstance(self.field, models.DateTimeField):
-            c.append("RFC 3339")
+            c.append("RFC 3339 with timezone UTC+1 (e.g. 2010-07-14T16:04:35+01:00)")
         elif isinstance(self.field, models.DateField):
-            c.append("ISO 8601 (YYYY-MM-DD)")
+            c.append("ISO 8601 with timezone UTC+1 (e.g. 2010-07-14)")
         elif isinstance(self.field, models.CharField):
             c.append("max. %s characters" % self.field.max_length)
         elif isinstance(self.field, models.FileField):
             c.append("valid internal zip file path")
         if self.field.null:
-            c.append("null")
+            c.append("may be null")
         return c
             
     def paperform_info(self):
@@ -221,7 +228,7 @@ class DocumentTypeSerializer(object):
             raise ValueError("no such doctype: %s" % data)
             
     def docs(self):
-        return None
+        return FieldDocs(choices=[('"%s"' % doctype.name, doctype.name) for doctype in DocumentType.objects.all()])
         
     def dump(self, obj, zf):
         return obj.name
@@ -229,15 +236,15 @@ class DocumentTypeSerializer(object):
 class EthicsCommissionSerializer(object):
     def load(self, data, zf, commit=False):
         try:
-            return EthicsCommission.objects.get(pk=data)
+            return EthicsCommission.objects.get(uuid=data)
         except EthicsCommission.DoesNotExist:
             raise ValueError("no such ethicscommission: %s" % data)
             
     def docs(self):
-        return None
+        return FieldDocs(choices=[('"%s"' % ec.uuid, ec.name) for ec in EthicsCommission.objects.all()])
         
     def dump(self, obj, zf):
-        return obj.pk
+        return obj.uuid
         
 class SubmissionSerializer(ModelSerializer):
     def __init__(self, **kwargs):
@@ -298,7 +305,6 @@ class Serializer(object):
 
         data = {
             'version': self.version,
-            'timestamp': datetime.datetime.now(),
             'type': 'SubmissionForm',
             'data': dump_model_instance(submission_form, zf),
         }

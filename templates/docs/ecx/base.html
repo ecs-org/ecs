@@ -1,0 +1,68 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<head>
+    <title>ECX Documention</title>
+    <style type="text/css">
+        .item{
+            border-top: 2px solid #cccccc;
+        }
+        .item .choices{
+            margin-left: 30px;
+        }
+        .key{
+            font-family: monospace;
+        }
+        .key:before{
+            content: "\"";
+        }
+        .key:after{
+            content: "\":";
+        }
+        .subset{
+            margin-left: 30px;
+        }
+        .subset:before{
+            content: "{";
+        }
+        .subset:after{
+            content: "}";
+        }
+        .paperform{
+            color: #666666;
+        }
+    </style>
+</head>
+<body>
+<h1>The ECX Document Format &mdash; Version {{ version }}</h1>
+<p>
+    An ecx document is a ZIP file that contains a single <a href="http://json.org">JSON</a> encoded data file (<i>data.json</i>) and any number of auxiliary data files.
+    The zip container MAY use compression.
+</p>
+
+<p>
+    The current specification only uses data files for attached documents. They SHOULD be stored below an <i>attachments/</i> directory inside the ZIP archive.
+    JSON fields that have a <tt>null</tt> value, MAY be ommitted from the document.
+</p>
+
+<p>
+    The suggested file extension is <i>ecx</i>, the mimetype <i>application/ecx</i>.
+</p>
+
+<h2>data.json</h2>
+<div class="item">
+    <span class="key">version</span> STRING, MUST be <tt>"0.1"</tt>
+</div>
+<div class="item">
+    <span class="key">type</span> STRING, MUST be <tt>"SubmissionForm"</tt>
+</div>
+<div class="item">
+    <span class="key">data</span> OBJECT
+    <div class="subset">
+    {% for name, info in fields.items %}
+        {% with "docs/ecx/object.html" as object_template %}
+            {% include object_template %}
+        {% endwith %}
+    {% endfor %}
+</div>
+</body>
+</html>

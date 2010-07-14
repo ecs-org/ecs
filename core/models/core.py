@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class EthicsCommission(models.Model):
+    uuid = models.CharField(max_length=32)
     name = models.CharField(max_length=120)
     address_1 = models.CharField(max_length=120)
     address_2 = models.CharField(max_length=120)
