@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
@@ -10,6 +11,8 @@ class UserProfile(models.Model):
     executive_board_member = models.BooleanField(default=False)
     thesis_review = models.BooleanField(default=False)
     internal = models.BooleanField(default=False)
+
+    session_key = models.CharField(max_length=40, null=True)
     
     class Meta:
         app_label = 'core'
