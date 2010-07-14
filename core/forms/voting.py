@@ -22,4 +22,8 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Vote
         fields = ('result', 'text')
-    
+
+class B2VoteReviewForm(forms.ModelForm):
+    class Meta:
+        model = Vote
+        fields = ('text',)

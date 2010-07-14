@@ -20,9 +20,15 @@
         <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
             <a href="#retrospective_thesis_review_tab">Thesis Review</a>
         </li>
-        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-            <a href="#vote_review_tab">Votum</a>
-        </li>
+        {% if b2_vote_review_form %}
+            <li class="active">
+                <a href="#b2vote_review_tab">B2 Votum</a>
+            </li>
+        {% else %}
+            <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+                <a href="#vote_review_tab">Votum</a>
+            </li>
+        {% endif %}
         {% for blueprint, checklist_review_form in checklist_reviews %}
             <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
                 <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
@@ -72,10 +78,8 @@
             </td></tr>
             <tr><th>Voten:</th><td>
                 <ul>
-                    {% for top in submission_form.submission.timetable_entries.all %}
-                        {% if top.vote %}
-                            <li>{{ top.vote.result }} am {{ top.start|date:'d.m.Y' }}</li>
-                        {% endif %}
+                    {% for vote in submission_form.submission.votes.all %}
+                        <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                     {% endfor %}
                 </ul>
             </td></tr>
@@ -104,14 +108,24 @@
             {% endwith %}
         {% endblock %}
     </div>
-    <div id="vote_review_tab" class="tab">
-        {% block vote_review_tab_content %}
-            <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
-            {% with vote_review_form as review_form %}
+    {% if b2_vote_review_form %}
+        <div id="b2vote_review_tab" class="tab">
+            <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+            <h4>Upgrade auf B1</h4>
+            {% with b2_vote_review_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
-        {% endblock %}
-    </div>
+        </div>
+    {% else %}
+        <div id="vote_review_tab" class="tab">
+            {% block vote_review_tab_content %}
+                <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+                {% with vote_review_form as review_form %}
+                    {% include 'submissions/review_form.inc' %}
+                {% endwith %}
+            {% endblock %}
+        </div>
+    {% endif %}
     {% for blueprint, checklist_review_form in checklist_reviews %}
     <div id="checklist_{{ blueprint.pk }}_review_form" class="checklist_review_tab">
         {% with checklist_review_form as review_form %}
