@@ -28,11 +28,11 @@
                 {{ form.result }}
             </div>
             {{ form.text }}
-        <div class="buttons">
-            <a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a>
-            <a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a>
-            <a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a>
-        </div>        
+            <div class="buttons">
+                <a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a>
+                <a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a>
+                <a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a>
+            </div>        
     {% endif %}
     </form>
 {% endblock %}
