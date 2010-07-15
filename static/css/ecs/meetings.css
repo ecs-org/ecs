@@ -198,6 +198,32 @@
   position: relative;
   width: 100%;
 }
+#meeting_assistant .navigation,
+#meeting_assistant .info {
+  display: block;
+  width: 100%;
+  float: left;
+  font-size: 0.8em;
+  border-top: 1px solid #ccc;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+#meeting_assistant .navigation form {
+
+}
+#meeting_assistant .left {
+  left: 0px;
+  width: 180px;
+  position: absolute;
+  padding: 10px;
+}
+#meeting_assistant .right {
+  right: 0px;
+  top: 0px;
+  width: 180px;
+  position: absolute;
+  padding: 10px;
+}
 #meeting_assistant .meta {
   display: block;
   font-size: 0.8em;
@@ -285,30 +311,6 @@
 }
 #meeting_assistant textarea {
   width: 98%;
-}
-#meeting_assistant .left {
-  left: 0px;
-  width: 180px;
-  position: absolute;
-  padding: 10px;
-}
-#meeting_assistant .right {
-  right: 0px;
-  top: 0px;
-  width: 180px;
-  position: absolute;
-  padding: 10px;
-}
-#meeting_assistant .navigation,
-#meeting_assistant .info {
-  float: left;
-  font-size: 0.8em;
-  border-top: 1px solid #ccc;
-  padding: 5px 0;
-  margin: 5px 0;
-}
-#meeting_assistant .navigation form {
-
 }
 #meeting_assistant .search {
   float: left;

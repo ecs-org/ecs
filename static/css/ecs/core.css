@@ -114,6 +114,18 @@ input, textarea, select {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
 }
+li.ModelChoiceField select {
+  width: 20em;
+}
+td.TypedChoiceField select {
+  width: 6em;
+}
+li.TypedChoiceField select {
+  width: 12em;
+}
+li.NullBooleanField select {
+  width: 5em;
+}
 input[type=submit] {
   color: #fff;
   background: #333;
