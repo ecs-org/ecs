@@ -114,6 +114,10 @@ input, textarea, select {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
 }
+#userswitcher_form select {
+  width: 190px;
+  font-size: 10pt;
+}
 li.ModelChoiceField select {
   width: 20em;
 }
