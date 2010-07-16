@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
-import datetime
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # 2010/0345
@@ -89,6 +89,8 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
+
+    befangene = models.ManyToManyField(User, null=True)
 
     class Meta:
         app_label = 'core'
