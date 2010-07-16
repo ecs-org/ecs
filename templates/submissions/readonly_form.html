@@ -34,6 +34,9 @@
                 <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
             </li>
         {% endfor %}
+        <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
+            <a href="#befangene_review_tab">Befangene Review</a>
+        </li>
         <li>
             <a href="#messages-tab">Nachrichten</a>
         </li>

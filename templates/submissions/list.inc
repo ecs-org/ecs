@@ -14,6 +14,7 @@
                  | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
                  | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">Thesis Review</a>
                  | <a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a>
+                 | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
                  | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">Vote Review</a>
                  | <a href="{% url ecs.core.views.b2_vote_review submission_form_pk=submission_form.pk %}">B2 Vote Review</a>
                  {% endif %}

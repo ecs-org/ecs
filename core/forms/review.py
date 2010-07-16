@@ -17,3 +17,10 @@ class RetrospectiveThesisReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
         fields = ('thesis', 'retrospective')
+
+class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ('befangene')
+
+

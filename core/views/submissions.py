@@ -13,7 +13,7 @@ from ecs.core.models import Document, Submission, SubmissionForm, Investigator, 
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.checklist import make_checklist_form
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
 from ecs.core import paper_forms
@@ -88,6 +88,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission, readonly=True)
     executive_review_form = ExecutiveReviewForm(instance=submission, readonly=True)
+    befangene_review_form = BefangeneReviewForm(instance=submission, readonly=True)
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
 
     checklist_reviews = []
@@ -109,6 +110,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'executive_review_form': executive_review_form,
         'vote_review_form': vote_review_form,
         'checklist_reviews': checklist_reviews,
+        'befangene_review_form': befangene_review_form,
     }
     if extra_context:
         context.update(extra_context)
@@ -133,6 +135,12 @@ def executive_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'executive_review_form': form,})
 
+def befangene_review(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
 def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
