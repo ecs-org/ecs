@@ -11,7 +11,7 @@ Sitzungsassistent
 
 {% block content %}
 <div id="meeting_assistant">
-    <div class="left">
+    <div class="meeting_assistant_nav">
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
             <div class="button"><a href="{% url ecs.core.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
@@ -62,10 +62,7 @@ Sitzungsassistent
     </div>
     <div id="meeting_assistant_body">
         {% if not meeting.open_tops.exists and meeting.started and not meeting.ended %}<span style="color:red">Alle TOPs wurden geschlossen. Sie können die Sitzung jetzt beenden.</span>{% endif %}
-        {% block meeting_assistant_body %}
-        {% endblock %}
-    </div>
-    <div class="right">
+        {% block meeting_assistant_body %}{% endblock %}
         {% block meeting_assistant_sidebar %}{% endblock %}
     </div>
 </div>

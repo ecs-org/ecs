@@ -75,9 +75,14 @@ ul.tab_headers {
 /* readonly */
 
 .readonly input, .readonly textarea, .readonly select, .readonly .rte_display {
-  color: #333 !important;
-  background: #e4e4e4 !important;
+  color: #333;
+  background: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
+}
+.readonly input[type=submit] {
+  color: #fff;
+  background: #333;
+  cursor: pointer;
 }
 .readonly .tab_headers li a {
   border: 1px solid #bbb;
@@ -131,6 +136,7 @@ li.NullBooleanField select {
   width: 5em;
 }
 input[type=submit] {
+  float: right;
   color: #fff;
   background: #333;
   cursor: pointer;
