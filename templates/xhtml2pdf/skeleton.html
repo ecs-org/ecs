@@ -3,45 +3,53 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>{% block title %}{% endblock %}</title>
     <style type="text/css">
-      @page {
-      size: a4;
-      margin: 2cm;
-      margin-bottom: 3cm;
-      @frame footer {
-      -pdf-frame-content: footer;
-      bottom: 2cm;
-      margin-left: 1cm;
-      margin-right: 1cm;
-      height: 1cm;
-      }
-      @frame footerpage {
-      text-align: right;
-      -pdf-frame-content: footerpage;
-      bottom: 2cm;
-      margin-left: 1cm;
-      margin-right: 1cm;
-      height: 1cm;
-      }
-      }
-      div.header {
-        text-align:center;
-        font-weigth: bold;
-        font-size: 170%;
-        padding-top: 10px;
-        padding-bottom: 0px;
-        width:18cm;
-        border:1px solid #000;
-        margin-bottom: 10px;
-      }
-      th, td {
-        padding: 2px;
-      }
-      body {
-        font-family: "Times New Roman", "Times", Serif;
-      }
-      p {
-        padding: 2px 0;
-      }
+        @page {
+            size: a4;
+            margin: 2cm;
+            margin-bottom: 3cm;
+            @frame footer {
+              -pdf-frame-content: footer;
+              bottom: 2cm;
+              margin-left: 1cm;
+              margin-right: 1cm;
+              height: 1cm;
+            }
+            @frame footerpage {
+              text-align: right;
+              -pdf-frame-content: footerpage;
+              bottom: 2cm;
+              margin-left: 1cm;
+              margin-right: 1cm;
+              height: 1cm;
+            }
+        }
+      
+        div.header {
+            text-align:center;
+            font-weigth: bold;
+            font-size: 170%;
+            padding-top: 10px;
+            padding-bottom: 0px;
+            width:18cm;
+            border:1px solid #000;
+            margin-bottom: 10px;
+        }
+        
+        th, td{
+            padding: 2px;
+        }
+        
+        body{
+            font-family: "Times New Roman", "Times", Serif;
+        }
+        
+        p{
+            padding: 2px 0;
+        }
+        
+        .checkbox{
+            font-family: monospace;
+        }
     </style>
   </head>
   <body>
