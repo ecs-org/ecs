@@ -8,6 +8,7 @@ from ecs.workflow import patterns
 from django.core.management.base import CommandError
 from django.core.management import call_command
 from django.contrib.auth.models import Group, User
+from django.contrib.sites.models import Site
 
 
 @bootstrap.register()
@@ -49,7 +50,7 @@ def expedited_review_categories():
 
 @bootstrap.register()
 def default_site():
-    Site.object.get_or_create(pk=1)
+    Site.objects.get_or_create(pk=1)
 
 @bootstrap.register()
 def templates(depends_on=('ecs.core.bootstrap.default_site',)):
