@@ -35,6 +35,25 @@ class Submission(models.Model):
     
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
 
+    def get_befangene(self):
+        submission_form = self.get_most_recent_form()
+        sponsor_email = submission_form.sponsor_email
+        # FIXME: how to get submitter email?
+        investigator_emails = [x.email for x in submission_form.investigators.all()]
+        
+        emails = [x for x in [sponsor_email]+investigator_emails if x]
+
+        befangene = []
+        for email in emails:
+            try:
+                users = User.objects.filter(email=email)
+            except User.DoesNotExist:
+                pass
+            else:
+                befangene += list(users)
+
+        return befangene
+
     def get_most_recent_form(self):
         # FIXME: pick the last accepted SubmissionForm
         try:
