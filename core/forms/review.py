@@ -10,17 +10,17 @@ class ExecutiveReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
-            'external_reviewer', 'external_reviewer_name', 'sponsor_required_for_next_meeting')
+            'external_reviewer', 'external_reviewer_name', 'sponsor_required_for_next_meeting',)
 
 
 class RetrospectiveThesisReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
-        fields = ('thesis', 'retrospective')
+        fields = ('thesis', 'retrospective',)
 
 class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
-        fields = ('befangene')
+        fields = ('befangene',)
 
 
