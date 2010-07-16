@@ -39,15 +39,20 @@ def notification_types():
     
     for name, form in types:
         NotificationType.objects.get_or_create(name=name, form=form)
-        
+
 
 @bootstrap.register()
 def expedited_review_categories():
     for i in range(5):
         ExpeditedReviewCategory.objects.get_or_create(abbrev="ExRC%s" % i, name="Expedited Review Category #%s" % i)
 
+
 @bootstrap.register()
-def templates():
+def default_site():
+    Site.object.get_or_create(pk=1)
+
+@bootstrap.register()
+def templates(depends_on=('ecs.core.bootstrap.default_site',)):
     from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
     for dirpath, dirnames, filenames in os.walk(basedir):
