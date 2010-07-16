@@ -33,6 +33,8 @@ class Submission(models.Model):
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     
+    befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
+
     def get_most_recent_form(self):
         # FIXME: pick the last accepted SubmissionForm
         try:
@@ -89,8 +91,6 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
-
-    befangene = models.ManyToManyField(User, null=True)
 
     class Meta:
         app_label = 'core'

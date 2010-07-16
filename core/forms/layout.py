@@ -87,9 +87,6 @@ SUBMISSION_FORM_TABS = (
         (u'Zentren im Ausland', []),
     ]),
     (u'Zentrum', []),
-    (u'Befangene', [
-        (u'Befangene', ['befangene',]),
-    ]),
 # disabled for sprint 4
     # (u'Review', [
     #     (u'Review', [
