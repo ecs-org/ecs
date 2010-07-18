@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # 2010/0345
+    ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
 
     def get_ec_number_display(self):
         try:
@@ -34,6 +34,8 @@ class Submission(models.Model):
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
+
+    study_types = models.ManyToManyField('core.StudyType', null=True, related_name='submissions')
 
     def get_befangene(self):
         submission_form = self.get_most_recent_form()
@@ -461,7 +463,16 @@ class ForeignParticipatingCenter(models.Model):
     
     class Meta:
         app_label = 'core'
-    
+
+# e.g.: AMG, MPG
+class StudyType(models.Model):
+    name = models.CharField(max_length=10, unique=True, db_index=True)
+
+    class Meta:
+        app_label = 'core'
+
+    def __unicode__(self):
+        return unicode(self.name)
 
 from ecs import workflow
 workflow.register(Submission)
