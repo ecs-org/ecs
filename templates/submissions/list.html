@@ -8,6 +8,11 @@ Liste aller Studien
 
 {% block content %}
 
+<form action="" method="post" enctype="multipart/form-data" style="margin-bottom:50px;">
+    <input type="text" name="keyword" />
+    <input type="submit" value="Suchen" />
+</form>
+
 {% if stashed_submission_forms%}
 <div class="overview">
     <h2>Offene Studien</h2>

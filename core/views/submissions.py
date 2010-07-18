@@ -293,12 +293,50 @@ def submission_pdf(request, submission_form_pk=None):
 
 
 def submission_form_list(request):
-    submissions = Submission.objects.order_by('ec_number')
-    meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
+
+    keyword = request.POST.get('keyword', None)
+
+    if keyword:
+        matched_submissions = set()
+        search_query = Q(ec_number__icontains=keyword)
+
+        m = re.match(r'(\d+)/(\d+)', keyword)
+        if m:
+            num = int(m.group(1))
+            year = int(m.group(2))
+            search_query |= Q(ec_number=('%04d/%04d' % (year, num)))
+            search_query |= Q(ec_number=('%04d/%04d' % (num, year)))
+
+        submissions = list()
+
+        for submission in Submission.objects.filter(search_query):
+            matched_submissions.add(submission)
+        
+        submission_forms = []
+        for submission in Submission.objects.all():    # FIXME: sloow
+            submission_forms.append(submission.get_most_recent_form())
+
+        submission_form_pks = [sf.pk for sf in submission_forms]
+        
+        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword)
+        submission_forms = SubmissionForm.objects.filter(pk__in=submission_form_pks).filter(form_search_query)
+        submissions += [sf.submission for sf in submission_forms]
+
+        for submission in submissions:
+            matched_submissions.add(submission)
+
+        submissions = Submission.objects.filter(pk__in=[s.pk for s in matched_submissions]).order_by('ec_number')
+        stashed_submission_forms = []  # FIXME: how to search in the docstash?
+        meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start')]
+    else:
+        submissions = Submission.objects.order_by('ec_number')
+        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False)
+        meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
+
     return render(request, 'submissions/list.html', {
         'unscheduled_submissions': submissions.filter(meetings__isnull=True),
         'meetings': meetings,
-        'stashed_submission_forms': DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False),
+        'stashed_submission_forms': stashed_submission_forms,
     })
 
 
@@ -342,42 +380,4 @@ def import_submission_form(request):
     return render(request, 'submissions/import.html', {
     
     })
-
-def search_for_submission(request):
-    keyword = request.POST.get('keyword', None)
-
-    matched_submissions = set()
-
-    if keyword:
-        search_query = Q(ec_number__icontains=keyword)
-
-        m = re.match(r'(\d+)/(\d+)', keyword)
-        if m:
-            num = int(m.group(1))
-            year = int(m.group(2))
-            search_query |= Q(ec_number=('%04d/%04d' % (year, num)))
-            search_query |= Q(ec_number=('%04d/%04d' % (num, year)))
-
-        submissions = list()
-
-        for submission in Submission.objects.filter(search_query):
-            matched_submissions.add(submission)
-        
-        submission_forms = []
-        for submission in Submission.objects.all():    # FIXME: sloow
-            submission_forms.append(submission.get_most_recent_form())
-
-        submission_form_pks = [sf.pk for sf in submission_forms]
-        
-        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword)
-        submission_forms = SubmissionForm.objects.filter(pk__in=submission_form_pks).filter(form_search_query)
-        submissions += [sf.submission for sf in submission_forms]
-
-        for submission in submissions:
-            matched_submissions.add(submission)
-
-    return render(request, 'submissions/search.html', {
-        'submissions': matched_submissions,
-    })
-
 
