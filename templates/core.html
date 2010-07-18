@@ -49,6 +49,7 @@
       <span class="togglers">Demo</span>
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.core.views.search_for_submission %}">Suche</a></li>
       </ul>
     </li>
   </ul>
@@ -103,7 +104,7 @@
       'submissions': 0,
       'notifications': 1,
       'meetings': 2,
-      'messages': 3,
+      'demo': 3
     };
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {

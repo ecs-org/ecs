@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 import tempfile
+import re
 from StringIO import StringIO
+
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.core.files import File
 from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
+from django.db.models import Q
 
 from ecs.core.views.utils import render, redirect_to_next_url, render_pdf, pdf_response
 from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer, Meeting
@@ -21,7 +25,6 @@ from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from django.core.files import File
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -339,3 +342,42 @@ def import_submission_form(request):
     return render(request, 'submissions/import.html', {
     
     })
+
+def search_for_submission(request):
+    keyword = request.POST.get('keyword', None)
+
+    matched_submissions = set()
+
+    if keyword:
+        search_query = Q(ec_number__icontains=keyword)
+
+        m = re.match(r'(\d+)/(\d+)', keyword)
+        if m:
+            num = int(m.group(1))
+            year = int(m.group(2))
+            search_query |= Q(ec_number=('%04d/%04d' % (year, num)))
+            search_query |= Q(ec_number=('%04d/%04d' % (num, year)))
+
+        submissions = list()
+
+        for submission in Submission.objects.filter(search_query):
+            matched_submissions.add(submission)
+        
+        submission_forms = []
+        for submission in Submission.objects.all():    # FIXME: sloow
+            submission_forms.append(submission.get_most_recent_form())
+
+        submission_form_pks = [sf.pk for sf in submission_forms]
+        
+        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword)
+        submission_forms = SubmissionForm.objects.filter(pk__in=submission_form_pks).filter(form_search_query)
+        submissions += [sf.submission for sf in submission_forms]
+
+        for submission in submissions:
+            matched_submissions.add(submission)
+
+    return render(request, 'submissions/search.html', {
+        'submissions': matched_submissions,
+    })
+
+
