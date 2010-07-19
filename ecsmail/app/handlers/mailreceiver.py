@@ -13,14 +13,14 @@ from ecs.ecsmail.persil import whitewash
 @route(".+")
 def IGNORE_BOUNCE(message):
     print "JUST A SOFT BOUNCE", message
-    bounces = queue.Queue(settings.BOUNCES)
+    bounces = queue.Queue(settings.BOUNCES_QUEUE)
     bounces.push(message)
     return START
 
 @route(".+")
 def NOTIFY_BOUNCE(message):
     print "REALLY HANDLING BOUNCE", message
-    bounces = queue.Queue(settings.BOUNCES)
+    bounces = queue.Queue(settings.BOUNCES_QUEUE)
     bounces.push(message)
     return START
 

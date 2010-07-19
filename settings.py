@@ -64,7 +64,10 @@ EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
                           # becauseconnections to the mailserver shouldn't block.
 # lamson config details
 # uses ECSMAIL_PORT, ECSMAIL_LOGSERVER_PORT, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
-BOUNCES = 'run/bounces' # bounce queue (relative to ecsmail/)
+BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
+UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
+DELIVERED_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
+
 RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
 RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}  
 HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']

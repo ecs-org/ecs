@@ -141,6 +141,7 @@ jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
 python-daemon:inst:!win:pypi:python-daemon==1.5.5
+python-daemon:inst:win:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 """
@@ -161,6 +162,10 @@ pylint:inst:all:pypi:pylint
 
 # In addition to application packages, packages needed or nice to have for development
 developer_packages=  """
+# mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
+mutt:req:apt:apt-get:mutt
+mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzip2scripts:mutt.exe
+mutt:req:mac:macports:mutt
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 docutils:inst:all:pypi:docutils

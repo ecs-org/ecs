@@ -7,6 +7,7 @@ from lamson import view, queue
 import logging
 import logging.config
 import os
+import os.path
 os.environ['LAMSON_LOADED'] = 'True'
 
 # import jinja2
@@ -24,7 +25,7 @@ receiver = SMTPReceiver(settings.RECEIVER_CONFIG['host'],
 Router.defaults(**settings.ROUTER_DEFAULTS)
 Router.load(settings.HANDLERS)
 Router.RELOAD=True
-Router.UNDELIVERABLE_QUEUE=queue.Queue("run/undeliverable")
+Router.UNDELIVERABLE_QUEUE=queue.Queue(settings.UNDELIVERABLE_QUEUE)
 
 # view.LOADER = jinja2.Environment(
 #     loader=jinja2.PackageLoader(settings.template_config['dir'], 

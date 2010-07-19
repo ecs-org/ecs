@@ -353,17 +353,28 @@ def timetable_pdf(request, meeting_pk=None):
 
 def agenda_htmlemail(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    htmlmail = unicode(render_html(request, 'meetings/email/agenda.html', {
+    filename = '%s-%s-Agenda.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    )
+    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
-    }))
-    plainmail = whitewash(htmlmail)
-    
-    send_mail(subject='Invitation to meeting', 
-             message=plainmail,
-             message_html=htmlmail,
-             from_email=settings.DEFAULT_FROM_EMAIL,
-             recipient_list=settings.AGENDA_RECIPIENT_LIST, fail_silently=False)
-              
+    })
+
+    for recipient in settings.AGENDA_RECIPIENT_LIST:        
+        htmlmail = unicode(render_html(request, 'meetings/email/invitation-with-agenda.html', {
+            'meeting': meeting,
+            'recipient': recipient,
+        }))
+        plainmail = whitewash(htmlmail)
+
+        # FIXME: this should go into a celery queue and not be called directly
+        send_mail(subject='Invitation to meeting', 
+                 message=plainmail,
+                 message_html=htmlmail,
+                 attachments=[(filename, pdf,'application/pdf'),],
+                 from_email=settings.DEFAULT_FROM_EMAIL,
+                 recipient_list=settings.AGENDA_RECIPIENT_LIST, fail_silently=False)
+        
     return HttpResponseRedirect(reverse('ecs.core.views.meeting_list'))
 
 def timetable_htmlemailpart(request, meeting_pk=None):
