@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 from django.template import Library
+from django.utils.safestring import mark_safe
 
 from ecs.core import paper_forms
 
@@ -18,6 +19,13 @@ register.filter('type_name', lambda obj: type(obj).__name__)
 register.filter('startwith', lambda obj, start: obj.startswith(substr))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
 register.filter('contains', lambda obj, x: x in obj)
+register.filter('not', lambda obj: not obj)
+
+@register.filter
+def repeat(s, n):
+    return mark_safe(s*n)
+repeat.is_safe = True
+
 
 @register.filter
 def get_field_info(formfield):

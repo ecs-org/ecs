@@ -36,7 +36,7 @@ def xhtml2pdf(html, **options):
     else:
         cmd = ''
     cmd += which('xhtml2pdf').next()
-    args = [cmd, '-q']
+    args = [cmd, ]
     for key, value in options.iteritems():
         if value is False:
             continue
@@ -57,4 +57,6 @@ def xhtml2pdf(html, **options):
         t.flush()
         popen = killableprocess.Popen(" ".join(args), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=t)
         result, stderr = popen.communicate(html)
+        if popen.returncode:
+            print result, stderr
     return result 

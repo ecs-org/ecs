@@ -1,0 +1,73 @@
+{% load core corepdf %}
+
+{% tcwrap border1 %}
+    <h1>Antrag</h1>
+    {% tcwrap plain %}
+        Version 6.0 vom 03.07.2009
+    </td>
+    <td style="text-align:right">
+        Bitte immer die <span class="underline">aktuelle</span> Version verwenden (<a href="http://ethikkommissionen.at">http://ethikkommissionen.at</a>)!
+    {% endtcwrap %}
+{% endtcwrap %}
+
+<div class="infotext">
+    Dieses Formular soll für Einreichungen bei &ouml;sterreichischen Ethikkommissionen verwendet werden. <br/>
+    Es setzt sich aus einem allgemeinen <span class="underline">Teil A</span> - Angaben zur Studie und zum Sponsor - <br/>
+    und aus einem speziellen <span class="underline">Teil B</span> - Angaben zu der/den einzelnen Pr&uuml;fstelle(n) - zusammen. <br/>
+    Bei Einreichungen für mehrere Zentren (Pr&uuml;fer) muss nur der Teil B an das jeweilige Zentrum angepasst werden.
+</div>
+
+<table>
+    <colgroup>
+        <col width="49%" />
+        <col width="2%">
+        <col width="49%" />
+    </colgroup>
+    <tr>
+        <td style="border:1px solid #000000;">
+            <span class="small">Adresse der Ethikkommission (optional)</span>
+            <!-- FIXME: why has 'height' no effect for table cells? -->
+            {{ '<br/>'|repeat:8 }}
+            <!--<br/>
+            An die<br/>
+            Ethikkommission<br/>
+            der Medizinischen Universität Wien<br/>
+            Borschkegasse 8b<br/>
+            1090 Wien<br/>
+            -->
+        </td>
+        <td width="2%" ></td>
+        <td style="border:1px solid #000000;">
+            {% tcwrap plain %}
+                <span class="small">Raum für Eingangsstempel, EK-Nummer, etc.</span>
+            </td>
+            <td style="text-align:right">
+                <span class="small">Bitte freilassen!</span>
+            {% endtcwrap %}
+        </td>
+    </tr>
+</table>
+
+<center><span style="font-weight:bold; font-size:large"><br/>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES<br/></span>
+  für folgende Prüfer bei folgenden österreichischen Ethikkommissionen:<br/>
+</center>
+
+<ul>
+  <li>Bitte alle Ethikkommissionen eintragen, an die der Antrag gesendet wird (Kurzbezeichnung!)</li>
+  <li>Im Falle einer multizentrischen Arzneimittelstudie ist die Leitethikkommission als erste anzuführen!</li>
+</ul>
+
+<table class="withborders">
+    <tr>
+        <th>Zuständige Ethikkommission</th>
+        <th>Zentrum</th>
+        <th>Prüfer (lokale Studienleitung)</th>
+    </tr>
+    {% for inv in submission_form.investigators.all %}
+        <tr>
+            <td>{{ inv.ethics_commission.name }}</td>
+            <td>{{ inv.organisation }}</td>
+            <td>{{ inv.name }}</td>
+        </tr>
+    {% endfor %}
+</table>

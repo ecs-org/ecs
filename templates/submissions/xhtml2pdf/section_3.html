@@ -1,0 +1,71 @@
+<p style="margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+<b>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%; page-break-after: avoid">
+3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries|checkbox }} ja {{ submission_form.substance_registered_in_countries|not|checkbox }} nein.
+Wenn <b>ja</b>, geben Sie an, in welchen: </p>
+
+<p style="margin-left: 0.63cm; text-indent: -0.63cm; margin-bottom: 0cm">
+<b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%">
+3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
+{{ submission_form.substance_preexisting_clinical_tries|checkbox }} ja 
+{{ submission_form.substance_preexisting_clinical_tries|not|checkbox }} nein </p>
+
+<p> Wenn <b>ja</b>, bitte geben Sie folgende Daten
+an: </p>
+
+<p style="page-break-inside: avoid">3.2.1
+ In welchen Staaten wurden
+die Prüfungen durchgeführt: <b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 3.2.2 Phase: <b> {{ submission_form.substance_p_c_t_phase }} </b> (Wenn Studien in mehreren Phasen angeführt sind,
+die höchste Phase angeben) </p>
+
+<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
+ 3.2.3 Zeitraum: <b> {{ submission_form.substance_p_c_t_period }} </b> </p>
+
+<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
+ 3.2.4 Anwendungsart(en): <b> {{ submission_form.substance_p_c_t_application_type }} </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+3.2.5 Wurde(n) die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt? 
+{{ submission_form.substance_p_c_t_gcp_rules|checkbox }} ja 
+{{ submission_form.substance_p_c_t_gcp_rules|not|checkbox }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 3.2.6 Liegt ein Abschlußbericht vor? 
+{{ submission_form.substance_p_c_t_final_report|checkbox }} ja 
+{{ submission_form.substance_p_c_t_final_report|not|checkbox }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 110%">
+ Wenn <b>ja</b>, bitte legen
+Sie die <b>Investigator´s Brochure, relevante Daten</b> oder ein
+<b>Gutachten des Arzneimittelbeirates</b> bei. </p>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+ <b>3b. Sonstige im Rahmen
+der Studie verabreichte Medikamente, deren Wirksamkeit und/oder
+Sicherheit nicht Gegenstand der Prüfung sind:</b> </p>
+
+<dl>
+<dd>
+<table width="576" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
+<col width="216">
+<col width="188">
+<col width="140">
+<tr>
+<th>Generic Name</th>
+<th>Darreichungsform</th>
+<th>Dosis</th>
+</tr>
+{% for drug in submission_form.nontesteduseddrug_set.all %}
+<tr>
+<td width="216"><b>{{ drug.generic_name }}</b></td>
+<td width="188"><b>{{ drug.preparation_form }}</b></td>
+<td width="140"><b>{{ drug.dosage }}</b></td>
+</tr>
+{% endfor %}
+</table>
