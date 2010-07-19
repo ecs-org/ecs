@@ -1,0 +1,79 @@
+<p style="margin-top: 0.21cm; border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0.11cm 0cm">
+2.2 Fachgebiet:<b>{{ submission_form.specialism }}</b></p>
+
+<table width="624" border="0" cellpadding="2" cellspacing="0">
+    <colgroup>
+        <col width="147">
+        <col width="147">
+        <col width="157">
+        <col width="157">
+    </colgroup>
+<tr>
+<td colspan="2" width="298"><b>2.3 Arzneimittelstudie</b> (wenn zutreffend)</td>
+<td colspan="2" width="317" valign="top"><b>2.4 Medizinproduktestudie</b> (wenn zutreffend)</td>
+</tr>
+<tr valign="top">
+<td width="147">2.3.1 Prüfsubstanz(en):</td>
+<td width="147"><b>{{ submission_form.pharma_checked_substance }}</b></td>
+<td width="157">2.4.1 Prüfprodukt(e):</td>
+<td width="157"><b>{{ submission_form.medtech_checked_product }}</b></td>
+</tr>
+<tr valign="top">
+<td width="147">2.3.2 Referenzsubstanz:</td>
+<td width="147"><b>{{ submission_form.pharma_reference_substance }}</b></td>
+<td width="157">2.4.2 Referenzprodukt:</td>
+<td width="157"><b>{{ submission_form.medtech_reference_substance }}</b></td>
+</tr>
+</table>
+<p style="margin-left: 3.5cm; text-indent: -3.5cm; margin-top: 0.21cm">
+2.5 Klinische Phase: <b>{{ submission_form.clinical_phase }}</b> </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.6 Nehmen andere Zentren an der Studie teil: 
+{{ submission_form.multicentric|checkbox }} ja {{ submission_form.multicentric|not|checkbox }} nein. Wenn <b>ja:</b> </p>
+
+<p style="line-height: 100%; page-break-after: avoid"> {{ submission_form.multicentric|checkbox }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland </p>
+<p> 2.7 Liste
+der Zentren: <br/>
+{% for ec in submission_form.ethics_commissions.all %}
+  <b>{{ ec.name }}</b> ; {{ ec.zip_code }} {{ ec.city }} <br/>
+{% endfor %}
+{% for pc in submission_form.foreignparticipatingcenter_set.all %}
+  <b>{{ pc.name }}</b> ; {{ pc.zip_code }} {{ pc.city }} <br/>
+{% endfor %}
+</p>
+
+
+<p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; page-break-after: avoid">
+2.8 Liegen bereits Voten anderer Ethikkommissionen vor? </p>
+<p>{{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <b>ja</b>, <b>Voten beilegen!</b> </p>
+
+<p style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0.11cm 0cm; line-height: 100%">
+2.9 Geplante Anzahl der Prüfungsteilnehmer/innen gesamt (<u>alle teilnehmenden Zentren</u>): <b> {{ submission_form.subject_count }}</b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%; page-break-after: avoid">
+2.10 Charakterisierung der Prüfungsteilnehmer/innen : 2.10.1 Mindestalter: <b> {{ submission_form.subject_minage }} </b> 2.10.2 Höchstalter: <b> {{ submission_form.subject_maxage }} </b> </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: none; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.10.3 Sind auch nicht persönlich Einwilligungsfähige einschließbar? 
+{{ submission_form.subject_noncompetents|checkbox }} ja
+{{ submission_form.subject_noncompetents|not|checkbox }} nein </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: none; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.10.4 Einschließbar sind 
+{{ submission_form.subject_females|checkbox }} <u>weibliche</u> (und/oder) 
+{{ submission_form.subject_males|checkbox }} <u>männliche</u> Teilnehmer/innen . </p>
+
+<p style="margin-bottom: 0cm; border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.11cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%">
+2.10.5 Sind gebärfähige Frauen einschließbar? {{ submission_form.subject_childbearing|checkbox }} ja {{ submission_form.subject_childbearing|not|checkbox }} nein </p>
+
+<p style="margin-top: 0.07cm; margin-bottom: 0.11cm; page-break-after: avoid">
+2.11 Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der
+Studie: <b> {{ submission_form.subject_duration }} </b> </p>
+
+<p style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.14cm; padding-left: 0cm; padding-right: 0cm">
+2.11.1 Aktive Phase: <b> {{ submission_form.subject_duration_active }} </b>
+2.11.2 Nachkontrollen: <b> {{ submission_form.subject_duration_controls }} </b> </p>
+
+<p style="border-top: none; border-bottom: 1px solid #000; padding-top: 0cm; padding-bottom: 0.14cm">
+Voraussichtliche Gesamtdauer der Studie: <b> {{ submission_form.subject_planned_total_duration }} </b> </p>

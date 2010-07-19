@@ -1,0 +1,36 @@
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
+<b>4. Betrifft nur Studien
+gemäß MPG: Angaben zum Medizinprodukt:</b> </p>
+
+<p style="margin-left: 5.25cm; text-indent: -5.25cm; margin-bottom: 0cm; page-break-inside: avoid">
+4.1 Bezeichnung des Produktes: <b> {{ submission_form.medtech_product_name }} </b> </p>
+
+<p style="margin-left: 2.5cm; text-indent: -2.5cm; margin-top: 0.11cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+4.2 Hersteller: <b> {{ submission_form.medtech_manufacturer }} </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+4.3 Zertifiziert für diese Indikation: 
+{{ submission_form.medtech_certified_for_exact_indications|checkbox }} ja
+{{ submission_form.medtech_certified_for_exact_indications|yesno:"[ ],[X],[ ]" }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+4.4 Zertifiziert, aber für eine andere Indikation: 
+{{ submission_form.medtech_certified_for_other_indications|checkbox }} ja 
+{{ submission_form.medtech_certified_for_other_indications|yesno:"[ ],[X],[ ]" }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 4.5 Das Medizinprodukt trägt ein CE-Zeichen {{ submission_form.medtech_ce_symbol|checkbox }} ja
+{{ submission_form.medtech_ce_symbol|yesno:"[ ],[X],[ ]" }} nein </p>
+
+<p style="margin-bottom: 0cm; line-height: 100%">
+ 4.6 Die Produktbroschüre liegt bei. {{ submission_form.medtech_manual_included|checkbox }} ja
+{{ submission_form.medtech_manual_included|yesno:"[ ],[X],[ ]" }} nein </p>
+
+<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 0.11cm;">
+ 4.7 Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des Medizinproduktes
+herangezogen worden (Technische Sicherheit): </p>
+<p> <b>{{ submission_form.medtech_technical_safety_regulations }}</b> </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.11cm;">
+ 4.8 Allfällige Abweichungen von den o.a. Bestimmungen (Normen): </p>
+<p> <b>{{ submission_form.medtech_departure_from_regulations }}</b> </p>

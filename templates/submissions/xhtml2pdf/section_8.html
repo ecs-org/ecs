@@ -1,0 +1,164 @@
+<p style="margin-bottom: 0cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-before: always; page-break-after: avoid">
+ <b>8. Biometrie,
+Datenschutz: <i>!!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen
+!!!</i></b> </p>
+
+<p align="center" style="margin-bottom: 0.14cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
+ <i>(Hier nur
+Kurzinformationen in Stichworten, ausführlicher &nbsp; wenn
+erforderlich &nbsp; unter Punkt 7.15 und 7.16)</i> </p>
+
+
+<h4>8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)</h4>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+    {{ submission_form.study_plan_open|checkbox }} 8.1.1 offen 
+    {{ submission_form.study_plan_randomized|checkbox }} 8.1.2 randomisiert 
+    {{ submission_form.study_plan_parallelgroups|checkbox }} 8.1.3 Parallelgruppen 
+    {{ submission_form.multicentric|not|checkbox }} 8.1.4 monozentrisch
+</p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+    {{ submission_form.study_plan_single_blind|checkbox }} 8.1.5 blind 
+    {{ submission_form.study_plan_controlled|checkbox }} 8.1.6 kontrolliert 
+    {{ submission_form.study_plan_cross_over|checkbox }} 8.1.7 cross-over 
+    {{ submission_form.multicentric|checkbox }} 8.1.8 multizentrisch
+</p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+    {{ submission_form.study_plan_double_blind|checkbox }} 8.1.9 doppelblind 
+    {{ submission_form.study_plan_placebo|checkbox }} 8.1.10 Placebo 
+    {{ submission_form.study_plan_factorized|checkbox }} 8.1.11 faktoriell 
+    {{ submission_form.study_plan_pilot_project|checkbox }} 8.1.12 Pilotprojekt
+</p>
+
+<p style="margin-left: 8.5cm; text-indent: -8.5cm; margin-bottom: 0cm; line-height: 120%; page-break-inside: avoid">
+    {{ submission_form.study_plan_observer_blinded|checkbox }} 8.1.13 observer-blinded 
+    {{ submission_form.study_plan_equivalence_testing|checkbox }} 8.1.14 Äquivalenzprüfung
+</p>
+
+<p style="margin-left: 4.5cm; text-indent: -4.5cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+ 8.1.15 Sonstiges: <b> {{ submission_form.study_plan_misc|default_if_none:"" }} </b> </p>
+
+<p style="margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-inside: avoid">
+ 8.1.16 Anzahl der Gruppen: <b> {{ submission_form.study_plan_number_of_groups|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 9cm; text-indent: -9cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.17 Stratifizierung: {{ submission_form.study_plan_stratification|not|checkbox }} nein {{ submission_form.study_plan_stratification|checkbox }} ja: Kriterien: <b> {{ submission_form.study_plan_stratification|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 9cm; text-indent: -9cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.18 Messwiederholungen: {{ submission_form.study_plan_sample_frequency|not|checkbox }} nein {{ submission_form.study_plan_sample_frequency|checkbox }} ja: Zeitpunkte: <b> {{ submission_form.study_plan_sample_frequency|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.19 Hauptzielgröße: <b> {{ submission_form.study_plan_primary_objectives|default_if_none:"" }}  </b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.20 Nullhypothese(n): <b> {{ submission_form.study_plan_null_hypothesis|default_if_none:"" }}</b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0cm; page-break-inside: avoid">
+ 8.1.21 Alternativhypothese(n): <b> {{ submission_form.study_plan_alternative_hypothesis|default_if_none:"" }}</b> </p>
+
+<p style="margin-left: 5cm; text-indent: -5cm; margin-top: 0.11cm; margin-bottom: 0.14cm; page-break-inside: avoid">
+ 8.1.22 Nebenzielgrößen: <b> {{ submission_form.study_plan_secondary_objectives|default_if_none:"" }} </b> </p>
+
+<p style="margin-bottom: 0cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+8.2 Studienplanung </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+Die Fallzahlberechnung basiert auf (Alpha = Fehler 1. Art, Power = 1 – Beta = 1 –
+Fehler 2. Art): </p>
+
+<p style="margin-left: 10.5cm; text-indent: -10.5cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+8.2.1 Alpha:  <b> {{ submission_form.study_plan_alpha|default_if_none:"" }} </b> 
+8.2.2 Power: <b> {{ submission_form.study_plan_power|default_if_none:"" }} </b> 
+8.2.3 Stat.Verfahren: <b>  {{ submission_form.study_plan_statalgorithm|default_if_none:"" }}    </b> </p>
+<p style="margin-left: 9.75cm; text-indent: -9.75cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+
+8.2.4 Multiples
+Testen:{{ submission_form.study_plan_multiple_test_correction_algorithm|not|checkbox }} nein 
+{{ submission_form.study_plan_multiple_test_correction_algorithm|checkbox }} ja:
+Korrekturverfahren.: <b> {{ submission_form.study_plan_multiple_test_correction_algorithm|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 11.25cm; text-indent: -11.25cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+ 8.2.5 Erwartete Anzahl von Studienabbrecher/inne/n
+(Drop-out-Quote): <b> {{ submission_form.study_plan_dropout_ratio|default_if_none:"" }} </b> </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+ 8.3 Geplante statistische analyse </p>
+
+<p style="margin-bottom: 0cm; line-height: 90%; page-break-inside: avoid">
+ Population: {{ submission_form.study_plan_population_intention_to_treat|checkbox }} 8.3.1 Intention-to-treat 
+{{ submission_form.study_plan_population_per_protocol|checkbox }} 8.3.2 Per Protocol </p>
+
+<p style="margin-left: 10cm; text-indent: -10cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+
+8.3.3 Zwischenauswertung: {{ submission_form.study_plan_abort_crit|not|checkbox }} nein {{ submission_form.study_plan_abort_crit|checkbox }} ja: Abbruchkriterien: <b> {{ submission_form.study_plan_abort_crit|default_if_none:"" }} </b> </p>
+
+<p style="margin-left: 6cm; text-indent: -6cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+ 8.3.4 Geplante statistische Verfahren: 
+ <b> {{ submission_form.study_plan_planned_statalgorithm }}</b> </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+ 8.4 Dokumentationsbögen /
+Datenmanagement </p>
+
+<p style="margin-bottom: 0cm; line-height: 90%; page-break-after: avoid">
+8.4.1 Angaben zur
+Datenqualitätsprüfung </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+  <b>{{ submission_form.study_plan_dataquality_checking }}</b>
+     </p>
+
+<p style="margin-bottom: 0cm; line-height: 90%; page-break-after: avoid">
+8.4.2 Angaben zum
+Datenmanagement </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+ <b>{{ submission_form.study_plan_datamanagement }}</b>
+      </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+ 8.5 Verantwortliche und
+Qualifikation </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.5.1 Wer führte die
+biometrische Planung durch (ggf. Nachweis der
+Qualifikation)? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+  <b>{{ submission_form.study_plan_biometric_planning }}</b>
+      </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.5.2 Wer wird die
+statistische Auswertung durchführen (ggf. Nachweis der
+Qualifikation)? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0.04cm; page-break-inside: avoid">
+  <b>{{ submission_form.study_plan_statistics_implementation }}</b>
+      </p>
+
+<p style="margin-top: 0.21cm; margin-bottom: 0.04cm; border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.11cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 110%; page-break-after: avoid">
+8.6 Datenschutz </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+ 8.6.1 Die Datenverarbeitung erfolgt {{ submission_form.study_plan_dataprotection_reason|checkbox }} a) 
+ personenbezogen {{ submission_form.study_plan_dataprotection_reason|not|checkbox }} b) 
+ indirekt
+personenbezogen </p>
+
+<p style="margin-left: 5.25cm; text-indent: -5.25cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+ 8.6.2 Wenn a): Begründung: <b> {{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}    </b> </p>
+
+<p style="margin-left: 5.25cm; text-indent: -5.25cm; margin-bottom: 0.07cm; page-break-inside: avoid">
+ DVR-Nummer: <b> {{ submission_form.study_plan_dataprotection_dvr|default_if_none:"" }}    </b> </p>
+
+<p style="margin-bottom: 0cm; line-height: 120%; page-break-after: avoid">
+8.6.3 Wenn b): Wie erfolgt
+die Anonymisierung? </p>
+
+<p style="margin-left: 1cm; margin-bottom: 0cm; page-break-inside: avoid">
+  <b>{{ submission_form.study_plan_dataprotection_anonalgoritm }}</b>
+      </p>
