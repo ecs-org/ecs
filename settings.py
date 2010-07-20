@@ -78,6 +78,7 @@ ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 EMAIL_WHITELIST = {}
 AGENDA_RECIPIENT_LIST = {}
 
+# fulltext search engine config
 HAYSTACK_SITECONF = 'ecs.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")
@@ -130,14 +131,16 @@ if platform.node() == "ecsdev.ep3.at":
     # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
     EMAIL_WHITELIST = {}
     AGENDA_RECIPIENT_LIST = {}
+
+    # fulltext search engine override (ecsdev uses solr instead of whoosh)
+    HAYSTACK_SEARCH_ENGINE = "solr"
+    HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
     
     # testecs does not show django debug messages
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
-
-    HAYSTACK_SEARCH_ENGINE = "solr"
-    HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
+        
 
 
 # use different settings if local_settings.py exists

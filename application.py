@@ -76,7 +76,8 @@ pysolr:inst:all:pypi:pysolr
 
 # simple testing
 nose:inst:all:pypi:nose
-django-nose:inst:all:http://github.com/jbalogh/django-nose/tarball/master
+django-nose:inst:all:pypi:django-nose
+#http://github.com/jbalogh/django-nose/tarball/master
 
 #debugging
 werkzeug:inst:all:pypi:werkzeug
@@ -140,6 +141,7 @@ chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
+# we dont use python-daemon functionality in lamson, but lamson.utils imports daemon, so we fake it for windows
 python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:win:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson

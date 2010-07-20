@@ -73,7 +73,7 @@ def send_mail(**kwargs):
         print 'BAD EMAILS:', mylist, bad
         kwargs['recipient_list'] = list(mylist - bad)
         
-    if True: #os.environ.get('LAMSON_LOADED'):
+    if True: # FIXME: why do we look at the environment ? Disabled for now; os.environ.get('LAMSON_LOADED'):
         lamson_send_mail(**kwargs)
     else:
         django_send_html_mail(**kwargs)
