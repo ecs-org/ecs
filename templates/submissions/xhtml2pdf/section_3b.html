@@ -1,0 +1,19 @@
+{% load core corepdf %}
+
+<table width="576" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
+    <col width="216">
+    <col width="188">
+    <col width="140">
+    <tr>
+        <th>Generic Name</th>
+        <th>Darreichungsform</th>
+        <th>Dosis</th>
+    </tr>
+    {% for drug in submission_form.nontesteduseddrug_set.all %}
+        <tr>
+            <td class="value">{{ drug.generic_name }}</td>
+            <td class="value">{{ drug.preparation_form }}</td>
+            <td class="value">{{ drug.dosage }}</td>
+        </tr>
+    {% endfor %}
+</table>

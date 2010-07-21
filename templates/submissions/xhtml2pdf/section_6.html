@@ -1,11 +1,6 @@
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm">
- <b>6. Angaben zur
-durchzuführenden Therapie und Diagnostik</b> </p>
+{% load core corepdf %}
 
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; page-break-after: avoid">
- 6.1. Welche Maßnahmen bzw.
-Behandlungen werden <b>ausschließlich studienbezogen</b>
-durchgeführt? </p>
+<h4>6.1. Welche Maßnahmen bzw. Behandlungen werden <b>ausschließlich studienbezogen</b> durchgeführt? </h4>
 
 <center>
 <table width="624" border="1" bordercolor="#000000" cellpadding="5"
@@ -31,12 +26,10 @@ cellspacing="0">
 </table>
 </center>
 
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm">
-6.2. Welche speziellen Untersuchungen (<b>nur invasive und strahlenbelastende</b>) werden
-während des Studienzeitraumes <b>zu Routinezwecken</b> durchgeführt: </p>
+<h4>6.2. Welche speziellen Untersuchungen (<b>nur invasive und strahlenbelastende</b>) werden während des Studienzeitraumes <b>zu Routinezwecken</b> durchgeführt: </h4>
+
 <center>
-<table width="624" border="1" bordercolor="#000000" cellpadding="5"
-cellspacing="0">
+<table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
 <col width="169">
 <col width="217">
 <col width="120">
@@ -56,7 +49,8 @@ cellspacing="0">
 </table>
 </center>
 
-<p style="margin-bottom: 0cm"> 6.3. Ergänzende Informationen zu studienbezogenen
-Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>
+<h4> 6.3. Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </h4>
 
-<p style="margin-left: 0.6cm; margin-top: 0.21cm"><b>{{ submission_form.additional_therapy_info }}</b></p>
+<div class="value">
+    {{ submission_form.additional_therapy_info }}
+</div>

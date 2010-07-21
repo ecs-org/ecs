@@ -24,9 +24,9 @@
         <col width="49%" />
     </colgroup>
     <tr>
-        <td style="border:1px solid #000000;">
-            <span class="small">Adresse der Ethikkommission (optional)</span>
-            <!-- FIXME: why has 'height' no effect for table cells? -->
+        <td style="border:1px solid #000000;padding:0.5mm">
+            <span style="font-size:7pt">Adresse der Ethikkommission (optional)</span>
+            <!-- FIXME: why has 'height' no effect on table cells? -->
             {{ '<br/>'|repeat:8 }}
             <!--<br/>
             An die<br/>
@@ -37,27 +37,26 @@
             -->
         </td>
         <td width="2%" ></td>
-        <td style="border:1px solid #000000;">
+        <td style="border:1px solid #000000;padding:0.5mm">
             {% tcwrap plain %}
-                <span class="small">Raum für Eingangsstempel, EK-Nummer, etc.</span>
+                <span style="font-size:7pt">Raum für Eingangsstempel, EK-Nummer, etc.</span>
             </td>
             <td style="text-align:right">
-                <span class="small">Bitte freilassen!</span>
+                <span style="font-size:7pt">Bitte freilassen!</span>
             {% endtcwrap %}
         </td>
     </tr>
 </table>
 
-<center><span style="font-weight:bold; font-size:large"><br/>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES<br/></span>
-  für folgende Prüfer bei folgenden österreichischen Ethikkommissionen:<br/>
-</center>
+<div style="font-size:12pt;font-weight:bold">ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</div>
 
-<ul>
-  <li>Bitte alle Ethikkommissionen eintragen, an die der Antrag gesendet wird (Kurzbezeichnung!)</li>
-  <li>Im Falle einer multizentrischen Arzneimittelstudie ist die Leitethikkommission als erste anzuführen!</li>
-</ul>
+<div>
+    für folgende Prüfer bei folgenden österreichischen Ethikkommissionen:<br/>
+  ► Bitte alle Ethikkommissionen eintragen, an die der Antrag gesendet wird (<b>Kurzbezeichnung!</b>) ◄<br/>
+  ► Im Falle einer multizentrischen Arzneimittelstudie ist die Leitethikkommission als erste anzuführen! ◄
+</div>
 
-<table class="withborders">
+<table class="padded withborders">
     <tr>
         <th>Zuständige Ethikkommission</th>
         <th>Zentrum</th>

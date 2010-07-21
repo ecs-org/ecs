@@ -1,8 +1,4 @@
-<p style="margin-bottom: 0.42cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; line-height: 100%; page-break-before: always; page-break-after: avoid">
- <b>9. Liste der
-eingereichten Unterlagen</b> (wenn nicht gesondert dem Antrag
-beiliegend)<b>:</b> </p>
-
+{% load core corepdf %}
 <center>
 <table width="624" border="1" bordercolor="#000000" cellpadding="5"
 cellspacing="1">
@@ -25,10 +21,9 @@ cellspacing="1">
 {% endfor %}
 </table>
 </center>
-<p style="margin-bottom: 0cm"><br></p>
 
-<p style="margin-top: 0.42cm"> <b>Name und Unterschrift der Antragstellerin/des
-Antragstellers</b> </p>
+
+<h4>Name und Unterschrift der Antragstellerin/des Antragstellers</h4>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
  9.1 Name: <b> {{ submission_form.submitter_name }} </b> </p>
@@ -39,35 +34,47 @@ Antragstellers</b> </p>
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
  9.3 Position: <b> {{ submission_form.submitter_jobtitle }} </b> </p>
 
-<table width=642 style="margin-top: 0.21cm; margin-bottom: 0.11cm">
-<col width=80><col width=442>
-<tr><td width=80 align=left>9.4 Antragsteller/in
-ist </td><td>{{ submission_form.submitter_is_coordinator|checkbox }} 9.4.1 koordinierende/r Prüfer/in (multizentrische
-Studie) </td></tr>
-<tr><td>(nur AMG-Studien)</td><td> {{ submission_form.submitter_is_main_investigator|checkbox }} 9.4.2 Hauptprüfer/in (monozentrische Studie) </td></tr>
-
-<tr><td></td><td>{{ submission_form.submitter_is_sponsor|checkbox }} 9.4.3 Sponsor bzw. Vertreter/in des Sponsors </td></tr>
-
-<tr><td></td><td>{{ submission_form.submitter_is_authorized_by_sponsor|checkbox }} 9.4.4 vom Sponsor autorisierte Person/Organisation </td></tr>
+<table>
+    <tr>
+        <td width="4cm">
+            9.4 Antragsteller/in ist
+        </td>
+        <td>
+            {{ submission_form.submitter_is_coordinator|checkbox }} 9.4.1 koordinierende/r Prüfer/in (multizentrische Studie)
+        </td>
+    </tr>
+    <tr>
+        <td>(nur AMG-Studien)</td>
+        <td>
+            {{ submission_form.submitter_is_main_investigator|checkbox }} 9.4.2 Hauptprüfer/in (monozentrische Studie)
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            {{ submission_form.submitter_is_sponsor|checkbox }} 9.4.3 Sponsor bzw. Vertreter/in des Sponsors
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>
+            {{ submission_form.submitter_is_authorized_by_sponsor|checkbox }} 9.4.4 vom Sponsor autorisierte Person/Organisation 
+        </td>
+    </tr>
 </table>
+
 <p style="margin-top: 0.21cm; margin-bottom: 0cm"> Ich bestätige hiermit, dass die in diesem
 Antrag gemachten Angaben korrekt sind und dass ich der Meinung
 bin, dass die Durchführung der Studie in Übereinstimmung mit dem
 Protokoll, nationalen Regelun­gen und mit den Prinzipien der Guten
 Klinischen Praxis möglich sein wird. </p>
 
-{% if submission_form.submitter_agrees_to_publishing %}
-<p style="margin-top: 0.21cm; page-break-after: avoid"> Weiters stimme ich mit meiner Unterschrift zu,
-dass folgende Daten aus meinem Antrag ggf. durch die
-Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und
-Inhalt transparent zu machen:<br>
-EK-Nummer, Einreich-Datum, Projekttitel, Hauptprüfer, Sponsor/CRO,
-weitere Zentren.<br> </p>
-{% endif %}
-
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 1.48cm; page-break-after: avoid">
-<br>
-<br></p>
+<p style="{% if not submission_form.submitter_agrees_to_publishing %}text-decoration:line-through{% endif %}">
+    Weiters stimme ich mit meiner Unterschrift zu, dass folgende Daten aus meinem Antrag ggf. durch die
+    Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt transparent zu machen:<br/>
+    EK-Nummer, Einreich-Datum, Projekttitel, Hauptprüfer, Sponsor/CRO, weitere Zentren.<br/> 
+    <i>(Im Falle der Nicht-Zustimmung bitte diesen Absatz durchzustreichen)</i>
+</p>
 
 <table width="624" border="0" cellpadding="5" cellspacing="0">
 <col width="28">
@@ -76,30 +83,17 @@ weitere Zentren.<br> </p>
 <col width="188">
 <col width="28">
 <tr>
-<td width="28" height="11" valign="top">
-<p><br></p>
-
-</td>
-<td width="302" valign="bottom">
-<p align="center"> Unterschrift der Antragstellerin/des
-Antragstellers </p>
-
-</td>
-<td width="28" valign="top">
-<p><br></p>
-
-</td>
-<td width="188" valign="bottom">
-<p align="center"> Datum </p>
-
-</td>
-<td width="28" valign="top">
-<p><b>Datum</b></p>
-
-</td>
+    <td width="28" height="11" valign="top">
+    </td>
+    <td width="302" style="border-top:1px solid #000000">
+        Unterschrift der Antragstellerin/des Antragstellers
+    </td>
+    <td width="28" valign="top"></td>
+    <td width="188" style="border-top:1px solid #000000">
+        Datum
+    </td>
+    <td width="28"></td>
 </tr>
 </table>
-<p style="margin-bottom: 0cm"><br></p>
 
-<p align="center" style="margin-bottom: 0cm"> <i><b>!!! Achtung: Diese Unterschrift ist in jedem Fall
-erforderlich !!!</b></i> </p>
+<div class="infotext">!!! Achtung: Diese Unterschrift ist in jedem Fall erforderlich !!!</div>

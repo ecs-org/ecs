@@ -11,13 +11,13 @@ class FakeRequest(object):
         self.META = {}
 
 class Command(BaseCommand):
-    def handle(self, ec_number, **options):
+    def handle(self, ec_number, sf_pk, **options):
         try:
             s = Submission.objects.get(ec_number=ec_number)
         except Submission.DoesNotExist:
             raise CommandError("No submission matches the given EC-Number: %s" % ec_number)
 
-        submission_form = s.get_most_recent_form()
+        submission_form = s.forms.get(pk=sf_pk)
         if not submission_form:
             raise CommandError("This submission does not have an attached SubmissionForm.")
 

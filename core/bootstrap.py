@@ -689,6 +689,8 @@ def study_types():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_root'))
 def testsubmission():
     submission, created = Submission.objects.get_or_create(ec_number='4321')
+    if not created:
+        return
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Kinder'))
     
     submission_form_data = {
@@ -837,8 +839,6 @@ def testsubmission():
         'sponsor_address2': u'',
         'german_statistical_info': u'bla bla bla',
     }
-    
-    
     
     submission_form = SubmissionForm.objects.create(**submission_form_data)
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='AT'))

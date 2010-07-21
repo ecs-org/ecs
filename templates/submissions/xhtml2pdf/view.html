@@ -5,23 +5,67 @@
 
 {% block inline_css %}
     {{ block.super }}
+    *{
+        line-height: 1em;
+    }
+    body{
+        font-size: 11pt;
+    }
     
     td, th{
         text-align: left;
         vertical-align: top;
+        padding: 0;
+        margin: 0;
     }
-
-    .value{
-        font-weight: bold;
+    table, tr, h1, h2, h3, h4, h5, h6, p{
+        padding: 0;
+        margin: 0;
     }
     
+    h1{
+        text-align: center;
+        margin: 0cm;
+        padding: 1em;
+    }
+    
+    h2{
+        font-size: 14pt;
+    }
+    h3{
+        font-size: 11pt;
+        font-weight: bold;
+    }
+    h4{
+        font-size: 11pt;
+        font-weight: normal;
+        margin-top: 1em;
+    }
+    
+    .value{
+        font-weight: bold;
+        font-family: sans-serif;
+    }
+    .underline{
+        text-decoration: underline;
+    }
+    .small{
+        font-size: 10pt;
+    }
+    .checkbox{
+        font-family: monospace;
+    }
+    
+
     table{
         border: none;
     }
     
-    .checkbox{
-        font-family: monospace;
+    table.padded td,
+    table.padded th{
+        padding: 0.1cm;
     }
+    
     
     table.border1,
     table.part{
@@ -39,23 +83,13 @@
     table.withborders th{
         border-bottom: 2px solid #000000;
     }
-    
-    table{
-        margin: 0cm;
-    }
-    .underline{
-        text-decoration: underline;
-    }
-    .small{
-        font-size: small;
+
+    table.withrowborders,
+    table.withrowborders tr{
+        border-bottom: 1px solid #000000;
+        border-top: 1px solid #000000;
     }
     
-    h1{
-        text-align: center;
-        font-size: 2em;
-        margin: 0cm;
-        padding: 1em;
-    }
     .infotext{
         margin: 1em;
         text-align: center;
@@ -77,19 +111,26 @@
     table.part h2{
         border: 1px solid #000000;
         text-align: center;
-        font-size: 2em;
         padding: 0.2cm;
         height: 2em;
     }
     
-    h3{
-        font-weight: bold;
-        font-size: 1em;
+    
+    table.section{
+        margin-top: 1em;
+        border-top: 1px solid #000000;
+    }
+    table.section td{
+        padding: 0;
+    }
+    table.section h3{
+        margin-top: 5px;
+        border-top: 1px solid #000000;
+        padding-top: 0.5em;
     }
     
-    h4{
-        font-weight: normal;
-        font-size: 1em;
+    div.indented{
+        margin-left: 1cm;
     }
     
 {% endblock %}
@@ -98,151 +139,71 @@
 
     {% include "db/submissions/xhtml2pdf/head.html" %}
 
+    
     {% tcwrap part %}
         <h2>Teil A</h2>
     {% endtcwrap %}
-    
     {% include "db/submissions/xhtml2pdf/section_1.html" %}
+    
+    {% tcwrap section %}
+        <h3>2. Eckdaten der Studie</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_2_1.html" %}
+    {% include "db/submissions/xhtml2pdf/section_2_2-2_11.html" %}
+    
+    
+    {% tcwrap section %}
+        <h3>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_3a.html" %}
 
-    <h3>2. Eckdaten der Studie</h3>
+    {% tcwrap section %}
+        <h3>3b. Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind:</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_3b.html" %}
+    
+    
+    {% tcwrap section %}
+        <h3>4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt:</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_4.html" %}
+    
+    {% tcwrap section %}
+        <h3>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_5.html" %}
+    
+    {% tcwrap section %}
+        <h3>6. Angaben zur durchzuführenden Therapie und Diagnostik</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_6.html" %}
+    
+    {% tcwrap section %}
+        <h3>7. Strukturierte Kurzfassung des Projektes (<i><u>in deutscher Sprache, kein Verweis auf das Protokoll</u></i>)</h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_7.html" %}
+
+    {% tcwrap section %}
+            <h3>8. Biometrie, Datenschutz:</h3>
+        </td><td style="text-align:right; font-style:italic">
+            !!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen !!!
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_8.html" %}
+
+    <pdf:nextpage/>
+
+    {% tcwrap section %}
+        <h3>9. Liste der eingereichten Unterlagen <span style="font-weight:normal">(wenn nicht gesondert dem Antrag beiliegend)</span></h3>
+    {% endtcwrap %}
+    {% include "db/submissions/xhtml2pdf/section_9.html" %}
 
 
 {% for inv in submission_form.investigators.all %}
-
+    <pdf:nextpage/>
     {% tcwrap part %}
         <h2>Teil B</h2>
     {% endtcwrap %}
-
-<p style="margin-left: 4.5cm; text-indent: -4.5cm; margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1.10pt double #000000; border-bottom: 1.10pt double #000000; border-left: none; border-right: none; padding: 0.21cm 0cm; page-break-after: avoid">
- <b>Studienkurzbezeichnung: {{ submission_form.project_title }} </b> </p>
-
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; page-break-after: avoid">
- <b>10. Angaben zur
-Prüferin/zum Prüfer</b> </p>
-
-<p style="line-height: 100%"> 10.1
-Name: <b> {{ inv.name }} </b> </p>
-
-<p style="page-break-after: avoid"> 10.2
-Krankenanstalt/Institut/Abteilung: <b> {{ inv.organisation }} </b></p>
-
-<!--
-<table width="627" border="1" bordercolor="#000000" cellpadding="5"
-cellspacing="0">
-<col width="110">
-<col width="122">
-<col width="111">
-<col width="241">
-<tr>
-<th width="110">10.3 Telefon</th>
-<th width="122">10.4 „Pieps“/Mobil</th>
-<th width="111">10.5 Fax</th>
-<th width="241">10.6 e-mail-Adresse:</th>
-</tr><tr>
-<td width="110"><b>{{ inv.phone }}</b></td>
-<td width="122"><b>{{ inv.mobile }}</b></td>
-<td width="111"><b>{{ inv.fax }}</b></td>
-<td width="241"><b>{{ inv.email }}</b></td>
-</tr>
-</table>
--->
-
-<p style="margin-left: 10cm; text-indent: -10cm; margin-top: 0.21cm; margin-bottom: 0.11cm; page-break-inside: avoid">
-    10.7 Jus practicandi:{{ inv.jus_practicandi|yesno_checkboxes }}
-    10.8 Facharzt für: <span class="value">{{ inv.specialist }}</span>
-</p>
-
-<p style="margin-bottom: 0cm; line-height: 100%">
- 10.9 Prüfärztekurs: {{ inv.certified|checkbox }} ja {{ inv.certified|not|checkbox }} nein </p>
-
-<p style="margin-left: 1cm; text-indent: -1cm; margin-bottom: 0cm; line-height: 100%; page-break-inside: avoid">
- 10.10 Sofern relevant:
-Präklinische Qualifikation (z.B. Labordiagnostik) bzw. Name der
-Verantwortlichen: </p>
-
-<p style="margin-left: 1cm; margin-bottom: 0.11cm; page-break-inside: avoid">
-</p>
-
-<p style="margin-top: 0.21cm; margin-bottom: 0cm; border-top: 1.10pt double #000000; border-bottom: 1.10pt double #000000; border-left: none; border-right: none; padding: 0.21cm 0cm; page-break-after: avoid">
- <b>11.</b> <b>Geplante Anzahl der Patient/inn/en bzw.
-Proband/inn/en an dieser Prüfstelle {{ inv.subject_count }} </b> </p>
-
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.42cm; margin-bottom: 0.42cm; page-break-after: avoid">
-  <b>12. Verantwortliche
-    Mitarbeiter/innen an der klinischen Studie</b> (an Ihrer Prüfstelle) </p>
-
-<!--
-<table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
-<col width="29">
-<col width="52">
-<col width="89">
-<col width="106">
-<col width="289">
-<tr>
-<th width="29" valign="top">Fr/Hr</th>
-<th width="52" valign="top">Titel</th>
-<th width="89" valign="top">Vorname</th>
-<th width="106" valign="top">Name</th>
-<th width="289" valign="top">Institution</th>
-</tr>
-{% for emp in inv.investigatoremployee_set.all %}
-<tr>
-<td width="29" valign="top"><b>{{ emp.geschlecht_string }}</b></td>
-<td width="52" valign="top"><b>{{ emp.title }}</b></th>
-<td width="89" valign="top"><b>{{ emp.firstname }}</b></td>
-<td width="106" valign="top"><b>{{ emp.surname }}</b></td>
-<td width="289" valign="top"><b>{{ emp.organisation }}</b></td>
-</tr>
-{% endfor %}
-</table>
--->
-<p style="margin-top: 0.85cm; border-top: 1.10pt double #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.21cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm; page-break-after: avoid">
- <b>13. Unterschrift der
-Prüferin/des Prüfers</b> </p>
-
-<p style="margin-bottom: 0cm"> Ich bestätige hiermit, dass die in diesem Antrag
-gemachten Angaben korrekt sind und dass ich der Meinung bin, dass
-die durchführung der studie in Übereinstimmung mit dem Protokoll,
-nationalen Regelungen und mit den Prinzipien der Guten Klinischen
-Praxis möglich sein wird. </p>
-
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-bottom: 1.06cm; page-break-after: avoid">
-<br>
-<br></p>
-<!--
-<table width="624" border="0" cellpadding="5" cellspacing="0">
-<tr>
-<td width="28" height="11" valign="top"></td>
-<td width="302" valign="bottom">Unterschrift der Prüferin/des Prüfers</td>
-<td width="28" valign="top"></td>
-<td width="188" valign="bottom">Datum</td>
-<td width="28" valign="top"></td>
-</tr>
-</table>
--->
-<br/>
-
-<p align="center" style="margin-bottom: 0cm"> <i><b>!!! Achtung: Teil B ist in jedem Fall vollständig
-auszufüllen, bei multizentrischen klinischen Prüfungen nach AMG für
-jedes in Österreich teilnehmende Zentrum separat
-!!!</b></i> </p>
-
-<br>
-
-<p><i>Bei multizentrischen AMG-Studien
-sind die Teile B von der Hauptprüferin/dem Hauptprüfer des
-jeweiligen Zentrums zu unterzeichen.</i></p>
-
-<p><i>Alternativ zur Unterschrift auf
-den Teilen B können die Unterschriften der Hauptprüfer/innen auch
-auf den Unter­schriftenseiten des Protokolls oder der
-Prüfärzteverträge vorgelegt werden. Es muss jedenfalls eine
-eindeutige &nbsp; durch Unterschrift dokumentierte &nbsp;
-Zustimmung aller Hauptprüfer/innen zum Protokoll vorliegen.</i></p>
-
-
-
-
+    {% include "db/submissions/xhtml2pdf/part_b.html" %}
 {% endfor %}
 
 {% block footer %}
