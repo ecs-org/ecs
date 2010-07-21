@@ -2,7 +2,7 @@
 import math
 from datetime import timedelta, datetime
 from django.db import models, transaction
-from django.db.models.signals import post_delete
+from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 
 from ecs.core.models.core import MedicalCategory
@@ -104,6 +104,18 @@ class TimetableMetrics(object):
         return timedelta(seconds=math.sqrt(var / len(self.waiting_time_per_user)))
         
 
+class AssignedMedicalCategory(models.Model):
+    category = models.ForeignKey('core.MedicalCategory')
+    board_members = models.ManyToManyField(User, null=True)
+    meeting = models.ForeignKey('core.Meeting')
+
+    class Meta:
+        app_label = 'core'
+        unique_together = (('category', 'meeting'),)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.meeting.title, self.category.name)
+
 class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)
@@ -111,13 +123,17 @@ class Meeting(models.Model):
     submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     started = models.DateTimeField(null=True)
     ended = models.DateTimeField(null=True)
-    
+
     class Meta:
         app_label = 'core'
         
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         
+    @property
+    def medical_categories(self):
+        return AssignedMedicalCategory.objects.filter(meeting=self)
+
     @cached_property
     def duration(self):
         return timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
@@ -241,7 +257,13 @@ class Meeting(models.Model):
     @property
     def open_tops_with_vote(self):
         return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
-        
+
+def _post_meeting_save(sender, instance, created, **kwargs):
+    if not kwargs.get('raw'):
+        for category in MedicalCategory.objects.all():
+            AssignedMedicalCategory.objects.get_or_create(category=category, meeting=instance)
+
+post_save.connect(_post_meeting_save, sender=Meeting)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
