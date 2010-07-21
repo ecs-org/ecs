@@ -137,6 +137,13 @@ def participation_editor(request, meeting_pk=None):
         'categories': MedicalCategory.objects.all(),
     })
 
+def medical_categories(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    return render(request, 'meetings/timetable/medical_categories.html', {
+        'meeting': meeting,    
+    })
+
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.optimization_task_id:

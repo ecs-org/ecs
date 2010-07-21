@@ -116,6 +116,10 @@ class AssignedMedicalCategory(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.meeting.title, self.category.name)
 
+    @property
+    def submissions(self):
+        return self.meeting.submissions.filter(medical_categories=self.category)
+
 class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)

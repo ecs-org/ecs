@@ -43,6 +43,7 @@ urlpatterns = patterns(
     url(r'^meetings/$', 'ecs.core.views.meeting_list'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/editor/$', 'ecs.core.views.timetable_editor'),
     url(r'^meeting/(?P<meeting_pk>\d+)/particiaptions/$', 'ecs.core.views.participation_editor'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/$', 'ecs.core.views.medical_categories'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/$', 'ecs.core.views.optimize_timetable'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/new/$', 'ecs.core.views.add_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/add/$', 'ecs.core.views.add_free_timetable_entry'),

@@ -1,0 +1,24 @@
+{% extends 'core.html' %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    Spezialisten für {{ meeting.title }} am {{ meeting.start|date:'d.m.Y H:i' }}
+{% endblock %}
+
+{% block content %}
+
+{% for category in meeting.medical_categories %}
+    <div class="medical_category">
+        {{ category.category }} [{{ category.submissions|length }}]: 
+        {% for submission in category.submissions %}
+            {{ submission }}
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+{% endfor %}
+
+{% endblock %}
+
+

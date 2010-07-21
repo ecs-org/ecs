@@ -18,6 +18,7 @@ Liste aller Sitzungen
               <strong>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</strong><br />
                   <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
                   | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
+                  | <a href="{% url ecs.core.views.medical_categories meeting_pk=meeting.pk %}">Spezialistenzuordnung</a>
                   | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
                   | <a href="{% url ecs.core.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
                   | <a href="{% url ecs.core.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
