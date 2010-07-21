@@ -66,7 +66,7 @@ EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
 # uses ECSMAIL_PORT, ECSMAIL_LOGSERVER_PORT, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
 BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
 UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
-DELIVERED_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
+TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
 
 RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
 RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}  
@@ -74,9 +74,12 @@ HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
 ROUTER_DEFAULTS = {'host': '.+'}
 ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 
+
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
-AGENDA_RECIPIENT_LIST = {}
+# FIXME: Agenda is send to whitelist instead of invited people
+AGENDA_RECIPIENT_LIST = EMAIL_WHITELIST
+
 
 # fulltext search engine config
 HAYSTACK_SITECONF = 'ecs.search_sites'
@@ -128,10 +131,6 @@ if platform.node() == "ecsdev.ep3.at":
     RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx
     EMAIL_PORT = 25
 
-    # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
-    EMAIL_WHITELIST = {}
-    AGENDA_RECIPIENT_LIST = {}
-
     # fulltext search engine override (ecsdev uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"
     HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
@@ -140,7 +139,6 @@ if platform.node() == "ecsdev.ep3.at":
     if user == "testecs":
         DEBUG = False
         TEMPLATE_DEBUG = False
-        
 
 
 # use different settings if local_settings.py exists

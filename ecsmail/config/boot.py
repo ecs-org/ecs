@@ -11,12 +11,11 @@ import os.path
 os.environ['LAMSON_LOADED'] = 'True'
 
 # import jinja2
-
 # logging.config.fileConfig("config/logging.conf")
 
 # the relay host to actually send the final message to
 relay = Relay(host=settings.RELAY_CONFIG['host'], 
-                       port=settings.RELAY_CONFIG['port'], debug=1)
+                       port=settings.RELAY_CONFIG['port']) # , debug=1
 
 # where to listen for incoming messages
 receiver = SMTPReceiver(settings.RECEIVER_CONFIG['host'],
