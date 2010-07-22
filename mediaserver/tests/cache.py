@@ -16,7 +16,7 @@ class CacheTest(TestCase):
     pages = 123
     opt_compress = False
     opt_interlace = False
-    png_name = os.path.join('mediaserver', 'tests', 'test-pdf-14-seitig_3x3_big_0002_a7_z.png')
+    png_name = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig_3x3_big_0002_a7_z.png')
     png_md5 = '207cf4f4e4a04b9b8f6d6b7c1e389260'
     page = 2
     zoom = '3x3'
