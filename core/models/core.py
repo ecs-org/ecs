@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import User
 
 class EthicsCommission(models.Model):
@@ -21,6 +22,10 @@ class EthicsCommission(models.Model):
     
     def __unicode__(self):
         return self.name
+        
+    @property
+    def system(self):
+        return self.uuid == settings.ETHICS_COMMISSION_UUID
 
 
 class ExpeditedReviewCategory(models.Model):

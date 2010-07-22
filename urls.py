@@ -27,6 +27,7 @@ urlpatterns = patterns('',
     url(r'^mediaserver/', include('ecs.mediaserver.urls')),
     url(r'^tasks/', include('ecs.tasks.urls')),
     url(r'^messages/', include('ecs.messages.urls')),
+    url(r'^billing/', include('ecs.billing.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),

@@ -20,6 +20,7 @@ register.filter('startwith', lambda obj, start: obj.startswith(substr))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
 register.filter('contains', lambda obj, x: x in obj)
 register.filter('not', lambda obj: not obj)
+register.filter('euro', lambda val: (u"€ %.2f" % float(val)).replace('.', ','))
 
 @register.filter
 def repeat(s, n):

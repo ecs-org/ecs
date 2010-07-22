@@ -1,0 +1,23 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block menuSelection %}overview{% endblock %}
+
+{% block htmltitle %}Rechnungsstellung - Einreichungen{% endblock %}
+
+{% block headertitle %}
+    Rechnungsstellung - Einreichungen
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+    {% for submission in submissions %}
+        <div>
+            <input type="checkbox" name="bill_{{ submission.pk }}" checked="checked" /> {{ submission.project_title }}
+            <div><span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})</div>
+        </div>
+    {% endfor %}
+    <input type="submit">
+    </form>
+{% endblock %}
+

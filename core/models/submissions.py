@@ -5,7 +5,22 @@ from django.contrib.auth.models import User
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
-
+    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
+    thesis = models.NullBooleanField()
+    retrospective = models.NullBooleanField()
+    # FIXME: why do we have two field for expedited_review?
+    expedited = models.NullBooleanField()
+    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
+    # FIXME: why do we have two fields for external_review?
+    external_reviewer = models.NullBooleanField()
+    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    remission = models.BooleanField(default=False)    
+    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
+    sponsor_required_for_next_meeting = models.BooleanField(default=False)
+    befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
+    study_types = models.ManyToManyField('core.StudyType', null=True, related_name='submissions')
+    billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
+    
     def get_ec_number_display(self):
         try:
             year, ec_number = self.ec_number.split('/')
@@ -18,25 +33,6 @@ class Submission(models.Model):
         else:
             return '%s/%s' % (ec_number, year)
     get_ec_number_display.short_description = 'EC-Number'
-
-    # medical categories
-    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
-    thesis = models.NullBooleanField()
-    retrospective = models.NullBooleanField()
-    # FIXME: why do we have two field for expedited_review?
-    expedited = models.NullBooleanField()
-    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    # FIXME: why do we have two fields for external_review?
-    external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
-    remission = models.BooleanField(default=False)
-    
-    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
-    sponsor_required_for_next_meeting = models.BooleanField(default=False)
-    
-    befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
-
-    study_types = models.ManyToManyField('core.StudyType', null=True, related_name='submissions')
 
     def get_befangene(self):
         submission_form = self.get_most_recent_form()
@@ -86,6 +82,20 @@ class Submission(models.Model):
         return sf.german_project_title
         
     @property
+    def multicentric(self):
+        sf = self.get_most_recent_form()
+        if not sf:
+            return None
+        return sf.multicentric
+        
+    @property
+    def is_drug_study(self):
+        sf = self.get_most_recent_form()
+        if not sf:
+            return None
+        return sf.project_type_non_reg_drug or sf.project_type_reg_drug
+        
+    @property
     def is_active(self):
         vote = self.get_most_recent_vote()
         if vote:
@@ -100,7 +110,7 @@ class Submission(models.Model):
         
     def __unicode__(self):
         return self.get_ec_number_display()
-
+        
     class Meta:
         app_label = 'core'
 

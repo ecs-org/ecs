@@ -291,6 +291,7 @@ INSTALLED_APPS = (
     'ecs.messages',
     'ecs.dashboard',
     'ecs.bootstrap',
+    'ecs.billing',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'
@@ -317,7 +318,6 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 COMPRESS = True
 COMPRESS_JS_FILTERS = []
 
-
 #ECS_AUTO_PDF_BARCODE = True # default
 
 # pdf-as settings
@@ -327,3 +327,4 @@ SESSION_COOKIE_AGE = 1800                # logout after 30 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
