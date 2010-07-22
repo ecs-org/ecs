@@ -29,6 +29,7 @@ class Submission(models.Model):
     # FIXME: why do we have two fields for external_review?
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    remission = models.BooleanField(default=False)
     
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)

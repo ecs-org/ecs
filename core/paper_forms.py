@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.utils.functional import memoize
 
-from ecs.core.models import SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
+from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
 from ecs.core.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification
 
 _form_info = {}
@@ -291,6 +291,9 @@ FormInfo(InvestigatorEmployee, fields=(
     FieldInfo(None, 'organisation', u'Institution'),
 ))
 
+FormInfo(Submission, fields=(
+    FieldInfo(None, 'remission', u'Gebührenbefreiung'),
+))
 
 def get_field_info_for_model(model):
     fields = {}
