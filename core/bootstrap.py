@@ -14,17 +14,20 @@ from django.contrib.sites.models import Site
 @bootstrap.register()
 def document_types():
     names = (
-        u"Patienteninformation",
-        u"Covering Letter",
-        u"Versicherungsbest\u00e4tigung",
-        u"Investigator's Brochure",
-        u"CRF",
-        u"PI's Curriculum Vit\u00e6",
-        u"U. gem\u00e4\u00df EU-Direktive 2001-20-EG",
-        u"Conflict of Interest",
-        u"Protokoll",
+        (u"Covering Letter", u"coveringletter", u"Anschreiben / Begleitschreiben an die Ethikkommission"),
+        (u"Patienteninformation", u"patientinformation", 
+            u"Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- Information, Information für nicht einwilligungsfähige Patienten"),
+        (u"Versicherungsbestätigung", u"insurancecertificate", u""),
+        (u"Protokoll", u"protocol", u"Studienprotokoll"),
+        (u"Investigator's Brochure", u"investigatorsbrochure", u""),
+        (u"Amendment", u"amendment", u"Protokolländerungen"),
+        (u"Curriculum Vitae (CV)", u"cv", u"Lebenslauf"),
+        (u"Conflict of Interest", u"conflictofinterest", u"kann auch ein Financial Disclosure Form sein"),
+        (u"Case Report Form (CRF)", u"crf", ""),
+        (u"EudraCT Formular", u"eudract", u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial"),
+        (u"Nebenwirkungsmeldung", u"adversereaction", u"Med Watch-Bericht, CIOMS-Formular etc."),
+        (u"Sonstige", u"other", u"Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."),
     )
-    
     for name in names:
         DocumentType.objects.get_or_create(name=name)
 
@@ -32,10 +35,10 @@ def document_types():
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"SAE Bericht", "ecs.core.forms.NotificationForm"),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
+        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.NotificationForm"),
         (u"Protokolländerung", "ecs.core.forms.NotificationForm"),
+        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
+        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
     )
     
     for name, form in types:
