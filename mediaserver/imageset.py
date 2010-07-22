@@ -2,6 +2,7 @@
 from ecs.mediaserver.renderer import Renderer
 from ecs.mediaserver.renderset import RenderSet
 from ecs.mediaserver.storage import Cache, SetData
+from ecs.utils import hashauth
 
 class ImageSet(object):
 
@@ -19,7 +20,7 @@ class ImageSet(object):
         for zoom in self.render_set.zoom_list:
             bigpages = self.render_set.get_bigpages(zoom, self.set_data.pages)
             page_set = range(1, bigpages + 1)
-            self.images[zoom] = dict([(p, { 'url': '/mediaserver/%s/%s/%s/' % (self.id, p, zoom)}) for p in page_set])
+            self.images[zoom] = dict([(p, { 'url': hashauth.sign_url('/mediaserver/%s/%s/%s/' % (self.id, p, zoom))}) for p in page_set])
 
 
     def store(self, origin, pdf_name, pages, opt_compress=True, opt_interlace=True):

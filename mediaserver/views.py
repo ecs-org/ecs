@@ -9,7 +9,8 @@ from django.conf import settings
 from ecs.core.models import Document
 from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.renderer import Renderer
-from ecs.mediaserver.storage import Cache
+from ecs.mediaserver.storage import Cache, SetData
+from ecs.utils import hashauth
 
 
 def load_refill_set(cache, id):
@@ -77,7 +78,7 @@ def get_image_data(id, bigpage, zoom):
     last_modified = email.utils.formatdate(png_time, usegmt=True)
     return (png_data, expires, last_modified)
 
-
+@hashauth.protect(ttl=10)
 def get_image(request, id='1', bigpage=1, zoom='1'):
     if not request.user.is_authenticated():
         return HttpResponse("Error: you need to be logged in!")

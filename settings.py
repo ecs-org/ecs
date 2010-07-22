@@ -273,6 +273,7 @@ INSTALLED_APPS = (
     'djangodblog',
     'djcelery',
     'ecs.utils.countries',
+    'ecs.utils.hashauth',
     'compressor',
     'dbtemplates',
     'haystack',
