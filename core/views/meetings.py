@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
 from ecs.core.views.utils import render, render_html, render_pdf, pdf_response
-from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint
-from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm
+from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint, AssignedMedicalCategory
+from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.core.task_queue import optimize_timetable_task
 from ecs.utils.timedelta import parse_timedelta
@@ -137,11 +137,20 @@ def participation_editor(request, meeting_pk=None):
         'categories': MedicalCategory.objects.all(),
     })
 
-def medical_categories(request, meeting_pk=None):
+def medical_categories(request, meeting_pk=None, category_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting.assign_medical_categories()
+
+    if category_pk:
+        form = AssignedMedicalCategoryForm(request.POST, instance=AssignedMedicalCategory.objects.get(pk=category_pk))
+        form.save()
+
+    category_list = [x for x in meeting.medical_categories.all().order_by('category__abbrev') if x.submissions.count()]
+    categories = [(x, AssignedMedicalCategoryForm(None, instance=x),) for x in category_list]
 
     return render(request, 'meetings/timetable/medical_categories.html', {
         'meeting': meeting,    
+        'categories': categories,
     })
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):

@@ -9,16 +9,40 @@
 
 {% block content %}
 
-{% for category in meeting.medical_categories %}
-    <div class="medical_category">
-        {{ category.category }} [{{ category.submissions|length }}]: 
-        {% for submission in category.submissions %}
-            {{ submission }}
-            {% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </div>
+<ul>
+{% for category, form in categories %}
+    <li>
+        <span class="mc_toggle">{{ category.category }} [{{ category.submissions|length }}]</span>
+        <ul class="mc_element">
+            <li>Einreichungen: 
+            {% for submission in category.submissions %}
+                {{ submission }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </li>
+            <li>
+                <form action="{% url ecs.core.views.medical_categories meeting_pk=meeting.pk category_pk=category.pk %}" method="post">
+                    {{ form.as_p }}
+                    <input type="submit" value="Speichern" />
+                </form>
+            </li>
+        </ul>
+    </li>
 {% endfor %}
+</ul>
 
 {% endblock %}
 
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript">
+    (function(){
+    window.addEvent('domready', function(){
+      var AccordionObject = new Accordion($$('.mc_toggle'), $$('.mc_element'));
+    });
+    })();
+  </script>
+{% endblock %}
+
+{% block menuSelection %}meetings{% endblock %}
 

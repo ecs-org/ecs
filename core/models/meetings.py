@@ -107,7 +107,7 @@ class TimetableMetrics(object):
 class AssignedMedicalCategory(models.Model):
     category = models.ForeignKey('core.MedicalCategory')
     board_members = models.ManyToManyField(User, null=True)
-    meeting = models.ForeignKey('core.Meeting')
+    meeting = models.ForeignKey('core.Meeting', related_name='medical_categories')
 
     class Meta:
         app_label = 'core'
@@ -134,10 +134,6 @@ class Meeting(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         
-    @property
-    def medical_categories(self):
-        return AssignedMedicalCategory.objects.filter(meeting=self)
-
     @cached_property
     def duration(self):
         return timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
@@ -262,12 +258,10 @@ class Meeting(models.Model):
     def open_tops_with_vote(self):
         return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
 
-def _post_meeting_save(sender, instance, created, **kwargs):
-    if not kwargs.get('raw'):
-        for category in MedicalCategory.objects.all():
-            AssignedMedicalCategory.objects.get_or_create(category=category, meeting=instance)
-
-post_save.connect(_post_meeting_save, sender=Meeting)
+    def assign_medical_categories(self):
+        categories = set(sum([list(x.medical_categories.all()) for x in self.submissions.all()], []))
+        for category in categories:
+            AssignedMedicalCategory.objects.get_or_create(category=category, meeting=self)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')

@@ -3,7 +3,7 @@ from datetime import datetime
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
-from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation
+from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
 
@@ -49,3 +49,16 @@ class SubmissionSchedulingForm(forms.Form):
     title = forms.CharField(required=False)
     sponsor_invited = forms.BooleanField(required=False)
     
+class AssignedMedicalCategoryForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        retval =  super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['board_members'].queryset = User.objects.filter(medical_categories=self.instance.category, ecs_profile__board_member=True)
+        else:
+            self.fields['board_members'].queryset = User.objects.filter(medical_categories__gt=0, ecs_profile__board_member=True)
+        return retval
+
+    class Meta:
+        model = AssignedMedicalCategory
+        fields = ('board_members',)
+
