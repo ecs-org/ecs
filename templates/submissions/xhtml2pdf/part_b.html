@@ -15,26 +15,25 @@
 <p style="page-break-after: avoid"> 10.2
 Krankenanstalt/Institut/Abteilung: <b> {{ inv.organisation }} </b></p>
 
-<!--
-<table width="627" border="1" bordercolor="#000000" cellpadding="5"
-cellspacing="0">
-<col width="110">
-<col width="122">
-<col width="111">
-<col width="241">
-<tr>
-<th width="110">10.3 Telefon</th>
-<th width="122">10.4 „Pieps“/Mobil</th>
-<th width="111">10.5 Fax</th>
-<th width="241">10.6 e-mail-Adresse:</th>
-</tr><tr>
-<td width="110"><b>{{ inv.phone }}</b></td>
-<td width="122"><b>{{ inv.mobile }}</b></td>
-<td width="111"><b>{{ inv.fax }}</b></td>
-<td width="241"><b>{{ inv.email }}</b></td>
-</tr>
+
+<table width="627" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
+    <col width="110">
+    <col width="122">
+    <col width="111">
+    <col width="241">
+    <tr>
+        <th width="110">10.3 Telefon</th>
+        <th width="122">10.4 „Pieps“/Mobil</th>
+        <th width="111">10.5 Fax</th>
+        <th width="241">10.6 e-mail-Adresse:</th>
+    </tr><tr>
+        <td width="110"><b>{{ inv.phone }}</b></td>
+        <td width="122"><b>{{ inv.mobile }}</b></td>
+        <td width="111"><b>{{ inv.fax }}</b></td>
+        <td width="241"><b>{{ inv.email }}</b></td>
+    </tr>
 </table>
--->
+
 
 <p style="margin-left: 10cm; text-indent: -10cm; margin-top: 0.21cm; margin-bottom: 0.11cm; page-break-inside: avoid">
     10.7 Jus practicandi:{{ inv.jus_practicandi|yesno_checkboxes }}
