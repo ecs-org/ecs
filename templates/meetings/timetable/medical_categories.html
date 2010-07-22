@@ -12,7 +12,7 @@
 <ul>
 {% for category, form in categories %}
     <li>
-        <span class="mc_toggle">{{ category.category }} [{{ category.submissions|length }}]</span>
+        <span class="mc_toggle">{{ category.category }} [{{ category.submissions|length }} Einreichungen, {% for user in form.instance.board_members %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}]</span>
         <ul class="mc_element">
             <li>Einreichungen: 
             {% for submission in category.submissions %}
