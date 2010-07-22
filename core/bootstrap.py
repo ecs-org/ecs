@@ -28,8 +28,8 @@ def document_types():
         (u"Nebenwirkungsmeldung", u"adversereaction", u"Med Watch-Bericht, CIOMS-Formular etc."),
         (u"Sonstige", u"other", u"Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."),
     )
-    for name in names:
-        DocumentType.objects.get_or_create(name=name)
+    for name,identifier,helptext in names:
+        DocumentType.objects.get_or_create(name=name, identifier=identifier, helptext=helptext)
 
 
 @bootstrap.register()
@@ -53,6 +53,7 @@ def expedited_review_categories():
 
 @bootstrap.register()
 def default_site():
+    ''' XXX: default_site is needed for dbtemplates, but we dont know why '''
     Site.objects.get_or_create(pk=1)
 
 @bootstrap.register()
@@ -174,6 +175,8 @@ def submission_workflow():
 def auth_groups():
     groups = (
         u'Presenter',
+        u'Sponsor',
+        u'Investigator',
         u'EC-Office',
         u'EC-Meeting Secretary',
         u'EC-Internal Review Group',
@@ -185,6 +188,7 @@ def auth_groups():
         u'EC-Thesis Review Group',
         u'EC-Board Member',
         u'External Reviewer',
+        u'userswitcher_target',
     )
     
     for group in groups:
@@ -204,8 +208,8 @@ def auth_user_root():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     developers = (
-        ('wuxxin', u'Felix', u'Erkinger', u'wuxxin@ecsdev.ep3.at'),
-        ('mvw', 'Marc', 'van Woerkom', 'mvw@ecsdev.ep3.at'),
+        ('wuxxin', u'Felix', u'Erkinger', u'felix@erkinger.at'),
+        ('mvw', 'Marc', 'van Woerkom', 'marc.vanwoerkom@googlemail.com'),
         ('emulbreh', u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
         ('natano', u'Martin', u'Natano', 'natano@natano.net'),
     )
@@ -216,55 +220,39 @@ def auth_user_developers():
         user.last_name = dev[2]
         user.email = dev[3]
         user.set_password(dev[4])
+        user.is_staff = True
         user.save()
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_testusers():
     testusers = (
-        (u'External Reviewer 1', u'External Reviewer'),
-        (u'External Reviewer 2', u'External Reviewer'),
-        (u'External Reviewer 3', u'External Reviewer'),
-        (u'Presenter Testuser 1', u'Presenter'),
-        (u'Presenter Testuser 2', u'Presenter'),
-        (u'Presenter Testuser 3', u'Presenter'),
-        (u'EC-Office Testuser 1', u'EC-Office'),
-        (u'EC-Office Testuser 2', u'EC-Office'),
-        (u'EC-Office Testuser 3', u'EC-Office'),
-        (u'EC-M. Secretary Testuser u', u'EC-Meeting Secretary'),
-        (u'Meeting Secretary Testuser 2', u'EC-Meeting Secretary'),
-        (u'Meeting Sec. Testuser 3', u'EC-Meeting Secretary'),
-        (u'Internal R. Testuser 1', u'EC-Internal Review Group'),
-        (u'Internal R. Group Testuser 2', u'EC-Internal Review Group'),
-        (u'Internal R. Group Testuser 3', u'EC-Internal Review Group'),
-        (u'Ex. Board Testuser 1', u'EC-Executive Board Group'),
-        (u'Ex. Board Testuser 2', u'EC-Executive Board Group'),
-        (u'Ex. Board Group Testuser 3', u'EC-Executive Board Group'),
-        (u'EC-Signing Group Testuser 1', u'EC-Signing Group'),
-        (u'EC-Signing Group Testuser 2', u'EC-Signing Group'),
-        (u'EC-Signing Group Testuser 3', u'EC-Signing Group'),
-        (u'EC-Statistic Group Testuser 1', u'EC-Statistic Group'),
-        (u'EC-Statistic Group Testuser 2', u'EC-Statistic Group'),
-        (u'EC-Statistic Group Testuser 3', u'EC-Statistic Group'),
-        (u'Notification R. Testuser 1', u'EC-Notification Review Group'),
-        (u'Notification R. Testuser 2', u'EC-Notification Review Group'),
-        (u'Notification R. Testuser 3', u'EC-Notification Review Group'),
-        (u'Ins. R. Testuser 1', u'EC-Insurance Reviewer'),
-        (u'Ins. Reviewer Testuser 2', u'EC-Insurance Reviewer'),
-        (u'Ins. R. Testuser 3', u'EC-Insurance Reviewer'),
-        (u'Thesis R. Group Testuser 1', u'EC-Thesis Review Group'),
-        (u'Thesis R. Group Testuser 2', u'EC-Thesis Review Group'),
-        (u'Thesis R. Group Testuser 3', u'EC-Thesis Review Group'),
-        (u'EC-Board Member Testuser 1', u'EC-Board Member'),
-        (u'EC-Board Member Testuser 2', u'EC-Board Member'),
-        (u'EC-Board Member Testuser 3', u'EC-Board Member'),
-        (u'External Reviewer Testuser 1', u'External Reviewer'),
-        (u'External Reviewer Testuser 2', u'External Reviewer'),
-        (u'External Reviewer Testuser 3', u'External Reviewer'),
+        (u'Presenter', u'Presenter'),
+        (u'Sponsor', u'Sponsor'),
+        (u'Investigtor', u'Investigator'),
+        (u'EC-Office', u'EC-Office'),
+        (u'EC-M. Secretary', u'EC-Meeting Secretary'),
+        (u'Internal Rev', u'EC-Internal Review Group'),
+        (u'Executive', u'EC-Executive Board Group'),
+        (u'Signing', u'EC-Signing Group'),
+        (u'Statistic Rev', u'EC-Statistic Group'),
+        (u'Notification Rev', u'EC-Notification Review Group'),
+        (u'Insurance Rev', u'EC-Insurance Reviewer'),
+        (u'Thesis Rev', u'EC-Thesis Review Group'),
+        (u'External Reviewer', u'External Reviewer'),
+
+    testboardusers = (
+        (u'EC-Board Member 1', u'EC-Board Member'),
+        (u'EC-Board Member 2', u'EC-Board Member'),
+        (u'EC-Board Member 3', u'EC-Board Member'),
     )
     
-    for testuser in testusers:
-        user, created = User.objects.get_or_create(username=testuser[0])
-        user.groups.add(Group.objects.get(name=testuser[1]))
+    for testuser, testgroup in testusers:
+        for number in range(1,4):
+            user, created = User.objects.get_or_create(username=" ".join((testuser,str(number))))
+            user.groups.add(Group.objects.get(name=testgroup))
+            user.groups.add(Group.objects.get(name="userswitcher_target"))
+
+
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_users():
