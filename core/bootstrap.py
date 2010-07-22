@@ -242,7 +242,7 @@ def medical_categories():
         (u'Recht', u'Juristen'),
         (u'Pharmazie', u'Pharmazeuten'),
         (u'Patient', u'Patientenvertreter'), 
-        (u'BehindertenOrg', u'Benhindertenorganisation'), 
+        (u'BehinOrg', u'Benhindertenorganisation'), 
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technischer Sicherheitsbeauftragter'),
 
@@ -325,7 +325,6 @@ def auth_user_testusers():
         user.groups.add(Group.objects.get(name="userswitcher_target"))
 
         for medcategory in medcategories:
-            print medcategory
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
 
