@@ -41,7 +41,7 @@ class ExpeditedReviewCategory(models.Model):
 
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
-    abbrev = models.CharField(max_length=12)
+    abbrev = models.CharField(max_length=12, unique=True)
     users = models.ManyToManyField(User, related_name='medical_categories')
 
     class Meta:
