@@ -330,6 +330,17 @@ def agenda_pdf(request, meeting_pk=None):
     })
     return pdf_response(pdf, filename=filename)
 
+def protocol_pdf(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    filename = '%s-%s-Protokoll.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    )
+    
+    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
+        'meeting': meeting,
+    })
+    return pdf_response(pdf, filename=filename)
+
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     
