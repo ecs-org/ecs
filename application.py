@@ -146,6 +146,9 @@ python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:win:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
+
+# excel output
+xlwt:inst:all:pypi:xlwt
 """
 
 # software quality testing packages
