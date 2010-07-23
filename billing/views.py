@@ -39,7 +39,7 @@ def _get_organizations(submission_form):
 
 def submission_billing(request):
     # FIXME: only bill accepted submissions
-    unbilled_submissions = list(Submission.objects.filter(billed_at=None, accepted=))
+    unbilled_submissions = list(Submission.objects.filter(billed_at=None))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 
