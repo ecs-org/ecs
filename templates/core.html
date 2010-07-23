@@ -16,6 +16,13 @@
   </p> 
 {% endblock %}
 
+{% block searchbox %}
+  <form action="{% url ecs.core.views.submission_form_list %}" method="post" enctype="multipart/form-data">
+    <input type="text" name="keyword" />
+    <input type="submit" value="Go" />
+  </form>
+{% endblock %}
+
 {% block usertoolbar %} 
   <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
