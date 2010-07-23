@@ -79,7 +79,7 @@ ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 EMAIL_WHITELIST = {}
 # FIXME: Agenda is send to whitelist instead of invited people
 AGENDA_RECIPIENT_LIST = EMAIL_WHITELIST
-
+BILLING_RECIPIENT_LIST = ('emulbreh@googlemail.com',) # EMAIL_WHITELIST
 
 # fulltext search engine config
 HAYSTACK_SITECONF = 'ecs.search_sites'

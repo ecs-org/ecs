@@ -105,11 +105,12 @@ class Document(models.Model):
             self.file.seek(0)
             self.hash = m.hexdigest()
             
-            analyzer = Analyzer()     # update page number
-            analyzer.sniff_file(self.file)
-            if analyzer.valid is False:
-                raise ValidationError('invalid PDF')  # TODO add user-visible error message
-            self.pages = analyzer.pages
+            if self.mimetype == 'application/pdf':
+                analyzer = Analyzer()     # update page number
+                analyzer.sniff_file(self.file)
+                if analyzer.valid is False:
+                    raise ValidationError('invalid PDF')  # TODO add user-visible error message
+                self.pages = analyzer.pages
         
         return super(Document, self).save(**kwargs)
         
