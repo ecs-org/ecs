@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from ecs import bootstrap
-from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer, StudyType
+from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
 from ecs.utils.countries.models import Country
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
@@ -355,12 +355,6 @@ def checklist_questions():
         #FIXME: there is no unique constraint, so this is not idempotent
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
-
-@bootstrap.register()
-def study_types():
-    types = ['AMG', 'MPG']
-    for type in types:
-        StudyType.objects.get_or_create(name=type)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_root'))
 def testsubmission():

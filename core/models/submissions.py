@@ -18,9 +18,11 @@ class Submission(models.Model):
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
-    study_types = models.ManyToManyField('core.StudyType', null=True, related_name='submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     
+    is_amg = models.NullBooleanField()   # Arzneimittelgesetz
+    is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
+
     def get_ec_number_display(self):
         try:
             year, ec_number = self.ec_number.split('/')
@@ -474,18 +476,5 @@ class ForeignParticipatingCenter(models.Model):
     
     class Meta:
         app_label = 'core'
-
-# e.g.: AMG, MPG
-class StudyType(models.Model):
-    name = models.CharField(max_length=10, unique=True, db_index=True)
-
-    class Meta:
-        app_label = 'core'
-
-    def __unicode__(self):
-        return unicode(self.name)
-
-from ecs import workflow
-workflow.register(Submission)
 
 
