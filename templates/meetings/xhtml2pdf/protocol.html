@@ -11,22 +11,25 @@
     </div>
 
     <pdf:spacer height="1.5cm" />
-Beginn: {{meeting.start|date:'H:i'}}<br />
-Ende: {{meeting.end|date:'H:i'}}<br />
+    Beginn: {{meeting.start|date:'H:i'}}<br />
+    Ende: {{meeting.end|date:'H:i'}}<br />
     <pdf:spacer height="0.5cm" />
 
     {% for top, vote in tops %}
         <span style="font-weight:bold;">#{{ top }}</span>
         {% if top.submission %}
             <span style="font-weight:bold;">EK Nr.</span> {{ top.submission.ec_number }}<br />
-            <span style="font-weight:bold;">Antragsteller:</span> {{ top.submission.get_most_recent_form.submitter_name }}<br />
+            <span style="font-weight:bold;">Antragsteller:</span> {{ top.submission.get_most_recent_form.submitter_name }}
+            {% if top.submission.get_most_recent_form.sponsor_name %}
+                <span style="font-weight:bold;">Sponsor/CRO:</span> {{ top.submission.get_most_recent_form.sponsor_name }}
+            {% endif %}<br />
             <span style="font-weight:bold;">Einreichende Institut:</span> {{ top.submission.get_most_recent_form.submitter_organisation }}<br />
             <span style="font-weight:bold;">Projekttitel:</span> {{ top.submission.project_title }}<br />
         {% else %}
             <br />
         {% endif %}
-        {% if vote %}
 
+{% if top.submission %}
 <pdf:spacer height="1.0cm" />
 
 <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
@@ -42,31 +45,38 @@ Ende: {{meeting.end|date:'H:i'}}<br />
 {% endif %}
 {% if vote.result == '2' %}
     <tr>
-      <td>[X]</td>
+      <td width="3%">[X]</td>
       <td>Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluß ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt. <br/>
         <div style="font-size: small;"><span style="text-decoration: underline;">Achtung:</span> Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.</div></td>
     </tr>
 {% endif %}
 {% if vote.result == '3' %}
     <tr>
-      <td>[X]</td>
+      <td width="3%">[X]</td>
       <td>Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form. Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden. Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. <br/>
         <div style="font-size: small;"><span style="text-decoration: underline;">Achtung:</span> Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.</div></td>
     </tr>
 {% endif %}
 {% if vote.result == '4' %}
     <tr>
-      <td>[X]</td>
+      <td width="3%">[X]</td>
       <td>Der Antrag wird von der Ethik-Kommission abgelehnt.</td>
     </tr>
 {% endif %}
 {% if vote.result == '5' or vote.result == '5a' or vote.result == '5b' %}
     <tr>
-      <td>[X]</td>
+      <td width="3%">[X]</td>
       <td>Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)</td>
     </tr>
 {% endif %}
+{% if not vote %}
+    <tr>
+        <td width="3%">[X]</td>
+        <td>Es liegt kein Votum vor.</td>
+    </tr>
+{% endif %}
 </table> 
+
 {% if vote.text %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Kommentar:</span><br />
@@ -75,7 +85,24 @@ Ende: {{meeting.end|date:'H:i'}}<br />
 
 <pdf:spacer height="1.0cm" />
 
-        {% endif %}
+{% if top.submission.is_mpg %}
+    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß MPG handelt</span><br />
+{% endif %}
+{% if top.submission.is_amg %}
+    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß AMG handelt</span><br />
+{% endif %}
+{% if not top.submission.is_mpg and not top.submission.is_amg %}
+    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um keine klinische Prüfung gemäß AMG/MPG handelt</span><br />
+{% endif %}
+
+
+Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend.
+{% if top.submission.befangene.count %}
+Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäfts­ordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for user in top.submission.befangene.all %}{{ user.first_name }} {{ user.last_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+{% endif %}
+<pdf:spacer height="0.5cm" />
+{% endif %}
+
         <br />
     
     {% endfor %}
