@@ -18,15 +18,10 @@ Ende: {{meeting.end|date:'H:i'}}<br />
     {% for top, vote in tops %}
         <span style="font-weight:bold;">#{{ top }}</span>
         {% if top.submission %}
-            <span style="font-weight:bold;">EK Nr.</span>
-                {{ top.submission.ec_number }}<br />
-            <span style="font-weight:bold;">Antragsteller:</span>
-                {{ top.submission.get_most_recent_form.submitter_name }}<br />
-            <span style="font-weight:bold;">Einreichende Institut:</span>
-                {{ top.submission.get_most_recent_form.submitter_organisation }}<br />
-            <span style="font-weight:bold;">Projekttitel:</span>
-                {{ top.submission.project_title }}<br />
-
+            <span style="font-weight:bold;">EK Nr.</span> {{ top.submission.ec_number }}<br />
+            <span style="font-weight:bold;">Antragsteller:</span> {{ top.submission.get_most_recent_form.submitter_name }}<br />
+            <span style="font-weight:bold;">Einreichende Institut:</span> {{ top.submission.get_most_recent_form.submitter_organisation }}<br />
+            <span style="font-weight:bold;">Projekttitel:</span> {{ top.submission.project_title }}<br />
         {% else %}
             <br />
         {% endif %}
@@ -72,6 +67,11 @@ Ende: {{meeting.end|date:'H:i'}}<br />
     </tr>
 {% endif %}
 </table> 
+{% if vote.text %}
+    <pdf:spacer height="0.5cm" />
+    <span style="font-weight:bold;">Kommentar:</span><br />
+    {{ vote.text|escape}}
+{% endif %}
 
 <pdf:spacer height="1.0cm" />
 
