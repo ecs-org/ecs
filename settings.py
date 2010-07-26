@@ -237,10 +237,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.core.middleware.SingleLogin',    # deactivate previous user sessions on login
     'ecs.utils.forceauth.ForceAuth',
+    #'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     #'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
@@ -292,6 +294,7 @@ INSTALLED_APPS = (
     'ecs.dashboard',
     'ecs.bootstrap',
     'ecs.billing',
+    #'ecs.tracking',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'
