@@ -1,0 +1,13 @@
+.billing_summary{
+    border: 1px solid #000000;
+}
+
+.billing_summary td{
+    border: 1px solid #000000;
+    padding: 0.1em;
+    padding-right: 1em;
+}
+
+.price{
+    
+}

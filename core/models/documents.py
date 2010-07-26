@@ -3,11 +3,13 @@
 import hashlib
 import os
 import tempfile
+import datetime
 from uuid import uuid4
 
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import FileSystemStorage
+from django.core.files import File
 from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
@@ -56,6 +58,17 @@ class DocumentFileStorage(FileSystemStorage):
         return smart_str(os.path.normpath(name))
 
 
+class DocumentManager(models.Manager):
+    def create_from_buffer(self, buf, **kwargs):
+        tmp = tempfile.NamedTemporaryFile()
+        tmp.write(buf)
+        tmp.flush()
+        tmp.seek(0)
+        kwargs.setdefault('date', datetime.datetime.now())
+        doc = self.create(file=File(tmp), **kwargs)
+        tmp.close()
+        return doc
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36)
     hash = models.SlugField(max_length=32)
@@ -68,6 +81,8 @@ class Document(models.Model):
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
     deleted = models.BooleanField(default=False, blank=True)
+    
+    objects = DocumentManager()
     
     class Meta:
         app_label = 'core'

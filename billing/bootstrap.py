@@ -12,7 +12,7 @@ def prices():
         STUDY_PRICING_MULTICENTRIC_DRUG_MAIN: 4000,
         STUDY_PRICING_MULTICENTRIC_DRUG_LOCAL: 500,
         STUDY_PRICING_REMISSION: 0,
-        EXTERNAL_REVIEW_PRICING: Decimal('4.95'),
+        EXTERNAL_REVIEW_PRICING: Decimal('181.68'),
     }
     for category, price in prices.items():
         Price.objects.get_or_create(category=category, defaults={
