@@ -1,0 +1,18 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block menuSelection %}submissions{% endblock %}
+
+{% block htmltitle %}Rechnungsstellung - External Review{% endblock %}
+
+{% block headertitle %}
+    Rechnungsstellung - External Review
+{% endblock %}
+
+{% block content %}
+    <a href="{% url ecs.core.views.download_document document_pk=xls_doc.pk %}">Detailierte Auflistung</a>
+
+    <h2>Zusammenfassung</h2>
+    ...
+{% endblock %}
+

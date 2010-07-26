@@ -534,4 +534,8 @@ content ol.submission_list li .actions {
     visibility: hidden; 
 }
 
+.even{
+    background-color: #eeeeee;
+}
+
 

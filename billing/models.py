@@ -11,20 +11,28 @@ PRICE_CATEGORIES = (
     (STUDY_PRICING_OTHER, u'Alle Studien außer multizentrische Arzneimittelstudien'),
     (STUDY_PRICING_MULTICENTRIC_DRUG_MAIN, u'Multizentrische Arzneimittelstudien für Leit-Ethikkommissionen'),
     (STUDY_PRICING_MULTICENTRIC_DRUG_LOCAL, u'Multizentrische Arzneimittelstudien für lokal zuständige Ethikkommissionen'),
-    (STUDY_PRICING_REMISSION, u'External Reviewer'),
-    (EXTERNAL_REVIEW_PRICING, u'Gebührenbefreiung'),
+    (STUDY_PRICING_REMISSION, u'Gebührenbefreiung'),
+    (EXTERNAL_REVIEW_PRICING, u'External Reviewer'),
 )
 
 class PriceManager(models.Manager):
-    def get_for_submission(self, submission):
+    def for_submissions(self):
+        return self.exclude(category=EXTERNAL_REVIEW_PRICING)
+
+    def get_for_submission(self, submission, review=False):
         if submission.remission:
             return self.get(category=STUDY_PRICING_REMISSION)
-        if submission.is_drug_study and submission.multicentric:
+        if submission.is_amg and submission.multicentric:
             if submission.main_ethics_commission.system:
                 return self.get(category=STUDY_PRICING_MULTICENTRIC_DRUG_MAIN)
             else:
                 return self.get(category=STUDY_PRICING_MULTICENTRIC_DRUG_LOCAL)
         return self.get(category=STUDY_PRICING_OTHER)
+        
+    def get_review_price(self):
+        return self.get(category=EXTERNAL_REVIEW_PRICING)
+        
+
 
 class Price(models.Model):
     category = models.SmallIntegerField(choices=PRICE_CATEGORIES, unique=True, db_index=True)

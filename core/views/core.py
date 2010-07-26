@@ -17,7 +17,13 @@ from ecs.docstash.models import DocStash
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
     response = HttpResponse(doc.file, content_type=doc.mimetype)
-    response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d')))
+    ext = 'pdf'
+    if 'excel' in doc.mimetype:
+        ext = 'xls'
+    response['Content-Disposition'] = 'attachment;filename=%s.%s' % (
+        slugify("%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d'))),
+        ext,
+    )
     return response
     
 # notifications

@@ -13,7 +13,8 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     # FIXME: why do we have two fields for external_review?
     external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True)
+    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
+    external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     remission = models.BooleanField(default=False)    
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
@@ -89,13 +90,6 @@ class Submission(models.Model):
         if not sf:
             return None
         return sf.multicentric
-        
-    @property
-    def is_drug_study(self):
-        sf = self.get_most_recent_form()
-        if not sf:
-            return None
-        return sf.project_type_non_reg_drug or sf.project_type_reg_drug
         
     @property
     def is_active(self):

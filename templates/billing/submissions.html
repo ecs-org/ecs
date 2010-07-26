@@ -1,7 +1,7 @@
 {% extends "core.html" %}
 {% load core %}
 
-{% block menuSelection %}overview{% endblock %}
+{% block menuSelection %}submissions{% endblock %}
 
 {% block htmltitle %}Rechnungsstellung - Einreichungen{% endblock %}
 
@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+    <a href="{% url ecs.billing.views.reset_submissions %}">reset</a>
     <form action="" method="post">
     {% for submission in submissions %}
         <div>
