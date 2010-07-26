@@ -20,14 +20,22 @@ class Command(BaseCommand):
         os.chdir(os.path.join(os.path.dirname(ecs.__file__), 'ecsmail'))
         
         if len(args) < 1:
-            print 'usage: ecsmail <server|log>'
-            return
+            print 'usage: ecsmail <server|log [port]> '
+            return 
         elif args[0] == 'server':
             # from ecs.ecsmail.config import settings as lamsettings
             from ecs.ecsmail.config import boot
             import asyncore
             asyncore.loop(timeout=0.1, use_poll=True)
         elif args[0] == 'log':
-            lamsettings = utils.make_fake_settings('127.0.0.1', settings.ECSMAIL_LOGSERVER_PORT)
+            if len(args) == 2:
+                port= int(args[1])
+            else:
+                port = settings.ECSMAIL_LOGSERVER_PORT
+            lamsettings = utils.make_fake_settings('127.0.0.1', port)
+            print("lamson log on 127.0.0.1 port", port)
             import asyncore
             asyncore.loop(timeout=0.1, use_poll=True)
+        else:
+            print 'usage: ecsmail <server|log [host port]> '
+            return 
