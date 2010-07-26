@@ -69,6 +69,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/error$', 'ecs.core.views.vote_sign_error'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive$', 'ecs.core.views.vote_sign_receive'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive;jsessionid=(?P<jsessionid>[^?]*)$', 'ecs.core.views.vote_sign_receive'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'ecs.core.views.protocol_pdf'),
 
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 )

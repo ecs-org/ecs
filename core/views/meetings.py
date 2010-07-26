@@ -336,10 +336,20 @@ def protocol_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
     
+    tops = []
+    for top in meeting.timetable_entries.all():
+        try:
+            vote = Vote.objects.filter(top=top)[0]
+        except IndexError:
+            vote = None
+        tops.append((top, vote,))
+
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
         'meeting': meeting,
+        'tops': tops,
     })
     return pdf_response(pdf, filename=filename)
+
 
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

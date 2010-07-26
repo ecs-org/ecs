@@ -24,6 +24,7 @@ Liste aller Sitzungen
                   | <a href="{% url ecs.core.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
                   | <a href="{% url ecs.core.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
                   | <a href="{% url ecs.core.views.votes_signing meeting_pk=meeting.pk %}">Signatur der Voten</a>
+                  | <a href="{% url ecs.core.views.protocol_pdf meeting_pk=meeting.pk %}">Protokoll PDF</a>
                   
           </li>
       {% endfor %}
