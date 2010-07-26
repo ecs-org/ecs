@@ -97,11 +97,11 @@ class MessageTestCase(MailTestCase):
         MailTestCase.setUp(self)
         
         self.fromuser = User(username='fromuser')
-        self.fromuser.email = "notexisting@notexisting.notexisting"
+        self.fromuser.email = "notexisting@fromuser.notexisting.notexisting"
         self.fromuser.set_password('password')
         self.fromuser.save()
         self.touser = User(username='touser')
-        self.touser.email = "nirvana@nirvana.nirvana"
+        self.touser.email = "notexisting@touser.nirvana.nirvana"
         self.touser.set_password('password')
         self.touser.save()
 
