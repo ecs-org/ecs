@@ -133,7 +133,7 @@ li.TypedChoiceField select {
   width: 12em;
 }
 li.NullBooleanField select {
-  width: 5em;
+  width: 8em;
 }
 input[type=submit] {
   float: right;
@@ -179,6 +179,19 @@ input[type=submit] {
 .togglers {
   cursor: pointer;
 }
+.searchbox {
+  float: left;
+  margin: 10px;
+}
+.searchbox input[type=text] {
+  float: left;
+  width: 150px;
+}
+.searchbox input[type=submit] {
+  float: left;
+  font-size: 9pt;
+  margin-left: 5px;
+}
 
 /* form layout */
 
@@ -208,7 +221,7 @@ input[type=submit] {
   width: 700px;
 }
 .form.main ol {
-  padding: 10px 0;
+  padding: 10px;
   display: block;
 }
 /*
@@ -311,11 +324,12 @@ tr.form td{
 .investigator_tab a.delete_row {
   background: url(/static/images/core/remove.png) no-repeat;
   height: 16px;
-  width: 16px;
+  width: 20px;
   display: inline-block;
   overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
+  margin-left: -2px;
 }
 div.inline_formset .form a.delete_row {
   display: block;
@@ -326,15 +340,17 @@ div.inline_formset .form a.delete_row {
 }
 .form.main a.add_row, #meeting_constraint_editor a.add_row {
   background: url(/static/images/core/add.png) no-repeat;
-  width: 16px;
+  width: 20px;
   height: 16px;
   display: inline-block;
   overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
-  /* FIXME: margin is needed because tables still have cellspacing  
-   * margin-left: 2px; */
+  /* FIXME: margin is needed because tables still have cellspacing */  
 
+}
+.field a.add_row {
+  
 }
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
@@ -346,6 +362,7 @@ div.inline_formset .form a.delete_row {
   width: auto;
   text-indent: 0px;
   margin-bottom: 3px;
+  margin-left: 0;
   padding-left: 20px;
   padding-right: 10px;
 }
