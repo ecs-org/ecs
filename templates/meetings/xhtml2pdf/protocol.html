@@ -106,6 +106,16 @@ Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen
         <br />
     
     {% endfor %}
+
+{% if b1ized.count %}
+    <span style="font-weight:bold;">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
+
+    {% for b1 in b1ized.all %}
+        <span style="font-weight:bold;">EK-Nr.: {{ b1.submission.ec_number }} {{ b1.submission.project_title }} ({{ b1.submission.get_most_recent_form.submitter_name }})
+    {% endfor %}
+{% endif %}
+
+
 {% endblock %}
 
 {% block footer %}{{ meeting.title }} {{ meeting.start|date:'d.m.Y' }}Protokoll{% endblock %}

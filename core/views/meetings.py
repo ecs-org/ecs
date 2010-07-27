@@ -336,17 +336,23 @@ def protocol_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y')
     )
     
+    timetable_entries = meeting.timetable_entries.all().order_by('timetable_index')
     tops = []
-    for top in meeting.timetable_entries.all():
+    for top in timetable_entries:
         try:
             vote = Vote.objects.filter(top=top)[0]
         except IndexError:
             vote = None
         tops.append((top, vote,))
 
+    b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
+    submissions = [x.submission for x in b2_votes]
+    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission__in=submissions).order_by('submission__ec_number')
+
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
         'meeting': meeting,
         'tops': tops,
+        'b1ized': b1ized,
     })
     return pdf_response(pdf, filename=filename)
 
