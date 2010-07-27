@@ -96,7 +96,7 @@ class Document(models.Model):
     def save(self, **kwargs):
         """ TODO: handel other filetypes than PDFs """
         if self.file:
-            if not self.uuid_document and getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): # if uuid is given, dont stamp the pdf
+            if not self.uuid_document and self.mimetype == 'application/pdf' and getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): # if uuid is given, dont stamp the pdf
                 tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
                 filename = tmp.name
                 buf = ''
