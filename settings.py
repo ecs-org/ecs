@@ -242,7 +242,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.core.middleware.SingleLogin',    # deactivate previous user sessions on login
     'ecs.utils.forceauth.ForceAuth',
-    #'ecs.tracking.middleware.TrackingMiddleware',
+    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     #'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
@@ -294,7 +294,7 @@ INSTALLED_APPS = (
     'ecs.dashboard',
     'ecs.bootstrap',
     'ecs.billing',
-    #'ecs.tracking',
+    'ecs.tracking',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'
