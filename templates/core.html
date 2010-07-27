@@ -17,10 +17,12 @@
 {% endblock %}
 
 {% block searchbox %}
-  <form action="{% url ecs.core.views.submission_form_list %}" method="post" enctype="multipart/form-data">
-    <input type="text" name="keyword" />
-    <input type="submit" value="Go" />
-  </form>
+  <div class="searchbox">
+    <form action="{% url ecs.core.views.submission_form_list %}" method="post" enctype="multipart/form-data">
+      <input type="text" name="keyword" />
+      <input type="submit" value="Go" />
+    </form>
+  </div>
 {% endblock %}
 
 {% block usertoolbar %} 

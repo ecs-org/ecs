@@ -22,12 +22,7 @@
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
-
 {% block content %} <!-- usertoolbar -->
-  {% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
-  {{ form.errors }}
-  {% endif %}
 
 <div class="wrapper">
   <h1>Ethikkommission Wien</h1>
@@ -43,5 +38,9 @@
       <p><input type="submit" value="login" /></p>
       <input type="hidden" name="next" value="{{ next }}" />
     </form>
+  {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+  {{ form.errors }}
+  {% endif %}
 </div>
 {% endblock %}
