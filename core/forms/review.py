@@ -5,7 +5,7 @@ from ecs.core.models import Submission, TimetableEntry
 from ecs.core.forms.utils import ReadonlyFormMixin
 
 class ExecutiveReviewForm(ReadonlyFormMixin, forms.ModelForm):
-    external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True))
+    external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True), required=False)
 
     class Meta:
         model = Submission

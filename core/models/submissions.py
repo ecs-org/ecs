@@ -98,6 +98,13 @@ class Submission(models.Model):
             return vote.activates
         return False
         
+    @property
+    def main_ethics_commission(self):
+        sf = self.get_most_recent_form()
+        if not sf:
+            return None
+        return sf.main_ethics_commission
+        
     def save(self, **kwargs):
         if not self.ec_number:
             from random import randint
@@ -388,7 +395,10 @@ class SubmissionForm(models.Model):
         
     @property
     def main_ethics_commission(self):
-        return self.investigators.get(main=True).ethics_commission
+        try:
+            return self.investigators.get(main=True).ethics_commission
+        except Investigator.DoesNotExist:
+            return None
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
