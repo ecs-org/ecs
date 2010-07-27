@@ -320,6 +320,7 @@ input[type=submit] {
 tr.form td{
   vertical-align: top;
 }
+.form.main .investigator_tab .field a.delete_row,
 .inline_formset .form a.delete_row,
 .investigator_tab a.delete_row {
   background: url(/static/images/core/remove.png) no-repeat;
@@ -346,11 +347,6 @@ div.inline_formset .form a.delete_row {
   overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
-  /* FIXME: margin is needed because tables still have cellspacing */  
-
-}
-.field a.add_row {
-  
 }
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
@@ -366,7 +362,6 @@ div.inline_formset .form a.delete_row {
   padding-left: 20px;
   padding-right: 10px;
 }
-
 #content a.delete_row:hover, #content a.add_row:hover {
   border-bottom: 0 none !important;
 }
