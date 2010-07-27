@@ -252,7 +252,6 @@
 }
 #meeting_assistant .buttons ul {
   float: left;
-  margin: 0;
   width: 100%;
 }
 #meeting_assistant .buttons ul li {
@@ -260,6 +259,7 @@
   display: block;
   float: left;
   font-size: 10pt;
+  padding: 0;
 }
 #meeting_assistant .buttons a {
   display: block;
