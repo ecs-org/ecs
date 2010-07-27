@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import xlwt
 from StringIO import StringIO
@@ -11,13 +12,14 @@ from ecs.core.models import Submission, Document
 from ecs.core.views.utils import render, render_html
 from ecs.messages.mail import send_mail
 from ecs.ecsmail.persil import whitewash
+
 from ecs.billing.models import Price
+from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):
     attrs = ('name', 'contact_name', 'address1', 'address2', 'zip_code', 'city', 'uid')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
-    print data
     bits = ['%(name)s' % data, 'zH %(contact_name)s' % data]
     if data['address1']:
         bits.append('%(address1)s' % data)
@@ -109,20 +111,13 @@ def submission_billing(request):
             fail_silently=False
         )
 
-        summary = {}
-        for price in Price.objects.for_submissions():
-            summary[price] = 0
-        total = 0
-        for submission in selected_for_billing:
-            summary[submission.price] += 1
-            total += submission.price.price
+        summary, total = collect_submission_billing_stats(selected_for_billing)
         
         return render(request, 'billing/submission_summary.html', {
             'summary': summary,
             'xls_doc': doc,
             'total': total,
         })
-        # return HttpResponse(xls_buf.getvalue(), mimetype='application/vnd.ms-excel')
         return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
 
     return render(request, 'billing/submissions.html', {

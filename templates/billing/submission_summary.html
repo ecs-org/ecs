@@ -14,16 +14,18 @@
 
     <h2>Zusammenfassung</h2>
     <table class="billing_summary">
-        {% for price, num in summary.items %}
+        {% for item in summary.values %}
             <tr>
-                <td>{{ price.text }}</td>
-                <td>{{ num }}</td>
-                <td><span class="price">{{ price.price|euro }}</span></td>
-                <td><span class="price">{{ price.price|multiply:num|euro }}</span></td>
+                <td>{{ item.label }}</td>
+                <td>{{ item.count }}</td>
+                <td><span class="price">{{ item.price.price|euro }}</span></td>
+                <td><span class="price">{{ item.price.text }}</span></td>
+                <td><span class="price">{{ item.price.price|multiply:item.count|euro }}</span></td>
             </tr>
         {% endfor %}
         <tr>
             <td>Betragssumme (brutto = netto)</td>
+            <td></td>
             <td></td>
             <td></td>
             <td>{{ total|euro }}</td>
