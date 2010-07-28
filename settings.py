@@ -272,7 +272,7 @@ INSTALLED_APPS = (
 
     'south',
     'django_nose',
-    'djangodblog',
+    #'djangodblog',
     'djcelery',
     'ecs.utils.countries',
     'ecs.utils.hashauth',
