@@ -49,7 +49,7 @@ CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
-    'ecs.messages.task_queue',
+    'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )
 
@@ -65,7 +65,6 @@ djcelery.setup_loader()
 LAMSON_BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
 LAMSON_UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
 LAMSON_TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
-
 LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8823} # listen here 
 LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825} # relay to
 LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
@@ -76,8 +75,8 @@ LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1']
 # lamson and django should be on the same machine
 FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
 DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']  # these two should be the local lamson server
-EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']  # !with another server you'll run into problems because connections to the mailserver shouldn't block.
+EMAIL_HOST = LAMSON_RELAY_CONFIG['host'] 
+EMAIL_PORT = LAMSON_RELAY_CONFIG['port'] 
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
 # FIXME: Agenda is send to whitelist instead of invited people
@@ -131,8 +130,8 @@ if platform.node() == "ecsdev.ep3.at":
 
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
-    EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']  # these two should be the local lamson server
-    EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']  # !with another server you'll run into problems because connections to the mailserver shouldn't block.
+    EMAIL_HOST = LAMSON_RELAY_CONFIG['host']
+    EMAIL_PORT = LAMSON_RELAY_CONFIG['port']
 
     # fulltext search engine override (ecsdev uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"
