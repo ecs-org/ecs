@@ -16,18 +16,18 @@ class Renderer(object):
             '-sOutputFile=%s_%s_%%04d.png' % (pdf_fname, zoom), \
             pdf_name \
         ]
-        print args
+        #print args
         p = subprocess.Popen(args)
         sts = os.waitpid(p.pid, 0)[1]
-        print 'sts = %s' % sts
+        #print 'sts = %s' % sts
 
 
     def render_page(self, png_name_in, png_name, args_compress, args_interlace):
         args = [ 'convert' ] + args_compress + args_interlace + [ png_name_in, png_name ]
-        print args
+        #print args
         p = subprocess.Popen(args)
         sts = os.waitpid(p.pid, 0)[1]
-        print 'sts = %s' % sts
+        #print 'sts = %s' % sts
 
 
     def render_bigpage(self, png_names, png_name, zoom, w, h, background, args_compress, args_interlace):
@@ -35,19 +35,19 @@ class Renderer(object):
             [ 'montage' ] + args_compress + args_interlace + \
             [ '-background', background, '-geometry', '%dx%d+0+0' % (w, h), '-tile', zoom ] + \
             png_names + [ png_name ]
-        print args
+        #print args
         p = subprocess.Popen(args)
         sts = os.waitpid(p.pid, 0)[1]
-        print 'sts = %s' % sts
+        #print 'sts = %s' % sts
 
 
     def remove_file(self, file_name):
-        print 'removing "%s"' % file_name
+        #print 'removing "%s"' % file_name
         os.remove(file_name)
 
 
     def rename_file(self, file_name_old, file_name_new):
-        print 'rename "%s" -> "%s"' % (file_name_old, file_name_new)
+        #print 'rename "%s" -> "%s"' % (file_name_old, file_name_new)
         os.rename(file_name_old, file_name_new)
 
 
