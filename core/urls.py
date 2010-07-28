@@ -35,6 +35,7 @@ urlpatterns = patterns(
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
     url(r'^submission_form/import/$', 'ecs.core.views.import_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
+    url(r'^submission_form/(?P<old_submission_form_pk>\d+)/(?P<new_submission_form_pk>\d+)/diff/$', 'ecs.core.views.diff'),
     
     url(r'^users/by_medical_category/$', 'ecs.core.views.users_by_medical_category'),
     

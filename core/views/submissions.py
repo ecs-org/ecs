@@ -25,6 +25,7 @@ from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
+from ecs.utils.diff_match_patch import diff_match_patch
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -384,4 +385,43 @@ def import_submission_form(request):
     return render(request, 'submissions/import.html', {
     
     })
+
+def diff_submission_forms(old_submission_form, new_submission_form):
+    sff = SubmissionFormForm(None, instance=old_submission_form)
+
+    differ = diff_match_patch()
+
+    diffs = []
+    for field in sff.fields.iterkeys():
+        try:
+            old = getattr(old_submission_form, field) or ''
+            new = getattr(new_submission_form, field) or ''
+        except AttributeError:
+            continue
+
+        if hasattr(new, 'all'):
+            old = u', '.join([unicode(x) for x in getattr(old, 'all')()])
+            new = u', '.join([unicode(x) for x in getattr(new, 'all')()])
+        else:
+            old = unicode(old).replace(u'\n', u'<br />\n')
+            new = unicode(new).replace(u'\n', u'<br />\n')
+
+        diff = differ.diff_main(old, new)
+        if differ.diff_levenshtein(diff):
+            differ.diff_cleanupSemantic(diff)
+            diffs.append((sff.fields[field].label, diff))
+
+    return diffs
+
+def diff(request, old_submission_form_pk, new_submission_form_pk):
+    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
+    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
+
+    diffs = diff_submission_forms(old_submission_form, new_submission_form)
+
+    return render(request, 'submissions/diff.html', {
+        'submission': new_submission_form.submission,
+        'diffs': diffs,
+    })
+
 

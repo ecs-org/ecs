@@ -1,0 +1,15 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block title %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+    EK-Nr. {{ submission.ec_number }}
+{% endblock %}
+
+{% block content %}
+    {% include "submissions/diff.inc" %}
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}
+
