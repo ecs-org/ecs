@@ -285,7 +285,6 @@ def submission_pdf(request, submission_form_pk=None):
 
 
 def submission_form_list(request):
-
     keyword = request.POST.get('keyword', None)
 
     if keyword:
@@ -310,7 +309,7 @@ def submission_form_list(request):
 
         submission_form_pks = [sf.pk for sf in submission_forms]
         
-        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword)
+        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword) | Q(sponsor_name__icontains=keyword) | Q(submitter_name__icontains=keyword) | Q(investigators__name__icontains=keyword)
         submission_forms = SubmissionForm.objects.filter(pk__in=submission_form_pks).filter(form_search_query)
         submissions += [sf.submission for sf in submission_forms]
 
