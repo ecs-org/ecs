@@ -10,4 +10,5 @@ def queued_mail_send(message, To, From, through_receiver=False):
     else:
         relay = Relay(host=settings.LAMSON_RELAY_CONFIG['host'],
             port=settings.LAMSON_RELAY_CONFIG['port'])
+    print("queued mail deliver using ", str(relay), ", from ", From, ", to ", To, ", msg ", message)
     relay.deliver(message, To, From)
