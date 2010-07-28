@@ -289,19 +289,28 @@ def auth_user_developers():
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        (u'Presenter', u'Presenter'),
-        (u'Sponsor', u'Sponsor'),
-        (u'Investigtor', u'Investigator'),
-        (u'Office', u'EC-Office'),
-        (u'Meeting Secretary', u'EC-Meeting Secretary'),
-        (u'Internal Rev', u'EC-Internal Review Group'),
-        (u'Executive', u'EC-Executive Board Group'),
-        (u'Signing', u'EC-Signing Group'),
-        (u'Statistic Rev', u'EC-Statistic Group'),
-        (u'Notification Rev', u'EC-Notification Review Group'),
-        (u'Insurance Rev', u'EC-Insurance Reviewer'),
-        (u'Thesis Rev', u'EC-Thesis Review Group'),
-        (u'External Reviewer', u'External Reviewer'),
+        (u'Presenter', u'Presenter',{}),
+        (u'Sponsor', u'Sponsor', {}),
+        (u'Investigtor', u'Investigator', {}),
+        (u'Office', u'EC-Office', {}),
+        (u'Meeting Secretary', u'EC-Meeting Secretary',
+            {'internal': True, }),
+        (u'Internal Rev', u'EC-Internal Review Group',
+            {'internal': True,}),
+        (u'Executive', u'EC-Executive Board Group',             
+            {'internal': True, 'executive_board_member': True, }),
+        (u'Signing', u'EC-Signing Group',                       
+            {'internal': True, }),
+        (u'Statistic Rev', u'EC-Statistic Group',
+            {'internal': True, }),
+        (u'Notification Rev', u'EC-Notification Review Group',
+            {'internal': True, }),
+        (u'Insurance Rev', u'EC-Insurance Reviewer',            
+            {'internal': True, }),
+        (u'Thesis Rev', u'EC-Thesis Review Group',              
+            {'internal': True, 'thesis_review': True}),
+        (u'External Reviewer', u'External Reviewer',            
+            {'external_review': True, }),
     )
         
     boardtestusers = (
@@ -313,16 +322,25 @@ def auth_user_testusers():
          (u'B.Member 6 (Päd)', ('Päd',)), 
     )
     
-    for testuser, testgroup in testusers:
+    for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = User.objects.get_or_create(username=" ".join((testuser,str(number))))
             user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(Group.objects.get(name="userswitcher_target"))
+
+            profile = user.get_profile()
+            for flagname, flagvalue in flags.items():
+                profile.__setattr__(flagname, flagvalue)
+            profile.save()
     
     for testuser, medcategories in boardtestusers:
         user, created = User.objects.get_or_create(username=testuser)
         user.groups.add(Group.objects.get(name='EC-Board Member'))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
+
+        profile = user.get_profile()
+        profile.board_member = True
+        profile.save()
 
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
