@@ -80,8 +80,8 @@ EMAIL_PORT = LAMSON_RELAY_CONFIG['port']
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
 # FIXME: Agenda is send to whitelist instead of invited people
-AGENDA_RECIPIENT_LIST = EMAIL_WHITELIST
-BILLING_RECIPIENT_LIST = ('emulbreh@googlemail.com',) # EMAIL_WHITELIST
+AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
+BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
 
 
 # fulltext search engine config
