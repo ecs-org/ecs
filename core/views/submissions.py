@@ -264,13 +264,7 @@ def view_submission_form(request, submission_form_pk=None):
 
 
 def submission_pdf(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    #return render(request, 'db/submissions/xhtml2pdf/view.html', {
-    #    'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-    #    'submission_form': submission_form,
-    #    'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-    #})
-    
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
     filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.ec_number.replace('/','-')
     
     if not submission_form.pdf_document:
@@ -279,20 +273,13 @@ def submission_pdf(request, submission_form_pk=None):
             'submission_form': submission_form,
             'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         })
-        tmp = tempfile.NamedTemporaryFile()
-        tmp.write(pdf)
-        tmp.flush()
-        tmp.seek(0)
-        doc = Document(date=datetime.now(), file=File(tmp))
-        doc.save()
-        tmp.close()
+        doc = Document.objects.create_from_buffer(pdf)
         submission_form.pdf_document = doc
         submission_form.save()
         pdf = doc.file.read()
     
     submission_form.pdf_document.file.seek(0)
     pdf = submission_form.pdf_document.file.read()
-    
     return pdf_response(pdf, filename=filename)
 
 
