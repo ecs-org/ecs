@@ -8,15 +8,21 @@
              <!--| <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>-->
              {% with submission.get_most_recent_form as submission_form %}
                  {% if submission_form %}
-                 | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
-                 | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
-                 <!--| <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>-->
-                 | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
-                 | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">Thesis Review</a>
-                 | <a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a>
-                 | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
-                 | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">Vote Review</a>
-                 | <a href="{% url ecs.core.views.b2_vote_review submission_form_pk=submission_form.pk %}">B2 Vote Review</a>
+                     | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
+                     | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
+                     <!--| <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>-->
+                     | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
+                     | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">Thesis Review</a>
+                     | <a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a>
+                     | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
+                     {% with submission.get_most_recent_vote as vote %}
+                        {% if vote %}
+                            | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">Vote Review</a>
+                            {% if vote.result == '2' %}
+                                | <a href="{% url ecs.core.views.b2_vote_review submission_form_pk=submission_form.pk %}">B2 Vote Review</a>
+                            {% endif %}
+                        {% endif %}
+                     {% endwith %}
                  {% endif %}
              {% endwith %}
              | <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}">Export</a>
