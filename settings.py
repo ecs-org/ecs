@@ -42,44 +42,48 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 # per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
+# Celery results
 CELERY_RESULT_BACKEND = 'database'
-#CELERY_RESULT_DBURI = 'sqlite://celery.db'
+#CELERY_RESULT_DBURI = 'sqlite://'+ os.path.join(PROJECT_DIR, 'celery.db')
+
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
+    'ecs.messages.task_queue',
     'ecs.mediaserver.task_queue',
 )
 
+# From http://github.com/ask/django-celery#readme
+# Special note for mod_wsgi users: If you're using mod_wsgi to deploy your Django application you need to include the following in your .wsgi module:
+import os
+os.environ["CELERY_LOADER"] = "django"
+import djcelery
+djcelery.setup_loader()
+
+
 # lamson config
-ECSMAIL_PORT = 8823 # port ecsmail listens on (gets overridden on host ecsdev)
-ECSMAIL_LOGSERVER_PORT = 8825 # development server that logs to queue (for development only)
-FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
+LAMSON_BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
+LAMSON_UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
+LAMSON_TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
 
-# used both by django AND lamson for sending email
+LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8823} # listen here 
+LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825} # relay to
+LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
+LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
+LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1']
+
+# used both by django AND lamson
 # lamson and django should be on the same machine
+FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
 DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = ECSMAIL_PORT # these two should be the local lamson server
-                          # !with another server you'll run into problems!
-                          # becauseconnections to the mailserver shouldn't block.
-# lamson config details
-# uses ECSMAIL_PORT, ECSMAIL_LOGSERVER_PORT, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
-BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
-UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
-TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
-
-RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
-RELAY_CONFIG = {'host': '127.0.0.1', 'port': ECSMAIL_LOGSERVER_PORT}  
-HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
-ROUTER_DEFAULTS = {'host': '.+'}
-ALLOWED_RELAY_HOSTS = ['127.0.0.1']
-
-
+EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']  # these two should be the local lamson server
+EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']  # !with another server you'll run into problems because connections to the mailserver shouldn't block.
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
 # FIXME: Agenda is send to whitelist instead of invited people
 AGENDA_RECIPIENT_LIST = EMAIL_WHITELIST
 BILLING_RECIPIENT_LIST = ('emulbreh@googlemail.com',) # EMAIL_WHITELIST
+
 
 # fulltext search engine config
 HAYSTACK_SITECONF = 'ecs.search_sites'
@@ -91,8 +95,10 @@ if platform.node() == "ecsdev.ep3.at":
     import getpass
     user = getpass.getuser()
     # use different settings if on host ecsdev.ep3.at depending username
+    
     DBPWD_DICT = {}
  
+    # django database
     if user in DBPWD_DICT:
         DATABASES['default'] = {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -117,19 +123,16 @@ if platform.node() == "ecsdev.ep3.at":
 
     # lamson config different for shredder
     if user == "shredder":
-        ECSMAIL_PORT = 8833
-        ECSMAIL_LOGSERVER_PORT = 8835
+        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.18', 'port': 8833} # listen here 
         FROM_DOMAIN = "s.ecsdev.ep3.at"
-        DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
     elif user == "testecs":
-        ECSMAIL_PORT = 8843
-        ECSMAIL_LOGSERVER_PORT = 8845
+        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.189', 'port': 8843} # listen here 
         FROM_DOMAIN = "test.ecsdev.ep3.at"
-        DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
 
-    RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': ECSMAIL_PORT} # listen here 
-    RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx
-    EMAIL_PORT = 25
+    DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
+    LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
+    EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']  # these two should be the local lamson server
+    EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']  # !with another server you'll run into problems because connections to the mailserver shouldn't block.
 
     # fulltext search engine override (ecsdev uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"
@@ -274,6 +277,11 @@ INSTALLED_APPS = (
     'django_nose',
     'djangodblog',
     'djcelery',
+    'ghettoq', 
+    # include ghettoq in installed apps if we use it as carrot backend, so we dont need any external brocker for testing
+    #if CARROT_BACKEND == "ghettoq.taproot.Database":
+    #    INSTALLED_APPS += ("ghettoq", ) 
+
     'ecs.utils.countries',
     'ecs.utils.hashauth',
     'compressor',
@@ -291,6 +299,7 @@ INSTALLED_APPS = (
     'ecs.workflow',
     'ecs.tasks',
     'ecs.messages',
+    'ecs.ecsmail',
     'ecs.dashboard',
     'ecs.bootstrap',
     'ecs.billing',
@@ -298,11 +307,8 @@ INSTALLED_APPS = (
     #'ecs.help',
 )
 
+# model that gets connected to contrib.auth model
 AUTH_PROFILE_MODULE = 'core.UserProfile'
-
-# include ghettoq in installed apps if we use it as carrot backend, so we dont need any external brocker for testing
-if CARROT_BACKEND == "ghettoq.taproot.Database":
-    INSTALLED_APPS += ("ghettoq", ) 
 
 # django-db-log
 # temporary for testing, catch 404 defaults to false
@@ -331,4 +337,5 @@ SESSION_COOKIE_AGE = 1800                # logout after 30 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# FIXME: describe where and how this is used; remeber, settings.py needs documentation on every settings
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'

@@ -7,20 +7,19 @@ from lamson.server import SMTPError
 
 from django.conf import settings
 from ecs.messages.models import Message
-
 from ecs.ecsmail.persil import whitewash
 
 @route(".+")
 def IGNORE_BOUNCE(message):
     print "JUST A SOFT BOUNCE", message
-    bounces = queue.Queue(settings.BOUNCES_QUEUE)
+    bounces = queue.Queue(settings.LAMSON_BOUNCES_QUEUE)
     bounces.push(message)
     return START
 
 @route(".+")
 def NOTIFY_BOUNCE(message):
     print "REALLY HANDLING BOUNCE", message
-    bounces = queue.Queue(settings.BOUNCES_QUEUE)
+    bounces = queue.Queue(settings.LAMSON_BOUNCES_QUEUE)
     bounces.push(message)
     return START
 
@@ -73,7 +72,7 @@ def START(message, address=None, host=None):
         #     smtp_delivery_state='new',
         # )
         # d.save()
-    elif message.Peer[0] in settings.ALLOWED_RELAY_HOSTS:
+    elif message.Peer[0] in settings.LAMSON_ALLOWED_RELAY_HOSTS:
         logging.info('RELAYING %s %s %s' % (message, address, host))
         relay.deliver(message)
     else:

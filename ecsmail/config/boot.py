@@ -14,17 +14,17 @@ os.environ['LAMSON_LOADED'] = 'True'
 # logging.config.fileConfig("config/logging.conf")
 
 # the relay host to actually send the final message to
-relay = Relay(host=settings.RELAY_CONFIG['host'], 
-                       port=settings.RELAY_CONFIG['port']) # , debug=1
+relay = Relay(host=settings.LAMSON_RELAY_CONFIG['host'], 
+                       port=settings.LAMSON_RELAY_CONFIG['port']) # , debug=1
 
 # where to listen for incoming messages
-receiver = SMTPReceiver(settings.RECEIVER_CONFIG['host'],
-                                 settings.RECEIVER_CONFIG['port'])
+#receiver = SMTPReceiver(settings.LAMSON_RECEIVER_CONFIG['host'],
+#                                 settings.LAMSON_RECEIVER_CONFIG['port'])
 
-Router.defaults(**settings.ROUTER_DEFAULTS)
-Router.load(settings.HANDLERS)
+Router.defaults(**settings.LAMSON_ROUTER_DEFAULTS)
+Router.load(settings.LAMSON_HANDLERS)
 Router.RELOAD=True
-Router.UNDELIVERABLE_QUEUE=queue.Queue(settings.UNDELIVERABLE_QUEUE)
+Router.UNDELIVERABLE_QUEUE=queue.Queue(settings.LAMSON_UNDELIVERABLE_QUEUE)
 
 # view.LOADER = jinja2.Environment(
 #     loader=jinja2.PackageLoader(settings.template_config['dir'], 

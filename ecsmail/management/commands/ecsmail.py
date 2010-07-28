@@ -1,10 +1,5 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
-from django.template.loader import render_to_string
-
-from ecs.messages.models import Message
-from ecs.utils.datastructures import OrderedSet
-from ecs.messages.mail import send_mail
 
 import ecs
 import sys
@@ -23,17 +18,24 @@ class Command(BaseCommand):
             print 'usage: ecsmail <server|log [port]> '
             return 
         elif args[0] == 'server':
-            # from ecs.ecsmail.config import settings as lamsettings
-            from ecs.ecsmail.config import boot
+            from lamson.server import SMTPReceiver
+            from ecs.ecsmail.config import boot as lamsettings
+            lamsettings.receiver = SMTPReceiver(settings.LAMSON_RECEIVER_CONFIG['host'], 
+                settings.LAMSON_RECEIVER_CONFIG['port'])
+
             import asyncore
+            print ("starting ecsmail server, Listen: %s:%s, Relay:  %s" % (lamsettings.receiver.host, lamsettings.receiver.port, str(lamsettings.relay)))
             asyncore.loop(timeout=0.1, use_poll=True)
+
         elif args[0] == 'log':
             if len(args) == 2:
                 port= int(args[1])
             else:
-                port = settings.ECSMAIL_LOGSERVER_PORT
-            lamsettings = utils.make_fake_settings('127.0.0.1', port)
-            print("lamson log on 127.0.0.1 port", port)
+                port = settings.LAMSON_RELAY_CONFIG['port']
+
+            host = settings.LAMSON_RELAY_CONFIG['host']
+            lamsettings = utils.make_fake_settings(host, port)
+            print("starting ecsmail testing log server, Listen: %s:%i" % (host, port))
             import asyncore
             asyncore.loop(timeout=0.1, use_poll=True)
         else:

@@ -3,7 +3,7 @@ import traceback
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-from ecs.messages.mail import send_mail
+from ecs.ecsmail.mail import send_mail
 
 
 MESSAGE_ORIGIN_ALICE = 1

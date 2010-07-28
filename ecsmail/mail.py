@@ -1,13 +1,11 @@
-import os
-import mimetypes
 from django.conf import settings
-from django.utils.encoding import force_unicode
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from time import gmtime, strftime
 
 def __parse_attachments(attachments):
-    ''' takes iterable of either filenamestrings, or list/tuples of (filename, data [,content_type])
-        returns tuples of filename, data, content_type '''  
+    ''' 
+    takes iterable of either filenamestrings, or list/tuples of (filename, data [,content_type])
+    returns tuples of filename, data, content_type
+    '''
+    import mimetypes
     if attachments:
         for attachment in attachments:
             filename = data = content_type = encoding = None
@@ -25,58 +23,39 @@ def __parse_attachments(attachments):
                 assert TypeError('dont know how to handle attachment from type %s' % (str(type(attachment))))
 
             yield (filename, data, content_type)
-
-            
-def django_send_mail(subject, message, from_email, recipient_list, fail_silently=False,
-                            message_html=None, attachments=None,
-                            auth_user=None, auth_password=None, connection=None, 
-                            **kwargs):
-    
-    print 'DJANGO SEND MAIL'
-    subject = force_unicode(subject)
-    message = force_unicode(message)
-    bcc = None
-    headers = None
-
-    email = EmailMultiAlternatives(subject=subject, body=message, from_email=from_email,
-                to=recipient_list, bcc=bcc, headers=headers)
-    if message_html:
-        email.attach_alternative(message_html, "text/html")  
-    if attachments:
-        for filename, data, content_type in __parse_attachments(attachments):
-            if data:
-                email.attach(filename=os.path.basename(filename), content=data, mimetype=content_type)
-            else:
-                email.attach_file(filename)
-    email.send()
-
             
 def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently=False,
-                        message_html=None, attachments=None, **kwargs):
+                        message_html=None, attachments=None, through_receiver=False, **kwargs):
     '''
-        sends message and returns messageid of message sent
+    puts messages to send into celery queue and returns list of messageids of messages to be sent
     '''
-    from ecs.ecsmail.config.boot import relay
     from lamson.mail import MailResponse
     from email.Utils import make_msgid
-    print 'LAMSON SEND MAIL'
+    from time import gmtime, strftime
+    from ecs.ecsmail.task_queue import queued_mail_send
+    sentids = []
+
+    # XXX: make a list if only one recipient (and therefore string) is there
+    if isinstance(recipient_list, basestring):
+        recipient_list = [recipient_list]
+
     for recipient in recipient_list:
         messageid = make_msgid()
         mess = MailResponse(To=recipient, From=from_email, Subject=subject, Body=message, Html=message_html)
         if attachments:
             for filename, data, content_type in __parse_attachments(attachments):
-                mess.attach(filename=filename, content_type=content_type, data=data)
-                
+                mess.attach(filename=filename, content_type=content_type, data=data)              
         mess['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
         mess['Message-ID'] = messageid
         mess = mess.to_message()
-        relay.deliver(mess, To=recipient, From=from_email)
-        return messageid
+        queued_mail_send.delay(mess, To=recipient, From=from_email, through_receiver=through_receiver)
+        sentids += messageid
+    return sentids
 
 
 def send_mail(**kwargs):
     '''
-        send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), and return message-id of sent message
+    send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), and return message-id of sent message
     '''
     mylist = set(kwargs['recipient_list'])
     bad = None
@@ -87,4 +66,3 @@ def send_mail(**kwargs):
         kwargs['recipient_list'] = list(mylist - bad)
         
     return lamson_send_mail(**kwargs)
-    

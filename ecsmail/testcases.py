@@ -9,17 +9,9 @@ import subprocess
 
 # FIXME: does not work this way: lamson logserver started in subthread
 def shouldbesetUpModule():
-    logserver = subprocess.Popen(("python", os.path.join(settings.PROJECT_DIR, 'manage.py'), 'ecsmail','log',str(settings.RELAY_CONFIG['port'])))
-    settings.logserver = logserver
-    time.sleep(2)
-    print settings.logserver
-    
+    pass    
 def shouldbedearDownModule():
-    print("about to shutdown logserver")
-    time.sleep(5)
-    logserver = settings.logserver
-    print("Terminate logserver", logserver.terminate())   
-    
+    pass
 
 class MailTestCase(TestCase):
     '''
@@ -57,8 +49,8 @@ class MailTestCase(TestCase):
 
     @classmethod
     def queue_clear(self):
-        clear_queue(settings.TESTING_QUEUE)
-        self.queue = Queue(settings.TESTING_QUEUE)
+        clear_queue(settings.LAMSON_TESTING_QUEUE)
+        self.queue = Queue(settings.LAMSON_TESTING_QUEUE)
         
     def setUp(self):
         self.queue_clear()

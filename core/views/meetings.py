@@ -14,7 +14,7 @@ from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.core.task_queue import optimize_timetable_task
 from ecs.utils.timedelta import parse_timedelta
 
-from ecs.messages.mail import send_mail
+from ecs.ecsmail.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 
 

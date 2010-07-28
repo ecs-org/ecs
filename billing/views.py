@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 
 from ecs.core.models import Submission, Document
 from ecs.core.views.utils import render, render_html
-from ecs.messages.mail import send_mail
+from ecs.ecsmail.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 
 from ecs.billing.models import Price
