@@ -295,6 +295,7 @@ INSTALLED_APPS = (
     'ecs.bootstrap',
     'ecs.billing',
     'ecs.tracking',
+    #'ecs.help',
 )
 
 AUTH_PROFILE_MODULE = 'core.UserProfile'

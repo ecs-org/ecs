@@ -10,8 +10,8 @@
   <p>
   {% comment %}
   <a href=""><img src="{{ MEDIA_URL }}images/core/search.png" alt="search"/></a> 
-  <a href=""><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
   {% endcomment %}
+  <a href="{{ request.tracking_data.view.path }}"><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
   <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
   </p> 
 {% endblock %}
@@ -62,6 +62,14 @@
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
       </ul>
     </li>
+  </ul>
+
+  {% load tracking %}
+  {% get_tracking_history as history %}
+  <ul style="font-size: 0.8em">
+      {% for entry in history %}
+        <li class="{% cycle 'even' 'odd' %}"><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
+      {% endfor %}
   </ul>
 {% endblock %}
 

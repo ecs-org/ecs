@@ -10,6 +10,7 @@ from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.messages.models import Message, Thread
 from ecs.messages.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
+from ecs.tracking.decorators import tracking_hint
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
     submission, task, reply_to = None, None, None
@@ -101,6 +102,7 @@ def delegate_thread(request, thread_pk=None):
         'form': form,
     })
     
+@tracking_hint(exclude=True)
 def incoming_message_widget(request):
     qs = Thread.objects.incoming(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
@@ -117,6 +119,7 @@ def incoming_message_widget(request):
         }
     )
 
+@tracking_hint(exclude=True)
 def outgoing_message_widget(request):
     qs = Thread.objects.outgoing(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
