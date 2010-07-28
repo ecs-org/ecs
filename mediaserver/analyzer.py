@@ -13,7 +13,8 @@ class Analyzer(object):
         self.pages = 0
         try:
             pdf = pyPdf.PdfFileReader(f)
-        except:
+        except Exception, e:
+            print type(e), str(e)
             print 'analyzer: error reading pdf file "%s"' % f.name
             return
         if pdf:

@@ -36,7 +36,7 @@ def xhtml2pdf(html, **options):
     else:
         cmd = ''
     cmd += which('xhtml2pdf').next()
-    args = [cmd, ]
+    args = [cmd, '-q']
     for key, value in options.iteritems():
         if value is False:
             continue

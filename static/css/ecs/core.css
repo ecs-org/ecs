@@ -53,6 +53,7 @@ ul.tab_headers {
   margin-bottom: 5px;
   display: block;
   height: 20px;
+  line-height: 20px;
   width: 90px;
   cursor: pointer;
   z-index: 100;
@@ -60,17 +61,34 @@ ul.tab_headers {
   text-decoration: none;
 }
 .button_save {
-  background: #84cefb;
-  border: 1px solid #ccc;  
+  background: #ccc;
+  border: 1px solid #999;  
+}
+.button_save_change {
+  background: #999;
+  border: 1px solid #666;  
 }
 .button_validate {
-  background: #84cefb;
-  border: 1px solid #ccc;  
+  background: #ccc;
+  border: 1px solid #999;  
+}
+.button_validate_valid_error {
+  background: #f84205;
+  border: 1px solid #d03704;  
+}
+.button_validate_valid {
+  background: #71ce09;
+  border: 1px solid #5ca907;  
 }
 .button_submit {
-  background: #84cefb;
-  border: 1px solid #ccc;  
+  background: #54aade;
+  border: 1px solid #7bc4f0;
 }
+.button_submit_valid {
+  background: #84cefb;
+  border: 1px solid #61b6e9;
+}
+
 
 /* readonly */
 
@@ -419,7 +437,7 @@ fieldset.disabled {
 .form.main li.max10 input{ width: 60px;}
 .form.main li.max20 input{ width: 100px;}
 .form.main li.max40 input{ width: 200px;}
-.form.main li.max60 input{ width: 340px;}
+.form.main li.max60 input{ width: 30em;}
 
 .form .wide {
   width: 16em;

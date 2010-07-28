@@ -136,7 +136,7 @@ class SubmissionForm(models.Model):
     sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contactname = models.CharField(max_length=80, null=True)
     sponsor_address1 = models.CharField(max_length=60, null=True)
-    sponsor_address2 = models.CharField(max_length=60, null=True)
+    sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
