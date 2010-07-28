@@ -122,7 +122,7 @@ if platform.node() == "ecsdev.ep3.at":
 
     # lamson config different for shredder
     if user == "shredder":
-        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.18', 'port': 8833} # listen here 
+        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.188', 'port': 8833} # listen here 
         FROM_DOMAIN = "s.ecsdev.ep3.at"
     elif user == "testecs":
         LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.189', 'port': 8843} # listen here 
