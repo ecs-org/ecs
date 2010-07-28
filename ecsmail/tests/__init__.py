@@ -1,0 +1,1 @@
+from ecsmailtest import ecsmailTest, simpleMessagesTest

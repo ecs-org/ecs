@@ -22,7 +22,6 @@ class simpleMessagesTest(MessageTestCase):
         this makes a new ecs internal message (which currently will send an email to the user)
         and then answer to that email which is then forwared back to the original sender
         '''
-  
         thread= self.create_thread(To=self.touser, From=self.fromuser, Subject="blu", Task=None, Submission=None)
         message = self.msg_to_thread(thread, To= self.fromuser, Body= "first message")
         eq_(self.queue_count(), 1)

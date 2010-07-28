@@ -20,6 +20,7 @@ class Command(BaseCommand):
         elif args[0] == 'server':
             from lamson.server import SMTPReceiver
             from ecs.ecsmail.config import boot as lamsettings
+            # inject receiver into lamsettings
             lamsettings.receiver = SMTPReceiver(settings.LAMSON_RECEIVER_CONFIG['host'], 
                 settings.LAMSON_RECEIVER_CONFIG['port'])
 
