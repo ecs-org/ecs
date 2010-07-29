@@ -22,7 +22,7 @@ from django.db.models import Q
 from django.core.files import File
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission, SubmissionForm, Meeting, Participation
+from ecs.core.models import Submission, SubmissionForm, Meeting, Participation, MedicalCategory
 from ecs.core.models import Document, DocumentType
 
 
@@ -70,6 +70,7 @@ class Command(BaseCommand):
         make_option('--submission_dir', '-d', action='store', dest='submission_dir', help='import doc files of submissions from a directory'),
         make_option('--submission', '-s', action='store', dest='submission', help='import doc file of submission'),
         make_option('--timetable', '-t', action='store', dest='timetable', help='import timetable'),
+        make_option('--categorize', '-c', action='store', dest='categorize', help='import medical categories from a file'),
         make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
         make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
         make_option('--analyze', '-a', action='store', dest='analyze_dir', help='analyze a bunch of doc files'),
@@ -487,10 +488,102 @@ class Command(BaseCommand):
         sys.stdout.write('\033[32mdone\033[0m\n')
 
 
+    @transaction.commit_on_success
+    def _import_categorize(self, filename):
+        filename = os.path.expanduser(filename)
+        try:
+            fd = open(filename, 'r')
+        except IOError:
+            self.abort('Cant open file %s' % filename)
+
+        lines = [x.strip() for x in fd.readlines() if x.strip() and not x.strip().startswith('#')]  #filter out empty lines and commented lines
+        fd.close()
+        try:
+            dataset = [(x.split(' ', 1)[0], x.split(' ', 1)[1].split(',')) for x in lines]
+        except IndexError:
+            self._abort('Syntax Error')
+
+        while True:
+            sys.stderr.write(' pk | title\n================\n')
+            sys.stderr.write('\n'.join('%3d | %s' % (meeting.pk, meeting.title) for meeting in Meeting.objects.all()if not meeting.title.endswith('ohne Teilnehmer')))
+            try:
+                meeting_pk = raw_input('\n\nWhich meeting(pk)? ')
+            except KeyboardInterrupt:
+                sys.stderr.write('\n')
+                self._abort('quit')
+            try:
+                meeting = Meeting.objects.get(pk=meeting_pk)
+                break
+            except (Meeting.DoesNotExist, ValueError):
+                self._warn('Meeting "%s" does not exist\n\n' % meeting_pk)
+
+        print meeting
+        print ''
+        
+        importcount = 0
+        failcount = 0
+        
+        pb = ProgressBar(maximum=len(dataset))
+        pb.update(importcount)
+        
+        failed_abbrev = []
+        failed_submissions = []
+        
+        for (medabbrev, ec_numbers) in dataset:
+            try:
+                sid = transaction.savepoint()
+                medcat = MedicalCategory.objects.get(abbrev=medabbrev)
+
+                for ec_number in ec_numbers:
+                    try:
+                        rofl = transaction.savepoint()
+                        s = Submission.objects.get(ec_number=ec_number)
+                        if not s.medical_categories.filter(abbrev=medabbrev):
+                            s.medical_categories.add(medcat)
+                            s.save()
+                    except Exception, e:
+                        transaction.savepoint_rollback(rofl)
+                        failed_submissions.append(ec_number)
+                        continue
+                    else:
+                        transaction.savepoint_commit(rofl)
+
+            except Exception, e:
+                transaction.savepoint_rollback(sid)
+                failed_abbrev.append(medabbrev)
+                failcount += 1
+            else:
+                transaction.savepoint_commit(sid)
+            finally:
+                importcount += 1
+                pb.update(importcount)
+        
+        if failed_abbrev:
+            self._warn('\nCould not find medical categories: %s\n' % (' '.join(failed_abbrev)))
+        
+        if failed_submissions:
+            self._warn('\nCould not find submissions: %s\n' % (' '.join(failed_submissions)))
+
+        print '== %d/%d categories imported ==' % (importcount - failcount, len(dataset))
+        if failcount:
+            self._abort('Failed to import %d participants' % failcount)
+        else:
+            print '\033[32mDone.\033[0m'
+
+        sys.stdout.write('Splitting meeting... ')
+        Meeting.objects.filter(title='%s ohne Teilnehmer' % (meeting.title)).delete()
+        meeting_ohne = Meeting.objects.create(title='%s ohne Teilnehmer' % (meeting.title), start=meeting.start)
+        for t_entry in meeting.timetable_entries.all():
+            if not t_entry.submission.medical_categories.count():
+                t_entry.meeting = meeting_ohne
+                t_entry.save()
+        sys.stdout.write('\033[32mdone\033[0m\n')
+
+
     def handle(self, *args, **kwargs):
-        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['participants'], kwargs['analyze_dir']] if x])
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir']] if x])
         if options_count is not 1:
-            self._abort('please specifiy one of -d/-s/-t/-p/-a')
+            self._abort('please specifiy one of -d/-s/-t/-c/-p/-a')
 
         if kwargs['submission_dir']:
             self._import_dir(kwargs['submission_dir'])
@@ -500,6 +593,8 @@ class Command(BaseCommand):
             self._import_timetable(kwargs['timetable'], kwargs['date'])
         elif kwargs['participants']:
             self._import_participants(kwargs['participants'])
+        elif kwargs['categorize']:
+            self._import_categorize(kwargs['categorize'])
         elif kwargs['analyze_dir']:
             self._analyze_dir(kwargs['analyze_dir'])
 
