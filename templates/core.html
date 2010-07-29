@@ -62,15 +62,17 @@
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
       </ul>
     </li>
+    <li>
+      <span class="togglers">Letzte Tätigkeiten</span>
+      {% load tracking %}
+      {% get_tracking_history as history %}
+      <ul class="elements" style="font-size:0.9em">
+          {% for entry in history %}
+              <li><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
+          {% endfor %}
+      </ul>
   </ul>
 
-  {% load tracking %}
-  {% get_tracking_history as history %}
-  <ul style="font-size: 0.8em">
-      {% for entry in history %}
-        <li class="{% cycle 'even' 'odd' %}"><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
-      {% endfor %}
-  </ul>
 {% endblock %}
 
 {% block headernav %}
