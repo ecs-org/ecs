@@ -51,14 +51,17 @@ class SubmissionSchedulingForm(forms.Form):
     
 class AssignedMedicalCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        retval =  super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['board_members'].queryset = User.objects.filter(medical_categories=self.instance.category, ecs_profile__board_member=True)
-        else:
-            self.fields['board_members'].queryset = User.objects.filter(medical_categories__gt=0, ecs_profile__board_member=True)
-        return retval
+        self.meeting = kwargs.pop('meeting')
+        self.category = kwargs.pop('category')
+        self.submissions = self.meeting.submissions.filter(medical_categories=self.category)
+        try:
+            kwargs['instance'] = AssignedMedicalCategory.objects.get(category=self.category, meeting=self.meeting)
+        except AssignedMedicalCategory.DoesNotExist:
+            pass
+        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category).order_by('username')
 
     class Meta:
         model = AssignedMedicalCategory
-        fields = ('board_members',)
+        fields = ('board_member',)
 

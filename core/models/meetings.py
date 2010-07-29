@@ -106,7 +106,7 @@ class TimetableMetrics(object):
 
 class AssignedMedicalCategory(models.Model):
     category = models.ForeignKey('core.MedicalCategory')
-    board_members = models.ManyToManyField(User, null=True)
+    board_member = models.ForeignKey(User, null=True)
     meeting = models.ForeignKey('core.Meeting', related_name='medical_categories')
 
     class Meta:
@@ -119,6 +119,7 @@ class AssignedMedicalCategory(models.Model):
     @property
     def submissions(self):
         return self.meeting.submissions.filter(medical_categories=self.category)
+
 
 class Meeting(models.Model):
     start = models.DateTimeField()
@@ -258,10 +259,6 @@ class Meeting(models.Model):
     def open_tops_with_vote(self):
         return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
 
-    def assign_medical_categories(self):
-        categories = set(sum([list(x.medical_categories.all()) for x in self.submissions.all()], []))
-        for category in categories:
-            AssignedMedicalCategory.objects.get_or_create(category=category, meeting=self)
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')

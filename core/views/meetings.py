@@ -137,16 +137,18 @@ def participation_editor(request, meeting_pk=None):
         'categories': MedicalCategory.objects.all(),
     })
 
-def medical_categories(request, meeting_pk=None, category_pk=None):
+def medical_categories(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    meeting.assign_medical_categories()
+    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
 
-    if category_pk:
-        form = AssignedMedicalCategoryForm(request.POST, instance=AssignedMedicalCategory.objects.get(pk=category_pk))
-        form.save()
+    forms = SortedDict()
+    for cat in required_categories:
+        forms[cat] = AssignedMedicalCategoryForm(request.POST or None, meeting=meeting, category=cat, prefix='cat%s' % cat.pk)
 
-    category_list = [x for x in meeting.medical_categories.all().order_by('category__abbrev') if x.submissions.count()]
-    forms = [AssignedMedicalCategoryForm(None, instance=x) for x in category_list]
+    if request.method == 'POST':
+        for cat, form in forms.iteritems():
+            if form.is_valid():
+                form.save()
 
     return render(request, 'meetings/timetable/medical_categories.html', {
         'meeting': meeting,    

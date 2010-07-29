@@ -8,29 +8,29 @@
 {% endblock %}
 
 {% block content %}
-
-<ul>
-{% for form in forms %}
-    <li>
-        <span class="mc_toggle">{{ form.instance.category }} [{{ form.instance.submissions|length }} Einreichungen{% if form.instance.board_members.count %}, {% for user in form.instance.board_members.all %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}]</span>
-        <ul class="mc_element">
-            <li>Einreichungen: 
-            {% for submission in form.instance.submissions %}
-                 <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.get_most_recent_form.pk %}">{{ submission }}</a>
-                {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-            </li>
-            <li>
-                <form action="{% url ecs.core.views.medical_categories meeting_pk=meeting.pk category_pk=form.instance.pk %}" method="post">
-                    {{ form.as_p }}
-                    <input type="submit" value="Speichern" />
-                </form>
-            </li>
-        </ul>
-    </li>
-{% endfor %}
-</ul>
-
+<form action="" method="post">
+    <ul>
+    {% for cat, form in forms.iteritems %}
+        <li>
+            <span class="mc_toggle">
+                {{ cat }} 
+                [{{ form.submissions|length }} Einreichungen{%if form.instance.board_member %}, {{ form.instance.board_member }}{% endif %}]
+            </span>
+            <ul class="mc_element">
+                <li>Einreichungen: 
+                {% for submission in form.submissions %}
+                     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.get_most_recent_form.pk %}">{{ submission }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                </li>
+                <li>
+                    {{ form.board_member }}
+                </li>
+            </ul>
+        </li>
+    {% endfor %}
+    </ul>
+    <input type="submit" value="Speichern" />
+</form>
 {% endblock %}
 
 {% block jsbottom %}
