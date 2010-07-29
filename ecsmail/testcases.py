@@ -8,8 +8,10 @@ import sys, os, time
 import subprocess
 
 # FIXME: does not work this way: lamson logserver started in subthread
-def shouldbesetUpModule():
-    pass    
+def setUpModule():
+    settings.LAMSON_SEND_THROUGH_RECEIVER = False 
+    # we dont have a frontend server (because we do router converstation so we sent directly to the relay backend)
+
 def shouldbedearDownModule():
     pass
 

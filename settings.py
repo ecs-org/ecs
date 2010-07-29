@@ -70,16 +70,18 @@ LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825} # relay to
 LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
 LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1']
+LAMSON_SEND_THROUGH_RECEIVER = True ; # this is set to false during unittests, so delivery will take place directly to the queue
 
 # used both by django AND lamson
 # lamson and django should be on the same machine
 FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
 DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-EMAIL_HOST = LAMSON_RELAY_CONFIG['host'] 
-EMAIL_PORT = LAMSON_RELAY_CONFIG['port'] 
+EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host'] 
+EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port'] 
+
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
-# FIXME: Agenda is send to whitelist instead of invited people
+# FIXME: Agenda, Billing is send to whitelist instead of invited people
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
 
@@ -132,8 +134,8 @@ if platform.node() == "ecsdev.ep3.at":
 
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
-    EMAIL_HOST = LAMSON_RELAY_CONFIG['host']
-    EMAIL_PORT = LAMSON_RELAY_CONFIG['port']
+    EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']
+    EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']
 
     # fulltext search engine override (ecsdev uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"

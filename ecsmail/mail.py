@@ -25,7 +25,7 @@ def __parse_attachments(attachments):
             yield (filename, data, content_type)
             
 def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently=False,
-                        message_html=None, attachments=None, through_receiver=False, **kwargs):
+                        message_html=None, attachments=None, **kwargs):
     '''
     puts messages to send into celery queue and returns list of messageids of messages to be sent
     '''
@@ -48,7 +48,7 @@ def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently
         mess['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
         mess['Message-ID'] = messageid
         mess = mess.to_message()
-        queued_mail_send.delay(mess, To=recipient, From=from_email, through_receiver=through_receiver)
+        queued_mail_send.delay(mess, To=recipient, From=from_email)
         sentids += messageid
     return sentids
 
