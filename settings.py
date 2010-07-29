@@ -85,7 +85,7 @@ EMAIL_WHITELIST = {}
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
 
-DIFF_REVIEW_LIST = ('natano', 'wuxxin',)
+DIFF_REVIEW_LIST = ('root',)
 
 
 # fulltext search engine config

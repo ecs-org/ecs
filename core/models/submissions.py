@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.conf import settings
 from ecs.messages.models import Message, Thread
+from ecs.core.models.meetings import TimetableEntry, Meeting
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -407,13 +408,26 @@ class SubmissionForm(models.Model):
 
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
+    submission = new_sf.submission
 
     try:
-        old_sf = new_sf.submission.forms.filter(pk__lt=new_sf.pk).order_by('-pk')[0]
+        old_sf = submission.forms.filter(pk__lt=new_sf.pk).order_by('-pk')[0]
     except IndexError:
         return
 
     recipients = [User.objects.get(username=x) for x in settings.DIFF_REVIEW_LIST]
+
+    timetable_entries = TimetableEntry.objects.filter(submission=submission)
+    recipients += sum([list(x.users) for x in timetable_entries], [])
+
+    meetings = set([x.meeting for x in timetable_entries])
+    assigned_medical_categories = [x.category for x in sum([list(x.medical_categories.all()) for x in meetings], []) if x.category in submission.medical_categories.all()]
+    recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
+    recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
+    recipients += list(User.objects.filter(email__in=sum([[x.email for x in old_sf.investigators.all()], [x.email for x in new_sf.investigators.all()]], [])))
+
+    recipients = set(recipients)
+
     text = u'An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n' % new_sf.submission.ec_number
     url = reverse('ecs.core.views.diff', kwargs={'old_submission_form_pk': old_sf.pk, 'new_submission_form_pk': new_sf.pk})
     text += u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.' % url
