@@ -63,17 +63,9 @@ def START(message, address=None, host=None):
                 body = message.body()
         
         m.thread.add_message(user=m.receiver, text=unicode(body), reply_to=m)
-        # d = Message(
-        #     sender=m.receiver,
-        #     receiver=m.sender,
-        #     reply_to=m, 
-        #     thread=m.thread, 
-        #     text=unicode(body),
-        #     smtp_delivery_state='new',
-        # )
-        # d.save()
+
     elif message.Peer[0] in settings.LAMSON_ALLOWED_RELAY_HOSTS:
-        logging.info('RELAYING %s %s %s' % (message, address, host))
+        logging.info('RELAYING %s %s %s' % (repr(message), address, host))
         relay.deliver(message)
     else:
         raise SMTPError(571) #Delivery not authorized, message refused
