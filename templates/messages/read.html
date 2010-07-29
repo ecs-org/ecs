@@ -26,7 +26,10 @@
           <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
       </li>
       <li style="border-top: 1px solid #999999">
-          <pre>{{ message.text }}</pre>
+          {% comment %}
+              FIXME: UGLY and unsecure!!!
+          {% endcomment %}
+          <pre>{{ message.text|safe }}</pre>
       </li>
     </ol>
   </div>

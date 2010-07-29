@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+import urlparse
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.conf import settings
+from ecs.messages.models import Message, Thread
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -399,6 +404,32 @@ class SubmissionForm(models.Model):
             return self.investigators.get(main=True).ethics_commission
         except Investigator.DoesNotExist:
             return None
+
+def _post_submission_form_save(**kwargs):
+    new_sf = kwargs['instance']
+
+    try:
+        old_sf = new_sf.submission.forms.filter(pk__lt=new_sf.pk).order_by('-pk')[0]
+    except IndexError:
+        return
+
+    recipients = [User.objects.get(username=x) for x in settings.DIFF_REVIEW_LIST]
+    text = u'An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n' % new_sf.submission.ec_number
+    url = reverse('ecs.core.views.diff', kwargs={'old_submission_form_pk': old_sf.pk, 'new_submission_form_pk': new_sf.pk})
+    text += u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.' % url
+    subject = u'Änderungen an %s' % new_sf.submission.ec_number
+
+    for recipient in recipients:
+        thread, created = Thread.objects.get_or_create(
+            subject=subject,
+            sender=User.objects.get(username='root'),
+            receiver=recipient,
+            submission=new_sf.submission
+        )
+
+        message = thread.add_message(User.objects.get(username='root'), text=text)
+
+post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
