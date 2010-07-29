@@ -125,11 +125,11 @@ if platform.node() == "ecsdev.ep3.at":
     # lamson config different for shredder
     if user == "shredder":
         LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
-        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.188', 'port': 8833} # listen here 
+        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8833} # listen here 
         FROM_DOMAIN = "s.ecsdev.ep3.at"
     elif user == "testecs":
         LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.189']
-        LAMSON_RECEIVER_CONFIG = {'host': '78.46.72.189', 'port': 8843} # listen here 
+        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8843} # listen here 
         FROM_DOMAIN = "test.ecsdev.ep3.at"
 
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
@@ -148,28 +148,24 @@ if platform.node() == "ecsdev.ep3.at":
 
 
 # use different settings if local_settings.py exists
-try:
+try: 
     from local_settings import *
 except ImportError:
     pass
 
+# use different database engine settings if local_settings.py exists
 try:
     import local_settings
-    local_db = {}
-    
+    local_db = {}    
     if hasattr(local_settings, 'DATABASE_ENGINE'):
         local_db['ENGINE'] = 'django.db.backends.%s' % local_settings.DATABASE_ENGINE
-
     for key in ('NAME', 'USER', 'PASSWORD', 'HOST', 'PORT'):
         if hasattr(local_settings, 'DATABASE_%s' % key):
-            local_db[key] = getattr(local_settings, 'DATABASE_%s' % key)
-    
+            local_db[key] = getattr(local_settings, 'DATABASE_%s' % key)  
     if hasattr(local_settings, 'local_db'):
         local_db = local_settings.local_db
-    
     if local_db:
         DATABASES['default'] = local_db
-    
 except ImportError:
     pass
 
