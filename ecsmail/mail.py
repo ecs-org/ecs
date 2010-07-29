@@ -38,11 +38,13 @@ def __to_message(message):
     del message.base.parts[:] 
   
     if message.Body and message.Html:
-        message.multipart = True 
-        if len(message.attachments) != 0:   # FIXME: this is a hack, but i think it works
-            message.base.content_encoding['Content-Type'] = ('multipart/mixed', {}) 
-        else:
-            message.base.content_encoding['Content-Type'] = ('multipart/alternative', {}) 
+        #FIXME: we are killing the plain body if both plain and html are there, but this is wrong, but multipart/alternative doesnt display attachments right
+        message.Body = None
+        #message.multipart = True 
+        #if len(message.attachments) != 0:   # FIXME: this is a hack, but i think it works
+        #    message.base.content_encoding['Content-Type'] = ('multipart/mixed', {}) 
+        #else:
+        #   message.base.content_encoding['Content-Type'] = ('multipart/alternative', {}) 
    
     if message.multipart: 
         message.base.body = None 
