@@ -16,8 +16,8 @@ def default_site():
     ''' XXX: default_site is needed for dbtemplates '''
     Site.objects.get_or_create(pk=1)
 
-@bootstrap.register()
-def templates(depends_on=('ecs.core.bootstrap.default_site',)):
+@bootstrap.register(depends_on=('ecs.core.bootstrap.default_site',))
+def templates():
     from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
     for dirpath, dirnames, filenames in os.walk(basedir):

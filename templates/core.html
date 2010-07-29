@@ -11,8 +11,8 @@
   {% comment %}
   <a href=""><img src="{{ MEDIA_URL }}images/core/search.png" alt="search"/></a> 
   {% endcomment %}
-  <a href="{{ request.tracking_data.view.path }}"><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
-  <a href="" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
+  <a href="" id="help_button" class="help_trigger"><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
+  <a href="" id="feedback_button" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
   </p> 
 {% endblock %}
 
@@ -197,6 +197,31 @@
           ecs.showWorkflowPopup();
           return false;
       });
+      
+      $('help_button').addEvent('click', function(e){
+          var link = $(e.target);
+          var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
+          if(e.shift){
+              url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
+          }
+          if(window.location.hash){
+              url += window.location.hash.substring(1) + '/';
+          }
+          //window.location.href = url;
+          var windowSize = $(window).getSize();
+          var overlay = new Element('div', {id: 'help_overlay'});
+          var iframe = new Element('iframe', {id: 'help_iframe', src: url});
+          overlay.appendChild(iframe);
+          overlay.setStyles({width: windowSize.x, height: windowSize.y});
+          iframe.onload = function(){
+              iframe.contentWindow.close = function(){
+                  overlay.dispose();
+              };
+          };
+          document.body.appendChild(overlay);
+          return false;
+      });
+      
       
       new BugShot();
     });

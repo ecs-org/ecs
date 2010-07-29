@@ -267,6 +267,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
+    'django.contrib.markup',
     'django_extensions',
 
     'django.contrib.admin',
@@ -303,7 +304,7 @@ INSTALLED_APPS = (
     'ecs.bootstrap',
     'ecs.billing',
     'ecs.tracking',
-    #'ecs.help',
+    'ecs.help',
 )
 
 # model that gets connected to contrib.auth model

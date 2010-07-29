@@ -1,0 +1,16 @@
+{% extends "shell.html" %}
+
+{% block htmlbody %}
+    <h1>ECS Onlinehilfe</h1>
+
+    {% block actions %}
+        <a href="javascript:window.close()">Schließen</a>
+        | <a href="{% url ecs.help.views.index %}">Übersicht</a>
+        | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
+    {% endblock %}
+    <div id="help_content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "shell.html" %}
+
+{% block htmlbody %}
+    {% if attachments %}
+    <ul>
+    {% for attachment in attachments %}
+        <li class="{% cycle 'even' 'odd' %}">{{ attachment.name }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form action="" method="post">
+        {{ form }}
+        <input type="submit" value="Upload" />
+    </form>
+    
+{% endblock %}

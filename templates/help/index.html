@@ -1,0 +1,9 @@
+{% extends "help/base.html" %}
+
+{% block content %}
+    <ul>
+    {% for help_page in pages %}
+        <li><a href="{% url ecs.help.views.view_help_page page_pk=help_page.pk %}">{{ help_page.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

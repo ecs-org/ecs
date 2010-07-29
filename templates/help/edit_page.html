@@ -1,0 +1,69 @@
+{% extends "help/base.html" %}
+
+{% block content %}
+    <h2>
+    {% if page %}
+        {{ page.title }}
+    {% else %}
+        Neue Seite
+    {% endif %}
+    </h2>
+    {{ form.errors }}
+    <form action="" method="post" id="helpform">
+        <div>
+            View: {{ form.view }}
+            Anchor: {{ form.anchor }}
+        </div>
+        <div class="title">{{ form.title }}</div>
+        <div class="text">
+            <div>
+            <a href="" id="ReST_italic"><i>kursiv</i></a> 
+            | <a href="" id="ReST_bold"><b>fett</b></a>
+            | <a href="" id="ReST_heading">Überschrift</a>
+            | <a href="" id="ReST_preview">Vorschau</a>
+            </div>
+            {{ form.text }}
+        </div>
+        <input type="submit" value="Speichern" />
+    </form>
+    <div id="help_attachments">
+        <iframe src="{% url ecs.help.views.attachments %}"></iframe>
+    </div>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript" src="{{ MEDIA_URL}}js/restructuredtext.js"></script>
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        var r = new ReST($('id_text'));
+        $('ReST_italic').addEvent('click', function(){r.makeItalic(); return false;});
+        $('ReST_bold').addEvent('click', function(){r.makeBold(); return false;});
+        $('ReST_heading').addEvent('click', function(){r.makeHeading(); return false;});
+        $('ReST_preview').addEvent('click', function(){
+            var preview = $('help_preview');
+            if(preview){
+                preview.dispose();
+                return false;
+            }
+            
+            preview = new Element('div', {id: 'help_preview'});
+            var textarea = $('id_text');
+            var size = textarea.getSize();
+            var pos = textarea.getPosition();
+            preview.setStyles({left: pos.x, top: pos.y, width: size.x, height: size.y});
+            var request = new Request.HTML({
+                url: '{% url ecs.help.views.preview_help_page_text %}',
+                method: 'post',
+                data: 'text=' + encodeURIComponent(textarea.value),
+                update: preview,
+                onSuccess: function(){
+                    document.body.appendChild(preview);
+                }
+            });
+            request.send();
+            return false;
+        });
+    });
+</script>
+{% endblock %}

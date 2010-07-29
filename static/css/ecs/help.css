@@ -1,0 +1,51 @@
+#help_overlay{
+    z-index: 100000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #ffffff;
+}
+
+#help_iframe{
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#help_content{
+}
+
+#help_content .title input{
+    width: 100%;
+    font-size: 2em;
+}
+
+#help_content .text textarea{
+    font-family: monospace;
+    font-size: 12pt;
+    width: 100%;
+    height: 30em;
+}
+
+#help_content form{
+    width: 70%;
+}
+
+#help_attachments {
+    width: 28%;
+    position: absolute;
+    right: 0px;
+}
+
+#help_attachments iframe{
+    border: none;
+    width: 100%;
+    height: 100%;
+}
+
+#help_preview{
+    overflow: auto;
+    position: absolute;
+    z-index: 100;
+    background-color: #ffffff;
+}

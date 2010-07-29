@@ -1,0 +1,23 @@
+{% extends "help/base.html" %}
+{% load markup %}
+
+{% block actions %}
+    {{ block.super }}
+    | <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">Seite Bearbeiten</a>
+{% endblock %}
+
+{% block content %}
+    <h2>{{ page.title }}</h2>
+    ({{ page.view.path }})
+    <div class="restructuredtext">
+        {{ page.text|restructuredtext }}
+    </div>
+    {% if related_pages %}
+    <h3>Siehe auch:</h3>
+    <ul>
+        {% for relpage in related_pages %}
+            <li><a href="{% url ecs.help.views.view_help_page page_pk=relpage.pk %}">{{ relpage.title }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endblock %}
