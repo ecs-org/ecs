@@ -1,7 +1,7 @@
 /* headernav */
 
 .tab_headers li {
-  display: inline;
+  display: inline-block;
   line-height: 30px;
 }
 ul.tab_headers {
@@ -437,7 +437,7 @@ fieldset.disabled {
 .form.main li.max10 input{ width: 60px;}
 .form.main li.max20 input{ width: 100px;}
 .form.main li.max40 input{ width: 200px;}
-.form.main li.max60 input{ width: 30em;}
+.form.main li.max60 input{ width: 340px;}
 
 .form .wide {
   width: 16em;

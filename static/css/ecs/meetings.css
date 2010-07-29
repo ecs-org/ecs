@@ -246,7 +246,8 @@
   margin-top: 10px;
 }
 #meeting_assistant .buttons {
-  float: right;
+  display: block;
+  float: left;
   margin-top: 10px;
   width: 100%;
 }
@@ -258,6 +259,7 @@
   list-style: none;
   display: block;
   float: left;
+  clear: both;
   font-size: 10pt;
   padding: 0;
 }
@@ -267,9 +269,8 @@
   border: 1px solid #ccc;
   background: #666;
   color: #fff;
-  margin: 5px;
+  margin: 5px 0;
   padding: 5px;
-  width: 100%;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -279,7 +280,7 @@
   background: #333;
 }
 #meeting_assistant .buttons a.selected {
-  background-color: #ccffcc;
+  background-color: #71ce09;
 }
 #meeting_assistant .buttons a .details {
   display: block;
@@ -318,6 +319,11 @@
   background: #999;
   color: #fff;
 }
+.reviews a.textblock {
+  display: block;
+  clear: both;
+  font-size: 10pt;
+}
 #meeting_assistant textarea {
   width: 98%;
 }
@@ -341,6 +347,7 @@
   list-style: none
 }
 #meeting_assistant .reviews li {
+  display: block;
   padding: 5px;
   border-radius: 3px;
   -moz-border-radius: 3px;
