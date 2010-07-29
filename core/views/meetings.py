@@ -146,11 +146,11 @@ def medical_categories(request, meeting_pk=None, category_pk=None):
         form.save()
 
     category_list = [x for x in meeting.medical_categories.all().order_by('category__abbrev') if x.submissions.count()]
-    categories = [(x, AssignedMedicalCategoryForm(None, instance=x),) for x in category_list]
+    forms = [AssignedMedicalCategoryForm(None, instance=x) for x in category_list]
 
     return render(request, 'meetings/timetable/medical_categories.html', {
         'meeting': meeting,    
-        'categories': categories,
+        'forms': forms,
     })
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
