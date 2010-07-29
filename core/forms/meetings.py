@@ -64,4 +64,4 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
     class Meta:
         model = AssignedMedicalCategory
         fields = ('board_member',)
-
+        

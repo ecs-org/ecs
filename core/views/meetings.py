@@ -148,7 +148,16 @@ def medical_categories(request, meeting_pk=None):
     if request.method == 'POST':
         for cat, form in forms.iteritems():
             if form.is_valid():
-                form.save()
+                if form.instance and form.instance.board_member:
+                    # remove all participations for a previous selected board member.
+                    # FIXME: this may delete manually entered data.
+                    Participation.objects.filter(medical_category=cat, entry__meeting=meeting).delete()
+                amc = form.save()
+                # add participations for all timetable entries with matching categories.
+                # FIXME: this assumes that all submissions have already been added to the meeting.
+                for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
+                    print entry, cat, amc.board_member
+                    Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
 
     return render(request, 'meetings/timetable/medical_categories.html', {
         'meeting': meeting,    
