@@ -6,6 +6,7 @@ from django.db.models import Q
 
 from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from core.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
+from core.views.submissions import diff_submission_forms
 
 
 class SubmissionFormTest(TestCase):
@@ -206,7 +207,7 @@ def create_submission_form():
         project_type_questionnaire=False,
         project_type_education_context=None,
         project_type_misc=None,
-        specialism="Pädiatrische Onkologie / Immunologie",
+        specialism=u"Pädiatrische Onkologie / Immunologie",
         pharma_checked_substance="1) R1 Randomisierung CEM - MAT/SCR",
         pharma_reference_substance="1) R1 Randomisierung BUMEL - MAT/SCR",
         medtech_checked_product="",
@@ -240,7 +241,7 @@ def create_submission_form():
         medtech_manual_included=False,
         medtech_technical_safety_regulations="",
         medtech_departure_from_regulations="",
-        insurance_name="Zürich Veresicherungs-Aktiengesellschaft",
+        insurance_name=u"Zürich Veresicherungs-Aktiengesellschaft",
         insurance_address_1="Schwarzenbergplatz 15",
         insurance_phone="50125",
         insurance_contract_number="WF-07218230-8",
@@ -297,8 +298,8 @@ def create_submission_form():
         study_plan_planned_statalgorithm="log rank test",
         study_plan_dataquality_checking="National coordinators cross check in local audits patient file data with electronic data. In addition the RDE system holds electronic plausibility controls.",
         study_plan_datamanagement="Date entry and management through the SIOPEN-R-Net platform including the RDE system",
-        study_plan_biometric_planning="Mag. rer.soc.oec. Ulrike Pötschger / Statistikerin",
-        study_plan_statistics_implementation="Mag. rer.soc.oec. Ulrike Pötschger / Statistikerin",
+        study_plan_biometric_planning=u"Mag. rer.soc.oec. Ulrike Pötschger / Statistikerin",
+        study_plan_statistics_implementation=u"Mag. rer.soc.oec. Ulrike Pötschger / Statistikerin",
         #study_plan_dataprotection_anonalgoritm="Electronically generated unique patient number within SIOPEN-R-Net",
         study_plan_dataprotection_anonalgoritm="to long",
         study_plan_dataprotection_dvr="",
@@ -349,4 +350,21 @@ class NotificationFormTest(TestCase):
         )
         progress_notification.save()
         progress_notification.investigators = self.submission_form.investigators.all()
+
+class SubmissionFormDiffTest(TestCase):
+    def setUp(self):
+        self.old_sf = create_submission_form()
+        self.new_sf = create_submission_form()
+
+    def test_submission_form_diff(self):
+        ''' Test if the submissionForm diff function works correctly '''
+        self.new_sf.project_title = 'roflcopter'
+        diff = diff_submission_forms(self.old_sf, self.new_sf)
+        self.failIf(not diff)
+        try:
+            project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
+        except IndexError:
+            self.fail()
+        self.failIf(not (1, 'roflcopter') in x[1])
+
 
