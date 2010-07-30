@@ -65,3 +65,13 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         model = AssignedMedicalCategory
         fields = ('board_member',)
         
+    def save(self, **kwargs):
+        commit = kwargs.get('commit', True)
+        kwargs['commit'] = False
+        obj = super(AssignedMedicalCategoryForm, self).save(**kwargs)
+        obj.meeting = self.meeting
+        obj.category = self.category
+        if commit:
+            obj.save()
+        return obj
+        

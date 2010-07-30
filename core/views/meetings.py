@@ -156,7 +156,6 @@ def medical_categories(request, meeting_pk=None):
                 # add participations for all timetable entries with matching categories.
                 # FIXME: this assumes that all submissions have already been added to the meeting.
                 for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
-                    print entry, cat, amc.board_member
                     Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
 
     return render(request, 'meetings/timetable/medical_categories.html', {
