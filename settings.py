@@ -138,11 +138,12 @@ if platform.node() == "ecsdev.ep3.at":
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
     EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']
     EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']
-
-    # fulltext search engine override (ecsdev uses solr instead of whoosh)
-    HAYSTACK_SEARCH_ENGINE = "solr"
-    HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
     
+    if user == "testecs":
+        # fulltext search engine override (testecs uses solr instead of whoosh)
+        HAYSTACK_SEARCH_ENGINE = "solr"
+        HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
+        
     # testecs does not show django debug messages
     if user == "testecs":
         DEBUG = False
