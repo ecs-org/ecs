@@ -4,6 +4,7 @@ import logging
 
 @task()
 def queued_mail_send(message, To, From):
+    logger = self.get_logger(**kwargs)
     from django.conf import settings
     from lamson.server import Relay
     if not hasattr(settings,'LAMSON_SEND_THROUGH_RECEIVER'): 
@@ -16,5 +17,6 @@ def queued_mail_send(message, To, From):
         relay = Relay(host=settings.LAMSON_RELAY_CONFIG['host'],
         port=settings.LAMSON_RELAY_CONFIG['port'])
 
-    print("".join(("queued mail deliver using ", str(relay), ", from ", From, ", to ", To, ", msg ", repr(message))))
+    logger.info("".join(("queued mail deliver using ", str(relay), ", from ", From, ", to ", To, ", msg ", repr(message))))
     relay.deliver(message, To, From)
+    # FIXME needs errror handling and return value 

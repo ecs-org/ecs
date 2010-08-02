@@ -29,7 +29,7 @@ from django.http import HttpResponseForbidden
 from ecs.core.models import Document
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 from ecs.utils import forceauth
-from ecs.utils.xhtml2pdf import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf
 
 
 def create_meeting(request):

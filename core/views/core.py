@@ -9,7 +9,7 @@ from ecs.core.views.utils import render, redirect_to_next_url
 from ecs.core.models import Document, Notification, NotificationType, SubmissionForm, Investigator, Submission
 from ecs.core.forms import DocumentFormSet
 from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
-from ecs.utils.xhtml2pdf import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 

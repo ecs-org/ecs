@@ -34,6 +34,7 @@ def _eval_timetable(metrics):
 
 @task()
 def optimize_timetable_task(meeting_id=None, algorithm=None):
+    logger = self.get_logger(**kwargs)
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
     try:
@@ -50,20 +51,22 @@ def optimize_timetable_task(meeting_id=None, algorithm=None):
 
 @task()
 def extract_and_index_pdf_text(document_pk=None):
-    print "indexing doc %s" % document_pk
+    logger = self.get_logger(**kwargs)
+    logger.debug("indexing doc %s" % document_pk)
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
-        print("Warning, Document with pk %s does not exist" % str(document_pk))
+        logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
         return
     if not doc.pages or doc.mimetype != 'application/pdf':
-        print("Warning, doc.pages (%s) not set or doc.mimetype (%s) != 'application/pdf'" % (str(doc.pages), str(doc.mimetype)))
+        logger.info("Warning, doc.pages (%s) not set or doc.mimetype (%s) != 'application/pdf'" % (str(doc.pages), str(doc.mimetype)))
         return
     for p in xrange(1, doc.pages + 1):
         cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-f", "%s" % p,  "-l",  "%s" % p,  "-q", doc.file.path, "-"]
         popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         text, stderr = popen.communicate()
         doc.page_set.create(num=p, text=text)
+        # FIXME: as a delayed tasks there ist missing error handling
     index = site.get_index(Page)
     index.backend.update(index, doc.page_set.all())
     
