@@ -80,6 +80,9 @@ except ValueError:
 pathlist.insert(0,bindir)
 os.environ['PATH']= os.pathsep.join(pathlist)
 
+# tell celery to load its settings from djcelery (which uses django settings.py)
+os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
+
 # start wsgi main
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
