@@ -16,7 +16,7 @@ SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-# dont migrate in testing
+# dont migrate in testing, this needs to be in main settings.py it doesnt work if set in utils/ecs_runner.py
 SOUTH_TESTS_MIGRATE = False
 
 
@@ -119,9 +119,9 @@ if platform.node() == "ecsdev.ep3.at":
     BROKER_USER = user
     if user in DBPWD_DICT:
         BROKER_PASSWORD = DBPWD_DICT[user]
-    BROKER_VHOST = user
-    CARROT_BACKEND = ""
-    CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
+        BROKER_VHOST = user
+        CARROT_BACKEND = ""
+        CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 
     # on ecsdev we use memcachedb instead of mockcache
     RENDERSTORAGE_LIB  = 'memcache'
