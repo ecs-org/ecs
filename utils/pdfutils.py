@@ -1,9 +1,12 @@
 import os, sys
 import subprocess
+from subprocess import PIPE, STDOUT
 import killableprocess
 import tempfile
 import time
 from StringIO import StringIO
+
+from pdfminer.pdfparser import PDFParser, PDFDocument
 
 from django.template import Context, loader
 from django.core.files import File
@@ -20,26 +23,59 @@ def ghostscript():
     else:
         return which('gs').next()
 
-def stamp_pdf(filename, barcode_content):
-    # FIXME: remove tempfile foo
+def pdf_isvalid(source):
+    parser = PDFParser(source)
+    doc = PDFDocument()
+    parser.set_document(doc)
+    doc.set_parser(parser)
+    doc.initialize('')
+    if not doc.is_extractable:
+        return False
+    return True
+    
+def pdf_pages(source):
+    parser = PDFParser(source)
+    doc = PDFDocument()
+    parser.set_document(doc)
+    doc.set_parser(parser)
+    doc.initialize('')
+    return doc.getNumPages()
+    
+def pdf_barcodestamp(source, barcode_content):
+    '''
+    takes source pdf and stamps a barcode to this pdf; Returns destination temporary filename
+    raises valueerror if something goes wrong 
+    '''
     template = loader.get_template('xhtml2pdf/barcode.ps')
-    barcode_ps = template.render(Context({'barcode': barcode_content}))
+    barcode_ps = template.render(Context({'barcode': barcode_content})) # render barcode template to ready to use postscript file
     
-    with tempfile.NamedTemporaryFile() as tmp:
-        tmp.write(barcode_ps)
-        tmp.flush()
-        tmp.seek(0)
-        tmp_out = tempfile.NamedTemporaryFile(suffix='.pdf')
+    try:
+        barcode_pdf_oshandle, barcode_pdf_name = tempfile.mkstemp(suffix='.pdf') 
+        target_oshandle, target_name = tempfile.mkstemp(suffix='.pdf')
         
-        gs = subprocess.Popen([ghostscript(), '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', '-sOutputFile=-', '-c', '<</Orientation 0>> setpagedevice', '-f', tmp.name], stdout=subprocess.PIPE)
-        pdftk = subprocess.Popen([which('pdftk').next(), filename, 'stamp', '-', 'output', tmp_out.name], stdin=gs.stdout)       
-        pdftk.wait()
-    
-    if pdftk.returncode != 0:
-        raise ValueError('pdftk returned with errorcode %s' % pdftk.returncode)
-    
-    return File(tmp_out)
-
+        # render barcode postscript file to pdf
+        gs = subprocess.Popen([ghostscript(), 
+            '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', 
+            '-sOutputFile=%s' % barcode_pdf_name, '-c', '<</Orientation 0>> setpagedevice', '-'],
+            stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        gsresult = gs.communicate(barcode_ps)
+        #print gsresult, gs.returncode, barcode_pdf_name
+        if gs.returncode != 0:
+            raise IOError('ghostscript returned error code %n , stderr: ' % gs.returncode, gsresult[1])        
+        
+        pdftk = subprocess.Popen([which('pdftk').next(),
+            source, 'stamp', barcode_pdf_name, 'output', target_name, 'dont_ask'],
+            bufsize=-1, stdin=PIPE, stdout=PIPE, stderr=PIPE)       
+        pdftkresult = pdftk.communicate()
+        #print pdftkresult, pdftk.returncode, target_name
+        if pdftk.returncode != 0:
+            raise ValueError('stamping pipeline returned with errorcode %s' % pdftk.returncode)
+    finally:
+        os.close(barcode_pdf_oshandle)
+        os.close(target_oshandle)
+        os.remove(barcode_pdf_name)
+           
+    return target_name
 
 def xhtml2pdf(html, **options):
     """ 

@@ -177,9 +177,8 @@ class Message(models.Model):
             try:
                 self.smtp_delivery_state='started'
                 send_mail(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
-                                                                 message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
-                                                                 from_email=self.return_address,
-                          recipient_list=[self.receiver.email], fail_silently=False)
+                    message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
+                    from_email=self.return_address, recipient_list=self.receiver.email)
                 self.smtp_delivery_state='sent'
             except:
                 traceback.print_exc()

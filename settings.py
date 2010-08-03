@@ -49,17 +49,17 @@ BROKER_VHOST = 'ecshost'
 # per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
 # Celery results, defaults to django if djcelery is imported
-CELERY_RESULT_BACKEND = 'database'
+#CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )
-# From http://github.com/ask/django-celery#readme
-# Special note for mod_wsgi users: If you're using mod_wsgi to deploy your Django application you need to include the following in your .wsgi module:
-import djcelery
-djcelery.setup_loader()
+# dont use queueing backend but consume it right away
+CELERY_ALWAYS_EAGER = True
+# propagate exceptions back to caller
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 
 # lamson config
@@ -116,13 +116,14 @@ if platform.node() == "ecsdev.ep3.at":
         }
         
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
-    BROKER_USER = user
     if user in DBPWD_DICT:
+        BROKER_USER = user
         BROKER_PASSWORD = DBPWD_DICT[user]
         BROKER_VHOST = user
         CARROT_BACKEND = ""
-        CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
-
+        # use queueing 
+        settings.CELERY_ALWAYS_EAGER = False
+        
     # on ecsdev we use memcachedb instead of mockcache
     RENDERSTORAGE_LIB  = 'memcache'
     RENDERSTORAGE_HOST = '127.0.0.1'
@@ -151,6 +152,7 @@ if platform.node() == "ecsdev.ep3.at":
         # testecs does not show django debug messages
         DEBUG = False
         TEMPLATE_DEBUG = False
+        CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 
 
 # use different settings if local_settings.py exists
