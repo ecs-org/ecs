@@ -3,8 +3,8 @@ from django.conf import settings
 import logging
 
 @task()
-def queued_mail_send(message, To, From):
-    logger = self.get_logger(**kwargs)
+def queued_mail_send(message, To, From, **kwargs):
+    logger = queued_mail_send.get_logger(**kwargs)
     from django.conf import settings
     from lamson.server import Relay
     if not hasattr(settings,'LAMSON_SEND_THROUGH_RECEIVER'): 
