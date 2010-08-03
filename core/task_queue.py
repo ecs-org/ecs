@@ -33,8 +33,8 @@ def _eval_timetable(metrics):
     return 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1) + 1000.0 / (math.sqrt(metrics._optimal_start_diff_squared_sum) + 1)
 
 @task()
-def optimize_timetable_task(meeting_id=None, algorithm=None):
-    logger = self.get_logger(**kwargs)
+def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
+    logger = optimize_timetable_task.get_logger(**kwargs)
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
     try:
@@ -50,7 +50,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None):
     return retval
 
 @task()
-def extract_and_index_pdf_text(document_pk=None):
+def extract_and_index_pdf_text(document_pk=None, **kwargs):
     logger = self.get_logger(**kwargs)
     logger.debug("indexing doc %s" % document_pk)
     try:
