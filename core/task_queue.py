@@ -51,7 +51,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
 
 @task()
 def extract_and_index_pdf_text(document_pk=None, **kwargs):
-    logger = self.get_logger(**kwargs)
+    logger = extract_and_index_pdf_text.get_logger(**kwargs)
     logger.debug("indexing doc %s" % document_pk)
     try:
         doc = Document.objects.get(pk=document_pk)
