@@ -16,7 +16,7 @@ class Command(BaseCommand):
         os.chdir(os.path.join(os.path.dirname(ecs.__file__), 'ecsmail'))
         
         if len(args) < 1:
-            self.stderr.write(self.args)
+            print("Usage: ecsmail ", self.args)
             return 
         elif args[0] == 'server':
             from lamson.server import SMTPReceiver
@@ -26,7 +26,7 @@ class Command(BaseCommand):
                 settings.LAMSON_RECEIVER_CONFIG['port'])
 
             import asyncore
-            self.stdout.write("starting ecsmail server, Listen: %s:%s, Relay:  %s" % (lamsettings.receiver.host, lamsettings.receiver.port, str(lamsettings.relay)))
+            print("starting ecsmail server, Listen: %s:%s, Relay:  %s" % (lamsettings.receiver.host, lamsettings.receiver.port, str(lamsettings.relay)))
             asyncore.loop(timeout=0.1, use_poll=True)
 
         elif args[0] == 'log':
@@ -37,10 +37,10 @@ class Command(BaseCommand):
 
             host = settings.LAMSON_RELAY_CONFIG['host']
             lamsettings = utils.make_fake_settings(host, port)
-            self.stdout.write("starting ecsmail testing log server, Listen: %s:%i" % (host, port))
+            print("starting ecsmail testing log server, Listen: %s:%i" % (host, port))
             import asyncore
             asyncore.loop(timeout=0.1, use_poll=True)
         else:
-            self.stderr.write(self.args)
+            print("Usage: ecsmail", self.args)
             return 
             
