@@ -6,8 +6,8 @@ from ecs.mediaserver.renderer import Renderer
 from ecs.mediaserver.imageset import ImageSet
 
 @task()
-def cache_and_render(document_pk):
-    logger = self.get_logger(**kwargs)
+def cache_and_render(document_pk, **kwargs):
+    logger = cache_and_render.get_logger(**kwargs)
     try:
         document = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
