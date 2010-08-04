@@ -63,20 +63,27 @@ def __to_message(message):
         message.base.body = message.Html 
         message.base.content_encoding['Content-Type'] = ('text/html', {}) 
    
-    return encoding.to_message(message.base) 
-            
+    return encoding.to_message(message.base)             
 
-def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently=False,
-                        message_html=None, attachments=None, **kwargs):
+def send_mail(subject, message, from_email, recipient_list, message_html=None, attachments=None, **kwargs):
     '''
+    send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), 
     puts messages to send into celery queue and returns list of messageids of messages to be sent
     '''
-    sentids = []
-
     # XXX: make a list if only one recipient (and therefore string) is there
     if isinstance(recipient_list, basestring):
         recipient_list = [recipient_list]
+ 
+    # filter out recipients which are not in the whitelist
+    mylist = set(recipient_list)
+    bad = None
+    if settings.EMAIL_WHITELIST:
+        bad = set([x for x in recipient_list if x not in settings.EMAIL_WHITELIST])
+    if bad:
+        print 'BAD EMAILS:', mylist, bad
+        recipient_list = list(mylist - bad)
 
+    sentids = []
     for recipient in recipient_list:
         messageid = make_msgid()
         mess = MailResponse(To=recipient, From=from_email, Subject=subject, Body=message, Html=message_html)
@@ -86,22 +93,7 @@ def lamson_send_mail(subject, message, from_email, recipient_list, fail_silently
         mess['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
         mess['Message-ID'] = messageid
         mess = __to_message(mess)
-
         queued_mail_send.delay(mess, To=recipient, From=from_email)
         sentids += messageid
     return sentids
-
-
-def send_mail(**kwargs):
-    '''
-    send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), and return message-id of sent message
-    '''
-    mylist = set(kwargs['recipient_list'])
-    bad = None
-    if settings.EMAIL_WHITELIST:
-        bad = set([x for x in kwargs['recipient_list'] if x not in settings.EMAIL_WHITELIST])
-    if bad:
-        print 'BAD EMAILS:', mylist, bad
-        kwargs['recipient_list'] = list(mylist - bad)
-        
-    return lamson_send_mail(**kwargs)
+ 

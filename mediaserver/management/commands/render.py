@@ -8,7 +8,6 @@ from ecs.mediaserver.analyzer import Analyzer
 from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.renderer import Renderer
 
-
 class Command(BaseCommand):
     args = '<name.pdf> <id>'
     help = 'renders the specified PDF document to images, storing under id'

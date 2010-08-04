@@ -9,7 +9,6 @@ from django.test import TestCase
 from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.storage import Cache
 
-
 class RendererTest(TestCase):
     pdf_name = 'test-pdf-14-seitig.pdf'
     id_test = '0'
@@ -28,5 +27,6 @@ class RendererTest(TestCase):
         print 'cache cleaned'
 
     def test_cmd(self):
-        pdf_fname = os.path.join(os.path.dirname(__file__), self.pdf_name)
+        pdf_fname = os.path.join(os.path.dirname(os.path.abspath(__file__)), self.pdf_name)
+        print("rendering %s as id %s" % (pdf_fname, str(self.id_test)))
         management.call_command('render', pdf_fname, self.id_test)

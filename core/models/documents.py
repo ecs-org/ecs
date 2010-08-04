@@ -4,6 +4,7 @@ import hashlib
 import os
 import tempfile
 import datetime
+import mimetypes
 from uuid import uuid4
 
 from django.db import models
@@ -15,8 +16,7 @@ from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
 
-from ecs.utils.pdfutils import stamp_pdf
-from ecs.mediaserver.analyzer import Analyzer
+from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
 
 
 class DocumentType(models.Model):
@@ -33,6 +33,7 @@ def upload_document_to(instance=None, filename=None):
     # the file path is derived from the document uuid. This should be
     # random enough, so we do not have collisions in the next gogolplex years
     dirs = list(instance.uuid_document[:6]) + [instance.uuid_document]
+    instance.original_file_name = filename  # save original_file_name
     return os.path.join(settings.FILESTORE, *dirs)
 
 
@@ -94,40 +95,37 @@ class Document(models.Model):
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def save(self, **kwargs):
-        """ TODO: handel other filetypes than PDFs """
-        if self.file:
-            if not self.uuid_document and self.mimetype == 'application/pdf' and getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): # if uuid is given, dont stamp the pdf
-                tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
-                filename = tmp.name
-                buf = ''
-                while True:
-                    buf = self.file.read(4096)
-                    if not buf: break
-                    tmp.write(buf)
-                tmp.close()
-                self.file.close()
+        if not self.file:
+            raise ValueError('no file')
+        if not os.path.exists(self.file.name):
+            raise IOError('does not exist %s' % self.file.name)
+        else:
+            if not self.uuid_document: 
+                self.uuid_document = str(uuid4()) # generate a new random uuid
+                content_type, encoding = mimetypes.guess_type(self.file.name) # look what kind of mimetype we would guess
                 
-                self.uuid_document = str(uuid4())
-                self.file = stamp_pdf(filename, self.uuid_document)
+                if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
+                    if not pdf_isvalid(self.file):
+                        raise ValueError('no valid pdf')
+                    if self.mimetype == 'application/pdf':
+                        self.pages = pdf_pages(self.file) # FIXME: this should get calculated after stamping
                     
-                os.remove(filename)
+                    if getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): # FIXME: call stampbarcode only if we have pdftk on the platform (currently !mac)
+                        originalfile = self.file.name
+                        self.file = pdf_barcodestamp(originalfile, self.uuid_document)
+                        os.remove(originalfile)
             
             m = hashlib.md5()        # update hash sum
+            self.file.seek(0)            
             while True:
-                buf = self.file.read(4096)
-                if not buf: break
-                m.update(buf)
+                data= self.file.read(8192)
+                if not data: break
+                m.update(data)
             self.file.seek(0)
             self.hash = m.hexdigest()
+                
+            return super(Document, self).save(**kwargs)
             
-            if self.mimetype == 'application/pdf':
-                analyzer = Analyzer()     # update page number
-                analyzer.sniff_file(self.file)
-                if analyzer.valid is False:
-                    raise ValidationError('invalid PDF')  # TODO add user-visible error message
-                self.pages = analyzer.pages
-        
-        return super(Document, self).save(**kwargs)
         
 class Page(models.Model):
     doc = models.ForeignKey(Document)

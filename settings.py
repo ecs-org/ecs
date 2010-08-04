@@ -1,17 +1,23 @@
 # Django settings for ecs project.
 
+# root dir of project
 import os.path, platform
 PROJECT_DIR = os.path.dirname(__file__)
 
+# admins is used to send django 500, 404 and celery errror messages per email, DEBUG needs to be false for this
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
-)
+    ('Felix Erkinger', 'felix@erkinger.at'),
+    )
 MANAGERS = ADMINS
+SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
+
 
 # Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
-# (because we want 404 and 500 custom errors and log the error)
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+# dont migrate in testing, this needs to be in main settings.py it doesnt work if set in utils/ecs_runner.py
+SOUTH_TESTS_MIGRATE = False
 
 
 # database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
@@ -28,7 +34,7 @@ DATABASES['default'] = {
 
 # mediaserver memcached(b) settings, RENDERSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
 # if set to mockcache, RENDERSTORAGE_HOST & PORT will be ignored
-# warning mockcache data is only visible inside same program, so seperate runner will NOT see entries
+# WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
 RENDERSTORAGE_LIB  = 'mockcache'
 RENDERSTORAGE_HOST = '127.0.0.1'
 RENDERSTORAGE_PORT = 21201 # port of memcachedb
@@ -42,23 +48,18 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 # per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
-# Celery results
-CELERY_RESULT_BACKEND = 'database'
-#CELERY_RESULT_DBURI = 'sqlite://'+ os.path.join(PROJECT_DIR, 'celery.db')
-
+# Celery results, defaults to django if djcelery is imported
+#CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.core.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )
-
-# From http://github.com/ask/django-celery#readme
-# Special note for mod_wsgi users: If you're using mod_wsgi to deploy your Django application you need to include the following in your .wsgi module:
-import os
-os.environ["CELERY_LOADER"] = "django"
-import djcelery
-djcelery.setup_loader()
+# dont use queueing backend but consume it right away
+CELERY_ALWAYS_EAGER = True
+# propagate exceptions back to caller
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 
 # lamson config
@@ -84,7 +85,6 @@ EMAIL_WHITELIST = {}
 # FIXME: Agenda, Billing is send to whitelist instead of invited people
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
-
 DIFF_REVIEW_LIST = ('root',)
 
 
@@ -92,12 +92,18 @@ DIFF_REVIEW_LIST = ('root',)
 HAYSTACK_SITECONF = 'ecs.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url
+HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only used if HAYSTACK_SEARCH_ENGINE = 'solr'
+
+
+#XXX: these are local fixes, they default to a sane value if unset
+#ECS_AUTO_PDF_BARCODE = True # default to true, skips pdftk stamping if set to false
+#ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs) if empty (needs to be overriden in local_settings for eg. windows
+
 
 if platform.node() == "ecsdev.ep3.at":
+    # use different settings if on host ecsdev.ep3.at depending username
     import getpass
     user = getpass.getuser()
-    # use different settings if on host ecsdev.ep3.at depending username
     
     DBPWD_DICT = {}
  
@@ -105,20 +111,19 @@ if platform.node() == "ecsdev.ep3.at":
     if user in DBPWD_DICT:
         DATABASES['default'] = {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': user,
-            'USER': user,
-            'PASSWORD': DBPWD_DICT[user],
-            'HOST': '127.0.0.1',
-            'PORT': '',
+            'NAME': user, 'USER': user, 'PASSWORD': DBPWD_DICT[user],
+            'HOST': '127.0.0.1', 'PORT': '',
         }
         
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
-    BROKER_USER = user
     if user in DBPWD_DICT:
+        BROKER_USER = user
         BROKER_PASSWORD = DBPWD_DICT[user]
-    BROKER_VHOST = user
-    CARROT_BACKEND = ""
-
+        BROKER_VHOST = user
+        CARROT_BACKEND = ""
+        # use queueing 
+        settings.CELERY_ALWAYS_EAGER = False
+        
     # on ecsdev we use memcachedb instead of mockcache
     RENDERSTORAGE_LIB  = 'memcache'
     RENDERSTORAGE_HOST = '127.0.0.1'
@@ -144,10 +149,10 @@ if platform.node() == "ecsdev.ep3.at":
         HAYSTACK_SEARCH_ENGINE = "solr"
         HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
         
-    # testecs does not show django debug messages
-    if user == "testecs":
+        # testecs does not show django debug messages
         DEBUG = False
         TEMPLATE_DEBUG = False
+        CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 
 
 # use different settings if local_settings.py exists
@@ -190,10 +195,11 @@ TIME_ZONE = 'Europe/Vienna'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'de-AT'
 
-# this should be default, but to be sure
+#TODO: this should be default, but to be sure (charset related)
 DEFAULT_CHARSET = "utf-8"
 FILE_CHARSET = "utf-8"
 
+# default site id
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -217,6 +223,7 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
+#TODO: what does this setting do
 #DBTEMPLATES_ADD_DEFAULT_SITE = False
 
 TEMPLATE_LOADERS = (
@@ -229,7 +236,6 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
-
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
@@ -249,20 +255,9 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.forceauth.ForceAuth',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
-    #'djangodblog.middleware.DBLogMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'ecs.workflow.middleware.WorkflowMiddleware',
 )   
-
-# debug toolbar config:
-# middleware on bottom:
-#    'debug_toolbar.middleware.DebugToolbarMiddleware',
-# application anyware:
-#    'debug_toolbar',
-DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
-INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
-
-ROOT_URLCONF = 'ecs.urls'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -278,12 +273,8 @@ INSTALLED_APPS = (
 
     'south',
     'django_nose',
-    'djangodblog',
     'djcelery',
     'ghettoq', 
-    # include ghettoq in installed apps if we use it as carrot backend, so we dont need any external brocker for testing
-    #if CARROT_BACKEND == "ghettoq.taproot.Database":
-    #    INSTALLED_APPS += ("ghettoq", ) 
 
     'ecs.utils.countries',
     'ecs.utils.hashauth',
@@ -310,19 +301,25 @@ INSTALLED_APPS = (
     'ecs.help',
 )
 
+
+# start of url matching
+ROOT_URLCONF = 'ecs.urls'
+
+# debug toolbar config:
+# middleware on bottom, app anywhere
+MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
+INSTALLED_APPS +=('debug_toolbar',) # anywhere
+DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
+INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
+
 # model that gets connected to contrib.auth model
 AUTH_PROFILE_MODULE = 'core.UserProfile'
-
-# django-db-log
-# temporary for testing, catch 404 defaults to false
-DBLOG_CATCH_404_ERRORS = True
 
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
-# use our ecs.utils.ecs_runner as default test runner
+# use our ecs.utils.ecs_runner as default test runner (sets a few settings related to testing and calls standard runner)
 TEST_RUNNER = 'ecs.utils.ecs_runner.EcsRunner'
-SOUTH_TESTS_MIGRATE = False
 
 # FIXME: clarify which part of the program works with this setting
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
@@ -331,14 +328,12 @@ FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 COMPRESS = True
 COMPRESS_JS_FILTERS = []
 
-#ECS_AUTO_PDF_BARCODE = True # default
-
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
 
 SESSION_COOKIE_AGE = 1800                # logout after 30 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of browser
 
-# FIXME: describe where and how this is used; remeber, settings.py needs documentation on every settings
+# FIXME: describe where and how this is used; settings.py needs documentation on every setting
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
