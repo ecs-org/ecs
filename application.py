@@ -93,8 +93,11 @@ beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 # needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
 
+# pdf validation
+pdfminer:inst:all:pypi:pdfminer
+
 # pisa / pdf generation
-pyPDF:inst:all:pypi:pyPDF
+# deprecated for ecs in favour of pdfminer, and optional for pisa:  pyPDF:inst:all:pypi:pyPDF
 html5lib:inst:all:pypi:html5lib
 reportlab:req:apt:apt-get:libfreetype6-dev
 reportlab:inst:!win:pypi:reportlab
