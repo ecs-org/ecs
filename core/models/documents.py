@@ -38,7 +38,7 @@ def storing_document_to(instance=None, filename=None):
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
     target_name = os.path.normpath(os.path.join(settings.FILESTORE, 'incoming', instance.uuid_document, instance.original_file_name))
-    print("incoming document to: original file name %s , target_name %s " % (instance.original_file_name, target_name))
+    #print("incoming document to: original file name %s , target_name %s " % (instance.original_file_name, target_name))
     return target_name
     
 class DocumentFileStorage(FileSystemStorage):
@@ -131,7 +131,7 @@ class Document(models.Model):
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
                 if getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): 
                     # FIXME: call stampbarcode only if we have pdftk on the platform (currently no mac)
-                    newfile = File(tempfile.NamedTemporaryFile(dir=os.path.join(settings.FILESTORE, 'workon')))
+                    newfile = File(tempfile.NamedTemporaryFile(dir=os.path.join(settings.FILESTORE)))
                     pdf_barcodestamp(self.file, self.uuid_document, newfile)
                     self.file.close()
                     self.file = newfile
