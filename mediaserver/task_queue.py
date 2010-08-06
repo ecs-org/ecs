@@ -15,11 +15,13 @@ def cache_and_render(document_pk, **kwargs):
         return False
 
     image_set = ImageSet(document_pk)
+    logger.info("Imageset %s" % repr(image_set))
     if image_set.store('doc save', document.file.name, document.pages) is False:
         logger.error('cache_and_render: can not store ImageSet "%s"' % document_pk)
         return False
 
     renderer = Renderer()
+    logger.info("renderer %s" % repr(renderer))
     renderer.render(image_set)
     cache = Cache()
     logger.info('rendered key "%s", set "%s"' % (cache.get_set_key(image_set.id), image_set.set_data))

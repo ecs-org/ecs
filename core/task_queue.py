@@ -52,7 +52,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
 @task()
 def extract_and_index_pdf_text(document_pk=None, **kwargs):
     logger = extract_and_index_pdf_text.get_logger(**kwargs)
-    logger.debug("indexing doc %s" % document_pk)
+    logger.debug("indexing doc with pk %s" % document_pk)
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
@@ -61,6 +61,7 @@ def extract_and_index_pdf_text(document_pk=None, **kwargs):
     if not doc.pages or doc.mimetype != 'application/pdf':
         logger.info("Warning, doc.pages (%s) not set or doc.mimetype (%s) != 'application/pdf'" % (str(doc.pages), str(doc.mimetype)))
         return
+    logger.debug("filename path %s %s" % (str(doc.file.path), str(doc.file.name)))
     for p in xrange(1, doc.pages + 1):
         cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-f", "%s" % p,  "-l",  "%s" % p,  "-q", doc.file.path, "-"]
         popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

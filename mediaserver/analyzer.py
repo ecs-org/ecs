@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import os
-import pyPdf
+from ecs.utils.pdfutils import pdf_isvalid, pdf_pages
+#import pyPdf
 
 
 class Analyzer(object):
@@ -12,18 +13,7 @@ class Analyzer(object):
     def sniff_file(self, f):
         self.valid = False
         self.pages = 0
-        if os.path.exists:
-            try:
-                pdf = pyPdf.PdfFileReader(f)
-            except Exception, e:
-                print type(e), str(e)
-                print 'analyzer: error reading pdf file "%s"' % f.name
-                return
-            if pdf:
-                self.valid = True
-                self.pages = pdf.getNumPages()
-        
-        
-
-
-
+        self.valid = pdf_isvalid(f)
+        if self.valid:
+            self.pages = pdf_pages(f)
+            

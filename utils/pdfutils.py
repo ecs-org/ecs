@@ -14,6 +14,7 @@ from django.conf import settings
 
 from ecs.utils.pathutils import which
 
+
 def ghostscript():
     '''
     returns ghostscript executable, checks ECS_GHOSTSCRIPT and uses it if exists
@@ -23,60 +24,77 @@ def ghostscript():
     else:
         return which('gs').next()
 
-def pdf_isvalid(source):
-    parser = PDFParser(source)
+def pdf_isvalid(filelike):
+    filelike.seek(0)
+    parser = PDFParser(filelike)
     doc = PDFDocument()
     parser.set_document(doc)
     doc.set_parser(parser)
     doc.initialize('')
     if not doc.is_extractable:
         return False
+    filelike.seek(0)
     return True
     
-def pdf_pages(source):
-    parser = PDFParser(source)
+def pdf_pages(filelike):
+    filelike.seek(0)
+    parser = PDFParser(filelike)
     doc = PDFDocument()
     parser.set_document(doc)
     doc.set_parser(parser)
     doc.initialize('')
-    return doc.getNumPages()
+    # TODO: is hack
+    pages = 0
+    for page in doc.get_pages():
+        pages += 1
+    filelike.seek(0)
+    return pages
     
-def pdf_barcodestamp(source, barcode_content):
+def pdf_barcodestamp(source_filelike, barcode_content, dest_filelike):
     '''
-    takes source pdf and stamps a barcode to this pdf; Returns destination temporary filename
-    raises valueerror if something goes wrong 
+    takes source pdf, stamps a barcode into it and output it to dest
+    raises IOError if something goes wrong (including exit errorcode and stderr output attached)
     '''
     template = loader.get_template('xhtml2pdf/barcode.ps')
     barcode_ps = template.render(Context({'barcode': barcode_content})) # render barcode template to ready to use postscript file
     
     try:
         barcode_pdf_oshandle, barcode_pdf_name = tempfile.mkstemp(suffix='.pdf') 
-        target_oshandle, target_name = tempfile.mkstemp(suffix='.pdf')
-        
         # render barcode postscript file to pdf
         gs = subprocess.Popen([ghostscript(), 
             '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', 
             '-sOutputFile=%s' % barcode_pdf_name, '-c', '<</Orientation 0>> setpagedevice', '-'],
             stdin=PIPE, stdout=PIPE, stderr=PIPE)
         gsresult = gs.communicate(barcode_ps)
-        #print gsresult, gs.returncode, barcode_pdf_name
         if gs.returncode != 0:
             raise IOError('ghostscript returned error code %n , stderr: ' % gs.returncode, gsresult[1])        
-        
-        pdftk = subprocess.Popen([which('pdftk').next(),
-            source, 'stamp', barcode_pdf_name, 'output', target_name, 'dont_ask'],
-            bufsize=-1, stdin=PIPE, stdout=PIPE, stderr=PIPE)       
-        pdftkresult = pdftk.communicate()
-        #print pdftkresult, pdftk.returncode, target_name
-        if pdftk.returncode != 0:
-            raise ValueError('stamping pipeline returned with errorcode %s' % pdftk.returncode)
-    finally:
+    finally:    
         os.close(barcode_pdf_oshandle)
-        os.close(target_oshandle)
+        
+    source_filelike.seek(0)
+    # implant barcode pdf to source pdf on every page 
+    pdftk = subprocess.Popen([which('pdftk').next(),
+        '-', 'stamp', barcode_pdf_name, 'output', '-', 'dont_ask'],
+        bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=PIPE)       
+    pdftkresult = pdftk.communicate()
+    #print pdftkresult, pdftk.returncode, target_name
+    source_filelike.seek(0)
+    if pdftk.returncode != 0:
+        raise IOError('stamping pipeline returned with errorcode %n , stderr: ' % pdftk.returncode, pdftkresult[1])
+    
+    if os.path.isfile(barcode_pdf_name):
         os.remove(barcode_pdf_name)
-           
-    return target_name
 
+"""
+        if destdir:
+            dir=os.path.abspath(destdir)
+            if not os.path.exists(dir):
+                os.makedirs(dir)
+            target_oshandle, target_name = tempfile.mkstemp(dir=dir, suffix='.pdf')
+        else:
+            target_oshandle, target_name = tempfile.mkstemp(suffix='.pdf')
+"""
+	
 def xhtml2pdf(html, **options):
     """ 
     Calls `xhtml2pdf` from pisa.

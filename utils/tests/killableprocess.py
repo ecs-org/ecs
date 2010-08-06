@@ -9,7 +9,7 @@ from ecs.utils import forceauth
 
 @forceauth.exempt
 def timeout_view(request):
-    popen = killableprocess.Popen('top', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    popen = killableprocess.Popen('more', stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     retcode = popen.wait(timeout=1)
     return HttpResponse(retcode)
 
@@ -21,7 +21,7 @@ class KillableProcessTest(TestCase):
     urls = 'ecs.utils.tests.killableprocess'
 
     def test_timeout(self):
-        popen = killableprocess.Popen('top')
+        popen = killableprocess.Popen('more')
         retcode = popen.wait(timeout=1)
         self.failIfEqual(retcode, 0)
         
