@@ -114,7 +114,7 @@ sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
 billard:inst:all:pypi:billiard
 django-picklefield:inst:all:pypi:django-picklefield
-#celery:req:apt:apt-get:rabbitmq-server
+celery:req:apt:apt-get:rabbitmq-server
 celery:req:mac:macports:rabbitmq-server
 celery:inst:all:pypi:celery
 # use ghettoq if development instead rabbitmq
