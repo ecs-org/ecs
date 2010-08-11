@@ -7,8 +7,9 @@ from ecs.utils.pdfutils import pdf_isvalid, pdf_pages
 
 class Analyzer(object):
     def sniff(self, pdf_name):
-        f = file(pdf_name, 'r')
+        f = file(pdf_name, 'rb')
         self.sniff_file(f)
+        f.close()
 
     def sniff_file(self, f):
         self.valid = False
