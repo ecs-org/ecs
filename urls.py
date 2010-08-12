@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.views import login
 from django.views.static import serve
+from django.views.generic.simple import direct_to_template
 from ecs.utils import forceauth
 import django
 
@@ -34,7 +35,7 @@ urlpatterns = patterns('',
     url(r'^trigger500/$', lambda request: 1/0),
     url(r'^bugshot/', include('ecs.bugshot.urls')),
     url(r'^search/', include('haystack.urls')),
-
+    url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
 )
 
