@@ -122,7 +122,7 @@ if platform.node() == "ecsdev.ep3.at":
         BROKER_VHOST = user
         CARROT_BACKEND = ""
         # use queueing 
-        settings.CELERY_ALWAYS_EAGER = False
+        CELERY_ALWAYS_EAGER = False
         
     # on ecsdev we use memcachedb instead of mockcache
     RENDERSTORAGE_LIB  = 'memcache'
