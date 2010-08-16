@@ -26,6 +26,7 @@ class SerializerTest(TestCase):
             doctype = DocumentType.objects.create(name='doctype-%s' % i)
             with open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb') as f:
                 doc = Document.objects.create(doctype=doctype, version='v%s' % i, date=datetime.date(2010, 03, 10), file=File(f))
+                doc.save()
                 docs.append(doc)
         sf.documents = docs
         for cat in ('6.1', '6.2'):
