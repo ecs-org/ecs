@@ -101,6 +101,7 @@ class Document(models.Model):
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def copy_to(self, upload_to):
+        ''' temporary helper, takes path returned from function upload_to(object, originalfilename), and copies it there '''
         dir=os.path.abspath(upload_to(self,self.file.name))
         if not os.path.exists(dir):
             os.makedirs(dir)
@@ -131,11 +132,14 @@ class Document(models.Model):
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
                 if getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): 
                     # FIXME: call stampbarcode only if we have pdftk on the platform (currently no mac)
+                    # FIXME: we dont call stampbarcode anymore, because barcode stamping will be done later, just before downloading, which is not happening but thats the idea ;-)
+                    """
                     newfile = File(tempfile.NamedTemporaryFile(dir=os.path.join(settings.FILESTORE)))
                     pdf_barcodestamp(self.file, newfile, self.uuid_document)
                     self.file.close()
                     self.file = newfile
-
+                    """
+                    
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
             self.file.seek(0)            
@@ -150,16 +154,7 @@ class Document(models.Model):
             self.pages = pdf_pages(self.file) # calculate number of pages
 
         return super(Document, self).save(**kwargs)
-
-    #self.file = File(open(newfile,'rb'))
-    # os.remove(originalfile)
-    #originalfile = os.path.join(self.file.path, self.file.name)
-    #self.file.close()
-    # copy file to wokring directory (so we have full access to it)
-    #newfile=self.copy_to(workon_document_to)
-    #self.file.close()
-    #self.file = File(open(newfile,'rb'))
-      
+  
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
@@ -177,7 +172,7 @@ def _post_doc_save(sender, **kwargs):
     if doc.pages and doc.mimetype == 'application/pdf':
         # FIXME: we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
         extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
-        #cache_and_render.apply_async(args=[doc.pk], countdown=3)
+        cache_and_render.apply_async(args=[doc.pk], countdown=3)
 
 def _post_page_delete(sender, **kwargs):
     from haystack import site

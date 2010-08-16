@@ -24,14 +24,22 @@
 ===views===        
 /ms/{uuid}/1x1/{pixelwidth(800,768,thumbnail)}/{pagenr(1..x)}
     # give one rendered page
-/ms/{uuid}/{montagefactor(3x3,5x5)}/{pixelwidth(800,768)}/{pagenr}
+/ms/{uuid}/{montagefactor(3x3,5x5)}/{pixelwidth(800,768)}/{pagenr(1..x)}
     # give montaged overview page
 /ms/{uuid}/download
     # give download of uuid stamped pdf 
+    # if original not in diskcache, load from storage
+    # stamp it with document uuid
+    # serve
 /ms/{uuid}/download/original
     # give download of original file without touching it
+    # if original not in diskcache, load from storage
+    # serve
 /ms/{uuid}/download/uuidtostamp
     # give download of uuid stamped and second uuid stamped pdf
+    # if original not in diskcache, load from storage
+    # stamp with both document uuid and uuidtostamp
+    # serve
 
 ===Constants, should be put into settings, because independend parts need it (ms and ecs)
 PW_800 = 800

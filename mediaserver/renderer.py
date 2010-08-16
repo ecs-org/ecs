@@ -10,34 +10,33 @@ from ecs.utils.pdfutils import ghostscript
 
 class Renderer(object):
     def render_pages(self, pdf_name, first_page, last_page, zoom, res_x, res_y, pdf_fname):
-        args = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', \
-            '-dPDFFitPage', '-dTextAlphaBits=4', '-sPAPERSIZE=a4', \
-            '-r%.5fx%.5f' % (res_x, res_y), \
-            '-dFirstPage=%s' % first_page, '-dLastPage=%s' % last_page, \
-            '-sOutputFile=%s_%s_%%04d.png' % (pdf_fname, zoom), \
-            pdf_name \
+        args = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE', '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', 
+            '-dPDFFitPage', '-dTextAlphaBits=4', '-sPAPERSIZE=a4', 
+            '-r%.5fx%.5f' % (res_x, res_y), 
+            '-dFirstPage=%s' % first_page, '-dLastPage=%s' % last_page, 
+            '-sOutputFile=%s_%s_%%04d.png' % (pdf_fname, zoom), 
+            pdf_name 
         ]
-        gs = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        gsoutput = gs.communicate()
-        print("gs.result ", pdf_name, gs.returncode, gsoutput)
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = popen.communicate()
+        if popen.returncode != 0:
+            raise IOError('ghostscript rendering document to images returned error code %i , stderr: %s' % (popen.returncode, stderr))        
 
     def render_page(self, png_name_in, png_name, args_compress, args_interlace):
         args = [ 'convert' ] + args_compress + args_interlace + [ png_name_in, png_name ]
-        #print args
-        p = subprocess.Popen(args)
-        sts = os.waitpid(p.pid, 0)[1]
-        #print 'sts = %s' % sts
-
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = popen.communicate()
+        if popen.returncode != 0:
+            raise IOError('imagemagick convert returned error code %i , stderr: %s' % (popen.returncode, stderr))        
 
     def render_bigpage(self, png_names, png_name, zoom, w, h, background, args_compress, args_interlace):
-        args = \
-            [ 'montage' ] + args_compress + args_interlace + \
+        args = [ 'montage' ] + args_compress + args_interlace + \
             [ '-background', background, '-geometry', '%dx%d+0+0' % (w, h), '-tile', zoom ] + \
             png_names + [ png_name ]
-        #print args
-        p = subprocess.Popen(args)
-        sts = os.waitpid(p.pid, 0)[1]
-        #print 'sts = %s' % sts
+        popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = popen.communicate()
+        if popen.returncode != 0:
+            raise IOError('imagemagick montage returned error code %i , stderr: %s' % (popen.returncode, stderr))        
 
 
     def remove_file(self, file_name):
