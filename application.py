@@ -68,7 +68,10 @@ docutils:inst:all:pypi:docutils
 django-dbtemplates:inst:all:pypi:django-dbtemplates
 
 #search
-whoosh:inst:all:pypi:whoosh
+# django-haystack currently has an issue with whoosh 1.x, so we use 0.3.18 or therelike
+whoosh:inst:all:pypi:whoosh\<=0.4
+# pysolr uses httplib2 with fallback to httplib
+httplib2:inst:all:pypi:httplib2
 pysolr:inst:all:pypi:pysolr
 django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
 pdftotext:req:apt:apt-get:poppler-utils
