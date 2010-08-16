@@ -2,6 +2,7 @@ import random, itertools, math, subprocess
 from celery.decorators import task
 from haystack import site
 
+from ecs.utils.pdfutils import pdftotext
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
 from ecs.core.models import Meeting, Document, Page
 
@@ -63,12 +64,7 @@ def extract_and_index_pdf_text(document_pk=None, **kwargs):
         return
     logger.debug("filename path %s %s" % (str(doc.file.path), str(doc.file.name)))
     for p in xrange(1, doc.pages + 1):
-        cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-f", "%s" % p,  "-l",  "%s" % p,  "-q", doc.file.path, "-"]
-        popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        text, stderr = popen.communicate()
+        text = pdftotext(doc.file.path, p)
         doc.page_set.create(num=p, text=text)
-        # FIXME: as a delayed tasks there ist missing error handling
     index = site.get_index(Page)
     index.backend.update(index, doc.page_set.all())
-    
-    

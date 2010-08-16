@@ -1,17 +1,15 @@
 import os, sys
 import subprocess
-from subprocess import PIPE, STDOUT
-import killableprocess
 import tempfile
 import time
-from StringIO import StringIO
-
-from pdfminer.pdfparser import PDFParser, PDFDocument
 
 from django.template import Context, loader
 from django.core.files import File
 from django.conf import settings
 
+from pdfminer.pdfparser import PDFParser, PDFDocument
+
+import ecs.utils.killableprocess 
 from ecs.utils.pathutils import which
 
 
@@ -24,6 +22,7 @@ def ghostscript():
     else:
         return which('gs').next()
 
+        
 def pdf_isvalid(filelike):
     filelike.seek(0)
     parser = PDFParser(filelike)
@@ -35,6 +34,7 @@ def pdf_isvalid(filelike):
         return False
     filelike.seek(0)
     return True
+    
     
 def pdf_pages(filelike):
     filelike.seek(0)
@@ -49,86 +49,110 @@ def pdf_pages(filelike):
         pages += 1
     filelike.seek(0)
     return pages
+
+
+def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
+    """
+    takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
+    raises IOError(descriptive text, returncode, stderr) in case of failure
+    outputnameing follows ghostscript conventions. The general form supported is:
+    "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
+    For more information, please refer to documentation on the C printf format specifications.
+    .. code-block::
+    # outputnaming example
+    import os, tempfile, uuid
+    tempdir = tempfile.mkdtemp()
+    uuid = uuid.uuid4()
+    zoom = "1x1"
+    outputnaming = os.path.join(tempdir, "_".join((str(uuid), zoom, '%%04d.png')))
+    """
+
+    cmd = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+        '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
+    cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
     
-def pdf_barcodestamp(source_filelike, barcode_content, dest_filelike):
+    if pixelwidth:
+        dpix = pixelwidth / (din_a4_x / cm_per_inch)
+        cmd += ['-r%.5f' % (dpix)]
+    if first_page:
+        cmd += ['-dFirstPage=%s' % first_page]
+    if last_page:
+        cmd += ['-dLastPage=%s' % last_page]
+    cmd += ['-sOutputFile='+ namingtemplate, sourcefile]
+
+    popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    if popen.returncode != 0:
+        raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
+    
+    
+def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, timeoutseconds=30):
     '''
     takes source pdf, stamps a barcode into it and output it to dest
     raises IOError if something goes wrong (including exit errorcode and stderr output attached)
     '''
+    if barcode2:
+        Raise(NotImplementedError)
+        # TODO: barcode2_content is currently unimplemented
+        
+    # render barcode template to ready to use postscript file
     template = loader.get_template('xhtml2pdf/barcode.ps')
-    barcode_ps = template.render(Context({'barcode': barcode_content})) # render barcode template to ready to use postscript file
+    barcode_ps = template.render(Context({'barcode': barcode1})) 
     
     try:
-        barcode_pdf_oshandle, barcode_pdf_name = tempfile.mkstemp(suffix='.pdf') 
         # render barcode postscript file to pdf
-        gs = subprocess.Popen([ghostscript(), 
+        barcode_pdf_oshandle, barcode_pdf_name = tempfile.mkstemp(suffix='.pdf') 
+        cmd = [ghostscript(), 
             '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', 
-            '-sOutputFile=%s' % barcode_pdf_name, '-c', '<</Orientation 0>> setpagedevice', '-'],
-            stdin=PIPE, stdout=PIPE, stderr=PIPE)
-        gsresult = gs.communicate(barcode_ps)
-        if gs.returncode != 0:
-            raise IOError('ghostscript returned error code %n , stderr: ' % gs.returncode, gsresult[1])        
+            '-sOutputFile=%s' % barcode_pdf_name, '-c', '<</Orientation 0>> setpagedevice', '-']
+        popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = popen.communicate(barcode_ps)
+        if popen.returncode != 0:
+            raise IOError('barcode processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
     finally:    
         os.close(barcode_pdf_oshandle)
-        
-    source_filelike.seek(0)
-    # implant barcode pdf to source pdf on every page 
-    pdftk = subprocess.Popen([which('pdftk').next(),
-        '-', 'stamp', barcode_pdf_name, 'output', '-', 'dont_ask'],
-        bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=PIPE)       
-    pdftkresult = pdftk.communicate()
-    #print pdftkresult, pdftk.returncode, target_name
-    source_filelike.seek(0)
-    if pdftk.returncode != 0:
-        raise IOError('stamping pipeline returned with errorcode %n , stderr: ' % pdftk.returncode, pdftkresult[1])
     
+    # implant barcode pdf to source pdf on every page 
+    source_filelike.seek(0)
+    cmd = [which('pdftk').next(), '-', 'stamp', barcode_pdf_name, 'output', '-', 'dont_ask']
+    popen = subprocess.Popen(cmd, bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=subprocess.PIPE)       
+    stdout, stderr = popen.communicate()
+    source_filelike.seek(0)
     if os.path.isfile(barcode_pdf_name):
         os.remove(barcode_pdf_name)
+    if popen.returncode != 0:
+        raise IOError('stamping pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+  
+  
+def pdftotext(pdffilename, pagenr=None, timeoutseconds= 30):
+    """
+    Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
+    if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
+    """
+    cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-q"]
+    if pagenr:
+        cmd += ["-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
+    cmd += [pdffilename, "-"]
+    popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    if popen.returncode != 0:
+        raise IOError('pdftotext pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+    return stdout
 
-"""
-        if destdir:
-            dir=os.path.abspath(destdir)
-            if not os.path.exists(dir):
-                os.makedirs(dir)
-            target_oshandle, target_name = tempfile.mkstemp(dir=dir, suffix='.pdf')
-        else:
-            target_oshandle, target_name = tempfile.mkstemp(suffix='.pdf')
-"""
-	
-def xhtml2pdf(html, **options):
+    
+def xhtml2pdf(html, timeoutseconds=30):
     """ 
-    Calls `xhtml2pdf` from pisa.
-    All `xhtml2pdf` commandline options (see `man htmldoc`) are supported, just replace '-' with '_' and use True/False values 
-    for options without arguments.
+    Calls pisa `xhtml2pdf` from the commandline, takes xhtml with embedded css and returns pdf
+    Raises IOError (descriptive text, returncode, stderr) in case something went wrong
     """
     if isinstance(html, unicode):
         html = html.encode("utf-8")
-    if sys.platform.startswith("linux"): # ugly, but our production platform is Ubuntu
-        cmd = 'ulimit -t 30 ; ' # FIXME: Hardcoded process abbort criterium: Currently 30 Seconds
-    else:
-        cmd = ''
-    cmd += which('xhtml2pdf').next()
-    args = [cmd, '-q']
-    for key, value in options.iteritems():
-        if value is False:
-            continue
-        option = "--%s" % key.replace('_', '-')
-        args.append(option)
-        if value is not True:
-            args.append(str(value))
-    args.append('-')
-    args.append('-')
-
-    # FIXME: add error handling / sanitize options
-    # FIXME: debug file is left on disk 
-    with tempfile.NamedTemporaryFile(prefix=time.strftime("xhtml2pdfdebug-%y%m%d%H%M%S-"), delete=False) as t:
-        t.write(str(args) + "\n")
-        t.write(str(os.environ.get("PATH", os.defpath)) + "\n\n")
-        with open(t.name + ".html", "w") as html_out:
-            html_out.write(html)
-        t.flush()
-        popen = killableprocess.Popen(" ".join(args), shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=t)
-        result, stderr = popen.communicate(html)
-        if popen.returncode:
-            print result, stderr
-    return result 
+    cmd = [which('xhtml2pdf').next(), '-q', '-', '-']
+  
+    with tempfile.NamedTemporaryFile() as t:
+        t.write(html); t.flush(); t.seek(0)
+        popen = ecs.utils.killableprocess.Popen(cmd, stdin=t, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = popen.communicate()
+        if popen.returncode != 0:
+            raise IOError('xhtml2pdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+    return stdout 

@@ -132,7 +132,7 @@ class Document(models.Model):
                 if getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): 
                     # FIXME: call stampbarcode only if we have pdftk on the platform (currently no mac)
                     newfile = File(tempfile.NamedTemporaryFile(dir=os.path.join(settings.FILESTORE)))
-                    pdf_barcodestamp(self.file, self.uuid_document, newfile)
+                    pdf_barcodestamp(self.file, newfile, self.uuid_document)
                     self.file.close()
                     self.file = newfile
 
