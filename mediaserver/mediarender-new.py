@@ -51,6 +51,11 @@ PW_5x5_768 = 768 / 5
 PW_thumbnail = 90
 PW_ALL = (PW_800, PW_768, PW_3x3_800, PW_5x5_800, PW_3x3_768, PW_5x5_768)
 
+
+examples:
+ msdocument(uuid).get()
+ msdocument(uuid)[3].image()
+
 ===Classes===
 class msdocument(object):
     def __init__(self, uuid):
@@ -138,4 +143,3 @@ class cache(object):
         #     * update sum
         pass
 
-    
