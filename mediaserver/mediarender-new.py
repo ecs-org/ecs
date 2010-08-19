@@ -1,14 +1,16 @@
 
+== documents ==
+
 ==utils==
-  document_read_urls(uuid, validuntil)
-
-
-==storagevault==
-  put(uuid, hash, mimetype, filelike)
-  (mimetype, hash, filelike) = get(uuid)
+  has document model knowledge is in ecsmain
+  json-dict = document_generate_urls(uuid, validuntil)
   secureurl_generate(secretkey, validuntil, url)
   secureurl_validate(publickey, url)
 
+==storagevault== where the original files that got uploaded are saved as an write once read many store
+  put(uuid, hash, filelike)
+     saves document as uuid name, and compares hash value with sended data hash value which gets calculated while put to the storage     
+  (hash, filelike) = get(uuid)
   
 ==mediaserver==
 
