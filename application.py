@@ -38,7 +38,10 @@ type=instbin # precompiled python libraries to install and use
  
 """
 
+import os
+import subprocess
 from deployment import package_merge
+from deployment.utils import install_upstart, apache_setup
 
 # sprint 7 sources
 sprint7_bundle = """
@@ -211,6 +214,7 @@ apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
+python-virtualenv:req:apt:apt-get:python-virtualenv
 """
 
 """
@@ -265,4 +269,12 @@ test_flavors = {
     'mailserver': '.false', # TODO: implement
     'signing': 'false', # TODO: implement
 }
+
+def system_setup(appname, upgrade=upgrade, use_sudo=use_sudo, dry=False):
+    install_upstart(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
+    apache_setup(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
+    os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
+    virtualenv = ['sudo'] if use_sudo else []
+    virtualenv += ['virtualenv', '--no-site-packages', '/etc/apache2/ecs/wsgibaseline/']
+    local(subprocess.list2cmdline(virtualenv))
 

@@ -1,59 +1,25 @@
 #!/usr/bin/env python
-"""
-Main WSGI Script
-================
+# -*- coding: utf-8 -*-
 
-Currently does a lot of magic, but works.
-
-WSGI Debug Helper
------------------
-if you have serious problems, comment out the rest of the script and run the code below instead, for debugging
-
-import cStringIO
 import os
-def application(environ, start_response):
-    headers = []
-    headers.append(('Content-Type', 'text/plain'))
-    write = start_response('200 OK', headers)
-    input = environ['wsgi.input']
-    output = cStringIO.StringIO()
-    print >> output, "PID: %%s" %% os.getpid()
-    print >> output, "UID: %%s" %% os.getuid()
-    print >> output, "GID: %%s" %% os.getgid()
-    print >> output
-    keys = environ.keys()
-    keys.sort()
-    for key in keys:
-        print >> output, '%%s: %%s' %% (key, repr(environ[key]))
-    print >> output
-    output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
-    return [output.getvalue()]
-"""
+import sys
+import site
 
-import os,sys,site
-
-# rewire stdout to stderr, because writing to stdout as wsgi is considered an error
+# writing to stdout as wsgi is considered an error
 sys.stdout = sys.stderr
 
 # Remember original sys.path.
 prev_sys_path = list(sys.path)
 
 #  source and environment location. 
-x=__file__
-if os.path.islink(x):
-    x=os.readlink(x)
-
-appdir = os.path.dirname(os.path.abspath(x))
-appname = os.path.basename(appdir) 
-appbasedir = os.path.join(appdir, "..")
-basedir = os.path.join(appdir, "../..")
+appdir = '%(home)s/src/%(appname)s'
+appbasedir = os.path.join(appdir, '..')
+basedir = os.path.join(appdir, '..', '..')
 
 # FIXME: is hardcoded path names, and should be replaced
 envdir = os.path.join(basedir, "environment")
 sitedir = os.path.join(envdir, "/lib/python2.6/site-packages")
 bindir = os.path.join(envdir, "bin")
-
-#print "ad %%s, an %%s, ab %%s, b %%s, e %%s" %% (appdir,appname,appbasedir,basedir,envdir) 
 
 # Add each new site-packages directory.. 
 site.addsitedir(sitedir)
@@ -69,7 +35,7 @@ sys.path[:0] = new_sys_path
 # include django app basedir and set django settings
 sys.path.append(appbasedir)
 sys.path.append(appdir)
-os.environ['DJANGO_SETTINGS_MODULE'] = appname+".settings"
+os.environ['DJANGO_SETTINGS_MODULE'] = %(appname)s + ".settings"
 
 # include environment bin dir at beginning of PATH
 pathlist = os.environ['PATH'].split(os.pathsep)
@@ -86,3 +52,4 @@ os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 # start wsgi main
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
+
