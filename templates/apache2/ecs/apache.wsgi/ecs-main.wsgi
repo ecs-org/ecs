@@ -17,14 +17,14 @@ def application(environ, start_response):
     write = start_response('200 OK', headers)
     input = environ['wsgi.input']
     output = cStringIO.StringIO()
-    print >> output, "PID: %s" % os.getpid()
-    print >> output, "UID: %s" % os.getuid()
-    print >> output, "GID: %s" % os.getgid()
+    print >> output, "PID: %%s" %% os.getpid()
+    print >> output, "UID: %%s" %% os.getuid()
+    print >> output, "GID: %%s" %% os.getgid()
     print >> output
     keys = environ.keys()
     keys.sort()
     for key in keys:
-        print >> output, '%s: %s' % (key, repr(environ[key]))
+        print >> output, '%%s: %%s' %% (key, repr(environ[key]))
     print >> output
     output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     return [output.getvalue()]
@@ -53,7 +53,7 @@ envdir = os.path.join(basedir, "environment")
 sitedir = os.path.join(envdir, "/lib/python2.6/site-packages")
 bindir = os.path.join(envdir, "bin")
 
-#print "ad %s, an %s, ab %s, b %s, e %s" % (appdir,appname,appbasedir,basedir,envdir) 
+#print "ad %%s, an %%s, ab %%s, b %%s, e %%s" %% (appdir,appname,appbasedir,basedir,envdir) 
 
 # Add each new site-packages directory.. 
 site.addsitedir(sitedir)
