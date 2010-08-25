@@ -296,7 +296,7 @@ local_db = {
 
     local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
     local('createdb %s' % username)
-    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py syncdb --noinput')
-    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py migrate')
-    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py bootstrap')
+    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
+    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate')
+    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
 
