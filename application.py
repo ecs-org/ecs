@@ -39,7 +39,10 @@ type=instbin # precompiled python libraries to install and use
 """
 
 import os
+import sys
 import subprocess
+import shutil
+from fabric.api.import local, env
 from deployment import package_merge
 from deployment.utils import install_upstart, apache_setup
 
@@ -214,7 +217,6 @@ apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
-python-virtualenv:req:apt:apt-get:python-virtualenv
 """
 
 """
@@ -270,11 +272,14 @@ test_flavors = {
     'signing': 'false', # TODO: implement
 }
 
-def system_setup(appname, upgrade=upgrade, use_sudo=use_sudo, dry=False):
+def system_setup(appname, upgrade=False, use_sudo=True, dry=False):
     install_upstart(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
     apache_setup(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
-    os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
-    virtualenv = ['sudo'] if use_sudo else []
-    virtualenv += ['virtualenv', '--no-site-packages', '/etc/apache2/ecs/wsgibaseline/']
-    local(subprocess.list2cmdline(virtualenv))
+    try:
+        os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
+    except OSError, e:
+        print >> sys.stderr, e
+    wsgi_bootstrap = ['sudo'] if use_sudo else []
+    wsgi_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
+    local(subprocess.list2cmdline(wsgi_bootstrap))
 
