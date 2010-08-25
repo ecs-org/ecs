@@ -42,7 +42,7 @@ import os
 import sys
 import subprocess
 import shutil
-from fabric.api.import local, env
+from fabric.api import local, env
 from deployment import package_merge
 from deployment.utils import install_upstart, apache_setup
 
