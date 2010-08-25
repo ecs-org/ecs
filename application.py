@@ -295,7 +295,7 @@ local_db = {
     local_settings.close()
 
     # postgres default port is 5432, but not on ubuntu, so we have to patch the config file
-    local('echo -e "/port\np\ns/= .*/= 5432/\np\nx" | sudo ex /etc/postgresql/8.4/main/postgresql.conf')
+    local('echo -e "/port\\np\\ns/= .*/= 5432/\\np\\nx" | sudo ex /etc/postgresql/8.4/main/postgresql.conf')
     local('sudo /etc/init.d/postgresql-8.4 stop')
     local('sudo /etc/init.d/postgresql-8.4 start')
 
