@@ -35,7 +35,7 @@ sys.path[:0] = new_sys_path
 # include django app basedir and set django settings
 sys.path.append(appbasedir)
 sys.path.append(appdir)
-os.environ['DJANGO_SETTINGS_MODULE'] = %(appname)s + ".settings"
+os.environ['DJANGO_SETTINGS_MODULE'] = '%(appname)s.settings'
 
 # include environment bin dir at beginning of PATH
 pathlist = os.environ['PATH'].split(os.pathsep)
