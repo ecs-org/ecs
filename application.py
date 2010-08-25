@@ -41,6 +41,7 @@ type=instbin # precompiled python libraries to install and use
 import os
 import sys
 import subprocess
+import getpass
 import shutil
 from fabric.api import local, env
 from deployment import package_merge
@@ -272,14 +273,30 @@ test_flavors = {
     'signing': 'false', # TODO: implement
 }
 
-def system_setup(appname, upgrade=False, use_sudo=True, dry=False):
-    install_upstart(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
-    apache_setup(appname, upgrade=upgrade, use_sudo=use_sudo, dry=dry)
-    try:
-        os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
-    except OSError, e:
-        print >> sys.stderr, e
+def system_setup(appname, use_sudo=True, dry=False):
+    install_upstart(appname, use_sudo=use_sudo, dry=dry)
+    apache_setup(appname, use_sudo=use_sudo, dry=dry)
+    os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
     wsgi_bootstrap = ['sudo'] if use_sudo else []
     wsgi_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
     local(subprocess.list2cmdline(wsgi_bootstrap))
+
+    dirname = os.path.dirname(__file__)
+    username = getpass.getuser()
+
+    local_settings = open(os.path.join(dirname, 'local_settings.py'), 'w')
+    local_settings.write("""
+local_db = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': '%s',
+    'USER': '%s',
+}
+    """ % (username, username))
+    local_settings.close()
+
+    local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
+    local('createdb %s' % username)
+    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py syncdb --noinput')
+    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py migrate')
+    local('cd ~/src/ecs; . ../environment/bin/activate; ./manage.py bootstrap')
 
