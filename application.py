@@ -273,9 +273,9 @@ test_flavors = {
     'signing': 'false', # TODO: implement
 }
 
-def system_setup(appname, use_sudo=True, dry=False):
+def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     install_upstart(appname, use_sudo=use_sudo, dry=dry)
-    apache_setup(appname, use_sudo=use_sudo, dry=dry)
+    apache_setup(appname, use_sudo=use_sudo, dry=dry, hostname=hostname, ip=ip)
     os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
     wsgi_bootstrap = ['sudo'] if use_sudo else []
     wsgi_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
