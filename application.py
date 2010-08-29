@@ -276,6 +276,9 @@ test_flavors = {
 def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     install_upstart(appname, use_sudo=use_sudo, dry=dry)
     apache_setup(appname, use_sudo=use_sudo, dry=dry, hostname=hostname, ip=ip)
+    local('sudo openssl req -config /root/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
+        (hostname, hostname))
+
     os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
     wsgi_bootstrap = ['sudo'] if use_sudo else []
     wsgi_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']

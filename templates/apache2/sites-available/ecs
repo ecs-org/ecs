@@ -1,11 +1,15 @@
 # Virtualhost Client http(s)://%(hostname)s
 
-#NameVirtualhost %(ip)s:80
+#NameVirtualhost %(ip)s:443
 
-<VirtualHost %(ip)s:80>
+<VirtualHost %(ip)s:443>
     ServerName s.%(hostname)s
     ServerAlias *.%(hostname)s
     ServerAdmin admin@%(hostname)s
+
+    SSLEngine on
+    SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
+    SSLCertificateKeyFile "/etc/ssl/private/%(hostname)s.key"
     
     DocumentRoot %(home)s/public_html
     <Directory "%(home)s/public_html">
