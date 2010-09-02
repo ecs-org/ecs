@@ -43,6 +43,7 @@ import sys
 import subprocess
 import getpass
 import shutil
+from uuid import uuid4
 from fabric.api import local, env
 from deployment import package_merge
 from deployment.utils import install_upstart, apache_setup
@@ -124,7 +125,7 @@ sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
 billard:inst:all:pypi:billiard
 django-picklefield:inst:all:pypi:django-picklefield
-#celery:req:apt:apt-get:rabbitmq-server
+celery:req:apt:apt-get:rabbitmq-server
 celery:req:mac:macports:rabbitmq-server
 celery:inst:all:pypi:celery
 # use ghettoq if development instead rabbitmq
@@ -287,14 +288,34 @@ def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     dirname = os.path.dirname(__file__)
     username = getpass.getuser()
 
+    celery_password = uuid4().get_hex()
+
     local_settings = open(os.path.join(dirname, 'local_settings.py'), 'w')
     local_settings.write("""
+# database settings
 local_db = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': '%s',
-    'USER': '%s',
+    'NAME': '%(username)s',
+    'USER': '%(username)s',
 }
-    """ % (username, username))
+
+# rabbitmq/celery settings
+BROKER_USER = '%(username)s'
+BROKER_PASSWORD = '%(celery_password)s'
+BROKER_VHOST = '%(username)s'
+CARROT_BACKEND = ""
+CELERY_ALWAYS_EAGER = False
+
+# haystack settings
+HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
+
+DEBUG = False
+TEMPLATE_DEBUG = False
+    """ % {
+        'username': username,
+        'celery_password': celery_password,
+    }
     local_settings.close()
 
     local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
@@ -302,4 +323,9 @@ local_db = {
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
+    # setup rabbitmq
+    local('sudo rabbitmqctl add_user %s %s' % (username, celery_password))
+    local('sudo rabbitmqctl add_vhost %s' % username)
+    local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (username, username))
+
 
