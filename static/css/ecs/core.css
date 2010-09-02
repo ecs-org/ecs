@@ -5,6 +5,7 @@
   line-height: 30px;
 }
 ul.tab_headers {
+  width: 85%;
 }
 .tab_headers li a {
   text-decoration: none;
