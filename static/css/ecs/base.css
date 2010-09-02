@@ -13,27 +13,23 @@ body {
   height: 100%; 
   max-height: 100%;
 }
-* html body { /*IE6 hack*/
-  padding: 0 250px 0 0; /*Set value to (0 WidthOfFrameDiv 0 0)*/
-}
-
-body.popup{
-}
 
 .innertube {
-  margin: 0 20px 20px; /*Margins for inner DIV inside each DIV (to provide padding)*/
-  float: left;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  left: 20px;
+  display: block;
 }
 #header {
   position: absolute;
   right: 220px;
   top: 0;
   left: 0;
-  min-height: 120px;
+  min-height: 100px;
   z-index: 101;
   background: #d8e6ef;
   display: block;
-  border-top: 2px solid #2b558e !important;
 }
 #headertitle {
   float: left;
@@ -65,7 +61,7 @@ body.popup{
 }
 #content {
   position: absolute;
-  top: 180px;
+  top: 100px;
   right: 220px;
   bottom: 0;
   left: 0;
@@ -73,11 +69,6 @@ body.popup{
   overflow-x: hidden;
   overflow-y: auto;
 }
-#content {
-  height: expression(document.body.clientHeight - (100 + 120 + (2 * 5)) + "px");
-  width: expression(document.body.clientWidth - (150 + 90 + (2 * 5)) + "px");
-}
-/* mysterious -5px required to compensate for the scrollbar's presence - or something. other values may be necessary in different situations */
 
 #sidebar {
   position: absolute;
@@ -89,7 +80,6 @@ body.popup{
   overflow: hidden; /*Disable scrollbars. Set to "scroll" to enable*/
   color: #333;
   background: #f6f6e9;
-  border-top: 2px solid #2b558e !important;
 }
 
 #logo, #account, #usertoolbar, #usermenu {
