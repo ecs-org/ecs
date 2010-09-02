@@ -67,3 +67,13 @@
   
 </div>
 {% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+  <script type="text/javascript">
+    var header_height = $$('#header').getHeight();
+    $$('#content').setStyle('top', header_height);
+  </script>
+{% endblock %}
+
+
