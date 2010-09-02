@@ -71,8 +71,28 @@
 {% block jsbottom %}
     {{ block.super }}
   <script type="text/javascript">
-    var header_height = $$('#header').getHeight();
-    $$('#content').setStyle('top', header_height);
+    function set_content_position() {
+      var header_height = $$('#header')[0].getHeight();
+      $$('#content')[0].setStyle('top', ''+header_height+'px');
+    }
+
+    function toggle_sidebar() {
+      var sidebar = $$('#sidebar')[0];
+      var header = $$('#header')[0];
+      var content = $$('#content')[0];
+      if (sidebar.isVisible()) {
+        sidebar.hide();
+        header.setStyle('right', '0px');
+        content.setStyle('right', '0px');
+      } else {
+        sidebar.show();
+        header.setStyle('right', '220px');
+        content.setStyle('right', '220px');
+      }
+    }
+
+    set_content_position();
+
   </script>
 {% endblock %}
 
