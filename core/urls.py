@@ -73,4 +73,5 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'ecs.core.views.protocol_pdf'),
 
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
+
 )

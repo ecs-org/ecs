@@ -2,8 +2,8 @@
 {% load compress %}
 
 {% block account %} 
-  <div class="user_icon"><a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
-  <div class="user_name">{{ user.get_full_name|default:user.username }}</div>
+  <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
+  <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
   <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   {% load userswitcher %}
   {% userswitcher %}
@@ -60,6 +60,7 @@
       <span class="togglers">Demo</span>
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
       </ul>
     </li>
     <li>

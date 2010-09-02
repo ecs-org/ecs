@@ -3,7 +3,7 @@ from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
 from ecs.messages.models import Message
 from ecs.tasks.models import Task
-from ecs.core.models import UserProfile
+from ecs.users.models import UserProfile
 
 register = Library()
 

@@ -1,6 +1,6 @@
 from django.contrib.sessions.models import Session
 
-from ecs.core.models import UserProfile
+from ecs.users.models import UserProfile
 
 
 class SingleLogin(object):

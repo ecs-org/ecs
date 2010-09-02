@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
@@ -5,6 +6,9 @@ from django.contrib.sessions.models import Session
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
+    gender = models.CharField(max_length=1, choices=(('w', 'Frau'), ('m', 'Herr')))
+    last_password_change = models.DateTimeField(default=datetime.datetime.now)
+    approved_by_office = models.BooleanField(default=False)
 
     external_review = models.BooleanField(default=False)
     board_member = models.BooleanField(default=False)
@@ -13,9 +17,6 @@ class UserProfile(models.Model):
     internal = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
-    
-    class Meta:
-        app_label = 'core'
     
     def __unicode__(self):
         return unicode(self.user.username)
