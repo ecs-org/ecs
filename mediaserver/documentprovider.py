@@ -37,25 +37,38 @@ class DocumentProvider(object):
             cid = cacheable.cacheID()
             self.vault.add(cid, cacheable.getData());
 
-    def fetch(self, cacheable, try_render_memcache=False, try_render_diskcache=False, try_doc_diskcache=False, try_vault=True):
+    def fetchDocument(self, document, try_doc_diskcache=True, try_vault=True):
         print "fetch"
         filelike=None
         
-        if try_render_memcache:        
-            filelike = self.render_memcache.fetch(cacheable);
-    
-        if not filelike and try_render_diskcache:
-            filelike = self.render_diskcache.fetch(cacheable);
-
-        if not filelike and try_doc_diskcache:
-            filelike = self.doc_diskcache.fetch(cacheable);
+            
+        if try_doc_diskcache:
+            filelike = self.doc_diskcache.fetch(document);
                         
         if not filelike and try_vault:
-            filelike = self.vault.get(cacheable.cacheID())
-            cacheable.setData(filelike.read())
-            self._cachePdfDocument(cacheable)
-            self._cacheDocshots(cacheable)
+            filelike = self.vault.get(document.cacheID())
+            document.setData(filelike.read())
+            self._cachePdfDocument(document)
+            self._cacheDocshots(document)
  
+        return filelike
+
+    def fetchDocshot(self, docshot, try_render_memcache=True, try_render_diskcache=True):
+        print "fetch"
+
+        filelike=None
+        
+        if try_render_memcache:     
+            print "render memcahe"   
+            filelike = self.render_memcache.fetch(docshot);
+    
+        if not filelike and try_render_diskcache:
+            print "render diskcache"
+            filelike = self.render_diskcache.fetch(docshot);
+            docshot.setData(filelike.read())
+            self.render_memcache.store(docshot)
+            filelike.seek(0)
+   
         return filelike
  
     def _cachePdfDocument(self, document):
@@ -99,8 +112,9 @@ class VolatileCache(object):
             cacheable = self.mc.get(cacheable.cacheID())
             if cacheable: 
                 cacheable.touch()
-
-            return StringIO(cacheable.getData())
+                return StringIO(cacheable.getData())
+            
+            return None
             
         def age(self):
             entriesByAge = self.entries_by_age()
@@ -142,6 +156,7 @@ class DiskCache(object):
 
             print "diskcache path", path
             if os.path.exists(path):
+                cacheable.touch()
                 os.utime(path, None)
                 return open(path, "r")
                 

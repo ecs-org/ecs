@@ -17,11 +17,8 @@ class Renderer(object):
         tile_width = (width / tiles_x) - margin_x
         tile_height = (height / tiles_y) - margin_y
 
-        args = 'montage -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d -[0-4] PNG:-' % (tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth)
-        print "exec:", args
-
+        args = 'montage -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d - PNG:-' % (tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth)
         popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
-        
         raw_pngstream, stderr = popen.communicate(pdfdocument.getData())
 
         if popen.returncode != 0:

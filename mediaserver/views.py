@@ -21,9 +21,7 @@ docprovider = DocumentProvider()
 def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
     print 'docshot request: %s, %s, %s, %s, %s' % (uuid, tiles_x, tiles_y, width, pagenr)
     
-    docshot = Docshot(tiles_x, tiles_y, width, pagenr, uuid=uuid)
-    f = docprovider.fetch(docshot, try_render_diskcache=True)
-     
+    f = docprovider.fetchDocshot(Docshot(tiles_x, tiles_y, width, pagenr, uuid=uuid))
     return HttpResponse(f.read(), mimetype='image/png')
    
 def upload_pdf(request):
@@ -39,7 +37,5 @@ def upload_pdf(request):
     return render_to_response('mediaserver/pdfupload.html', {'form': form})
 
 def download_pdf(request, uuid):
-    doc = PdfDocument(uuid=uuid)
-    f = docprovider.fetch(doc, try_doc_diskcache=True)
-    print "f", f
+    f = docprovider.fetchDocument(PdfDocument(uuid=uuid))
     return HttpResponse(f.read(), mimetype='application/pdf')
