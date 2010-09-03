@@ -90,7 +90,7 @@ def register(request):
 def activate(request, token=None):
     data = _registration_token_factory.parse_token_or_404(token)
     try:
-        existing_user = User.objects.get(email=data['email'])
+        existing_user = User.objects.get(email__iexact=data['email'])
         return render(request, 'users/registration/already_activated.html', {
             'existing_user': existing_user,
         })

@@ -511,7 +511,7 @@ def testsubmission():
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='US'))
     
     Investigator.objects.create(
-        name=u'Univ. Doz. Dr. Ruth Ladenstein',
+        contact_last_name=u'Univ. Doz. Dr. Ruth Ladenstein',
         submission_form=submission_form,
         subject_count=1,
         organisation=u'Kinderspital St. Anna',
