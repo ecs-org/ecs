@@ -303,7 +303,7 @@ local_db = {
 BROKER_USER = '%(username)s'
 BROKER_PASSWORD = '%(celery_password)s'
 BROKER_VHOST = '%(username)s'
-CARROT_BACKEND = ""
+CARROT_BACKEND = ''
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings
@@ -315,7 +315,8 @@ TEMPLATE_DEBUG = False
     """ % {
         'username': username,
         'celery_password': celery_password,
-    }
+    })
+    
     local_settings.close()
 
     local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
