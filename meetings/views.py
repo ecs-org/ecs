@@ -9,11 +9,13 @@ from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
 
-from ecs.core.views.utils import render, render_html, render_pdf, pdf_response
-from ecs.core.models import Meeting, Participation, TimetableEntry, Submission, MedicalCategory, Participation, Vote, ChecklistBlueprint, AssignedMedicalCategory, Document
-from ecs.core.forms.meetings import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm
+from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
+from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
+from ecs.documents.models import Document
+from ecs.meetings.forms import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
-from ecs.core.task_queue import optimize_timetable_task
+from ecs.meetings.task_queue import optimize_timetable_task
 
 from ecs.ecsmail.mail import send_mail
 from ecs.ecsmail.persil import whitewash
@@ -23,7 +25,7 @@ def create_meeting(request):
     form = MeetingForm(request.POST or None)
     if form.is_valid():
         meeting = form.save()
-        return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/form.html', {
         'form': form,
     })
@@ -41,7 +43,7 @@ def schedule_submission(request, submission_pk=None):
         kwargs = form.cleaned_data.copy()
         meeting = kwargs.pop('meeting')
         timetable_entry = meeting.add_entry(submission=submission, duration=datetime.timedelta(minutes=7.5), **kwargs)
-        return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'submissions/schedule.html', {
         'submission': submission,
         'form': form,
@@ -52,7 +54,7 @@ def add_free_timetable_entry(request, meeting_pk=None):
     form = FreeTimetableEntryForm(request.POST or None)
     if form.is_valid():
         entry = meeting.add_entry(**form.cleaned_data)
-        return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/timetable/add_free_entry.html', {
         'form': form,
         'meeting': meeting,
@@ -69,13 +71,13 @@ def add_timetable_entry(request, meeting_pk=None):
         import random
         for user in User.objects.order_by('?')[:random.randint(1, 4)]:
             Participation.objects.create(entry=entry, user=user)
-    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
     entry.delete()
-    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -85,14 +87,14 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.duration = form.cleaned_data['duration']
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def move_timetable_entry(request, meeting_pk=None):
     from_index = int(request.GET.get('from_index'))
     to_index = int(request.GET.get('to_index'))
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     meeting[from_index].index = to_index
-    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 def users_by_medical_category(request):
     category = get_object_or_404(MedicalCategory, pk=request.POST.get('category'))
@@ -156,7 +158,7 @@ def optimize_timetable(request, meeting_pk=None, algorithm=None):
         retval = optimize_timetable_task.delay(meeting_id=meeting.id,algorithm=algorithm)
         meeting.optimization_task_id = retval.task_id
         meeting.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -167,7 +169,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
-        return HttpResponseRedirect(reverse('ecs.core.views.meetings.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meetings.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
     return render(request, 'meetings/constraints/user_form.html', {
         'meeting': meeting,
         'participant': user,
@@ -198,7 +200,7 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
         if len(tops) == 1:
             top = tops[0]
     if top:
-        return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
     
     return render(request, 'meetings/assistant/quickjump_error.html', {
         'meeting': meeting,
@@ -215,7 +217,7 @@ def meeting_assistant(request, meeting_pk=None):
             })
         try:
             top_pk = request.session.get('meetings:%s:assistant:top_pk' % meeting.pk, None) or meeting[0].pk
-            return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top_pk}))
+            return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top_pk}))
         except IndexError:
             return render(request, 'meetings/assistant/error.html', {
                 'meeting': meeting,
@@ -231,7 +233,7 @@ def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     meeting.started = datetime.datetime.now()
     meeting.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
     
 def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -239,7 +241,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
         raise Http404("unfinished meetings cannot be stopped")
     meeting.ended = datetime.datetime.now()
     meeting.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -255,8 +257,8 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             try:
                 next_top = meeting.open_tops[0]
             except IndexError:
-                return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
-        return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
+                return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
     
     if top.submission:
         try:
@@ -313,7 +315,7 @@ def meeting_assistant_clear(request, meeting_pk=None):
     meeting.started = None
     meeting.ended = None
     meeting.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
 
 def agenda_pdf(request, meeting_pk=None):
@@ -415,7 +417,7 @@ def agenda_htmlemail(request, meeting_pk=None):
                  from_email=settings.DEFAULT_FROM_EMAIL,
                  recipient_list=settings.AGENDA_RECIPIENT_LIST, fail_silently=False)
         
-    return HttpResponseRedirect(reverse('ecs.core.views.meeting_list'))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_list'))
 
 def timetable_htmlemailpart(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

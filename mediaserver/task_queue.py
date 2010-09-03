@@ -1,5 +1,5 @@
 from celery.decorators import task
-from ecs.core.models import Document
+from ecs.documents.models import Document
 
 from ecs.mediaserver.storage import Cache
 from ecs.mediaserver.renderer import Renderer

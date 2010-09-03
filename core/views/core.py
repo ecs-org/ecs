@@ -5,27 +5,15 @@ from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 
-from ecs.core.views.utils import render, redirect_to_next_url
-from ecs.core.models import Document, Notification, NotificationType, SubmissionForm, Investigator, Submission
+from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.core.models import Notification, NotificationType, SubmissionForm, Investigator, Submission
+from ecs.documents.models import Document
 from ecs.core.forms import DocumentFormSet
 from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 
-# documents
-def download_document(request, document_pk=None):
-    doc = get_object_or_404(Document, pk=document_pk)
-    response = HttpResponse(doc.file, content_type=doc.mimetype)
-    ext = 'pdf'
-    if 'excel' in doc.mimetype:
-        ext = 'xls'
-    response['Content-Disposition'] = 'attachment;filename=%s.%s' % (
-        slugify("%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d'))),
-        ext,
-    )
-    return response
-    
 # notifications
 def notification_list(request):
     return render(request, 'notifications/list.html', {

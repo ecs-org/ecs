@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 
+from ecs.documents.models import Document
+
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
@@ -25,7 +27,7 @@ class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
     investigators = models.ManyToManyField('core.Investigator', related_name='notifications')
     submission_forms = models.ManyToManyField('core.SubmissionForm', related_name='notifications')
-    documents = models.ManyToManyField('core.Document')
+    documents = models.ManyToManyField(Document)
 
     comments = models.TextField(default="", blank=True)
     date_of_receipt = models.DateField(null=True, blank=True)

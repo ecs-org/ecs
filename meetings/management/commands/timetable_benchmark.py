@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
 from django.contrib.auth.models import User
-from ecs.core.models.meetings import Meeting
+from ecs.meetings.models import Meeting
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
 from ecs.utils.timedelta import timedelta_to_seconds
@@ -28,7 +28,7 @@ class Command(BaseCommand):
                     entry.add_user(user)
             #print len(entries_by_title)
 
-            setup = 'from ecs.core.models.meetings import Meeting;m = Meeting.objects.get(pk=%s);f = m.create_evaluation_func(lambda x: x);perm=list(m)' % meeting.pk
+            setup = 'from ecs.meetings.models import Meeting;m = Meeting.objects.get(pk=%s);f = m.create_evaluation_func(lambda x: x);perm=list(m)' % meeting.pk
             print "%.3fms per metric constructor" % (timeit.timeit('f(perm)', setup, number=1000))
             
             setup = 'from ecs.utils.genetic_sort import order_crossover'

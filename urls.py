@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^billing/', include('ecs.billing.urls')),
     url(r'^help/', include('ecs.help.urls')),
     url(r'^', include('ecs.users.urls')),
+    url(r'^', include('ecs.documents.urls')),
+    url(r'^', include('ecs.meetings.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),

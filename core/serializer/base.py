@@ -6,8 +6,8 @@ from django.db import models
 from django.core.files.base import File, ContentFile
 from django.utils.datastructures import SortedDict
 
-from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, \
-    ForeignParticipatingCenter, Document, DocumentType, NonTestedUsedDrug
+from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.documents.models import Document, DocumentType
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'

@@ -52,8 +52,8 @@
     <li>
       <span class="togglers">Sitzungen</span>
       <ul class="elements">
-        <li><a href="{% url ecs.core.views.meeting_list %}">Sitzungen</a></li>
-        <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</a></li>
+        <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
+        <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
       </ul>
     </li>
     <li>
@@ -171,7 +171,7 @@
       feedback_triggers.addEvent('click', feedback_handler);
       
       // message popups
-      {% load messages %}
+      {% load messages tasks %}
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
       var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.utils.functional import memoize
 
-from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Document, Investigator, InvestigatorEmployee
+from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator, InvestigatorEmployee
 from ecs.core.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification
+from ecs.documents.models import Document
 
 _form_info = {}
 

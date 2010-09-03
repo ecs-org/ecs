@@ -3,7 +3,7 @@ from datetime import datetime
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
-from ecs.core.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
+from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
 

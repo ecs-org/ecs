@@ -4,7 +4,8 @@ from django.test import TestCase
 from django.core.files.base import File
 
 from ecs.core.serializer import Serializer
-from ecs.core.models import Submission, SubmissionForm, Document, DocumentType, Measure, EthicsCommission, Investigator, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.core.models import Submission, SubmissionForm, Measure, EthicsCommission, Investigator, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.documents.models import Document, DocumentType
 
 SUBMISSION_FORM_DATA = {
     'project_title': 'title',

@@ -8,8 +8,9 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 
-from ecs.core.models import Submission, Document
-from ecs.core.views.utils import render, render_html
+from ecs.core.models import Submission
+from ecs.documents.models import Document
+from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 

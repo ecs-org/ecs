@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from django.contrib import admin
 
 from ecs.core.models import ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
-from ecs.core.models import DocumentType, Document, EthicsCommission, SubmissionForm, Investigator
+from ecs.core.models import EthicsCommission, SubmissionForm, Investigator
 from ecs.core.models import InvestigatorEmployee, Measure, NonTestedUsedDrug
 from ecs.core.models import ForeignParticipatingCenter, NotificationType, Notification
 from ecs.core.models import Submission, MedicalCategory
@@ -32,8 +31,6 @@ admin.site.register(ChecklistBlueprint, ChecklistBlueprintAdmin)
 admin.site.register(ChecklistQuestion)
 admin.site.register(Checklist, ChecklistAdmin)
 admin.site.register(ChecklistAnswer)
-admin.site.register(DocumentType)
-admin.site.register(Document)
 admin.site.register(EthicsCommission)
 admin.site.register(SubmissionForm)
 admin.site.register(Investigator)

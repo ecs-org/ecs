@@ -22,8 +22,9 @@ from django.db.models import Q
 from django.core.files import File
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission, SubmissionForm, Meeting, Participation, MedicalCategory
-from ecs.core.models import Document, DocumentType
+from ecs.core.models import Submission, SubmissionForm, MedicalCategory
+from ecs.meetings.models import Meeting, Participation
+from ecs.documents.models import Document, DocumentType
 
 
 PLATFORM = 'unix'

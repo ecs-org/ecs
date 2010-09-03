@@ -12,14 +12,18 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 
-from ecs.core.views.utils import render, redirect_to_next_url, render_pdf, pdf_response
-from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer, Meeting
+from ecs.documents.models import Document
+from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
+from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
+from ecs.meetings.models import Meeting
+
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
+
 from ecs.core import paper_forms
 from ecs.core import signals
 from ecs.core.serializer import Serializer

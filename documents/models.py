@@ -23,8 +23,6 @@ class DocumentType(models.Model):
     name = models.CharField(max_length=100)
     identifier = models.CharField(max_length=30, db_index=True, blank=True, default= "")
     helptext = models.TextField(blank=True, default="")
-    class Meta:
-        app_label = 'core'
 
     def __unicode__(self):
         return self.name
@@ -91,9 +89,6 @@ class Document(models.Model):
     
     objects = DocumentManager()
     
-    class Meta:
-        app_label = 'core'
-        
     def __unicode__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
@@ -159,12 +154,10 @@ class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
     text = models.TextField()
-    
-    class Meta:
-        app_label = 'core'
+
 
 def _post_doc_save(sender, **kwargs):
-    from ecs.core.task_queue import extract_and_index_pdf_text
+    from ecs.documents.task_queue import extract_and_index_pdf_text
     from ecs.mediaserver.task_queue import cache_and_render
     doc = kwargs['instance']
     doc.page_set.all().delete()

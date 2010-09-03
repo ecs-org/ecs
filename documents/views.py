@@ -1,10 +1,26 @@
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
 from django import forms
+from django.template.defaultfilters import slugify
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 
-from ecs.core.models import Page, Document
+from ecs.documents.models import Page, Document
+
+
+def download_document(request, document_pk=None):
+    doc = get_object_or_404(Document, pk=document_pk)
+    response = HttpResponse(doc.file, content_type=doc.mimetype)
+    ext = 'pdf'
+    if 'excel' in doc.mimetype:
+        ext = 'xls'
+    response['Content-Disposition'] = 'attachment;filename=%s.%s' % (
+        slugify("%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d'))),
+        ext,
+    )
+    return response
+
 
 class DocumentSearchView(SearchView):
     session_key = 'docsearch:q'

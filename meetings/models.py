@@ -9,13 +9,6 @@ from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 
-
-#impediments = p.get_impediments(time, event.duration)
-#if impediments:
-#    self.impediments.setdefault(p, []).extend(impediments)
-#if p not in self.impediments:
-#    self.impediments[p] =
-
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
         self.users = users
@@ -107,10 +100,9 @@ class TimetableMetrics(object):
 class AssignedMedicalCategory(models.Model):
     category = models.ForeignKey('core.MedicalCategory')
     board_member = models.ForeignKey(User, null=True)
-    meeting = models.ForeignKey('core.Meeting', related_name='medical_categories')
+    meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
     class Meta:
-        app_label = 'core'
         unique_together = (('category', 'meeting'),)
 
     def __unicode__(self):
@@ -124,9 +116,6 @@ class Meeting(models.Model):
     started = models.DateTimeField(null=True)
     ended = models.DateTimeField(null=True)
 
-    class Meta:
-        app_label = 'core'
-        
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         
@@ -266,10 +255,6 @@ class TimetableEntry(models.Model):
     optimal_start = models.TimeField(null=True)
     is_open = models.BooleanField(default=True)
     
-    class Meta:
-        app_label = 'core'
-        #unique_together = (('meeting', 'timetable_index'),)
-        
     def __unicode__(self):
         return "TOP %s" % (self.index + 1)
     
@@ -400,8 +385,6 @@ class Participation(models.Model):
     user = models.ForeignKey(User, related_name='meeting_participations')
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
     
-    class Meta:
-        app_label = 'core'
 
 class Constraint(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='constraints')
@@ -410,9 +393,6 @@ class Constraint(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     weight = models.FloatField(default=0.5)
 
-    class Meta:
-        app_label = 'core'
-        
     @property
     def duration(self):
         d = datetime.now().date()
