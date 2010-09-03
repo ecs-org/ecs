@@ -17,6 +17,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 
 from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
+from django.template.defaultfilters import time
 
 
 class DocumentType(models.Model):
@@ -63,7 +64,7 @@ class DocumentFileStorage(FileSystemStorage):
     def path(self, name):
         # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
         return smart_str(os.path.normpath(name))
-
+#'''#####
 
 class DocumentManager(models.Manager):
     def create_from_buffer(self, buf, **kwargs):
@@ -117,10 +118,13 @@ class Document(models.Model):
         tmp.close()
         return filename
 
-    def save(self, **kwargs):
-        if not self.file:
-            raise ValueError('no file')
+    def save(self, data, **kwargs):
+        if not self.uuid_document:
+            self.uuid_document = str(uuid4())
 
+        if not self.lastaccess:
+            self.lastaccess = time.time()
+        
         if not self.uuid_document: 
             self.uuid_document = str(uuid4()) # generate a new random uuid
             content_type, encoding = mimetypes.guess_type(self.file.name) # look what kind of mimetype we would guess

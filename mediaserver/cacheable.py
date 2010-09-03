@@ -30,6 +30,8 @@ class Cacheable(object):
         if data:
             self.setData(data)
             
+            
+           
         print "cacheable constr", self.uuid
             
     def cacheID(self):
@@ -44,14 +46,4 @@ class Cacheable(object):
     def lastaccess(self):
         return self.lastaccess
 
-    def setData(self, data):
-        self.data = data
-
-        if hasattr(self,"validate"):
-            print "validate"
-            self.validate()
-        else: 
-            raise NotImplemented("Subclasses need to implement validate")
-
-    def getData(self):
         return self.data
