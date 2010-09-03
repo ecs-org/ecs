@@ -96,7 +96,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     
     class Meta:
         model = Document
-        exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name')
+        exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
 
 class BaseDocumentFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):

@@ -4,8 +4,10 @@ import urlparse
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
+
 from ecs.messages.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
@@ -127,7 +129,8 @@ class Submission(models.Model):
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
-    documents = models.ManyToManyField(Document)
+    #documents = models.ManyToManyField(Document)
+    documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 

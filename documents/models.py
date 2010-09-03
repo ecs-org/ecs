@@ -15,6 +15,8 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.generic import GenericForeignKey
 
 from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
 
@@ -86,6 +88,10 @@ class Document(models.Model):
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
     deleted = models.BooleanField(default=False, blank=True)
+    
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    parent_object = GenericForeignKey('content_type', 'object_id')
     
     objects = DocumentManager()
     
