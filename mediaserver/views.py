@@ -11,84 +11,32 @@ from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.renderer import Renderer
 from ecs.mediaserver.storage import Cache, SetData
 from ecs.utils import hashauth
+from ecs.mediaserver.documentprovider import DocumentProvider
+from ecs.mediaserver.docshot import Docshot
+from ecs.mediaserver.forms.pdfuploadform import PdfUploadForm
+from django.shortcuts import render_to_response
+from ecs.mediaserver.document import PdfDocument
 
+docprovider = DocumentProvider()
 
-def load_refill_set(cache, id):
-    try:
-        document = Document.objects.get(pk=id)
-    except DoesNotExist:
-        print 'database miss: document "%s"' % id
-        return None
-    print 'database hit: loaded document "%s"' % id
-    pdf_name = document.file.name
-    pages = document.pages
-    if pages is None:
-        print 'document "%s" was stored without "pages" data' % id
-        return None
-    set_data = SetData('doc from db', pdf_name, pages)
-    if not cache.store_set(id, set_data):
-        print 'cache re-fill failed: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
-        return None
+def docshot(request, uuid, tiles_x, tiles_y, zoom, pagenr):
+    print '%s, %s, %s, %s, %s' % (uuid, tiles_x, tiles_y, zoom, pagenr)
+    
+    docshot = docprovider.fetch(Docshot(tiles_x, tiles_y, zoom, pagenr, uuid=uuid), volatile=True, disk=False, vault=False)
+    
+    return HttpResponse(docshot.__str__())
+    
+def upload_pdf(request):
+    if request.method == 'POST':
+        form = PdfUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file=request.FILES['pdffile']
+            doc = PdfDocument(data=file)
+            docprovider.store(doc, use_vault=True)
+            return HttpResponse("saved")
     else:
-        print 'cache re-filled: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
-        return set_data
+        form = PdfUploadForm(request.POST, request.FILES)
+    return render_to_response('mediaserver/pdfupload.html', {'form': form})
 
-
-def load_refill_page(cache, id, bigpage, zoom):
-    set_data = cache.load_set(id)
-    if set_data is None:
-        print 'cache miss: key "%s"' % cache.get_set_key(id)
-        set_data = load_refill_set(cache, id)
-        if set_data is None:
-            return None
-        else:
-            print 'cache hit: loaded key "%s", set "%s"' % (cache.get_set_key(id), set_data)
-    if bigpage > set_data.pages or bigpage < 1:
-        print 'invalid page "%s"' % bigpage
-        return None
-    image_set = ImageSet(id, set_data)
-    if image_set.render_set.has_zoom(zoom) is False:
-        print 'invalid zoom "%s"' % zoom
-        return None
-    image_set.init_images()
-    print 're-render page "%s", zoom "%s"' % (bigpage, zoom)
-    renderer = Renderer()
-    renderer.render(image_set, True, bigpage, zoom)
-    page_data = cache.load_page(id, bigpage, zoom)
-    if page_data is None:
-        print 'cache re-fill failed: key "%s", page "%s"' % (cache.get_page_key(id, bigpage, zoom), page_data)
-    else:
-        print 'cache re-filled: key "%s", page "%s"' % (cache.get_page_key(id, bigpage, zoom), page_data)
-    return page_data
-
-
-def get_image_data(id, bigpage, zoom):
-    cache = Cache()
-    page_data = cache.load_page(id, bigpage, zoom)
-    if page_data is None:
-        print 'cache miss: key "%s"' % cache.get_page_key(id, bigpage, zoom)
-        page_data = load_refill_page(cache, id, bigpage, zoom)
-        if page_data is None:
-            return (None, None, None)
-    else:
-        print 'cache hit: key "%s", page "%s"' % (cache.get_page_key(id, bigpage, zoom), page_data)
-    png_data = page_data.png_data
-    png_time = page_data.png_time
-    expires = email.utils.formatdate(time.time() + 30 * 24 * 3600, usegmt=True)
-    last_modified = email.utils.formatdate(png_time, usegmt=True)
-    return (png_data, expires, last_modified)
-
-@hashauth.protect(ttl=10)
-def get_image(request, id='1', bigpage=1, zoom='1'):
-    if not request.user.is_authenticated():
-        return HttpResponse("Error: you need to be logged in!")
-    id = str(id)
-    bigpage = int(bigpage)
-    image_data, expires, last_modified = get_image_data(id, bigpage, zoom)
-    if image_data is None:
-        return HttpResponseNotFound('<h1>Error: failed to fetch or create Image</h1>')
-    response = HttpResponse(image_data, mimetype='image/png')
-    response['Expires'] = expires
-    response['Last-Modified'] = last_modified
-    response['Cache-Control'] = 'public'
-    return response
+def download_pdf(request, uuid):
+    return HttpResponse(docprovider.fetch(PdfDocument(uuid=uuid), vault=True), mimetype='application/pdf')
