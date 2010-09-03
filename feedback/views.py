@@ -2,7 +2,7 @@
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
-from ecs.core.views.utils import render, redirect_to_next_url
+from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.feedback.models import Feedback
 
 import datetime

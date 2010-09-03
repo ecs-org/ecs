@@ -5,6 +5,7 @@
   line-height: 30px;
 }
 ul.tab_headers {
+  width: 85%;
 }
 .tab_headers li a {
   text-decoration: none;
@@ -42,7 +43,7 @@ ul.tab_headers {
   position: absolute;
   right: 0;
   top: 0;
-  padding: 20px 10px 0 0;
+  padding: 10px 10px 0 0;
   display: block;
   width: 105px;
   text-align: center;

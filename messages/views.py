@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
-from ecs.core.views.utils import render, redirect_to_next_url
+from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.messages.models import Message, Thread

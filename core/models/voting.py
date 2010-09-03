@@ -15,7 +15,7 @@ VOTE_RESULT_CHOICES = (
 
 class Vote(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='votes')
-    top = models.OneToOneField('core.TimetableEntry', related_name='vote', null=True)
+    top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=u'Kommentar')

@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from ecs.core.views import render, redirect_to_next_url
+from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.messages.models import Thread
 from ecs.tasks.models import Task

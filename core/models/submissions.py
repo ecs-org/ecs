@@ -4,10 +4,13 @@ import urlparse
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
+
 from ecs.messages.models import Message, Thread
-from ecs.core.models.meetings import TimetableEntry, Meeting
+from ecs.meetings.models import TimetableEntry, Meeting
+from ecs.documents.models import Document
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -124,11 +127,23 @@ class Submission(models.Model):
         app_label = 'core'
 
 
+class NameField(object):
+    def contribute_to_class(self, cls, name):
+        fields = {
+            'gender': models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')), blank=True, null=True),
+            'first_name': models.CharField(max_length=50, blank=True),
+            'last_name': models.CharField(max_length=50, blank=True),
+        }
+        for fieldname, field in fields.items():
+            field.contribute_to_class(cls, "%s_%s" % (name, fieldname))
+
+
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
-    documents = models.ManyToManyField('core.Document')
+    #documents = models.ManyToManyField(Document)
+    documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
-    pdf_document = models.ForeignKey('core.Document', related_name="submission_forms", null=True)
+    pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
@@ -140,7 +155,7 @@ class SubmissionForm(models.Model):
 
     # 1.5
     sponsor_name = models.CharField(max_length=100, null=True)
-    sponsor_contactname = models.CharField(max_length=80, null=True)
+    sponsor_contact = NameField()
     sponsor_address1 = models.CharField(max_length=60, null=True)
     sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
@@ -150,7 +165,7 @@ class SubmissionForm(models.Model):
     sponsor_email = models.EmailField(null=True)
 
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
-    invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
+    invoice_contact = NameField()
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
@@ -328,7 +343,7 @@ class SubmissionForm(models.Model):
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
-    submitter_name = models.CharField(max_length=80)
+    submitter_contact = NameField()
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
@@ -414,8 +429,14 @@ def _post_submission_form_save(**kwargs):
         old_sf = submission.forms.filter(pk__lt=new_sf.pk).order_by('-pk')[0]
     except IndexError:
         return
-
-    recipients = [User.objects.get(username=x) for x in settings.DIFF_REVIEW_LIST]
+    
+    recipients = []
+    for username in settings.DIFF_REVIEW_LIST:
+        try:
+            recipients.append(User.objects.get(username=username))
+        except User.DoesNotExist:
+            # FIXME: when we run unittests, these users may not exist.
+            pass
 
     timetable_entries = TimetableEntry.objects.filter(submission=submission)
     recipients += sum([list(x.users) for x in timetable_entries], [])
@@ -450,7 +471,7 @@ class Investigator(models.Model):
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
 
-    name = models.CharField(max_length=80)
+    contact = NameField()
     organisation = models.CharField(max_length=80, blank=True)
     phone = models.CharField(max_length=30, blank=True)
     mobile = models.CharField(max_length=30, blank=True)

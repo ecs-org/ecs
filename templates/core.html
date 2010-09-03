@@ -2,8 +2,8 @@
 {% load compress %}
 
 {% block account %} 
-  <div class="user_icon"><a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
-  <div class="user_name">{{ user.get_full_name|default:user.username }}</div>
+  <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
+  <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
   <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   {% load userswitcher %}
   {% userswitcher %}
@@ -52,14 +52,15 @@
     <li>
       <span class="togglers">Sitzungen</span>
       <ul class="elements">
-        <li><a href="{% url ecs.core.views.meeting_list %}">Sitzungen</a></li>
-        <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</a></li>
+        <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
+        <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
       </ul>
     </li>
     <li>
       <span class="togglers">Demo</span>
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
       </ul>
     </li>
     <li>
@@ -170,7 +171,7 @@
       feedback_triggers.addEvent('click', feedback_handler);
       
       // message popups
-      {% load messages %}
+      {% load messages tasks %}
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
       var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];

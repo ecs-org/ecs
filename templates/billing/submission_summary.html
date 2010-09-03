@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.core.views.download_document document_pk=xls_doc.pk %}">Detailierte Auflistung</a>
+    <a href="{% url ecs.documents.views.download_document document_pk=xls_doc.pk %}">Detailierte Auflistung</a>
 
     <h2>Zusammenfassung</h2>
     <table class="billing_summary">

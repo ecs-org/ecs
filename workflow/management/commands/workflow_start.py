@@ -1,9 +1,8 @@
 import datetime
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-
-from ecs.workflow.models import Graph
 from ecs.core.models import Submission
+from ecs.workflow.models import Graph
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
