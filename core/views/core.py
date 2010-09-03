@@ -18,7 +18,7 @@ from ecs.docstash.models import DocStash
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
-        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification', deleted=False),
+        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification'),
     })
 
 def view_notification(request, notification_pk=None):

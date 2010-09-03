@@ -325,7 +325,7 @@ def submission_form_list(request):
         meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start')]
     else:
         submissions = Submission.objects.order_by('ec_number')
-        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False)
+        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form')
         meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
 
     return render(request, 'submissions/list.html', {
