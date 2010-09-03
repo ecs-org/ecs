@@ -97,7 +97,9 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.3.1', None, u'ISRCTN-Nr.'), #'isrctn_number'
     # 1.5 u'Sponsor / Rechnungsempfänger/in (Kontaktperson in der Buchhaltung)'
     FieldInfo('1.5.1', 'sponsor_name', u'Name'),
-    FieldInfo('1.5.3', 'sponsor_contactname', u'Kontaktperson'),
+    FieldInfo('1.5.3', 'sponsor_contact_gender', u'Anrede der Kontaktperson'),
+    FieldInfo('1.5.3', 'sponsor_contact_first_name', u'Vorname der Kontaktperson'),
+    FieldInfo('1.5.3', 'sponsor_contact_last_name', u'Nachname der Kontaktperson'),
     FieldInfo('1.5.2', 'sponsor_address1', u'Adresse', short_label='Adresse 1'),
     FieldInfo('1.5.2', 'sponsor_address2', None, short_label='Adresse 2'),
     FieldInfo('1.5.2', 'sponsor_zip_code', None, short_label='Postleitzahl'),
@@ -106,7 +108,9 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.5', 'sponsor_fax', u'FAX'),
     FieldInfo('1.5.6', 'sponsor_email', u'e-mail'),
     FieldInfo('1.5.1', 'invoice_name', u'Name'),
-    FieldInfo('1.5.3', 'invoice_contactname', u'Kontaktperson'),
+    FieldInfo('1.5.3', 'invoice_contact_gender', u'Anrede der Kontaktperson'),
+    FieldInfo('1.5.3', 'invoice_contact_first_name', u'Vorname der Kontaktperson'),
+    FieldInfo('1.5.3', 'invoice_contact_last_name', u'Nachname der Kontaktperson'),
     FieldInfo('1.5.2', 'invoice_address1', u'Adresse', short_label='Adresse 1'),
     FieldInfo('1.5.2', 'invoice_address2', None, short_label='Adresse 2'),
     FieldInfo('1.5.2', 'invoice_zip_code', None, short_label='Postleitzahl'),
@@ -256,7 +260,10 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.6.2', 'study_plan_dataprotection_dvr', u'DVR-Nummer'),
     FieldInfo('8.6.3', 'study_plan_dataprotection_anonalgoritm', u'Wie erfolgt die Anonymisierung?'),
     # Name und Unterschrift der Antragstellerin/des Antragstellers
-    FieldInfo('9.1', 'submitter_name', u'Name'),
+    FieldInfo('9.1', 'submitter_contact_gender', None, short_label=u'Anrede'),
+    FieldInfo('9.1', 'submitter_contact_first_name', None, short_label=u'Vorname'),
+    FieldInfo('9.1', 'submitter_contact_last_name', None, short_label=u'Nachname'),
+
     FieldInfo('9.2', 'submitter_organisation', u'Institution/ Firma'),
     FieldInfo('9.3', 'submitter_jobtitle', u'Position'),
     # 9.4 Antragsteller/in ist (nur AMG-Studien)
@@ -272,7 +279,9 @@ FormInfo(Investigator, fields=(
     FieldInfo('10.2', 'organisation', u'Prüfzentrum'),
     FieldInfo('', 'ethics_commission', u'Ethik-Kommission'),
     FieldInfo('', 'main', u'Hauptprüfer'),
-    FieldInfo('10.1', 'name', u'Prüfarzt Name'),
+    FieldInfo('10.1', 'contact_gender', None, short_label=u'Anrede des Prüfarztes'),
+    FieldInfo('10.1', 'contact_first_name', None, short_label=u'Vorname des Prüfarztes'),
+    FieldInfo('10.1', 'contact_last_name', None, short_label=u'Nachname des Prüfarztes'),
     FieldInfo('10.3', 'phone', u'Telefon'),
     FieldInfo('10.4', 'mobile', u'"Pieps"/Mobil'),
     FieldInfo('10.5', 'fax', u'Fax'),

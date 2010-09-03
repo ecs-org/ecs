@@ -15,7 +15,7 @@ SUBMISSION_FORM_DATA = {
     'subject_maxage': 88,
     'project_type_misc': 'misc foo',
     'project_type_genetic_study': True,
-    'submitter_name': 'sn foo',
+    'submitter_contact_last_name': 'sn foo',
 }
 
 class SerializerTest(TestCase):

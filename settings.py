@@ -52,7 +52,8 @@ CARROT_BACKEND = "ghettoq.taproot.Database"
 #CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
-    'ecs.core.task_queue',
+    'ecs.meetings.task_queue',
+    'ecs.documents.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )

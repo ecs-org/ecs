@@ -141,7 +141,9 @@ RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureF
 class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Investigator
-        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
+        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 
+            'contact_gender', 'contact_first_name', 'contact_last_name',
+            'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):

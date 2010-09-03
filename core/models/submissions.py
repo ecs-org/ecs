@@ -127,6 +127,17 @@ class Submission(models.Model):
         app_label = 'core'
 
 
+class NameField(object):
+    def contribute_to_class(self, cls, name):
+        fields = {
+            'gender': models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')), blank=True, null=True),
+            'first_name': models.CharField(max_length=50, blank=True),
+            'last_name': models.CharField(max_length=50, blank=True),
+        }
+        for fieldname, field in fields.items():
+            field.contribute_to_class(cls, "%s_%s" % (name, fieldname))
+
+
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     #documents = models.ManyToManyField(Document)
@@ -144,7 +155,7 @@ class SubmissionForm(models.Model):
 
     # 1.5
     sponsor_name = models.CharField(max_length=100, null=True)
-    sponsor_contactname = models.CharField(max_length=80, null=True)
+    sponsor_contact = NameField()
     sponsor_address1 = models.CharField(max_length=60, null=True)
     sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
@@ -154,7 +165,7 @@ class SubmissionForm(models.Model):
     sponsor_email = models.EmailField(null=True)
 
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
-    invoice_contactname = models.CharField(max_length=80, null=True, blank=True)
+    invoice_contact = NameField()
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
     invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
@@ -332,7 +343,7 @@ class SubmissionForm(models.Model):
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
-    submitter_name = models.CharField(max_length=80)
+    submitter_contact = NameField()
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
@@ -460,7 +471,7 @@ class Investigator(models.Model):
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
 
-    name = models.CharField(max_length=80)
+    contact = NameField()
     organisation = models.CharField(max_length=80, blank=True)
     phone = models.CharField(max_length=30, blank=True)
     mobile = models.CharField(max_length=30, blank=True)
