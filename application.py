@@ -219,6 +219,7 @@ apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
+solr-jetty:req:apt:apt-get:solr-jetty
 """
 
 """
@@ -324,9 +325,14 @@ TEMPLATE_DEBUG = False
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
+
     # setup rabbitmq
     local('sudo rabbitmqctl add_user %s %s' % (username, celery_password))
     local('sudo rabbitmqctl add_vhost %s' % username)
     local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (username, username))
 
+    # setup solr-jetty
+    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~/solr_schema.xml')
+    local('sudp cp ~/solr_schema.xml /etc/solr/conf/schema.xml')
+    local('sudo /etc/init.d/jetty restart')
 
