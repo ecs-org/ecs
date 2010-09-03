@@ -10,20 +10,20 @@ class Docshot(Cacheable):
     classdocs
     '''
 
-    def __init__(self, tiles_x, tiles_y, width, firstpage, lastpage, uuid=None, lastaccess=None, data=None ):
+    def __init__(self, tiles_x, tiles_y, width, pagenr,**kwargs ):
         '''
         Constructor
         '''
         self.tiles_x=tiles_x
         self.tiles_y=tiles_y
         self.width=width
-        self.firstpage=firstpage
-        self.lastpage=lastpage
+        self.pagenr=pagenr
 
-        super(Docshot, self).__init__(self)
+        super(Docshot, self).__init__(**kwargs)
+        print "docshot constr:", self.uuid
     
     def cacheID(self):
-        return self.uuid, "_",self.tiles_x, "_", self.tiles_y, "_", self.width, "_", self.firstpage, "_", self.lastpage  
+        return "docshot_%s_%s_%s_%s_%s" % (super(Docshot, self).cacheID(), self.tiles_x, self.tiles_y ,self.width,self.pagenr)  
 
     def validate(self):
         pass

@@ -16,6 +16,7 @@ class Cacheable(object):
         '''
         Constructor
         '''
+
         if not uuid:
             self.uuid = uuid4()
         else:
@@ -29,8 +30,13 @@ class Cacheable(object):
         if data:
             self.setData(data)
             
+        print "cacheable constr", self.uuid
+            
     def cacheID(self):
-        return self.uuid.get_hex()
+        if hasattr(self.uuid,"get_hex"): 
+            return self.uuid.get_hex()
+        else:
+            return self.uuid
     
     def touch(self):
         self.lastaccess = time.time()
@@ -42,6 +48,7 @@ class Cacheable(object):
         self.data = data
 
         if hasattr(self,"validate"):
+            print "validate"
             self.validate()
         else: 
             raise NotImplemented("Subclasses need to implement validate")

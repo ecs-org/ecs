@@ -6,6 +6,7 @@ Created on Aug 26, 2010
 
 from ecs.mediaserver.cacheable import Cacheable
 from ecs.utils import pdfutils
+from StringIO import StringIO
 
 class PdfDocument(Cacheable):
     '''
@@ -17,6 +18,8 @@ class PdfDocument(Cacheable):
     
     def validate(self):
         data = self.getData()
-        pdfutils.pdf_isvalid(data)
-        self.numpages = pdfutils.pdf_pages(data)
+        iodata = StringIO(data)
+        pdfutils.pdf_isvalid(iodata)
+        print "pages"
+        self.numpages = pdfutils.pdf_pages(iodata)
         

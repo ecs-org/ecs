@@ -31,7 +31,7 @@ class DiskBuckets(object):
             path = self._generate_bucket_path(uuid)
             print "path:", path
             os.makedirs(os.path.dirname(path), DiskBuckets.DEFAULT_MKDIR_MODE)
-            open(path, "wb").write(filelike.read())
+            open(path, "wb").write(filelike)
         else:
             raise KeyError('Entry already exists: ' + uuid)  
 
@@ -53,5 +53,7 @@ class DiskBuckets(object):
         path=''
         for token in uuid[:self.maxdepth-1]: 
             path = os.path.join(path, token)
-        return os.path.join(self.root_dir, path, uuid)
+        result =  os.path.join(self.root_dir, path, uuid)
+        print "res: ",result
+        return result
 
