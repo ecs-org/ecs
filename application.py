@@ -190,10 +190,16 @@ developer_packages=  """
 mutt:req:apt:apt-get:mutt
 mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
 mutt:req:mac:macports:mutt
+
+# interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
+
+# sphinx for documentation creation
 docutils:inst:all:pypi:docutils
+Pygments:inst:all:pypi:Pygments
 sphinx:inst:all:pypi:sphinx
+
 # fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 simplejson:inst:all:pypi:simplejson
