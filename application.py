@@ -197,6 +197,7 @@ ipython:inst:all:pypi:ipython
 
 # sphinx for documentation creation
 docutils:inst:all:pypi:docutils
+Jinja2:inst:all:pypi:Jinja2
 Pygments:inst:all:pypi:Pygments
 sphinx:inst:all:pypi:sphinx
 
