@@ -339,8 +339,16 @@ TEMPLATE_DEBUG = False
     local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (username, username))
 
     # setup solr-jetty
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~/solr_schema.xml')
-    local('sudp cp ~/solr_schema.xml /etc/solr/conf/schema.xml')
-    local('echo -e "/^NO_START/\\ns/NO_START=1/NO_START=0/\\n$\\na\\nJETTY_PORT=8983\\n.\\nx\\n"| sudo ex /etc/default/jetty')
+    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % username)
+    local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % username)
+
+    jetty_cnf = open(os.path.expanduser('~/jetty.cnf'), 'w')
+    jetty_cnf.write("""
+NO_START=0
+VERBOSE=yes
+JETTY_PORT=8983
+    """)
+    jetty_cnf.close()
+    local('sudo cp ~%s /etc/default/jetty' % username)
     local('sudo /etc/init.d/jetty start')
 
