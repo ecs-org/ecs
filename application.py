@@ -341,5 +341,6 @@ TEMPLATE_DEBUG = False
     # setup solr-jetty
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~/solr_schema.xml')
     local('sudp cp ~/solr_schema.xml /etc/solr/conf/schema.xml')
-    local('sudo /etc/init.d/jetty restart')
+    local('echo -e "/^NO_START/\\ns/NO_START=1/NO_START=0/\\n$\\na\\nJETTY_PORT=8983\\n.\\nx\\n"| sudo ex /etc/default/jetty')
+    local('sudo /etc/init.d/jetty start')
 
