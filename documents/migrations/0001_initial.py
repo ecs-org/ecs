@@ -7,6 +7,7 @@ from django.db import models
 class Migration(SchemaMigration):
     depends_on = (
         ('core', '0027_move_user_profiles'),
+        ('pdfviewer', '0004_auto__add_field_annotation_docid__add_field_annotation_page'),
     )
 
     def forwards(self, orm):
