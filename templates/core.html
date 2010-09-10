@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
+{% load i18n %}
 
 {% block account %} 
   <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
@@ -31,9 +32,9 @@
         
 {% block usermenu %}
   <ul>
-    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">Übersicht</a></li>
+    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
     <li>
-      <span class="togglers">Studien</span>
+      <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
           <li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
@@ -43,28 +44,28 @@
       </ul>
     </li>
     <li>
-      <span class="togglers">Studien Meldungen</span>
+      <span class="togglers">{% trans "Study Notifications" %}</span>
       <ul class="elements">
 	<li><a href="{% url ecs.core.views.notification_list %}">Offene Meldungen</a></li>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Sitzungen</span>
+      <span class="togglers">{% trans "Meetings" %}</span>
       <ul class="elements">
         <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
         <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Demo</span>
+      <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
           <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">Letzte Tätigkeiten</span>
+      <span class="togglers">{% trans "Recent Activities" %}</span>
       {% load tracking %}
       {% get_tracking_history as history %}
       <ul class="elements" style="font-size:0.9em">
@@ -73,7 +74,6 @@
           {% endfor %}
       </ul>
   </ul>
-
 {% endblock %}
 
 {% block headernav %}

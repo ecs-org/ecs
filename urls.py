@@ -38,5 +38,6 @@ urlpatterns = patterns('',
     url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
     
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 )
 

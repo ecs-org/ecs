@@ -31,7 +31,6 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
 
-
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
         # (prefix, formset_class, callable SubmissionForm -> initial data)
