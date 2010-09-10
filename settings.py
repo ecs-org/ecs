@@ -207,6 +207,18 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+# workaround: we can not use the django gettext function in the settings
+# because it depends on the settings.
+gettext = lambda s: s
+
+# declare supported languages for i18n. English is the internal project language.
+# We do not want to expose our internal denglish to the end-user, so disable english
+# in the settings
+LANGUAGES = (
+    #('en', gettext('English')),
+    ('de', gettext('German')),
+)
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static')
@@ -249,6 +261,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
