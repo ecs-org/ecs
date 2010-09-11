@@ -168,6 +168,8 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 
 # excel output
 xlwt:inst:all:pypi:xlwt
+
+django-reversion:inst:all:pypi:django-reversion
 """
 
 # software quality testing packages

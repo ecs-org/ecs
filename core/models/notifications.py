@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+import reversion
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
@@ -40,6 +43,9 @@ class Notification(models.Model):
     def __unicode__(self):
         return u"%s" % (self.type,)
 
+reversion.register(Notification)
+
+
 class ReportNotification(Notification):
     reason_for_not_started = models.TextField(null=True, blank=True)
     recruited_subjects = models.IntegerField(null=True, blank=True)
@@ -54,18 +60,26 @@ class ReportNotification(Notification):
     class Meta:
         abstract = True
 
+reversion.register(ReportNotification)
+
+
 class CompletionReportNotification(ReportNotification):
     study_aborted = models.BooleanField()
     completion_date = models.DateField()
 
     class Meta:
         app_label = 'core'
-    
+
+reversion.register(CompletionReportNotification)
+
+
 class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
     extension_of_vote_requested = models.BooleanField(default=False, blank=True)
     
     class Meta:
         app_label = 'core'
+
+reversion.register(ProgressReportNotification)
 
 

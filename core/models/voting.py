@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+
+import reversion
+
 from django.db import models
+
 
 VOTE_RESULT_CHOICES = (
     ('1', u'1 Positiv'),
@@ -12,6 +16,7 @@ VOTE_RESULT_CHOICES = (
     ('5b', u'5b Nicht behandelt'),
     #('5c', u'5c Lokale EK'),
 )
+
 
 class Vote(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='votes')
@@ -59,4 +64,7 @@ class Vote(models.Model):
     @property
     def activates(self):
         return self.result in ('1', '1a')
+
+reversion.register(Vote)
+
     

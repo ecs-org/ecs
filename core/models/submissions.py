@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
+import reversion
 
 from ecs.messages.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
@@ -125,6 +126,8 @@ class Submission(models.Model):
         
     class Meta:
         app_label = 'core'
+
+reversion.register(Submission)
 
 
 class NameField(object):
@@ -464,6 +467,7 @@ def _post_submission_form_save(**kwargs):
 
         message = thread.add_message(User.objects.get(username='root'), text=text)
 
+reversion.register(SubmissionForm)
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
 class Investigator(models.Model):
