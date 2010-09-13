@@ -137,7 +137,7 @@ ghostscript:req:mac:macports:ghostscript
 #ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe::gswin32c.exe needs a portable exe file not that, but the url for now
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
-imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.3-Q16-windows.zip:unzipflatmain:montage.exe
+imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatmain:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
 memcached:req:apt:apt-get:memcached
