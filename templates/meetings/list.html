@@ -16,15 +16,16 @@ Liste aller Sitzungen
       {% for meeting in meetings %}
           <li>
               <strong>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</strong><br />
-                  <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
-                  | <a href="{% url ecs.meetings.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
-                  | <a href="{% url ecs.meetings.views.medical_categories meeting_pk=meeting.pk %}">Spezialistenzuordnung</a>
-                  | <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
-                  | <a href="{% url ecs.meetings.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
-                  | <a href="{% url ecs.meetings.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
-                  | <a href="{% url ecs.meetings.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
-                  | <a href="{% url ecs.core.views.votes.votes_signing meeting_pk=meeting.pk %}">Signatur der Voten</a>
-                  | <a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">Protokoll PDF</a>
+                  <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Zeitplan</a>
+                  | <a href="{% url ecs.core.views.participation_editor meeting_pk=meeting.pk %}">Projektzuordnung</a>
+                  | <a href="{% url ecs.core.views.medical_categories meeting_pk=meeting.pk %}">Spezialistenzuordnung</a>
+                  | <a href="{% url ecs.core.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a>
+                  | <a href="{% url ecs.core.views.agenda_pdf meeting_pk=meeting.pk %}">Agenda PDF</a>
+                  | <a href="{% url ecs.core.views.timetable_pdf meeting_pk=meeting.pk %}">Timetable PDF</a>
+                  | <a href="{% url ecs.core.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
+                  | <a href="{% url ecs.core.views.votes_signing meeting_pk=meeting.pk %}">Signatur der Voten</a>
+                  | <a href="{% url ecs.core.views.protocol_pdf meeting_pk=meeting.pk %}">Protokoll PDF</a>
+                  
           </li>
       {% endfor %}
   </ol>

@@ -1,4 +1,4 @@
-from ecs.utils.viewutils import CsrfExemptBaseHandler
+from ecs.core.views import CsrfExemptBaseHandler
 from piston.doc import generate_doc
 from feedback.models import Feedback
 import datetime

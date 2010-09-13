@@ -13,7 +13,7 @@ window.BugShot = new Class({
     initialize: function(options){
         this.setOptions(options);
         this.disabled = false;
-        $(window).addEvent('keypress', (function(e){
+        window.addEvent('keypress', (function(e){
             if((e.meta || e.control) && e.key == ':'){
                 this.shoot();
             }
@@ -27,8 +27,6 @@ window.BugShot = new Class({
         var self = this;
 
         this.applet = new Element('applet', {code: 'Camera.class', archive: this.options.appletURL, width: 0, height: 0});
-        // we have to set <param name="initial_focus" value="false"/> to prevent firefox on windows from stealing the keyboard focus (see bug #470):
-        this.applet.appendChild(new Element('param', {name: 'initial_focus', value: 'false'}));
         this.overlay = new Element('div', {
             'class': 'bugshot'
         });

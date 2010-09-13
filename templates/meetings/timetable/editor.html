@@ -14,11 +14,11 @@
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
     {% if not running_optimization %}
-        <a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
-        | <a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">RandomAdd</a>
-        | <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
-        {% comment %}| <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
-        | <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
+        <a href="{% url ecs.core.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
+        | <a href="{% url ecs.core.views.add_free_timetable_entry meeting_pk=meeting.pk %}">RandomAdd</a>
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
+        {% comment %}| <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
+        | <a href="{% url ecs.core.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
     {% endif %}
     <div class="waiting_time">
     Wartezeit: 
@@ -41,8 +41,8 @@
                 {% endif %}
             </h3>
             {% if not running_optimization %}
-                <a class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
-                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                <a class="remove" href="{% url ecs.core.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
+                <form action="{% url ecs.core.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
                     <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
                     <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
                 </form>
@@ -73,7 +73,7 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="{% url ecs.meetings.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
+                    <a href="{% url ecs.core.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
                     </div>
                 </li>
             {% endfor %}
@@ -125,7 +125,7 @@ window.addEvent('domready', function(){
             var fromIndex = dndInfo.startIndex;
             dndInfo.startIndex = null;
             if(fromIndex != toIndex && fromIndex !== null){
-                window.location.href = '{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
+                window.location.href = '{% url ecs.core.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
             }
         }
     });

@@ -12,24 +12,21 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 
-from ecs.documents.models import Document
-from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
-from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
-from ecs.meetings.models import Meeting
-
+from ecs.core.views.utils import render, redirect_to_next_url, render_pdf, pdf_response
+from ecs.core.models import Document, Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer, Meeting
 from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
-
 from ecs.core import paper_forms
 from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
+
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -312,8 +309,7 @@ def submission_form_list(request):
 
         submission_form_pks = [sf.pk for sf in submission_forms]
         
-        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword) | Q(sponsor_name__icontains=keyword) | Q(submitter_contact_last_name__icontains=keyword) | Q(investigators__contact_last_name__icontains=keyword) | Q(eudract_number__icontains=keyword)
-
+        form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword) | Q(sponsor_name__icontains=keyword) | Q(submitter_name__icontains=keyword) | Q(investigators__name__icontains=keyword)
         submission_forms = SubmissionForm.objects.filter(pk__in=submission_form_pks).filter(form_search_query)
         submissions += [sf.submission for sf in submission_forms]
 
@@ -325,7 +321,7 @@ def submission_form_list(request):
         meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start')]
     else:
         submissions = Submission.objects.order_by('ec_number')
-        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form')
+        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', deleted=False)
         meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
 
     return render(request, 'submissions/list.html', {

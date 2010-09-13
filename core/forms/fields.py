@@ -38,11 +38,11 @@ class TimedeltaField(forms.CharField):
 
 class InvestigatorChoiceMixin(object):
     def __init__(self, **kwargs):
-        kwargs.setdefault('queryset', Investigator.objects.order_by('contact_last_name', 'contact_first_name'))
+        kwargs.setdefault('queryset', Investigator.objects.order_by('name'))
         super(InvestigatorChoiceMixin, self).__init__(**kwargs)
 
     def label_from_instance(self, obj):
-        return u"%s (%s)" % (obj.contact_last_name, obj.ethics_commission.name) # FIXME: use the full contact name
+        return u"%s (%s)" % (obj.name, obj.ethics_commission.name)
 
 class InvestigatorChoiceField(InvestigatorChoiceMixin, forms.ModelChoiceField): pass
 class InvestigatorMultipleChoiceField(InvestigatorChoiceMixin, forms.ModelMultipleChoiceField): pass

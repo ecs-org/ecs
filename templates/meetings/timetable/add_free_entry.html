@@ -10,6 +10,6 @@
         {% endfor %}
     </ol>
     <input type="submit" value="Speichern" />
-    <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a>
+    <a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a>
 </form>
 {% endblock %}

@@ -4,6 +4,8 @@
   display: inline-block;
   line-height: 30px;
 }
+ul.tab_headers {
+}
 .tab_headers li a {
   text-decoration: none;
   padding: 3px 5px;
@@ -45,18 +47,8 @@
   width: 105px;
   text-align: center;
 }
-
-.floating_box{
-    position: absolute;
-    right: 30px;
-    top: 90px;
-    width: 98px;
-    background-color: #eeeeee;
-    opacity: 0.8;
-    padding: 10px;
-}
-
-.floating_box a {
+.header_actions a {
+  float: right;
   padding: 3px;
   margin-bottom: 5px;
   display: block;

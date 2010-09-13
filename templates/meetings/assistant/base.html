@@ -14,12 +14,12 @@ Sitzungsassistent
     <div class="meeting_assistant_nav">
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
-            <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
+            <div class="button"><a href="{% url ecs.core.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
             {% if not meeting.started %}
-            <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
+            <div class="button"><a href="{% url ecs.core.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
-                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Stop</a></div>
+                    <div class="button"><a href="{% url ecs.core.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Stop</a></div>
                 {% endif %}
             {% endif %}
             <ol class="info">
@@ -50,7 +50,7 @@ Sitzungsassistent
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
                     <div class="search">
-                        <form action="{% url ecs.meetings.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">
+                        <form action="{% url ecs.core.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">
                             <input type="text" name="q" />
                             <input type="submit" value="Suchen" />
                         </form>

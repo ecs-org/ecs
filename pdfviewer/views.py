@@ -6,12 +6,14 @@ from django.conf import settings
 
 from json import JSONEncoder, JSONDecoder
 
-from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.documents.models import Document
+from ecs.core.views.utils import render, redirect_to_next_url
+
+
+from ecs.core.models import Document
 from ecs.mediaserver.imageset import ImageSet
 from ecs.mediaserver.storage import Cache, SetData
-from ecs.pdfviewer.models import Annotation
 
+from ecs.pdfviewer.models import Annotation
 
 def load_refill_set(id):
     try:

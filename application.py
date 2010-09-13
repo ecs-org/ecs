@@ -43,11 +43,9 @@ import sys
 import subprocess
 import getpass
 import shutil
-from uuid import uuid4
 from fabric.api import local, env
 from deployment import package_merge
 from deployment.utils import install_upstart, apache_setup
-
 
 # sprint 7 sources
 sprint7_bundle = """
@@ -93,6 +91,7 @@ django-nose:inst:all:pypi:django-nose
 #http://github.com/jbalogh/django-nose/tarball/master
 
 #debugging
+werkzeug:inst:all:pypi:werkzeug
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 # did throw errors in own code itself, instead of doing its job of logging errors django-db-log:inst:all:pypi:django-db-log
 
@@ -125,6 +124,8 @@ sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
 billard:inst:all:pypi:billiard
 django-picklefield:inst:all:pypi:django-picklefield
+#celery:req:apt:apt-get:rabbitmq-server
+celery:req:mac:macports:rabbitmq-server
 celery:inst:all:pypi:celery
 # use ghettoq if development instead rabbitmq
 ghettoq:inst:all:pypi:ghettoq
@@ -139,13 +140,11 @@ imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.3-Q16-windows.zip:unzipflatmain:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
-
-memcached:req:apt:apt-get:memcached
-memcached:req:mac:macports:memcached
-memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatmain:memcached.exe
+memcachedb:req:apt:apt-get:memcachedb
+# FIXME: there is no memcachedb macport yet
+python-memcached:req:mac:macports:memcached
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
-
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
@@ -168,15 +167,7 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 
 # excel output
 xlwt:inst:all:pypi:xlwt
-
-django-reversion:inst:all:pypi:django-reversion
-
-#file encryption
-# win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
-# gnupg:req:apt:apt-get:gnupg
-# gnupg:req:mac:macports:gnupg
 """
-
 
 # software quality testing packages
 quality_packages= """
@@ -192,21 +183,16 @@ pylint:inst:all:pypi:pylint
 """
 
 
-# packages needed or nice to have for development
+# In addition to application packages, packages needed or nice to have for development
 developer_packages=  """
-# if you want to have real queuing, you need rabbitmq
-celery:req:apt:apt-get:rabbitmq-server
-celery:req:mac:macports:rabbitmq-server
-
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
 mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
 mutt:req:mac:macports:mutt
-
-# interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
-
+docutils:inst:all:pypi:docutils
+sphinx:inst:all:pypi:sphinx
 # fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 simplejson:inst:all:pypi:simplejson
@@ -232,9 +218,6 @@ apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
-solr-jetty:req:apt:apt-get:solr-jetty
-celery:req:apt:apt-get:rabbitmq-server
-memcached:req:apt:apt-get:memcached
 """
 
 """
@@ -246,13 +229,14 @@ a2enmod wsgi #should be automatic active because is extra package
  WSGIPythonHome /home/ecsdev/baseline
  # create a baseline python environment (this is a minimal virtual env)
  ./bootstrap.py --baseline /home/ecsdev/baseline
+
 # needs apache config snippet (see apache.conf)
 # needs apache wsgi snippet (see main.wsgi)
 # these should not be generated inside the sourcedir, because main.wsgi is restarted if file is touched
+
 # needs ecs-main application celeryd upstart.conf
 # needs mediaserver application celeryd upstart.conf
 """
-
 
 # Environments
 ###############
@@ -303,35 +287,14 @@ def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     dirname = os.path.dirname(__file__)
     username = getpass.getuser()
 
-    celery_password = uuid4().get_hex()
-
     local_settings = open(os.path.join(dirname, 'local_settings.py'), 'w')
     local_settings.write("""
-# database settings
 local_db = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': '%(username)s',
-    'USER': '%(username)s',
+    'NAME': '%s',
+    'USER': '%s',
 }
-
-# rabbitmq/celery settings
-BROKER_USER = '%(username)s'
-BROKER_PASSWORD = '%(celery_password)s'
-BROKER_VHOST = '%(username)s'
-CARROT_BACKEND = ''
-CELERY_ALWAYS_EAGER = False
-
-# haystack settings
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
-
-DEBUG = False
-TEMPLATE_DEBUG = False
-    """ % {
-        'username': username,
-        'celery_password': celery_password,
-    })
-    
+    """ % (username, username))
     local_settings.close()
 
     local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
@@ -339,23 +302,4 @@ TEMPLATE_DEBUG = False
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate')
     local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
-
-    # setup rabbitmq
-    local('sudo rabbitmqctl add_user %s %s' % (username, celery_password))
-    local('sudo rabbitmqctl add_vhost %s' % username)
-    local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (username, username))
-
-    # setup solr-jetty
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % username)
-    local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % username)
-
-    jetty_cnf = open(os.path.expanduser('~/jetty.cnf'), 'w')
-    jetty_cnf.write("""
-NO_START=0
-VERBOSE=yes
-JETTY_PORT=8983
-    """)
-    jetty_cnf.close()
-    local('sudo cp ~%s /etc/default/jetty' % username)
-    local('sudo /etc/init.d/jetty start')
 

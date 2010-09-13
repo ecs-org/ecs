@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand, CommandError
 from ecs.core.models import Submission, SubmissionForm
 from ecs.core.serializer import Serializer
 from ecs.core import paper_forms
-from ecs.utils.viewutils import render_pdf
 
 class FakeRequest(object):
     def __init__(self):
@@ -22,6 +21,7 @@ class Command(BaseCommand):
         if not submission_form:
             raise CommandError("This submission does not have an attached SubmissionForm.")
 
+        from ecs.core.views.utils import render_pdf
         pdf = render_pdf(FakeRequest(), 'db/submissions/xhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
             'submission_form': submission_form,

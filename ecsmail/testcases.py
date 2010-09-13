@@ -32,7 +32,7 @@ class MailTestCase(TestCase):
               
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
         import ecs.ecsmail.config.boot
-        self.mailclient = RouterConversation("somedude@notexisting.blu", "requests_tests")
+        self.client = RouterConversation("somedude@notexisting.blu", "requests_tests")
 
         #from ecs.utils.raise_thread import ThreadWithExc
         #import asyncore 
@@ -76,7 +76,7 @@ class MailTestCase(TestCase):
     @classmethod
     def deliver(self, To, From, Subject, Body):
         ''' Delivers the message trough ecsmail/lamson setup '''
-        self.mailclient.deliver(To, From, Subject, Body)
+        self.client.deliver(To, From, Subject, Body)
         
     @classmethod
     def is_delivered(self, pattern):

@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-from ecs.utils.viewutils import render
+from ecs.core.views.utils import render
 
 from ecs.tracking.models import View
 from ecs.help.models import Page, Attachment

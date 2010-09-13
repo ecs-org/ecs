@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from ecs import bootstrap
-from ecs.core.models import NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
+from ecs.core.models import DocumentType, NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
 from ecs.utils.countries.models import Country
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
@@ -154,6 +154,27 @@ def auth_groups():
     for group in groups:
         Group.objects.get_or_create(name=group)
 
+@bootstrap.register()
+def document_types():
+    names = (
+        (u"Covering Letter", u"coveringletter", u"Anschreiben / Begleitschreiben an die Ethikkommission"),
+        (u"Patienteninformation", u"patientinformation", 
+            u"Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- Information, Information für nicht einwilligungsfähige Patienten"),
+        (u"Versicherungsbestätigung", u"insurancecertificate", u""),
+        (u"Protokoll", u"protocol", u"Studienprotokoll"),
+        (u"Investigator's Brochure", u"investigatorsbrochure", u""),
+        (u"Amendment", u"amendment", u"Protokolländerungen"),
+        (u"Curriculum Vitae (CV)", u"cv", u"Lebenslauf"),
+        (u"Conflict of Interest", u"conflictofinterest", u"kann auch ein Financial Disclosure Form sein"),
+        (u"Case Report Form (CRF)", u"crf", ""),
+        (u"EudraCT Formular", u"eudract", u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial"),
+        (u"Nebenwirkungsmeldung", u"adversereaction", u"Med Watch-Bericht, CIOMS-Formular etc."),
+        (u"Sonstige", u"other", u"Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."),
+    )
+    for name, identifier, helptext in names:
+        d, created = DocumentType.objects.get_or_create(name=name, identifier=identifier)
+        d.helptext= helptext
+        d.save()
 
 @bootstrap.register()
 def notification_types():
@@ -406,7 +427,7 @@ def testsubmission():
         'submitter_is_main_investigator': False,
         'insurance_phone': u'50125',
         'study_plan_population_intention_to_treat': False,
-        'submitter_contact_last_name': u'Univ. Doz. Dr. Ruth Ladenstein',
+        'submitter_name': u'Univ. Doz. Dr. Ruth Ladenstein',
         'submitter_is_authorized_by_sponsor': False,
         'medtech_manufacturer': u'',
         'subject_planned_total_duration': u'8 months',
@@ -447,6 +468,7 @@ def testsubmission():
         'insurance_address_1': u'Schwarzenbergplatz 15',
         'german_additional_info': u'bla bla bla',
         'study_plan_primary_objectives': None,
+        'sponsor_contactname': None,
         'study_plan_dataprotection_reason': u'',
         'medtech_certified_for_exact_indications': False,
         'sponsor_city': u'Wien',
@@ -501,6 +523,7 @@ def testsubmission():
         'study_plan_multiple_test_correction_algorithm': u'',
         'sponsor_address1': u'Kinderspitalg. 6',
         'invoice_name': u'',
+        'invoice_contactname': None,
         'sponsor_address2': u'',
         'german_statistical_info': u'bla bla bla',
     }
@@ -511,7 +534,7 @@ def testsubmission():
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='US'))
     
     Investigator.objects.create(
-        contact_last_name=u'Univ. Doz. Dr. Ruth Ladenstein',
+        name=u'Univ. Doz. Dr. Ruth Ladenstein',
         submission_form=submission_form,
         subject_count=1,
         organisation=u'Kinderspital St. Anna',

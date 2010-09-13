@@ -1,7 +1,7 @@
 from django import forms
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
-from ecs.core.models import Submission
+from ecs.core.models import Submission, TimetableEntry
 from ecs.core.forms.utils import ReadonlyFormMixin
 
 class ExecutiveReviewForm(ReadonlyFormMixin, forms.ModelForm):

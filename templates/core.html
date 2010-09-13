@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load i18n %}
 
 {% block account %} 
-  <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
-  <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
+  <div class="user_icon"><a href=""><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
+  <div class="user_name">{{ user.get_full_name|default:user.username }}</div>
   <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   {% load userswitcher %}
   {% userswitcher %}
@@ -32,9 +31,9 @@
         
 {% block usermenu %}
   <ul>
-    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
+    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">Übersicht</a></li>
     <li>
-      <span class="togglers">{% trans "Studies" %}</span>
+      <span class="togglers">Studien</span>
       <ul class="elements">
           <li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
@@ -44,28 +43,27 @@
       </ul>
     </li>
     <li>
-      <span class="togglers">{% trans "Study Notifications" %}</span>
+      <span class="togglers">Studien Meldungen</span>
       <ul class="elements">
 	<li><a href="{% url ecs.core.views.notification_list %}">Offene Meldungen</a></li>
         <li><a href="{% url ecs.core.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">{% trans "Meetings" %}</span>
+      <span class="togglers">Sitzungen</span>
       <ul class="elements">
-        <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
-        <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
+        <li><a href="{% url ecs.core.views.meeting_list %}">Sitzungen</a></li>
+        <li><a href="{% url ecs.core.views.create_meeting %}">neue Sitzung</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">{% trans "Demo" %}</span>
+      <span class="togglers">Demo</span>
       <ul class="elements">
           <li><a href="{% url ecs.messages.views.send_message %}">Neue Nachricht</a></li>
-          <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
       </ul>
     </li>
     <li>
-      <span class="togglers">{% trans "Recent Activities" %}</span>
+      <span class="togglers">Letzte Tätigkeiten</span>
       {% load tracking %}
       {% get_tracking_history as history %}
       <ul class="elements" style="font-size:0.9em">
@@ -74,6 +72,7 @@
           {% endfor %}
       </ul>
   </ul>
+
 {% endblock %}
 
 {% block headernav %}
@@ -171,7 +170,7 @@
       feedback_triggers.addEvent('click', feedback_handler);
       
       // message popups
-      {% load messages tasks %}
+      {% load messages %}
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
       var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];

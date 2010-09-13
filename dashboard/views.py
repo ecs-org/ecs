@@ -1,4 +1,4 @@
-from ecs.utils.viewutils import render
+from ecs.core.views.utils import render
 from ecs.tasks.models import Task
 
 def view_dashboard(request):

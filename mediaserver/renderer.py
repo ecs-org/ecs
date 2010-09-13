@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import subprocess
 from ecs.mediaserver.docshot import Docshot
 

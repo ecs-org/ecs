@@ -8,9 +8,8 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 
-from ecs.core.models import Submission
-from ecs.documents.models import Document
-from ecs.utils.viewutils import render, render_html
+from ecs.core.models import Submission, Document
+from ecs.core.views.utils import render, render_html
 from ecs.ecsmail.mail import send_mail
 from ecs.ecsmail.persil import whitewash
 
@@ -19,10 +18,9 @@ from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):
-    # FIXME: use the full contact name
-    attrs = ('name', 'contact_last_name', 'address1', 'address2', 'zip_code', 'city', 'uid')
+    attrs = ('name', 'contact_name', 'address1', 'address2', 'zip_code', 'city', 'uid')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
-    bits = ['%(name)s' % data, 'zH %(contact_last_name)s' % data]
+    bits = ['%(name)s' % data, 'zH %(contact_name)s' % data]
     if data['address1']:
         bits.append('%(address1)s' % data)
     if data['address2']:
@@ -86,7 +84,7 @@ def submission_billing(request):
                 submission.ec_number,
                 _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
                 submission_form.eudract_number or '?',
-                submission_form.submitter_contact.last_name, # FIXME: use the full name
+                submission_form.submitter_name,
                 _get_organizations(submission_form),
                 submission.price.price,
             ])

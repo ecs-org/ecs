@@ -1,6 +1,8 @@
+from django.db import models, transaction
 import datetime
-from django.db import models
-from ecs.documents.models import Document
+
+from ecs.core.models import Document
+
 
 class Annotation(models.Model):
     uuid = models.CharField(max_length=36, primary_key=True)

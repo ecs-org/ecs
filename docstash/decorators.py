@@ -1,10 +1,12 @@
 from django.utils.functional import wraps
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 
 from ecs.docstash.models import DocStash
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
+
+VERSION_COOKIE_NAME = 'docstash_%s'
 
 # FIXME: version cookies need to be signed
 def with_docstash_transaction(*args, **kwargs):
@@ -20,8 +22,11 @@ def with_docstash_transaction(*args, **kwargs):
             else:
                 docstash = get_object_or_404(DocStash, group=view_name, key=docstash_key)
                 request.docstash = docstash
-                # FIXME: this is a simplification and only sufficient for our single-user application
-                version = docstash.current_version 
+                version = request.COOKIES.get(VERSION_COOKIE_NAME % docstash.key, None)
+                if version is None and request.method == 'GET':
+                    version = docstash.current_version
+                else:
+                    version = int(version)
                 try:
                     docstash.start_transaction(version)
                 except UnknownVersion, e:
@@ -36,6 +41,8 @@ def with_docstash_transaction(*args, **kwargs):
                 except:
                     docstash.rollback_transaction()
                     raise
+        
+            response.set_cookie(str(VERSION_COOKIE_NAME % docstash.key), str(docstash.current_version))
             return response
         return decorated
     

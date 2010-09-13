@@ -1,8 +1,6 @@
 import os
-from django.core.urlresolvers import reverse
 from ecs.utils.testcases import LoginTestCase
-from ecs.core.models import NotificationType
-from ecs.documents.models import DocumentType
+from ecs.core.models import NotificationType, DocumentType
 
 from ecs.core.tests.submissions_and_notifications import create_submission_form
 
@@ -88,7 +86,7 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(doc.version, '3.1415')
         self.failUnless(doc.file)
         
-        response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
+        response = self.client.get('/core/document/%s/download/' % doc.pk)
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(response.content[:4], '%PDF')
    
