@@ -37,7 +37,7 @@ DATABASES['default'] = {
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
 # StorageVault settings
-STORAGE_VAULT_OPTIONS = {'DiskBuckets.rootdir' = os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
+STORAGE_VAULT_OPTIONS = {'DiskBuckets.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
 
 
 # mediaserver memcached(b) settings, RENDERSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
