@@ -5,13 +5,11 @@ Created on Aug 26, 2010
 '''
 import getpass
 import os
-import pickle
 
 from django.conf import settings
 from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.renderer import Renderer
-from StringIO import StringIO
-from ecs.mediaserver.models.DocumentModel import PdfDocument
+
 
 class DocumentProvider(object):
     '''
@@ -27,71 +25,57 @@ class DocumentProvider(object):
         self.doc_diskcache = DiskCache()
         self.vault = DiskBuckets("/tmp/diskbucket", allow_mkrootdir=True)
 
-    def storeDocshot(self, docshotModel, use_render_memcache=False, use_render_diskcache=False, use_doc_diskcache=False, use_vault=False):
+    def addDocshot(self, docshotModel, filelike, use_render_memcache=False, use_render_diskcache=False):
         if use_render_memcache:
-            self.render_memcache.store(docshotModel);
+            self.render_memcache.add(docshotModel.cacheID(), filelike)
         if use_render_diskcache:
-            self.render_diskcache.store(docshotModel);
-        if use_doc_diskcache:
-            self.doc_diskcache.store(docshotModel);
-        if use_vault:
-            cid = docshotModel.cacheID()
-            self.vault.add(cid, docshotModel.getData());
-            
+            self.render_diskcache.add(docshotModel.cacheID(), filelike)
+           
 
-    def storePdfDocument(self, pdfDocModel):
-        self.vault.add(pdfDocModel.cacheID(), pdfDocModel.data);
+    def addPdfDocument(self, pdfDocModel, filelike):
+        self.vault.add(pdfDocModel.cacheID(), filelike);
     
-    def fetchPdfDocument(self, document, try_doc_diskcache=True, try_vault=True):
-        print "fetch"
+    def getPdfDocument(self, pdfDocModel, try_doc_diskcache=True, try_vault=True):
         filelike=None
             
         if try_doc_diskcache:
-            filelike = self.doc_diskcache.fetch(document);
+            filelike = self.doc_diskcache.get(pdfDocModel);
                         
-        self.
         if not filelike and try_vault:
-            filelike = self.vault.get(document.cacheID())
-            document.setData(filelike.read())
-            self._cachePdfDocument(document)
-            self._cacheDocshots(document)
+            filelike = self.vault.get(pdfDocModel.cacheID())
+            self._cachePdfDocument(pdfDocModel, filelike)
+            self._cacheDocshots(pdfDocModel, filelike)
  
         return filelike
 
-    def fetchDocshot(self, docshot, try_render_memcache=True, try_render_diskcache=True):
-        print "fetch"
-
+    def getDocshot(self, docshotModel, try_render_memcache=True, try_render_diskcache=True):
         filelike=None
         
         if try_render_memcache:     
-            print "render memcahe"   
-            filelike = self.render_memcache.fetch(docshot);
+            filelike = self.render_memcache.get(docshotModel);
     
         if not filelike and try_render_diskcache:
-            print "render diskcache"
-            filelike = self.render_diskcache.fetch(docshot);
-            docshot.setData(filelike.read())
-            self.render_memcache.store(docshot)
+            filelike = self.render_diskcache.get(docshotModel.cacheID());
+            self.render_memcache.store(docshotModel.cacheID(), filelike)
             filelike.seek(0)
    
         return filelike
  
-    def _cachePdfDocument(self, document):
-        if document:
-            self.doc_diskcache.store(document)
+    def __cachePdfDocument(self, pdfDocModel, filelike):
+        self.doc_diskcache.store(pdfDocModel.cacheID(), filelike)
 
-    def _cacheDocshots(self, document):
-        for docshot in self._createDefaultDocshots(document):
+    def __cacheDocshots(self, pdfDocModel, filelike):
+        for docshot in self._createDefaultDocshots(pdfDocModel,filelike):
             self.render_diskcache.store(docshot)
 
-    def _createDefaultDocshots(self, document):
+    def __createDefaultDocshots(self, pdfDocModel, filelike):
         tiles = [ 1, 3, 5 ]
         width = [ 800, 768 ] 
         docshots = []
  
         for t in tiles:
             for w in width:
-                docshots.extend(self.renderer.renderPDFMontage(document, w, t, t)) 
+                docshots.extend(self.renderer.renderPDFMontage(pdfDocModel, filelike, w, t, t)) 
         
         return docshots
     
@@ -110,58 +94,28 @@ class VolatileCache(object):
             self.mc = memcache.Client(['%s:%d' % (settings.RENDERSTORAGE_HOST, settings.RENDERSTORAGE_PORT)], debug=False)
             self.maxsize = 1024 * 1024 * 10
 
-        def store(self, cacheable):
-            self.mc.set(cacheable.cacheID(), cacheable)
+        def add(self, uuid, filelike):
+            self.mc.set(uuid, filelike)
             
-        def fetch(self, cacheable):
-            cacheable = self.mc.get(cacheable.cacheID())
-            if cacheable: 
-                cacheable.touch()
-                return StringIO(cacheable.getData())
+        def get(self, uuid):
+                return self.mc.get(uuid)
             
-            return None
-            
-        def age(self):
-            entriesByAge = self.entries_by_age()
-            cachesize = self.size()
-            
-            while cachesize < self.maxsize:
-                oldest = entriesByAge.next();
-                size = os.path.getsize(oldest)
-                os.remove(oldest)
-                cachesize -= size
-            
-        def entries_by_age(self):
-            return list(reversed(sorted(self.entries(), key=Cacheable.lastaccess)))
-
         def entries(self):
             return self.mc.dictionary.values() 
         
-        def size(self):
-            sum(len(entry.data) for entry in self.entries())
-
-class DiskCache(object):
+class DiskCache(DiskBuckets):
         def __init__(self):
             self.cachedir = "/tmp"
             self.maxsize = 1024 * 1024 * 10
+            super(DiskCache, self).__init__(self.cachedir)
 
-        def store(self, cacheable):
-            path=os.path.join(self.cachedir, cacheable.cacheID());
-            print "diskcache store", cacheable, " ",cacheable.cacheID(), " ", path
-            if not os.path.exists(path):
-                f = open(path, 'wb')
-                f.write(cacheable.getData())
-                f.close()
-                return True
-            else:
-                return False
+        def add(self, uuid, filelike):
+            super(DiskCache, self).add(uuid, filelike)
              
-        def fetch(self, cacheable):
-            path=self._internal_path(cacheable)
+        def get(self, uuid):
+            path=self._internal_path(uuid)
 
-            print "diskcache path", path
             if os.path.exists(path):
-                cacheable.touch()
                 os.utime(path, None)
                 return open(path, "r")
                 
@@ -190,4 +144,5 @@ class DiskCache(object):
             return os.path.join(self.cachedir, cacheable.cacheID())
             
         def _raw_entries(self):
-            return os.listdir(os.path.join(self.cachedir, "*"))
+            files = os.walk(self.cachedir)
+            return files

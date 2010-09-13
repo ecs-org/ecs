@@ -37,7 +37,7 @@ class PdfDocumentModel(models.Model):
             m = hashlib.md5() # calculate hash sum
             self.file.seek(0)            
             while True:
-                data= self.file.read(8192)
+                data=self.file.read(8192)
                 if not data: break
                 m.update(data)
             self.file.seek(0)
