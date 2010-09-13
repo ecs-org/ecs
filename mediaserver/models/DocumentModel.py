@@ -1,8 +1,3 @@
-'''
-Created on Sep 3, 2010
-
-@author: elchaschab
-'''
 import mimetypes
 import time
 from uuid import uuid4

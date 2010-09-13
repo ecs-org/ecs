@@ -298,7 +298,7 @@
       
       toggle_search: function(){
           this.key_nav_enabled = false;
-          var searchDialog = new ecs.Dialog('{% url ecs.core.views.document_search document_pk=id %}', {
+          var searchDialog = new ecs.Dialog('{% url ecs.documents.views.document_search document_pk=id %}', {
               size: {
                   width: 500,
                   height: 400

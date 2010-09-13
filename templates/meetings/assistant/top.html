@@ -34,19 +34,19 @@
 
 {% block meeting_assistant_navigation %}
     {% if top.next_open %}
-        <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
     {% endif %}
     {% if top.previous_open %}
-        <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
     {% endif %}
     {% if top.next %}
-        <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top }})</a>
     {% endif %}
     {% if top.previous %}
-        <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
     {% endif %}
     {% if last_top %}
-        <a href="{% url ecs.core.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
     {% endif %}
     {{ block.super }}
 {% endblock %}

@@ -16,10 +16,12 @@ from ecs.mediaserver.models.DocumentModel import PdfDocument
 class DocumentProvider(object):
     '''
     classdocs
+
     '''
     renderer = Renderer() 
     
     def __init__(self):
+        
         self.render_memcache = VolatileCache()
         self.render_diskcache = DiskCache()
         self.doc_diskcache = DiskCache()
@@ -47,6 +49,10 @@ class DocumentProvider(object):
         if try_doc_diskcache:
             filelike = self.doc_diskcache.fetch(document);
                         
+<<<<<<< local
+        self.
+=======
+>>>>>>> other
         if not filelike and try_vault:
             filelike = self.vault.get(document.cacheID())
             document.setData(filelike.read())

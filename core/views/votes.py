@@ -9,9 +9,11 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpRespons
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
-from ecs.core.views.utils import render, render_pdf, pdf_response
-from ecs.core.models import Meeting, TimetableEntry, Submission, Vote, Document
-from ecs.core.forms.meetings import MeetingForm, SubmissionSchedulingForm
+from ecs.utils.viewutils import render, render_pdf, pdf_response
+from ecs.core.models import Submission, Vote
+from ecs.meetings.models import Meeting, TimetableEntry
+from ecs.documents.models import Document
+from ecs.meetings.forms import MeetingForm, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 

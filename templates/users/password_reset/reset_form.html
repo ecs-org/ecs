@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block content %}
+<h2>Passwort Ändern</h2>
+<form action="" method="post">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" value="Passwort Ändern" />
+</form>
+{% endblock %}
