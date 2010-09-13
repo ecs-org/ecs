@@ -1,0 +1,15 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block content %}
+
+{% with profile_user.get_profile as profile %}
+<h2>{{ profile_user }}</h2>
+{% if profile.approved_by_office %}
+    <a href="{% url ecs.users.views.change_password %}">Passwort Ändern</a>
+{% endif %}
+{% include "users/base_profile.inc" %}
+{% endwith %}
+
+{% endblock %}

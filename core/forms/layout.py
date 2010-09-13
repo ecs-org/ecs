@@ -22,18 +22,23 @@ SUBMISSION_FORM_TABS = (
     ]),
     (u'Antragsteller', [
         (u'Antragsteller', [
-            'submitter_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
+            'submitter_contact_gender', 'submitter_contact_first_name', 'submitter_contact_last_name',
+            'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
             'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
         ]),
     ]),
     (u'Sponsor', [
         (u'Sponsor', [
-            'sponsor_name', 'sponsor_contactname', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+            'sponsor_name', 
+            'sponsor_contact_gender', 'sponsor_contact_first_name', 'sponsor_contact_last_name',
+            'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
             'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
             'invoice_differs_from_sponsor',
         ]),
         (u'Rechnungsempfänger', [
-            'invoice_name', 'invoice_contactname', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
+            'invoice_name', 
+            'invoice_contact_gender', 'invoice_contact_first_name', 'invoice_contact_last_name',
+            'invoice_address1', 'invoice_address2', 'invoice_zip_code', 
             'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
         ]),

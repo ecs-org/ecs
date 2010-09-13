@@ -35,7 +35,6 @@ class DocStash(models.Model):
     key = models.CharField(max_length=41, primary_key=True)
     group = models.CharField(max_length=120, db_index=True, null=True)
     current_version = models.IntegerField(default=-1)
-    deleted = models.BooleanField(default=False)
     # FIXME: owner should not be nullable
     owner = models.ForeignKey(User, null=True)
 
@@ -43,6 +42,9 @@ class DocStash(models.Model):
         if not self.key:
             self.key = uuid.uuid4().hex
         super(DocStash, self).save(*args, **kwargs)
+        
+    def delete(self):
+        self._deleted = True
         
     def _get_current_attribute(self, name, default=None):
         if not hasattr(self, '_current_data'):
@@ -64,9 +66,6 @@ class DocStash(models.Model):
     def modtime(self):
         return self._get_current_attribute('modtime', None)
         
-    def delete(self):
-        self.deleted = True
-
     def transaction(self):
         return TransactionContextManager(self)
         
@@ -85,7 +84,7 @@ class DocStash(models.Model):
         if self._transaction.is_dirty():
             # the following update query should be atomic (with Transaction Isolation Level "Read committed" or better)
             # it serves as a guard against race conditions:
-            if not DocStash.objects.filter(key=self.key, current_version=self.current_version).update(current_version=models.F('current_version') + 1, deleted=self.deleted):
+            if not DocStash.objects.filter(key=self.key, current_version=self.current_version).update(current_version=models.F('current_version') + 1):
                 raise ConcurrentModification()
             else:
                 self.current_version += 1
@@ -93,6 +92,9 @@ class DocStash(models.Model):
                 if hasattr(self, '_current_data'):
                     del self._current_data
         del self._transaction
+        if getattr(self, '_deleted', False):
+            super(DocStash, self).delete()
+
     
     @_transaction_required
     def rollback_transaction(self):

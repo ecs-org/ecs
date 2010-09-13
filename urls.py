@@ -1,7 +1,6 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.views import login
 from django.views.static import serve
 from django.views.generic.simple import direct_to_template
 from ecs.utils import forceauth
@@ -10,13 +9,11 @@ import django
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
+    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
 
     url(r'^core/', include('core.urls')),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docstash/', include('docstash.urls')),
-    url(r'^accounts/login/$', forceauth.exempt(login), {'template_name': 'login.html'}),
-    url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
@@ -30,6 +27,9 @@ urlpatterns = patterns('',
     url(r'^messages/', include('ecs.messages.urls')),
     url(r'^billing/', include('ecs.billing.urls')),
     url(r'^help/', include('ecs.help.urls')),
+    url(r'^', include('ecs.users.urls')),
+    url(r'^', include('ecs.documents.urls')),
+    url(r'^', include('ecs.meetings.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^trigger500/$', lambda request: 1/0),
@@ -37,5 +37,7 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls')),
     url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
+    
+    url(r'^i18n/', include('django.conf.urls.i18n')),
 )
 

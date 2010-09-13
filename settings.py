@@ -52,7 +52,8 @@ CARROT_BACKEND = "ghettoq.taproot.Database"
 #CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
-    'ecs.core.task_queue',
+    'ecs.meetings.task_queue',
+    'ecs.documents.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )
@@ -206,6 +207,18 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
+# workaround: we can not use the django gettext function in the settings
+# because it depends on the settings.
+gettext = lambda s: s
+
+# declare supported languages for i18n. English is the internal project language.
+# We do not want to expose our internal denglish to the end-user, so disable english
+# in the settings
+LANGUAGES = (
+    #('en', gettext('English')),
+    ('de', gettext('German')),
+)
+
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static')
@@ -248,10 +261,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'reversion.middleware.RevisionMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
-    'ecs.core.middleware.SingleLogin',    # deactivate previous user sessions on login
+    'ecs.users.middleware.SingleLogin',    # deactivate previous user sessions on login
     'ecs.utils.forceauth.ForceAuth',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
@@ -275,6 +290,7 @@ INSTALLED_APPS = (
     'django_nose',
     'djcelery',
     'ghettoq', 
+    'reversion',
 
     'ecs.utils.countries',
     'ecs.utils.hashauth',
@@ -299,6 +315,9 @@ INSTALLED_APPS = (
     'ecs.billing',
     'ecs.tracking',
     'ecs.help',
+    'ecs.users',
+    'ecs.documents',
+    'ecs.meetings',
 )
 
 
@@ -313,7 +332,7 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
 # model that gets connected to contrib.auth model
-AUTH_PROFILE_MODULE = 'core.UserProfile'
+AUTH_PROFILE_MODULE = 'users.UserProfile'
 
 # filestore is now in root dir (one below source)
 FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
@@ -331,9 +350,14 @@ COMPRESS_JS_FILTERS = []
 # pdf-as settings
 PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
 
-SESSION_COOKIE_AGE = 1800                # logout after 30 minutes of inactivity
+SESSION_COOKIE_AGE = 2700                # logout after 45 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of browser
 
 # FIXME: describe where and how this is used; settings.py needs documentation on every setting
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
+
+DEFAULT_USER_GROUPS = ('Presenter',)
+REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
+PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
+LOGIN_REDIRECT_URL = '/dashboard/'

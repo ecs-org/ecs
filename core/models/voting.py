@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+
+import reversion
+
 from django.db import models
+
 
 VOTE_RESULT_CHOICES = (
     ('1', u'1 Positiv'),
@@ -13,9 +17,10 @@ VOTE_RESULT_CHOICES = (
     #('5c', u'5c Lokale EK'),
 )
 
+
 class Vote(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='votes')
-    top = models.OneToOneField('core.TimetableEntry', related_name='vote', null=True)
+    top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=u'Kommentar')
@@ -59,4 +64,7 @@ class Vote(models.Model):
     @property
     def activates(self):
         return self.result in ('1', '1a')
+
+reversion.register(Vote)
+
     

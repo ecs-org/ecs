@@ -4,7 +4,7 @@
         <h3><span class="ecnr">{{ submission.ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
             <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
-             | <a href="{% url ecs.core.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
+             | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
              <!--| <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>-->
              {% with submission.get_most_recent_form as submission_form %}
                  {% if submission_form %}
@@ -39,7 +39,7 @@
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}
             {% if meetings %}
-                <div class="info">Sitzungen: {% for meeting in meetings %}<a href="{% url ecs.core.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">Sitzungen: {% for meeting in meetings %}<a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
     </li>

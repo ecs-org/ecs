@@ -97,3 +97,8 @@ def send_mail(subject, message, from_email, recipient_list, message_html=None, a
         sentids += messageid
     return sentids
  
+def send_html_email(subject, message_html, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, attachments=None, **kwargs):
+    from ecs.ecsmail.persil import whitewash
+    message = whitewash(message_html)
+    kwargs.setdefault('fail_silently', False)
+    return send_mail(subject, message, from_email, recipient_list, message_html, attachments=attachments, **kwargs)
