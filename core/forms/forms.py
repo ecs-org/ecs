@@ -5,7 +5,9 @@ from django.forms.models import BaseModelFormSet, inlineformset_factory, modelfo
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.safestring import mark_safe
 
-from ecs.core.models import Document, Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
+
+from ecs.documents.models import Document
+from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
@@ -94,7 +96,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     
     class Meta:
         model = Document
-        exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name')
+        exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
 
 class BaseDocumentFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
@@ -139,7 +141,9 @@ RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureF
 class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Investigator
-        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 'name', 'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
+        fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 
+            'contact_gender', 'contact_first_name', 'contact_last_name',
+            'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):

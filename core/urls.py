@@ -12,14 +12,9 @@ urlpatterns = patterns(
     url(r'^notifications/$', 'ecs.core.views.notification_list'),
     url(r'^submission_data_for_notification/$', 'ecs.core.views.submission_data_for_notification'),
 
-    url(r'^document/(?P<document_pk>\d+)/download/$', 'ecs.core.views.download_document'),
-    url(r'^document/(?P<document_pk>\d+)/search/$', 'ecs.core.views.document_search'),
-    url(r'^documents/search/$', 'ecs.core.views.document_search'),
-
     url(r'^submission/(?P<submission_pk>\d+)/edit/', 'ecs.core.views.edit_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/start_workflow/', 'ecs.core.views.start_workflow'),
     url(r'^submission/(?P<submission_pk>\d+)/copy_form/', 'ecs.core.views.copy_latest_submission_form'),
-    url(r'^submission/(?P<submission_pk>\d+)/schedule/', 'ecs.core.views.schedule_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/messages/send/', 'ecs.messages.views.send_message'),
     url(r'^submission/(?P<submission_pk>\d+)/export/', 'ecs.core.views.export_submission'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.view_submission_form'),
@@ -37,32 +32,6 @@ urlpatterns = patterns(
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
     url(r'^submission_form/(?P<old_submission_form_pk>\d+)/(?P<new_submission_form_pk>\d+)/diff/$', 'ecs.core.views.diff'),
     
-    url(r'^users/by_medical_category/$', 'ecs.core.views.users_by_medical_category'),
-    
-    url(r'^meeting/new/$', 'ecs.core.views.create_meeting'),
-    #url(r'^meeting/(?P<meeting_pk>\d+)/$', 'ecs.core.views.view_meeting'),
-    url(r'^meetings/$', 'ecs.core.views.meeting_list'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/editor/$', 'ecs.core.views.timetable_editor'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/particiaptions/$', 'ecs.core.views.participation_editor'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/$', 'ecs.core.views.medical_categories'),
-    #url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/(?P<category_pk>\d+)/$', 'ecs.core.views.medical_categories'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/$', 'ecs.core.views.optimize_timetable'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/new/$', 'ecs.core.views.add_timetable_entry'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/add/$', 'ecs.core.views.add_free_timetable_entry'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'ecs.core.views.move_timetable_entry'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'ecs.core.views.remove_timetable_entry'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'ecs.core.views.update_timetable_entry'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'ecs.core.views.meetings.edit_user_constraints'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/$', 'ecs.core.views.meeting_assistant'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/clear/$', 'ecs.core.views.meeting_assistant_clear'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/start/$', 'ecs.core.views.meeting_assistant_start'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/stop/$', 'ecs.core.views.meeting_assistant_stop'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/(?P<top_pk>\d+)/$', 'ecs.core.views.meeting_assistant_top'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/quickjump/$', 'ecs.core.views.meeting_assistant_quickjump'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/agenda_pdf/$', 'ecs.core.views.agenda_pdf'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetable_pdf/$', 'ecs.core.views.timetable_pdf'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/agenda_htmlemail/$', 'ecs.core.views.agenda_htmlemail'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'ecs.core.views.timetable_htmlemailpart'),
     url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_pdf/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_sign'),
@@ -70,7 +39,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/error$', 'ecs.core.views.vote_sign_error'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive$', 'ecs.core.views.vote_sign_receive'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive;jsessionid=(?P<jsessionid>[^?]*)$', 'ecs.core.views.vote_sign_receive'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'ecs.core.views.protocol_pdf'),
-
+    
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
+
 )
