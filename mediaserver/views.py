@@ -22,6 +22,7 @@ def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
     print 'docshot request: %s, %s, %s, %s, %s' % (uuid, tiles_x, tiles_y, width, pagenr)
     
     f = docprovider.fetchDocshot(Docshot(tiles_x, tiles_y, width, pagenr, uuid=uuid))
+    
     return HttpResponse(f.read(), mimetype='image/png')
    
 def upload_pdf(request):
