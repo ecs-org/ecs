@@ -170,6 +170,11 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 xlwt:inst:all:pypi:xlwt
 
 django-reversion:inst:all:pypi:django-reversion
+
+#file encryption
+# win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
+# gnupg:req:apt:apt-get:gnupg
+# gnupg:req:mac:macports:gnupg
 """
 
 
