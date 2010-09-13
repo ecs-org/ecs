@@ -5,6 +5,17 @@ from ecs.documents.models import Document, Page
 
 
 @task()
+def upload_to_storagevault(document_pk=None, **kwargs):
+    try:
+        doc = Document.objects.get(pk=document_pk)
+    except Document.DoesNotExist:
+        logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
+        return
+    vault = StorageVault()
+    vault.add(doc.uuid, doc.file.path)
+    # TODO: prime mediaserver
+
+@task()
 def extract_and_index_pdf_text(document_pk=None, **kwargs):
     logger = extract_and_index_pdf_text.get_logger(**kwargs)
     logger.debug("indexing doc with pk %s" % document_pk)

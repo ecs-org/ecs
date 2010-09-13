@@ -30,15 +30,10 @@ class DocumentType(models.Model):
     def __unicode__(self):
         return self.name
 
-def storing_document_to(instance=None, filename=None):
-    # the file path is derived from the document uuid. This should be
-    # random enough, so we do not have collisions in the next gogolplex years
-    dirs = list(instance.uuid_document[:6]) + [instance.uuid_document]
-    return os.path.join(settings.FILESTORE, *dirs)
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
-    target_name = os.path.normpath(os.path.join(settings.FILESTORE, 'incoming', instance.uuid_document, instance.original_file_name))
+    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid_document, instance.original_file_name))
     #print("incoming document to: original file name %s , target_name %s " % (instance.original_file_name, target_name))
     return target_name
     
@@ -66,17 +61,6 @@ class DocumentFileStorage(FileSystemStorage):
         return smart_str(os.path.normpath(name))
 
 
-class DocumentManager(models.Manager):
-    def create_from_buffer(self, buf, **kwargs):
-        tmp = tempfile.NamedTemporaryFile()
-        tmp.write(buf)
-        tmp.flush()
-        tmp.seek(0)
-        kwargs.setdefault('date', datetime.datetime.now())
-        doc = self.create(file=File(tmp), **kwargs)
-        tmp.close()
-        return doc
-
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36)
     hash = models.SlugField(max_length=32)
@@ -94,30 +78,11 @@ class Document(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
     
-    objects = DocumentManager()
-    
     def __unicode__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
-
-    def copy_to(self, upload_to):
-        ''' temporary helper, takes path returned from function upload_to(object, originalfilename), and copies it there '''
-        dir=os.path.abspath(upload_to(self,self.file.name))
-        if not os.path.exists(dir):
-            os.makedirs(dir)
-        tmp = tempfile.NamedTemporaryFile(delete=False, dir=dir, suffix=os.path.splitext(self.file.name)[1])
-        filename = tmp.name
-        print("copying to %s" % filename)
-        buf = ''
-        self.file.seek(0)
-        while True:
-            buf = self.file.read(8192)
-            if not buf: break
-            tmp.write(buf)
-        tmp.close()
-        return filename
 
     def save(self, **kwargs):
         if not self.file:
@@ -130,18 +95,7 @@ class Document(models.Model):
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
                 if not pdf_isvalid(self.file):
                     raise ValidationError('no valid pdf')			
-      
-            if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
-                if getattr(settings, 'ECS_AUTO_PDF_BARCODE', True): 
-                    # FIXME: call stampbarcode only if we have pdftk on the platform (currently no mac)
-                    # FIXME: we dont call stampbarcode anymore, because barcode stamping will be done later, just before downloading, which is not happening but thats the idea ;-)
-                    """
-                    newfile = File(tempfile.NamedTemporaryFile(dir=os.path.join(settings.FILESTORE)))
-                    pdf_barcodestamp(self.file, newfile, self.uuid_document)
-                    self.file.close()
-                    self.file = newfile
-                    """
-                    
+
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
             self.file.seek(0)            
@@ -154,7 +108,7 @@ class Document(models.Model):
 
         if self.mimetype == 'application/pdf':
             self.pages = pdf_pages(self.file) # calculate number of pages
-
+                    
         return super(Document, self).save(**kwargs)
   
 reversion.register(Document)
@@ -170,15 +124,21 @@ reversion.register(Page)
 
 def _post_doc_save(sender, **kwargs):
     from ecs.documents.task_queue import extract_and_index_pdf_text
-    from ecs.mediaserver.task_queue import cache_and_render
+    from ecs.documents.task_queue import upload_to_storage_vault
+    
     doc = kwargs['instance']
     doc.page_set.all().delete()
+    
     print("doc file %s , path %s, original %s" % (str(doc.file.name), str(doc.file.path), str(doc.original_file_name)))
+    
     if doc.pages and doc.mimetype == 'application/pdf':
         # FIXME: we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
         extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
-        cache_and_render.apply_async(args=[doc.pk], countdown=3)
-
+    
+    # upload it via celery to the storage vault
+    upload_to_storagevault.apply_async(args=[doc.pk], countdown=3)
+        
+        
 def _post_page_delete(sender, **kwargs):
     from haystack import site
     site.get_index(Page).remove_object(kwargs['instance'])

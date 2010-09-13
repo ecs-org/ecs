@@ -6,9 +6,6 @@ import time
 from django.http import HttpResponse, HttpResponseNotFound
 from django.conf import settings
 
-from ecs.core.models import Document
-from ecs.mediaserver.imageset import ImageSet
-from ecs.mediaserver.storage import Cache, SetData
 from ecs.utils import hashauth
 from ecs.mediaserver.documentprovider import DocumentProvider
 from ecs.mediaserver.docshot import Docshot

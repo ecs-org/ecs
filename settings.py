@@ -32,6 +32,14 @@ DATABASES['default'] = {
 }
 
 
+
+# incoming filestore is now in root dir (one below source)
+INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
+
+# StorageVault settings
+STORAGE_VAULT_OPTIONS = {'DiskBuckets.rootdir' = os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
+
+
 # mediaserver memcached(b) settings, RENDERSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
 # if set to mockcache, RENDERSTORAGE_HOST & PORT will be ignored
 # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
@@ -333,9 +341,6 @@ INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.
 
 # model that gets connected to contrib.auth model
 AUTH_PROFILE_MODULE = 'users.UserProfile'
-
-# filestore is now in root dir (one below source)
-FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-store"))
 
 # use our ecs.utils.ecs_runner as default test runner (sets a few settings related to testing and calls standard runner)
 TEST_RUNNER = 'ecs.utils.ecs_runner.EcsRunner'
