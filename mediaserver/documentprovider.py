@@ -9,42 +9,47 @@ import pickle
 
 from django.conf import settings
 from ecs.mediaserver.diskbuckets import DiskBuckets
-from ecs.mediaserver.docshot import Docshot
 from ecs.mediaserver.renderer import Renderer
 from StringIO import StringIO
+from ecs.mediaserver.models.DocumentModel import PdfDocument
 
 class DocumentProvider(object):
     '''
     classdocs
-    '''
 
+    '''
     renderer = Renderer() 
     
     def __init__(self):
+        
         self.render_memcache = VolatileCache()
         self.render_diskcache = DiskCache()
         self.doc_diskcache = DiskCache()
         self.vault = DiskBuckets("/tmp/diskbucket", allow_mkrootdir=True)
 
-    def store(self, cacheable, use_render_memcache=False, use_render_diskcache=False, use_doc_diskcache=False, use_vault=False):
+    def storeDocshot(self, docshotModel, use_render_memcache=False, use_render_diskcache=False, use_doc_diskcache=False, use_vault=False):
         if use_render_memcache:
-            self.render_memcache.store(cacheable);
+            self.render_memcache.store(docshotModel);
         if use_render_diskcache:
-            self.render_diskcache.store(cacheable);
+            self.render_diskcache.store(docshotModel);
         if use_doc_diskcache:
-            self.doc_diskcache.store(cacheable);
+            self.doc_diskcache.store(docshotModel);
         if use_vault:
-            cid = cacheable.cacheID()
-            self.vault.add(cid, cacheable.getData());
+            cid = docshotModel.cacheID()
+            self.vault.add(cid, docshotModel.getData());
+            
 
-    def fetchDocument(self, document, try_doc_diskcache=True, try_vault=True):
+    def storePdfDocument(self, pdfDocModel):
+        self.vault.add(pdfDocModel.cacheID(), pdfDocModel.data);
+    
+    def fetchPdfDocument(self, document, try_doc_diskcache=True, try_vault=True):
         print "fetch"
         filelike=None
-        
             
         if try_doc_diskcache:
             filelike = self.doc_diskcache.fetch(document);
                         
+        self.
         if not filelike and try_vault:
             filelike = self.vault.get(document.cacheID())
             document.setData(filelike.read())
