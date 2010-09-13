@@ -39,7 +39,7 @@ class SerializerTest(TestCase):
             NonTestedUsedDrug.objects.create(submission_form=sf, generic_name="gn-%s" % i, preparation_form="pf-%s" % i, dosage="d-%s" % i)
         for i in range(2):
             ec = EthicsCommission.objects.create(name="ethics-commission-%s" % i, uuid=uuid.uuid4().hex)
-            investigator = Investigator.objects.create(submission_form=sf, main=bool(i), ethics_commission=ec, name="investigator-%s" % i, subject_count=3+i)
+            investigator = Investigator.objects.create(submission_form=sf, main=bool(i), ethics_commission=ec, contact_last_name="investigator-%s" % i, subject_count=3+i)
             for j in range(2):
                 investigator.employees.create(sex='m', surname='s-%s-%s' % (i, j), firstname='s-%s-%s' % (i, j))
         return sf
@@ -57,7 +57,7 @@ class SerializerTest(TestCase):
         self.failUnlessEqual(get_measure_set(a), get_measure_set(b))
         
         get_employee_set = lambda x: frozenset((e.sex, e.firstname, e.surname) for e in x.employees.all())
-        get_investigator_set = lambda x: set((i.name, i.main, i.ethics_commission, i.subject_count, get_employee_set(i)) for i in x.investigators.all())
+        get_investigator_set = lambda x: set((i.contact_last_name, i.main, i.ethics_commission, i.subject_count, get_employee_set(i)) for i in x.investigators.all())
         self.failUnlessEqual(get_investigator_set(a), get_investigator_set(b))
         
         get_fpc_set = lambda x: set((fpc.name,) for fpc in x.foreignparticipatingcenter_set.all())
