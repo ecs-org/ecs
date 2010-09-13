@@ -5,6 +5,7 @@ from django.utils import simplejson
 from django.db import models
 from django.core.files.base import File, ContentFile
 from django.utils.datastructures import SortedDict
+from django.contrib.contenttypes import generic
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
@@ -144,6 +145,9 @@ class ModelSerializer(object):
                 val = f
             elif isinstance(field, models.ForeignKey):
                 val = load_model_instance(field.rel.to, val, zf)
+            elif isinstance(field, generic.GenericRelation):
+                val = self.load_many(field.rel.to, val, zf, commit=False)
+                deferr = True
         elif isinstance(val, list):
             rel_model = getattr(self.model, fieldname).related.model
             val = self.load_many(rel_model, val, zf, commit=False)
