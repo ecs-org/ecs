@@ -48,6 +48,7 @@ from fabric.api import local, env
 from deployment import package_merge
 from deployment.utils import install_upstart, apache_setup
 
+
 # sprint 7 sources
 sprint7_bundle = """
 
@@ -92,7 +93,6 @@ django-nose:inst:all:pypi:django-nose
 #http://github.com/jbalogh/django-nose/tarball/master
 
 #debugging
-werkzeug:inst:all:pypi:werkzeug
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 # did throw errors in own code itself, instead of doing its job of logging errors django-db-log:inst:all:pypi:django-db-log
 
@@ -125,8 +125,6 @@ sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
 billard:inst:all:pypi:billiard
 django-picklefield:inst:all:pypi:django-picklefield
-celery:req:apt:apt-get:rabbitmq-server
-celery:req:mac:macports:rabbitmq-server
 celery:inst:all:pypi:celery
 # use ghettoq if development instead rabbitmq
 ghettoq:inst:all:pypi:ghettoq
@@ -141,11 +139,13 @@ imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.3-Q16-windows.zip:unzipflatmain:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
-memcachedb:req:apt:apt-get:memcachedb
-# FIXME: there is no memcachedb macport yet
-python-memcached:req:mac:macports:memcached
+
+memcached:req:apt:apt-get:memcached
+memcached:req:mac:macports:memcached
+memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatmain:memcached.exe
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
+
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
@@ -172,6 +172,7 @@ xlwt:inst:all:pypi:xlwt
 django-reversion:inst:all:pypi:django-reversion
 """
 
+
 # software quality testing packages
 quality_packages= """
 # nose and django-nose is in main app
@@ -186,8 +187,12 @@ pylint:inst:all:pypi:pylint
 """
 
 
-# In addition to application packages, packages needed or nice to have for development
+# packages needed or nice to have for development
 developer_packages=  """
+# if you want to have real queuing, you need rabbitmq
+celery:req:apt:apt-get:rabbitmq-server
+celery:req:mac:macports:rabbitmq-server
+
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
 mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
@@ -196,12 +201,6 @@ mutt:req:mac:macports:mutt
 # interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
-
-# sphinx for documentation creation
-docutils:inst:all:pypi:docutils
-Jinja2:inst:all:pypi:Jinja2
-Pygments:inst:all:pypi:Pygments
-sphinx:inst:all:pypi:sphinx
 
 # fudge:inst:all:pypi:fudge
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
@@ -229,6 +228,8 @@ modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
 solr-jetty:req:apt:apt-get:solr-jetty
+celery:req:apt:apt-get:rabbitmq-server
+memcached:req:apt:apt-get:memcached
 """
 
 """
@@ -240,14 +241,13 @@ a2enmod wsgi #should be automatic active because is extra package
  WSGIPythonHome /home/ecsdev/baseline
  # create a baseline python environment (this is a minimal virtual env)
  ./bootstrap.py --baseline /home/ecsdev/baseline
-
 # needs apache config snippet (see apache.conf)
 # needs apache wsgi snippet (see main.wsgi)
 # these should not be generated inside the sourcedir, because main.wsgi is restarted if file is touched
-
 # needs ecs-main application celeryd upstart.conf
 # needs mediaserver application celeryd upstart.conf
 """
+
 
 # Environments
 ###############
