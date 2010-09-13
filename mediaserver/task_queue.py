@@ -1,19 +1,20 @@
 from celery.decorators import task
-from ecs.core.models import Document
+# FIXME/mediaserver: from ecs.documents.models import Document
 
-from ecs.mediaserver.storage import Cache
-from ecs.mediaserver.renderer import Renderer
-from ecs.mediaserver.imageset import ImageSet
+# FIXME/mediaserver: from ecs.mediaserver.storage import Cache
+# FIXME/mediaserver: from ecs.mediaserver.renderer import Renderer
+# FIXME/mediaserver: from ecs.mediaserver.imageset import ImageSet
 
 @task()
 def cache_and_render(document_pk, **kwargs):
+    return # FIXME/mediaserver
     logger = cache_and_render.get_logger(**kwargs)
     try:
         document = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
         logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
         return False
-
+    
     image_set = ImageSet(document_pk)
     logger.info("Imageset %s" % repr(image_set))
     if image_set.store('doc save', document.file.name, document.pages) is False:
