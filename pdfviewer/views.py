@@ -8,8 +8,8 @@ from json import JSONEncoder, JSONDecoder
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
-from ecs.mediaserver.imageset import ImageSet
-from ecs.mediaserver.storage import Cache, SetData
+# FIXME/mediaserver: from ecs.mediaserver.imageset import ImageSet
+# FIXME/mediaserver: from ecs.mediaserver.storage import Cache, SetData
 from ecs.pdfviewer.models import Annotation
 
 

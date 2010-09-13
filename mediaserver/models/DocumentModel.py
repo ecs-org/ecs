@@ -20,6 +20,9 @@ class PdfDocumentModel(models.Model):
     pages = models.IntegerField(null=True, blank=True)
     lastaccess = models.DateTimeField()
     
+    class Meta:
+        app_label = 'mediaserver'
+    
     def save(self, filelike, **kwargs):
         if not pdf_isvalid(self.file):
             raise ValidationError("Invalid Pdf")
@@ -47,6 +50,7 @@ class PdfDocumentModel(models.Model):
 
     def cacheID(self):
         return self.uuid
+
     
 class DocshotModel(PdfDocumentModel):
     '''
@@ -57,6 +61,9 @@ class DocshotModel(PdfDocumentModel):
     width=models.IntegerField(null=True, blank=True)
     pagenr=models.IntegerField(null=True, blank=True)
     
+    class Meta:
+        app_label = 'mediaserver'
+    
     def cacheID(self):
         return "docshot_%s_%s_%s_%s_%s" % (super(DocshotModel, self).cacheID(), self.tiles_x, self.tiles_y ,self.width,self.pagenr)  
-
+        
