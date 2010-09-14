@@ -144,7 +144,7 @@ if platform.node() == "ecsdev.ep3.at":
         FROM_DOMAIN = "s.ecsdev.ep3.at"
     elif user == "testecs":
         LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.189']
-        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8843} # listen here 
+        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': int(os.environ.get('LAMSON_RECEIVER_PORT', 8843))} # listen here 
         FROM_DOMAIN = "test.ecsdev.ep3.at"
 
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
@@ -380,6 +380,4 @@ if 'test' in sys.argv or 'runserver' in sys.argv:
                 ecsmail.terminate()
                 os.remove('ecsmail.lock')
             atexit.register(cleanup)
-    
-    
-    
+        
