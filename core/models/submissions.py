@@ -424,6 +424,8 @@ class SubmissionForm(models.Model):
         except Investigator.DoesNotExist:
             return None
 
+reversion.register(SubmissionForm)
+
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
@@ -467,7 +469,6 @@ def _post_submission_form_save(**kwargs):
 
         message = thread.add_message(User.objects.get(username='root'), text=text)
 
-reversion.register(SubmissionForm)
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
 class Investigator(models.Model):
@@ -489,6 +490,7 @@ class Investigator(models.Model):
     class Meta:
         app_label = 'core'
 
+reversion.register(Investigator)
 
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
@@ -516,6 +518,7 @@ class InvestigatorEmployee(models.Model):
     class Meta:
         app_label = 'core'
 
+reversion.register(InvestigatorEmployee)
 
 # 6.1 + 6.2
 class Measure(models.Model):
@@ -531,6 +534,8 @@ class Measure(models.Model):
     class Meta:
         app_label = 'core'
 
+reversion.register(Measure)
+
 # 3b
 class NonTestedUsedDrug(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -542,6 +547,8 @@ class NonTestedUsedDrug(models.Model):
     class Meta:
         app_label = 'core'
 
+reversion.register(NonTestedUsedDrug)
+
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -551,4 +558,4 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
 
-
+reversion.register(ForeignParticipatingCenter)

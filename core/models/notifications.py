@@ -27,6 +27,8 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.name
 
+reversion.register(NotificationType)
+
 class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
     investigators = models.ManyToManyField('core.Investigator', related_name='notifications')
@@ -61,7 +63,6 @@ class ReportNotification(Notification):
         abstract = True
 
 reversion.register(ReportNotification)
-
 
 class CompletionReportNotification(ReportNotification):
     study_aborted = models.BooleanField()
