@@ -253,6 +253,7 @@ def auth_user_developers():
         ('mvw', 'Marc', 'van Woerkom', 'marc.vanwoerkom@googlemail.com'),
         ('emulbreh', u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
         ('natano', u'Martin', u'Natano', 'natano@natano.net'),
+        ('amir', u'amir', u'hassan', 'amir@viel-zu.org'),
     )
     
     for dev in developers:
