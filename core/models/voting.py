@@ -17,6 +17,10 @@ VOTE_RESULT_CHOICES = (
     #('5c', u'5c Lokale EK'),
 )
 
+POSITIVE_VOTE_RESULTS = ('1', '1a', '2')
+NEGATIVE_VOTE_RESULTS = ('4', '5a')
+FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
+
 
 class Vote(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='votes')
@@ -51,11 +55,11 @@ class Vote(models.Model):
         
     @property
     def positive(self):
-        return self.result in ('1', '1a', '2')
+        return self.result in POSITIVE_VOTE_RESULTS
         
     @property
     def negative(self):
-        return self.result in ('4', '5a')
+        return self.result in NEGATIVE_VOTE_RESULTS
         
     @property
     def recessed(self):

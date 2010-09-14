@@ -1,7 +1,7 @@
 # Django settings for ecs project.
 
 # root dir of project
-import os.path, platform
+import os.path, platform, sys
 PROJECT_DIR = os.path.dirname(__file__)
 
 # admins is used to send django 500, 404 and celery errror messages per email, DEBUG needs to be false for this
@@ -365,3 +365,18 @@ DEFAULT_USER_GROUPS = ('Presenter',)
 REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+if 'test' in sys.argv or 'runserver' in sys.argv:
+    import subprocess, atexit
+    if not os.path.exists('ecsmail.lock'):
+        with open('ecsmail.lock', 'w'):
+            cmd = ['python', sys.argv[0], 'ecsmail', 'log']
+            print ' '.join(cmd)
+            ecsmail = subprocess.Popen(cmd)
+            def cleanup():
+                ecsmail.terminate()
+                os.remove('ecsmail.lock')
+            atexit.register(cleanup)
+    
+    
+    

@@ -13,7 +13,10 @@ def upload_to_storagevault(document_pk=None, **kwargs):
         return
     vault = getVault()
     with open(doc.file.path,"rb") as f:
-        vault.add(doc.uuid_document, f)
+        try:
+            vault.add(doc.uuid_document, f)
+        except KeyError:
+            pass # FIXME/mediaserver
 
     # TODO: prime mediaserver
     return True
