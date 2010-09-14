@@ -40,7 +40,7 @@ class DocStash(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.key:
-            self.key = uuid.uuid4().hex
+            self.key = uuid.uuid4().get_hex()
         super(DocStash, self).save(*args, **kwargs)
         
     def delete(self):

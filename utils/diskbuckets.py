@@ -8,8 +8,8 @@ import os
 
 class DiskBuckets(object):
     '''
-    stores binary data associated to a uuid into a directory tree 
-    which is directly derived from the uuid. 
+    stores binary data associated to a identifier into a directory tree 
+    which is directly derived from the identifier. 
     '''
     DEFAULT_MKDIR_MODE=0777
     
@@ -24,36 +24,39 @@ class DiskBuckets(object):
         self.allow_mkrootdir = allow_mkrootdir
         self._prepare_root_dir()
 
-    def add(self, uuid, filelike):
-        print "uuid: ", uuid
-        if not self.exists(uuid):
+    def add(self, identifier, filelike):
+        print "identifier: ", identifier
+        if not self.exists(identifier):
             
-            path = self._generate_bucket_path(uuid)
+            path = self._generate_path(identifier)
             print "path:", path
             os.makedirs(os.path.dirname(path), DiskBuckets.DEFAULT_MKDIR_MODE)
-            open(path, "wb").write(filelike)
+            if hasattr(filelike, "read"):
+                open(path, "wb").write(filelike.read())
+            else:
+                open(path, "wb").write(filelike)
         else:
-            raise KeyError('Entry already exists: ' + uuid)  
+            raise KeyError('Entry already exists: ' + identifier)  
 
-    def get(self, uuid):
-        if self.exists(uuid):
-            return open(self._generate_bucket_path(uuid), "r")
+    def get(self, identifier):
+        if self.exists(identifier):
+            return open(self._generate_path(identifier), "rb")
         else: 
-            raise KeyError('Entry not found: ' + uuid)
+            raise KeyError('Entry not found: ' + identifier)
 
-    def exists(self, uuid):
-        path = self._generate_bucket_path(uuid) 
+    def exists(self, identifier):
+        path = self._generate_path(identifier) 
         return os.path.isfile(path) and not os.path.islink(path);
-
+            
     def _prepare_root_dir(self):
         if self.allow_mkrootdir and not os.path.isdir(self.root_dir):
             os.makedirs(self.root_dir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
-    def _generate_bucket_path(self, uuid):
+    def _generate_path(self, identifier):
         path=''
-        for token in uuid[:self.maxdepth-1]: 
+        for token in identifier[:self.maxdepth-1]: 
             path = os.path.join(path, token)
-        result =  os.path.join(self.root_dir, path, uuid)
+        result =  os.path.join(self.root_dir, path, identifier)
         print "res: ",result
         return result
 

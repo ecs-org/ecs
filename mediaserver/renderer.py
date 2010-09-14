@@ -1,5 +1,5 @@
 import subprocess
-from ecs.mediaserver.models.DocumentModel import DocshotModel
+from ecs.mediaserver.models.DocumentModel import MediaBlob, Docshot
 
 class Renderer(object):
     def renderPDFMontage(self, uuid, filelike, width, tiles_x, tiles_y, aspect_ratio=1.41428, dpi=72, depth=8):
@@ -22,33 +22,24 @@ class Renderer(object):
         if popen.returncode != 0:
             raise IOError('montage returned error code % i , stderr: % s' % (popen.returncode, stderr))
 
-        docshots = []
         pagenr = 0
         for png_data in self._split_raw_pngstream(raw_pngstream):
-            docshots.append(DocshotModel(tiles_x, tiles_y, width, pagenr, uuid=uuid, data=png_data))
             pagenr = pagenr + 1
-
-        return docshots
+            yield(Docshot(MediaBlob(uuid=uuid), tiles_x, tiles_y, width, pagenr), png_data)
+            
 
     def _split_raw_pngstream(self, raw_pngstream):
         import binascii
         header = binascii.a2b_hex('89504E470D0A1A0A')
-        offsets = []
-        last_offset = 0
-        raw_pngs = []
-    
-        while True:
+        offset = last_offset = 0
+        
+        while offset != -1:
             offset = raw_pngstream.find(header, last_offset)
             if offset == -1:
-                break
-            offsets.append(offset)
-            last_offset = offset + 1
+                yield (raw_pngstream[last_offset:])
+            else:
+                start = last_offset
+                end = offset
+                last_offset = offset
+                yield (raw_pngstream[start:end])
     
-        for i in xrange(len(offsets) - 1):
-            start = offsets[i]
-            end = offsets[i+1]
-            raw_pngs.append(raw_pngstream[start:end])
-    
-        raw_pngs.append(raw_pngstream[offsets[-1]:])
-    
-        return raw_pngs 

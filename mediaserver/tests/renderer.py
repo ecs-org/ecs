@@ -6,8 +6,6 @@ from django.core import management
 from django.db import models
 from django.test import TestCase
 
-from ecs.mediaserver.imageset import ImageSet
-from ecs.mediaserver.storage import Cache
 
 class RendererTest(TestCase):
     pdf_name = 'test-pdf-14-seitig.pdf'

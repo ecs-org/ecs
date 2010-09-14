@@ -1,8 +1,8 @@
 from celery.decorators import task
 from haystack import site
 from ecs.utils.pdfutils import pdftotext
+from ecs.utils.storagevault import getVault
 from ecs.documents.models import Document, Page
-
 
 @task()
 def upload_to_storagevault(document_pk=None, **kwargs):
@@ -11,10 +11,13 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     except Document.DoesNotExist:
         logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
         return
-    vault = StorageVault()
-    vault.add(doc.uuid, doc.file.path)
-    # TODO: prime mediaserver
+    vault = getVault()
+    with open(doc.file.path,"rb") as f:
+        vault.add(doc.uuid_document, f)
 
+    # TODO: prime mediaserver
+    return True
+    
 @task()
 def extract_and_index_pdf_text(document_pk=None, **kwargs):
     logger = extract_and_index_pdf_text.get_logger(**kwargs)

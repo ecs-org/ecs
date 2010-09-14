@@ -58,13 +58,6 @@ def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page
     outputnameing follows ghostscript conventions. The general form supported is:
     "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
     For more information, please refer to documentation on the C printf format specifications.
-    .. code-block::
-    # outputnaming example
-    import os, tempfile, uuid
-    tempdir = tempfile.mkdtemp()
-    uuid = uuid.uuid4()
-    zoom = "1x1"
-    outputnaming = os.path.join(tempdir, "_".join((str(uuid), zoom, '%%04d.png')))
     """
 
     cmd = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',

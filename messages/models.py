@@ -167,7 +167,7 @@ class Message(models.Model):
                             choices=DELIVERY_STATES, default='new',
                             db_index=True)
     
-    uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().hex, db_index=True)
+    uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().get_hex(), db_index=True)
     
     objects = MessageManager()
     

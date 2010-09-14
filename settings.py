@@ -31,21 +31,20 @@ DATABASES['default'] = {
     'PORT': '',
 }
 
-
-
 # incoming filestore is now in root dir (one below source)
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
 # StorageVault settings
-STORAGE_VAULT_OPTIONS = {'DiskBuckets.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
+STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
+STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
 
-
-# mediaserver memcached(b) settings, RENDERSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
-# if set to mockcache, RENDERSTORAGE_HOST & PORT will be ignored
+# mediaserver memcached(b) settings, RENDER_MEMORYSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
+# if set to mockcache, RENDER_MEMORYSTORAGE_HOST & PORT will be ignored
 # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-RENDERSTORAGE_LIB  = 'mockcache'
-RENDERSTORAGE_HOST = '127.0.0.1'
-RENDERSTORAGE_PORT = 21201 # port of memcachedb
+RENDER_FILESTORAGE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-mediacache"))
+RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
+RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
+RENDER_MEMORYSTORAGE_PORT = 21201 # port of memcachedb
 
 
 # celery configuration defaults

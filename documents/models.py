@@ -89,7 +89,7 @@ class Document(models.Model):
             raise ValueError('no file')
 
         if not self.uuid_document: 
-            self.uuid_document = str(uuid4()) # generate a new random uuid
+            self.uuid_document = uuid4().get_hex() # generate a new random uuid
             content_type, encoding = mimetypes.guess_type(self.file.name) # look what kind of mimetype we would guess
 
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
@@ -124,7 +124,7 @@ reversion.register(Page)
 
 def _post_doc_save(sender, **kwargs):
     from ecs.documents.task_queue import extract_and_index_pdf_text
-    from ecs.documents.task_queue import upload_to_storage_vault
+    from ecs.documents.task_queue import upload_to_storagevault
     
     doc = kwargs['instance']
     doc.page_set.all().delete()
