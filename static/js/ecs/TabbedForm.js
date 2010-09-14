@@ -35,7 +35,6 @@ ecs.TabbedForm = new Class({
     },
     autosave: function(force){
         var currentData = this.form.toQueryString();
-        console.log('start autosave ..', arguments);
         if(!this.autosaveDisabled && (force === true || (this.lastSave.data != currentData))){
             this.lastSave.timestamp = new Date();
             this.lastSave.data = currentData;

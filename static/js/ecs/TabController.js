@@ -80,7 +80,6 @@ ecs.TabGroup = new Class({
         });
     },
     setSelected: function(selected){
-        console.log('setSelected', selected, this);
         this.selected = selected;
         if(this.header){
             this.header.setClass(this.controller.options.selectedTabClass, selected);
@@ -129,14 +128,12 @@ ecs.TabController = new Class({
             }, this);
             this.tabGroups.push(new ecs.TabGroup(this, header, container, tabs));
         }, this);
-        console.log(this.tabGroups);
         this.selectTab(initialSelection || this.tabs[0], true);
     },
     onTabHeaderClick: function(event, tab){
         this.selectTab(tab);
     },
     onTabGroupHeaderClick: function(event, tabGroup){
-        console.log(arguments);
         this.selectTabGroup(tabGroup);
     },
     selectTab: function(tab, initial){
@@ -154,7 +151,6 @@ ecs.TabController = new Class({
         this.fireEvent('tabSelectionChange', tab, !!initial);
     },
     selectTabGroup: function(tabGroup, initial){
-        console.log('tabGroup', tabGroup);
         if(tabGroup === this.selectedTabGroup){
             return;
         }
