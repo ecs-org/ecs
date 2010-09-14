@@ -74,7 +74,7 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 LAMSON_BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
 LAMSON_UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
 LAMSON_TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
-LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8823} # listen here 
+LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': int(os.environ.get('LAMSON_RECEIVER_PORT', 8823))} # listen here 
 LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825} # relay to
 LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
 LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
@@ -367,8 +367,11 @@ PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
-    import subprocess, atexit
+    import subprocess, atexit, random
     if not os.path.exists('ecsmail.lock'):
+        _port = random.randint(30000, 60000)
+        LAMSON_RECEIVER_CONFIG['port'] = _port
+        os.environ['LAMSON_RECEIVER_PORT'] = str(_port)
         with open('ecsmail.lock', 'w'):
             cmd = ['python', sys.argv[0], 'ecsmail', 'log']
             print ' '.join(cmd)
