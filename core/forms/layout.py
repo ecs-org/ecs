@@ -4,6 +4,7 @@ from ecs.core.forms import NotificationForm, ProgressReportNotificationForm, Com
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
 #  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
 # )
+
 SUBMISSION_FORM_TABS = (
     (u'Eckdaten', [
         (u'Titel', ['project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted',]),
@@ -92,12 +93,6 @@ SUBMISSION_FORM_TABS = (
         (u'Zentren im Ausland', []),
     ]),
     (u'Zentrum', []),
-# disabled for sprint 4
-    # (u'Review', [
-    #     (u'Review', [
-    #         'medical_categories', 'thesis', 'retrospective', 'expedited', 'external_reviewer', 'external_reviewer_name',
-    #     ]),
-    # ]),
 )
 
 

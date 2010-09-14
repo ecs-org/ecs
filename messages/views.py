@@ -133,6 +133,12 @@ def outgoing_message_widget(request):
         page_size=4,
     )
 
+@tracking_hint(exclude=True)
+def communication_overview_widget(request, submission_pk=None):
+    return render(request, 'messages/widgets/overview.inc', {
+        'threads': Thread.objects.filter(submission__pk=submission_pk),
+    })
+
 def message_widget(request, queryset=None, template='messages/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4):
     queryset = queryset.select_related('thread')
 
@@ -141,8 +147,11 @@ def message_widget(request, queryset=None, template='messages/widgets/messages.i
     if sort:
         if not sort in ('timestamp', '-timestamp', 'user', '-user'):
             sort = None
-        if sort:
-            queryset = queryset.order_by(sort.replace('user', user_sort))
+        if sort and sort.endswith('user'):
+            if user_sort:
+                queryset = queryset.order_by(sort.replace('user', user_sort))
+            else:
+                sort = None
     request.session[sort_session_key] = sort
 
     page_session_key = 'dashboard:%s:page' % session_prefix

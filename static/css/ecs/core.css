@@ -1,4 +1,42 @@
 /* headernav */
+.tab_header_groups{
+    position: relative;
+}
+.tab_header_groups li{
+    display: inline-block;
+    line-height: 30px;
+    margin-bottom: 30px;
+}
+
+.tab_header_groups li a {
+  text-decoration: none;
+  padding: 3px 5px;
+  border: 1px solid #b7d4e5;
+  background: #e2eaf0;
+  color: #2b558e;
+}
+.tab_header_groups li a.active {
+  background: #2b558e;
+  color: #e2eaf0;
+}
+.tab_header_groups li a.errors{
+    background: #fb6464;
+    color: #fff !important;
+    border: 1px solid #ff0000;
+}
+
+.tab_header_groups a.active.errors {
+  color: #fff;
+  background: #ff8000;
+}
+
+
+.tab_headers{
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    width: 1200px;
+}
 
 .tab_headers li {
   display: inline-block;

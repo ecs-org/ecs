@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core %} 
+{% load core i18n %} 
 
 {% block workflow_query_params %}submission={{ submission_form.submission_id }}{% endblock %}
 
@@ -7,49 +7,81 @@
   {{ submission_form.submission.ec_number }} {{ submission_form.project_title }}
 {% endblock %}
 
+{% block header_actions %}
+    {{ block.super }}
+    <div class="floating_box">
+        <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Bearbeiten</a>
+    </div>
+{% endblock %}
+
+
 {% block headernav %}
   <div class="readonly">
-    <ul class="tab_headers">
-    {% block tab_headers %}
+    <ul class="tab_header_groups">
+    {% block tab_header_groups %}
         <li>
-            <a href="#status-tab">Status</a>
+            <a href="#">{% trans "Status" %}</a>
+            <ul class="tab_headers">
+                <li>
+                    <a href="#status-tab">Status</a>
+                </li>
+                <li>
+                    <a href="#workflow-tab">Workflow</a>
+                </li>
+            </ul>
         </li>
-        <li{% if not executive_review_form.readonly %} class="readonly_review active"{% endif %}>
-            <a href="#executive_review_tab">Executive Review</a>
-        </li>
-        <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
-            <a href="#retrospective_thesis_review_tab">Thesis Review</a>
-        </li>
-        {% if b2_vote_review_form %}
-            <li class="active">
-                <a href="#b2vote_review_tab">B2 Votum</a>
-            </li>
-        {% else %}
-            <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-                <a href="#vote_review_tab">Votum</a>
-            </li>
-        {% endif %}
-        {% for blueprint, checklist_review_form in checklist_reviews %}
-            <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
-                <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
-            </li>
-        {% endfor %}
-        <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
-            <a href="#befangene_review_tab">Befangene Review</a>
+
+        {{ block.super }}
+
+        <li>
+            <a href="#">{% trans "Review" %}</a>
+            <ul class="tab_headers">
+                <li{% if not executive_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <a href="#executive_review_tab">Executive Review</a>
+                </li>
+                <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <a href="#retrospective_thesis_review_tab">Thesis Review</a>
+                </li>
+                {% if b2_vote_review_form %}
+                    <li class="active">
+                        <a href="#b2vote_review_tab">B2 Votum</a>
+                    </li>
+                {% else %}
+                    <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#vote_review_tab">Votum</a>
+                    </li>
+                {% endif %}
+                {% for blueprint, checklist_review_form in checklist_reviews %}
+                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
+                    </li>
+                {% endfor %}
+                <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <a href="#befangene_review_tab">Befangene Review</a>
+                </li>
+            </ul>
         </li>
         <li>
-            <a href="#messages-tab">Nachrichten</a>
+            <a href="#">{% trans "Communication" %}</a>
+            <ul class="tab_headers">
+                <li><a href="#communication-tab">{% trans "My Communication" %}</a></li>
+                <li><a href="#communication_overview-tab">{% trans "Communication Overview" %}</a></li>
+            </ul>
         </li>
         <li>
-            <a href="#workflow-tab">Workflow</a>
+            <a href="#">{% trans "Votes" %}</a>
+            <ul class="tab_headers">
+                <li><a href="#pending_votes-tab">{% trans "Pending Votes" %}</a></li>
+                <li><a href="#published_votes-tab">{% trans "Published Votes" %}</a></li>
+            </ul>
         </li>
-        {% for tab, fieldsets in tabs %}
-            {% ifnotequal tab "Zentrum" %}
-            <li>
-                <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
-            </li>
-            {% endifnotequal %}
-        {% endfor %}
+        <li>
+            <a href="#">{% trans "Notifications" %}</a>
+            <ul class="tab_headers">
+                <li><a href="#pending_notifications-tab">{% trans "Pending Notifications" %}</a></li>
+                <li><a href="#answered_notifications-tab">{% trans "Answered Notifications" %}</a></li>
+            </ul>
+        </li>
     {% endblock %}
     </ul>
   </div>
@@ -97,6 +129,56 @@
             </td></tr>
         </table>
     </div>
+    <div id="pending_notifications-tab" class="tab">
+        <h3>{% trans "Pending Notifications" %}
+        {% if pending_notifications %}
+            <ul>
+                {% for notification in pending_notifications %}
+                    <li><a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{% trans "There are no pending notifications." %}</p>
+        {% endif %}
+        <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+    </div>
+    <div id="answered_notifications-tab" class="tab">
+        <h3>{% trans "Answered Notifications" %}
+        {% if answered_notifications %}
+            <ul>
+                {% for notification in answered_notifications %}
+                    <li><a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{% trans "There are no answered notifications." %}</p>
+        {% endif %}
+        <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+    </div>
+    <div id="pending_votes-tab" class="tab">
+        <h3>{% trans "Pending Votes" %}</h3>
+        {% if pending_votes %}
+            <ul>
+                {% for vote in pending_votes %}
+                    <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{% trans "There are no pending votes." %}</p>
+        {% endif %}
+    </div>
+    <div id="published_votes-tab" class="tab">
+        <h3>{% trans "Published Votes" %}</h3>
+        {% if published_votes %}
+            <ul>
+                {% for vote in published_votes %}
+                    <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>{% trans "There are no published votes." %}</p>
+        {% endif %}
+    </div>
     <div id="executive_review_tab" class="tab">
         {% block executive_review_tab_content %}
             {% with executive_review_form as review_form %}
@@ -143,10 +225,15 @@
             {% endwith %}
         {% endblock %}
     </div>
-    <div id="messages-tab" class="tab">
-        <h3>Nachrichten</h3>
+    <div id="communication-tab" class="tab">
+        <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
+        <a href="{% url ecs.messages.views.send_message submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
+    </div>
+    <div id="communication_overview-tab" class="tab">
+        <h3>{% trans "Communication Overview" %}</h3>
+        <div id="communication_overview_messages"></div>
     </div>
     <div id="workflow-tab" class="tab">
         <h3>Workflow</h3>
@@ -180,6 +267,8 @@
             $$('.checklist_review_tab').each(function(tabBody){
                 tabBody.getElements('.NullBooleanField>select').each(function(select){
                     select.addEvent('change', updateChecklistCommentVisibility.bind(window, select));
+                });
+            });
             
             var msgRequest = new Request.HTML({
                 url: '{% url ecs.messages.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}',
@@ -190,6 +279,12 @@
             var msgRequest = new Request.HTML({
                 url: '{% url ecs.messages.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}',
                 update: $('outgoing_messages')
+            });
+            msgRequest.send();
+
+            var msgRequest = new Request.HTML({
+                url: '{% url ecs.messages.views.communication_overview_widget submission_pk=submission_form.submission.pk %}',
+                update: $('communication_overview_messages')
             });
             msgRequest.send();
 

@@ -1,19 +1,33 @@
 {% extends "core.html" %}
-{% load core %} 
+{% load core i18n %} 
 
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
 {% endblock %}
 
 {% block headernav %}
-    <ul class="tab_headers">
-    {% block tab_headers %}
-        {% for tab, fieldsets in tabs %}
-            {% ifnotequal tab "Zentrum" %}
-            <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-            {% endifnotequal %}
-        {% endfor %}
-    {% endblock %}
+    <ul class="tab_header_groups">
+        {% block tab_header_groups %}
+        <li>
+            <a href="#">{% trans "Submission" %}</a>
+            <ul class="tab_headers">
+            {% block submission_tab_headers %}
+                {% for tab, fieldsets in tabs %}
+                    {% ifnotequal tab "Zentrum" %}
+                    <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+                    {% endifnotequal %}
+                {% endfor %}
+            {% endblock %}
+            </ul>
+        </li>
+        <li>
+            <a href="#">{% trans "Centers" %}</a>
+            <ul class="tab_headers" id="center_tabgroup">
+                {% block center_tabs %}
+                {% endblock %}
+            </ul>
+        </li>
+        {% endblock %}
     </ul>
     {{ block.super }}
 {% endblock %}

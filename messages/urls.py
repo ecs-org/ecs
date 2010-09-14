@@ -12,4 +12,5 @@ urlpatterns = patterns('ecs.messages.views',
     url(r'^thread/(?P<thread_pk>\d+)/delegate/$', 'delegate_thread'),
     url(r'^widgets/incoming_messages/$', 'incoming_message_widget'),
     url(r'^widgets/outgoing_messages/$', 'outgoing_message_widget'),
+    url(r'^widgets/communication_overview/(?P<submission_pk>\d+)$', 'communication_overview_widget'),
 )

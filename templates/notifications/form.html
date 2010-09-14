@@ -1,13 +1,18 @@
 {% extends 'core.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
 {% block headernav %}
-    <ul class="tab_headers">
-    {% for tab, fieldsets in tabs %}
-        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-    {% endfor %}
+    <ul class="tab_header_groups">
+        <li>
+            <a href="#">{% trans "New Notification" %}</a>
+            <ul class="tab_headers">
+            {% for tab, fieldsets in tabs %}
+                <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+            {% endfor %}
+            </ul>
+        </li>
     </ul>
     {{ block.super }}
 {% endblock %}

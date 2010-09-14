@@ -118,6 +118,7 @@ ecs.setupFormFieldHelpers = function(context){
 ecs.setupInvestigatorFormSet = function(tabController, readonly){
     var ifs = $('investigator_formset');
     if(ifs){
+        var centerTabGroup = tabController.getTabGroupForElement('center_tabgroup');
         var investigatorFormset = new ecs.InlineFormSet(ifs, {
             prefix: 'investigator',
             formSelector: '.investigator_tab',
@@ -127,7 +128,7 @@ ecs.setupInvestigatorFormSet = function(tabController, readonly){
             addButtonText: 'Weiteres Zentrum Hinzufügen',
             removeButtonText: 'Dieses Zentrum Entfernen',
             onFormSetup: function(form, index, added, formset){
-                tabController.addTab('Zentrum ' + (index + 1) +  '', form);
+                tabController.addTab(centerTabGroup, 'Zentrum ' + (index + 1) +  '', form);
                 if(readonly){
                     return;
                 }
@@ -185,9 +186,9 @@ ecs.setupInvestigatorFormSet = function(tabController, readonly){
 };
 
 ecs.setupForms = function(){
-    var tabHeaders = $$('.tab_headers')[0];
-    if(tabHeaders){
-        var tabController = new ecs.TabController(tabHeaders);
+    var tabHeaders = $$('.tab_headers');
+    if(tabHeaders.length){
+        var tabController = new ecs.TabController($$('.tab_header_groups > li'));
         var mainForm = document.getElement('form.tabbed.main');
         if(mainForm){
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {

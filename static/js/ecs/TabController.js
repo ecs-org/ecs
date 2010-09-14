@@ -5,6 +5,7 @@ ecs.Tab = new Class({
         this.header = header;
         this.panel = panel;
         this.index = index;
+        this.group = null;
         this.panel.setStyle('display', 'none');
         this.clickHandler = controller.onTabHeaderClick.bindWithEvent(controller, this);
         this.header.addEvent('click', this.clickHandler);
@@ -18,7 +19,7 @@ ecs.Tab = new Class({
         this.setClass(this.controller.options.selectedTabClass, selected);
         this.panel.setStyle('display', selected ? 'block' : 'none');
         this.selected = selected;
-        this.fireEvent('select');
+        this.fireEvent(selected ? 'select' : 'deselect', this);
     },
     remove: function(){
         this.header.removeEvent('click', this.clickHandler);
@@ -32,39 +33,114 @@ ecs.Tab = new Class({
     }
 });
 
+ecs.TabGroup = new Class({
+    initialize: function(controller, header, container, tabs){
+        this.controller = controller;
+        this.header = header;
+        this.container = container;
+        this.tabs = [];
+        this.selectedTab = tabs ? tabs[0] : null;
+        this.selected = false;
+        this.tabSelectionHandler = this.onTabSelect.bind(this);
+        this.container.setStyle('display', 'none');
+        tabs.each(function(tab){
+            this.addTab(tab);
+        }, this);
+        if(this.header){
+            this.header.addEvent('click', controller.onTabGroupHeaderClick.bindWithEvent(controller, this));
+        }
+    },
+    addTab: function(tab){
+        this.tabs.push(tab);
+        tab.group = this;
+        if(this.tabs.length === 1){
+            this.selectedTab = tab;
+        }
+        tab.addEvent('select', this.tabSelectionHandler);
+    },
+    onTabSelect: function(tab){
+        this.selectedTab = tab;
+    },
+    removeTab: function(tab){
+        this.tabs.erase(tab);
+        if(tab === this.selectedTab){
+            this.selectedTab = this.tabs[0];
+        }
+        tab.removeEvent('select', this.tabSelectionHandler);
+    },
+    setHeaderClass: function(cls, set){
+        if(this.header){
+            this.header.setClass(cls, set);
+        }
+    },
+    setClass: function(cls, set){
+        this.setHeaderClass(cls, set);
+        this.tabs.each(function(tab){
+            tab.setClass(cls, set);
+        });
+    },
+    setSelected: function(selected){
+        console.log('setSelected', selected, this);
+        this.selected = selected;
+        if(this.header){
+            this.header.setClass(this.controller.options.selectedTabClass, selected);
+        }
+        this.controller.selectTab(this.selectedTab);
+        this.container.setStyle('display', selected ? 'block' : 'none');
+    }
+});
+
 ecs.TabController = new Class({
     Implements: [Options, Events],
     options: {
         tabIdPrefix: 'tab-',
-        selectedTabClass: 'active'
+        selectedTabClass: 'active',
+        tabGroupHeaderSelector: 'a',
+        tabGroupContainerSelector: 'ul',
+        tabGroupSelector: null
     },
-    initialize: function(headerContainer, options){
+    initialize: function(tabGroupContainers, options){
         this.setOptions(options);
         this.tabs = [];
+        this.tabGroups = [];
         this.selectedTab = null;
-        this.headerContainer = headerContainer;
+        this.selectedTabGroup = null;
+        this.tabGroupContainers = tabGroupContainers;
+
         var index = 0;
         var initialSelection = null;
-        headerContainer.getChildren('li').each(function(header){
-            var hash = header.getElement('a').href.split('#')[1];
-            var panel = $(hash);
-            var tab = new ecs.Tab(this, header, panel, index++);
-            if(window.location.hash == '#' + hash){
-                initialSelection = tab;
-            }
-            if(!initialSelection && header.hasClass(this.options.selectedTabClass)){
-                initialSelection = tab;
-            }
-            header.removeClass(this.options.selectedTabClass);
-            this.tabs.push(tab);
+        tabGroupContainers.each(function(el){
+            var header = el.getFirst(this.options.tabGroupHeaderSelector);
+            var container = el.getFirst(this.options.tabGroupContainerSelector);
+            var tabs = [];
+            container.getElements('li').each(function(header){
+                var hash = header.getElement('a').href.split('#')[1];
+                var panel = $(hash);
+                var tab = new ecs.Tab(this, header, panel, index++);
+                if(window.location.hash == '#' + hash){
+                    initialSelection = tab;
+                }
+                if(!initialSelection && header.hasClass(this.options.selectedTabClass)){
+                    initialSelection = tab;
+                }
+                header.removeClass(this.options.selectedTabClass);
+                this.tabs.push(tab);
+                tabs.push(tab);
+            }, this);
+            this.tabGroups.push(new ecs.TabGroup(this, header, container, tabs));
         }, this);
+        console.log(this.tabGroups);
         this.selectTab(initialSelection || this.tabs[0], true);
     },
     onTabHeaderClick: function(event, tab){
         this.selectTab(tab);
     },
+    onTabGroupHeaderClick: function(event, tabGroup){
+        console.log(arguments);
+        this.selectTabGroup(tabGroup);
+    },
     selectTab: function(tab, initial){
-        if(tab == this.selectedTab){
+        if(tab === this.selectedTab){
             return;
         }
         if(this.selectedTab){
@@ -73,8 +149,23 @@ ecs.TabController = new Class({
         this.selectedTab = tab;
         if(tab){
             tab.setSelected(true);
+            this.selectTabGroup(tab.group, initial);
         }
         this.fireEvent('tabSelectionChange', tab, !!initial);
+    },
+    selectTabGroup: function(tabGroup, initial){
+        console.log('tabGroup', tabGroup);
+        if(tabGroup === this.selectedTabGroup){
+            return;
+        }
+        if(this.selectedTabGroup){
+            this.selectedTabGroup.setSelected(false);
+        }
+        this.selectedTabGroup = tabGroup;
+        if(tabGroup){
+            tabGroup.setSelected(true);
+        }
+        this.fireEvent('tabGroupSelectionChange', tabGroup, !!initial);
     },
     getSelectedTab: function(){
         return this.selectedTab;
@@ -86,9 +177,10 @@ ecs.TabController = new Class({
         return this.tabs.map(function(tab){ return tab.panel;})
     },
     getTabForElement: function(el){
+        el = $(el);
         for(var i=0;i<this.tabs.length;i++){
             var tab = this.tabs[i];
-            if(tab.panel == el || tab.panel.hasChild(el)){
+            if(tab.panel === el || tab.panel.hasChild(el)){
                 return tab;
             }
         }
@@ -97,15 +189,26 @@ ecs.TabController = new Class({
     getTab: function(index){
         return this.tabs[index];
     },
-    addTab: function(header, panel, inject){
+    getTabGroupForElement: function(el){
+        el = $(el);
+        for(var i=0;i<this.tabGroups.length;i++){
+            var tabGroup = this.tabGroups[i];
+            if(tabGroup.container === el || tabGroup.container.hasChild(el)){
+                return tabGroup;
+            }
+        }
+        return null;
+    },
+    addTab: function(tabGroup, header, panel, inject){
         panel.id = panel.id || this.options.tabIdPrefix + this.tabs.length;
         header = new Element('li', {html: '<a href="#' + panel.id + '">' + header + '</a>'});
-        this.headerContainer.grab(header);
+        tabGroup.container.grab(header);
         if(inject){
             panel.inject(this.tabs.getLast().panel, 'after');
         }
         var tab = new ecs.Tab(this, header, panel, this.tabs.length);
         this.tabs.push(tab);
+        tabGroup.addTab(tab);
         this.fireEvent('tabAdded', tab);
         return tab;
     },

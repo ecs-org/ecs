@@ -12,11 +12,13 @@ ecs.TabbedForm = new Class({
         tabController.getTabs().each(function(tab){
             if(tab.panel.getElement('.errors')){
                 tab.setClass('errors', true);
+                tab.group.setHeaderClass('errors', true);
             }
         });
         tabController.addEvent('tabAdded', function(tab){
             if(tab.panel.getElement('.errors')){
                 tab.setClass('errors', true);
+                tab.group.setHeaderClass('errors', true);
             }
         });
         tabController.addEvent('tabSelectionChange', (function(tab){
