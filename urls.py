@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^core/', include('core.urls')),
     url(r'^dashboard/', include('dashboard.urls')),
     url(r'^docstash/', include('docstash.urls')),
+    url(r'^audit/', include('ecs.audit.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
