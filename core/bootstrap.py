@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
 from ecs import bootstrap
-from ecs.core.models import NotificationType, ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
+from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
+from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow import patterns
