@@ -69,7 +69,7 @@
     {{ block.super }}
   <script type="text/javascript">
     function set_content_position() {
-      var header_height = $$('#header')[0].getHeight();
+      var header_height = $$('#header', '#tab_headers')[0].getHeight();
       $$('#content')[0].setStyle('top', ''+header_height+'px');
     }
     

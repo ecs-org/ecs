@@ -23,10 +23,10 @@
             <a href="#">{% trans "Status" %}</a>
             <ul class="tab_headers">
                 <li>
-                    <a href="#status-tab">Status</a>
+                    <a href="#status_tab">Status</a>
                 </li>
                 <li>
-                    <a href="#workflow-tab">Workflow</a>
+                    <a href="#workflow_tab">Workflow</a>
                 </li>
             </ul>
         </li>
@@ -64,22 +64,22 @@
         <li>
             <a href="#">{% trans "Communication" %}</a>
             <ul class="tab_headers">
-                <li><a href="#communication-tab">{% trans "My Communication" %}</a></li>
-                <li><a href="#communication_overview-tab">{% trans "Communication Overview" %}</a></li>
+                <li><a href="#communication_tab">{% trans "My Communication" %}</a></li>
+                <li><a href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>
             </ul>
         </li>
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                <li><a href="#pending_votes-tab">{% trans "Pending Votes" %}</a></li>
-                <li><a href="#published_votes-tab">{% trans "Published Votes" %}</a></li>
+                <li><a href="#pending_votes_tab">{% trans "Pending Votes" %}</a></li>
+                <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
             </ul>
         </li>
         <li>
             <a href="#">{% trans "Notifications" %}</a>
             <ul class="tab_headers">
-                <li><a href="#pending_notifications-tab">{% trans "Pending Notifications" %}</a></li>
-                <li><a href="#answered_notifications-tab">{% trans "Answered Notifications" %}</a></li>
+                <li><a href="#pending_notifications_tab">{% trans "Pending Notifications" %}</a></li>
+                <li><a href="#answered_notifications_tab">{% trans "Answered Notifications" %}</a></li>
             </ul>
         </li>
     {% endblock %}
@@ -94,7 +94,7 @@
 {% endblock %}
 
 {% block tabs %}
-    <div id="status-tab">
+    <div id="status_tab">
         <h3>Status</h3>
         <table>
             <tr><th>Eingereicht am:</th><td>?</td></tr>
@@ -129,7 +129,7 @@
             </td></tr>
         </table>
     </div>
-    <div id="pending_notifications-tab" class="tab">
+    <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Pending Notifications" %}
         {% if pending_notifications %}
             <ul>
@@ -142,7 +142,7 @@
         {% endif %}
         <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
     </div>
-    <div id="answered_notifications-tab" class="tab">
+    <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}
         {% if answered_notifications %}
             <ul>
@@ -155,7 +155,7 @@
         {% endif %}
         <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
     </div>
-    <div id="pending_votes-tab" class="tab">
+    <div id="pending_votes_tab" class="tab">
         <h3>{% trans "Pending Votes" %}</h3>
         {% if pending_votes %}
             <ul>
@@ -167,7 +167,7 @@
             <p>{% trans "There are no pending votes." %}</p>
         {% endif %}
     </div>
-    <div id="published_votes-tab" class="tab">
+    <div id="published_votes_tab" class="tab">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
             <ul>
@@ -225,17 +225,17 @@
             {% endwith %}
         {% endblock %}
     </div>
-    <div id="communication-tab" class="tab">
+    <div id="communication_tab" class="tab">
         <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
         <a href="{% url ecs.messages.views.send_message submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
     </div>
-    <div id="communication_overview-tab" class="tab">
+    <div id="communication_overview_tab" class="tab">
         <h3>{% trans "Communication Overview" %}</h3>
         <div id="communication_overview_messages"></div>
     </div>
-    <div id="workflow-tab" class="tab">
+    <div id="workflow_tab" class="tab">
         <h3>Workflow</h3>
     </div>
     {{ block.super }}

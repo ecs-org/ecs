@@ -40,8 +40,9 @@ body {
   display: block;
 }
 #headernav {
-  float: left;
+  position: relative;
   display: block;
+  float: left;
   width: 100%;
   background: #d8e6ef;
   font-size: 11pt;
