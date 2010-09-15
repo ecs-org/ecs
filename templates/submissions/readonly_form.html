@@ -134,26 +134,26 @@
         {% if pending_notifications %}
             <ul>
                 {% for notification in pending_notifications %}
-                    <li><a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                    <li><a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>{% trans "There are no pending notifications." %}</p>
         {% endif %}
-        <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
     </div>
     <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}
         {% if answered_notifications %}
             <ul>
                 {% for notification in answered_notifications %}
-                    <li><a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                    <li><a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
-        <a href="{% url ecs.core.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
     </div>
     <div id="pending_votes_tab" class="tab">
         <h3>{% trans "Pending Votes" %}</h3>

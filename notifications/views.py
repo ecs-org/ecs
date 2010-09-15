@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 
 from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.core.models import Notification, NotificationType, SubmissionForm, Investigator, Submission
 from ecs.documents.models import Document
 from ecs.core.forms import DocumentFormSet
 from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
@@ -14,11 +13,14 @@ from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 
+from ecs.core.models import SubmissionForm, Investigator, Submission
+from ecs.notifications.models import Notification, NotificationType
+
 # notifications
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
-        'stashed_notifications': DocStash.objects.filter(group='ecs.core.views.core.create_notification'),
+        'stashed_notifications': DocStash.objects.filter(group='ecs.notifications.views.core.create_notification'),
     })
 
 def view_notification(request, notification_pk=None):
@@ -82,7 +84,7 @@ def create_notification(request, notification_type_pk=None):
             notification.documents = request.docstash['documents']
 
             request.docstash.delete()
-            return HttpResponseRedirect(reverse('ecs.core.views.view_notification', kwargs={'notification_pk': notification.pk}))
+            return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,

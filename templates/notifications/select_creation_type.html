@@ -9,7 +9,7 @@
 {% block content %}
     <ul>
     {% for notification_type in notification_types %}
-        <li><a href="{% url ecs.core.views.create_notification notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a></li>
+        <li><a href="{% url ecs.notifications.views.create_notification notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a></li>
     {% endfor %}
     </ul>
 

@@ -5,13 +5,6 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/', 'permanent': True}),
 
-    url(r'^notification/new/$', 'ecs.core.views.select_notification_creation_type'),
-    url(r'^notification/new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_notification'),
-    url(r'^notification/(?P<notification_pk>\d+)/$', 'ecs.core.views.view_notification'),
-    url(r'^notification/(?P<notification_pk>\d+)/pdf/$', 'ecs.core.views.notification_pdf'),
-    url(r'^notifications/$', 'ecs.core.views.notification_list'),
-    url(r'^submission_data_for_notification/$', 'ecs.core.views.submission_data_for_notification'),
-
     url(r'^submission/(?P<submission_pk>\d+)/edit/', 'ecs.core.views.edit_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/start_workflow/', 'ecs.core.views.start_workflow'),
     url(r'^submission/(?P<submission_pk>\d+)/copy_form/', 'ecs.core.views.copy_latest_submission_form'),

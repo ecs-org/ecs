@@ -1,15 +1,20 @@
 import os
 from django.core.urlresolvers import reverse
 from ecs.utils.testcases import LoginTestCase
-from ecs.core.models import NotificationType
 from ecs.documents.models import DocumentType
+from ecs.notifications.models import NotificationType
 
-from ecs.core.tests.submissions_and_notifications import create_submission_form
+from ecs.core.tests.submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):
+    
+    def test_notification_list(self):
+        response = self.client.get(reverse('ecs.notifications.views.notification_list'))
+        self.failUnlessEqual(response.status_code, 200)
+
     def test_creation_type_selection(self):
         NotificationType.objects.create(name='foo notif')
-        response = self.client.get('/core/notification/new/')
+        response = self.client.get(reverse('ecs.notifications.views.select_notification_creation_type'))
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless('foo notif' in response.content)
         
@@ -26,7 +31,7 @@ class NotificationFormTest(LoginTestCase):
         notification_type = NotificationType.objects.create(name='foo notif')
 
         # GET the form and expect a docstash transactions redirect, then follow this redirect
-        response = self.client.get('/core/notification/new/%s/' % notification_type.pk)
+        response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': notification_type.pk}))
         self.failUnlessEqual(response.status_code, 302)
         url = response['Location']
         response = self.client.get(url)
@@ -65,14 +70,14 @@ class NotificationFormTest(LoginTestCase):
         
     def _setup_POST_url(self):
         notification_type = NotificationType.objects.create(name='foo notif')
-        response = self.client.get('/core/notification/new/%s/' % notification_type.pk)
+        response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': notification_type.pk}))
         return response['Location']
         
     def test_document_upload(self):
         url = self._setup_POST_url()
         data = self._create_POST_data(save='save')
         doctype = DocumentType.objects.create(name='foo doctype')
-        f = open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb')
+        f = open(os.path.join(os.path.dirname(__file__), '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf'), 'rb')
         data.update({
             'document-0-file': f,
             'document-0-doctype': doctype.pk,

@@ -96,7 +96,7 @@
                     querystring.push('submission_form=' + option.value);
                 });
                 var request = new Request.HTML({
-                    url: '/core/submission_data_for_notification/',
+                    url: '/submission_data_for_notification/',
                     data: querystring.join('&'),
                     method: 'get',
                     evalScripts: false,

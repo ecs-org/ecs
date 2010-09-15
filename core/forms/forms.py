@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
-from ecs.core.models import Notification, CompletionReportNotification, ProgressReportNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField

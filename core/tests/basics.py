@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from ecs.utils.testcases import LoginTestCase
 
 def test_import():
@@ -9,21 +10,13 @@ def test_import():
     
 class CoreUrlsTest(LoginTestCase):
     def test_index(self):
-        response = self.client.get('/dashboard/')
+        response = self.client.get(reverse('ecs.dashboard.views.view_dashboard'))
         self.failUnlessEqual(response.status_code, 200)
         
     def test_submission_form_new(self):
-        response = self.client.get('/core/submission_form/new/')
+        response = self.client.get(reverse('ecs.core.views.create_submission_form'))
         self.failUnlessEqual(response.status_code, 302)
 
-    def test_notification_new(self):
-        response = self.client.get('/core/notification/new/')
-        self.failUnlessEqual(response.status_code, 200)
-
-    def test_notifications(self):
-        response = self.client.get('/core/notifications/')
-        self.failUnlessEqual(response.status_code, 200)
-
     def test_submission_forms(self):
-        response = self.client.get('/core/submission_forms/')
+        response = self.client.get(reverse('ecs.core.views.submission_form_list'))
         self.failUnlessEqual(response.status_code, 200)

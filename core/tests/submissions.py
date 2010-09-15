@@ -4,9 +4,9 @@ from ecs.utils.countries.models import Country
 from django.test import TestCase
 from django.db.models import Q
 
-from core.models import Submission, SubmissionForm, EthicsCommission, Investigator
-from core.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
-from core.views.submissions import diff_submission_forms
+from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
+from ecs.core.views.submissions import diff_submission_forms
+from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 
 
 class SubmissionFormTest(TestCase):
@@ -323,37 +323,6 @@ def create_submission_form():
     sform.save()
     return sform
 
-class NotificationFormTest(TestCase):
-    def setUp(self):
-        sform = create_submission_form()
-        # normal way would be to fetch one, but the test database does not contain the data rows :(
-        ek1 = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
-        ek1.save()
-        self.investigator = Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1)
-        self.submission = sub
-        self.submission_form = sform
-
-    def test_notification_creation(self):
-        some_notification_type = NotificationType.objects.create(name='Test')
-        some_date = datetime.date(2010, 3, 1)
-
-        nform = Notification(type=some_notification_type, comments="we need longer to torture our victims! Really.")
-        nform.save()
-        nform.submission_forms = [self.submission_form]
-        
-        completion_notification = CompletionReportNotification(type=some_notification_type, comments="foo", 
-            SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
-            study_aborted=True, completion_date=some_date,
-        )
-        completion_notification.save()
-        completion_notification.investigators = self.submission_form.investigators.all()
-
-        progress_notification = ProgressReportNotification(type=some_notification_type, comments="foo", 
-            SAE_count=1, SUSAR_count=2, aborted_subjects=3, finished_subjects=4, recruited_subjects=5, 
-            runs_till=some_date, extension_of_vote_requested=True,
-        )
-        progress_notification.save()
-        progress_notification.investigators = self.submission_form.investigators.all()
 
 class SubmissionFormDiffTest(TestCase):
     def setUp(self):

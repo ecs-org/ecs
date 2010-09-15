@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import reversion
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
@@ -14,9 +11,6 @@ class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
     
-    class Meta:
-        app_label = 'core'
-    
     @property
     def form_cls(self):
         if not hasattr(self, '_form_cls'):
@@ -26,8 +20,6 @@ class NotificationType(models.Model):
     
     def __unicode__(self):
         return self.name
-
-reversion.register(NotificationType)
 
 class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
@@ -39,14 +31,8 @@ class Notification(models.Model):
     comments = models.TextField(default="", blank=True)
     date_of_receipt = models.DateField(null=True, blank=True)
     
-    class Meta:
-        app_label = 'core'
-    
     def __unicode__(self):
         return u"%s" % (self.type,)
-
-reversion.register(Notification)
-
 
 class ReportNotification(Notification):
     reason_for_not_started = models.TextField(null=True, blank=True)
@@ -57,30 +43,15 @@ class ReportNotification(Notification):
     SUSAR_count = models.PositiveIntegerField(default=0, blank=True)
     
     class Meta:
-        app_label = 'core'
-    
-    class Meta:
         abstract = True
-
-reversion.register(ReportNotification)
 
 class CompletionReportNotification(ReportNotification):
     study_aborted = models.BooleanField()
     completion_date = models.DateField()
-
-    class Meta:
-        app_label = 'core'
-
-reversion.register(CompletionReportNotification)
 
 
 class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
     extension_of_vote_requested = models.BooleanField(default=False, blank=True)
     
-    class Meta:
-        app_label = 'core'
-
-reversion.register(ProgressReportNotification)
-
 

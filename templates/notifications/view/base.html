@@ -11,7 +11,7 @@ Meldungen zur laufenden Studie(n)
 
 {% block content %}
 <ul>
-    <li><a href="{% url ecs.core.views.notification_pdf notification_pk=notification.pk %}">Download PDF</a></li>
+    <li><a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}">Download PDF</a></li>
 </ul>  
 {% with notification.submission_forms.all as submission_forms %}
     {% with notification.investigators.all as investigators %}
