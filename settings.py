@@ -35,18 +35,29 @@ DATABASES['default'] = {
 # incoming filestore is now in root dir (one below source)
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
+
+
 # StorageVault settings
+
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-
 # mediaserver memcached(b) settings, RENDER_MEMORYSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
 # if set to mockcache, RENDER_MEMORYSTORAGE_HOST & PORT will be ignored
 # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-RENDER_FILESTORAGE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-mediacache"))
-RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
-RENDER_MEMORYSTORAGE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
-RENDER_MEMORYSTORAGE_PORT = 11211 # standardport of memcache, not used for mockcache
 
+
+# Mediaserver settings
+#TODO Migrate mediaserver stettings to a seperate config file
+DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
+DOC_DISKCACHE_MAXSIZE = 2**34
+
+RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))
+RENDER_DISKCACHE_MAXSIZE = 2**33
+
+RENDER_MEMCACHE_LIB  = 'mockcache'
+RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
+RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
+RENDER_MEMCACHE_MAXSIZE = 2**29
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
 # production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 
