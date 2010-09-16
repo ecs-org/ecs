@@ -10,7 +10,7 @@ RR.11: ...on demand ... view and to print the Audit Trail
 
 User story:
   1Task: create global user middleware
-  2Task: create post-save handler for creating audit trail entry + create Audit Trail model; old+new data; unittests
+  2Task: create post-save handler for creating audit trail entry + create Audit Trail model; only new data; unittests
   3Task: implement human readable diff function
   4Task: optional: rsyslogd scope is sending to (hostname/server/client certificate)
   5Task: maybe s3-url like checksum to see if log is valid
