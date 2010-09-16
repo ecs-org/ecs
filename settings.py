@@ -54,6 +54,11 @@ DOC_DISKCACHE_MAXSIZE = 2**34
 RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))
 RENDER_DISKCACHE_MAXSIZE = 2**33
 
+# which one is the current? are they both needed?
+RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
+RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
+RENDER_MEMORYSTORAGE_PORT = 11211 # standard port of memcache
+
 RENDER_MEMCACHE_LIB  = 'mockcache'
 RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
@@ -132,7 +137,6 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only us
 #XXX: these are local fixes, they default to a sane value if unset
 #ECS_AUTO_PDF_BARCODE = True # default to true, skips pdftk stamping if set to false
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs) if empty (needs to be overriden in local_settings for eg. windows
-
 
 if platform.node() == "ecsdev.ep3.at":
     # use different settings if on host ecsdev.ep3.at depending username
@@ -307,7 +311,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'ecs.workflow.middleware.WorkflowMiddleware',
-    'ecs.audit.middleware.GlobalUserMiddleware',
+    'ecs.users.middleware.GlobalUserMiddleware',
 )   
 
 INSTALLED_APPS = (

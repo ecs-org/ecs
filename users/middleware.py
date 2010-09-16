@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+import threading
+
 from django.contrib.sessions.models import Session
 
 from ecs.users.models import UserProfile
@@ -26,4 +30,23 @@ class SingleLogin(object):
         if old_session_key and Session.objects.filter(session_key=old_session_key):
             Session.objects.filter(session_key=old_session_key).delete()
             request.single_login_enforced = True
+
+
+current_user_store = threading.local()
+
+class GlobalUserMiddleware(object):
+    def process_request(self, request):
+        if request.user:
+            current_user_store.user = request.user
+        return None
+    
+    def process_response(self, request, response):
+        if hasattr(current_user_store, 'user'):
+            del current_user_store.user
+        return response
+    
+    def process_exception(self, request, exception):
+        if hasattr(current_user_store, 'user'):
+            del current_user_store.user
+        return None
 
