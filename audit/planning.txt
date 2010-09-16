@@ -1,0 +1,64 @@
+
+RR.1: ... The copies have to  be produced both in human readable
+format (screen visualization, print) and in electronic format
+and must be available for verification or reproduction
+RR.4: ...any change produce a log entry in the audit log including the old values of the data.
+RR.5: ...trail includes...4. Electronic Record original value. 5. Electronic Record final value.
+RR.7: ...on demand ...create accurate and complete copies of audit trail in a standard form (ASCII,
+RR.9: ...shall prevent all user profiles at any level (including System Administrator) from altering the Audit Trail. (rsyslog to other machine would catch that)
+RR.11: ...on demand ... view and to print the Audit Trail
+
+User story:
+  1Task: create global user middleware
+  2Task: create post-save handler for creating audit trail entry + create Audit Trail model; old+new data; unittests
+  3Task: implement human readable diff function
+  4Task: optional: rsyslogd scope is sending to (hostname/server/client certificate)
+  5Task: maybe s3-url like checksum to see if log is valid
+
+ * if we implement the auditlog 
+   * transactions ? as long we only use "request transaction" we should be safe
+   * thread safe ? 
+   * registration of models we want ?
+   * how to implement high level changes
+     * eg. submission medicalbla changes , we want 
+       * mr. huber changed the submission foo on 1.1.2010 at 12:34
+         * insert new medical
+         * changed sponsor.name from bla to blu
+   
+class AuditMiddleware(object):
+    def parse_request(self, request):
+        user = request.user
+        def post_save_handler(**kwargs):
+            audit_trail_instance.user = user
+        post_save.connect(post_save_handler)
+    
+    def end_request(self.reqeust)
+        post_save.remove(foobar)
+        
+current_user_store = threading.local()
+
+with auth.user(foo):
+   do_something()
+
+class GlobalUserMiddleware():
+    def process_view(self, request, view, ..):
+        with auth.user(request.user):
+            view(request, ..)
+
+
+class Change(models.Model):
+    instance = generic.GenericForeignKey(null=True)
+    content_type = models.ForeignKey(ContentType) # ?
+    user = models.ForeignKey(User)
+    time = models.DateTimeField()
+    verbose_name = models.CharField(max_length=100)
+    diff = models.TextField()
+
+log format example:
+
+[Feb 08 2010 07:30:12] user "e.singer" modified
+    User: root <root@ep3.at>
+    == start diff ==
+email: "foo@example.com" -> "bar@example.com"
+    == end diff ===
+[...]
