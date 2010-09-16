@@ -7,7 +7,7 @@ from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 
 class AuditTrail(models.Model):
-    instance = generic.GenericForeignKey(null=True)
+    #instance = generic.GenericForeignKey(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=100, null=False, blank=False)
     user = models.ForeignKey(User)

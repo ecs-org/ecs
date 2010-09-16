@@ -307,6 +307,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'ecs.workflow.middleware.WorkflowMiddleware',
+    'ecs.audit.middleware.GlobalUserMiddleware',
 )   
 
 INSTALLED_APPS = (
