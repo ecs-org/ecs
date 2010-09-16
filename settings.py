@@ -43,20 +43,20 @@ STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_D
 # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
 RENDER_FILESTORAGE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-mediacache"))
 RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
-RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
-RENDER_MEMORYSTORAGE_PORT = 21201 # port of memcachedb
+RENDER_MEMORYSTORAGE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
+RENDER_MEMORYSTORAGE_PORT = 11211 # standardport of memcache, not used for mockcache
 
 
-# celery configuration defaults
+# celery configuration defaults, uses local loopback via qhettoq and always eager
+# production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-# per default carrot (celery's backend) will use ghettoq for its queueing, blank this (hopefully this should work) to use RabbitMQ
+# per default carrot (celery's backend) will use ghettoq for its queueing, 
+# blank this (hopefully this should work) to use RabbitMQ
 CARROT_BACKEND = "ghettoq.taproot.Database"
-# Celery results, defaults to django if djcelery is imported
-#CELERY_RESULT_BACKEND = 'database'
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.meetings.task_queue',
@@ -64,30 +64,44 @@ CELERY_IMPORTS = (
     'ecs.ecsmail.task_queue',
     'ecs.mediaserver.task_queue',
 )
+# try to propagate exceptions back to caller
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
 CELERY_ALWAYS_EAGER = True
-# propagate exceptions back to caller
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 
-# lamson config
+# lamson config, 
+# defaults to send outgoing django mail directly to dummy smartmx (ecsmail log) and store results in maildir (ecsmail/run/queue)
+# for production override LAMSON_SEND_THROUGH_RECEIVER, RECEIVER_CONFIG, RELAY_CONFIG, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
 LAMSON_BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
 LAMSON_UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
 LAMSON_TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
-LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': int(os.environ.get('LAMSON_RECEIVER_PORT', 8823))} # listen here 
-LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825} # relay to
+LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '127.0.0.1', 'port': 8823} # listen here 
+# LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 88125}
 LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
 LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
 LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1']
-LAMSON_SEND_THROUGH_RECEIVER = True ; # this is set to false during unittests, so delivery will take place directly to the queue
-
-# used both by django AND lamson
-# lamson and django should be on the same machine
+LAMSON_SEND_THROUGH_RECEIVER = False ; # this is set to True on production systems where mail should actually been routed
+# used both by django AND lamson, XXX lamson and django should be on the same machine
 FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
 DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host'] 
-EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port'] 
+if LAMSON_SEND_THROUGH_RECEIVER:
+    EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host'] 
+    EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port'] 
+else:
+    EMAIL_HOST = '127.0.0.1' # LAMSON_RELAY_CONFIG['host'] 
+    EMAIL_PORT = 4789 #LAMSON_RELAY_CONFIG['port'] 
+    
 
+if 'test' in sys.argv or 'runserver' in sys.argv:
+    import random
+    if not os.path.exists('ecsmail.lock'):
+        _port = random.randint(30000, 60000)
+        LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': _port} # smartmx dummy
+        EMAIL_HOST = LAMSON_RELAY_CONFIG['host']
+        EMAIL_PORT = LAMSON_RELAY_CONFIG['port']
+        print "through receiver: ", LAMSON_SEND_THROUGH_RECEIVER, _port
+        
 # FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
 # FIXME: Agenda, Billing is send to whitelist instead of invited people
@@ -133,19 +147,21 @@ if platform.node() == "ecsdev.ep3.at":
         CELERY_ALWAYS_EAGER = False
         
     # on ecsdev we use memcachedb instead of mockcache
-    RENDERSTORAGE_LIB  = 'memcache'
-    RENDERSTORAGE_HOST = '127.0.0.1'
-    RENDERSTORAGE_PORT = 21201 # port of memcachedb
+    RENDER_MEMORYSTORAGE_LIB  = 'memcache'
+    RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
+    RENDER_MEMORYSTORAGE_PORT = 11211 # standard port of memcache
 
     # lamson config different for shredder
     if user == "shredder":
         LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
         LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8833} # listen here 
         FROM_DOMAIN = "s.ecsdev.ep3.at"
+        LAMSON_SEND_THROUGH_RECEIVER = True
     elif user == "testecs":
         LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.189']
-        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': int(os.environ.get('LAMSON_RECEIVER_PORT', 8843))} # listen here 
+        LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8843} # listen here 
         FROM_DOMAIN = "test.ecsdev.ep3.at"
+        LAMSON_SEND_THROUGH_RECEIVER = True
 
     DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
@@ -368,14 +384,14 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
+
 if 'test' in sys.argv or 'runserver' in sys.argv:
-    import subprocess, atexit, random
+    import subprocess, atexit
     if not os.path.exists('ecsmail.lock'):
-        _port = random.randint(30000, 60000)
-        LAMSON_RECEIVER_CONFIG['port'] = _port
-        os.environ['LAMSON_RECEIVER_PORT'] = str(_port)
         with open('ecsmail.lock', 'w'):
-            cmd = ['python', sys.argv[0], 'ecsmail', 'log']
+            # xxx: sys.executable should work in most environments (if you want python, you probably get python with it)
+            cmd = [os.path.normpath(sys.executable), sys.argv[0], 'ecsmail', 'log', str(_port)] 
+            # let the log server listen on smartmx dummy
             print ' '.join(cmd)
             ecsmail = subprocess.Popen(cmd)
             def cleanup():

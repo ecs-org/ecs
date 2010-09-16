@@ -8,25 +8,30 @@ general:
  name:type:platform:resourcetype:resource[:optional]*
  name=[a-zA-Z0-9-_]+
  type=(req:inst|instbin)
- platform=(all|[!]?win|[!]?mac|[!]?apt)
+ platform=(all|[!]?win|[!]?mac|[!]?apt|[!]?suse)
  resourcetype=(pypi|http[s]?|ftp|file|dir)
  resource=url or packagelist seperated with space or comma
  optional depends on command
  
 type=req  # third party packages not written in python
+
+ platform=suse:resourcetype=zypper:resource=pkglist # can be space or comma seperated
+ resource={zypper-packagename}[,{zypper-packagename}]*
+ 
  platform=apt:resourcetype=apt-get:resource=pkglist # can be space or comma seperated
  resource={apt-packagename}[,{apt-packagename}]*
  
  platform=mac:resourcetype=(macports|homebrew):resource=pkglist # can be space or comma seperated
- resource={macports-packagename}[,{macports-packagename}]*
-
+ resource={macports/homebrew-packagename}[,{macports/homebrew-packagename}]*
+ # if both homebrew and macports are active on a host, then homebrew ist selected in preference to macports
+ 
  platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=(unzipflat|unzipflatmain):additional=executable 
  # executable= to be checked if exists in path, package is considered installed if found
  unzipflat unzips all files in zip file to one directory where they will be in path (Scripts directory on windwos)
  unzipflatmain unzips only first directory level above and including rootdir of zipfile to one directory -,,-
  
 type=inst # python libraries to install and use
- platform=(all|[!]?win|[!]?mac|[!]?apt)
+ platform=(all|[!]?win|[!]?mac|[!]?apt|[!]suse)
  resourcetype=(http[s]?|ftp|file):resource=url
  resourcetype=pypi:resource={pypiname}[(\>|\>=|==){version}]?
  # WARNING: pypi version using > or < needs backslash !
@@ -108,7 +113,7 @@ antiword:req:mac:macports:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
-# needed for massimport statistic function
+# mpmath needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
 
 # pdf validation

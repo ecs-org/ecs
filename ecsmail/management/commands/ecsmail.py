@@ -22,7 +22,7 @@ class Command(BaseCommand):
             from lamson.server import SMTPReceiver
             from ecs.ecsmail.config import boot as lamsettings
             # inject receiver into lamsettings
-            lamsettings.receiver = SMTPReceiver(settings.LAMSON_RECEIVER_CONFIG['host'], 
+            lamsettings.receiver = SMTPReceiver(settings.LAMSON_RECEIVER_CONFIG['listen'], 
                 settings.LAMSON_RECEIVER_CONFIG['port'])
 
             import asyncore
