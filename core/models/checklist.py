@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import reversion
-
 from django.db import models
 from django.contrib.contenttypes.generic import GenericForeignKey
 
@@ -17,8 +15,6 @@ class ChecklistBlueprint(models.Model):
     def __unicode__(self):
         return self.name
 
-reversion.register(ChecklistBlueprint)
-
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
     text = models.CharField(max_length=200)
@@ -30,8 +26,6 @@ class ChecklistQuestion(models.Model):
 
     def __unicode__(self):
         return u"%s: '%s'" % (self.blueprint, self.text)
-
-reversion.register(ChecklistQuestion)
 
 class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
@@ -68,8 +62,6 @@ class Checklist(models.Model):
     def has_negative_comments(self):
         return self.get_answers_with_comments(False).exists()
 
-reversion.register(Checklist)
-
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)
@@ -82,4 +74,3 @@ class ChecklistAnswer(models.Model):
     def __unicode__(self):
         return u"Answer to '%s': %s" % (self.question, self.answer)
 
-reversion.register(ChecklistAnswer)

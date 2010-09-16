@@ -8,9 +8,10 @@ PROJECT_DIR = os.path.dirname(__file__)
 ADMINS = (
     ('Felix Erkinger', 'felix@erkinger.at'),
     )
+ADMINS = ()
 MANAGERS = ADMINS
 SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
-
+MAIL_ADMINS = False
 
 # Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
 DEBUG = True
@@ -34,18 +35,29 @@ DATABASES['default'] = {
 # incoming filestore is now in root dir (one below source)
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
+
+
 # StorageVault settings
+
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-
 # mediaserver memcached(b) settings, RENDER_MEMORYSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
 # if set to mockcache, RENDER_MEMORYSTORAGE_HOST & PORT will be ignored
 # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-RENDER_FILESTORAGE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-mediacache"))
-RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
-RENDER_MEMORYSTORAGE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
-RENDER_MEMORYSTORAGE_PORT = 11211 # standardport of memcache, not used for mockcache
 
+
+# Mediaserver settings
+#TODO Migrate mediaserver stettings to a seperate config file
+DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
+DOC_DISKCACHE_MAXSIZE = 2**34
+
+RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))
+RENDER_DISKCACHE_MAXSIZE = 2**33
+
+RENDER_MEMCACHE_LIB  = 'mockcache'
+RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
+RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
+RENDER_MEMCACHE_MAXSIZE = 2**29
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
 # production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 
@@ -287,7 +299,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'reversion.middleware.RevisionMiddleware',
+    #'reversion.middleware.RevisionMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLogin',    # deactivate previous users sessions on login
     'ecs.utils.forceauth.ForceAuth',
@@ -313,7 +325,7 @@ INSTALLED_APPS = (
     'django_nose',
     'djcelery',
     'ghettoq', 
-    'reversion',
+    #'reversion',   # clashes with south if data migrations are done
 
     'ecs.utils.countries',
     'ecs.utils.hashauth',
@@ -383,7 +395,6 @@ DEFAULT_USER_GROUPS = ('Presenter',)
 REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
-
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import subprocess, atexit
