@@ -60,13 +60,13 @@ sprint7_bundle = """
 # database bindings
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:macports:postgresql84-server
-psycopg2:req:zypper:zypper:postgresql-devel
+psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:inst:!win:pypi:psycopg2
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.0.13.win32-py2.6-pg8.4.1-release.exe
 
 pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:macports:sqlite3
-pysqlite:req:zypper:zypper:sqlite3-devel
+pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-py2.6.exe
 
@@ -94,7 +94,7 @@ pysolr:inst:all:pypi:pysolr
 django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:macports:poppler
-pdftotext:req:zypper:zypper:poppler-tools
+pdftotext:req:suse:zypper:poppler-tools
 pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
 
 # simple testing
@@ -146,18 +146,18 @@ django-celery:inst:all:pypi:django-celery
 # pdf document server rendering (includes mockcache for easier testing)
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
-ghostscript:req:zypper:zypper:ghostscript-library
+ghostscript:req:suse:zypper:ghostscript-library
 #ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe::gswin32c.exe needs a portable exe file not that, but the url for now
 
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
-imagemagick:req:zypper:zypper:ImageMagick
+imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatmain:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
 memcached:req:apt:apt-get:memcached
 memcached:req:mac:macports:memcached
-memcached:req:zypper:zypper:memcached
+memcached:req:suse:zypper:memcached
 memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatmain:memcached.exe
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
@@ -218,7 +218,7 @@ celery:req:mac:macports:rabbitmq-server
 # FIXME: no rabbitmq on opensuse
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
-mutt:req:zypper:zypper:mutt
+mutt:req:suse:zypper:mutt
 mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
 mutt:req:mac:macports:mutt
 
