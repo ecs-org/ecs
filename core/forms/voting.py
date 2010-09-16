@@ -12,7 +12,7 @@ class VoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission')
+        exclude = ('top', 'submission_form', 'submission', 'published')
         
 class SaveVoteForm(VoteForm):
     result = ResultField(required=False)

@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
-import reversion
 
 from ecs.messages.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
@@ -33,6 +32,9 @@ class Submission(models.Model):
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
+    
+    # denormalization
+    current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='_current_for')
 
     def get_ec_number_display(self):
         try:
@@ -66,57 +68,54 @@ class Submission(models.Model):
 
         return befangene
 
+    # FIXME: replace all calls with direct attribute access
     def get_most_recent_form(self):
-        # FIXME: pick the last accepted SubmissionForm
-        try:
-            return self.forms.order_by('-pk')[0]
-        except (SubmissionForm.DoesNotExist, IndexError):
-            return None
-
+        return self.current_submission_form
+    
+    # FIXME: replace all calls withs the appropriate direct attribute access
     def get_most_recent_vote(self):
+        return self.current_submission_form.current_pending_vote or self.current_submission_form.current_published_vote
+        
+    @property
+    def votes(self):
         from ecs.core.models import Vote
-        try:
-            return Vote.objects.filter(submission=self).order_by('-pk')[0]
-        except (Vote.DoesNotExist, IndexError):
-            return None
+        return Vote.objects.filter(submission_form__submission=self)
 
     @property
     def project_title(self):
-        sf = self.get_most_recent_form()
-        if not sf:
+        if not self.current_submission_form:
             return None
-        return sf.project_title
+        return self.current_submission_form.project_title
         
     @property
     def german_project_title(self):
-        sf = self.get_most_recent_form()
-        if not sf:
+        if not self.current_submission_form:
             return None
-        return sf.german_project_title
+        return self.current_submission_form.german_project_title
         
     @property
     def multicentric(self):
-        sf = self.get_most_recent_form()
-        if not sf:
+        if not self.current_submission_form:
             return None
-        return sf.multicentric
+        return self.current_submission_form.multicentric
         
     @property
     def is_active(self):
-        vote = self.get_most_recent_vote()
-        if vote:
-            return vote.activates
+        submission_form = self.current_submission_form
+        if submission_form:
+            if submission_form.current_published_vote:
+                return submission_form.current_published_vote.activates
         return False
         
     @property
     def main_ethics_commission(self):
-        sf = self.get_most_recent_form()
-        if not sf:
+        if not self.current_submission_form:
             return None
-        return sf.main_ethics_commission
+        return self.current_submission_form.main_ethics_commission
         
     def save(self, **kwargs):
         if not self.ec_number:
+            # FIXME: how do we really assign ec-numbers for new submissions?
             from random import randint
             self.ec_number = "EK-%s" % randint(10000, 100000)
         super(Submission, self).save(**kwargs)
@@ -126,8 +125,6 @@ class Submission(models.Model):
         
     class Meta:
         app_label = 'core'
-
-reversion.register(Submission)
 
 
 class NameField(object):
@@ -143,13 +140,17 @@ class NameField(object):
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
-    #documents = models.ManyToManyField(Document)
     documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
+    
+    # denormalization
+    primary_investigator = models.OneToOneField('core.Investigator', null=True)
+    current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
+    current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
 
     class Meta:
         app_label = 'core'
@@ -157,6 +158,7 @@ class SubmissionForm(models.Model):
     # 1.4 (via self.documents)
 
     # 1.5
+    sponsor = models.ForeignKey(User, null=True, related_name="sponsored_submission_forms")
     sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contact = NameField()
     sponsor_address1 = models.CharField(max_length=60, null=True)
@@ -166,7 +168,7 @@ class SubmissionForm(models.Model):
     sponsor_phone = models.CharField(max_length=30, null=True)
     sponsor_fax = models.CharField(max_length=30, null=True)
     sponsor_email = models.EmailField(null=True)
-
+    
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
     invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
@@ -346,6 +348,7 @@ class SubmissionForm(models.Model):
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
+    submitter = models.ForeignKey(User, null=True, related_name='submitted_submission_forms')
     submitter_contact = NameField()
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
@@ -413,26 +416,21 @@ class SubmissionForm(models.Model):
         return self.measures.filter(category="6.2")
         
     @property
-    def submitter(self):
-        # FIXME: how do we get the creator of this instance from reversion?
-        return None
-        
-    @property
     def main_ethics_commission(self):
         try:
-            return self.investigators.get(main=True).ethics_commission
+            return self.primary_investigator.ethics_commission
         except Investigator.DoesNotExist:
             return None
-
-reversion.register(SubmissionForm)
 
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
-
-    try:
-        old_sf = submission.forms.filter(pk__lt=new_sf.pk).order_by('-pk')[0]
-    except IndexError:
+    
+    old_sf = submission.current_submission_form
+    submission.current_submission_form = new_sf
+    submission.save(force_update=True)
+    
+    if not old_sf:
         return
     
     recipients = []
@@ -476,6 +474,7 @@ class Investigator(models.Model):
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
     main = models.BooleanField(default=False, blank=True)
 
+    user = models.ForeignKey(User, null=True, related_name='investigations')
     contact = NameField()
     organisation = models.CharField(max_length=80, blank=True)
     phone = models.CharField(max_length=30, blank=True)
@@ -489,8 +488,6 @@ class Investigator(models.Model):
     
     class Meta:
         app_label = 'core'
-
-reversion.register(Investigator)
 
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
@@ -518,8 +515,6 @@ class InvestigatorEmployee(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(InvestigatorEmployee)
-
 # 6.1 + 6.2
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
@@ -534,8 +529,6 @@ class Measure(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(Measure)
-
 # 3b
 class NonTestedUsedDrug(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -547,8 +540,6 @@ class NonTestedUsedDrug(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(NonTestedUsedDrug)
-
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -558,4 +549,3 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(ForeignParticipatingCenter)

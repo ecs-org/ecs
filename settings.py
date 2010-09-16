@@ -8,9 +8,10 @@ PROJECT_DIR = os.path.dirname(__file__)
 ADMINS = (
     ('Felix Erkinger', 'felix@erkinger.at'),
     )
+ADMINS = ()
 MANAGERS = ADMINS
 SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
-
+MAIL_ADMINS = False
 
 # Default is DEBUG, but eg. platform.node ecsdev.ep3.at user testecs overrides that
 DEBUG = True
@@ -287,7 +288,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'reversion.middleware.RevisionMiddleware',
+    #'reversion.middleware.RevisionMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLogin',    # deactivate previous users sessions on login
     'ecs.utils.forceauth.ForceAuth',
@@ -313,7 +314,7 @@ INSTALLED_APPS = (
     'django_nose',
     'djcelery',
     'ghettoq', 
-    'reversion',
+    #'reversion',   # clashes with south if data migrations are done
 
     'ecs.utils.countries',
     'ecs.utils.hashauth',
@@ -383,7 +384,6 @@ DEFAULT_USER_GROUPS = ('Presenter',)
 REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
-
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import subprocess, atexit

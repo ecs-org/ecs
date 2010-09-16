@@ -120,8 +120,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'befangene_review_form': befangene_review_form,
         'pending_notifications': submission_form.notifications.all(),
         'answered_notficiations': [], # FIXME
-        'pending_votes': submission_form.submission.votes.all(),
-        'published_votes': [], # FIXME
+        'pending_votes': submission_form.submission.votes.filter(published=False),
+        'published_votes': submission_form.submission.votes.filter(published=True),
     }
     if extra_context:
         context.update(extra_context)
