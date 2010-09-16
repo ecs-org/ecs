@@ -14,15 +14,14 @@ from ecs.utils.pdfutils import pdf_isvalid
 
 class DocumentProvider(object):
     '''
-    classdocs
-
+    
     '''
     renderer = Renderer() 
     
     def __init__(self):
         self.render_memcache = VolatileCache()
-        self.render_diskcache = DiskCache(os.path.join(settings.RENDER_FILESTORAGE, "docshots"))
-        self.doc_diskcache = DiskCache(os.path.join(settings.RENDER_FILESTORAGE, "blobs"))
+        self.render_diskcache = DiskCache(os.path.join(settings.RENDER_DISKCACHE, "docshots"), settings.RENDER_DISKCACHE_MAXSIZE)
+        self.doc_diskcache = DiskCache(os.path.join(settings.DOC_DISKCACHE, "blobs") , settings.DOC_DISKCACHE_MAXSIZE)
         self.vault = getVault()
         
     def addDocshot(self, docshot, filelike, use_render_memcache=False, use_render_diskcache=False):
@@ -79,7 +78,7 @@ class DocumentProvider(object):
             return False
         
         for docshot, data in self._createDefaultDocshots(pdfblob,filelike):
-            self.addDocShot(docshot, data, use_render_diskcache= True)
+            self.addDocShot(docshot, data, use_render_diskcache=True)
         return True
         
     def _createDefaultDocshots(self, pdfblob, filelike):
@@ -92,6 +91,7 @@ class DocumentProvider(object):
                 
 class VolatileCache(object):
     def __init__(self):
+        # TODO configure memcache qoutas
         if settings.RENDER_MEMORYSTORAGE_LIB == 'memcache':
             import memcache as memcache
         elif settings.RENDER_MEMORYSTORAGE_LIB == 'mockcache' or settings.RENDER_MEMORYSTORAGE_LIB == '' :
@@ -102,7 +102,6 @@ class VolatileCache(object):
 
         self.ns = '%s.ms' % getpass.getuser()
         self.mc = memcache.Client(['%s:%d' % (settings.RENDER_MEMORYSTORAGE_HOST, settings.RENDER_MEMORYSTORAGE_PORT)], debug=False)
-        self.maxsize = 1024 * 1024 * 10
 
     def add(self, identifier, filelike):
         # FIXME: self.ns (identifier part which is the current running os user of the process) should be incooperated into memcache identifier to avoid collissions
@@ -118,8 +117,8 @@ class VolatileCache(object):
         return self.mc.dictionary.values() 
         
 class DiskCache(DiskBuckets):
-        def __init__(self, root_dir):
-            self.maxsize = 1024 * 1024 * 10
+        def __init__(self, root_dir, maxsize):
+            self.maxsize = maxsize
             super(DiskCache, self).__init__(root_dir, allow_mkrootdir=True)
 
         def add(self, identifier, filelike):
@@ -130,7 +129,7 @@ class DiskCache(DiskBuckets):
 
         def get(self, uuid):
             if self.exits(uuid):
-                self.update_access(path)
+                self.update_access(uuid)
                 return super(DiskCache, self).get(uuid)
             else:
                 return None
