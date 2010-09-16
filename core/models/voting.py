@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import reversion
-
 from django.db import models
-
 
 VOTE_RESULT_CHOICES = (
     ('1', u'1 Positiv'),
@@ -69,6 +66,3 @@ class Vote(models.Model):
     def activates(self):
         return self.result in ('1', '1a')
 
-reversion.register(Vote)
-
-    

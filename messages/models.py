@@ -2,7 +2,6 @@
 
 import datetime, uuid
 import traceback
-import reversion
 
 from django.conf import settings
 from django.db import models
@@ -150,8 +149,6 @@ class Thread(models.Model):
             raise ValueError("Threads may only be delegated by the current sender or receiver")
         self.save()
 
-reversion.register(Thread)
-
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
@@ -191,7 +188,5 @@ class Message(models.Model):
                 traceback.print_exc()
                 self.smtp_delivery_state='failed'
         super(Message, self).save(*args, **kwargs)
-
-reversion.register(Message)
 
 

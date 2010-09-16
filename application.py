@@ -187,7 +187,7 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # excel output
 xlwt:inst:all:pypi:xlwt
 
-django-reversion:inst:all:pypi:django-reversion
+#django-reversion:inst:all:pypi:django-reversion
 
 #file encryption
 # win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe

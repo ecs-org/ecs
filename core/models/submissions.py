@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
-import reversion
 
 from ecs.messages.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
@@ -126,8 +125,6 @@ class Submission(models.Model):
         
     class Meta:
         app_label = 'core'
-
-reversion.register(Submission)
 
 
 class NameField(object):
@@ -424,8 +421,6 @@ class SubmissionForm(models.Model):
         except Investigator.DoesNotExist:
             return None
 
-reversion.register(SubmissionForm)
-
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
@@ -490,8 +485,6 @@ class Investigator(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(Investigator)
-
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
 
@@ -518,8 +511,6 @@ class InvestigatorEmployee(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(InvestigatorEmployee)
-
 # 6.1 + 6.2
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
@@ -534,8 +525,6 @@ class Measure(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(Measure)
-
 # 3b
 class NonTestedUsedDrug(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -547,8 +536,6 @@ class NonTestedUsedDrug(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(NonTestedUsedDrug)
-
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
@@ -558,4 +545,3 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
 
-reversion.register(ForeignParticipatingCenter)
