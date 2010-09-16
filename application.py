@@ -1,46 +1,6 @@
 # ecs main application environment config
-
 """
-# package lists format
-########################################
-
-general:
- name:type:platform:resourcetype:resource[:optional]*
- name=[a-zA-Z0-9-_]+
- type=(req:inst|instbin)
- platform=(all|[!]?win|[!]?mac|[!]?apt|[!]?suse)
- resourcetype=(pypi|http[s]?|ftp|file|dir)
- resource=url or packagelist seperated with space or comma
- optional depends on command
- 
-type=req  # third party packages not written in python
-
- platform=suse:resourcetype=zypper:resource=pkglist # can be space or comma seperated
- resource={zypper-packagename}[,{zypper-packagename}]*
- 
- platform=apt:resourcetype=apt-get:resource=pkglist # can be space or comma seperated
- resource={apt-packagename}[,{apt-packagename}]*
- 
- platform=mac:resourcetype=(macports|homebrew):resource=pkglist # can be space or comma seperated
- resource={macports/homebrew-packagename}[,{macports/homebrew-packagename}]*
- # if both homebrew and macports are active on a host, then homebrew ist selected in preference to macports
- 
- platform=win:resourcetype=(http[s]?|ftp|file):resource=url:additional=(unzipflat|unzipflatmain):additional=executable 
- # executable= to be checked if exists in path, package is considered installed if found
- unzipflat unzips all files in zip file to one directory where they will be in path (Scripts directory on windwos)
- unzipflatmain unzips only first directory level above and including rootdir of zipfile to one directory -,,-
- 
-type=inst # python libraries to install and use
- platform=(all|[!]?win|[!]?mac|[!]?apt|[!]suse)
- resourcetype=(http[s]?|ftp|file):resource=url
- resourcetype=pypi:resource={pypiname}[(\>|\>=|==){version}]?
- # WARNING: pypi version using > or < needs backslash !
-
-type=instbin # precompiled python libraries to install and use
- platform=win
- resourcetype=(http[s]?|ftp|file)
- installes a binary version of a python package (which is equivalent to unzip self extracting exe to libs)
- 
+ see source:/docs/src/ecs-sys/PacketFormat.rst
 """
 
 import os
@@ -50,8 +10,7 @@ import getpass
 import shutil
 from uuid import uuid4
 from fabric.api import local, env
-from deployment import package_merge
-from deployment.utils import install_upstart, apache_setup
+from deployment.utils import package_merge, install_upstart, apache_setup
 
 
 # sprint 7 sources
