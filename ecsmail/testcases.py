@@ -7,14 +7,6 @@ from ecs.messages.models import Message, Thread
 import sys, os, time
 import subprocess
 
-# FIXME: does not work this way: lamson logserver started in subthread
-def setUpModule():
-    settings.LAMSON_SEND_THROUGH_RECEIVER = False 
-    # we dont have a frontend server (because we do router converstation so we sent directly to the relay backend)
-
-def shouldbedearDownModule():
-    pass
-
 class MailTestCase(TestCase):
     '''
     TestCase Class, modified to test whole mailsetup including mail sending and receiving

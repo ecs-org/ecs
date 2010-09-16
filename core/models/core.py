@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import reversion
-
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -30,8 +28,6 @@ class EthicsCommission(models.Model):
     def system(self):
         return self.uuid == settings.ETHICS_COMMISSION_UUID
 
-reversion.register(EthicsCommission)
-
 class ExpeditedReviewCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12)
@@ -41,8 +37,6 @@ class ExpeditedReviewCategory(models.Model):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.abbrev)
-
-reversion.register(ExpeditedReviewCategory)
 
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
@@ -54,6 +48,4 @@ class MedicalCategory(models.Model):
 
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.abbrev)
-
-reversion.register(MedicalCategory)
 

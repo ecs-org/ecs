@@ -1,6 +1,5 @@
 import imp, sys
 from optparse import make_option
-from reversion import revision
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
@@ -57,10 +56,6 @@ class Command(BaseCommand):
             print "    Delete %s.%s pk=%s" % (model._meta.app_label, model.__name__, obj.pk)
 
 
-        # make the initial revesion for diffing
-        revision.start()
-        revision.comment = "Bootstraping (./manage.py bootstrap)"
-
         post_save.connect(log_save)
         post_delete.connect(log_delete)
 
@@ -68,10 +63,8 @@ class Command(BaseCommand):
             post_save.disconnect(log_save)
             post_delete.disconnect(log_delete)
             if rollback:
-                revision.invalidate()
                 transaction.rollback()
             else:
-                revision.end()
                 transaction.commit()
 
         try:

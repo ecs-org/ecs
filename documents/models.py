@@ -6,7 +6,6 @@ import tempfile
 import datetime
 import mimetypes
 from uuid import uuid4
-import reversion
 
 from django.db import models
 from django.db.models.signals import post_save, post_delete
@@ -111,15 +110,11 @@ class Document(models.Model):
                     
         return super(Document, self).save(**kwargs)
   
-reversion.register(Document)
-
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
     text = models.TextField()
-
-reversion.register(Page)
 
 
 def _post_doc_save(sender, **kwargs):

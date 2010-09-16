@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+<<<<<<< local
 import reversion
+=======
+>>>>>>> other
 
 from django.db import models
 from django.db.models.signals import post_save
-
 
 VOTE_RESULT_CHOICES = (
     ('1', u'1 Positiv'),
@@ -74,6 +76,7 @@ class Vote(models.Model):
     def activates(self):
         return self.result in ('1', '1a')
 
+<<<<<<< local
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
@@ -90,3 +93,5 @@ def _post_vote_save(sender, **kwargs):
 
 post_save.connect(_post_vote_save, sender=Vote)
 reversion.register(Vote)
+=======
+>>>>>>> other
