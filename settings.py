@@ -287,7 +287,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'reversion.middleware.RevisionMiddleware',
+    #'reversion.middleware.RevisionMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLogin',    # deactivate previous users sessions on login
     'ecs.utils.forceauth.ForceAuth',
@@ -313,7 +313,7 @@ INSTALLED_APPS = (
     'django_nose',
     'djcelery',
     'ghettoq', 
-    'reversion',
+    #'reversion',   # clashes with south if data migrations are done
 
     'ecs.utils.countries',
     'ecs.utils.hashauth',
