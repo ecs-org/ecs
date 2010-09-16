@@ -5,7 +5,6 @@
 {% block htmlbody %}
 <div id="container">
 
-    <div id="header_wrapper">
 	  <div id="header">
         {% block header %}
             <div id="headertitle">
@@ -23,12 +22,13 @@
             </div>
         {% endblock %}
 	  </div>
-    </div>
 
     <div id="content">
 	    {% block content %}
 	    {% endblock %}
     </div>
+
+    <div id="toggle_sidebar_button"><a href="#" id="toggle_sidebar" title="Sidebar verstecken/wiederherstellen"><img src="{{ MEDIA_URL }}/images/toggle.png" alt="toggle sidebar"/></a></div>
   
     <div id="sidebar">
         {% block sidebar %}
@@ -73,7 +73,17 @@
       $$('#content')[0].setStyle('top', ''+header_height+'px');
     }
     
-    function toggle_sidebar() {
+
+    function set_tab_height() {
+      var tab_height = $$('.tab_header_groups')[0].getHeight();
+      $$('.tab_header_groups')[0].setStyle('margin-bottom', ''+tab_height+'px');
+      $$('.tab_headers')[0].setStyle('margin-bottom', ''+tab_height+'px');
+      $$('#content')[0].setStyle('margin-top', ''+tab_height+'px');
+    }
+
+
+    window.addEvent('domready', function() {
+    $('toggle_sidebar').addEvent('click', function() {
       var sidebar = $$('#sidebar')[0];
       var header = $$('#header')[0];
       var content = $$('#content')[0];
@@ -86,9 +96,12 @@
         header.setStyle('right', '220px');
         content.setStyle('right', '220px');
       }
-    }
+      });
+    });
 
     set_content_position();
+    set_tab_height();
+    
   </script>
 {% endblock %}
 
