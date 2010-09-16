@@ -77,8 +77,5 @@ class Command(BaseCommand):
             raise
         else:
             if transaction.is_dirty():
-                if dry_run:
-                    cleanup(rollback=True)
-                else:
-                    cleanup()
+                cleanup(rollback=True if dry_run else False)
 
