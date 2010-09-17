@@ -47,7 +47,9 @@ STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_D
 
 
 # Mediaserver settings
-#TODO Migrate mediaserver stettings to a seperate config file
+#TODO Migrate mediaserver settings to a separate config file
+MEDIASERVER_KEYOWNER="43BA0B84B8C6007858854B84F122070D7FB78045"
+
 DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
 DOC_DISKCACHE_MAXSIZE = 2**34
 
@@ -63,6 +65,7 @@ RENDER_MEMCACHE_LIB  = 'mockcache'
 RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
 RENDER_MEMCACHE_MAXSIZE = 2**29
+
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
 # production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 
