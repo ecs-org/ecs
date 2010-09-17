@@ -112,6 +112,11 @@ else:
     EMAIL_HOST = '127.0.0.1' # LAMSON_RELAY_CONFIG['host'] 
     EMAIL_PORT = 4789 #LAMSON_RELAY_CONFIG['port'] 
     
+# enable the audit trail
+ENABLE_AUDIT_TRAIL = True
+if 'syncdb' in sys.argv or 'migrate' in sys.argv:
+    # there is no user root at this time, so we cant create a audit log
+    ENABLE_AUDIT_TRAIL=False
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import random

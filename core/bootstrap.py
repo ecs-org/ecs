@@ -234,18 +234,6 @@ def medical_categories():
         medcat.name = longname
         medcat.save()
 
-
-@bootstrap.register()
-def auth_user_root():
-    root, created = User.objects.get_or_create(username='root')
-    root.first_name = 'System'
-    root.last_name = 'Administrator'
-    root.is_staff = True
-    root.is_superuser = True
-    root.email = 'nobody@example.notexisting.loc'
-    root.set_unusable_password()
-    root.save()
-
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     ''' Developer Account Creation '''
@@ -355,7 +343,7 @@ def checklist_questions():
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_root'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions'))
 def testsubmission():
     submission, created = Submission.objects.get_or_create(ec_number='4321')
     if not created:

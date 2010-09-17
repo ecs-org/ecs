@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.core.serializers import serialize
+from django.conf import settings
 
 from ecs.audit.models import AuditTrail
 from ecs.users.utils import get_current_user
@@ -10,6 +11,9 @@ def post_save_handler(**kwargs):
     instance = kwargs['instance']
     
     if sender == AuditTrail:
+        return
+    
+    if not settings.ENABLE_AUDIT_TRAIL:
         return
     
     description = '%s %s instance of %s' % (

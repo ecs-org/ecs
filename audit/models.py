@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from uuid import uuid4
-from hashlib import sha256
 from datetime import datetime
+import hmac
+import hashlib
 
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from ecs.users.utils import get_current_user
 
@@ -41,8 +43,9 @@ class AuditTrail(models.Model):
             last_hash = previous_entry.hash
         self.user = get_current_user()
         self.created_at = datetime.now()
-        self.hash = sha256(last_hash+self._get_log_line()).hexdigest()
+        self.hash = hmac.new(str(last_hash), self._get_log_line(), hashlib.sha256).hexdigest()
         rval = super(AuditTrail, self).save(*args, **kwargs)
-        print self.get_log_line()
+        if settings.DEBUG:
+            print self.description
         # TODO: log with rsyslogd
         return rval

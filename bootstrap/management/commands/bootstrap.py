@@ -6,6 +6,21 @@ from django.db import transaction
 from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.utils.importlib import import_module
+from django.contrib.auth.models import User
+
+
+def _create_root_user():
+    settings.ENABLE_AUDIT_LOG = False
+    root, _ = User.objects.get_or_create(username='root')
+    root.first_name = 'System'
+    root.last_name = 'Administrator'
+    root.is_staff = True
+    root.is_superuser = True
+    root.email = 'nobody@example.notexisting.loc'
+    root.set_unusable_password()
+    root.save()
+    settings.ENABLE_AUDIT_LOG = True
+
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
@@ -68,6 +83,7 @@ class Command(BaseCommand):
                 transaction.commit()
 
         try:
+            _create_root_user()
             for name in order:
                 print "Bootstrapping %s." % name
                 func = bootstrap_funcs[name]
