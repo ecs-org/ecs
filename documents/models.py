@@ -119,7 +119,7 @@ class Page(models.Model):
 
 def _post_doc_save(sender, **kwargs):
     from ecs.documents.task_queue import extract_and_index_pdf_text
-    from ecs.documents.task_queue import upload_to_storagevault
+    from ecs.documents.task_queue import encrypt_and_upload_to_storagevault
     
     doc = kwargs['instance']
     doc.page_set.all().delete()
@@ -131,7 +131,7 @@ def _post_doc_save(sender, **kwargs):
         extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
     
     # upload it via celery to the storage vault
-    upload_to_storagevault.apply_async(args=[doc.pk], countdown=3)
+    encrypt_and_upload_to_storagevault.apply_async(args=[doc.pk], countdown=3)
         
         
 def _post_page_delete(sender, **kwargs):

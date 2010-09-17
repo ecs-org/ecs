@@ -1,20 +1,24 @@
+from django.conf import settings
 from celery.decorators import task
 from haystack import site
 from ecs.utils.pdfutils import pdftotext
 from ecs.utils.storagevault import getVault
 from ecs.documents.models import Document, Page
+from ecs.utils import gpgutils
 
 @task()
-def upload_to_storagevault(document_pk=None, **kwargs):
+def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
         logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
         return
+    
     vault = getVault()
     with open(doc.file.path,"rb") as f:
         try:
-            vault.add(doc.uuid_document, f)
+            encrypted = gpgutils.encrypt(f, settings.MEDIASERVER_KEYOWNER)
+            vault.add(doc.uuid_document, encrypted)
         except KeyError:
             pass # FIXME/mediaserver
 
