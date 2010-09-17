@@ -12,21 +12,23 @@ def post_save_handler(**kwargs):
 
     ignore_list = [
         'ecs.audit.models.AuditTrail',
-        'django.contrib.sessions.models.Session',
     ]
     
-    ignored_classes = set()
+    if hasattr(settings, 'AUDIT_TRAIL_IGNORED_MODELS'):
+        ignore_list += list(settings.AUDIT_TRAIL_IGNORED_MODELS)
+    
+    ignored_models = set()
     for entry in ignore_list:
         entry_list = entry.split('.')
         module = __import__('.'.join(entry_list[:-1]), fromlist=entry_list[:-2])
-        ignored_class = getattr(module, entry_list[-1])
-        ignored_classes.add(ignored_class)
+        ignored_model = getattr(module, entry_list[-1])
+        ignored_models.add(ignored_model)
     
     
     sender = kwargs['sender']
     instance = kwargs['instance']
     
-    if sender in ignored_classes:
+    if sender in ignored_models:
         return
 
     description = '%s %s instance of %s' % (

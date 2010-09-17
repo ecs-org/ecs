@@ -118,6 +118,10 @@ if 'syncdb' in sys.argv or 'migrate' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
     ENABLE_AUDIT_TRAIL=False
 
+AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
+        'django.contrib.sessions.models.Session',
+)
+
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import random
     if not os.path.exists('ecsmail.lock'):
