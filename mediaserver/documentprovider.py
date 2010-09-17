@@ -9,14 +9,13 @@ import os
 from django.conf import settings
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
-from ecs.mediaserver.renderer import Renderer
+from ecs.mediaserver.renderer import renderPDFMontage
 from ecs.utils.pdfutils import pdf_isvalid
-
+ 
 class DocumentProvider(object):
     '''
     
     '''
-    renderer = Renderer() 
     
     def __init__(self):
         self.render_memcache = VolatileCache()
@@ -87,21 +86,21 @@ class DocumentProvider(object):
             
         for t in tiles:
             for w in width:
-                yield (self.renderer.renderPDFMontage(pdfblob, filelike, w, t, t))
+                yield (renderPDFMontage(pdfblob, filelike, w, t, t))
                 
 class VolatileCache(object):
     def __init__(self):
         # TODO configure memcache qoutas
-        if settings.RENDER_MEMORYSTORAGE_LIB == 'memcache':
+        if settings.RENDER_MEMCACHE_LIB == 'memcache':
             import memcache as memcache
-        elif settings.RENDER_MEMORYSTORAGE_LIB == 'mockcache' or settings.RENDER_MEMORYSTORAGE_LIB == '' :
+        elif settings.RENDER_MEMCACHE_LIB == 'mockcache' or settings.RENDER_MEMCACHE_LIB == '' :
             import mockcache as memcache
             print "Debug: Import mockcache as memcache"
         else:
-            raise NotImplementedError('i do not know about %s as RENDER_MEMORYSTORAGE_LIB' % settings.RENDER_MEMORYSTORAGE_LIB)
+            raise NotImplementedError('i do not know about %s as RENDER_MEMORYSTORAGE_LIB' % settings.RENDER_MEMCACHE_LIB)
 
         self.ns = '%s.ms' % getpass.getuser()
-        self.mc = memcache.Client(['%s:%d' % (settings.RENDER_MEMORYSTORAGE_HOST, settings.RENDER_MEMORYSTORAGE_PORT)], debug=False)
+        self.mc = memcache.Client(['%s:%d' % (settings.RENDER_MEMCACHE_HOST, settings.RENDER_MEMCACHE_PORT)], debug=False)
 
     def add(self, identifier, filelike):
         # FIXME: self.ns (identifier part which is the current running os user of the process) should be incooperated into memcache identifier to avoid collissions

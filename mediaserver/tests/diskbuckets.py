@@ -26,7 +26,8 @@ class DiskBucketsTest(TestCase):
     def tearDown(self):
         shutil.rmtree(self.root_dir)
     
-    def test_Consistency(self):
+    def testConsistency(self):
+        
         for u in self.uuids: 
             self.assertEquals(self.store.get(u).read(), hashlib.md5(u).hexdigest())
 
