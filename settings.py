@@ -66,6 +66,8 @@ RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
 RENDER_MEMCACHE_MAXSIZE = 2**29
 
+# Storagevault connector settings
+S3_SECRET_KEYS = { "UnitTestKey": "imhappytobeatestkey", "LocalFileStorageVault": "imhappytobeasecretkey"}
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
 # production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 
