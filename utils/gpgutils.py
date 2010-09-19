@@ -17,6 +17,7 @@ def _prepare(filelike):
     f_in.close();
     return tmp_in, tmp_out
 
+# TODO change to symmetric key
 def encrypt(filelike, fingerprint):
     tmp_in, tmp_out = _prepare(filelike)
 
@@ -28,6 +29,7 @@ def encrypt(filelike, fingerprint):
     
     return open(tmp_out, 'rb')
 
+# TODO change to symmetric key
 def decrypt(filelike, fingerprint):
     tmp_in, tmp_out = _prepare(filelike)
 
