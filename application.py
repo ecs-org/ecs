@@ -34,7 +34,7 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 pytz:inst:all:pypi:pytz
 
 # django main
-django:inst:all:pypi:django==1.2.1
+django:inst:all:pypi:django==1.2.3
 south:inst:all:pypi:south
 django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
@@ -146,13 +146,13 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # excel output
 xlwt:inst:all:pypi:xlwt
 
-#django-reversion:inst:all:pypi:django-reversion
+# architecture decission: we will not use django-reversion:inst:all:pypi:django-reversion
 
 #file encryption
 # win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
-gnupg:req:mac:homebrew:fixmegnupgforhomebrewpackagename
+gnupg:req:mac:homebrew:FIXME gnupgforhomebrewpackagename
 """
 
 
