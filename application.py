@@ -150,8 +150,9 @@ xlwt:inst:all:pypi:xlwt
 
 #file encryption
 # win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
-# gnupg:req:apt:apt-get:gnupg
-# gnupg:req:mac:macports:gnupg
+gnupg:req:apt:apt-get:gnupg
+gnupg:req:mac:macports:gnupg
+gnupg:req:mac:homebrew:fixmegnupgforhomebrewpackagename
 """
 
 
@@ -160,8 +161,8 @@ quality_packages= """
 # nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
 coverage:inst:!win:pypi:coverage
-nose-xcover:inst:!win:http://github.com/cmheisel/nose-xcover/tarball/master
 coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
+nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
 logilab-common:inst:all:pypi:logilab-common\>=0.49.0
 logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint

@@ -38,12 +38,8 @@ INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs
 
 
 # StorageVault settings
-
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-# mediaserver memcached(b) settings, RENDER_MEMORYSTORAGE_LIB can either be "memcache" or "mockcache" (and defaults to mockcache if empty)
-# if set to mockcache, RENDER_MEMORYSTORAGE_HOST & PORT will be ignored
-# WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
 
 
 # Mediaserver settings
@@ -56,11 +52,8 @@ DOC_DISKCACHE_MAXSIZE = 2**34
 RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))
 RENDER_DISKCACHE_MAXSIZE = 2**33
 
-# which one is the current? are they both needed?
-RENDER_MEMORYSTORAGE_LIB  = 'mockcache'
-RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
-RENDER_MEMORYSTORAGE_PORT = 11211 # standard port of memcache
-
+# RENDER_MEMCACHE_LIB: if set to mockcache, HOST & PORT will be ignored
+# WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
 RENDER_MEMCACHE_LIB  = 'mockcache'
 RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
@@ -174,10 +167,10 @@ if platform.node() == "ecsdev.ep3.at":
         # use queueing 
         CELERY_ALWAYS_EAGER = False
         
-    # on ecsdev we use memcachedb instead of mockcache
-    RENDER_MEMORYSTORAGE_LIB  = 'memcache'
-    RENDER_MEMORYSTORAGE_HOST = '127.0.0.1'
-    RENDER_MEMORYSTORAGE_PORT = 11211 # standard port of memcache
+    # on ecsdev we use memcache instead of mockcache
+    RENDER_MEMCACHE_LIB  = 'memcache'
+    RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
+    RENDER_MEMCACHE_PORT = 11211
 
     # lamson config different for shredder
     if user == "shredder":
