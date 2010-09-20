@@ -8,7 +8,7 @@ class MediaBlob(object):
     def __init__(self, uuid):
         self.uuid = uuid 
     def cacheID(self):
-        return self.uuid
+        return self.uuid.get_hex()
 
     
 class Docshot(object):
@@ -20,5 +20,5 @@ class Docshot(object):
         self.pagenr = pagenr
         
     def cacheID(self):
-        return "docshot_%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y ,self.width,self.pagenr)  
-        
+        return "%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y ,self.width, self.pagenr)  
+

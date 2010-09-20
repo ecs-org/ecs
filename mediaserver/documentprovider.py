@@ -11,7 +11,6 @@ from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
 from ecs.mediaserver.renderer import renderDefaultDocshots
 from ecs.utils.pdfutils import pdf_isvalid
-import tempfile
  
 class DocumentProvider(object):
     '''
@@ -22,6 +21,7 @@ class DocumentProvider(object):
         self.render_diskcache = DiskCache(os.path.join(settings.RENDER_DISKCACHE, "docshots"), settings.RENDER_DISKCACHE_MAXSIZE)
         self.doc_diskcache = DiskCache(os.path.join(settings.DOC_DISKCACHE, "blobs") , settings.DOC_DISKCACHE_MAXSIZE)
         self.vault = getVault()
+
         
     def addDocshot(self, docshot, filelike, use_render_memcache=False, use_render_diskcache=False):
         if use_render_memcache:
