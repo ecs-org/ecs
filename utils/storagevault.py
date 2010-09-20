@@ -19,16 +19,16 @@ def getVault():
     
 class UnimplementedStorageVault():
     def __init__(self):
-        raise UnimplementedError
+        raise NotImplementedError
  
     def add(self, uuid, filelike):
-        raise UnimplementedError
+        raise NotImplementedError
 
     def get(self, uuid):
-        raise UnimplementedError
+        raise NotImplementedError
 
     def exists(self, uuid):
-        raise UnimplementedError
+        raise NotImplementedError
 
 class LocalFileStorageVault(DiskBuckets):
     def __init__(self):
@@ -39,15 +39,15 @@ class S3StorageVault():
     def __init__(self):
         self.id = settings.STORAGE_VAULT_OPTIONS['authid']
         self.key = settings.STORAGE_VAULT_OPTIONS['authkey']
-        raise UnimplementedError
+        raise NotImplementedError
  
     def add(self, uuid, filelike):
-        raise UnimplementedError
+        raise NotImplementedError
 
     def get(self, uuid):
-        raise UnimplementedError
+        raise NotImplementedError
 
     def exists(self, uuid):
-        raise UnimplementedError
+        raise NotImplementedError
 
         

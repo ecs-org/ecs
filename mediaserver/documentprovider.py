@@ -89,7 +89,7 @@ class VolatileCache(object):
             import mockcache as memcache
             print "Debug: Import mockcache as memcache"
         else:
-            raise NotImplementedError('i do not know about %s as RENDER_MEMORYSTORAGE_LIB' % settings.RENDER_MEMCACHE_LIB)
+            raise NotImplementedError('i do not know about %s as RENDER_MEMCACHE_LIB' % settings.RENDER_MEMCACHE_LIB)
 
         self.ns = '%s.ms' % getpass.getuser()
         self.mc = memcache.Client(['%s:%d' % (settings.RENDER_MEMCACHE_HOST, settings.RENDER_MEMCACHE_PORT)], debug=False)
