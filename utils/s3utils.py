@@ -7,13 +7,14 @@ Created on Sep 19, 2010
 from ecs.utils.django_signed.signed import base64_hmac
 from django.conf import settings
 from urlparse import urlparse, parse_qs
+from time import time
 
 def createExpiringUrl(baseurl, bucket, objectid, keyId, expires):
     signature = _createSignatur(bucket, objectid, keyId, expires);
-    url = "%s%s%s?AWSAccessKeyId=%s&amp;Expires=%s&amp;Signature=%s" % (baseurl, bucket, objectid, keyId, expires, signature) 
-    auth_header = "Authorization: AWS %s:%s" (keyId, signature)
+    url = "%s%s%s?AWSAccessKeyId=%s&Expires=%s&Signature=%s" % (baseurl, bucket, objectid, keyId, expires, signature) 
+    #auth_header = "Authorization: AWS %s:%s" % (keyId, signature)
     
-    return url, auth_header
+    return url
 
 def _createSignatur(bucket, objectid, keyId, expires):
     secretKey = settings.S3_SECRET_KEYS[keyId]
@@ -25,18 +26,20 @@ def _createSignatur(bucket, objectid, keyId, expires):
     
 def verifyExpiringUrl(bucket, objectid, keyId, expires, signature):
     expected_signature = _createSignatur(bucket, objectid, keyId, expires);
-    
-    return expected_signature == signature
+    return (int(expires) > int(time()) and expected_signature == signature)
+
+def verifyExpiringUrlString(urlstring):
+    bucket, objectid, keyId, expires, signature = parseS3UrlFeatures(urlstring);
+    return verifyExpiringUrl(bucket, objectid, keyId, expires, signature)
 
 def parseS3UrlFeatures(urlstring):
     parsedurl = urlparse(urlstring);
     query_dict = parse_qs(parsedurl.query)
     tail, sep ,head = parsedurl.path.rpartition("/");
-    
     bucket = tail + sep
     objectid = head
-    keyId = query_dict["AWSAccessKeyId"]
-    expires = query_dict["Expires"]
-    signature = query_dict["Signature"]
+    keyId = query_dict["AWSAccessKeyId"].pop()
+    expires = query_dict["Expires"].pop()
+    signature = query_dict["Signature"].pop()
     
     return (bucket, objectid, keyId, expires, signature)
