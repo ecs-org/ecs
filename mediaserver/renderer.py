@@ -1,9 +1,10 @@
 import subprocess
 import tempfile
-from ecs.mediaserver.models.DocumentModel import MediaBlob, Docshot
+from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
 import os
+from uuid import UUID
 
-def renderPDFMontage(uuid, filelike, width, tiles_x, tiles_y, aspect_ratio=1.41428, dpi=72, depth=8):
+def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=1.41428, dpi=72, depth=8):
     margin_x = 0
     margin_y = 0
     
@@ -16,22 +17,30 @@ def renderPDFMontage(uuid, filelike, width, tiles_x, tiles_y, aspect_ratio=1.414
     tile_height = (height / tiles_y) - margin_y
     
     tmp_renderdir = tempfile.mkdtemp() 
-    tmp_rendersrc = os.path.join(tmp_renderdir, 'pdf_' + uuid)
-    tmp_docshot_prefix = os.path.join(tmp_renderdir, 'docshot_' + uuid + '_' + width + '_' + tiles_x + 'x' + tiles_y + '_')
+    tmp_docshot_prefix = os.path.join(tmp_renderdir, '%s_%s_%sx%s_' % (uuid, width, tiles_x, tiles_y))
      
-    f_rendersrc = os.open(tmp_rendersrc, "wb");
-    f_rendersrc.write(filelike);
-    f_rendersrc.close();
-       
-    args = 'montage -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d %s PNG:%s%%d' % (tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth, tmp_rendersrc, tmp_docshot_prefix)
-    popen = subprocess.Popen(args)
-
-    if popen.returncode != 0:
-        raise IOError('montage returned error code % i')
+    args = '/usr/bin/montage -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d %s PNG:%s%%d' % (tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth, tmp_rendersrc, tmp_docshot_prefix)
+    popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
+    returncode = popen.wait()
+    
+    if returncode != 0:
+        raise IOError('montage returned error code:%d %s' % (returncode, popen.stderr.read()))
 
     pagenr = 0
     
-    docshots = [ ds for ds in os.listdir(tmp_renderdir) if ds.startswith("docshot") ]
+    for ds in sorted(os.listdir(tmp_renderdir)):
+        dspath = os.path.join(tmp_renderdir, ds)
+        return Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr=pagenr+1), open(dspath,"rb")
+
+def renderDefaultDocshots(self, pdfblob, filelike):
+    tiles = [ 1, 3, 5 ]
+    width = [ 800, 768 ] 
     
-    for ds in docshots:
-        yield(Docshot(MediaBlob(uuid=uuid), tiles_x, tiles_y, width, pagenr=pagenr+1), open(ds,"rb"))
+    # prepare the temporary render src
+    tmp_rendersrc = tempfile.mktemp();
+    with open(tmp_rendersrc, "wb") as f_rendersrc:
+        f_rendersrc.write(filelike.read());
+
+    for t in tiles:
+        for w in width:
+            yield renderPDFMontage(pdfblob.cacheID(), tmp_rendersrc, w, t, t)
