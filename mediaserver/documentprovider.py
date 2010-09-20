@@ -9,14 +9,14 @@ import os
 from django.conf import settings
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
-from ecs.mediaserver.renderer import renderPDFMontage
+from ecs.mediaserver.renderer import renderDefaultDocshots
 from ecs.utils.pdfutils import pdf_isvalid
+import tempfile
  
 class DocumentProvider(object):
     '''
     
     '''
-    
     def __init__(self):
         self.render_memcache = VolatileCache()
         self.render_diskcache = DiskCache(os.path.join(settings.RENDER_DISKCACHE, "docshots"), settings.RENDER_DISKCACHE_MAXSIZE)
@@ -36,7 +36,7 @@ class DocumentProvider(object):
         filelike=None
             
         if try_doc_diskcache:
-            filelike = self.doc_diskcache.get(mediablob);
+            filelike = self.doc_diskcache.get(mediablob.cacheID());
                         
         if not filelike and try_vault:
             filelike = self.vault.get(mediablob.cacheID())
@@ -59,35 +59,27 @@ class DocumentProvider(object):
                 filelike = self.render_diskcache.get(docshot.cacheID()) # do not update access because get of diskcache makes it
 
                 if not filelike: # still not here, so we need to recache from scratch
-                    self.getBlob(docshot.mediablob.cacheID()) # This primes caches
+                    self.getBlob(docshot.mediablob) # This primes caches
                     
                     filelike = self.render_diskcache.get(docshot.cacheID())
                     if not filelike:
                         return None
                         
-                self.render_memcache.store(docshot.cacheID(), filelike)
+                self.render_memcache.add(docshot.cacheID(), filelike)
                 filelike.seek(0)
         return filelike
  
     def _cacheBlob(self, mediablob, filelike):
-        self.doc_diskcache.store(mediablob.cacheID(), filelike)
+        self.doc_diskcache.add(mediablob.cacheID(), filelike)
 
     def _cacheDocshots(self, pdfblob, filelike):
         if not pdf_isvalid(filelike):
             return False
         
-        for docshot, data in self._createDefaultDocshots(pdfblob,filelike):
-            self.addDocShot(docshot, data, use_render_diskcache=True)
+        for docshot, data in renderDefaultDocshots(pdfblob,filelike):
+            self.addDocshot(docshot, data, use_render_diskcache=True)
         return True
-        
-    def _createDefaultDocshots(self, pdfblob, filelike):
-        tiles = [ 1, 3, 5 ]
-        width = [ 800, 768 ] 
-            
-        for t in tiles:
-            for w in width:
-                yield (renderPDFMontage(pdfblob, filelike, w, t, t))
-                
+               
 class VolatileCache(object):
     def __init__(self):
         # TODO configure memcache qoutas
@@ -127,7 +119,7 @@ class DiskCache(DiskBuckets):
             os.utime(self._generate_path(identifier), None)
 
         def get(self, uuid):
-            if self.exits(uuid):
+            if self.exists(uuid):
                 self.update_access(uuid)
                 return super(DiskCache, self).get(uuid)
             else:
