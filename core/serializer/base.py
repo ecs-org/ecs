@@ -60,7 +60,7 @@ class FieldDocs(object):
 class ModelSerializer(object):
     exclude = ('id',)
     groups = ()
-    follow = ()
+    follow = {}
     fields = ()
 
     def __init__(self, model, groups=None, exclude=None, follow=None, fields=None):
@@ -78,7 +78,10 @@ class ModelSerializer(object):
         names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
         if self.fields:
             names = names.intersection(self.fields)
-        return names.union(self.follow)
+        return names.union(self.follow.keys())
+        
+    def get_reverse_name(self, follow_name):
+        return self.follow.get(follow_name)
         
     def split_prefix(self, name):
         prefix, key = None, name
@@ -178,6 +181,7 @@ class ModelSerializer(object):
         obj.clean()
         old_save = obj.save
         def _save(*args, **kwargs):
+            del obj.save
             old_save(*args, **kwargs)
             for name, val, action in deferred:
                 manager = getattr(obj, name)
@@ -263,11 +267,17 @@ class SubmissionSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
-        follow = ('foreignparticipatingcenter_set', 'investigators', 'measures', 'documents', 'nontesteduseddrug_set'),
-        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote'),
+        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator'),
+        follow = {
+            'foreignparticipatingcenter_set': 'submission_form',
+            'investigators': 'submission_form',
+            'measures': 'submission_form',
+            'documents': 'parent_object',
+            'nontesteduseddrug_set': 'submission_form',
+        },
     ),
     Submission: SubmissionSerializer(exclude=('id', 'external_reviewer_name', 'current_submission_form')),
-    Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form'), follow=('employees',)),
+    Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form'), follow={'employees': 'investigator'}),
     InvestigatorEmployee: ModelSerializer(InvestigatorEmployee, exclude=('id', 'investigator')),
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
