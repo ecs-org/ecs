@@ -374,11 +374,11 @@ class TimetableEntry(models.Model):
             return entries[0]
         return None
 
-def _timetable_entry_delete_post_delete(sender, **kwargs):
+def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
 
-post_delete.connect(_timetable_entry_delete_post_delete, sender=TimetableEntry)
+post_delete.connect(_timetable_entry_post_delete, sender=TimetableEntry)
 
 class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')

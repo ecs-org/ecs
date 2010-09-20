@@ -8,8 +8,9 @@ def get_current_user():
     if hasattr(current_user_store, 'user'):
         return current_user_store.user
     else:
+        return None
         # FIXME: what do we return during testing or management commands? Do we really query the user table every time?
-        return User.objects.get(username='root')
+        #return User.objects.get(username='root')
         
 @contextmanager
 def sudo(user):

@@ -9,7 +9,11 @@ from ecs.users.utils import get_current_user
 def post_save_handler(**kwargs):
     if not settings.ENABLE_AUDIT_TRAIL:
         return
-
+        
+    if not get_current_user():
+        # FIXME!
+        return
+    
     ignore_list = [
         'ecs.audit.models.AuditTrail',
     ]

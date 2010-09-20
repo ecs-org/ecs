@@ -321,6 +321,9 @@ def create_submission_form():
     sform.substance_registered_in_countries = []
     sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
     sform.save()
+    ek = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
+    ek.save()
+    Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek)
     return sform
 
 

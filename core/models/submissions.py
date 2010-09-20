@@ -7,10 +7,14 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
+from ecs.core.models.voting import FINAL_VOTE_RESULTS
 
 from ecs.messages.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
+
+from ecs import authorization
+from ecs.authorization.managers import AuthorizationManager
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -35,6 +39,9 @@ class Submission(models.Model):
     
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='_current_for')
+    next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful
+    
+    objects = AuthorizationManager()
 
     def get_ec_number_display(self):
         try:
@@ -127,6 +134,44 @@ class Submission(models.Model):
         app_label = 'core'
 
 
+class SubmissionQFactory(authorization.AuthorizationQFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+
+        ### shortcircuit logic
+        if not profile.approved_by_office:
+            return self.make_deny_q()
+
+        ### default policy: deny access to all submissions.
+        q = self.make_deny_q()
+
+        ### rules that apply until a final vote has been published.
+        until_vote_q = self.make_q(additional_reviewers=user)
+        if profile.thesis_review:
+            until_vote_q |= self.make_q(thesis=True)
+        if profile.board_member:
+            until_vote_q |= self.make_q(timetable_entries__participations__user=user, timetable_entries__meeting=self.make_f('next_meeting'))
+        if profile.expedited_review:
+            until_vote_q |= self.make_q(expedited=True)
+        if profile.external_review:
+            until_vote_q |= self.make_q(external_reviewer_name=user)
+        # FIXME: how do we detect whether an insurance review is required?
+        #if profile.insurance_review:
+        #    until_vote_q |= self.make_q(insurance_review_required=True)
+        q |= until_vote_q & (
+            self.make_q(current_submission_form__current_published_vote=None)
+            | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)
+        )
+
+        ### rules that apply until the end of the submission lifecycle
+        until_eol_q = self.make_q(pk__gt=0) # active=True
+        if not (user.is_staff or profile.internal):
+            until_eol_q &= self.make_q(current_submission_form__submitter=user) | self.make_q(current_submission_form__primary_investigator__user=user) | self.make_q(current_submission_form__sponsor=user)
+        q |= until_eol_q
+        return q
+
+authorization.register(Submission, SubmissionQFactory)
+
 class NameField(object):
     def contribute_to_class(self, cls, name):
         fields = {
@@ -154,6 +199,8 @@ class SubmissionForm(models.Model):
 
     class Meta:
         app_label = 'core'
+        
+    objects = AuthorizationManager('submission')
     
     # 1.4 (via self.documents)
 
@@ -486,8 +533,20 @@ class Investigator(models.Model):
     certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
     
+    objects = AuthorizationManager('submission_form__submission')
+    
     class Meta:
         app_label = 'core'
+
+
+def _post_investigator_save(sender, **kwargs):
+    investigator = kwargs['instance']
+    if not investigator.main:
+        return
+    investigator.submission_form.primary_investigator = investigator
+    investigator.submission_form.save()
+    
+post_save.connect(_post_investigator_save, sender=Investigator)
 
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
@@ -497,6 +556,11 @@ class InvestigatorEmployee(models.Model):
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
+    
+    objects = AuthorizationManager('investigator__submission_form__submission')
+    
+    class Meta:
+        app_label = 'core'
     
     @property
     def full_name(self):
@@ -512,8 +576,7 @@ class InvestigatorEmployee(models.Model):
     @property
     def geschlecht_string(self):
         return dict(m="Hr", f="Fr").get(self.sex, "")
-    class Meta:
-        app_label = 'core'
+
 
 # 6.1 + 6.2
 class Measure(models.Model):
@@ -526,8 +589,11 @@ class Measure(models.Model):
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
     
+    objects = AuthorizationManager('submission_form__submission')
+    
     class Meta:
         app_label = 'core'
+
 
 # 3b
 class NonTestedUsedDrug(models.Model):
@@ -537,14 +603,19 @@ class NonTestedUsedDrug(models.Model):
     preparation_form = models.CharField(max_length=40)
     dosage = models.CharField(max_length=40)
     
+    objects = AuthorizationManager('submission_form__submission')
+    
     class Meta:
         app_label = 'core'
+
 
 # 2.6.2 + 2.7
 class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
     name = models.CharField(max_length=60)
     investigator_name = models.CharField(max_length=60, blank=True)
+    
+    objects = AuthorizationManager('submission_form__submission')
     
     class Meta:
         app_label = 'core'
