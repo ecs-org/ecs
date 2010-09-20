@@ -15,6 +15,13 @@ class S3UtilsTest(TestCase):
     
     def testConsistency(self):
         uuid = uuid4()
-        url, auth_header = createExpiringUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, int(time()) + 60)
+        hasExpired = int(time())
+        willExpire = hasExpired + 60
+        
+        url, auth_header = createExpiringUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, willExpire)
         bucket, objectid, keyId, expires, signature = parseS3UrlFeatures(url)
         self.assertEqual(verifyExpiringUrl(bucket, objectid, keyId, expires, signature), True);
+        
+        url, auth_header = createExpiringUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, hasExpired)
+        bucket, objectid, keyId, expires, signature = parseS3UrlFeatures(url)
+        self.assertEqual(verifyExpiringUrl(bucket, objectid, keyId, expires, signature), False);
