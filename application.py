@@ -160,7 +160,7 @@ gnupg:req:mac:homebrew:FIXME gnupgforhomebrewpackagename
 quality_packages= """
 # nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
-coverage:inst:!win:pypi:coverage
+coverage:inst:!win:pypi:coverage\<=3.4
 coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
 nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
 logilab-common:inst:all:pypi:logilab-common\>=0.49.0
