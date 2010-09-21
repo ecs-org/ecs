@@ -1,6 +1,6 @@
 import os, datetime, uuid
 from StringIO import StringIO
-from django.test import TestCase
+from ecs.utils.testcases import EcsTestCase
 from django.core.files.base import File
 
 from ecs.core.serializer import Serializer
@@ -18,7 +18,7 @@ SUBMISSION_FORM_DATA = {
     'submitter_contact_last_name': 'sn foo',
 }
 
-class SerializerTest(TestCase):
+class SerializerTest(EcsTestCase):
     def create_submission_form(self):
         s = Submission.objects.create(ec_number='EK-FOO')
         sf = SubmissionForm.objects.create(submission=s, **SUBMISSION_FORM_DATA)

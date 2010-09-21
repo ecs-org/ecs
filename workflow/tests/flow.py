@@ -1,4 +1,3 @@
-from django.test import TestCase
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
@@ -9,9 +8,10 @@ from ecs.workflow.exceptions import TokenRequired
 from ecs.workflow.models import Foo, FooReview, Token
 from ecs import workflow
 
+from ecs.utils.testcases import EcsTestCase
 from ecs.workflow.tests import flow_declarations
 
-class FlowTest(TestCase):
+class FlowTest(EcsTestCase):
     def setUp(self):
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         management.call_command('workflow_sync')

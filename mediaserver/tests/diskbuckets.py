@@ -8,10 +8,12 @@ import unittest
 import shutil
 import hashlib
 import tempfile
-from django.test import TestCase
+
+from ecs.utils.testcases import EcsTestCase
 from ecs.utils.diskbuckets import DiskBuckets
 
-class DiskBucketsTest(TestCase):
+
+class DiskBucketsTest(EcsTestCase):
  
     def setUp(self):
         self.root_dir = tempfile.mkdtemp()
@@ -36,3 +38,4 @@ class DiskBucketsTest(TestCase):
     
 if __name__ == "__main__":
     unittest.main()
+    

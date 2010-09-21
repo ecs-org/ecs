@@ -4,10 +4,10 @@ import hashlib
 import os
 
 from django.db import models
-from django.test import TestCase
+from ecs.utils.testcases import EcsTestCase
 
 
-class CacheTest(TestCase):
+class CacheTest(EcsTestCase):
     id_test = '0'
     origin = 'CacheTest'
     pdf_name = 'foo.pdf'

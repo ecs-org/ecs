@@ -5,9 +5,9 @@ unittest). These will both pass when you run "manage.py test".
 Replace these with more appropriate tests for your application.
 """
 
-from django.test import TestCase
+from ecs.utils.testcases import EcsTestCase
 
-class SimpleTest(TestCase):
+class SimpleTest(EcsTestCase):
     def test_basic_addition(self):
         """
         Tests that 1 + 1 always equals 2.

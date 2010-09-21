@@ -1,9 +1,10 @@
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from ecs.messages.models import Message, Thread
 
-class MessageTest(TestCase):
+from ecs.messages.models import Message, Thread
+from ecs.utils.testcases import EcsTestCase
+
+class MessageTest(EcsTestCase):
     def setUp(self):
         for name in ('alice', 'bob', ):
             user = User(username=name)
