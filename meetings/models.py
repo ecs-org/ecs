@@ -243,6 +243,9 @@ class Meeting(models.Model):
     def open_tops_with_vote(self):
         return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
 
+    def __nonzero__(self):
+        return True   # work around a django bug
+
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
