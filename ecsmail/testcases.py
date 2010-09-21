@@ -1,4 +1,4 @@
-from django.test import TestCase
+from ecs.utils.testcases import EcsTestCase
 from django.contrib.auth.models import User
 from django.conf import settings
 from lamson.testing import *
@@ -7,7 +7,7 @@ from ecs.messages.models import Message, Thread
 import sys, os, time
 import subprocess
 
-class MailTestCase(TestCase):
+class MailTestCase(EcsTestCase):
     '''
     TestCase Class, modified to test whole mailsetup including mail sending and receiving
     overwrites settings.EMAIL_WHITELIST while running to empty because mail is not send, but stored in queue
@@ -49,9 +49,10 @@ class MailTestCase(TestCase):
     def setUp(self):
         self.queue_clear()
         routing.Router.clear_states() 
+        super(MailTestCase, self).setUp()
 
     def tearDown(self):
-        pass      
+        super(MailTestCase, self).tearDown()
   
     @classmethod
     def queue_count(self):
@@ -80,7 +81,7 @@ class MessageTestCase(MailTestCase):
     Dereived from MailTestCase, additionaly setup two ecs users, fromuser and touser, and adds functions to add internal ecs -messages
     '''
     def setUp(self):
-        MailTestCase.setUp(self)
+        super(MessageTestCase, self).setUp()
         
         self.fromuser = User(username='fromuser')
         self.fromuser.email = "notexisting@fromuser.notexisting.notexisting"
@@ -120,5 +121,5 @@ class MessageTestCase(MailTestCase):
         '''
         returns message that is stored inside thread that matches the pattern, or None if not found
         '''
-        Raise(UnimplementedError)
+        raise(NotImplementedError)
                 
