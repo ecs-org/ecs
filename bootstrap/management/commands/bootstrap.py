@@ -8,6 +8,7 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.contrib.auth.models import User
 
+from ecs.audit.models import AuditTrail
 
 def _create_root_user():
     settings.ENABLE_AUDIT_LOG = False
@@ -60,6 +61,8 @@ class Command(BaseCommand):
                 raise CommandError("Cyclic dependencies: %s" % ", ".join(sorted(set(bootstrap_funcs.keys())-set(order))))
         
         def log_save(sender, **kwargs):
+            if sender == AuditTrail:  # dont log creation of audit trail entries
+                return
             obj = kwargs['instance']
             model = obj.__class__
             action = kwargs.get('created', False) and "Create" or "Update"

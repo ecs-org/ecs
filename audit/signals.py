@@ -1,48 +1,52 @@
 # -*- coding: utf-8 -*-
 
+import fnmatch
+import re
+
 from django.core.serializers import serialize
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User, AnonymousUser
 
 from ecs.audit.models import AuditTrail
 from ecs.users.utils import get_current_user
 
+
+__ignored_models = ['ecs.audit.models.AuditTrail',]
+if hasattr(settings, 'AUDIT_TRAIL_IGNORED_MODELS'):
+    __ignored_models += list(settings.AUDIT_TRAIL_IGNORED_MODELS)
+
+__ignored_models_rexs = [fnmatch.translate(x) for x in __ignored_models]
+_ignored_models_rex = re.compile('(' + ')|('.join(__ignored_models_rexs) + ')')
+
+
 def post_save_handler(**kwargs):
-    if not settings.ENABLE_AUDIT_TRAIL:
+    """ This creates an AuditTrail entry for every db change """
+    if not settings.ENABLE_AUDIT_TRAIL:  # this is set when syncdb or migrate is being run
         return
-        
-    if not get_current_user():
-        # FIXME!
-        return
-    
-    ignore_list = [
-        'ecs.audit.models.AuditTrail',
-    ]
-    
-    if hasattr(settings, 'AUDIT_TRAIL_IGNORED_MODELS'):
-        ignore_list += list(settings.AUDIT_TRAIL_IGNORED_MODELS)
-    
-    ignored_models = set()
-    for entry in ignore_list:
-        entry_list = entry.split('.')
-        module = __import__('.'.join(entry_list[:-1]), fromlist=entry_list[:-2])
-        ignored_model = getattr(module, entry_list[-1])
-        ignored_models.add(ignored_model)
-    
     
     sender = kwargs['sender']
     instance = kwargs['instance']
-    
-    if sender in ignored_models:
+    user = get_current_user()
+    if not user or user.__class__ == AnonymousUser:
+        # FIXME!
+        user = User.objects.get(username='root')
+
+    sender_path = '.'.join([sender.__module__, sender.__name__])
+    if _ignored_models_rex.match(sender_path):
         return
 
     description = '%s %s instance of %s' % (
-        get_current_user(),
+        user,
         'created' if kwargs['created'] else 'modified',
         sender.__name__,
     )
 
     a = AuditTrail()
     a.description = description
+    a.user = user
     a.instance = instance
+    a.content_type = ContentType.objects.get_for_model(sender)
     a.data = serialize('json', sender.objects.filter(pk=instance.pk))
     a.save()
+

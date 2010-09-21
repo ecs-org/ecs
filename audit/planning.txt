@@ -36,7 +36,7 @@ class AuditMiddleware(object):
         post_save.remove(foobar)
         
 current_user_store = threading.local()
-
+ relation
 with auth.user(foo):
    do_something()
 
