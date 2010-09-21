@@ -1,5 +1,4 @@
 from datetime import timedelta
-from django.test import TestCase
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
@@ -9,9 +8,10 @@ from ecs import workflow
 # test only models:
 from ecs.workflow.models import Foo
 
+from ecs.utils.testcases import EcsTestCase
 from ecs.workflow.tests import deadline_declarations
 
-class DeadlineTest(TestCase):
+class DeadlineTest(EcsTestCase):
     def setUp(self):
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         management.call_command('workflow_sync')

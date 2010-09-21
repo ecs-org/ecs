@@ -1,11 +1,13 @@
 import os
 
-from django.test import TestCase
 from django_extensions.utils.uuid import uuid4
+
+from ecs.utils.testcases import EcsTestCase
 from ecs.utils.pdfutils import pdf_pages
 from ecs.mediaserver.renderer import renderPDFMontage
 
-class RendererTest(TestCase):
+
+class RendererTest(EcsTestCase):
     pdfdoc = 'test-pdf-14-seitig.pdf'
 
     def setUp(self):

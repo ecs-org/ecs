@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from ecs.utils.countries.models import Country
-from django.test import TestCase
+from ecs.utils.testcases import EcsTestCase
 from django.db.models import Q
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
@@ -9,7 +9,7 @@ from ecs.core.views.submissions import diff_submission_forms
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 
 
-class SubmissionFormTest(TestCase):
+class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
         sub = Submission()
         sub.save()
@@ -327,7 +327,7 @@ def create_submission_form():
     return sform
 
 
-class SubmissionFormDiffTest(TestCase):
+class SubmissionFormDiffTest(EcsTestCase):
     def setUp(self):
         self.old_sf = create_submission_form()
         self.new_sf = create_submission_form()

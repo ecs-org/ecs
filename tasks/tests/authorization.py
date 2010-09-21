@@ -1,8 +1,9 @@
-from django.test import TestCase
 from django.contrib.auth.models import User, Group
+
+from ecs.utils.testcases import EcsTestCase
 from ecs.tasks.models import TaskType, Task
 
-class AuthorizationTest(TestCase):
+class AuthorizationTest(EcsTestCase):
     def setUp(self):
         group_a = Group.objects.create(name='group-a')
         group_b = Group.objects.create(name='group-b')

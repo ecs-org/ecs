@@ -1,12 +1,13 @@
 import math
 from datetime import datetime, timedelta, time
-from django.test import TestCase
 from django.db.models import connection
 from django.contrib.auth.models import User
 
+from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
 
-class MeetingModelTest(TestCase):
+
+class MeetingModelTest(EcsTestCase):
     def test_entry_management(self):
         start = datetime(2010, 4, 8, 0)
         m = Meeting.objects.create(start=start, title="Test")
@@ -84,6 +85,4 @@ class MeetingModelTest(TestCase):
         self.failUnlessEqual(metrics.waiting_time_variance, timedelta(hours=math.sqrt(4.75)))
         
         self.failUnlessEqual(len(connection.queries), query_count)        
-        
-
 

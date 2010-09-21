@@ -1,5 +1,4 @@
 from django.db import models
-from django.test import TestCase
 from django.contrib.contenttypes.models import ContentType
 from django.core import management
 from ecs.workflow.models import Graph
@@ -8,10 +7,11 @@ from ecs import workflow
 from ecs.workflow.models import Foo
 from ecs.workflow.tests import flow_declarations
 
+from ecs.utils.testcases import EcsTestCase
 from ecs.tasks.models import Task, TaskType
 
 
-class WorkflowIntegrationTest(TestCase):
+class WorkflowIntegrationTest(EcsTestCase):
     def setUp(self):
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         management.call_command('workflow_sync')
