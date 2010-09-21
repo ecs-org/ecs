@@ -111,7 +111,6 @@ else:
 ENABLE_AUDIT_TRAIL = True
 if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
-    # FIXME: how to test the audit trail?
     ENABLE_AUDIT_TRAIL=False
 
 AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
