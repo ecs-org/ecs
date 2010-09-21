@@ -1,11 +1,13 @@
-from ecs.utils.testcases import EcsTestCase
-from django.contrib.auth.models import User
+# -*- coding: utf-8 -*-
+
 from django.conf import settings
-from lamson.testing import *
 from django.contrib.auth.models import User
+
+from lamson.testing import Queue, clear_queue, routing, delivered, RouterConversation
+
+from ecs.utils.testcases import EcsTestCase
 from ecs.messages.models import Message, Thread
-import sys, os, time
-import subprocess
+
 
 class MailTestCase(EcsTestCase):
     '''
@@ -14,10 +16,7 @@ class MailTestCase(EcsTestCase):
     you probably want to "from lamson.server import SMTPError" inside your tests, to check for smtperrorcodes
     '''
     @classmethod
-    def setUpClass(self):
-        from lamson import utils
-        from lamson import server, routing
-        
+    def setUpClass(self):      
         # permit emails sent to all
         self.saved_EMAIL_WHITELIST= settings.EMAIL_WHITELIST
         settings.EMAIL_WHITELIST=[]
