@@ -1,12 +1,14 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-
 from django.conf import settings
+
+from ecs.core import bootstrap
 
 class EcsTestCase(TestCase):
     def setUp(self):
         User.objects.create(username="root", is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
+        bootstrap.templates()
     
     def tearDown(self):
         settings.ENABLE_AUDIT_TRAIL = False
@@ -23,3 +25,5 @@ class LoginTestCase(EcsTestCase):
     def tearDown(self):
         super(LoginTestCase, self).tearDown()
         self.client.logout()
+
+            
