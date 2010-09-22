@@ -18,4 +18,4 @@ def sudo(user):
     _previous_user = getattr(current_user_store, 'user', None)
     current_user_store.user = user
     yield
-    current_user_store = _previous_user
+    current_user_store.user = _previous_user

@@ -19,7 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 
 from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
-from ecs import authorization
+from ecs.authorization import AuthorizationManager
 
 
 class DocumentType(models.Model):
@@ -60,7 +60,7 @@ class DocumentFileStorage(FileSystemStorage):
         return smart_str(os.path.normpath(name))
 
 
-class DocumentManager(authorization.AuthorizationManager): 
+class DocumentManager(AuthorizationManager): 
     def create_from_buffer(self, buf, **kwargs): 
         tmp = tempfile.NamedTemporaryFile() 
         tmp.write(buf) 
@@ -124,15 +124,6 @@ class Document(models.Model):
                     
         return super(Document, self).save(**kwargs)
 
-
-class DocumentAuthorizationQFactory(authorization.AuthorizationQFactory):
-    def get_q(self, user):
-        from ecs.core.models import SubmissionForm
-        submission_q = models.Q(content_type=ContentType.objects.get_for_model(SubmissionForm))
-        q = ~submission_q | (submission_q & models.Q(object_id__in=SubmissionForm.objects.values('pk').query))
-        return q
-
-authorization.register(Document, DocumentAuthorizationQFactory)
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)

@@ -36,16 +36,17 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.sponsor_user = self._create_test_user('sponsor', approved_by_office=True)
         self.submitter_user = self._create_test_user('submitter', approved_by_office=True)
         self.thesis_review_user = self._create_test_user('thesis_review', approved_by_office=True, thesis_review=True)
-        
+    
         self.another_board_member_user = self._create_test_user('another_board_member', approved_by_office=True, board_member=True)
         self.unapproved_user = self._create_test_user('unapproved_user')
-        
+    
         sf = create_submission_form()
         sf.submitter = self.submitter_user
         sf.sponsor = self.sponsor_user
         sf.additional_review_user = self.additional_review_user
         sf.project_title = self.EC_NUMBER
         sf.save()
+    
         investigator = sf.investigators.all()[0]
         investigator.user = self.primary_investigator_user
         investigator.save()

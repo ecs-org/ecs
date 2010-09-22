@@ -31,7 +31,7 @@ class Vote(models.Model):
     class Meta:
         app_label = 'core'
         
-    objects = authorization.AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager()
 
     def get_ec_number(self):
         if self.top:

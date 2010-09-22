@@ -1,40 +1,60 @@
 from django.db.models import F, Q
 from django.conf import settings
 
-_authorization_q_factories = {}
+class QFactoryRegistry(object):
+    def __init__(self):
+        self.q_factories = {}
+        self.lookups = {}
+        self.loaded = False
+        
+    def register(self, model, factory=None, lookup=None):
+        if not factory and not lookup:
+            raise TypeError("register requires a `factory` or a `lookup` argument")
+        if factory:
+            self.q_factories[model] = factory
+        if lookup:
+            self.lookups[model] = lookup
 
-def register(model, factory):
-    _authorization_q_factories[model] = factory
+    def load_authorization_config(self):
+        if self.loaded:
+            return
+        __import__(settings.AUTHORIZATION_CONFIG)
+        self.loaded = True
     
-def make_q_factory(model, prefix=None):
-    if prefix:
-        for lookup in prefix.split('__'):
-            try:
-                model = model._meta.get_field(lookup).rel.to
-            except AttributeError:
-                raise Exception("cannot lookup %s.%s for authoriation" % (model, lookup))
-    q_factory = _authorization_q_factories.get(model, None)
-    if not q_factory:
-        return None
-    return q_factory(prefix)
-    
+    def get_q_factory(self, model):
+        self.load_authorization_config()
+        target_model = model
+        lookup = self.lookups.get(model)
+        if lookup:
+            for bit in lookup.split('__'):
+                try:
+                    target_model = target_model._meta.get_field(bit).rel.to
+                except AttributeError:
+                    raise Exception("cannot lookup %s.%s for authoriation" % (target_model, bit))
+        q_factory = self.q_factories.get(target_model, None)
+        if not q_factory:
+            raise ImproperlyConfigured("The model %s uses an AuthorizationManager with lookup '%s' which resolves to %s, but no matching QFactory was provided." % (
+                model.__name__, self._lookup, target_model.__name__,
+            ))
+        return q_factory(lookup)
+        
 
-class AuthorizationQFactory(object):
-    def __init__(self, prefix):
-        self.prefix = prefix
+class QFactory(object):
+    def __init__(self, lookup):
+        self.lookup = lookup
 
     def make_q(self, **lookups):
-        if not self.prefix:
+        if not self.lookup:
             return Q(**lookups)
-        return Q(**dict(('%s__%s' % (self.prefix, key), val) for key, val in lookups.iteritems()))
+        return Q(**dict(('%s__%s' % (self.lookup, key), val) for key, val in lookups.iteritems()))
         
     def make_deny_q(self):
         return Q(pk=None)
 
     def make_f(self, lookup):
-        if not self.prefix:
+        if not self.lookup:
             return F(lookup)
-        return F('%s__%s' % (self.prefix, lookup))
+        return F('%s__%s' % (self.lookup, lookup))
 
     def __call__(self, user):
         if not user or user.is_superuser:
@@ -46,3 +66,7 @@ class AuthorizationQFactory(object):
     def get_q(self, user):
         return Q()
 
+
+registry = QFactoryRegistry()
+register = registry.register
+get_q_factory = registry.get_q_factory

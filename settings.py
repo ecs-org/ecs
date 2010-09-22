@@ -422,6 +422,9 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
+# authorization
+AUTHORIZATION_CONFIG = 'ecs.auth_conf'
+
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import subprocess, atexit
     if not os.path.exists('ecsmail.lock'):
