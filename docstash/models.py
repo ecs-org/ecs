@@ -8,6 +8,7 @@ from django_extensions.db.fields.json import JSONField
 from picklefield.fields import PickledObjectField
 
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
+from ecs.authorization import AuthorizationManager
 
 def _transaction_required(method):
     @wraps(method)
@@ -37,6 +38,8 @@ class DocStash(models.Model):
     current_version = models.IntegerField(default=-1)
     # FIXME: owner should not be nullable
     owner = models.ForeignKey(User, null=True)
+    
+    objects = AuthorizationManager()
 
     def save(self, *args, **kwargs):
         if not self.key:

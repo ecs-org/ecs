@@ -18,7 +18,7 @@ def with_docstash_transaction(*args, **kwargs):
                 kwargs['docstash_key'] = docstash.key
                 response = HttpResponseRedirect(reverse(view_name, kwargs=kwargs))
             else:
-                docstash = get_object_or_404(DocStash, group=view_name, key=docstash_key)
+                docstash = get_object_or_404(DocStash, group=view_name, owner=request.user, key=docstash_key)
                 request.docstash = docstash
                 # FIXME: this is a simplification and only sufficient for our single-user application
                 version = docstash.current_version 

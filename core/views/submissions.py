@@ -315,10 +315,7 @@ def submission_form_list(request):
         for submission in Submission.objects.filter(search_query):
             matched_submissions.add(submission)
         
-        submission_forms = []
-        for submission in Submission.objects.all():    # FIXME: sloow
-            submission_forms.append(submission.get_most_recent_form())
-
+        submission_forms = SubmissionForm.objects.exclude(current_for_submission=None).distinct()
         submission_form_pks = [sf.pk for sf in submission_forms]
         
         form_search_query = Q(project_title__icontains=keyword) | Q(german_project_title__icontains=keyword) | Q(sponsor_name__icontains=keyword) | Q(submitter_contact_last_name__icontains=keyword) | Q(investigators__contact_last_name__icontains=keyword) | Q(eudract_number__icontains=keyword)
@@ -329,13 +326,13 @@ def submission_form_list(request):
         for submission in submissions:
             matched_submissions.add(submission)
 
-        submissions = Submission.objects.filter(pk__in=[s.pk for s in matched_submissions]).order_by('ec_number')
+        submissions = Submission.objects.filter(pk__in=[s.pk for s in matched_submissions]).distinct().order_by('ec_number')
         stashed_submission_forms = []  # FIXME: how to search in the docstash?
-        meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start')]
+        meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start').distinct()]
     else:
-        submissions = Submission.objects.order_by('ec_number')
+        submissions = Submission.objects.order_by('ec_number').distinct()
         stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form')
-        meetings = [(meeting, meeting.submissions.order_by('ec_number')) for meeting in Meeting.objects.order_by('-start')]
+        meetings = [(meeting, meeting.submissions.order_by('ec_number').distinct()) for meeting in Meeting.objects.order_by('-start')]
 
     return render(request, 'submissions/list.html', {
         'unscheduled_submissions': submissions.filter(meetings__isnull=True),

@@ -3,6 +3,7 @@ from ecs import authorization
 from ecs.core.models import Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Vote
 from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
+from ecs.docstash.models import DocStash
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -56,3 +57,9 @@ class DocumentQFactory(authorization.QFactory):
         return q
 
 authorization.register(Document, factory=DocumentQFactory)
+
+class DocstashQFactory(authorization.QFactory):
+    def get_q(self, user):
+        return self.make_q(owner=user)
+
+authorization.register(DocStash, factory=DocstashQFactory)
