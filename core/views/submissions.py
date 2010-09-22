@@ -371,7 +371,6 @@ def export_submission(request, submission_pk):
     return response
 
 def import_submission_form(request):
-    print request.FILES
     if 'file' in request.FILES:
         serializer = Serializer()
         submission_form = serializer.read(request.FILES['file'])
