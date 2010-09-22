@@ -95,6 +95,12 @@ SUBMISSION_FORM_TABS = (
     (u'Zentrum', []),
 )
 
+def get_all_used_submission_form_fields():
+    all_fields = []
+    for _, fieldsets in SUBMISSION_FORM_TABS:
+        for _, fields in fieldsets:
+            all_fields += fields
+    return all_fields
 
 
 NOTIFICATION_FORM_TABS = {}
