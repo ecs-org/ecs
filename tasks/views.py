@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
-from ecs.messages.models import Thread
+from ecs.communication.models import Thread
 from ecs.tasks.models import Task
 from ecs.tasks.forms import DelegateTaskForm, ManageTaskForm
 

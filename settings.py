@@ -369,7 +369,7 @@ INSTALLED_APPS = (
     'ecs.mediaserver',
     'ecs.workflow',
     'ecs.tasks',
-    'ecs.messages',
+    'ecs.communication',
     'ecs.ecsmail',
     'ecs.dashboard',
     'ecs.bootstrap',

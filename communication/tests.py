@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
-from ecs.messages.models import Message, Thread
+from ecs.communication.models import Message, Thread
 from ecs.utils.testcases import EcsTestCase
 
 class MessageTest(EcsTestCase):
@@ -15,10 +15,10 @@ class MessageTest(EcsTestCase):
     def test_send_message(self):
         self.client.login(username='alice', password='...')
 
-        response = self.client.get(reverse('ecs.messages.views.send_message'))
+        response = self.client.get(reverse('ecs.communication.views.send_message'))
         self.failUnlessEqual(response.status_code, 200)
         
-        response = self.client.post(reverse('ecs.messages.views.send_message'), {
+        response = self.client.post(reverse('ecs.communication.views.send_message'), {
             'subject': 'SUBJECT',
             'text': 'TEXT',
             'receiver': self.bob.pk,
@@ -30,21 +30,21 @@ class MessageTest(EcsTestCase):
         self.failUnlessEqual(message.sender, self.alice)
         self.failUnlessEqual(message.receiver, self.bob)
         
-        response = self.client.get(reverse('ecs.messages.views.outbox'))
+        response = self.client.get(reverse('ecs.communication.views.outbox'))
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless(message.thread in response.context['page'].object_list)
-        response = self.client.get(reverse('ecs.messages.views.inbox'))
+        response = self.client.get(reverse('ecs.communication.views.inbox'))
         self.failUnlessEqual(response.status_code, 200)
         self.failIf(message.thread in response.context['page'].object_list)
 
         self.client.logout()
         self.client.login(username='bob', password='...')
 
-        response = self.client.get(reverse('ecs.messages.views.inbox'))
+        response = self.client.get(reverse('ecs.communication.views.inbox'))
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless(message.thread in response.context['page'].object_list)
 
-        response = self.client.get(reverse('ecs.messages.views.outbox'))
+        response = self.client.get(reverse('ecs.communication.views.outbox'))
         self.failUnlessEqual(response.status_code, 200)
         self.failIf(message.thread in response.context['page'].object_list)
 
@@ -55,7 +55,7 @@ class MessageTest(EcsTestCase):
         message = thread.add_message(self.alice, text="text")
 
         self.client.login(username='bob', password='...')
-        response = self.client.post(reverse('ecs.messages.views.send_message', kwargs={'reply_to_pk': message.pk}), {
+        response = self.client.post(reverse('ecs.communication.views.send_message', kwargs={'reply_to_pk': message.pk}), {
             'text': 'REPLY TEXT',
         })
         self.failUnlessEqual(response.status_code, 302)

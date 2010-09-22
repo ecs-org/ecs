@@ -8,8 +8,8 @@ from django.core.paginator import Paginator, EmptyPage
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
-from ecs.messages.models import Message, Thread
-from ecs.messages.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
+from ecs.communication.models import Message, Thread
+from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
 from ecs.tracking.decorators import tracking_hint
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
@@ -46,9 +46,9 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
             )
 
         message = thread.add_message(request.user, text=form.cleaned_data['text'])
-        return redirect_to_next_url(request, reverse('ecs.messages.views.read_thread', kwargs={'thread_pk': thread.pk}))
+        return redirect_to_next_url(request, reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': thread.pk}))
 
-    return render(request, 'messages/send.html', {
+    return render(request, 'communication/send.html', {
         'submission': submission,
         'task': task,
         'form': form,
@@ -73,7 +73,7 @@ def read_thread(request, thread_pk=None):
         page_num = paginator.num_pages
         page = paginator.page(page_num)
 
-    return render(request, 'messages/read.html', {
+    return render(request, 'communication/read.html', {
         'thread': thread,
         'page': page,
     })
@@ -93,11 +93,11 @@ def delegate_thread(request, thread_pk=None):
     form = ThreadDelegationForm(request.POST or None)
     if form.is_valid():
         thread.delegate(request.user, form.cleaned_data['to'])
-        return render(request, 'messages/delegate_thread_response.html', {
+        return render(request, 'communication/delegate_thread_response.html', {
             'to': form.cleaned_data['to'],
             'thread': thread,
         })
-    return render(request, 'messages/delegate_thread.html', {
+    return render(request, 'communication/delegate_thread.html', {
         'thread': thread,
         'form': form,
     })
@@ -110,7 +110,7 @@ def incoming_message_widget(request):
         qs = qs.filter(submission__pk=submission_pk)
     return message_widget(request, 
         queryset=qs,
-        template='messages/widgets/incoming_messages.inc',
+        template='communication/widgets/incoming_messages.inc',
         user_sort='last_message__sender__username',
         session_prefix='dashboard:incoming_messages',
         page_size=4,
@@ -127,7 +127,7 @@ def outgoing_message_widget(request):
         qs = qs.filter(submission__pk=submission_pk)
     return message_widget(request, 
         queryset=qs,
-        template='messages/widgets/outgoing_messages.inc',
+        template='communication/widgets/outgoing_messages.inc',
         user_sort='last_message__receiver__username',
         session_prefix='dashboard:outgoing_messages',
         page_size=4,
@@ -135,11 +135,11 @@ def outgoing_message_widget(request):
 
 @tracking_hint(exclude=True)
 def communication_overview_widget(request, submission_pk=None):
-    return render(request, 'messages/widgets/overview.inc', {
+    return render(request, 'communication/widgets/overview.inc', {
         'threads': Thread.objects.filter(submission__pk=submission_pk),
     })
 
-def message_widget(request, queryset=None, template='messages/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4):
+def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4):
     queryset = queryset.select_related('thread')
 
     sort_session_key = '%s:sort' % session_prefix
@@ -177,7 +177,7 @@ def message_widget(request, queryset=None, template='messages/widgets/messages.i
 
 def inbox(request):
     return message_widget(request, 
-        template='messages/inbox.html',
+        template='communication/inbox.html',
         queryset=Thread.objects.incoming(request.user).order_by('-last_message__timestamp'),
         session_prefix='messages:inbox',
         user_sort='sender__username',
@@ -186,7 +186,7 @@ def inbox(request):
 
 def outbox(request):
     return message_widget(request, 
-        template='messages/outbox.html',
+        template='communication/outbox.html',
         queryset=Thread.objects.outgoing(request.user).order_by('-last_message__timestamp'),
         session_prefix='messages:outbox',
         user_sort='receiver__username',

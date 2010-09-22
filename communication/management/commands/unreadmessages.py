@@ -2,7 +2,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
 
-from ecs.messages.models import Message
+from ecs.communication.models import Message
 from ecs.ecsmail.mail import send_mail
 from ecs.utils.datastructures import OrderedSet
 

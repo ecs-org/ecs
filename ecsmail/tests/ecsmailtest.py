@@ -3,7 +3,7 @@ from ecs.ecsmail.testcases import MailTestCase, MessageTestCase
 from lamson.server import SMTPError
 from django.conf import settings
 from django.contrib.auth.models import User
-from ecs.messages.models import Message, Thread
+from ecs.communication.models import Message, Thread
 
 class ecsmailTest(MailTestCase):
     def test_relay(self):

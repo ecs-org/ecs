@@ -9,7 +9,7 @@ from django.db.models.signals import post_save
 from django.conf import settings
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 
-from ecs.messages.models import Message, Thread
+from ecs.communication.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
 

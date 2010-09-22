@@ -1,4 +1,4 @@
-{% load humanize core messages %}
+{% load humanize core communication %}
 
 <ol class="messages">
 {% for thread in threads %}

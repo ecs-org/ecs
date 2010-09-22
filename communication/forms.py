@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from ecs.messages.models import Message, Thread
+from ecs.communication.models import Message, Thread
 
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield()

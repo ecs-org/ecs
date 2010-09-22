@@ -1,7 +1,7 @@
 import datetime
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
-from ecs.messages.models import Message
+from ecs.communication.models import Message
 from ecs.users.models import UserProfile
 
 register = Library()
@@ -41,7 +41,7 @@ class FetchMessagesNode(Node):
 
     def render(self, context):
         user = context['request'].user
-        cache_key = "ecs.messages:last_pull:%s" % user.pk
+        cache_key = "ecs.communication:last_pull:%s" % user.pk
         last_pull = cache.get(cache_key)
         if last_pull:
             messages = Message.objects.filter(receiver=user, timestamp__gt=last_pull)

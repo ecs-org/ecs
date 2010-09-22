@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from lamson.testing import Queue, clear_queue, routing, delivered, RouterConversation
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.messages.models import Message, Thread
+from ecs.communication.models import Message, Thread
 
 
 class MailTestCase(EcsTestCase):

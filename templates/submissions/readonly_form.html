@@ -229,7 +229,7 @@
         <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
-        <a href="{% url ecs.messages.views.send_message submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
+        <a href="{% url ecs.communication.views.send_message submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
     </div>
     <div id="communication_overview_tab" class="tab">
         <h3>{% trans "Communication Overview" %}</h3>
@@ -271,19 +271,19 @@
             });
             
             var msgRequest = new Request.HTML({
-                url: '{% url ecs.messages.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}',
+                url: '{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}',
                 update: $('incoming_messages')
             });
             msgRequest.send();
             
             var msgRequest = new Request.HTML({
-                url: '{% url ecs.messages.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}',
+                url: '{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}',
                 update: $('outgoing_messages')
             });
             msgRequest.send();
 
             var msgRequest = new Request.HTML({
-                url: '{% url ecs.messages.views.communication_overview_widget submission_pk=submission_form.submission.pk %}',
+                url: '{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}',
                 update: $('communication_overview_messages')
             });
             msgRequest.send();

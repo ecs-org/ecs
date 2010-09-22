@@ -1,5 +1,5 @@
-{% extends "messages/list.html" %}
-{% load messages %}
+{% extends "communication/list.html" %}
+{% load communication %}
 
 {% block content %}
 <div class="messages_overview">
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block message_actions %}
-    {{ block.super }} <a class="popup" href="{% url ecs.messages.views.send_message reply_to_pk=thread.last_message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
+    {{ block.super }} <a class="popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
 {% endblock %}
 
 {% block extra_message_table_headers %}

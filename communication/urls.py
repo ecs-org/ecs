@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('ecs.messages.views',
+urlpatterns = patterns('ecs.communication.views',
     url(r'^inbox/$', 'inbox'),
     url(r'^outbox/$', 'outbox'),
     url(r'^send/(?:(?P<submission_pk>\d+)/)?$', 'send_message'),

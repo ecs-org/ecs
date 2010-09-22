@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load messages %}
+{% load communication %}
 
 {% block menuSelection %}messages{% endblock %}
 
@@ -20,7 +20,7 @@
       <tr>
           <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>
-              <a class="popup" href="{% url ecs.messages.views.read_thread thread_pk=thread.pk %}">
+              <a class="popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">
                   {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
                   {{ thread.subject }}
               </a>
@@ -33,9 +33,9 @@
           {% endblock %}
           <td>
               {% block message_actions %}
-                  <a class="popup" href="{% url ecs.messages.views.read_thread thread_pk=thread.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
+                  <a class="popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
                   {% if not message.thread.closed %}
-                  <a class="api" href="{% url ecs.messages.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
+                  <a class="api" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
                   {% endif %}
               {% endblock %}
           </td>

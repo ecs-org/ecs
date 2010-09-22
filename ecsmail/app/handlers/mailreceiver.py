@@ -6,7 +6,7 @@ from lamson.bounce import bounce_to
 from lamson.server import SMTPError
 
 from django.conf import settings
-from ecs.messages.models import Message
+from ecs.communication.models import Message
 from ecs.ecsmail.persil import whitewash
 
 @route(".+")
