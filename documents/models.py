@@ -60,6 +60,17 @@ class DocumentFileStorage(FileSystemStorage):
         return smart_str(os.path.normpath(name))
 
 
+class DocumentManager(models.Manager): 
+    def create_from_buffer(self, buf, **kwargs): 
+        tmp = tempfile.NamedTemporaryFile() 
+        tmp.write(buf) 
+        tmp.flush() 
+        tmp.seek(0) 
+        kwargs.setdefault('date', datetime.datetime.now()) 
+        doc = self.create(file=File(tmp), **kwargs) 
+        tmp.close() 
+        return doc
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36)
     hash = models.SlugField(max_length=32)
@@ -77,6 +88,8 @@ class Document(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
     
+    objects = DocumentManager()
+    
     def __unicode__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
@@ -93,11 +106,11 @@ class Document(models.Model):
 
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
                 if not pdf_isvalid(self.file):
-                    raise ValidationError('no valid pdf')			
+                    raise ValidationError('no valid pdf')
 
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
-            self.file.seek(0)            
+            self.file.seek(0)
             while True:
                 data= self.file.read(8192)
                 if not data: break
