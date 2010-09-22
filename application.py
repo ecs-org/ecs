@@ -172,6 +172,9 @@ pylint:inst:all:pypi:pylint
 
 # packages needed or nice to have for development
 developer_packages=  """
+#jsonrpc for cmdline ticket editing
+jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
+
 # if you want to have real queuing, you need rabbitmq
 celery:req:apt:apt-get:rabbitmq-server
 celery:req:mac:macports:rabbitmq-server
