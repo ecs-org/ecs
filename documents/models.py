@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 
 from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
+from ecs import authorization
 
 
 class DocumentType(models.Model):
@@ -37,7 +38,6 @@ def incoming_document_to(instance=None, filename=None):
     return target_name
     
 class DocumentFileStorage(FileSystemStorage):
-
     def get_available_name(self, name):
         """
         Returns a filename that's free on the target storage system, and
@@ -60,7 +60,7 @@ class DocumentFileStorage(FileSystemStorage):
         return smart_str(os.path.normpath(name))
 
 
-class DocumentManager(models.Manager): 
+class DocumentManager(authorization.AuthorizationManager): 
     def create_from_buffer(self, buf, **kwargs): 
         tmp = tempfile.NamedTemporaryFile() 
         tmp.write(buf) 
@@ -70,6 +70,7 @@ class DocumentManager(models.Manager):
         doc = self.create(file=File(tmp), **kwargs) 
         tmp.close() 
         return doc
+
 
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36)
@@ -122,7 +123,16 @@ class Document(models.Model):
             self.pages = pdf_pages(self.file) # calculate number of pages
                     
         return super(Document, self).save(**kwargs)
-  
+
+
+class DocumentAuthorizationQFactory(authorization.AuthorizationQFactory):
+    def get_q(self, user):
+        from ecs.core.models import SubmissionForm
+        submission_q = models.Q(content_type=ContentType.objects.get_for_model(SubmissionForm))
+        q = ~submission_q | (submission_q & models.Q(object_id__in=SubmissionForm.objects.values('pk').query))
+        return q
+
+authorization.register(Document, DocumentAuthorizationQFactory)
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)

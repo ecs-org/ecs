@@ -7,7 +7,7 @@ from django.db.models import Q
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.core.views.submissions import diff_submission_forms
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
-
+from ecs.documents.models import Document
 
 class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
@@ -321,6 +321,7 @@ def create_submission_form():
     sform.substance_registered_in_countries = []
     sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
     sform.save()
+    doc = Document.objects.create_from_buffer("foobar", mimetype="text/plain", parent_object=sform)
     ek = EthicsCommission(address_1 = u'Borschkegasse 8b/E 06', chairperson = u'Univ.Prof.Dr.Ernst Singer', city = u'Wien', contactname = u'Fr. Dr.Christiane Druml', email = u'ethik-kom@meduniwien.ac.at', fax = u'(01) 40400-1690', name = u'EK Med.Universit\xe4t Wien', phone = u'(01) 40400-2147, -2248, -2241', url = u'www.meduniwien.ac.at/ethik', zip_code = u'A-1090')
     ek.save()
     Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek)

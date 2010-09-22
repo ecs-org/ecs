@@ -1,6 +1,6 @@
 from django.db import models
 from ecs.users.utils import get_current_user
-from ecs.authorization import make_q_factory
+from ecs.authorization.base import make_q_factory
 
 class AuthorizationManager(models.Manager):
     def __init__(self, prefix=None, **kwargs):

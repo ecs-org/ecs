@@ -12,9 +12,7 @@ from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.communication.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
-
 from ecs import authorization
-from ecs.authorization.managers import AuthorizationManager
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -41,7 +39,7 @@ class Submission(models.Model):
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='_current_for')
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful
     
-    objects = AuthorizationManager()
+    objects = authorization.AuthorizationManager()
 
     def get_ec_number_display(self):
         try:
@@ -200,7 +198,7 @@ class SubmissionForm(models.Model):
     class Meta:
         app_label = 'core'
         
-    objects = AuthorizationManager('submission')
+    objects = authorization.AuthorizationManager('submission')
     
     # 1.4 (via self.documents)
 
@@ -533,7 +531,7 @@ class Investigator(models.Model):
     certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
     
-    objects = AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager('submission_form__submission')
     
     class Meta:
         app_label = 'core'
@@ -557,7 +555,7 @@ class InvestigatorEmployee(models.Model):
     firstname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
     
-    objects = AuthorizationManager('investigator__submission_form__submission')
+    objects = authorization.AuthorizationManager('investigator__submission_form__submission')
     
     class Meta:
         app_label = 'core'
@@ -589,7 +587,7 @@ class Measure(models.Model):
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
     
-    objects = AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager('submission_form__submission')
     
     class Meta:
         app_label = 'core'
@@ -603,7 +601,7 @@ class NonTestedUsedDrug(models.Model):
     preparation_form = models.CharField(max_length=40)
     dosage = models.CharField(max_length=40)
     
-    objects = AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager('submission_form__submission')
     
     class Meta:
         app_label = 'core'
@@ -615,7 +613,7 @@ class ForeignParticipatingCenter(models.Model):
     name = models.CharField(max_length=60)
     investigator_name = models.CharField(max_length=60, blank=True)
     
-    objects = AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager('submission_form__submission')
     
     class Meta:
         app_label = 'core'

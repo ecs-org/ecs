@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models.signals import post_save
-from ecs.authorization.managers import AuthorizationManager
+from ecs import authorization
 
 VOTE_RESULT_CHOICES = (
     ('1', u'1 Positiv'),
@@ -31,7 +31,7 @@ class Vote(models.Model):
     class Meta:
         app_label = 'core'
         
-    objects = AuthorizationManager('submission_form__submission')
+    objects = authorization.AuthorizationManager('submission_form__submission')
 
     def get_ec_number(self):
         if self.top:
