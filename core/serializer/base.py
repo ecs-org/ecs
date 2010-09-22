@@ -95,7 +95,10 @@ class ModelSerializer(object):
         if val is None or isinstance(val, (bool, basestring, int, long, datetime.datetime, datetime.date)):
             return val
         if hasattr(val, 'all') and hasattr(val, 'count'):
-            return [dump_model_instance(x, zf) for x in val.all()]
+            try:
+                return [dump_model_instance(x, zf) for x in val.all()]
+            except ValueError, e:
+                raise ValueError("cannot dump %s.%s: %s" % (self.model.__name__, fieldname, e))
         
         field = self.model._meta.get_field(fieldname)
 
@@ -107,7 +110,7 @@ class ModelSerializer(object):
             zf.write(val.path, zip_name)
             return zip_name
         else:
-            raise TypeError("cannot serialize objecs of type %s" % type(val))
+            raise ValueError("cannot serialize objects of type %s" % type(val))
         
         return val
 
@@ -267,7 +270,7 @@ class SubmissionSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
-        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator'),
+        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 'pdf_document'),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
@@ -276,8 +279,8 @@ _serializers = {
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
-    Submission: SubmissionSerializer(exclude=('id', 'external_reviewer_name', 'current_submission_form')),
-    Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form'), follow={'employees': 'investigator'}),
+    Submission: SubmissionSerializer(fields=('ec_number')),
+    Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form', 'user'), follow={'employees': 'investigator'}),
     InvestigatorEmployee: ModelSerializer(InvestigatorEmployee, exclude=('id', 'investigator')),
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
@@ -289,12 +292,12 @@ _serializers = {
 
 def load_model_instance(model, data, zf, commit=True):
     if model not in _serializers:
-        raise TypeError("cannot load objects of type %s" % model)
+        raise ValueError("cannot load objects of type %s" % model)
     return _serializers[model].load(data, zf, commit=commit)
 
 def dump_model_instance(obj, zf):
     if obj.__class__ not in _serializers:
-        raise TypeError("cannot serialize objecs of type %s" % obj.__class__)
+        raise ValueError("cannot serialize objecs of type %s" % obj.__class__)
     return _serializers[obj.__class__].dump(obj, zf)
     
 class _JsonEncoder(simplejson.JSONEncoder):
@@ -316,7 +319,7 @@ class Serializer(object):
     
     def write(self, submission_form, file_like):
         zf = zipfile.ZipFile(file_like, 'w', zipfile.ZIP_DEFLATED)
-
+        
         data = {
             'version': self.version,
             'type': 'SubmissionForm',
