@@ -1,8 +1,11 @@
 import subprocess
 import tempfile
+from django.conf import settings
 from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
 import os
 from uuid import UUID
+
+MONTAGE_PATH = getattr(settings, 'IMAGEMAGICK_MONTAGE_PATH', '/usr/bin/montage')
 
 def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=1.41428, dpi=72, depth=8):
     margin_x = 0
@@ -19,7 +22,7 @@ def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=
     tmp_renderdir = tempfile.mkdtemp() 
     tmp_docshot_prefix = os.path.join(tmp_renderdir, '%s_%s_%sx%s_' % (uuid, width, tiles_x, tiles_y))
      
-    args = '/usr/bin/montage -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d %s PNG:%s%%d' % (tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth, tmp_rendersrc, tmp_docshot_prefix)
+    args = '%s -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d %s PNG:%s%%d' % (MONTAGE_PATH, tile_height, tile_width,margin_x, margin_y,tiles_x, tiles_y, dpi, depth, tmp_rendersrc, tmp_docshot_prefix)
     popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
     returncode = popen.wait()
     
