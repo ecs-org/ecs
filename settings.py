@@ -381,6 +381,7 @@ INSTALLED_APPS = (
     'ecs.meetings',
     'ecs.audit',
     'ecs.notifications',
+    'ecs.authorization',
 )
 
 
