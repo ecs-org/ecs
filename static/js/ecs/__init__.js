@@ -3,7 +3,9 @@ if(!window.console){
 }
 
 var ecs = window.ecs = {
-    messages: new Roar()
+    messages: new Roar({
+        duration: 10000
+    })
 };
 
 $extend(ecs, {

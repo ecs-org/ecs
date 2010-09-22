@@ -177,14 +177,18 @@
       {% load communication tasks %}
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
-      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender }}', 'subject': '{{ message.subject }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
-      var newTasks = [{% for task in new_tasks %}{'__unicode__': '{{ task }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender|escapejs }}', 'subject': '{{ message.subject|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      var newTasks = [{% for task in new_tasks %}{'__unicode__': '{{ task|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
       newMessages.each(function(msg){
           ecs.messages.alert('Neue Nachricht', '<b>{subject}</b> von {sender}'.substitute(msg));
       });
       newTasks.each(function(task){
           ecs.messages.alert('Neuer Task', '<b>{__unicode__}</b>'.substitute(task));
       });
+      
+      {% for message in messages %}
+          ecs.messages.alert('{{ message.tags|escapejs }}', '{{ message|escapejs }}')
+      {% endfor %}
       
       // workflow popups
       

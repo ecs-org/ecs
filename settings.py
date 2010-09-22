@@ -316,6 +316,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.media",
     "django.core.context_processors.request",
+    "django.contrib.messages.context_processors.messages",
 )
 
 MIDDLEWARE_CLASSES = (
@@ -333,6 +334,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'ecs.workflow.middleware.WorkflowMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )   
 
 INSTALLED_APPS = (
@@ -342,6 +344,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.humanize',
     'django.contrib.markup',
+    'django.contrib.messages',
     'django_extensions',
 
     'django.contrib.admin',
@@ -425,6 +428,10 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 
 # authorization
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
+
+# django.contrib.messages
+
+MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import subprocess, atexit

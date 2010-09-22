@@ -11,6 +11,8 @@ from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
+from django.utils.translation import ugettext as _
+from django.contrib import messages
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -228,28 +230,31 @@ def create_submission_form(request):
             document_formset = DocumentFormSet(prefix='document')
 
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
-            submission_form = form.save(commit=False)
-            submission = request.docstash.get('submission') or Submission.objects.create()
-            submission_form.submission = submission
-            submission_form.save()
-            form.save_m2m()
-            submission_form.documents = request.docstash['documents']
+            if not request.user.get_profile().approved_by_office:
+                messages.add_message(request, messages.INFO, _('You cannot submit studies yet. Please wait until the office has approved your account.'))
+            else:
+                submission_form = form.save(commit=False)
+                submission = request.docstash.get('submission') or Submission.objects.create()
+                submission_form.submission = submission
+                submission_form.save()
+                form.save_m2m()
+                submission_form.documents = request.docstash['documents']
             
-            formsets = formsets.copy()
-            investigators = formsets.pop('investigator').save(commit=False)
-            for investigator in investigators:
-                investigator.submission_form = submission_form
-                investigator.save()
-            for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
-                employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
-                employee.save()
+                formsets = formsets.copy()
+                investigators = formsets.pop('investigator').save(commit=False)
+                for investigator in investigators:
+                    investigator.submission_form = submission_form
+                    investigator.save()
+                for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
+                    employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
+                    employee.save()
 
-            for formset in formsets.itervalues():
-                for instance in formset.save(commit=False):
-                    instance.submission_form = submission_form
-                    instance.save()
-            request.docstash.delete()
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+                for formset in formsets.itervalues():
+                    for instance in formset.save(commit=False):
+                        instance.submission_form = submission_form
+                        instance.save()
+                request.docstash.delete()
+                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
         'form': form,
