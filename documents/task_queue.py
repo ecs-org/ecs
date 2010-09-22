@@ -11,6 +11,7 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
+        logger = encrypt_and_upload_to_storagevault.get_logger(**kwargs)
         logger.warning("Warning, Document with pk %s does not exist" % str(document_pk))
         return
     
