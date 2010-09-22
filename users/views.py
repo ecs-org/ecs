@@ -12,6 +12,7 @@ from django.conf import settings
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
+from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import send_html_email
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm
 from ecs.users.models import UserProfile
@@ -29,7 +30,7 @@ class TimestampedTokenFactory(object):
         data, timestamp = signed.loads(token, extra_key=self.extra_key)
         if time.time() - timestamp > self.ttl:
             raise ValueError("token expired")
-        return data
+        return data, timestamp
         
     def parse_token_or_404(self, token):
         try:
@@ -41,6 +42,7 @@ _password_reset_token_factory = TimestampedTokenFactory(extra_key=settings.REGIS
 _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWORD_RESET_SECRET)
 
 @forceauth.exempt
+@ratelimit_post(minutes=5, requests=5, key_field='username')
 def login(request, *args, **kwargs):
     kwargs.setdefault('template_name', 'users/login.html')
     return auth_views.login(request, *args, **kwargs)
@@ -68,6 +70,7 @@ def change_password(request):
 
 
 @forceauth.exempt
+@ratelimit_post(minutes=5, requests=5, key_field='email')
 def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
@@ -88,7 +91,7 @@ def register(request):
 
 @forceauth.exempt
 def activate(request, token=None):
-    data = _registration_token_factory.parse_token_or_404(token)
+    data, timestamp = _registration_token_factory.parse_token_or_404(token)
     try:
         existing_user = User.objects.get(email__iexact=data['email'])
         return render(request, 'users/registration/already_activated.html', {
@@ -121,6 +124,7 @@ def activate(request, token=None):
 
 
 @forceauth.exempt
+@ratelimit_post(minutes=5, requests=5, key_field='email')
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
@@ -140,12 +144,17 @@ def request_password_reset(request):
 
 @forceauth.exempt
 def do_password_reset(request, token=None):
-    email = _password_reset_token_factory.parse_token_or_404(token)
+    email, timestamp = _password_reset_token_factory.parse_token_or_404(token)
     user = get_object_or_404(User, email=email)
+    profile = user.get_profile()
+    if profile.last_password_change and time.mktime(profile.last_password_change.timetuple()) > timestamp:
+        return render(request, 'users/password_reset/token_already_used.html', {})
+    
     form = SetPasswordForm(user, request.POST or None)
     if form.is_valid():
         form.save()
-        UserProfile.objects.filter(user=user).update(last_password_change=datetime.datetime.now())
+        profile.last_password_change = datetime.datetime.now()
+        profile.save()
         return render(request, 'users/password_reset/reset_complete.html', {})
     return render(request, 'users/password_reset/reset_form.html', {
         'user': user,

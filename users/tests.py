@@ -59,6 +59,10 @@ class PasswordChangeTest(MailTestCase):
         user = User.objects.get(username='foobar')
         self.failUnless(user.check_password('1234'))
         
+        response = self.client.get(password_reset_url)
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIf('form' in response.context)
+        
     def test_password_change(self):
         user = User(username='foobar')
         user.set_password('test')
