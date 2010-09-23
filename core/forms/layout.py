@@ -23,7 +23,7 @@ SUBMISSION_FORM_TABS = (
     ]),
     (u'Antragsteller', [
         (u'Antragsteller', [
-            'submitter_contact_gender', 'submitter_contact_first_name', 'submitter_contact_last_name',
+            'submitter_contact_gender', 'submitter_contact_first_name', 'submitter_contact_last_name', 'submitter_email',
             'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
             'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing',
         ]),

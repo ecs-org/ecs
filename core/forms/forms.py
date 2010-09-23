@@ -98,7 +98,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio', 'study_plan_population_intention_to_treat', 
             'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
-            'study_plan_dataprotection_anonalgoritm'
+            'study_plan_dataprotection_anonalgoritm', 'submitter_email',
         )
         
     def clean(self):

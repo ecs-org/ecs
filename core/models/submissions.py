@@ -55,23 +55,9 @@ class Submission(models.Model):
     get_ec_number_display.short_description = 'EC-Number'
 
     def get_befangene(self):
-        submission_form = self.get_most_recent_form()
-        sponsor_email = submission_form.sponsor_email
-        # FIXME: how to get submitter email?
-        investigator_emails = [x.email for x in submission_form.investigators.all()]
-        
-        emails = [x for x in [sponsor_email]+investigator_emails if x]
-
-        befangene = []
-        for email in emails:
-            try:
-                users = User.objects.filter(email=email)
-            except User.DoesNotExist:
-                pass
-            else:
-                befangene += list(users)
-
-        return befangene
+        sf = self.current_submission_form
+        emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
+        return list(User.objects.filter(email__in=emails))
 
     # FIXME: replace all calls with direct attribute access
     def get_most_recent_form(self):
@@ -120,7 +106,7 @@ class Submission(models.Model):
         
     def save(self, **kwargs):
         if not self.ec_number:
-            # FIXME: how do we really assign ec-numbers for new submissions?
+            # FIXME: how do we really assign ec-numbers for new submissions? (FMD1)
             from random import randint
             self.ec_number = "EK-%s" % randint(10000, 100000)
         super(Submission, self).save(**kwargs)
@@ -200,7 +186,7 @@ class SubmissionForm(models.Model):
     project_type_psychological_study = models.BooleanField()
     
     # 2.2
-    # FIXME: use fixed set of choices ?
+    # TODO: use fixed set of choices ?
     specialism = models.TextField(null=True)
 
     # 2.3
@@ -346,6 +332,7 @@ class SubmissionForm(models.Model):
     # 9.x
     submitter = models.ForeignKey(User, null=True, related_name='submitted_submission_forms')
     submitter_contact = NameField()
+    submitter_email = models.EmailField(blank=True, null=True)
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
@@ -429,13 +416,7 @@ def _post_submission_form_save(**kwargs):
     if not old_sf:
         return
     
-    recipients = []
-    for username in settings.DIFF_REVIEW_LIST:
-        try:
-            recipients.append(User.objects.get(username=username))
-        except User.DoesNotExist:
-            # FIXME: when we run unittests, these users may not exist.
-            pass
+    recipients = list(User.objects.filter(username__in=settings.DIFF_REVIEW_LIST))
 
     timetable_entries = TimetableEntry.objects.filter(submission=submission)
     recipients += sum([list(x.users) for x in timetable_entries], [])
