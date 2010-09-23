@@ -6,7 +6,7 @@
             <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
              | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
              <!--| <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>-->
-             {% with submission.get_most_recent_form as submission_form %}
+             {% with submission.current_submission_form as submission_form %}
                  {% if submission_form %}
                      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
                      | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
