@@ -16,6 +16,7 @@ SUBMISSION_FORM_DATA = {
     'project_type_misc': 'misc foo',
     'project_type_genetic_study': True,
     'submitter_contact_last_name': 'sn foo',
+    'study_plan_blind': 0,
 }
 
 class SerializerTest(EcsTestCase):

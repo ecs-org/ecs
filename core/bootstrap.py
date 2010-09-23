@@ -482,6 +482,7 @@ def testsubmission():
         'subject_count': 175,
         'substance_p_c_t_gcp_rules': True,
         'subject_minage': 0,
+        'study_plan_blind': 0,
         'study_plan_randomized': False,
         'study_plan_cross_over': False,
         'german_consent_info': u'bla bla bla',
