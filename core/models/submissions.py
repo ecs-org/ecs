@@ -279,8 +279,7 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
-    # FIXME: study_plan_blind should not be nullable
-    study_plan_blind = models.SmallIntegerField(null=True, choices=[(0, 'offen'), (1, 'blind'), (2, 'doppelblind')])
+    study_plan_blind = models.SmallIntegerField(choices=[(0, 'offen'), (1, 'blind'), (2, 'doppelblind')])
     study_plan_observer_blinded = models.BooleanField()
     study_plan_randomized = models.BooleanField()
     study_plan_parallelgroups = models.BooleanField()
@@ -508,8 +507,7 @@ class InvestigatorEmployee(models.Model):
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
-    #FIXME: category should not be nullable
-    category = models.CharField(max_length=3, null=True, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
+    category = models.CharField(max_length=3, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
     type = models.CharField(max_length=150)
     count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)
