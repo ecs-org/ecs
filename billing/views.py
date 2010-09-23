@@ -19,10 +19,9 @@ from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):
-    # FIXME: use the full contact name
-    attrs = ('name', 'contact_last_name', 'address1', 'address2', 'zip_code', 'city', 'uid')
+    attrs = ('name', 'contact', 'address1', 'address2', 'zip_code', 'city', 'uid')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
-    bits = ['%(name)s' % data, 'zH %(contact_last_name)s' % data]
+    bits = ['%(name)s' % data, 'zH %s' % data['contact'].full_name]
     if data['address1']:
         bits.append('%(address1)s' % data)
     if data['address2']:
@@ -59,13 +58,13 @@ class SimpleXLS(object):
         self.xls.save(f)
 
 
-# FIXME: for testing purposes only
+# FIXME: for testing purposes only (FMD1)
 def reset_submissions(request):
     Submission.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
 
 def submission_billing(request):
-    # FIXME: only bill accepted submissions
+    # FIXME: only bill accepted submissions (FMD1)
     unbilled_submissions = list(Submission.objects.filter(billed_at=None))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
@@ -77,7 +76,7 @@ def submission_billing(request):
                 selected_for_billing.append(submission)
                 
         xls = SimpleXLS()
-        xls.write_row(0, (u'Anz.', u'Firma', u'Eudract-Nr.', u'Antragsteller', u'Klinik', u'Summe'))
+        xls.write_row(0, (u'Anz.', u'EK-Nummer', u'Firma', u'Eudract-Nr.', u'Antragsteller', u'Klinik', u'Summe'))
         for i, submission in enumerate(selected_for_billing):
             r = i + 1
             submission_form = submission.get_most_recent_form()
@@ -86,7 +85,7 @@ def submission_billing(request):
                 submission.ec_number,
                 _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
                 submission_form.eudract_number or '?',
-                submission_form.submitter_contact.last_name, # FIXME: use the full name
+                submission_form.submitter_contact.full_name,
                 _get_organizations(submission_form),
                 submission.price.price,
             ])
@@ -103,7 +102,6 @@ def submission_billing(request):
         htmlmail = unicode(render_html(request, 'billing/email/submissions.html', {}))
         plainmail = whitewash(htmlmail)
 
-        # FIXME: this should go into a celery queue and not be called directly
         send_mail(subject='Billing request', 
             message=plainmail,
             message_html=htmlmail,
@@ -127,7 +125,7 @@ def submission_billing(request):
     })
     
 
-# FIXME: for testing purposes only
+# FIXME: for testing purposes only (FMD1)
 def reset_external_review_payment(request):
     Submission.objects.update(external_reviewer_billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
@@ -172,7 +170,6 @@ def external_review_payment(request):
         htmlmail = unicode(render_html(request, 'billing/email/external_review.html', {}))
         plainmail = whitewash(htmlmail)
         
-        # FIXME: this should go into a celery queue and not be called directly
         send_mail(subject='Payment request', 
             message=plainmail,
             message_html=htmlmail,

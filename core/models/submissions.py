@@ -12,6 +12,7 @@ from ecs.communication.models import Message, Thread
 from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
+from ecs.core.models.names import NameField
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -129,17 +130,6 @@ class Submission(models.Model):
         
     class Meta:
         app_label = 'core'
-
-
-class NameField(object):
-    def contribute_to_class(self, cls, name):
-        fields = {
-            'gender': models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')), blank=True, null=True),
-            'first_name': models.CharField(max_length=50, blank=True),
-            'last_name': models.CharField(max_length=50, blank=True),
-        }
-        for fieldname, field in fields.items():
-            field.contribute_to_class(cls, "%s_%s" % (name, fieldname))
 
 
 class SubmissionForm(models.Model):
