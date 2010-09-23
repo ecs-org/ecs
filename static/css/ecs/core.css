@@ -237,10 +237,6 @@ input[type=submit] {
 
 /* form layout */
 
-.ui-tabs .ui-tabs-nav li a {
-    /* FIXME: this is a hack */
-    font-size: 12px;
-}
 .form.main .field, .form.main .tab {
   background: #f9feff;
   min-width: 700px;
