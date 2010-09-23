@@ -69,6 +69,7 @@ django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/t
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # FIXME: no antiword on opensuse
+#antiword:req:suse:zypper:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
@@ -129,7 +130,8 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 #barcode stamping
 pdftk:req:apt:apt-get:pdftk
 pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
-# FIXME: no pdftk on opensuse
+# Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
+pdftk:req:suse:zypper:pdftk
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
 # lamson mail server
