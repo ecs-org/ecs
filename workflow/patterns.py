@@ -30,7 +30,7 @@ def synchronization(token):
         if not expected_inputs:
             node.progress(*synchronized_tokens)
 
-# TODO: we might need a cancelling discriminator
+# TODO: we might need a cancelling discriminator (FMD1)
 #@control()
 #def cancelling_discriminator(node, workflow):
 #    pass
