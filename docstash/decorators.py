@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from ecs.docstash.models import DocStash
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
-# FIXME: version cookies need to be signed
 def with_docstash_transaction(*args, **kwargs):
     def decorator(view):
         view_name = "%s.%s" % (view.__module__, view.__name__)
@@ -20,7 +19,7 @@ def with_docstash_transaction(*args, **kwargs):
             else:
                 docstash = get_object_or_404(DocStash, group=view_name, owner=request.user, key=docstash_key)
                 request.docstash = docstash
-                # FIXME: this is a simplification and only sufficient for our single-user application
+                # XXX: this is a simplification and only sufficient for our single-user application
                 version = docstash.current_version 
                 try:
                     docstash.start_transaction(version)
@@ -31,7 +30,7 @@ def with_docstash_transaction(*args, **kwargs):
                     try:
                         docstash.commit_transaction()
                     except ConcurrentModification:
-                        # FIXME: handle concurrent updates
+                        # FIXME: handle concurrent updates (FMD1)
                         raise
                 except:
                     docstash.rollback_transaction()
