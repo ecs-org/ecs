@@ -152,7 +152,7 @@ xlwt:inst:all:pypi:xlwt
 # win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
-gnupg:req:mac:homebrew:FIXME gnupgforhomebrewpackagename
+gnupg:req:mac:homebrew:gnupg
 """
 
 
@@ -199,7 +199,7 @@ antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiwor
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
 # graphviz:inst:apt:pypi:pygraphviz
-#FIXME: who needs levenshtein ?
+#levenshtein is needed for the massimport statistics
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 # required for django_extensions unittests:
