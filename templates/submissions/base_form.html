@@ -123,7 +123,7 @@
                         <thead>
                         <tr>
                             <th></th>
-                            {% for field in investigatoremployee_formset|empty_form %}
+                            {% for field in investigatoremployee_formset.empty_form %}
                                 {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                                     {% with field|get_field_info as field_info %}
                                     <th class="label">
@@ -151,7 +151,7 @@
                             {% endifequal %}
                         {% empty %}
                             {% if not readonly %}
-                                {% with investigatoremployee_formset|empty_form as form %}
+                                {% with investigatoremployee_formset.empty_form as form %}
                                     <tr class="form template">
                                         {% include "forms/tables/row.html" %}
                                     </tr>

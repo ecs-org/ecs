@@ -70,21 +70,6 @@ def smart_truncate(s, n):
     
 
 @register.filter
-def empty_form(formset):
-    # FIXME: replace with formset.empty_form when we switch to django 1.2
-    defaults = {
-        'auto_id': formset.auto_id,
-        'prefix': formset.add_prefix('__prefix__'),
-        'empty_permitted': True,
-    }
-    if formset.data or formset.files:
-        defaults['data'] = formset.data
-        defaults['files'] = formset.files
-    form = formset.form(**defaults)
-    formset.add_fields(form, 0)
-    return form
-
-@register.filter
 def class_for_field(field):
     return 'wide' if field.field.max_length > 50 else 'narrow'
 
