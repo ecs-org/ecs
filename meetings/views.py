@@ -139,11 +139,11 @@ def medical_categories(request, meeting_pk=None):
             if form.is_valid():
                 if form.instance and form.instance.board_member:
                     # remove all participations for a previous selected board member.
-                    # FIXME: this may delete manually entered data.
+                    # FIXME: this may delete manually entered data. (FMD1)
                     Participation.objects.filter(medical_category=cat, entry__meeting=meeting).delete()
                 amc = form.save()
                 # add participations for all timetable entries with matching categories.
-                # FIXME: this assumes that all submissions have already been added to the meeting.
+                # FIXME: this assumes that all submissions have already been added to the meeting. (FMD1)
                 for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
                     Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
 
@@ -409,7 +409,6 @@ def agenda_htmlemail(request, meeting_pk=None):
         }))
         plainmail = whitewash(htmlmail)
 
-        # FIXME: this should go into a celery queue and not be called directly
         send_mail(subject='Invitation to meeting', 
                  message=plainmail,
                  message_html=htmlmail,
