@@ -21,9 +21,10 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
             encrypted = gpgutils.encrypt(f, settings.MEDIASERVER_KEYOWNER)
             vault.add(doc.uuid_document, encrypted)
         except KeyError:
-            pass # FIXME/mediaserver
+            logger = encrypt_and_upload_to_storagevault.get_logger(**kwargs)
+            logger.error("Error, can't encrypt documents. invalid keyowner?: %s" % (settings.MEDIASERVER_KEYOWNER))
 
-    # TODO: prime mediaserver
+    # TODO: prime mediaserver (depends on resolution of #713)
     return True
     
 @task()
