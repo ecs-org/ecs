@@ -37,7 +37,7 @@ class Submission(models.Model):
     
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
-    next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful
+    next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful (FMD1)
     
     objects = AuthorizationManager()
 
