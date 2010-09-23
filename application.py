@@ -152,7 +152,7 @@ xlwt:inst:all:pypi:xlwt
 # win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
-gnupg:req:mac:homebrew:FIXME gnupgforhomebrewpackagename
+gnupg:req:mac:homebrew:gnupg
 """
 
 
