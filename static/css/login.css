@@ -23,6 +23,9 @@
   top: 0 !important;
   left: 0 !important;
 }
+#toggle_sidebar_button {
+  display:none !important;
+}
 .innertube {
   float: none;
 }
