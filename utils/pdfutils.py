@@ -43,10 +43,7 @@ def pdf_pages(filelike):
     parser.set_document(doc)
     doc.set_parser(parser)
     doc.initialize('')
-    # TODO: is hack
-    pages = 0
-    for page in doc.get_pages():
-        pages += 1
+    pages = sum(1 for _ in doc.get_pages())
     filelike.seek(0)
     return pages
 
