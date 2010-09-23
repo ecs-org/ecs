@@ -80,7 +80,6 @@ def register(request):
             'activation_url': activation_url,
             'form': form,
         }))
-        # FIXME: this should go into a celery queue and not be called directly
         send_html_email(subject='ECS - Anmeldung', message_html=htmlmail, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/registration/registration_complete.html', {})
         
