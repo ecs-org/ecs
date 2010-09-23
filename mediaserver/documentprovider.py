@@ -9,8 +9,12 @@ import os
 from django.conf import settings
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
-from ecs.mediaserver.renderer import renderDefaultDocshots
+from ecs.mediaserver.renderer import renderDefaultDocshots,DEFAULT_ASPECT_RATIO
 from ecs.utils.pdfutils import pdf_isvalid
+from ecs.mediaserver.cacheobjects import Docshot
+from ecs.utils import s3utils
+from time import time
+ 
  
 class DocumentProvider(object):
     '''
@@ -79,7 +83,28 @@ class DocumentProvider(object):
         for docshot, data in renderDefaultDocshots(pdfblob,filelike):
             self.addDocshot(docshot, data, use_render_diskcache=True)
         return True
-               
+
+    def createDocshotDictionary(self,pdfblob):
+        tiles = [ 1, 3, 5 ]
+        width = [ 800, 768 ] 
+        docshotDict = {};
+    
+        for t in tiles:
+            for w in width:
+                pagenum = 1
+                while self.getDocshot(Docshot(pdfblob, t, t, w , pagenum)):
+                    bucket = "/mediaserver/%s/%dx%d/%d/%d/" % (pdfblob.cacheID(), t, t, w, pagenum)
+                    baseurl = "http://%s:%d" % (settings.MEDIASERVER_HOST, settings.MEDIASERVER_PORT)
+                    expire = int(time()) + settings.S3_DEFAULT_EXPIRATION_SEC
+                    linkdesc = "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w)
+                    # "linkdescription": ["expiringURL", page, tiles_x, tiles_y, width, height]
+                    docshotDict[linkdesc] = [s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), pagenum, t, t, width, width * DEFAULT_ASPECT_RATIO]
+                    pagenum += 1
+            # additionally provide a lookup for the available pages of width/montage permutations
+            docshotDict["%d/%dx%d" % (t, t)] = pagenum
+
+        return docshotDict
+            
 class VolatileCache(object):
     def __init__(self):
         # TODO configure memcache qoutas
@@ -147,3 +172,7 @@ class DiskCache(DiskBuckets):
         def _raw_entries(self):
             files = os.walk(self.root_dir)
             return files
+
+# we don't want parallel instances in the webapp
+docProvider = DocumentProvider()
+

@@ -6,8 +6,11 @@ import os
 from uuid import UUID
 
 MONTAGE_PATH = getattr(settings, 'IMAGEMAGICK_MONTAGE_PATH', '/usr/bin/montage')
-
-def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=1.41428, dpi=72, depth=8):
+DEFAULT_ASPECT_RATIO = 1.41428
+DEFAULT_DPI = 72
+DEFAULT_DEPTH = 8
+    
+def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=DEFAULT_ASPECT_RATIO, dpi=DEFAULT_DPI, depth=DEFAULT_DEPTH):    
     margin_x = 0
     margin_y = 0
     
