@@ -36,8 +36,7 @@ class DocStash(models.Model):
     key = models.CharField(max_length=41, primary_key=True)
     group = models.CharField(max_length=120, db_index=True, null=True)
     current_version = models.IntegerField(default=-1)
-    # FIXME: owner should not be nullable
-    owner = models.ForeignKey(User, null=True)
+    owner = models.ForeignKey(User)
     
     objects = AuthorizationManager()
 
