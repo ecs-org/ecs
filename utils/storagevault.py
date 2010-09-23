@@ -8,28 +8,13 @@ Created on Aug 19, 2010
 from django.conf import settings
 from ecs.utils.diskbuckets import DiskBuckets
 
-
 def getVault():
-    if settings.STORAGE_VAULT == 'ecs.utils.storagevault.LocalFileStorageVault':
-        return LocalFileStorageVault()
-    else:
-        return UnimplementedStorageVault()
-    # FIXME: this should look at settings.STORAGE_VAULT and use the settings there, but for now we hardcode it
-    # return somethinglike getclassofstr(settings.STORAGE_VAULT)
+    vault = globals()[settings.STORAGE_VAULT]
+            
+    if vault is None:
+        raise KeyError("No Vault implementation for name: %s" % (settings.STORAGE_VAULT))
+    return vault()
     
-class UnimplementedStorageVault():
-    def __init__(self):
-        raise NotImplementedError
- 
-    def add(self, uuid, filelike):
-        raise NotImplementedError
-
-    def get(self, uuid):
-        raise NotImplementedError
-
-    def exists(self, uuid):
-        raise NotImplementedError
-
 class LocalFileStorageVault(DiskBuckets):
     def __init__(self):
         rootdir = settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir']        
