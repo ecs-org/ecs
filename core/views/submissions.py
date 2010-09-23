@@ -122,7 +122,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'checklist_reviews': checklist_reviews,
         'befangene_review_form': befangene_review_form,
         'pending_notifications': submission_form.notifications.all(),
-        'answered_notficiations': [], # FIXME
+        'answered_notficiations': [], # FIXME (FMD1)
         'pending_votes': submission_form.submission.votes.filter(published=False),
         'published_votes': submission_form.submission.votes.filter(published=True),
     }
@@ -328,7 +328,7 @@ def submission_form_list(request):
             matched_submissions.add(submission)
 
         submissions = Submission.objects.filter(pk__in=[s.pk for s in matched_submissions]).distinct().order_by('ec_number')
-        stashed_submission_forms = []  # FIXME: how to search in the docstash?
+        stashed_submission_forms = []  # FIXME: how to search in the docstash? (FMD1)
         meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__in=submissions).order_by('-start').distinct()]
     else:
         submissions = Submission.objects.order_by('ec_number').distinct()
@@ -355,7 +355,7 @@ def edit_submission(request, submission_pk=None):
         'submission': submission,
     })
 
-# FIXME: HACK
+# FIXME: for testing purposes only (FMD1)
 def start_workflow(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     from ecs.workflow.models import Graph
