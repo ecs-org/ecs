@@ -18,9 +18,9 @@
             <span style="font-weight:bold;">EK Nr.</span>
                 {{ entry.submission.ec_number }}<br />
             <span style="font-weight:bold;">Antragsteller:</span>
-                {{ entry.submission.get_most_recent_form.submitter_name }}<br />
+                {{ entry.submission.current_submission_form.submitter_name }}<br />
             <span style="font-weight:bold;">Institut:</span>
-                {{ entry.submission.get_most_recent_form.submitter_organisation }}<br />
+                {{ entry.submission.current_submission_form.submitter_organisation }}<br />
             <span style="font-weight:bold;">Projekttitel:</span>
                 {{ entry.submission.project_title }}<br />
             <br />
