@@ -137,6 +137,7 @@ pdftk:req:apt:apt-get:pdftk
 pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
 # Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
 pdftk:req:suse:zypper:pdftk
+#FIXME, port or at least homebrew package of pdftk
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
 # lamson mail server
