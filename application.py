@@ -199,7 +199,7 @@ antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiwor
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
 # graphviz:inst:apt:pypi:pygraphviz
-#FIXME: who needs levenshtein ?
+#levenshtein is needed for the massimport statistics
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 # required for django_extensions unittests:
