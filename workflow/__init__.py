@@ -21,7 +21,7 @@ def register(model):
 def _post_save(sender, **kwargs):
     if _autostart_disabled or sender not in __registry:
         return
-    # FIXME: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299
+    # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299
     if kwargs['created'] and not kwargs.get('raw'):
         from ecs.workflow.models import Workflow, Graph
         ct = ContentType.objects.get_for_model(sender)
