@@ -39,7 +39,7 @@ def submission_data_for_notification(request):
         'investigators': investigators,
     })
 
-# FIXME: move this into create_notification()
+# XXX: move this into create_notification (FMD1)
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
         'notification_types': NotificationType.objects.order_by('name')
