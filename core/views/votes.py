@@ -126,36 +126,35 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print 'vote_sign_receive meeting "%s", vote "%s", jsessionid "%s"' % (meeting_pk, vote_pk, jsessionid)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
-       pdf_url = request.REQUEST['pdf-url']
-       pdf_id = request.REQUEST['pdf-id']
-       num_bytes = request.REQUEST['num-bytes']
-       pdfas_session_id = request.REQUEST['pdfas-session-id']
-       url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-       value = id_get(pdf_id)
-       if value is None:
-           return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-       a = value.split(':')
-       t_name = a[1]
-       pdf_name = a[2]
-       os.remove(t_name)
-       id_delete(pdf_id)
-       # f is not seekable, so we have to store it as local file first
-       f = urllib2.urlopen(url)
-       t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-       t_name = t.name
-       t.write(f.read())
-       t.close()
-       f.close()
-       print 'wrote "%s" as "%s"' % (pdf_name, t_name)
-       t = open(t_name, 'rb')
-       d = datetime.datetime.now()
-       # TODO prevent barcode stamping (don't touch the signed pdf!)
-       document = Document(file=t, original_file_name=pdf_name, date=d)
-       document.save()
-       print 'stored "%s" as "%s"' % (pdf_name, document.pk)
-       t.close()
-       os.remove(t_name)
-       return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
+        pdf_url = request.REQUEST['pdf-url']
+        pdf_id = request.REQUEST['pdf-id']
+        num_bytes = request.REQUEST['num-bytes']
+        pdfas_session_id = request.REQUEST['pdfas-session-id']
+        url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
+        value = id_get(pdf_id)
+        if value is None:
+            return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+        a = value.split(':')
+        t_name = a[1]
+        pdf_name = a[2]
+        os.remove(t_name)
+        id_delete(pdf_id)
+        # f is not seekable, so we have to store it as local file first
+        f = urllib2.urlopen(url)
+        t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+        t_name = t.name
+        t.write(f.read())
+        t.close()
+        f.close()
+        print 'wrote "%s" as "%s"' % (pdf_name, t_name)
+        t = open(t_name, 'rb')
+        d = datetime.datetime.now()
+        document = Document(file=t, original_file_name=pdf_name, date=d)
+        document.save()
+        print 'stored "%s" as "%s"' % (pdf_name, document.pk)
+        t.close()
+        os.remove(t_name)
+        return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 
