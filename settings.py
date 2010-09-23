@@ -1,4 +1,4 @@
- Django settings for ecs project.
+# Django settings for ecs project.
 
 # root dir of project
 import os.path, platform, sys
