@@ -89,7 +89,7 @@ def is_accepted(workflow):
 
 @workflow.guard(model=Submission)
 def is_marked_as_thesis_by_submitter(workflow):
-    return bool(workflow.data.get_most_recent_form().project_type_education_context)
+    return bool(workflow.data.current_submission_form.project_type_education_context)
     
 @workflow.guard(model=Submission)
 def is_thesis_and_retrospective(workflow):

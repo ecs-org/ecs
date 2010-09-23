@@ -17,7 +17,7 @@ class Command(BaseCommand):
         except Submission.DoesNotExist:
             raise CommandError("No submission matches the given EC-Number: %s" % ec_number)
 
-        sf = s.get_most_recent_form()
+        sf = s.current_submission_form
         if not sf:
             raise CommandError("This submission does not have an attached SubmissionForm.")
 

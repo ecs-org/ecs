@@ -81,9 +81,10 @@ def copy_submission_form(request, submission_form_pk=None):
     
 
 def copy_latest_submission_form(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.get_most_recent_form()
-    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+    submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
+    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={
+        'submission_form_pk': submission_form.pk
+    }))
 
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
@@ -364,7 +365,7 @@ def start_workflow(request, submission_pk=None):
 
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.get_most_recent_form()
+    submission_form = submission.current_submission_form
     serializer = Serializer()
     buf = StringIO()
     serializer.write(submission_form, buf)

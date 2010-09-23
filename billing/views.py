@@ -79,7 +79,7 @@ def submission_billing(request):
         xls.write_row(0, (u'Anz.', u'EK-Nummer', u'Firma', u'Eudract-Nr.', u'Antragsteller', u'Klinik', u'Summe'))
         for i, submission in enumerate(selected_for_billing):
             r = i + 1
-            submission_form = submission.get_most_recent_form()
+            submission_form = submission.current_submission_form
             xls.write_row(i + 1, [
                 "%s." % r,
                 submission.ec_number,

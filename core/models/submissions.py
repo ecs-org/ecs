@@ -59,10 +59,6 @@ class Submission(models.Model):
         emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
         return list(User.objects.filter(email__in=emails))
 
-    # FIXME: replace all calls with direct attribute access
-    def get_most_recent_form(self):
-        return self.current_submission_form
-    
     # FIXME: replace all calls withs the appropriate direct attribute access
     def get_most_recent_vote(self):
         return self.current_submission_form.current_pending_vote or self.current_submission_form.current_published_vote
