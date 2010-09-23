@@ -273,10 +273,9 @@ upstart_targets = {
 test_flavors = {
     'default': './manage.py test',
     'mainapp': './manage.py test',
-    'mediaserver': 'false',  # TODO: implement
-    'logmailserver': 'false', # TODO: implement
-    'mailserver': '.false', # TODO: implement
-    'signing': 'false', # TODO: implement
+    'mediaserver': 'false',  # include in the mainapp tests
+    'mailserver': '.false', # included in the mainapp tests
+    'signing': 'false', # TODO: how to test the signing application?
 }
 
 def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
