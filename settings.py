@@ -1,4 +1,4 @@
-# Django settings for ecs project.
+ Django settings for ecs project.
 
 # root dir of project
 import os.path, platform, sys
@@ -418,7 +418,7 @@ SESSION_COOKIE_AGE = 2700                # logout after 45 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of browser
 
-# FIXME: describe where and how this is used; settings.py needs documentation on every setting
+# this is used by the EthicsCommission model to identiry the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
 DEFAULT_USER_GROUPS = ('Presenter',)
