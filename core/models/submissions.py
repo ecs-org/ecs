@@ -59,10 +59,6 @@ class Submission(models.Model):
         emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
         return list(User.objects.filter(email__in=emails))
 
-    # FIXME: replace all calls withs the appropriate direct attribute access
-    def get_most_recent_vote(self):
-        return self.current_submission_form.current_pending_vote or self.current_submission_form.current_published_vote
-        
     @property
     def votes(self):
         from ecs.core.models import Vote
@@ -127,7 +123,7 @@ class SubmissionForm(models.Model):
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
     current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
-
+    
     class Meta:
         app_label = 'core'
         
@@ -399,6 +395,11 @@ class SubmissionForm(models.Model):
             return self.primary_investigator.ethics_commission
         except Investigator.DoesNotExist:
             return None
+            
+    @property
+    def current_vote(self):
+        return self.current_pending_vote or self.current_published_vote
+
 
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']

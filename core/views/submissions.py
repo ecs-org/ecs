@@ -93,7 +93,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     documents = submission_form.documents.all().order_by('pk')
-    vote = submission_form.submission.get_most_recent_vote()
+    vote = submission_form.current_vote
     submission = submission_form.submission
 
     retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission, readonly=True)
@@ -176,7 +176,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
 
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    vote = submission_form.submission.get_most_recent_vote()
+    vote = submission_form.current_vote
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
@@ -186,7 +186,7 @@ def vote_review(request, submission_form_pk=None):
 
 def b2_vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    vote = submission_form.submission.get_most_recent_vote()
+    vote = submission_form.current_vote
     if not vote or not vote.result == '2':
         raise Http404("This SubmissionForm has no B2-Vote")
     b2_vote_review_form = B2VoteReviewForm(request.POST or None, initial={
