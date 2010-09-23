@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 if callable(func) and getattr(func, 'bootstrap', False):
                     bootstrap_funcs["%s.%s" % (func.__module__, func.__name__)] = func
     
-        # XXX: inefficient
+        # XXX: inefficient (FMD1)
         cycle = True
         order = []
         while len(order) < len(bootstrap_funcs):
