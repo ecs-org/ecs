@@ -36,7 +36,7 @@ def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=
     
     for ds in sorted(os.listdir(tmp_renderdir)):
         dspath = os.path.join(tmp_renderdir, ds)
-        return Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr=pagenr+1), open(dspath,"rb")
+        yield Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr=pagenr+1), open(dspath,"rb")
 
 def renderDefaultDocshots(self, pdfblob, filelike):
     tiles = [ 1, 3, 5 ]
@@ -49,4 +49,5 @@ def renderDefaultDocshots(self, pdfblob, filelike):
 
     for t in tiles:
         for w in width:
-            yield renderPDFMontage(pdfblob.cacheID(), tmp_rendersrc, w, t, t)
+            for docshot, data in renderPDFMontage(pdfblob.cacheID(), tmp_rendersrc, w, t, t):
+                yield docshot, data
