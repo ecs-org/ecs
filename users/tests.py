@@ -15,7 +15,7 @@ class RegistrationTest(MailTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(len(self.queue_list()), 1)
         key, message = self.queue.pop()
-        # FIXME: how do we get the right url without knowing its path-prefix?
+        # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message.body())
         self.failUnless(match)
         activation_url = match.group(1)
@@ -44,7 +44,7 @@ class PasswordChangeTest(MailTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(len(self.queue_list()), 1)
         key, message = self.queue.pop()
-        # FIXME: how do we get the right url without knowing its path-prefix?
+        # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message.body())
         self.failUnless(match)
         password_reset_url = match.group(1)
