@@ -68,7 +68,7 @@ django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/t
 # needed for deployment: massimport
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
-# FIXME: no antiword on opensuse
+# antiword has to be build by hand for opensuse
 #antiword:req:suse:zypper:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 
@@ -123,7 +123,12 @@ python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
-# FIXME: which dependencies dos PIL have on opensuse?
+# PIL requirements for opensuse
+libjpeg-devel:req:suse:zypper:libjpeg-devel
+zlib-devel:req:suse:zypper:zlib
+libfreetype6:req:suse:zypper:libfreetype6
+freetype2-devel:req:suse:zypper:freetype2-devel
+liblcms1:req:suse:zypper:liblcms1
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
@@ -180,7 +185,8 @@ jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 # if you want to have real queuing, you need rabbitmq
 celery:req:apt:apt-get:rabbitmq-server
 celery:req:mac:macports:rabbitmq-server
-# FIXME: no rabbitmq on opensuse
+# available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
+rabbitmq-server:req:suse:zypper:rabbitmq-server
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
 mutt:req:suse:zypper:mutt
