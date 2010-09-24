@@ -8,8 +8,7 @@ PROJECT_DIR = os.path.dirname(__file__)
 ADMINS = (
     ('Felix Erkinger', 'felix@erkinger.at'),
     )
-ADMINS = ()
-MANAGERS = ADMINS
+MANAGERS = ADMINS = ()
 SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
 MAIL_ADMINS = False
 
@@ -362,6 +361,10 @@ INSTALLED_APPS = (
     'dbtemplates',
     'haystack',
 
+    'paging',
+    'indexer',
+    'sentry.client',
+
     'ecs.core',
     'ecs.utils',
     'ecs.feedback',
@@ -430,8 +433,13 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
 
 # django.contrib.messages
-
 MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# django-sentry
+SENTRY_TESTING = True # log exceptions even when DEBUG=False
+SENTRY_KEY = 'okdzo74fungotd9t89ec1ffi0f56bmvwlgd'
+SENTRY_REMOTE_URL = "http://127.0.0.1:8090/store/"
+SENTRY_REMOTE_TIMEOUT = 3
 
 if 'test' in sys.argv or 'runserver' in sys.argv:
     import subprocess, atexit

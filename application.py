@@ -161,6 +161,14 @@ xlwt:inst:all:pypi:xlwt
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
+
+# django-sentry
+django-indexer:inst:all:pypi:django-indexer
+django-paging:inst:all:pypi:django-paging
+django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
+pygooglechart:inst:all:pypi:pygooglechart
+django-sentry:inst:all:pypi:django-sentry
+
 """
 
 
