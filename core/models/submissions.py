@@ -13,6 +13,7 @@ from ecs.meetings.models import TimetableEntry, Meeting
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
+from django.utils.translation import gettext as _
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -59,6 +60,13 @@ class Submission(models.Model):
         emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
         return list(User.objects.filter(email__in=emails))
 
+    def get_creation_notification_receivers(self):
+        sf = self.current_submission_form
+        emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
+        registered = list(User.objects.filter(email__in=emails))
+        unregistered = list(set(emails).difference(set(registered)))
+        return registered, unregistered
+   
     @property
     def votes(self):
         from ecs.core.models import Vote
@@ -439,6 +447,20 @@ def _post_submission_form_save(**kwargs):
         )
 
         message = thread.add_message(User.objects.get(username='root'), text=text)
+
+def _post_creation_form_save(**kwargs):
+    new_sf = kwargs['instance']
+    submission = new_sf.submission
+   
+    # not previous form -> not an edit -> creation
+    if submission.current_submission_form:
+        return
+    
+    submission.current_submission_form = new_sf
+    submission.save(force_update=True)
+
+    registered, unregistered = new_sf.get_creation_notification_receivers()
+    
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
