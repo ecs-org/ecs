@@ -15,7 +15,7 @@ class RendererTest(EcsTestCase):
         self.f_pdfdoc = open(self.pdfdoc, "rb")
         self.pages = pdf_pages(self.f_pdfdoc)
 
-    def testConsistency(self):
+    def testPngRendering(self):
         tiles = [ 1, 3, 5 ]
         width = [ 800, 768 ] 
         
@@ -34,6 +34,5 @@ class RendererTest(EcsTestCase):
                 fullpages, remainder = divmod(self.pages, t**2)
                 if remainder > 0: 
                     fullpages =  fullpages + 1
-                print t
                 self.assertEquals(pagenum, fullpages);
 

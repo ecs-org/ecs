@@ -26,24 +26,25 @@ def _prepare(filelike):
 # TODO change to symmetric key
 def encrypt(filelike, fingerprint):
     tmp_in, tmp_out = _prepare(filelike)
-    return tmp_in # FIXME/mediaserver
-
+    return open(tmp_in, 'rb')
     args = '%s --always-trust --batch --yes -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, fingerprint, tmp_out, tmp_in)
-    popen = subprocess.Popen(args, shell=True)
-
-    if popen.returncode != 0:
-        raise IOError('gpg returned error code % i')
+    popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
+    returncode = popen.wait()
+    
+    if returncode != 0:
+        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
     
     return open(tmp_out, 'rb')
 
 # TODO change to symmetric key
 def decrypt(filelike, fingerprint):
     tmp_in, tmp_out = _prepare(filelike)
-
+    return open(tmp_in, 'rb')
     args = '%s --always-trust --batch --yes -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, fingerprint, tmp_out, tmp_in)
-    popen = subprocess.Popen(args, shell=True)
-
-    if popen.returncode != 0:
-        raise IOError('gpg returned error code % i')
+    popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
+    returncode = popen.wait()
+    
+    if returncode != 0:
+        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
     
     return open(tmp_out, 'rb')

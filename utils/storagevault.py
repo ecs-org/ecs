@@ -16,7 +16,7 @@ def getVault():
     except ImportError:
         raise ImproperlyConfigured("No Vault implementation for name: %s" % (settings.STORAGE_VAULT))
     return vault()
-    
+
 class LocalFileStorageVault(DiskBuckets):
     def __init__(self):
         rootdir = settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir']        

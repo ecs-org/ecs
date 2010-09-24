@@ -44,6 +44,8 @@ STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_D
 # Mediaserver settings
 #TODO Migrate mediaserver settings to a separate config file
 MEDIASERVER_KEYOWNER="43BA0B84B8C6007858854B84F122070D7FB78045"
+MEDIASERVER_HOST="localhost"
+MEDIASERVER_PORT=8000
 
 DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
 DOC_DISKCACHE_MAXSIZE = 2**34
@@ -60,6 +62,7 @@ RENDER_MEMCACHE_MAXSIZE = 2**29
 
 # Storagevault connector settings
 S3_SECRET_KEYS = { "UnitTestKey": "imhappytobeatestkey", "LocalFileStorageVault": "imhappytobeasecretkey"}
+S3_DEFAULT_EXPIRATION_SEC = 5*60
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
 # production environments should clear CARROT_BACKEND (sets to default of rabbitmq), BROKER_USER, PASSWORD, VHOST 

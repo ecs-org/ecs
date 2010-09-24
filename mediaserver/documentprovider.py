@@ -12,9 +12,8 @@ from ecs.utils.diskbuckets import DiskBuckets
 from ecs.mediaserver.renderer import renderDefaultDocshots,DEFAULT_ASPECT_RATIO
 from ecs.utils.pdfutils import pdf_isvalid
 from ecs.mediaserver.cacheobjects import Docshot
-from ecs.utils import s3utils
+from ecs.utils import s3utils, gpgutils
 from time import time
- 
  
 class DocumentProvider(object):
     '''
@@ -44,8 +43,9 @@ class DocumentProvider(object):
                         
         if not filelike and try_vault:
             filelike = self.vault.get(mediablob.cacheID())
-            self._cacheBlob(mediablob, filelike)
-            self._cacheDocshots(mediablob, filelike)
+            decrypted = gpgutils.decrypt(filelike, settings.MEDIASERVER_KEYOWNER)
+            self._cacheBlob(mediablob, decrypted)
+            self._cacheDocshots(mediablob, decrypted)
  
         return filelike
 
@@ -100,8 +100,6 @@ class DocumentProvider(object):
                     # "linkdescription": ["expiringURL", page, tiles_x, tiles_y, width, height]
                     docshotDict[linkdesc] = [s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), pagenum, t, t, width, width * DEFAULT_ASPECT_RATIO]
                     pagenum += 1
-            # additionally provide a lookup for the available pages of width/montage permutations
-            docshotDict["%d/%dx%d" % (t, t)] = pagenum
 
         return docshotDict
             
@@ -112,7 +110,6 @@ class VolatileCache(object):
             import memcache as memcache
         elif settings.RENDER_MEMCACHE_LIB == 'mockcache' or settings.RENDER_MEMCACHE_LIB == '' :
             import mockcache as memcache
-            print "Debug: Import mockcache as memcache"
         else:
             raise NotImplementedError('i do not know about %s as RENDER_MEMCACHE_LIB' % settings.RENDER_MEMCACHE_LIB)
 
@@ -174,5 +171,5 @@ class DiskCache(DiskBuckets):
             return files
 
 # we don't want parallel instances in the webapp
-docProvider = DocumentProvider()
+docprovider = DocumentProvider()
 
