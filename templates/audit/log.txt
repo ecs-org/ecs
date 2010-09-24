@@ -1,0 +1,2 @@
+{% for entry in entries %}
+{{ entry.get_log_line|safe }}{% endfor %}

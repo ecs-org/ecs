@@ -1,11 +1,23 @@
 # -*- coding: utf-8 -*-
 
-#from reversion import revision
-#from reversion.models import Revision
+from django.http import HttpResponse, Http404
 
-from django.http import HttpResponse
+from ecs.utils.viewutils import render, render_html
+from ecs.audit.models import AuditTrail
 
-def trail(request):
-    #revisions = Revision.objects.order_by('date_created')
-    revisions = []
-    return HttpResponse('\n'.join([str(x) for x in revisions]))
+
+def log(request, format):
+    entries = AuditTrail.objects.all().order_by('created_at')
+    if format == 'html':
+        template = 'audit/log.html'
+        mimetype = 'text/html'
+    elif format == 'txt':
+        template = 'audit/log.txt'
+        mimetype = 'text/plain'
+    else:
+        raise Http404()
+    
+    return render(request, template, {
+        'entries': entries,
+    }, mimetype=mimetype)
+

@@ -1,0 +1,18 @@
+{% extends 'core.html' %}
+
+{% block htmltitle %}ECS Audit Trail Log{% endblock %}
+
+{% block headertitle %}
+Audit Trail
+{% endblock %}
+
+{% block content %}
+
+<pre>
+{% for entry in entries %}
+{{ entry.get_log_line }}{% endfor %}
+</pre>
+
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}

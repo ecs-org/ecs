@@ -3,5 +3,5 @@ from django.conf import settings
 
 urlpatterns = patterns(
     '',
-    url(r'^trail/$', 'ecs.audit.views.trail'),
+    url(r'^log/(?P<format>\w+)/$', 'ecs.audit.views.log'),
 )
