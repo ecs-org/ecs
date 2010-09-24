@@ -13,8 +13,12 @@ class SettingsTest(EcsTestCase):
         self.failUnless(hasattr(settings, 'ENABLE_AUDIT_TRAIL'))
         self.failUnless(hasattr(settings, 'AUDIT_TRAIL_IGNORED_MODELS'))
            
-class CreateUserTest(EcsTestCase):
     def test_create_user(self):
         audit_trail_entries_count = AuditTrail.objects.count()
         User.objects.create(username='audit_trail_test_user')  # User and UserProfile are being created
         self.failUnlessEqual(audit_trail_entries_count+2, AuditTrail.objects.count())
+    
+    def test_line_formatting(self):
+        a = AuditTrail.objects.filter()[0]
+        a.get_log_line()
+
