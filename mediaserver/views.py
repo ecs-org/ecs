@@ -4,13 +4,9 @@ from django.http import HttpResponse, HttpResponseNotFound, \
     HttpResponseBadRequest
 
 from ecs.mediaserver.documentprovider import DocumentProvider
-from ecs.mediaserver.forms.pdfuploadform import PdfUploadForm
-from django.shortcuts import render_to_response
 from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
-from uuid import uuid4, UUID
+from uuid import  UUID
 from ecs.utils import s3utils
-from time import time
-import json
 
 docprovider = DocumentProvider()
 
