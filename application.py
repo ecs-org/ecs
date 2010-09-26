@@ -107,18 +107,18 @@ django-celery:inst:all:pypi:django-celery
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
-#ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exe::gswin32c.exe needs a portable exe file not that, but the url for now
+ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:system:gswin32c.exe
 
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
-imagemagick:req:win:http://www.imagemagick.org/download/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatmain:montage.exe
+imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
 memcached:req:apt:apt-get:memcached
 memcached:req:mac:macports:memcached
 memcached:req:suse:zypper:memcached
-memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatmain:memcached.exe
+memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 
@@ -157,10 +157,10 @@ xlwt:inst:all:pypi:xlwt
 # architecture decission: we will not use django-reversion:inst:all:pypi:django-reversion
 
 #file encryption
-# win32: ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
+gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:system:gpg.exe
 
 # django-sentry
 django-indexer:inst:all:pypi:django-indexer

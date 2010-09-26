@@ -1,7 +1,8 @@
 import os
 
 def which(file, mode=os.F_OK | os.X_OK, path=None):
-    """Locate a file in the user's path, or a supplied path. The function
+    """
+    Locate a file in the user's standard path, or a supplied path. The function
     yields full paths in which the given file matches a file in a directory on
     the path. on windows it uses the PATHEXT Variable to check for file+ extension
     """
