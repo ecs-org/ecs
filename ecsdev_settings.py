@@ -31,7 +31,10 @@ RENDER_MEMCACHE_LIB  = 'memcache'
 RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211
 
-# lamson config different for shredder
+
+# lamson config
+FROM_DOMAIN = 'ecsdev.ep.at'
+
 if user == "shredder":
     LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
     LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8833} # listen here 
