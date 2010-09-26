@@ -33,7 +33,8 @@ RENDER_MEMCACHE_PORT = 11211
 
 
 # lamson config
-FROM_DOMAIN = 'ecsdev.ep.at'
+FROM_DOMAIN = 'ecsdev.ep3.at'
+LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '127.0.0.1', 'port': 8823} # listen here 
 
 if user == "shredder":
     LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
