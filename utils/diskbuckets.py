@@ -25,11 +25,9 @@ class DiskBuckets(object):
         self._prepare_root_dir()
 
     def add(self, identifier, filelike):
-        print "identifier: ", identifier
         if not self.exists(identifier):
             
             path = self._generate_path(identifier)
-            print "path:", path
             bucketdir = os.path.dirname(path);
             if not os.path.isdir(bucketdir):
                 os.makedirs(os.path.dirname(path), DiskBuckets.DEFAULT_MKDIR_MODE)
@@ -60,6 +58,5 @@ class DiskBuckets(object):
         for token in identifier[:self.maxdepth-1]: 
             path = os.path.join(path, token)
         result =  os.path.join(self.root_dir, path, identifier)
-        print "res: ",result
         return result
 

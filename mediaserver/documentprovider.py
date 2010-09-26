@@ -97,8 +97,9 @@ class DocumentProvider(object):
                     baseurl = "http://%s:%d" % (settings.MEDIASERVER_HOST, settings.MEDIASERVER_PORT)
                     expire = int(time()) + settings.S3_DEFAULT_EXPIRATION_SEC
                     linkdesc = "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w)
+                    h =  w * DEFAULT_ASPECT_RATIO
                     # "linkdescription": ["expiringURL", page, tiles_x, tiles_y, width, height]
-                    docshotDict[linkdesc] = [s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), pagenum, t, t, width, width * DEFAULT_ASPECT_RATIO]
+                    docshotDict[linkdesc] = [s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), pagenum, t, t, w, h]
                     pagenum += 1
 
         return docshotDict

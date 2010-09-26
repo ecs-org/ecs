@@ -4,19 +4,22 @@ Created on Sep 24, 2010
 @author: elchaschab
 '''
 import os
-from uuid import uuid4
+from uuid import UUID,uuid4
 from ecs.utils.testcases import EcsTestCase
 from ecs.utils.storagevault import getVault
 from django.conf import settings
 import tempfile
-from ecs.utils import gpgutils
+from ecs.utils import gpgutils, s3utils
 from ecs.mediaserver.documentprovider import DocumentProvider
-from ecs.mediaserver.cacheobjects import MediaBlob
+from ecs.mediaserver.cacheobjects import MediaBlob,Docshot
 import urllib2
 import binascii
+import urlparse
+import re
 
 class PdfViewerInterface(EcsTestCase):
     pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')
+    png_magic = binascii.a2b_hex('89504E470D0A1A0A')
 
     def setUp(self):
         # rewrite vault settings for testing
@@ -43,10 +46,24 @@ class PdfViewerInterface(EcsTestCase):
     def testDocshot(self):
         dsdict = self.docprovider.createDocshotDictionary(self.docblob)
 
-        for url in dsdict.values():
-            # download and verify its (probably) a png
-            with urllib2.urlopen(url) as png_in:        
-                png_magic = binascii.a2b_hex('89504E470D0A1A0A')
-                self.assertTrue(png_in.read(8) == png_magic);
-        
+        for dsurl in dsdict.values():
+            # simulate behavjour of ecs.mediaserver.views.docshot since the server isn't running
+	    url = dsurl[0]
+	    self.assertTrue(s3utils.verifyExpiringUrlString(url))
             
+	    parsed = urlparse.urlparse(url)
+            print "#####parsed:",parsed
+            pathsplit = re.compile('/')
+	    tilessplit =  re.compile('x')
+	    path = pathsplit.split(parsed.path) 
+	    uuid = path[2]
+	    tiles = tilessplit.split(path[3])
+	    width = path[4]
+	    pagenr =  path[5]
+	
+
+            ds = Docshot(MediaBlob(UUID(uuid)), tiles[0], tiles[1], width, pagenr)
+            with self.docprovider.getDocshot(ds) as f:
+                png_magic = binascii.a2b_hex('89504E470D0A1A0A')
+                self.assertTrue(f.read(8) == png_magic);            
+

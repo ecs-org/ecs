@@ -62,6 +62,7 @@ RENDER_MEMCACHE_MAXSIZE = 2**29
 
 # Storagevault connector settings
 S3_SECRET_KEYS = { "UnitTestKey": "imhappytobeatestkey", "LocalFileStorageVault": "imhappytobeasecretkey"}
+S3_DEFAULT_KEY = "LocalFileStorageVault"
 S3_DEFAULT_EXPIRATION_SEC = 5*60
 
 # celery configuration defaults, uses local loopback via qhettoq and always eager
@@ -171,7 +172,7 @@ if platform.node() == "ecsdev.ep3.at":
     # django database
     if user in DBPWD_DICT:
         DATABASES['default'] = {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'ENGINE': 'django.db.backends.sqlite3',
             'NAME': user, 'USER': user, 'PASSWORD': DBPWD_DICT[user],
             'HOST': '127.0.0.1', 'PORT': '',
         }
