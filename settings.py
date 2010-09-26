@@ -23,7 +23,7 @@ SOUTH_TESTS_MIGRATE = False
 # database configuration defaults, may get overwritten in platform.node()=="ecsdev.ep3.at" and local_settings.py
 DATABASES = {}
 DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': os.path.join(PROJECT_DIR, 'ecs.db'),
     'USER': '',
     'PASSWORD': '',
