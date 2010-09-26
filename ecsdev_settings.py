@@ -12,6 +12,7 @@ DBPWD_DICT = {}
 
 if user in DBPWD_DICT:
     # django database
+    DATABASES= {}
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': user, 'USER': user, 'PASSWORD': DBPWD_DICT[user],

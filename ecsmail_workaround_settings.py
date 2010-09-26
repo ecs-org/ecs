@@ -14,7 +14,6 @@ if not os.path.exists('ecsmail.lock'):
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': _port} # smartmx dummy
     EMAIL_HOST = LAMSON_RELAY_CONFIG['host']
     EMAIL_PORT = LAMSON_RELAY_CONFIG['port']
-    print "through receiver: ", LAMSON_SEND_THROUGH_RECEIVER, _port
     
     with open('ecsmail.lock', 'w'):
         # xxx: sys.executable should work in most environments (if you want python, you probably get python with it)
