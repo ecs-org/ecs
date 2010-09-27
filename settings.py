@@ -132,7 +132,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'reversion.middleware.RevisionMiddleware',
     'ecs.utils.middleware.SignedCookiesMiddleware',
-    'ecs.users.middleware.SingleLogin', # deactivate previous users sessions on login
+    'ecs.users.middleware.SingleLogin',  # deactivate previous users sessions on login
     'ecs.utils.forceauth.ForceAuth',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
