@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 import datetime
-import urlparse
-from django.core.urlresolvers import reverse
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.db.models.signals import post_save
 from django.conf import settings
 
-from ecs.communication.models import Message, Thread
-from ecs.meetings.models import TimetableEntry, Meeting
+from ecs.meetings.models import TimetableEntry
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from django.utils.translation import gettext as _
+from ecs.utils.notification import send_submission_change,\
+    send_submission_invitation, send_submission_creation
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -63,8 +62,8 @@ class Submission(models.Model):
     def get_creation_notification_receivers(self):
         sf = self.current_submission_form
         emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
-        registered = list(User.objects.filter(email__in=emails))
-        unregistered = list(set(emails).difference(set(registered)))
+        registered = set(User.objects.filter(email__in=emails))
+        unregistered = set(emails).difference(set(registered))
         return registered, unregistered
    
     @property
@@ -429,40 +428,26 @@ def _post_submission_form_save(**kwargs):
     assigned_medical_categories = [x.category for x in sum([list(x.medical_categories.all()) for x in meetings], []) if x.category in submission.medical_categories.all()]
     recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
     recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
-    recipients += list(User.objects.filter(email__in=sum([[x.email for x in old_sf.investigators.all()], [x.email for x in new_sf.investigators.all()]], [])))
-
     recipients = set(recipients)
 
-    text = u'An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n' % new_sf.submission.ec_number
-    url = reverse('ecs.core.views.diff', kwargs={'old_submission_form_pk': old_sf.pk, 'new_submission_form_pk': new_sf.pk})
-    text += u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.' % url
-    subject = u'Änderungen an %s' % new_sf.submission.ec_number
+    send_submission_change(new_sf, recipients);
 
-    for recipient in recipients:
-        thread, created = Thread.objects.get_or_create(
-            subject=subject,
-            sender=User.objects.get(username='root'),
-            receiver=recipient,
-            submission=new_sf.submission
-        )
-
-        message = thread.add_message(User.objects.get(username='root'), text=text)
-
-def _post_creation_form_save(**kwargs):
+def _post_submission_form_create(**kwargs):
     new_sf = kwargs['instance']
-    submission = new_sf.submission
-   
-    # not previous form -> not an edit -> creation
-    if submission.current_submission_form:
+       
+    # no previous form -> not an edit -> creation
+    if new_sf.submission.current_submission_form:
         return
     
-    submission.current_submission_form = new_sf
-    submission.save(force_update=True)
+    new_sf.submission.current_submission_form = new_sf
+    new_sf.submission.save(force_update=True)
 
     registered, unregistered = new_sf.get_creation_notification_receivers()
+    send_submission_creation(new_sf, registered)
+    send_submission_invitation(new_sf, unregistered)
     
-
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
+post_save.connect(_post_submission_form_create, sender=SubmissionForm)
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
