@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 
 from ecs.workflow.models import Token, Node
-from ecs.workflow.signals import token_created, token_consumed
+from ecs.workflow.signals import token_received, token_consumed
 
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
@@ -99,7 +99,7 @@ class Task(models.Model):
         return u"%s %s" % (self.data, self.task_type)
 
 # workflow integration:
-def workflow_token_created(sender, **kwargs):
+def workflow_token_received(sender, **kwargs):
     try:
         task_type = TaskType.objects.get(workflow_node=sender.node)
         Task.objects.create(workflow_token=sender, task_type=task_type, data=sender.workflow.data)
@@ -120,6 +120,6 @@ def node_saved(sender, **kwargs):
     name = node.name or node.node_type.name or node.node_type.implementation
     task_type, created = TaskType.objects.get_or_create(workflow_node=node, name=name)
         
-token_created.connect(workflow_token_created)
+token_received.connect(workflow_token_received)
 token_consumed.connect(workflow_token_consumed)
 post_save.connect(node_saved, sender=Node)

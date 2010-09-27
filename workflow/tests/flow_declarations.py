@@ -1,29 +1,45 @@
-from ecs import workflow
+from ecs.workflow import register, Activity, guard
+
 from ecs.workflow.models import Foo, FooReview
 from django.dispatch import Signal
 
-workflow.register(Foo)
+register(Foo)
 
 foo_change = Signal()
 
-@workflow.activity(model=Foo)
-def A(token): pass
+class A(Activity):
+    class Meta:
+        model = Foo
 
-@workflow.activity(model=Foo)
-def B(token): pass
+class B(Activity):
+    class Meta:
+        model = Foo
 
-@workflow.activity(model=Foo)
-def C(token): pass
+class C(Activity):
+    class Meta:
+        model = Foo
 
-@workflow.activity(model=Foo, lock=lambda wf: wf.data.flag, signal=foo_change)
-def D(token): pass
+class D(Activity):
+    def is_locked(self):
+        return not self.workflow.data.flag
+        
+    class Meta:
+        model = Foo
+        signals = (foo_change,)
 
-@workflow.activity(model=Foo)
-def E(token): pass
+def on_foo_change(sender, **kwargs):
+    sender.workflow.unlock(D)
+foo_change.connect(on_foo_change)
 
-@workflow.guard(model=Foo)
+class E(Activity):
+    class Meta:
+        model = Foo
+
+@guard(model=Foo)
 def GUARD(workflow):
     return workflow.data.flag
-    
-@workflow.activity(model=Foo, vary_on=FooReview)
-def V(token): pass
+
+class V(Activity):
+    class Meta:
+        model = Foo
+        vary_on = FooReview

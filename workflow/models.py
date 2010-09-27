@@ -4,8 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
-from ecs.workflow.controller import registry, NodeHandler
-from ecs.workflow.signals import workflow_started, workflow_finished, token_created, token_consumed, token_unlocked, deadline_reached
+from ecs.workflow.controllers import bind_node, bind_edge, bind_guard, NodeController
+from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_unlocked, deadline_reached
 from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
@@ -39,7 +39,7 @@ class NodeType(models.Model):
     
     def save(self, **kwargs):
         if not self.implementation and self.is_subgraph:
-            self.implementation = 'ecs.workflow.patterns.subgraph'
+            self.implementation = 'ecs.workflow.patterns.Subgraph'
         super(NodeType, self).save(**kwargs)
     
     @property
@@ -57,7 +57,7 @@ class NodeType(models.Model):
     def __unicode__(self):
         if self.data_type:
             return "%s(%s)" % (self.name, self.data_type)
-        return self.name
+        return "'%s':%s" % (self.name, self.implementation)
         
 class GraphManager(models.Manager):
     def create(self, **kwargs):
@@ -91,8 +91,8 @@ class Graph(NodeType):
         return self.nodes.filter(is_end_node=True)
         
     def _prep_nodetype(self, nodetype, data=None):
-        if isinstance(nodetype, NodeHandler):
-            nodetype = nodetype.node_type
+        if isinstance(nodetype, type) and issubclass(nodetype, NodeController):
+            nodetype = nodetype._meta.node_type
         if nodetype.data_type:
             if not isinstance(data, nodetype.data_type.model_class()):
                 raise TypeError("nodes of type %s require data of type %s, got: %s" % (nodetype, nodetype.data_type.model_class(), type(data)))
@@ -149,59 +149,20 @@ class Node(models.Model):
 
     def add_edge(self, to, guard=None, negated=False, deadline=False):
         if guard:
-            guard = guard.instance
+            guard = guard._meta.instance
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
+        
+    def add_branches(self, guard, true, false):
+        self.add_edge(true, guard=guard.instance)
+        self.add_edge(false, guard=guard.instance, negated=True)
     
     def get_edge(self, to, guard=None, negated=False, deadline=False):
         if guard:
             guard = guard.instance
         return Edge.objects.get(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
         
-    def receive_token(self, workflow, source=None, trail=None):
-        flow_controller = registry.get_handler(self)
-        token = workflow.tokens.create(
-            node=self, 
-            source=source, 
-            deadline=flow_controller.get_deadline(self, workflow),
-            locked=flow_controller.is_locked(self, workflow),
-        )
-        if trail:
-            token.trail = trail
-        token_created.send(token)
-        flow_controller.receive_token(token)
-        
-    def get_tokens(self, workflow, locked=None):
-        tokens = workflow.get_tokens().filter(node=self)
-        if locked is not None:
-            tokens = tokens.filter(locked=locked)
-        return tokens
-    
-    def get_token(self, workflow, locked=None):
-        tokens = self.get_tokens(workflow, locked=locked)[:1]
-        if tokens:
-            return tokens[0]
-        return None
-    
-    def progress(self, *tokens, **kwargs):
-        assert tokens, "Node.progress() must be called with at least one Token instance"
-        deadline = kwargs.pop('deadline', False)
-        workflow = tokens[0].workflow
-        for token in tokens:
-            token.consume()
-        if self.is_end_node:
-            workflow.finish(self)
-        else:
-            for edge in self.edges.filter(deadline=deadline).select_related('to_node'):
-                if edge.check_guard(workflow):
-                    edge.to_node.receive_token(workflow, source=self, trail=tokens)
-    
-    def handle_deadline(self, token):
-        registry.get_handler(self).handle_deadline(token)
-        deadline_reached.send(token)
-        self.progress(token, deadline=True)
-        
-    def unlock(self, workflow):
-        registry.get_handler(self).unlock(self, workflow)
+    def bind(self, workflow):
+        return bind_node(self, workflow)
 
 
 class Edge(models.Model):
@@ -211,10 +172,11 @@ class Edge(models.Model):
     guard = models.ForeignKey(Guard, related_name='nodes', null=True)
     negated = models.BooleanField(default=False)
     
-    def check_guard(self, workflow):
-        if not self.guard_id:
-            return not self.negated
-        return self.negated != registry.get_guard(self).check(workflow)
+    def bind(self, workflow):
+        return bind_edge(self, workflow)
+        
+    def bind_guard(self, workflow):
+        return bind_guard(self, workflow)
 
 
 class Workflow(models.Model):
@@ -226,14 +188,12 @@ class Workflow(models.Model):
     parent = models.ForeignKey('workflow.Token', null=True, related_name='parent_workflow')
     
     def clear_tokens(self):
-        self.get_tokens().consume()
+        for token in self.tokens.filter(consumed_at=None):
+            token.consume()
 
-    def get_tokens(self):
-        return self.tokens.filter(consumed_at=None)
-        
     def start(self):
         for node in self.graph.start_nodes:
-            node.receive_token(self)
+            node.bind(self).receive_token(None)
         workflow_started.send(self)
         
     def finish(self, node=None):
@@ -242,22 +202,8 @@ class Workflow(models.Model):
         self.save(force_update=True)
         workflow_finished.send(self)
         if self.parent:
-            self.parent.node.progress(self.parent)
+            self.parent.node.bind(self.parent.workflow).progress(self.parent)
         
-
-class TokenManager(models.Manager):
-    def get_query_set(self):
-        return TokenQuerySet(self.model)
-
-class TokenQuerySet(models.query.QuerySet):
-    def consume(self, **kwargs):
-        timestamp = datetime.datetime.now()
-        for token in self:
-            token.consume(timestamp=timestamp)
-
-    def unlock(self):
-        for token in self:
-            token.unlock()
 
 class Token(models.Model):
     workflow = models.ForeignKey(Workflow, related_name='tokens')
@@ -266,16 +212,16 @@ class Token(models.Model):
     source = models.ForeignKey(Node, related_name='sent_tokens', null=True) # denormalized: can be derived from trail
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
+    rejected = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
     consumed_at = models.DateTimeField(null=True, blank=True, default=None)
     consumed_by = models.ForeignKey(User, null=True, blank=True)
     
-    objects = TokenManager()
-    
-    def consume(self, timestamp=None):
+    def consume(self, timestamp=None, reject=False):
         if self.consumed_at:
             raise TokenAlreadyConsumed()
         self.consumed_at = timestamp or datetime.datetime.now()
+        self.rejected = reject
         self.save()
         token_consumed.send(self)
         
@@ -294,7 +240,7 @@ class Token(models.Model):
     def handle_deadline(self):
         if not self.deadline:
             return
-        self.node.handle_deadline(self)
+        self.node.bind(self.workflow).handle_deadline(self)
     
     @property
     def activity_trail(self):
@@ -310,7 +256,7 @@ class Token(models.Model):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
         
     def __unicode__(self):
-        return u"%sToken at %s" % (self.is_consumed and 'Consumed ' or '', self.node)
+        return u"%sToken at %s, deadline=%s, locked=%s" % (self.is_consumed and 'Consumed ' or '', self.node, self.deadline, self.locked)
 
 
 import sys

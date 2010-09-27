@@ -1,25 +1,37 @@
+import imp
+from django.conf import settings
+from django.utils.importlib import import_module
 from django.db.models.signals import post_save, class_prepared
 from django.contrib.contenttypes.models import ContentType
-from ecs.workflow.controller import registry
 
-activity = registry.activity
-control = registry.control
-guard = registry.guard
-clear_caches = registry.clear_caches
+from ecs.workflow.controllers import Activity, FlowController, guard
 
+__all__ = ('Activity', 'FlowController', 'NodeController', 'register', 'guard', 'autostart_disabled')
 
-__registry = set()
+_registered_models = set()
 _autostart_disabled = False
 
 def register(model):
-    if model in __registry:
+    if model in _registered_models:
         return
-    __registry.add(model)
+    _registered_models.add(model)
     from ecs.workflow.descriptors import WorkflowDescriptor
     model.workflow = WorkflowDescriptor()
+    
+def autodiscover():
+    for app in settings.INSTALLED_APPS:
+        try:
+            app_path = import_module(app).__path__
+        except AttributeError:
+            continue
+        try:
+            imp.find_module('workflow', app_path)
+        except ImportError:
+            continue
+        module = import_module("%s.workflow" % app)
 
 def _post_save(sender, **kwargs):
-    if _autostart_disabled or sender not in __registry:
+    if _autostart_disabled or sender not in _registered_models:
         return
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
     if kwargs['created'] and not kwargs.get('raw'):

@@ -1,170 +1,154 @@
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.core import management
 
+from ecs.workflow.tests.base import WorkflowTestCase
 from ecs.workflow.models import Graph, Node
-from ecs.workflow.exceptions import TokenRequired
+from ecs.workflow.exceptions import TokenRequired, BadActivity, WorkflowError
+from ecs import workflow
 # test only models:
 from ecs.workflow.models import Foo, FooReview, Token
-from ecs import workflow
 
-from ecs.utils.testcases import EcsTestCase
-from ecs.workflow.tests import flow_declarations
+from ecs.workflow.tests import flow_declarations as decl
 
-class FlowTest(EcsTestCase):
+class FlowTest(WorkflowTestCase):
     def setUp(self):
+        super(FlowTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
-        management.call_command('workflow_sync')
-        
-    def tearDown(self):
-        workflow.clear_caches()
-        
-    def assertActivitiesEqual(self, obj, acts):
-        self.failUnlessEqual(set(acts), set(bound_activity.activity for bound_activity in obj.workflow.activities))
         
     def test_sequence(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B)
-        n_c = g.create_node(flow_declarations.C, end=True)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B)
+        n_c = g.create_node(decl.C, end=True)
         n_a.add_edge(n_b)
         n_b.add_edge(n_c)
         
         # a, b, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        bound_a = obj.workflow.get(flow_declarations.A)
-        self.failUnlessEqual(flow_declarations.A, bound_a.activity)
-        bound_a.perform()
-        
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        bound_b = obj.workflow.get(flow_declarations.B)
-        self.failUnlessEqual(flow_declarations.B, bound_b.activity)
-        bound_b.perform()
-        
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        bound_c = obj.workflow.get(flow_declarations.C)
-        self.failUnlessEqual(flow_declarations.C, bound_c.activity)
-        bound_c.perform()
-        
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         self.assertActivitiesEqual(obj, [])
 
     def test_parallel_split(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B)
-        n_c = g.create_node(flow_declarations.C)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B)
+        n_c = g.create_node(decl.C)
         n_a.add_edge(n_b)
         n_a.add_edge(n_c)
         
         # a, b, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.B, flow_declarations.C])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B, decl.C])
+        obj.workflow.do(decl.B)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         
         self.assertActivitiesEqual(obj, [])
         
         # a, c, b
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.B, flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.B, decl.C])
+        obj.workflow.do(decl.C)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
         
     def test_simple_merge(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B, start=True)
-        n_c = g.create_node(flow_declarations.C)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B, start=True)
+        n_c = g.create_node(decl.C)
         n_a.add_edge(n_c)
         n_b.add_edge(n_c)
         
         # a, c, b, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A, flow_declarations.B])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A, decl.B])
+        obj.workflow.do(decl.A)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.B, flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.B, decl.C])
+        obj.workflow.do(decl.C)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         
         self.assertActivitiesEqual(obj, [])
         
         # a, b, c, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A, flow_declarations.B])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A, decl.B])
+        obj.workflow.do(decl.A)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.B, flow_declarations.C])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B, decl.C])
+        obj.workflow.do(decl.B)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.C, flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C, decl.C])
+        obj.workflow.do(decl.C)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         
         self.assertActivitiesEqual(obj, [])
         
     def test_branching(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B)
-        n_c = g.create_node(flow_declarations.C)
-        n_a.add_edge(n_b, guard=flow_declarations.GUARD)
-        n_a.add_edge(n_c, guard=flow_declarations.GUARD, negated=True)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B)
+        n_c = g.create_node(decl.C)
+        n_a.add_edge(n_b, guard=decl.GUARD)
+        n_a.add_edge(n_c, guard=decl.GUARD, negated=True)
         
-        # self.GUARD => False
+        # GUARD => False
         obj = Foo.objects.create(flag=False)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
 
         self.assertActivitiesEqual(obj, [])
         
-        # self.GUARD => True
+        # GUARD => True
         obj = Foo.objects.create(flag=True)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
 
         self.assertActivitiesEqual(obj, [])
         
         
     def test_generic_control(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_x0 = g.create_node(workflow.patterns.generic, start=True)
-        n_a = g.create_node(flow_declarations.A)
-        n_x1 = g.create_node(workflow.patterns.generic)
-        n_b = g.create_node(flow_declarations.B)
-        n_x2 = g.create_node(workflow.patterns.generic)
-        n_x3 = g.create_node(workflow.patterns.generic, end=True)
+        n_x0 = g.create_node(workflow.patterns.Generic, start=True)
+        n_a = g.create_node(decl.A)
+        n_x1 = g.create_node(workflow.patterns.Generic)
+        n_b = g.create_node(decl.B)
+        n_x2 = g.create_node(workflow.patterns.Generic)
+        n_x3 = g.create_node(workflow.patterns.Generic, end=True)
         
         n_x0.add_edge(n_a)
         n_a.add_edge(n_x1)
@@ -174,21 +158,21 @@ class FlowTest(EcsTestCase):
         
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.do(flow_declarations.A)
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
 
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        obj.workflow.do(flow_declarations.B)
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
 
         self.assertActivitiesEqual(obj, [])
 
         
     def test_synchronization(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B, start=True)
-        n_sync = g.create_node(workflow.patterns.synchronization)
-        n_c = g.create_node(flow_declarations.C, end=True)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B, start=True)
+        n_sync = g.create_node(workflow.patterns.Synchronization)
+        n_c = g.create_node(decl.C, end=True)
         n_a.add_edge(n_sync)
         n_b.add_edge(n_sync)
         n_sync.add_edge(n_c)
@@ -196,97 +180,97 @@ class FlowTest(EcsTestCase):
         # a, b, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A, flow_declarations.B])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A, decl.B])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.B])
+        obj.workflow.do(decl.B)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         
         self.assertActivitiesEqual(obj, [])
         
         # b, a, c
         obj = Foo.objects.create()
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A, flow_declarations.B])
-        obj.workflow.get(flow_declarations.B).perform()
+        self.assertActivitiesEqual(obj, [decl.A, decl.B])
+        obj.workflow.do(decl.B)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
-        obj.workflow.get(flow_declarations.A).perform()
+        self.assertActivitiesEqual(obj, [decl.A])
+        obj.workflow.do(decl.A)
         
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
-        obj.workflow.get(flow_declarations.C).perform()
+        self.assertActivitiesEqual(obj, [decl.C])
+        obj.workflow.do(decl.C)
         
         self.assertActivitiesEqual(obj, [])
         
         
     def test_locks(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_d = g.create_node(flow_declarations.D, start=True)
-        n_b = g.create_node(flow_declarations.B)
+        n_d = g.create_node(decl.D, start=True)
+        n_b = g.create_node(decl.B)
         n_d.add_edge(n_b)
         
         obj = Foo.objects.create()
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
-        self.assertRaises(TokenRequired, obj.workflow.do, flow_declarations.D)
+        self.assertActivitiesEqual(obj, [decl.D])
+        self.assertRaises(TokenRequired, obj.workflow.do, decl.D)
         
-        flow_declarations.foo_change.send(obj)
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
+        decl.foo_change.send(obj)
+        self.assertActivitiesEqual(obj, [decl.D])
 
-        self.assertRaises(TokenRequired, obj.workflow.do, flow_declarations.D)
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
+        self.assertRaises(TokenRequired, obj.workflow.do, decl.D)
+        self.assertActivitiesEqual(obj, [decl.D])
 
         obj.flag = True
         obj.save()
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
+        self.assertActivitiesEqual(obj, [decl.D])
 
-        self.assertRaises(TokenRequired, obj.workflow.do, flow_declarations.D)
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
+        self.assertRaises(TokenRequired, obj.workflow.do, decl.D)
+        self.assertActivitiesEqual(obj, [decl.D])
         
-        flow_declarations.foo_change.send(obj)
-        self.assertActivitiesEqual(obj, [flow_declarations.D])
+        decl.foo_change.send(obj)
+        self.assertActivitiesEqual(obj, [decl.D])
 
-        obj.workflow.do(flow_declarations.D)
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
+        obj.workflow.do(decl.D)
+        self.assertActivitiesEqual(obj, [decl.B])
         
     def test_subgraph(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         h = Graph.objects.create(name='TestSubGraph', content_type=self.foo_ct)
-        n_b = h.create_node(flow_declarations.B, start=True)
-        n_c = h.create_node(flow_declarations.C, end=True)
+        n_b = h.create_node(decl.B, start=True)
+        n_c = h.create_node(decl.C, end=True)
         n_b.add_edge(n_c)
         
-        n_a = g.create_node(flow_declarations.A, start=True)
+        n_a = g.create_node(decl.A, start=True)
         n_h = g.create_node(h)
-        n_e = g.create_node(flow_declarations.E, end=True)
+        n_e = g.create_node(decl.E, end=True)
         
         n_a.add_edge(n_h)
         n_h.add_edge(n_e)
         
         obj = Foo.objects.create()
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
+        self.assertActivitiesEqual(obj, [decl.A])
         
-        obj.workflow.do(flow_declarations.A)
-        self.assertActivitiesEqual(obj, [flow_declarations.B])
+        obj.workflow.do(decl.A)
+        self.assertActivitiesEqual(obj, [decl.B])
 
-        obj.workflow.do(flow_declarations.B)
-        self.assertActivitiesEqual(obj, [flow_declarations.C])
+        obj.workflow.do(decl.B)
+        self.assertActivitiesEqual(obj, [decl.C])
 
-        obj.workflow.do(flow_declarations.C)
-        self.assertActivitiesEqual(obj, [flow_declarations.E])
+        obj.workflow.do(decl.C)
+        self.assertActivitiesEqual(obj, [decl.E])
 
-        obj.workflow.do(flow_declarations.E)
+        obj.workflow.do(decl.E)
         self.assertActivitiesEqual(obj, [])
         
     def test_trail(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
-        n_b = g.create_node(flow_declarations.B)
-        n_c = g.create_node(flow_declarations.C)
-        n_e = g.create_node(flow_declarations.E, end=True)
-        n_sync = g.create_node(workflow.patterns.synchronization)
+        n_a = g.create_node(decl.A, start=True)
+        n_b = g.create_node(decl.B)
+        n_c = g.create_node(decl.C)
+        n_e = g.create_node(decl.E, end=True)
+        n_sync = g.create_node(workflow.patterns.Synchronization)
         n_a.add_edge(n_b)
         n_a.add_edge(n_c)
         n_b.add_edge(n_sync)
@@ -294,10 +278,11 @@ class FlowTest(EcsTestCase):
         n_sync.add_edge(n_e)
         
         obj = Foo.objects.create()        
-        obj.workflow.do(flow_declarations.A)
-        obj.workflow.do(flow_declarations.B)
-        obj.workflow.do(flow_declarations.C)
-        obj.workflow.do(flow_declarations.E)
+        obj.workflow.do(decl.A)
+        
+        obj.workflow.do(decl.B)
+        obj.workflow.do(decl.C)
+        obj.workflow.do(decl.E)
 
         a_token = Token.objects.get(node=n_a)
         b_token = Token.objects.get(node=n_b)
@@ -322,28 +307,28 @@ class FlowTest(EcsTestCase):
         
         r0 = FooReview.objects.create(name='R0')
         r1 = FooReview.objects.create(name='R1')
-        n_v0 = g.create_node(flow_declarations.V, data=r0, start=True)
-        n_v1 = g.create_node(flow_declarations.V, data=r1, end=True)        
+        n_v0 = g.create_node(decl.V, data=r0, start=True)
+        n_v1 = g.create_node(decl.V, data=r1, end=True)        
         n_v0.add_edge(n_v1)
         
         obj = Foo.objects.create()
-        self.assertActivitiesEqual(obj, [flow_declarations.V])
+        self.assertActivitiesEqual(obj, [decl.V])
 
-        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V)
-        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r1)
-        obj.workflow.do(flow_declarations.V, data=r0)
-        self.assertActivitiesEqual(obj, [flow_declarations.V])
+        self.assertRaises(WorkflowError, obj.workflow.do, decl.V)
+        self.assertRaises(WorkflowError, obj.workflow.do, decl.V, data=r1)
+        obj.workflow.do(decl.V, data=r0)
+        self.assertActivitiesEqual(obj, [decl.V])
 
-        self.assertRaises(KeyError, obj.workflow.do, flow_declarations.V, data=r0)
-        obj.workflow.do(flow_declarations.V, data=r1)
+        self.assertRaises(WorkflowError, obj.workflow.do, decl.V, data=r0)
+        obj.workflow.do(decl.V, data=r1)
         self.assertActivitiesEqual(obj, [])
         
     def test_disable_autostart(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
-        n_a = g.create_node(flow_declarations.A, start=True)
+        n_a = g.create_node(decl.A, start=True)
         
         obj = Foo.objects.create()
-        self.assertActivitiesEqual(obj, [flow_declarations.A])
+        self.assertActivitiesEqual(obj, [decl.A])
         
         with workflow.autostart_disabled():
             obj = Foo.objects.create()

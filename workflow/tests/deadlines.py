@@ -1,26 +1,19 @@
 from datetime import timedelta
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.core import management
 
+from ecs.workflow.tests.base import WorkflowTestCase
 from ecs.workflow.models import Graph, Node, NodeType, Guard
 from ecs import workflow
 # test only models:
 from ecs.workflow.models import Foo
 
-from ecs.utils.testcases import EcsTestCase
 from ecs.workflow.tests import deadline_declarations
 
-class DeadlineTest(EcsTestCase):
+class DeadlineTest(WorkflowTestCase):
     def setUp(self):
+        super(DeadlineTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
-        management.call_command('workflow_sync')
-        
-    def tearDown(self):
-        workflow.clear_caches()
-        
-    def assertActivitiesEqual(self, obj, acts):
-        self.failUnlessEqual(set(acts), set(bound_activity.activity for bound_activity in obj.workflow.activities))
         
     def test_simple_deadline(self):
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
@@ -45,7 +38,7 @@ class DeadlineTest(EcsTestCase):
         
         obj = Foo.objects.create()
         self.assertActivitiesEqual(obj, [deadline_declarations.A])
-        token = obj.workflow.get_token(deadline_declarations.A)
+        token = obj.workflow.activitiy_tokens[0]
         token.handle_deadline()
         
         self.assertActivitiesEqual(obj, [deadline_declarations.C])

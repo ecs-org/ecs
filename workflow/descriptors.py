@@ -1,67 +1,53 @@
 from django.contrib.contenttypes.models import ContentType
 
-from ecs.workflow.controller import registry
 from ecs.workflow.models import Workflow, Token, Node, NODE_TYPE_CATEGORY_ACTIVITY
-
-class BoundActivity(object):
-    def __init__(self, node, workflow):
-        self.activity = registry.get_handler(node)
-        self.workflow = workflow
-        self.node = node
-
-    def perform(self):
-        self.activity.perform(self.node, self.workflow)
-        
-    def unlock(self):
-        self.activity.unlock(self.node, self.workflow)
-
-    def __repr__(self):
-        return u"<BoundActivity %s in %s>" % (self.node, self.workflow)
-
+from ecs.workflow.exceptions import BadActivity
 
 class ObjectWorkflow(object):
     def __init__(self, obj):
         self.object = obj
-        ct = ContentType.objects.get_for_model(type(obj))
-        self.workflows = Workflow.objects.filter(content_type=ct, data_id=obj.pk)
+        self.workflows = Workflow.objects.filter(
+            content_type=ContentType.objects.get_for_model(type(obj)), 
+            data_id=obj.pk,
+        )
 
     def _get_activity_tokens(self, *acts):
-        tokens = Token.objects.filter(workflow__in=self.workflows.values('pk'), consumed_at=None, node__node_type__category=NODE_TYPE_CATEGORY_ACTIVITY).select_related('node', 'workflow')
+        tokens = Token.objects.filter(workflow__in=self.workflows.values('pk').query, consumed_at=None, node__node_type__category=NODE_TYPE_CATEGORY_ACTIVITY).select_related('node', 'workflow')
         if acts:
-            tokens = tokens.filter(node__node_type__in=[act.node_type for act in acts])
+            tokens = tokens.filter(node__node_type__in=[act._meta.node_type for act in acts])
         return tokens
 
     def _get_activities(self, *acts):
-        return [BoundActivity(token.node, token.workflow) for token in self._get_activity_tokens(*acts)]
+        return [token.node.bind(token.workflow) for token in self._get_activity_tokens(*acts)]
 
     activities = property(_get_activities)
     activitiy_tokens = property(_get_activity_tokens)
 
-    def get(self, activity, data=None):
-        token = self.get_token(activity, data=data)
-        return BoundActivity(token.node, token.workflow)
-
-    def get_token(self, activity, data=None):
+    def iter_controllers(self, activity, data=None):
         if isinstance(activity, Token):
-            return activity
-        try:
-            tokens = self._get_activity_tokens(activity)
-            if data:
-                data_ct = ContentType.objects.get_for_model(type(data))
-                tokens = tokens.filter(node__data_id=data.pk, node__data_ct=data_ct)
-            else:
-                tokens = tokens.filter(node__node_type__data_type=None)
-            return tokens[:1].get()
-        except Token.DoesNotExist:
-            raise KeyError("no token for activity %s with data '%s'" % (activity, data))
+            assert activity.workflow.data == self.object
+            yield activity.node.bind(activity.workflow)
+        else:
+            for workflow in self.workflows.select_related('graph'):
+                nodes = workflow.graph.nodes.filter(node_type=activity._meta.node_type)
+                if data:
+                    nodes = nodes.filter(data_id=data.pk, data_ct=ContentType.objects.get_for_model(type(data)))
+                else:
+                    nodes = nodes.filter(node_type__data_type=None)
+                for node in nodes:
+                    yield node.bind(workflow)
 
     def do(self, activity, data=None):
-        self.get(activity, data=data).perform()
+        controllers = list(self.iter_controllers(activity, data=data))
+        for a in controllers:
+            a.perform()
+        if not controllers:
+            raise BadActivity(activity)
 
     def unlock(self, activity):
-        for workflow in self.workflows:
-            for node in Node.objects.filter(tokens__workflow=workflow, node_type=activity.node_type):
-                node.unlock(workflow)
+        for workflow in self.workflows.all():
+            for node in Node.objects.filter(tokens__workflow=workflow, node_type=activity._meta.node_type):
+                node.bind(workflow).unlock()
 
 class WorkflowDescriptor(object):
     def __get__(self, obj, obj_type=None):

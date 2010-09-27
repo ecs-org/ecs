@@ -37,46 +37,43 @@ class Command(BaseCommand):
             transaction.rollback()
     
     def do_sync(self, quiet=False, **options):
-        from ecs.workflow.controller import registry
+        from ecs.workflow.controllers.registry import iter_guards, iter_activities, iter_controls
         guards = set()
-        for handler in registry.guards:
+        for g in iter_guards():
             guard, created = Guard.objects.get_or_create(
-                implementation=handler.name, 
-                content_type=_get_ct_or_none(handler.model), 
-                defaults={'name': handler.name}
+                implementation=g._meta.name, 
+                content_type=_get_ct_or_none(g._meta.model), 
+                defaults={'name': g._meta.name}
             )
             guards.add(guard)
-            registry._guard_map[guard.pk] = handler
             if created and not quiet:
-                print "Created guard '%s' for %s" % (handler.name, _format_model(handler.model))
+                print "Created guard '%s' for %s" % (g._meta.name, _format_model(g._meta.model))
 
         for removed_guard in Guard.objects.exclude(pk__in=[g.pk for g in guards]):
             print "The implementation for Guard '%s' could not be found, but it is still present in the db." % removed_guard.implementation
 
         node_types = set()
-        for handler in registry.activities:
+        for a in iter_activities():
             node_type, created = NodeType.objects.get_or_create(
                 category=NODE_TYPE_CATEGORY_ACTIVITY, 
-                implementation=handler.name, 
-                content_type=_get_ct_or_none(handler.model), 
-                defaults={'name': handler.name, 'data_type': _get_ct_or_none(handler.vary_on)}
+                implementation=a._meta.name, 
+                content_type=_get_ct_or_none(a._meta.model), 
+                defaults={'name': a._meta.name, 'data_type': _get_ct_or_none(a._meta.vary_on)}
             )
             node_types.add(node_type)
-            registry._node_type_map[node_type.pk] = handler
             if created and not quiet:
-                print "Created activity '%s' for %s" % (handler.name, _format_model(handler.model))
+                print "Created activity '%s' for %s" % (a._meta.name, _format_model(a._meta.model))
 
-        for handler in registry.controls:
+        for c in iter_controls():
             node_type, created = NodeType.objects.get_or_create(
                 category=NODE_TYPE_CATEGORY_CONTROL,
-                implementation=handler.name,
-                content_type=_get_ct_or_none(handler.model),
-                defaults={'name': handler.name, 'data_type': _get_ct_or_none(handler.vary_on)}
+                implementation=c._meta.name,
+                content_type=_get_ct_or_none(c._meta.model),
+                defaults={'name': c._meta.name, 'data_type': _get_ct_or_none(c._meta.vary_on)}
             )
             node_types.add(node_type)
-            registry._node_type_map[node_type.pk] = handler
             if created and not quiet:
-                print "Created control '%s' for %s" % (handler.name, _format_model(handler.model))
+                print "Created control '%s' for %s" % (c._meta.name, _format_model(c._meta.model))
         
         for removed_node_type in NodeType.objects.exclude(pk__in=[nt.pk for nt in node_types]):
             if not removed_node_type.is_subgraph:

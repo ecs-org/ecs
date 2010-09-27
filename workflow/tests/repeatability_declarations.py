@@ -7,17 +7,27 @@ register(Foo)
 
 
 class A(Activity):
-    deadline = timedelta(seconds=0)
-    
     class Meta:
         model = Foo
-
 
 class B(Activity):
+    def is_repeatable(self):
+        return True
+
     class Meta:
         model = Foo
 
-
 class C(Activity):
+    class Meta:
+        model = Foo
+
+class D(Activity):
+    def is_reentrant(self):
+        return False
+
+    class Meta:
+        model = Foo
+
+class E(Activity):
     class Meta:
         model = Foo

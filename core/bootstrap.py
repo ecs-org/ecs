@@ -39,6 +39,7 @@ def templates():
 
 @bootstrap.register()
 def submission_workflow():
+    return
     call_command('workflow_sync', quiet=True)
 
     from ecs.core import workflow as cwf

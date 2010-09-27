@@ -4,9 +4,11 @@ from django.contrib import admin
 from django.views.static import serve
 from django.views.generic.simple import direct_to_template
 from ecs.utils import forceauth
+from ecs import workflow
 import django
 
 admin.autodiscover()
+workflow.autodiscover()
 
 urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
