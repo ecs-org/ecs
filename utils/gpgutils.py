@@ -7,8 +7,9 @@ import tempfile
 import subprocess
 import os
 from django.conf import settings
+from ecs.utils.pathutils import which
 
-GPG_EXECUTABLE = getattr(settings, 'GPG_EXECUTABLE', '/usr/bin/gpg')
+GPG_EXECUTABLE =  settings.ECS_GNUPG if hasattr(settings,"ECS_GNUPG") else which('gpg').next()
 
 def _prepare(filelike):
     tmp_dir = tempfile.mkdtemp() 

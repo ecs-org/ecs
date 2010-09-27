@@ -17,10 +17,7 @@ def ghostscript():
     '''
     returns ghostscript executable, checks ECS_GHOSTSCRIPT and uses it if exists
     '''
-    if hasattr(settings,"ECS_GHOSTSCRIPT"):
-        return settings.ECS_GHOSTSCRIPT
-    else:
-        return which('gs').next()
+    return settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
 
         
 def pdf_isvalid(filelike):
@@ -82,7 +79,7 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ti
     raises IOError if something goes wrong (including exit errorcode and stderr output attached)
     '''
     if barcode2:
-        Raise(NotImplementedError)
+        raise(NotImplementedError)
         # TODO: barcode2_content is currently unimplemented
         
     # render barcode template to ready to use postscript file

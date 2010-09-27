@@ -1,8 +1,11 @@
-from django.conf import settings
-from lamson import encoding
-from lamson.mail import MailResponse
 from email.Utils import make_msgid
 from time import gmtime, strftime
+
+from django.conf import settings
+
+from lamson import encoding
+from lamson.mail import MailResponse
+
 from ecs.ecsmail.task_queue import queued_mail_send
 
 
