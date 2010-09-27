@@ -1,11 +1,11 @@
 import os
+import binascii
 
 from django_extensions.utils.uuid import uuid4
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.utils.pdfutils import pdf_pages
 from ecs.mediaserver.renderer import renderPDFMontage
-import binascii
 
 class RendererTest(EcsTestCase):
     pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')

@@ -3,19 +3,21 @@ Created on Sep 24, 2010
 
 @author: elchaschab
 '''
-import os
-from uuid import UUID,uuid4
-from ecs.utils.testcases import EcsTestCase
-from ecs.utils.storagevault import getVault
-from django.conf import settings
-import tempfile
-from ecs.utils import gpgutils, s3utils
-from ecs.mediaserver.documentprovider import DocumentProvider
-from ecs.mediaserver.cacheobjects import MediaBlob,Docshot
-import urllib2
 import binascii
 import urlparse
 import re
+import os
+import tempfile
+from uuid import UUID,uuid4
+
+from django.conf import settings
+
+from ecs.utils import gpgutils, s3utils
+from ecs.mediaserver.documentprovider import DocumentProvider
+from ecs.mediaserver.cacheobjects import MediaBlob,Docshot
+from ecs.utils.testcases import EcsTestCase
+from ecs.utils.storagevault import getVault
+
 
 class PdfViewerInterface(EcsTestCase):
     pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')

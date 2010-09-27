@@ -5,19 +5,20 @@ Created on Aug 26, 2010
 '''
 import getpass
 import os
+from time import time
 
 from django.conf import settings
+
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
 from ecs.mediaserver.renderer import renderDefaultDocshots,DEFAULT_ASPECT_RATIO
 from ecs.utils.pdfutils import pdf_isvalid
 from ecs.mediaserver.cacheobjects import Docshot
 from ecs.utils import s3utils, gpgutils
-from time import time
  
 class DocumentProvider(object):
     '''
-    
+        The central document storage and retrieval facility. Implements caching layers and rules as well as storage logic
     '''
     def __init__(self):
         self.render_memcache = VolatileCache()
@@ -105,6 +106,9 @@ class DocumentProvider(object):
         return docshotDict
             
 class VolatileCache(object):
+    '''
+    A volatile cache using memcache
+    '''
     def __init__(self):
         # TODO configure memcache qoutas
         if settings.RENDER_MEMCACHE_LIB == 'memcache':
@@ -129,47 +133,50 @@ class VolatileCache(object):
 
     def entries(self):
         return self.mc.dictionary.values() 
-        
+
 class DiskCache(DiskBuckets):
-        def __init__(self, root_dir, maxsize):
-            self.maxsize = maxsize
-            super(DiskCache, self).__init__(root_dir, allow_mkrootdir=True)
+    '''
+    Persistent cache using directory buckets which are derived from the cache id of storage unit
+    '''
+    def __init__(self, root_dir, maxsize):
+        self.maxsize = maxsize
+        super(DiskCache, self).__init__(root_dir, allow_mkrootdir=True)
 
-        def add(self, identifier, filelike):
-            super(DiskCache, self).add(identifier, filelike)
-             
-        def update_access(self, identifier):
-            os.utime(self._generate_path(identifier), None)
+    def add(self, identifier, filelike):
+        super(DiskCache, self).add(identifier, filelike)
+         
+    def update_access(self, identifier):
+        os.utime(self._generate_path(identifier), None)
 
-        def get(self, uuid):
-            if self.exists(uuid):
-                self.update_access(uuid)
-                return super(DiskCache, self).get(uuid)
-            else:
-                return None
-            
-        def age(self):
-            entriesByAge = self.entries_by_age()
-            cachesize = self.size()
-            
-            while cachesize < self.maxsize:
-                oldest = entriesByAge.next();
-                size = os.path.getsize(oldest)
-                os.remove(oldest)
-                cachesize -= size
+    def get(self, uuid):
+        if self.exists(uuid):
+            self.update_access(uuid)
+            return super(DiskCache, self).get(uuid)
+        else:
+            return None
+        
+    def age(self):
+        entriesByAge = self.entries_by_age()
+        cachesize = self.size()
+        
+        while cachesize < self.maxsize:
+            oldest = entriesByAge.next();
+            size = os.path.getsize(oldest)
+            os.remove(oldest)
+            cachesize -= size
 
-        def entries_by_age(self):
-            return list(reversed(sorted(self.entries(), key=os.path.getatime)))
+    def entries_by_age(self):
+        return list(reversed(sorted(self.entries(), key=os.path.getatime)))
 
-        def entries(self):
-            return [open(path,"rb") for path in self._raw_entries()]
+    def entries(self):
+        return [open(path,"rb") for path in self._raw_entries()]
 
-        def size(self):
-            return sum(os.path.getsize(entry) for entry in self._raw_entries())
+    def size(self):
+        return sum(os.path.getsize(entry) for entry in self._raw_entries())
 
-        def _raw_entries(self):
-            files = os.walk(self.root_dir)
-            return files
+    def _raw_entries(self):
+        files = os.walk(self.root_dir)
+        return files
 
 # we don't want parallel instances in the webapp
 docprovider = DocumentProvider()

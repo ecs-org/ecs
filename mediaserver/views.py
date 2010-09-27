@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from uuid import  UUID
+
 from django.http import HttpResponse, HttpResponseNotFound, \
     HttpResponseBadRequest
 
 from ecs.mediaserver.documentprovider import DocumentProvider
 from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
-from uuid import  UUID
 from ecs.utils import s3utils
 
 docprovider = DocumentProvider()

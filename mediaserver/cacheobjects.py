@@ -5,6 +5,9 @@ Created on Sep 3, 2010
 '''
 
 class MediaBlob(object):
+    '''
+    A generic cacheable blob
+    '''
     def __init__(self, uuid):
         self.uuid = uuid 
     def cacheID(self):
@@ -12,6 +15,9 @@ class MediaBlob(object):
 
     
 class Docshot(object):
+    '''
+    A cacheable preview image of an actual document
+    '''
     def __init__(self, mediablob, tiles_x, tiles_y, width, pagenr):
         self.mediablob = mediablob
         self.tiles_x = tiles_x

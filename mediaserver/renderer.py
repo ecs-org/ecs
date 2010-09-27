@@ -1,9 +1,13 @@
 import subprocess
 import tempfile
-from django.conf import settings
-from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
 import os
 from uuid import UUID
+
+from django.conf import settings
+
+from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
+
+
 
 MONTAGE_PATH = getattr(settings, 'IMAGEMAGICK_MONTAGE_PATH', '/usr/bin/montage')
 DEFAULT_ASPECT_RATIO = 1.41428
