@@ -178,7 +178,7 @@ def __attach_to_submissions(self, user):
     investigator_by_email = Investigator.objects.filter(email=user.email)
     
     for inv in investigator_by_email:
-        investigator_by_email.user = user
+        inv.user = user
 
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
