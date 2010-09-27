@@ -212,16 +212,14 @@ class Token(models.Model):
     source = models.ForeignKey(Node, related_name='sent_tokens', null=True) # denormalized: can be derived from trail
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
-    rejected = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
     consumed_at = models.DateTimeField(null=True, blank=True, default=None)
     consumed_by = models.ForeignKey(User, null=True, blank=True)
     
-    def consume(self, timestamp=None, reject=False):
+    def consume(self, timestamp=None):
         if self.consumed_at:
             raise TokenAlreadyConsumed()
         self.consumed_at = timestamp or datetime.datetime.now()
-        self.rejected = reject
         self.save()
         token_consumed.send(self)
         
