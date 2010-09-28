@@ -1,7 +1,7 @@
 import time
 import datetime
 
-from django.http import HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
@@ -16,8 +16,6 @@ from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import send_html_email
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm
 from ecs.users.models import UserProfile
-from ecs.core.models.submissions import Submission, SubmissionForm, Investigator
-
 
 class TimestampedTokenFactory(object):
     def __init__(self, extra_key=None, ttl=3600):
@@ -166,29 +164,16 @@ def pending_approval_userlist(request):
         'users': User.objects.filter(ecs_profile__approved_by_office=False),
     })
 
-def __attach_to_submissions(self, user):
-    sf_by_submitter_email = SubmissionForm.objects.filter(submitter_email=user.email)
-    for sf in sf_by_submitter_email:
-        sf.submitter = user
-
-    sf_by_sponsor_email = SubmissionForm.objects.filter(sponsor_email=user.email)
-    for sf in sf_by_sponsor_email:
-        sf.sponsor = user
-
-    investigator_by_email = Investigator.objects.filter(email=user.email)
-    
-    for inv in investigator_by_email:
-        inv.user = user
-
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
         print request.POST
         approved = request.POST.get('approve', False)
-        UserProfile.objects.filter(user=user).update(approved_by_office=approved)
+        userProfile = UserProfile.objects.filter(user=user)
+        userProfile.update(approved_by_office=approved)
         
         if approved:
-            __attach_to_submissions()
+            userProfile.attach_to_submissions()
     return render(request, 'users/approve.html', {
         'profile_user': user,
     })
