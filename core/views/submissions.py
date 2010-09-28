@@ -13,6 +13,7 @@ from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.contrib import messages
+from django.db import models
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -382,30 +383,61 @@ def import_submission_form(request):
     
     })
 
+
+def _render_field_value(v):
+    print v.__class__
+    if isinstance(v, models.Model):
+        fields = [f.name for f in v.__class__._meta.fields]
+        for field in fields:
+            try:
+                w = getattr(v, field) or ''
+            except AttributeError:
+                print 'AttributeError: %s' % field
+                continue
+            
+            if hasattr(w, 'all'):
+                w = u', '.join([_render_field_value(x) for x in getattr(w, 'all')()])
+            else:
+                w = _render_field_value(w)
+        return w
+        
+    else:
+        return unicode(v).replace(u'\n', u'<br />\n')
+
+
 def diff_submission_forms(old_submission_form, new_submission_form):
     sff = SubmissionFormForm(None, instance=old_submission_form)
-
+    #fields = [f.name for f in SubmissionForm._meta.fields if not f.name == 'id'and not f.name == 'submission']
+    fields = [x for x in SubmissionForm._meta.get_all_field_names() if not x == 'submission' and not x == 'current_for_submission']
     differ = diff_match_patch()
 
     diffs = []
-    for field in sff.fields.iterkeys():
+    for field in fields:
         try:
             old = getattr(old_submission_form, field) or ''
             new = getattr(new_submission_form, field) or ''
         except AttributeError:
+            print 'AttributeError: %s' % field
+            continue
+        except Submission.DoesNotExist:  # FIXME: remove this
+            print 'Submission.DoesNotExist: %s' % field
             continue
 
         if hasattr(new, 'all'):
-            old = u', '.join([unicode(x) for x in getattr(old, 'all')()])
-            new = u', '.join([unicode(x) for x in getattr(new, 'all')()])
+            old = u', '.join([_render_field_value(x) for x in getattr(old, 'all')()])
+            new = u', '.join([_render_field_value(x) for x in getattr(new, 'all')()])
         else:
-            old = unicode(old).replace(u'\n', u'<br />\n')
-            new = unicode(new).replace(u'\n', u'<br />\n')
+            old = _render_field_value(old)
+            new = _render_field_value(new)
 
         diff = differ.diff_main(old, new)
         if differ.diff_levenshtein(diff):
+            try:
+                label = sff.fields[field].label
+            except KeyError:
+                label = field
             differ.diff_cleanupSemantic(diff)
-            diffs.append((sff.fields[field].label, diff))
+            diffs.append((label, diff))
 
     return diffs
 
