@@ -324,7 +324,7 @@ CELERY_IMPORTS = (
     'ecs.meetings.task_queue',
     'ecs.documents.task_queue',
     'ecs.ecsmail.task_queue',
-    'ecs.mediaserver.task_queue',
+    #ecs.mediaserver.task_queue',
 )
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True

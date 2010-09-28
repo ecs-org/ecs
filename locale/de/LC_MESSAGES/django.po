@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-10 16:16+0200\n"
+"POT-Creation-Date: 2010-09-28 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: settings.py:228
+#: settings.py:57
 msgid "German"
 msgstr "Deutsch"
 
-#: core/views/submissions.py:200
-msgid "creating new submission form"
-msgstr "erstelle neue einreichung"
+#: core/views/submissions.py:236
+msgid ""
+"You cannot submit studies yet. Please wait until the office has approved "
+"your account."
+msgstr "Sie koennen noch keine Studien abschicken, da ihr Account noch nicht bestaetigt wurde "
 
 #: templates/core.html:35
 msgid "Dashboard"
@@ -48,6 +50,98 @@ msgstr "Demo"
 #: templates/core.html:68
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
+
+#: templates/notifications/form.html:9
+#, fuzzy
+msgid "New Notification"
+msgstr "Studien Meldungen"
+
+#: templates/submissions/base_form.html:12
+msgid "Submission"
+msgstr "Einreichung"
+
+#: templates/submissions/base_form.html:24
+msgid "Centers"
+msgstr "Zentren"
+
+#: templates/submissions/readonly_form.html:23
+#, fuzzy
+msgid "Status"
+msgstr "Studien"
+
+#: templates/submissions/readonly_form.html:37
+msgid "Review"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:65
+msgid "Communication"
+msgstr "Nachrichten"
+
+#: templates/submissions/readonly_form.html:67
+#: templates/submissions/readonly_form.html:229
+msgid "My Communication"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:68
+#: templates/submissions/readonly_form.html:235
+msgid "Communication Overview"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:72
+msgid "Votes"
+msgstr "Voten"
+
+#: templates/submissions/readonly_form.html:74
+#: templates/submissions/readonly_form.html:159
+msgid "Pending Votes"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:75
+#: templates/submissions/readonly_form.html:171
+msgid "Published Votes"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:79
+#, fuzzy
+msgid "Notifications"
+msgstr "Studien Meldungen"
+
+#: templates/submissions/readonly_form.html:81
+#: templates/submissions/readonly_form.html:133
+#, fuzzy
+msgid "Pending Notifications"
+msgstr "Studien Meldungen"
+
+#: templates/submissions/readonly_form.html:82
+#: templates/submissions/readonly_form.html:146
+#, fuzzy
+msgid "Answered Notifications"
+msgstr "Studien Meldungen"
+
+#: templates/submissions/readonly_form.html:141
+msgid "There are no pending notifications."
+msgstr ""
+
+#: templates/submissions/readonly_form.html:143
+#: templates/submissions/readonly_form.html:156
+msgid "Create a new notification"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:154
+msgid "There are no answered notifications."
+msgstr ""
+
+#: templates/submissions/readonly_form.html:167
+msgid "There are no pending votes."
+msgstr ""
+
+#: templates/submissions/readonly_form.html:179
+msgid "There are no published votes."
+msgstr ""
+
+#: templates/submissions/readonly_form.html:232
+msgid "Write a new message"
+msgstr ""
 
 #: users/forms.py:18
 msgid "The two password fields didn't match."
@@ -96,6 +190,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "creating new submission form"
+#~ msgstr "erstelle neue einreichung"
 
 #~ msgid "English"
 #~ msgstr "Englisch"
