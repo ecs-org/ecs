@@ -11,7 +11,7 @@ from ecs.meetings.models import TimetableEntry
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from ecs.utils.notification import send_submission_change,\
+from ecs.utils.common_messages import send_submission_change,\
     send_submission_invitation, send_submission_creation
 
 class Submission(models.Model):
