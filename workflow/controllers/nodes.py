@@ -99,7 +99,7 @@ class NodeController(object):
         else:
             self.emit_token(deadline=deadline, trail=tokens)
             
-    def receive_token(self, source, trail=None):
+    def receive_token(self, source, trail=()):
         if not self.is_reentrant() and self.has_tokens(consumed=None):
             raise TokenRejected("%s is not repeatable" % self.node)
         token = self.workflow.tokens.create(
