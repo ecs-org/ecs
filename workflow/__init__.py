@@ -45,26 +45,15 @@ post_save.connect(_post_save)
 
 
 # HACK
-from django.utils.functional import wraps
 import warnings
+from contextlib import contextmanager
 
-class _AutostartDisabled(object):
-    def __call__(self, func):
-        @wraps(func)
-        def decorated(*args, **kwargs):
-            with self:
-                return func(*args, **kwargs)
-        return decorated
-    
-    def __enter__(self):
-        globals()['_autostart_disabled'] = True
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        globals()['_autostart_disabled'] = False
-
+@contextmanager
 def autostart_disabled():
     warnings.warn("Disabling workflow autostart is not thread safe", UserWarning, stacklevel=2)
-    return _AutostartDisabled()
+    globals()['_autostart_disabled'] = True
+    yield
+    globals()['_autostart_disabled'] = False
 
     
     

@@ -334,11 +334,6 @@ class FlowTest(WorkflowTestCase):
             obj = Foo.objects.create()
             self.assertActivitiesEqual(obj, [])
         
-        @workflow.autostart_disabled()
-        def foo():
-            return Foo.objects.create()
-            
-        obj = foo()
         self.assertActivitiesEqual(obj, [])
-            
+        
 
