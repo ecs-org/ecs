@@ -126,7 +126,6 @@ python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-de
 # PIL requirements for opensuse
 libjpeg-devel:req:suse:zypper:libjpeg-devel
 zlib-devel:req:suse:zypper:zlib
-libfreetype6:req:suse:zypper:libfreetype6
 freetype2-devel:req:suse:zypper:freetype2-devel
 liblcms1:req:suse:zypper:liblcms1
 python-pil:inst:!win:pypi:PIL
@@ -195,7 +194,8 @@ jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 celery:req:apt:apt-get:rabbitmq-server
 celery:req:mac:macports:rabbitmq-server
 # available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
-rabbitmq-server:req:suse:zypper:rabbitmq-server
+# uncomment is if there is a possibility to specify repositories for suse
+#rabbitmq-server:req:suse:zypper:rabbitmq-server
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
 mutt:req:suse:zypper:mutt
