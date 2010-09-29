@@ -38,6 +38,9 @@ class FeedbackCreate(CsrfExemptBaseHandler):
             args[fieldname] = request.POST.get(fieldname)
         obj = Feedback(**args)
         obj.save()
+        print ""
+        print "handlers.py"
+        print ""
         return obj
 
     def read(self, request):

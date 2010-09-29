@@ -40,10 +40,10 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             id = int(id)
             if id > 0:
                 fb = Feedback.objects.get(id=id)
-                fb.me_too_votes.add(user)
+                fb.me_too_votes_add(user)
             else:
                 fb = Feedback.objects.get(id=-id)
-                fb.me_too_votes.remove(user)
+                fb.me_too_votes_remove(user)
         else:
             description_error = (description == '')
             if not (description_error):

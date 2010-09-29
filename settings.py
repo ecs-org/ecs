@@ -404,5 +404,6 @@ INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.
 # hack some ecsmail settings
 if 'test' in sys.argv or 'runserver' in sys.argv:
     from ecsmail_workaround_settings import *
-    
-    
+
+#ecs.feedback tracrpc settings
+FEEDBACK_CONFIG = {}
