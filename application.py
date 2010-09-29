@@ -165,7 +165,9 @@ gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:system:
 django-indexer:inst:all:pypi:django-indexer
 django-paging:inst:all:pypi:django-paging
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
-pygooglechart:inst:all:pypi:pygooglechart
+#pygooglechart:inst:all:pypi:pygooglechart
+# XXX: we use the githyub mirror as long as slowchop.com is down
+pygooglechart:inst:all:pypi:http://github.com/gak/pygooglechart/tarball/master
 django-sentry:inst:all:pypi:django-sentry
 
 """
