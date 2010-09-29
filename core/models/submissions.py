@@ -12,7 +12,7 @@ from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
 from ecs.utils.common_messages import send_submission_change,\
-    send_submission_invitation, send_submission_creation
+    send_submission_creation, send_submission_invitation
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -407,6 +407,21 @@ class SubmissionForm(models.Model):
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
 
+def attach_to_submissions(user):
+    sf_by_submitter_email = SubmissionForm.objects.filter(submitter_email=user.email)
+    for sf in sf_by_submitter_email:
+        sf.submitter = user
+        sf.save()
+        
+    sf_by_sponsor_email = SubmissionForm.objects.filter(sponsor_email=user.email)
+    for sf in sf_by_sponsor_email:
+        sf.sponsor = user
+        sf.save()
+        
+    investigator_by_email = Investigator.objects.filter(email=user.email)
+    for inv in investigator_by_email:
+        inv.user = user
+        inv.save()
 
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']

@@ -22,24 +22,6 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return unicode(self.user.username)
     
-    def attach_to_submissions(self):
-        from ecs.core.models.submissions import SubmissionForm, Investigator
-        sf_by_submitter_email = SubmissionForm.objects.filter(submitter_email=self.user.email)
-        for sf in sf_by_submitter_email:
-            sf.submitter = self.user.email
-            sf.save()
-            
-        sf_by_sponsor_email = SubmissionForm.objects.filter(sponsor_email=self.user.email)
-        for sf in sf_by_sponsor_email:
-            sf.sponsor = self.user.email
-            sf.save()
-            
-        investigator_by_email = Investigator.objects.filter(email=self.user.email)
-        
-        for inv in investigator_by_email:
-            inv.user = self.user.email
-            inv.save()
-            
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
     if kwargs['created'] and not kwargs.get('raw'):

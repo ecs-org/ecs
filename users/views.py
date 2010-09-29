@@ -16,6 +16,7 @@ from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import send_html_email
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm
 from ecs.users.models import UserProfile
+from ecs.core.models.submissions import attach_to_submissions
 
 class TimestampedTokenFactory(object):
     def __init__(self, extra_key=None, ttl=3600):
@@ -173,7 +174,7 @@ def approve(request, user_pk=None):
         userProfile.update(approved_by_office=approved)
         
         if approved:
-            userProfile.attach_to_submissions()
+            attach_to_submissions(user)
     return render(request, 'users/approve.html', {
         'profile_user': user,
     })
