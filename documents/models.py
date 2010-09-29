@@ -73,7 +73,7 @@ class DocumentManager(AuthorizationManager):
 
 
 class Document(models.Model):
-    uuid_document = models.SlugField(max_length=36)
+    uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage())
     original_file_name = models.CharField(max_length=100, null=True, blank=True)
