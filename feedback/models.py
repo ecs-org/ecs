@@ -39,18 +39,21 @@ class Feedback(models.Model):
         except:
             raise
         return success, result
-        
+
+
     def save(self, *args, **kwargs):
         #print ""
         #print "saving lala"
         #print ""
+        if 'dont_create_ticket' in kwargs and kwargs['dont_create_ticket'] == True:
+            super(Feedback, self).save(*args, **kwargs)
+        else:
+            if settings.FEEDBACK_CONFIG['create_trac_tickets'] == True:
+                success, result = self._create_trac_ticket()
+                if success:
+                    self.trac_ticket_id = result
+            super(Feedback, self).save(*args, **kwargs)
         
-        if settings.FEEDBACK_CONFIG['create_trac_tickets'] == True:
-            success, result = self._create_trac_ticket()
-            if success:
-                self.trac_ticket_id = result
-        
-        super(Feedback, self).save(self, *args, **kwargs)
 
     def me_too_votes_add(self, user=None):
         if user is None:
@@ -64,8 +67,8 @@ class Feedback(models.Model):
             success, result = self._create_trac_ticket()
             if success:
                 self.trac_ticket_id = result
-                self.save()
-                #super(Feedback, self).save(self)
+                self.save(dont_create_ticket=True)
+                #super(Feedback, self).save()
             ticket = tracrpc._get_ticket(self.trac_ticket_id)
             
         emails = ticket['cc'].split(',')
@@ -94,8 +97,8 @@ class Feedback(models.Model):
             success, result = self._create_trac_ticket()
             if success:
                 self.trac_ticket_id = result
-                self.save()
-                #super(Feedback, self).save(self)
+                self.save(dont_create_ticket=True)
+                #super(Feedback, self).save()
             ticket = tracrpc._get_ticket(self.trac_ticket_id)
         
         emails = ticket['cc'].split(',')

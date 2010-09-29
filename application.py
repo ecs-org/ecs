@@ -170,6 +170,8 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:http://github.com/gak/pygooglechart/tarball/master
 django-sentry:inst:all:pypi:django-sentry
 
+# jsonrpclib is needed for ecs.feedback to talk to trac
+jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 """
 
 
