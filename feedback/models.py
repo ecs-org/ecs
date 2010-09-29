@@ -58,34 +58,17 @@ class Feedback(models.Model):
     def me_too_votes_add(self, user=None):
         if user is None:
             return
-        
-        tracrpc = self._get_tracrpc()
-        ticket = tracrpc._get_ticket(self.trac_ticket_id)
-        if ticket is None:
-            #FIXME ticket could have been deleted, but trac could also jsut be anreachable or its just an rpc protocol error (none is returned)
-            #ticket got deleted
-            success, result = self._create_trac_ticket()
-            if success:
-                self.trac_ticket_id = result
-                self.save(dont_create_ticket=True)
-                #super(Feedback, self).save()
-            ticket = tracrpc._get_ticket(self.trac_ticket_id)
-            
-        emails = ticket['cc'].split(',')
-        already_in_cc = False
-        for email in emails:
-            if user.email in email:
-                already_in_cc = True
-
-        if not already_in_cc:
-            update_ticket = {'cc': "%s,%s" % (ticket['cc'], user.email)}
-            comment = ''
-            tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
-        
+        self._update_ticket_cc(user, add=True)
         self.me_too_votes.add(user)
         
-    
     def me_too_votes_remove(self, user=None):
+        if user is None:
+            return
+        
+        self._update_ticket_cc(user, add=False)
+        self.me_too_votes.remove(user)
+    
+    def _update_ticket_cc(self, user=None, add=True):
         if user is None:
             return
         
@@ -98,7 +81,6 @@ class Feedback(models.Model):
             if success:
                 self.trac_ticket_id = result
                 self.save(dont_create_ticket=True)
-                #super(Feedback, self).save()
             ticket = tracrpc._get_ticket(self.trac_ticket_id)
         
         emails = ticket['cc'].split(',')
@@ -106,15 +88,18 @@ class Feedback(models.Model):
         for email in emails:
             if user.email in email:
                 in_cc = True
-                emails.remove(email)
-        
-        if in_cc:
-            update_ticket = {'cc':','.join(emails)}
+                if not add:
+                    emails.remove(email)
+                    
+        if add and not in_cc:
+            update_ticket = {'cc': "%s,%s" % (ticket['cc'], user.email)}
             comment = ''
             tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
         
-        self.me_too_votes.remove(user)
-    
+        if not add and in_cc:
+            update_ticket = {'cc':','.join(emails)}
+            comment = ''
+            tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
     
     
     
