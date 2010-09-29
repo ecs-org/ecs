@@ -377,6 +377,8 @@ try:
         import local_settings
         if hasattr(local_settings, 'DATABASE_ENGINE'):
             raise ImproperlyConfigured('deprecated setting (DATABASE_ENGINE) found in local_setings, please use DATABASES convention instead')
+        # local_db is the default database, because we can not
+        # access the DATABASES dictionary in the local_settings
         if hasattr(local_settings, 'local_db'):
             DATABASES['default'] = local_db
     except ImportError:
