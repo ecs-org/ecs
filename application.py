@@ -195,7 +195,7 @@ developer_packages=  """
 jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 
 # dependency generation for python programs
-sfood:inst:all:pypi:sfood
+sfood:inst:all:pypi:snakefood
 
 # if you want to have real queuing, you need rabbitmq
 celery:req:apt:apt-get:rabbitmq-server
