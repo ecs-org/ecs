@@ -61,9 +61,9 @@ class Submission(models.Model):
 
     def get_creation_notification_receivers(self):
         sf = self.current_submission_form
-        emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
+        emails = set(filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()]))
         registered = set(User.objects.filter(email__in=emails))
-        unregistered = set(emails).difference(set(registered))
+        unregistered = emails.difference(registered)
         return registered, unregistered
    
     @property
