@@ -88,6 +88,7 @@ class Document(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
+    replaces_document = models.ForeignKey('Document', null=True, blank=True)
     
     objects = DocumentManager()
     

@@ -228,7 +228,12 @@ def create_submission_form(request):
             return HttpResponse('autosave successfull')
         
         if document_formset.is_valid():
-            request.docstash['documents'] = request.docstash['documents'] + document_formset.save()
+            documents = set(request.docstash['documents'] + document_formset.save())
+            replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
+            for doc in replaced_documents:  # remove replaced documents
+                if doc in documents:
+                    documents.remove(doc)
+            request.docstash['documents'] = list(documents)
             document_formset = DocumentFormSet(prefix='document')
 
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):

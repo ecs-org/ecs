@@ -66,6 +66,7 @@ FormInfo(Document, fields=(
     FieldInfo(None, 'version', u'Version'),
     FieldInfo(None, 'date', u'Datum'),
     FieldInfo(None, 'doctype', u'Typ'),
+    FieldInfo(None, 'replaces_document', u'Ersetze Dokument')
 ))
 
 FormInfo(ForeignParticipatingCenter, fields=(

@@ -9,7 +9,6 @@
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
             </a>
 	    <a href="{% url pdf_show doc.pk 1 1 %}" target="_blank">Ansehen</a>
-	    <a href="{% url document_replace doc.pk %}" target="_blank">Ersetzen</a>
             <a href="" class="delete_document">delete</a>
             <input type="hidden" name="documents" value="{{ doc.pk }}" />
         </div>
