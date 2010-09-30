@@ -52,7 +52,7 @@ class CategorizationReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.executive_review', kwargs={'submission_pk': self.workflow.data.pk})
 
-        
+
 class PaperSubmissionReview(Activity):
     class Meta:
         model = Submission
@@ -70,11 +70,6 @@ class ChecklistReview(Activity):
         blueprint = self.node.data
         submission_form = self.workflow.data.current_submission_form
         return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint_pk})
-
-
-class BoardMemberReview(Activity):
-    class Meta:
-        model = Submission
 
 
 class VoteRecommendation(Activity):

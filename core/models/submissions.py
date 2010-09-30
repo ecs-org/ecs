@@ -29,6 +29,7 @@ class Submission(models.Model):
     remission = models.BooleanField(default=False)    
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
+    insurance_review_required = models.BooleanField(default=True)
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     

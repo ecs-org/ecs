@@ -44,10 +44,13 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
-        ChecklistReview, BoardMemberReview, ExternalReview, VoteRecommendation, VoteRecommendationReview)
+        ChecklistReview, ExternalReview, VoteRecommendation, VoteRecommendationReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation
     
-    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik')
+    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik') 
+    insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Insurance Review')
+    legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Legal and Patient Review')
+    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Board Member Review')
     
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -60,10 +63,10 @@ def submission_workflow():
             'initial_thesis_review': Args(InitialReview),
             'thesis_categorization_review': Args(CategorizationReview),
             'paper_submission_review': Args(PaperSubmissionReview),
-            # FIXME: 'legal_and_patient_review': Args(ChecklistReview, data=..., name=u"Legal and Patient Review"),
-            # FIXME: 'insurance_review': Args(ChecklistReview, data=..., name=u"Insurance Review"),
+            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=u"Legal and Patient Review"),
+            'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review"),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review"),
-            # FIXME: 'board_member_review': Args(BoardMemberReview, data=..., name=u"Board Member Review"),
+            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review"),
             'external_review': Args(ExternalReview),
             'thesis_vote_recommendation': Args(VoteRecommendation),
             'vote_recommendation_review': Args(VoteRecommendationReview),
@@ -80,6 +83,8 @@ def submission_workflow():
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
             ('initial_thesis_review', 'paper_submission_review'): None,
+            
+            ('resubmission', 'start'): None,
 
             ('thesis_categorization_review', 'thesis_vote_recommendation'): None,
 
@@ -92,10 +97,10 @@ def submission_workflow():
             ('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
 
-            #('generic_review', 'board_member_review'): None,
-            #('generic_review', 'insurance_review'): None,
+            ('generic_review', 'board_member_review'): None,
+            ('generic_review', 'insurance_review'): None,
             ('generic_review', 'statistical_review'): None,
-            #('generic_review', 'legal_and_patient_review'): None,
+            ('generic_review', 'legal_and_patient_review'): None,
         }
     )
 
@@ -322,6 +327,9 @@ def checklist_questions():
             u'5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?',
             u'6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?',
         ),
+        u'Legal and Patient Review': (u"42 ?",),
+        u'Insurance Review': (u"42 ?",),
+        u'Board Member Review': (u"42 ?",),
     }
 
     for bp_name in questions.keys():
