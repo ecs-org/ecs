@@ -23,3 +23,19 @@ def cached_property(arg):
         return decorator
     else:
         return CachedProperty(arg)
+
+class Args(object):
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+        
+    def update(self, *args, **kwargs):
+        self.args += args
+        self.kwargs.update(kwargs)
+        
+    def apply(self, func):
+        return func(*self.args, **self.kwargs)
+        
+    def __nonzero__(self):
+        return bool(self.args and self.kwargs)
+    

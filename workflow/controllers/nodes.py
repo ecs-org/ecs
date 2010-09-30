@@ -15,6 +15,13 @@ class NodeControllerOptions(object):
         self.model = getattr(meta, 'model', None)
         self.vary_on = getattr(meta, 'vary_on', None)
         self.auto = getattr(meta, 'auto', False)
+        update_lock = getattr(meta, 'update_lock', None)
+        # XXX: update_deadline = getattr(meta, 'update_deadline', None)
+        if update_lock:
+            lock_signal, lock_kwarg = update_lock
+            def _unlock(sender, **kwargs):
+                kwargs[unlock_kwarg].workflow.unlock()
+            unlock_signal.connect(_unlock, sender=self.model)
         
     @cached_property
     def node_type(self):
@@ -127,6 +134,9 @@ class NodeController(object):
             return deadline
         else:
             raise TypeError("NodeHandler.deadline must be of type datetime or timedelta or None")
+            
+    def get_url(self):
+        return None
 
 
 class Activity(NodeController):

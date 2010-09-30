@@ -1,98 +1,95 @@
-#from ecs import workflow
-#from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint
-#from ecs.core.signals import post_thesis_review
-#
-#@workflow.activity(model=Submission)
-#def change_submission_form(token):
-#    pass
-#
-## UC-11
-#@workflow.activity(model=Submission)
-#def inspect_form_and_content_completeness(token):
-#    pass
-#
-#@workflow.activity(model=Submission)
-#def acknowledge_signed_submission_form(token):
-#    pass
-#
-#def _is_thesis_categorization_complete(wf):
-#    return (wf.data.thesis is not None) and (wf.data.retrospective is not None)
-#
-## UC-12
-#@workflow.activity(model=Submission, lock=_is_thesis_categorization_complete, signal=post_thesis_review)
-#def categorize_retrospective_thesis(token):
-#    pass
-#
-#@workflow.activity(model=Submission)
-#def review_retrospective_thesis(token):
-#    pass
-#
-## UC-12 / UC-15 (reassign)
-#@workflow.activity(model=Submission)
-#def assign_external_reviewer(token):
-#    pass
-#
-## UC-16
-#@workflow.activity(model=Submission)
-#def review_external(token):
-#    pass
-#    
-#@workflow.activity(model=Submission, vary_on=ChecklistBlueprint)
-#def review_with_checklist(token):
-#    pass
-#
-## UC-42 (placeholder)
-#@workflow.activity(model=Submission)
-#def review_legal_and_patient_data(token):
-#    pass
-#    
-## UC-42 (placeholder)
-#@workflow.activity(model=Submission)
-#def review_statistical_issues(token):
-#    pass
-#
-## UC-41 (placeholder)
-#@workflow.activity(model=Submission)
-#def review_insurance_issues(token):
-#    pass
-#
-## UC-12
-#@workflow.activity(model=Submission)
-#def review_scientific_issues(token):
-#    pass
-#
-## UC-14
-#@workflow.activity(model=Submission)
-#def contact_external_reviewer(token):
-#    pass
-#
-#@workflow.activity(model=Submission)
-#def do_external_review(token):
-#    pass
-#
-#
-#@workflow.control(model=Submission)
-#def reject(token):
-#    workflow.patterns.generic(token)
-#
-#@workflow.control(model=Submission)
-#def accept(token):
-#    workflow.patterns.generic(token)
-#    
-#@workflow.guard(model=Submission)
-#def is_classified_for_external_review(workflow):
-#    return workflow.data.external_reviewer is True
-#
-#@workflow.guard(model=Submission)
-#def is_accepted(workflow):
-#    return True
-#
-#@workflow.guard(model=Submission)
-#def is_marked_as_thesis_by_submitter(workflow):
-#    return bool(workflow.data.current_submission_form.project_type_education_context)
-#    
-#@workflow.guard(model=Submission)
-#def is_thesis_and_retrospective(workflow):
-#    submission = workflow.data
-#    return submission.thesis and submission.retrospective
-#
+from ecs.workflow import Activity, guard
+from ecs.core.models import Submission, ChecklistBlueprint, Vote
+
+
+@guard(model=Submission)
+def is_acknowledged(wf):
+    return wf.data.is_acknowledged
+    
+
+@guard(model=Submission)
+def is_thesis(wf):
+    if wf.data.thesis is None:
+        return wf.data.current_submission_form.project_type_education_context is not None
+    return wf.data.thesis
+    
+
+@guard(model=Submission)
+def is_expedited(wf):
+    return bool(wf.data.expedited)
+    
+
+@guard(model=Submission)
+def has_recommendation(wf):
+    return False # FIXME
+
+
+@guard(model=Submission)
+def has_accepted_recommendation(wf):
+    return False # FIXME
+
+
+class InitialReview(Activity):
+    class Meta:
+        model = Submission
+    
+    def get_url(self):
+        return None # FIXME
+
+
+class Resubmission(Activity):
+    class Meta:
+        model = Submission
+        
+    def get_url(self):
+        return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data.pk})
+        
+
+class CategorizationReview(Activity):
+    class Meta:
+        model = Submission
+        
+    def get_url(self):
+        return reverse('ecs.core.views.executive_review', kwargs={'submission_pk': self.workflow.data.pk})
+
+        
+class PaperSubmissionReview(Activity):
+    class Meta:
+        model = Submission
+
+    def get_url(self):
+        return None # FIXME
+
+
+class ChecklistReview(Activity):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+        
+    def get_url(self):
+        blueprint = self.node.data
+        submission_form = self.workflow.data.current_submission_form
+        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint_pk})
+
+
+class BoardMemberReview(Activity):
+    class Meta:
+        model = Submission
+
+
+class VoteRecommendation(Activity):
+    class Meta:
+        model = Submission
+
+    def get_url(self):
+        return None # FIXME
+
+
+class VoteRecommendationReview(Activity):
+    class Meta:
+        model = Submission
+        
+    def get_url(self):
+        return None # FIXME
+
+

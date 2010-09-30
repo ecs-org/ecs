@@ -43,6 +43,6 @@ class EdgeController(object):
     guard = property(lambda self: self.edge.bind_guard(self.workflow))
     
     def is_active(self):
-        return self.negated != self.guard()
+        return self.negated != self.guard(self.workflow)
 
 
