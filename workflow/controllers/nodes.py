@@ -11,7 +11,8 @@ from ecs.workflow.exceptions import TokenRequired, TokenRejected
 from ecs.workflow.controllers.registry import add_controller
 
 class NodeControllerOptions(object):
-    def __init__(self, meta):
+    def __init__(self, meta, cls):
+        self.cls = cls
         self.model = getattr(meta, 'model', None)
         self.vary_on = getattr(meta, 'vary_on', None)
         self.auto = getattr(meta, 'auto', False)
@@ -33,7 +34,7 @@ class NodeControllerOptions(object):
         try:
             return NodeType.objects.get(implementation=self.name, content_type=ct)
         except NodeType.DoesNotExist:
-            raise RuntimeError("%s is not synced to the database. Forgot to run the workflow_sync command?" % self)
+            raise RuntimeError("%s is not synced to the database. Forgot to run the workflow_sync command?" % self.cls)
 
 class NodeControllerBase(type):
     def __new__(cls, name, bases, attrs):
@@ -42,7 +43,7 @@ class NodeControllerBase(type):
         newcls = super(NodeControllerBase, cls).__new__(cls, name, bases, attrs)
         if not parents:
             return newcls
-        newcls._meta = NodeControllerOptions(meta)
+        newcls._meta = NodeControllerOptions(meta, newcls)
         newcls._meta.name = add_controller(newcls)
         return newcls
 

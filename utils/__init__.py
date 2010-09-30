@@ -37,5 +37,5 @@ class Args(object):
         return func(*self.args, **self.kwargs)
         
     def __nonzero__(self):
-        return bool(self.args and self.kwargs)
+        return bool(self.args or self.kwargs)
     

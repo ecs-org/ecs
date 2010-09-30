@@ -93,3 +93,41 @@ class VoteRecommendationReview(Activity):
         return None # FIXME
 
 
+class ExternalReview(Activity):
+    class Meta:
+        model = Submission
+
+    def get_url(self):
+        return None # FIXME
+
+
+class VoteFinalization(Activity):
+    class Meta:
+        model = Vote
+    
+    def get_url(self):
+        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+
+
+class VoteReview(Activity):
+    class Meta:
+        model = Vote
+        
+    def get_url(self):
+        return None # FIXME
+
+
+class VoteSigning(Activity):
+    class Meta:
+        model = Vote
+        
+    def get_url(self):
+        return None # FIXME
+
+
+class VotePublication(Activity):
+    class Meta:
+        model = Vote
+
+    def get_url(self):
+        return None # FIXME

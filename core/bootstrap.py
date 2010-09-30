@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 import os, datetime, random
+from django.core.management.base import CommandError
+from django.contrib.auth.models import Group, User
+from django.contrib.sites.models import Site
+
 from ecs import bootstrap
 from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
 from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
-from ecs.workflow.models import Graph, Node, Edge
-from ecs.workflow import patterns
-from django.core.management.base import CommandError
-from django.core.management import call_command
-from django.contrib.auth.models import Group, User
-from django.contrib.sites.models import Site
+from ecs.utils import Args
+
+from ecs.workflow.patterns import Generic
+from ecs.workflow.utils import setup_workflow_graph
+
 
 
 @bootstrap.register()
@@ -37,101 +40,84 @@ def templates():
                     tpl.content = content
                     tpl.save()
 
-@bootstrap.register()
+@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
-    return
-    call_command('workflow_sync', quiet=True)
+    from ecs.core.models import Submission
+    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
+        ChecklistReview, BoardMemberReview, ExternalReview, VoteRecommendation, VoteRecommendationReview)
+    from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation
+    
+    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik')
+    
+    setup_workflow_graph(Submission,
+        auto_start=True,
+        nodes={
+            'start': Args(Generic, start=True),
+            'generic_review': Args(Generic),
+            'resubmission': Args(Resubmission),
+            'initial_review': Args(InitialReview),
+            'categorization_review': Args(CategorizationReview),
+            'initial_thesis_review': Args(InitialReview),
+            'thesis_categorization_review': Args(CategorizationReview),
+            'paper_submission_review': Args(PaperSubmissionReview),
+            # FIXME: 'legal_and_patient_review': Args(ChecklistReview, data=..., name=u"Legal and Patient Review"),
+            # FIXME: 'insurance_review': Args(ChecklistReview, data=..., name=u"Insurance Review"),
+            'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review"),
+            # FIXME: 'board_member_review': Args(BoardMemberReview, data=..., name=u"Board Member Review"),
+            'external_review': Args(ExternalReview),
+            'thesis_vote_recommendation': Args(VoteRecommendation),
+            'vote_recommendation_review': Args(VoteRecommendationReview),
+            'END': Args(Generic, end=True), # FIXME
+        },
+        edges={
+            ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
+            ('start', 'initial_thesis_review'): Args(guard=is_thesis),
 
-    from ecs.core import workflow as cwf
-    
-    nodes = {
-        'initial_review': dict(nodetype=cwf.inspect_form_and_content_completeness, start=True, name="Formal R."),
-        'not_retrospective_thesis': dict(nodetype=patterns.generic, name="Review Split"),
-        'reject': dict(nodetype=cwf.reject, end=True),
-        'accept': dict(nodetype=cwf.accept),
-        'thesis_review': dict(nodetype=cwf.categorize_retrospective_thesis, name='Thesis Categorization'),
-        'thesis_review2': dict(nodetype=cwf.categorize_retrospective_thesis, name='Executive Thesis Categorization'),
-        'retro_thesis': dict(nodetype=cwf.review_retrospective_thesis, name="Retrospective Thesis R."),
-        'legal_and_patient_review': dict(nodetype=cwf.review_legal_and_patient_data, name="Legal+Patient R."),
-        'scientific_review': dict(nodetype=cwf.review_scientific_issues, name="Executive R."),
-        'statistical_review': dict(nodetype=cwf.review_statistical_issues, name="Statistical R."),
-        'insurance_review': dict(nodetype=cwf.review_insurance_issues, name="Insurance R."),
-        'contact_external_reviewer': dict(nodetype=cwf.contact_external_reviewer, name="Contact External Reviewer"),
-        'do_external_review': dict(nodetype=cwf.do_external_review, name="External R."),
-        'workflow_merge': dict(nodetype=patterns.generic, name="Workflow Merge"),
-        'workflow_sync': dict(nodetype=patterns.synchronization, end=True),
-        'review_sync': dict(nodetype=patterns.synchronization, name="Review Sync"),
-        'scientific_review_complete': dict(nodetype=patterns.generic, name="Scientific R. Complete"),
-        'acknowledge_signed_submission_form': dict(nodetype=cwf.acknowledge_signed_submission_form, name="Ack. Signed Submission"),
-    }
-    
-    edges = {
-        ('initial_review', 'reject'): dict(guard=cwf.is_accepted, negated=True),
-        ('initial_review', 'accept'): dict(guard=cwf.is_accepted),
-        ('accept', 'thesis_review2'): dict(guard=cwf.is_marked_as_thesis_by_submitter, negated=True),
-        ('accept', 'thesis_review'): dict(guard=cwf.is_marked_as_thesis_by_submitter),
-        ('accept', 'acknowledge_signed_submission_form'): dict(),
-        ('accept', 'statistical_review'): dict(),
-        ('thesis_review', 'thesis_review2'): dict(guard=cwf.is_thesis_and_retrospective, negated=True),
-        ('thesis_review', 'retro_thesis'): dict(guard=cwf.is_thesis_and_retrospective),
-        ('thesis_review2', 'thesis_review'): dict(guard=cwf.is_thesis_and_retrospective),
-        ('thesis_review2', 'not_retrospective_thesis'): dict(guard=cwf.is_thesis_and_retrospective, negated=True),
-        ('not_retrospective_thesis', 'legal_and_patient_review'): dict(),
-        ('not_retrospective_thesis', 'scientific_review'): dict(),
-        ('not_retrospective_thesis', 'insurance_review'): dict(),
-        ('scientific_review', 'contact_external_reviewer'): dict(guard=cwf.is_classified_for_external_review),
-        ('scientific_review', 'scientific_review_complete'): dict(guard=cwf.is_classified_for_external_review, negated=True),
-        ('scientific_review_complete', 'review_sync'): dict(),
-        ('contact_external_reviewer', 'do_external_review'): dict(),
-        ('do_external_review', 'scientific_review_complete'): dict(),
-        ('do_external_review', 'scientific_review'): dict(deadline=True),
-        ('statistical_review', 'workflow_sync'): dict(),
-        ('insurance_review', 'review_sync'): dict(),
-        ('acknowledge_signed_submission_form', 'workflow_sync'): dict(),
-        ('review_sync', 'workflow_merge'): dict(),
-        ('retro_thesis', 'workflow_merge'): dict(),
-        ('workflow_merge', 'workflow_sync'): dict(),
-    }
-    
-    try:
-        old_graph = Graph.objects.get(model=Submission, auto_start=True)
-    except Graph.MultipleObjectsReturned:
-        raise CommandError("There is more than one graph for Submission with auto_start=True.")
-    except Graph.DoesNotExist:
-        old_graph = None
-    
-    upgrade = True
+            ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
+            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
+            ('initial_review', 'paper_submission_review'): None,
 
-    if old_graph:
-        upgrade = False
-        node_instances = {}
-        for name, attrs in nodes.iteritems():
-            try:
-                node_instances[name] = old_graph.get_node(**attrs)
-            except Node.DoesNotExist:
-                upgrade = True
-                break
-        if not upgrade:
-            for node_names, attrs in edges.iteritems():
-                from_name, to_name = node_names
-                try:
-                    node_instances[from_name].get_edge(node_instances[to_name], **attrs)
-                except Edge.DoesNotExist:
-                    upgrade = True
-                    break
+            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
+            ('initial_thesis_review', 'paper_submission_review'): None,
 
-    if upgrade:
-        if old_graph:
-            old_graph.auto_start = False
-            old_graph.save()
+            ('thesis_categorization_review', 'thesis_vote_recommendation'): None,
+
+            ('thesis_vote_recommendation', 'vote_recommendation_review'): Args(guard=has_recommendation),
+            ('thesis_vote_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),
+
+            ('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
+            ('vote_recommendation_review', 'categorization_review'): Args(guard=has_accepted_recommendation, negated=True),
+
+            ('categorization_review', 'END'): Args(guard=is_expedited),
+            ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
+
+            #('generic_review', 'board_member_review'): None,
+            #('generic_review', 'insurance_review'): None,
+            ('generic_review', 'statistical_review'): None,
+            #('generic_review', 'legal_and_patient_review'): None,
+        }
+    )
+
+@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync',))
+def vote_workflow():
+    from ecs.core.models import Vote
+    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication
+
+    setup_workflow_graph(Vote, 
+        auto_start=True, 
+        nodes={
+            'vote_finalization': Args(VoteFinalization),
+            'vote_review': Args(VoteFinalization),
+            'office_vote_finalization': Args(VoteFinalization),
+            'office_vote_review': Args(VoteReview),
+            'vote_signing': Args(VoteSigning),
+            'vote_publication': Args(VotePublication),
+        }, 
+        edges={
         
-        g = Graph.objects.create(model=Submission, auto_start=True)
-        node_instances = {}
-        for name, attrs in nodes.iteritems():
-            node_instances[name] = g.create_node(**attrs)
-        for node_names, attrs in edges.iteritems():
-            from_name, to_name = node_names
-            node_instances[from_name].add_edge(node_instances[to_name], **attrs)
+        }
+    )
 
 
 @bootstrap.register()

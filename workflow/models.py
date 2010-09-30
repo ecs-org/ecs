@@ -65,12 +65,22 @@ class GraphManager(models.Manager):
         if model:
             kwargs['content_type'] = ContentType.objects.get_for_model(model)
         return super(GraphManager, self).create(**kwargs)
-        
-    def get(self, **kwargs):
+    
+    def _prep_get_kwargs(self, kwargs):
         model = kwargs.pop('model', None)
         if model:
             kwargs['content_type'] = ContentType.objects.get_for_model(model)
-        return super(GraphManager, self).get(**kwargs)
+        return kwargs
+    
+    def get(self, **kwargs):
+        return super(GraphManager, self).get(**self._prep_get_kwargs(kwargs))
+        
+    def create(self, **kwargs):
+        return super(GraphManager, self).create(**self._prep_get_kwargs(kwargs))
+
+    def get_or_create(self, **kwargs):
+        return super(GraphManager, self).get_or_create(**self._prep_get_kwargs(kwargs))
+
 
 class Graph(NodeType):
     auto_start = models.BooleanField()
