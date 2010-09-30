@@ -390,7 +390,6 @@ def import_submission_form(request):
 
 
 def _render_field_value(v):
-    print v.__class__
     if isinstance(v, models.Model):
         fields = [f.name for f in v.__class__._meta.fields]
         for field in fields:
