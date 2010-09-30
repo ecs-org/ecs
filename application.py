@@ -115,10 +115,6 @@ imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
-memcached:req:apt:apt-get:memcached
-memcached:req:mac:macports:memcached
-memcached:req:suse:zypper:memcached
-memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 
@@ -197,12 +193,6 @@ jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
-# if you want to have real queuing, you need rabbitmq
-celery:req:apt:apt-get:rabbitmq-server
-celery:req:mac:macports:rabbitmq-server
-# available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
-# uncomment is if there is a possibility to specify repositories for suse
-#rabbitmq-server:req:suse:zypper:rabbitmq-server
 # mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 mutt:req:apt:apt-get:mutt
 mutt:req:suse:zypper:mutt
@@ -239,8 +229,19 @@ modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 postgresql:req:apt:apt-get:postgresql
 exim:req:apt:apt-get:exim4
 solr-jetty:req:apt:apt-get:solr-jetty
-celery:req:apt:apt-get:rabbitmq-server
+
+# on the production system we use a REAL queuing solution
+rabbitmq-server:req:apt:apt-get:rabbitmq-server
+#rabbitmq-server:req:mac:macports:rabbitmq-server
+# available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
+# uncomment is if there is a possibility to specify repositories for suse
+#rabbitmq-server:req:suse:zypper:rabbitmq-server
+
 memcached:req:apt:apt-get:memcached
+#memcached:req:mac:macports:memcached
+#memcached:req:suse:zypper:memcached
+#memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
+# btw, we only need debian packages in the system_packages
 """
 
 """
