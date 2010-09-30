@@ -1,0 +1,25 @@
+{% extends "shell.html" %}
+
+{% block htmlbody %}
+
+<div id="pdfviewer"></div>
+
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+
+<script type="text/javascript">
+    $(window).addEvent('domready', function(){
+        var images = {{ images|safe }};
+        var viewerElement = $('pdfviewer');
+        for(var key in images){
+            var img = new Element('img', {src: images[key][0], style: 'float: none'});
+            viewerElement.grab(img);
+            console.log(key, images[key]);
+        }
+        $(document.body).setStyle('overflow', 'auto');
+    });
+</script>
+
+{% endblock %}

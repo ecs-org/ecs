@@ -1,86 +1,28 @@
 # -*- coding: utf-8 -*-
-
+import uuid
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
-
-from json import JSONEncoder, JSONDecoder
+from django.utils import simplejson
+from django.shortcuts import get_object_or_404
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
-# FIXME/mediaserver: from ecs.mediaserver.imageset import ImageSet
-# FIXME/mediaserver: from ecs.mediaserver.storage import Cache, SetData
 from ecs.pdfviewer.models import Annotation
+from ecs.mediaserver.documentprovider import DocumentProvider
+from ecs.mediaserver.cacheobjects import MediaBlob
 
-
-def load_refill_set(id):
-    try:
-        document = Document.objects.get(pk=id)
-    except Document.DoesNotExist:
-        print 'database miss: document "%s"' % id
-        return None
-    print 'database hit: loaded document "%s"' % id
-    pdf_name = document.file.name
-    pages = document.pages
-    if pages is None:
-        print 'document "%s" was stored without "pages" data' % id
-        return None
-    set_data = SetData('doc from db', pdf_name, pages)
-    cache = Cache()
-    if not cache.store_set(id, set_data):
-        print 'cache re-fill failed: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
-        return None
-    else:
-        print 'cache re-filled: key "%s", set "%s"' % (cache.get_set_key(id), set_data)
-        return set_data
-
+document_provider = DocumentProvider()
 
 def show(request, id='1', page=1, zoom='1'):
-    if not request.user.is_authenticated():
-        return HttpResponse('Error: you need to be logged in!')
-    else:
-        user = request.user
-        if user is None:
-            return HttpResponse('Error: user is None!')
-
-    id = str(id)
-    page = int(page)
-
-    image_set = ImageSet(id)
-    if image_set.load() is False:
-        image_set.set_data = load_refill_set(id)
-        if image_set.set_data is None:
-            return HttpResponse('Error: can not load ImageSet "%s"!' % id)
-        image_set.init_images()
-    render_set = image_set.render_set
-    if not render_set.has_zoom(zoom):
-        return HttpResponse('Error: invalid parameter zoom = "%s"! Choose from %s' % (zoom, render_set.zoom_list))
-    zoom_index = render_set.zoom_list.index(zoom)
-    zoom_list_json = JSONEncoder().encode(render_set.zoom_list);
-    zoom_pages_json = JSONEncoder().encode(render_set.zoom_pages);
-
-    pages = image_set.set_data.pages
-
-    if page < 1 or page > pages:
-        return HttpResponse('Error: no page = "%s" at zoom = "%s"!' % (page, zoom))
-
-    images_json = JSONEncoder().encode(image_set.images)
-
+    document = get_object_or_404(Document, pk=id)
     annotations = dict([(anno.uuid, JSONDecoder().decode(anno.layoutData)) for anno in Annotation.objects.filter(docid=id, page=page)])
-    
-    allAnno = JSONEncoder().encode(annotations)
+    docdict = document_provider.createDocshotDictionary(MediaBlob(uuid.UUID(document.uuid_document)))
 
-    return render(request, 'pdfviewer/show.html', {
-        'id': id,
-        'allAnno': allAnno,
-        'page': page,
-        'pages': pages,
-        'zoom_index': zoom_index,
-        'zoom_list': zoom_list_json,
-        'zoom_pages': zoom_pages_json,
-        'height': render_set.height,
-        'width': render_set.width,
-        'images': images_json,
+    return render(request, 'pdfviewer/viewer.html', {
+        'document': document,
+        'allAnno': simplejson.dumps(annotations),
+        'images': simplejson.dumps(docdict),
     })
 
 
