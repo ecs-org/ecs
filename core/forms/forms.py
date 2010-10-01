@@ -109,6 +109,13 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        document_pks = kwargs.get('document_pks', [])
+        if 'document_pks' in kwargs.keys():
+            del kwargs['document_pks']
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
     
     def clean(self):
         file = self.cleaned_data.get('file')
@@ -126,13 +133,6 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Document
         exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
-
-class BaseDocumentFormSet(BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', Document.objects.none())
-        super(BaseDocumentFormSet, self).__init__(*args, **kwargs)
-        
-DocumentFormSet = modelformset_factory(Document, formset=BaseDocumentFormSet, extra=1, form=DocumentForm)
 
 ## ##
 

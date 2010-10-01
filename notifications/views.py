@@ -7,7 +7,6 @@ from django.template.defaultfilters import slugify
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
-from ecs.core.forms import DocumentFormSet
 from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
@@ -53,7 +52,7 @@ def create_notification(request, notification_type_pk=None):
     else:
         form = notification_type.form_cls(request.POST or None)
 
-    document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
+    document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
     
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -72,7 +71,7 @@ def create_notification(request, notification_type_pk=None):
         
         if document_formset.is_valid():
             request.docstash['documents'] = request.docstash['documents'] + document_formset.save()
-            document_formset = DocumentFormSet(prefix='document')
+            document_form = DocumentForm(prefix='document')
         
         if submit and form.is_valid():
             notification = form.save(commit=False)
@@ -90,7 +89,7 @@ def create_notification(request, notification_type_pk=None):
         'notification_type': notification_type,
         'form': form,
         'tabs': NOTIFICATION_FORM_TABS[form.__class__],
-        'document_formset': document_formset,
+        'document_form': document_form,
         'documents': request.docstash.get('documents', []),
     })
 

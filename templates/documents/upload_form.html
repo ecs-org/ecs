@@ -18,8 +18,21 @@
 {% endif %}
 </div>
 
-{% with document_formset as formset %}
-    {% include "forms/inline_formset.html" %}
-{% endwith %}
+<form action="" method="post">
+    <div class="form">
+        {% with document_form as form %}
+        <ol>
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    {% include "forms/field.html" %}
+                {% endif %}
+            {% endfor %}
+        </ol>
+        {% endwith %}
+    </div>
+</form>
 <input type="submit" id="document_upload_button" name="upload" value="Upload" />
 

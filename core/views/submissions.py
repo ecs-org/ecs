@@ -20,8 +20,8 @@ from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_re
 from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.meetings.models import Meeting
 
-from ecs.core.forms import DocumentFormSet, SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm
+from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -211,7 +211,7 @@ def create_submission_form(request):
         form = SubmissionFormForm(request.POST or None)
         formsets = get_submission_formsets(request.POST or None)
 
-    document_formset = DocumentFormSet(request.POST or None, request.FILES or None, prefix='document')
+    document_form = DocumentForm(request.POST or None, request.FILES or None, document_pks=[x.pk for x in request.docstash['documents']], prefix='document')
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -227,14 +227,15 @@ def create_submission_form(request):
         if autosave:
             return HttpResponse('autosave successfull')
         
-        if document_formset.is_valid():
-            documents = set(request.docstash['documents'] + document_formset.save())
+        if document_form.is_valid():
+            documents = set(request.docstash['documents'])
+            documents.add(document_form.save())
             replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
             for doc in replaced_documents:  # remove replaced documents
                 if doc in documents:
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
-            document_formset = DocumentFormSet(prefix='document')
+            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
 
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             if not request.user.get_profile().approved_by_office:
@@ -266,7 +267,7 @@ def create_submission_form(request):
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'document_formset': document_formset,
+        'document_form': document_form,
         'documents': request.docstash.get('documents', []),
     }
     for prefix, formset in formsets.iteritems():
