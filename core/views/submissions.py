@@ -365,7 +365,7 @@ def edit_submission(request, submission_pk=None):
 def start_workflow(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     from ecs.workflow.models import Graph
-    wf = Graph.objects.get().create_workflow(data=submission)
+    wf = Graph.objects.get(model=Submission, auto_start=True).create_workflow(data=submission)
     wf.start()
     return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
 

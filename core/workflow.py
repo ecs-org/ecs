@@ -1,10 +1,13 @@
-from ecs.workflow import Activity, guard
+from ecs.workflow import Activity, guard, register
 from ecs.core.models import Submission, ChecklistBlueprint, Vote
 
 
+register(Submission)
+register(Vote)
+
 @guard(model=Submission)
 def is_acknowledged(wf):
-    return wf.data.is_acknowledged
+    return wf.data.current_submission_form.acknowledged
     
 
 @guard(model=Submission)
@@ -13,6 +16,28 @@ def is_thesis(wf):
         return wf.data.current_submission_form.project_type_education_context is not None
     return wf.data.thesis
     
+
+@guard(model=Submission)
+def has_b2vote(wf):
+    sf = wf.data.current_submission_form
+    if sf.current_pending_vote:
+        return sf.current_pending_vote.result == '2'
+    if sf.current_published_vote:
+        return sf.current_published_vote.result == '2'
+    return False
+
+@guard(model=Vote)
+def is_executive_vote_review_required(wf):
+    return wf.data.executive_review_required
+
+
+@guard(model=Vote)
+def is_final(wf):
+    return wf.data.final
+    
+@guard(model=Vote)
+def is_b2upgrade(wf):
+    return False # FIXME
 
 @guard(model=Submission)
 def is_expedited(wf):
@@ -43,7 +68,13 @@ class Resubmission(Activity):
         
     def get_url(self):
         return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data.pk})
+
+class B2VoteReview(Activity):
+    class Meta:
+        model = Submission
         
+    def get_url(self):
+        return reverse('ecs.core.views.b2_vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
 class CategorizationReview(Activity):
     class Meta:

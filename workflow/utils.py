@@ -1,4 +1,4 @@
-from ecs.utils import Args
+from ecs.utils import Args, camel_split
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.workflow.models import NODE_TYPE_CATEGORY_SUBGRAPH, NODE_TYPE_CATEGORY_CONTROL, NODE_TYPE_CATEGORY_ACTIVITY
 
@@ -22,6 +22,10 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
 
 
 def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
+    """
+    created a new workflow graph if a graph with the same structure does not already exists. 
+    old graphs will loose their auto_start=True flag.
+    """
     try:
         graph, created = Graph.objects.get_or_create(model=model, **kwargs)
     except Graph.MultipleObjectsReturned:
@@ -35,6 +39,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
     
     node_instances = {}
     for name, args in nodes.iteritems():
+        args.setdefault('name', " ".join(camel_split(args[0].__name__)))
         node_instances[name] = args.apply(graph.create_node)
     for node_names, args in edges.iteritems():
         if not args:

@@ -44,8 +44,8 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
-        ChecklistReview, ExternalReview, VoteRecommendation, VoteRecommendationReview)
-    from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation
+        ChecklistReview, ExternalReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
+    from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik') 
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Insurance Review')
@@ -55,13 +55,15 @@ def submission_workflow():
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True),
-            'generic_review': Args(Generic),
+            'start': Args(Generic, start=True, name="Start"),
+            'generic_review': Args(Generic, name="Review Split"),
             'resubmission': Args(Resubmission),
             'initial_review': Args(InitialReview),
+            'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review"),
+            'b2_vote_review': Args(B2VoteReview),
             'categorization_review': Args(CategorizationReview),
-            'initial_thesis_review': Args(InitialReview),
-            'thesis_categorization_review': Args(CategorizationReview),
+            'initial_thesis_review': Args(InitialReview, name="Initial Thesis Review"),
+            'thesis_categorization_review': Args(CategorizationReview, name="Thesis Categorization Review"),
             'paper_submission_review': Args(PaperSubmissionReview),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=u"Legal and Patient Review"),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review"),
@@ -70,7 +72,6 @@ def submission_workflow():
             'external_review': Args(ExternalReview),
             'thesis_vote_recommendation': Args(VoteRecommendation),
             'vote_recommendation_review': Args(VoteRecommendationReview),
-            'END': Args(Generic, end=True), # FIXME
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
@@ -84,17 +85,20 @@ def submission_workflow():
             ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
             ('initial_thesis_review', 'paper_submission_review'): None,
             
-            ('resubmission', 'start'): None,
+            ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
+            ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
+            ('b2_resubmission_review', 'b2_vote_review'): None,
+            ('b2_vote_review', 'resubmission'): Args(guard=has_b2vote),
 
             ('thesis_categorization_review', 'thesis_vote_recommendation'): None,
 
             ('thesis_vote_recommendation', 'vote_recommendation_review'): Args(guard=has_recommendation),
             ('thesis_vote_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),
 
-            ('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
+            #('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
             ('vote_recommendation_review', 'categorization_review'): Args(guard=has_accepted_recommendation, negated=True),
 
-            ('categorization_review', 'END'): Args(guard=is_expedited),
+            #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
 
             ('generic_review', 'board_member_review'): None,
@@ -108,19 +112,42 @@ def submission_workflow():
 def vote_workflow():
     from ecs.core.models import Vote
     from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication
+    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2upgrade
 
     setup_workflow_graph(Vote, 
         auto_start=True, 
         nodes={
-            'vote_finalization': Args(VoteFinalization),
-            'vote_review': Args(VoteFinalization),
-            'office_vote_finalization': Args(VoteFinalization),
-            'office_vote_review': Args(VoteReview),
+            'start': Args(Generic, start=True, name="Start"),
+            'review': Args(Generic, name="Review Split"),
+            'b2upgrade': Args(Generic, name="B2 Upgrade", end=True),
+            'executive_vote_finalization': Args(VoteReview, name="Executive Vote Finalization"),
+            'executive_vote_review': Args(VoteReview, name="Executive Vote Review"),
+            'internal_vote_review': Args(VoteReview, name="Internal Vote Review"),
+            'office_vote_finalization': Args(VoteReview, name="Office Vote Finalization"),
+            'office_vote_review': Args(VoteReview, name="Office Vote Review"),
+            'final_office_vote_review': Args(VoteReview, name="Office Vote Review"),
             'vote_signing': Args(VoteSigning),
-            'vote_publication': Args(VotePublication),
+            'vote_publication': Args(VotePublication, end=True),
         }, 
         edges={
-        
+            ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
+            ('start', 'b2upgrade'): Args(guard=is_b2upgrade),
+            ('review', 'executive_vote_finalization'): Args(guard=is_executive_vote_review_required),
+            ('review', 'office_vote_finalization'): Args(guard=is_executive_vote_review_required, negated=True),
+            ('executive_vote_finalization', 'office_vote_review'): None,
+            ('office_vote_finalization', 'internal_vote_review'): None,
+
+            ('office_vote_review', 'executive_vote_review'): Args(guard=is_final, negated=True),
+            ('office_vote_review', 'vote_signing'): Args(guard=is_final),
+
+            ('internal_vote_review', 'office_vote_finalization'): Args(guard=is_final, negated=True),
+            ('internal_vote_review', 'executive_vote_review'): Args(guard=is_final),
+
+            ('executive_vote_review', 'final_office_vote_review'): Args(guard=is_final, negated=True),
+            ('executive_vote_review', 'vote_signing'): Args(guard=is_final),
+            
+            ('final_office_vote_review', 'executive_vote_review'): None,
+            ('vote_signing', 'vote_publication'): None
         }
     )
 

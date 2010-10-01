@@ -1,3 +1,4 @@
+import re
 
 class CachedProperty(object):
     def __init__(self, func, attr=None):
@@ -23,6 +24,12 @@ def cached_property(arg):
         return decorator
     else:
         return CachedProperty(arg)
+        
+        
+_camel_split_re = re.compile(r'[A-Z0-9]+(?![a-z])|\w[^A-Z]+')
+def camel_split(s):
+    return [m.group(0) for m in _camel_split_re.finditer(s)]
+
 
 class Args(object):
     def __init__(self, *args, **kwargs):
@@ -35,6 +42,14 @@ class Args(object):
         
     def apply(self, func):
         return func(*self.args, **self.kwargs)
+        
+    def setdefault(self, key, value):
+        self.kwargs.setdefault(key, value)
+        
+    def __getitem__(self, key):
+        if isinstance(key, str):
+            return self.kwargs[key]
+        return self.args[key]
         
     def __nonzero__(self):
         return bool(self.args or self.kwargs)

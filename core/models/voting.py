@@ -26,6 +26,7 @@ class Vote(models.Model):
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=u'Kommentar')
+    final = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
     
     class Meta:

@@ -19,6 +19,7 @@ def register(model):
     model.workflow = WorkflowDescriptor()
     
 def autodiscover():
+    import ecs.workflow.patterns
     for app in settings.INSTALLED_APPS:
         try:
             app_path = import_module(app).__path__

@@ -120,6 +120,7 @@ class Submission(models.Model):
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
+    acknowledged = models.BooleanField(default=False)
     documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)

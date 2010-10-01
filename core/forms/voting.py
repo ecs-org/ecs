@@ -12,7 +12,7 @@ class VoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission_form', 'submission', 'published')
+        exclude = ('top', 'submission_form', 'submission', 'published', 'final')
         
 class SaveVoteForm(VoteForm):
     result = ResultField(required=False)
@@ -21,9 +21,9 @@ class SaveVoteForm(VoteForm):
 class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Vote
-        fields = ('result', 'text')
+        fields = ('result', 'text', 'final')
 
 class B2VoteReviewForm(forms.ModelForm):
     class Meta:
         model = Vote
-        fields = ('text',)
+        fields = ('text', 'final')
