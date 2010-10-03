@@ -57,6 +57,8 @@ django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/m
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
+pdftotext:req:openbsd:pkg:poppler
+pdftotext:req:openbsd:pkg:poppler-data
 pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
 
 # simple testing
@@ -73,6 +75,7 @@ antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword has to be build by hand for opensuse
 #antiword:req:suse:zypper:antiword
+antiword:req:openbsd:pkg:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
