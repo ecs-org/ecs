@@ -113,11 +113,13 @@ django-celery:inst:all:pypi:django-celery
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
+ghostscript:req:openbsd:pkg:ghostscript--
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:system:gswin32c.exe
 
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
+imagemagick:req:openbsd:pkg:ImageMagick--
 imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
@@ -140,6 +142,7 @@ pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.e
 pdftk:req:suse:zypper:pdftk
 #FIXME, port or at least homebrew package of pdftk
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
+# XXX: no pdftk on openbsd
 
 # lamson mail server
 chardet:inst:all:pypi:chardet
@@ -161,6 +164,8 @@ xlwt:inst:all:pypi:xlwt
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
+gnupg:req:suse:zypper:gpg2
+gnupg:req:openbsd:pkg:gnupg
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:system:gpg.exe
 
 # django-sentry
@@ -215,6 +220,8 @@ simplejson:inst:all:pypi:simplejson
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
+#antiword:req:suse:zypper:antiword
+antiword:req:openbsd:pkg:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
