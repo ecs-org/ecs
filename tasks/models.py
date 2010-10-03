@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 
+from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
 
@@ -24,6 +25,10 @@ class TaskManager(models.Manager):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
         return self.filter(content_type=ct, data_id=data.pk)
+        
+    def acceptable_for_user(self, user):
+        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to__ecs_profile__indisposed=True))
+
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')
@@ -48,6 +53,14 @@ class Task(models.Model):
         if not self.workflow_token_id:
             return False
         return self.workflow_token.locked
+    
+    @cached_property
+    def node_controller(self):
+        return self.workflow_token.node.bind(self.workflow_token.workflow)
+
+    @cached_property
+    def url(self):
+        return self.node_controller.get_url()
     
     def close(self, commit=True):
         self.closed_at = datetime.datetime.now()

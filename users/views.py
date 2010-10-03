@@ -1,7 +1,7 @@
 import time
 import datetime
 
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
@@ -14,7 +14,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import send_html_email
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, MarkUserIndisposedForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -50,13 +50,6 @@ def login(request, *args, **kwargs):
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
     return auth_views.logout(request, *args, **kwargs)
-
-
-def profile(request):
-    return render(request, 'users/profile.html', {
-        'profile_user': request.user,
-    })
-
 
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
@@ -164,15 +157,31 @@ def pending_approval_userlist(request):
     return render(request, 'users/pending_approval_list.html', {
         'users': User.objects.filter(ecs_profile__approved_by_office=False),
     })
+    
+def indisposed_userlist(request):
+    return render(request, 'users/indisposed_list.html', {
+        'users': User.objects.filter(ecs_profile__indisposed=True),
+    })
+
+def profile(request):
+    return render(request, 'users/profile.html', {
+        'profile_user': request.user,
+    })
+
+def mark_indisposed(request):
+    form = MarkUserIndisposedForm(request.POST or None)
+    if form.is_valid():
+        UserProfile.objects.filter(user=form.cleaned_data['user']).update(indisposed=True)
+        return HttpResponseRedirect(reverse('ecs.users.views.indisposed_userlist'))
+    return render(request, 'users/mark_indisposed.html', {
+        'form': form,
+    })
 
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
-        print request.POST
         approved = request.POST.get('approve', False)
-        userProfile = UserProfile.objects.filter(user=user)
-        userProfile.update(approved_by_office=approved)
-        
+        UserProfile.objects.filter(user=user).update(approved_by_office=approved)
         if approved:
             attach_to_submissions(user)
     return render(request, 'users/approve.html', {
