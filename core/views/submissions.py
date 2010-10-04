@@ -390,8 +390,11 @@ def import_submission_form(request):
     })
 
 
-def _render_field_value(v):
-    return '' # XXX: only for testing, function does not work right now
+def _render_field_value(v, recursion_depth=3):
+    #return '' # XXX: only for testing, function does not work right now
+    if recursion_depth == 0:
+        return ''
+    recursion_depth -= 1
     if isinstance(v, models.Model):
         fields = [f.name for f in v.__class__._meta.fields]
         for field in fields:
@@ -402,9 +405,11 @@ def _render_field_value(v):
                 continue
             
             if hasattr(w, 'all'):
-                w = u', '.join([_render_field_value(x) for x in getattr(w, 'all')()])
+                #w = unicode(w)
+                w = u', '.join([_render_field_value(x, recursion_depth) for x in getattr(w, 'all')()])
             else:
-                w = _render_field_value(w)
+                #w = unicode(w)
+                w = _render_field_value(w, recursion_depth)
         return w
         
     else:
@@ -413,8 +418,8 @@ def _render_field_value(v):
 
 def diff_submission_forms(old_submission_form, new_submission_form):
     sff = SubmissionFormForm(None, instance=old_submission_form)
-    #fields = [f.name for f in SubmissionForm._meta.fields if not f.name == 'id'and not f.name == 'submission']
-    fields = [x for x in SubmissionForm._meta.get_all_field_names() if not x == 'submission' and not x == 'current_for_submission']
+    fields = [x for x in SubmissionForm._meta.get_all_field_names() if not x in ('submission', 'current_for_submission',)]
+    #fields = [x.name for x in SubmissionForm._meta.fields if not x.name in ('submission', 'current_for_submission',)]
     differ = diff_match_patch()
 
     diffs = []
