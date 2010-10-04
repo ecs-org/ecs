@@ -25,13 +25,6 @@
     <div>
         {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
         <a href="{{ task.url|default:manage_url }}">{{ task.data }}</a>
-        <span class="actions">
-            {% if not task.locked %}
-                <a href="{% url ecs.tasks.views.do_task task_pk=task.pk %}">Erledigt</a> | 
-            {% endif %}
-            <a href="{% url ecs.tasks.views.delegate_task task_pk=task.pk %}" class="">Delegieren</a> 
-            | <a href="">Rückfrage</a>
-        </span>
     </div>
     {% endfor %}
 </div>

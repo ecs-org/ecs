@@ -54,6 +54,9 @@ def has_recommendation(wf):
 def has_accepted_recommendation(wf):
     return False # FIXME
 
+@guard(model=Submission)
+def needs_external_review(wf):
+    return wf.data.external_reviewer
 
 class InitialReview(Activity):
     class Meta:
@@ -126,6 +129,10 @@ class ExternalReview(Activity):
 
     def get_url(self):
         return None # FIXME
+        
+class ExternalReviewInvitation(Activity):
+    class Meta:
+        model = Submission
 
 
 class VoteFinalization(Activity):

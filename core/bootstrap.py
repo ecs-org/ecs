@@ -43,8 +43,8 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
-        ChecklistReview, ExternalReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
-    from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote
+        ChecklistReview, ExternalReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
+    from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik') 
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Insurance Review')
@@ -80,6 +80,7 @@ def submission_workflow():
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalReview, group=EXTERNAL_REVIEW_GROUP),
+            'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
         },
@@ -110,6 +111,9 @@ def submission_workflow():
 
             #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
+            ('categorization_review', 'external_review_invitation'): Args(guard=needs_external_review),
+            ('external_review_invitation', 'external_review'): None,
+            ('external_review', 'external_review_invitation'): Args(deadline=True),
 
             ('generic_review', 'board_member_review'): None,
             ('generic_review', 'insurance_review'): None,

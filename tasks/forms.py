@@ -29,6 +29,7 @@ class ManageTaskForm(forms.Form):
         super(ManageTaskForm, self).__init__(*args, **kwargs)
         self.fields['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
         self.fields['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
+        self.fields['assign_to'].queryset = User.objects.filter(groups__task_types=task.task_type)
     
     def clean(self):
         cd = self.cleaned_data

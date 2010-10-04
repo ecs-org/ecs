@@ -21,7 +21,7 @@ def _username_for_message(message, attr, user):
     if mask:
         groups = target_user.groups.all()
         if message.thread.task:
-            groups &= message.task.task_type.groups.all()
+            groups &= message.thread.task.task_type.groups.all()
         if len(groups) == 1:
             return groups[0].name
     return target_user.username
