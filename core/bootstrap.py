@@ -293,7 +293,7 @@ def auth_user_testusers():
         (u'Presenter', u'Presenter',{}),
         (u'Sponsor', u'Sponsor', {}),
         (u'Investigtor', u'Investigator', {}),
-        (u'Office', u'EC-Office', {}),
+        (u'Office', u'EC-Office', {'internal': True}),
         (u'Meeting Secretary', u'EC-Meeting Secretary',
             {'internal': True, }),
         (u'Internal Rev', u'EC-Internal Review Group',
@@ -331,7 +331,7 @@ def auth_user_testusers():
 
             profile = user.get_profile()
             for flagname, flagvalue in flags.items():
-                profile.__setattr__(flagname, flagvalue)
+                setattr(profile, flagname, flagvalue)
             profile.save()
     
     for testuser, medcategories in boardtestusers:
