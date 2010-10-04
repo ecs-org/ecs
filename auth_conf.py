@@ -26,9 +26,8 @@ class SubmissionQFactory(authorization.QFactory):
             until_vote_q |= self.make_q(expedited=True)
         if profile.external_review:
             until_vote_q |= self.make_q(external_reviewer_name=user)
-        # FIXME: how do we detect whether an insurance review is required?
-        #if profile.insurance_review:
-        #    until_vote_q |= self.make_q(insurance_review_required=True)
+        if profile.insurance_review:
+            until_vote_q |= self.make_q(insurance_review_required=True)
         q |= until_vote_q & (
             self.make_q(current_submission_form__current_published_vote=None)
             | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)

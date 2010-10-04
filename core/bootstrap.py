@@ -11,8 +11,7 @@ from ecs.utils.countries.models import Country
 from ecs.utils import Args
 
 from ecs.workflow.patterns import Generic
-from ecs.workflow.utils import setup_workflow_graph
-
+from ecs.integration.utils import setup_workflow_graph
 
 
 @bootstrap.register()
@@ -52,26 +51,37 @@ def submission_workflow():
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Legal and Patient Review')
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Board Member Review')
     
+    THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
+    THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
+    EXECUTIVE_GROUP = 'EC-Executive Board Group'
+    PRESENTER_GROUP = 'Presenter'
+    OFFICE_GROUP = 'EC-Office'
+    BOARD_MEMBER_GROUP = 'EC-Board Member'
+    EXTERNAL_REVIEW_GROUP = 'External Reviewer'
+    INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
+    STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
+    INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
+    
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name="Start"),
             'generic_review': Args(Generic, name="Review Split"),
-            'resubmission': Args(Resubmission),
-            'initial_review': Args(InitialReview),
-            'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review"),
-            'b2_vote_review': Args(B2VoteReview),
-            'categorization_review': Args(CategorizationReview),
-            'initial_thesis_review': Args(InitialReview, name="Initial Thesis Review"),
-            'thesis_categorization_review': Args(CategorizationReview, name="Thesis Categorization Review"),
-            'paper_submission_review': Args(PaperSubmissionReview),
-            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=u"Legal and Patient Review"),
-            'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review"),
-            'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review"),
-            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review"),
-            'external_review': Args(ExternalReview),
-            'thesis_vote_recommendation': Args(VoteRecommendation),
-            'vote_recommendation_review': Args(VoteRecommendationReview),
+            'resubmission': Args(Resubmission, group=PRESENTER_GROUP),
+            'initial_review': Args(InitialReview, group=OFFICE_GROUP),
+            'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review", group=INTERNAL_REVIEW_GROUP),
+            'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP),
+            'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP),
+            'initial_thesis_review': Args(InitialReview, name="Initial Thesis Review", group=THESIS_REVIEW_GROUP),
+            'thesis_categorization_review': Args(CategorizationReview, name="Thesis Categorization Review", group=THESIS_EXECUTIVE_GROUP),
+            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP),
+            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=u"Legal and Patient Review", group=INTERNAL_REVIEW_GROUP),
+            'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review", group=INSURANCE_REVIEW_GROUP),
+            'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
+            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
+            'external_review': Args(ExternalReview, group=EXTERNAL_REVIEW_GROUP),
+            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
+            'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
@@ -107,8 +117,9 @@ def submission_workflow():
             ('generic_review', 'legal_and_patient_review'): None,
         }
     )
+    
 
-@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync',))
+@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
     from ecs.core.models import Vote
     from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication
@@ -167,6 +178,7 @@ def auth_groups():
         u'EC-Notification Review Group',
         u'EC-Insurance Reviewer',
         u'EC-Thesis Review Group',
+        u'EC-Thesis Executive Group',
         u'EC-Board Member',
         u'External Reviewer',
         u'userswitcher_target',
@@ -278,28 +290,28 @@ def auth_user_developers():
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        (u'Presenter', u'Presenter',{}),
-        (u'Sponsor', u'Sponsor', {}),
-        (u'Investigtor', u'Investigator', {}),
-        (u'Office', u'EC-Office', {}),
+        (u'Presenter', u'Presenter',{'approved_by_office': True}),
+        (u'Sponsor', u'Sponsor', {'approved_by_office': True}),
+        (u'Investigtor', u'Investigator', {'approved_by_office': True}),
+        (u'Office', u'EC-Office', {'internal': True, 'approved_by_office': True}),
         (u'Meeting Secretary', u'EC-Meeting Secretary',
-            {'internal': True, }),
+            {'internal': True, 'approved_by_office': True}),
         (u'Internal Rev', u'EC-Internal Review Group',
-            {'internal': True,}),
+            {'internal': True, 'approved_by_office': True}),
         (u'Executive', u'EC-Executive Board Group',             
-            {'internal': True, 'executive_board_member': True, }),
+            {'internal': True, 'executive_board_member': True, 'approved_by_office': True}),
         (u'Signing', u'EC-Signing Group',                       
-            {'internal': True, }),
+            {'internal': True, 'approved_by_office': True}),
         (u'Statistic Rev', u'EC-Statistic Group',
-            {'internal': True, }),
+            {'internal': True, 'approved_by_office': True}),
         (u'Notification Rev', u'EC-Notification Review Group',
-            {'internal': True, }),
+            {'internal': True, 'approved_by_office': True}),
         (u'Insurance Rev', u'EC-Insurance Reviewer',            
-            {'internal': True, }),
+            {'internal': True, 'approved_by_office': True}),
         (u'Thesis Rev', u'EC-Thesis Review Group',              
-            {'internal': True, 'thesis_review': True}),
+            {'internal': True, 'thesis_review': True, 'approved_by_office': True}),
         (u'External Reviewer', u'External Reviewer',            
-            {'external_review': True, }),
+            {'external_review': True, 'approved_by_office': True}),
     )
         
     boardtestusers = (
@@ -319,7 +331,7 @@ def auth_user_testusers():
 
             profile = user.get_profile()
             for flagname, flagvalue in flags.items():
-                profile.__setattr__(flagname, flagvalue)
+                setattr(profile, flagname, flagvalue)
             profile.save()
     
     for testuser, medcategories in boardtestusers:

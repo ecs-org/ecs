@@ -176,6 +176,11 @@ def mark_indisposed(request):
     return render(request, 'users/mark_indisposed.html', {
         'form': form,
     })
+    
+def reset_indisposed_mark(request):
+    if request.method == 'POST':
+        UserProfile.objects.filter(user=request.user).update(indisposed=False)
+    return HttpResponseRedirect(reverse('ecs.users.views.profile'))
 
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)

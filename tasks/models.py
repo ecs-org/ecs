@@ -28,6 +28,9 @@ class TaskManager(models.Manager):
         
     def acceptable_for_user(self, user):
         return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to__ecs_profile__indisposed=True))
+        
+    def for_user(self, user):
+        return self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True))
 
 
 class Task(models.Model):

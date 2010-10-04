@@ -46,6 +46,18 @@ class Args(object):
     def setdefault(self, key, value):
         self.kwargs.setdefault(key, value)
         
+    def pop(self, key, *default):
+        if isinstance(key, str):
+            return self.kwargs.pop(key, *default)
+        try:
+            x = self.args[key]
+            self.args = self.args[:key] + self.args[key + 1:]
+            return x
+        except IndexError:
+            if default:
+                return default[0]
+            raise
+        
     def __getitem__(self, key):
         if isinstance(key, str):
             return self.kwargs[key]
