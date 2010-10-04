@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from ecs.workflow import Activity, guard, register
 from ecs.core.models import Submission, ChecklistBlueprint, Vote
 

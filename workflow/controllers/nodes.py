@@ -141,7 +141,7 @@ class NodeController(object):
 
 
 class Activity(NodeController):
-    def perform(self):
+    def perform(self, choice=None):
         token = self.get_token(locked=False)
         if not token:
             token = self.get_token(locked=True)

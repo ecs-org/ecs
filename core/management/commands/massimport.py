@@ -20,6 +20,7 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.core.files import File
+from django.conf import settings
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, SubmissionForm, MedicalCategory
@@ -30,6 +31,9 @@ from ecs.documents.models import Document, DocumentType
 PLATFORM = 'unix'
 if platform.platform().lower().startswith('win'):
     PLATFORM = 'win'
+    
+def _popen_antiword(filename):
+    return Popen(['antiword'] + getattr(settings, 'ANTIWORD_ARGS', []) + ['-x', 'db', filename], stdout=PIPE, stderr=PIPE)
 
 class ProgressBar():
     def __init__(self, minimum=0, maximum=100):
@@ -121,7 +125,7 @@ class Command(BaseCommand):
                 'doctype': doctype,
             })
 
-        antiword = Popen(['antiword', '-x', 'db', filename], stdout=PIPE, stderr=PIPE)
+        antiword = _popen_antiword(filename)
         docbook, standard_error = antiword.communicate()
         if antiword.returncode:
             raise Exception(standard_error.strip())
@@ -360,10 +364,10 @@ class Command(BaseCommand):
             self.abort('please specify a date')
 
         filename = os.path.expanduser(filename)
-        antiword = Popen(['antiword', '-x', 'db', filename], stdout=PIPE, stderr=PIPE)
+        antiword = _popen_antiword(filename)
         docbook, standard_error = antiword.communicate()
         if antiword.returncode:
-            self._abort('Cant read file')
+            raise Exception(standard_error.strip())
 
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
         x=s.findAll(text=re.compile("EK Nr."))

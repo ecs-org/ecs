@@ -51,3 +51,12 @@ class ManageTaskForm(forms.Form):
                 self._errors['question_type'] = self.error_class([u'Sie müssen einen Adressaten auswählen'])
 
         return cd
+
+class TaskListFilterForm(forms.Form):
+    amg = forms.BooleanField(required=False)
+    mpg = forms.BooleanField(required=False)
+    other = forms.BooleanField(required=False)
+
+    mine = forms.BooleanField(required=False)
+    open = forms.BooleanField(required=False)
+    proxy = forms.BooleanField(required=False)

@@ -1,0 +1,16 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block content %}
+<h2>{% trans 'Indisposed Users' %} ({{ users|length }})</h2>
+<a href="{% url ecs.users.views.mark_indisposed %}">{% trans 'Add' %}</a>
+<ul>
+    {% for user in users %}
+        <li>{{ user }} ({% for group in user.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %})</li>
+    {% endfor %}
+</ul>
+
+
+{% endblock %}

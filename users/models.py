@@ -8,6 +8,7 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=1, choices=(('w', 'Frau'), ('m', 'Herr')))
     last_password_change = models.DateTimeField(default=datetime.datetime.now)
     approved_by_office = models.BooleanField(default=False)
+    indisposed = models.BooleanField(default=False)
 
     external_review = models.BooleanField(default=False)
     board_member = models.BooleanField(default=False)

@@ -2,9 +2,10 @@
 import datetime
 
 from django.db import models
+from django.db.models import Q
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
-from django.db.models.signals import post_save
 from django.conf import settings
 
 from ecs.meetings.models import TimetableEntry
@@ -13,6 +14,34 @@ from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
 from ecs.utils.common_messages import send_submission_change,\
     send_submission_creation, send_submission_invitation
+    
+    
+class SubmissionQuerySet(models.query.QuerySet):
+    def amg(self):
+        return self.filter(Q(is_amg=True) | (
+            Q(is_amg=None) & (
+                Q(current_submission_form__project_type_non_reg_drug=True)
+                | Q(current_submission_form__project_type_reg_drug=True)
+            )
+        ))
+    
+    def mpg(self):
+        return self.filter(Q(is_mpg=True) | (
+            Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
+        ))
+        
+        
+class SubmissionManager(AuthorizationManager):
+    def get_query_set(self):
+        qs = super(SubmissionManager, self).get_query_set()
+        qs.__class__ = SubmissionQuerySet
+        return qs
+        
+    def amg(self):
+        return self.all().amg()
+        
+    def mpg(self):
+        return self.all().mpg()
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
@@ -40,7 +69,7 @@ class Submission(models.Model):
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful (FMD1)
     
-    objects = AuthorizationManager()
+    objects = SubmissionManager()
 
     def get_ec_number_display(self):
         try:

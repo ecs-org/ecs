@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 
 class RegistrationForm(forms.Form):
     gender = forms.ChoiceField(choices=(('f', 'Frau'), ('m', 'Herr')))
@@ -20,3 +21,7 @@ class ActivationForm(forms.Form):
 
 class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField()
+
+
+class MarkUserIndisposedForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all())
