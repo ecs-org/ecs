@@ -198,3 +198,6 @@ body {
   border: none !important;
 }
 
+.profile_data td, .profile_data th{
+    vertical-align: top;
+}
