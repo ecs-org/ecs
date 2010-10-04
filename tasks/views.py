@@ -27,7 +27,7 @@ def task_backlog(request):
     })
 
 def my_tasks(request):
-    all_tasks = Task.objects.filter(closed_at=None).select_related('task_type').order_by('task_type__name', '-assigned_at')
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', '-assigned_at')
     submission_ct = ContentType.objects.get_for_model(Submission)
     taskfilter_session_key = 'tasks:filter'
     filterform = TaskListFilterForm(request.POST or request.session.get(taskfilter_session_key, {'amg': True, 'mpg': True, 'other': True, 'mine': True, 'open': True, 'proxy': True}))

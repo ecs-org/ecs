@@ -1,7 +1,7 @@
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
-from ecs.workflow.utils import setup_workflow_graph
+from ecs.integration.utils import setup_workflow_graph
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync',))
 def meeting_workflow():
