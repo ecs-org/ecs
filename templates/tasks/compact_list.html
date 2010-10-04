@@ -24,7 +24,7 @@
     {% endifchanged %}
     <div>
         {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-        <a href="{{ task.url|default:manage_url }}">{{ task.data }}</a>
+        <a href="{{ task.url|default:manage_url }}"{% if task.url %} class="escape_popup"{% endif %}>{{ task.data }}</a>
     </div>
     {% endfor %}
 </div>
@@ -85,6 +85,12 @@
         $$('#task_list_filter input').each(function(input){
             input.addEvent('change', function(){
                 $('task_list_filter').submit();
+            });
+        });
+        $$('a.escape_popup').each(function(a){
+            a.addEvent('click', function(){
+                window.parent.location.href = a.href;
+                return false;
             });
         });
     });
