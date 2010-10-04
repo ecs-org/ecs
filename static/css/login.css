@@ -4,7 +4,7 @@
   padding: 0 !important; /*Set value to (0 WidthOfFrameDiv 0 0)*/
   text-align: center;
 }
-#header {
+#header, #toggle_sidebar_button {
   display: none;
 }
 #content {
@@ -26,11 +26,8 @@
 #toggle_sidebar_button {
   display:none !important;
 }
-.innertube {
-  float: none;
-}
 .wrapper {
-  margin: 150px auto;
+  margin: 100px auto;
   width: 300px;
   text-align: left;
 }
@@ -38,6 +35,7 @@
   background: url(../images/logo.png) no-repeat;
   width: 200px;
   height: 48px;
+  margin-left: 10px;
   text-indent: -9999px;
 }
 #content form {
@@ -48,25 +46,36 @@
 }
 .login_screen {
   display: block;
-  height: 100%;
   background: #D8E6EF;
   padding: 20px 20px 40px;
-  border: 1px solid #2B558E;
+  border: 1px solid #b7d4e5;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
 }
 .login_screen p {
   display: block;
 }
 .login_screen label {
-  font-size: 12pt;
+  font-size: 11pt;
 }
 .login_screen input {
   padding: 5px;
   font-size: 11pt;
-  width: 250px;
+  width: 245px;
 }
-.login_screen input [type=submit] {
-  width: 50px;
+.login_screen input[type=submit] {
+  width: 70px;
+  margin-top: 5px;
+  padding: 4px 7px;
   float: right;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+.pw_reg {
+  margin: 10px 0 0 20px;
+  font-size: 10pt;
 }
 
 #browser_warning{
