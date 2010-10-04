@@ -12,12 +12,18 @@
   position: absolute;
   left: 0;
 }
+.tab_headers li {
+
+}
 .tab_header_groups li a, .tab_headers li a {
   text-decoration: none;
   padding: 3px 5px;
   border: 1px solid #b7d4e5;
   background: #e2eaf0;
   color: #2b558e;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 .tab_header_groups li a.active, .tab_headers .active a {
   background: #2b558e;
@@ -59,28 +65,30 @@
   width: 105px;
   text-align: center;
 }
-
-.floating_box{
+.floating_box {
   position: absolute;
-  right: 30px;
+  right: 20px;
   top: 90px;
   width: 98px;
   background-color: #eeeeee;
-  opacity: 0.8;
   padding: 10px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
-
 .floating_box a {
-  padding: 3px;
+  padding: 3px 6px;
   margin-bottom: 5px;
   display: block;
   height: 20px;
   line-height: 20px;
-  width: 90px;
   cursor: pointer;
   z-index: 100;
   color: #333;
   text-decoration: none;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 .button_save {
   background: #ccc;
@@ -219,7 +227,17 @@ input[type=submit] {
   margin: 5px 10px;
 }
 .togglers {
+  display: block;
   cursor: pointer;
+  border-bottom: 1px solid #e3e3bf;
+  padding: 1px 3px;
+}
+#usermenu a {
+  display: block;
+  padding: 1px 3px;
+}
+#usermenu a:hover, .togglers:hover {
+  background: #e3e3bf;
 }
 .searchbox {
   float: left;
@@ -309,9 +327,9 @@ input[type=submit] {
   color: #ff0000;
   padding: 2px;
 }
-.form.main table td .errors li{
-    margin: 0px;
-    float: none;
+.form.main table td .errors li {
+  margin: 0px;
+  float: none;
 }
 .form.main ol li.BooleanField {
   padding-left: 240px;

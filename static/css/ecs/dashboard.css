@@ -5,7 +5,9 @@
   border: 2px solid #D8E6EF;
   padding: 10px;
   background-color: #f5f5d2;
+  border-radius: 10px;
   -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
   margin: 0 10px 10px 0;
   width: 336px;
 }
