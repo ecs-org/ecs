@@ -11,7 +11,6 @@ ecs.pdfviewer = {
                 this.height = image.height;
                 this.width = image.width;
             }
-            console.log('load', image.page, image.url);
             this.images.push(image);
         },
         loadImage: function(url, callback){
@@ -39,7 +38,6 @@ ecs.pdfviewer = {
             var spriteIndex = pageIndex % perImage;
             var spriteX = spriteIndex % this.sprite.x;
             var spriteY = parseInt(spriteIndex / this.sprite.x);
-            //console.log(pageIndex, this.width, this.height, this.getPageWidth(), this.getPageHeight());
             var url = this.images[imageIndex].url;
             el.setStyles({
                 'width': this.getPageWidth() + 'px',
@@ -114,14 +112,12 @@ ecs.pdfviewer = {
             }
         },
         nextPage: function(delta){
-            console.log('next', this.currentPageIndex, delta);
             this.setPage(Math.min(this.currentPageIndex + (delta || 1), this.pageCount - 1));
         },
         previousPage: function(delta){
             this.setPage(Math.max(this.currentPageIndex - (delta || 1), 0));
         },
         render: function(imageSetKey, offset, w, h){
-            console.log(arguments);
             if($A(arguments).every((function(val, index){ return this.currentContent[index] == val;}).bind(this))){
                 return;
             }
@@ -198,7 +194,6 @@ ecs.pdfviewer = {
                 this.cycleController(e.shift ? -1 : +1);
             }
             else if(target.hasClass('page')){
-                console.log(target.id);
                 var pageIndex = parseInt(target.id.split('_').getLast());
                 this.setPage(pageIndex, false);
                 this.setControllerIndex(this.controllers.length - 1);
