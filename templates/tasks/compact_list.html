@@ -1,81 +1,87 @@
 {% extends "shell.html" %}
 {% load i18n %}
 
+{% block htmlcss %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}tasks/css/tasks.css" />
+{% endblock %}
+
 {% block htmlbody %}
-<form id="task_list_filter" action="" method="post">
-    <div>
-        {{ filterform.mine }} {% trans "Mine" %}
-        {{ filterform.open }} {% trans "Open" %}
-        {{ filterform.proxy }} {% trans "Proxy" %}
-    </div>
-    <div>
-        {{ filterform.amg }} <label for="id_amg">{% trans "AMG" %}</label>
-        {{ filterform.mpg }} <label for="id_mpg">{% trans "MPG" %}</label>
-        {{ filterform.other }} <label for="id_other">{% trans "Other" %}</label>
-    </div>
-</form>
-
-{% if accepted_tasks %}
-<div class="TaskList">
-    <h2>Meine Tasks</h2>
-    {% for task in accepted_tasks %}
-    {% ifchanged task.task_type %}
-        <h3>{{ task.task_type }}</h3>
-    {% endifchanged %}
-    <div>
-        {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-        <a href="{{ task.url|default:manage_url }}"{% if task.url %} class="escape_popup"{% endif %}>{{ task.data }}</a>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-{% if assigned_tasks %}
+  <div id="task_list">
+    <form id="task_list_filter" action="" method="post">
+        <div class="task_list_choose">
+            {{ filterform.mine }} <label>{% trans "Mine" %}</label>
+            {{ filterform.open }} <label>{% trans "Open" %}</label>
+            {{ filterform.proxy }} <label>{% trans "Proxy" %}</label>
+        </div>
+        <div class="task_list_choose">
+            {{ filterform.amg }} <label for="id_amg">{% trans "AMG" %}</label>
+            {{ filterform.mpg }} <label for="id_mpg">{% trans "MPG" %}</label>
+            {{ filterform.other }} <label for="id_other">{% trans "Other" %}</label>
+        </div>
+    </form>
+    
+    {% if accepted_tasks %}
     <div class="TaskList">
-        <h2>Mir zugewiesene Tasks</h2>
-        {% for task in assigned_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            <div>
-                {{ task }}
-                <span class="actions">
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">Ablehnen</a>
-                </span>
-            </div>
+        <h2>Meine Tasks</h2>
+        {% for task in accepted_tasks %}
+        {% ifchanged task.task_type %}
+            <h3>{{ task.task_type }}</h3>
+        {% endifchanged %}
+        <div class="task_item">
+            {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
+            <a href="{{ task.url|default:manage_url }}"{% if task.url %} class="escape_popup"{% endif %}>{{ task.data }}</a>
+        </div>
         {% endfor %}
     </div>
-{% endif %}
-
-{% if open_tasks %}
-    <div class="TaskList">
-        <h2>Offene Tasks</h2>
-        {% for task in open_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% if proxy_tasks %}
-    <div class="TaskList">
-        <h2>{% trans 'Proxy Tasks' %}</h2>
-        {% for task in proxy_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }} (für {{ task.assigned_to }})</a>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% if not accepted_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
-    <i>{% trans "There are no tasks for you." %}</i>
-{% endif %}
-
+    {% endif %}
+    
+    {% if assigned_tasks %}
+        <div class="TaskList">
+            <h2>Mir zugewiesene Tasks</h2>
+            {% for task in assigned_tasks %}
+                {% ifchanged task.task_type %}
+                    <h3>{{ task.task_type }}</h3>
+                {% endifchanged %}
+                <div>
+                    {{ task }}
+                    <span class="actions">
+                        <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">Annehmen</a> 
+                        | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">Ablehnen</a>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if open_tasks %}
+        <div class="TaskList">
+            <h2>Offene Tasks</h2>
+            {% for task in open_tasks %}
+                {% ifchanged task.task_type %}
+                    <h3>{{ task.task_type }}</h3>
+                {% endifchanged %}
+                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if proxy_tasks %}
+        <div class="TaskList">
+            <h2>{% trans 'Proxy Tasks' %}</h2>
+            {% for task in proxy_tasks %}
+                {% ifchanged task.task_type %}
+                    <h3>{{ task.task_type }}</h3>
+                {% endifchanged %}
+                <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }} (für {{ task.assigned_to }})</a>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    {% if not accepted_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
+        <em>{% trans "There are no tasks for you." %}</em>
+    {% endif %}
+  </div>
 {% endblock %}
 
 {% block jsbottom %}

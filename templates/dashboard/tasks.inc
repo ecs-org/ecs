@@ -6,7 +6,7 @@
 
 {% if accepted_tasks %}
     <div class="TaskList">
-        <h2>Meine Tasks</h2>
+        <h3>Meine Tasks</h3>
         {% for task in accepted_tasks %}
         <div>
             <a class="popup" href="{% url ecs.tasks.views.manage_task task_pk=task.pk %}">{{ task }}</a>
@@ -19,7 +19,7 @@
 {% endif %}
 {% if assigned_tasks %}
     <div class="TaskList">
-        <h2>Mir zugewiesene Tasks</h2>
+        <h3>Mir zugewiesene Tasks</h3>
         {% for task in assigned_tasks %}
         <div>
             {{ task }}
@@ -33,7 +33,7 @@
 {% endif %}
 {% if open_tasks %}
     <div class="TaskList">
-        <h2>Offene Tasks</h2>
+        <h3>Offene Tasks</h3>
         {% for task in open_tasks %}
         <div>
             {{ task }}
