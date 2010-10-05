@@ -157,6 +157,7 @@ class Message(models.Model):
     reply_to = models.ForeignKey('self', null=True, related_name='replies')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     unread = models.BooleanField(default=True)
+    soft_bounced = models.BooleanField(default=False)
     text = models.TextField()
     origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
     

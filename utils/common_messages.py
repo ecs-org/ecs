@@ -2,7 +2,7 @@
 '''
 Created on Sep 27, 2010
 
-@author: elchaschab
+@author: amir
 '''
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User

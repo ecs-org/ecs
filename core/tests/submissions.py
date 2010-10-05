@@ -8,6 +8,9 @@ from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Invest
 from ecs.core.views.submissions import diff_submission_forms
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document
+from django.contrib.auth.models import User
+from ecs.core.models.submissions import attach_to_submissions
+from django.core.urlresolvers import reverse
 
 class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
@@ -345,3 +348,27 @@ class SubmissionFormDiffTest(EcsTestCase):
         self.failIf(not (1, 'roflcopter') in x[1])
 
 
+class SubmissionAttachUserTest(EcsTestCase):
+    def setUp(self):
+        self.email = 'foobar@test.test'
+
+        self.user = User(username="foobar", email=self.email) 
+        self.sender = User(username="root", email="root@root.root")
+        self.sf = create_submission_form()
+
+        self.sf.sponsor_email = self.email
+        self.sf.investigator_email = self.email
+        self.sf.submitter_email = self.email
+
+        self.user.save()
+        self.sender.save();
+        self.sf.save()
+
+    def test_submission_attach_user(self):
+        attach_to_submissions(self.user)        
+        self.sf = SubmissionForm.objects.get(project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)")
+        self.assertEquals(self.sf.sponsor, self.user)
+        self.assertEquals(self.sf.submitter, self.user)
+
+    def tearDown(self):
+        self.user.delete()
