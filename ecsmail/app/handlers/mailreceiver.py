@@ -14,8 +14,6 @@ from django.contrib.auth.models import User
 from ecs.communication.models import Message
 from ecs.ecsmail.persil import whitewash
 from ecs.ecsmail.models import RawMail
-from hashlib import md5
-
 
 @route(".+")
 def SOFT_BOUNCE(message):
@@ -29,7 +27,8 @@ def SOFT_BOUNCE(message):
         body = __prepareBody(message)
         bouncemsg = ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg)
         bouncemsg.soft_bounced = True;
-        
+        bouncemsg.save()
+
     return START
 
 @route(".+")
@@ -146,11 +145,12 @@ def START(message, address=None, host=None):
         host_addr = gethostbyname(host);
         local_addr = gethostbyname("localhost")
 
-#        if host_addr == local_addr:
-#            message.to = "office"
-        
-        logging.info('RELAYING %s %s %s' % (repr(message), address, host))
-        relay.deliver(message)
+        if host_addr == local_addr:
+            pass
+            #FIXME which user to notify?
+        else:
+            logging.info('RELAYING %s %s %s' % (repr(message), address, host))
+            relay.deliver(message)
     else:
         raise SMTPError(571) #Delivery not authorized, message refused
 
