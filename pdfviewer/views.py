@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import uuid
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
@@ -16,13 +15,12 @@ document_provider = DocumentProvider()
 
 def show(request, id='1', page=1, zoom='1'):
     document = get_object_or_404(Document, pk=id)
-    annotations = dict([(anno.uuid, JSONDecoder().decode(anno.layoutData)) for anno in Annotation.objects.filter(docid=id, page=page)])
-    docdict = document_provider.createDocshotDictionary(MediaBlob(uuid.UUID(document.uuid_document)))
+    annotations = dict([(anno.uuid, simplejson.loads(anno.layoutData)) for anno in Annotation.objects.filter(docid=id, page=page)])
 
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
-        'allAnno': simplejson.dumps(annotations),
-        'images': simplejson.dumps(docdict),
+        'annotations': simplejson.dumps(annotations),
+        'images': simplejson.dumps(document_provider.createDocshotData(document.uuid_document)),
     })
 
 

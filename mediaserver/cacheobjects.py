@@ -10,8 +10,12 @@ class MediaBlob(object):
     '''
     def __init__(self, uuid):
         self.uuid = uuid 
+
     def cacheID(self):
         return self.uuid.get_hex()
+        
+    def __str__(self):
+        return self.cacheID()
 
     
 class Docshot(object):

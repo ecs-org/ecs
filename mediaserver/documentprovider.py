@@ -5,6 +5,7 @@ Created on Aug 26, 2010
 '''
 import getpass
 import os
+import uuid
 from time import time
 
 from django.conf import settings
@@ -13,7 +14,7 @@ from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
 from ecs.mediaserver.renderer import renderDefaultDocshots,DEFAULT_ASPECT_RATIO
 from ecs.utils.pdfutils import pdf_isvalid
-from ecs.mediaserver.cacheobjects import Docshot
+from ecs.mediaserver.cacheobjects import Docshot, MediaBlob
 from ecs.utils import s3utils, gpgutils
  
 class DocumentProvider(object):
@@ -85,25 +86,35 @@ class DocumentProvider(object):
             self.addDocshot(docshot, data, use_render_diskcache=True)
         return True
 
-    def createDocshotDictionary(self,pdfblob):
+    def createDocshotData(self, mediablob):
+        if not isinstance(mediablob, MediaBlob):
+            mediablob = MediaBlob(uuid.UUID(mediablob))
         tiles = [ 1, 3, 5 ]
         width = [ 800, 768 ] 
-        docshotDict = {};
+        docshotData = [];
     
         for t in tiles:
             for w in width:
                 pagenum = 1
-                while self.getDocshot(Docshot(pdfblob, t, t, w , pagenum)):
-                    bucket = "/mediaserver/%s/%dx%d/%d/%d/" % (pdfblob.cacheID(), t, t, w, pagenum)
+                while self.getDocshot(Docshot(mediablob, t, t, w , pagenum)):
+                    bucket = "/mediaserver/%s/%dx%d/%d/%d/" % (mediablob.cacheID(), t, t, w, pagenum)
                     baseurl = "http://%s:%d" % (settings.MEDIASERVER_HOST, settings.MEDIASERVER_PORT)
                     expire = int(time()) + settings.S3_DEFAULT_EXPIRATION_SEC
                     linkdesc = "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w)
                     h =  w * DEFAULT_ASPECT_RATIO
                     # "linkdescription": ["expiringURL", page, tiles_x, tiles_y, width, height]
-                    docshotDict[linkdesc] = [s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), pagenum, t, t, w, h]
+                    docshotData.append({
+                        'description': linkdesc,
+                        'url': s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), 
+                        'page': pagenum, 
+                        'tx': t,
+                        'ty': t,
+                        'width': w, 
+                        'height': h,
+                    })
                     pagenum += 1
 
-        return docshotDict
+        return docshotData
             
 class VolatileCache(object):
     '''
