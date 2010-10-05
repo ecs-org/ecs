@@ -19,10 +19,12 @@ def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
     
     f = docprovider.getDocshot(Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr))
 
-    if f:
-        return HttpResponse(f.read(), mimetype='image/png')
-    else:
+    if not f:
         return HttpResponseNotFound()
+    if hasattr(f, 'read'):
+        f = f.read()
+    return HttpResponse(f, mimetype='image/png')
+        
 
 def download_pdf(request, uuid):
     if not s3utils.verifyExpiringUrlString(request.get_full_path()):
