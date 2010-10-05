@@ -1,4 +1,10 @@
 ecs.pdfviewer = {
+    /* TODO: optimize loading time / responsiveness
+     - Guess which images might be accessed next and preload them in the background.
+       At least firefox has a default connection limit per server of 15.
+     - Reuse page <div>s
+     - Optional: use larger sprites
+     */
     ImageSet: new Class({
         initialize: function(options){
             this.sprite = options.sprite;
@@ -13,14 +19,14 @@ ecs.pdfviewer = {
             }
             this.images.push(image);
         },
-        loadImage: function(url, callback){
+        loadImage: function(image, callback){
             var img = new Image();
             img.addEvent('load', function(){
                 if(callback){
                     callback();
                 }
             });
-            img.src = url;
+            img.src = image.url;
         },
         getSpriteOffset: function(x, y){
             return '-' + parseInt(x * this.getPageWidth()) + 'px -' + parseInt(y * this.getPageHeight()) + 'px';
@@ -38,16 +44,16 @@ ecs.pdfviewer = {
             var spriteIndex = pageIndex % perImage;
             var spriteX = spriteIndex % this.sprite.x;
             var spriteY = parseInt(spriteIndex / this.sprite.x);
-            var url = this.images[imageIndex].url;
+            var image = this.images[imageIndex];
             el.setStyles({
                 'width': this.getPageWidth() + 'px',
                 'height': this.getPageHeight() + 'px'
             });
             var offset = this.getSpriteOffset(spriteX, spriteY);
-            this.loadImage(url, function(){
+            this.loadImage(image, function(){
                 el.removeClass('loading');
                 el.setStyles({
-                    'background-image': 'url(' + url + ')',
+                    'background-image': 'url(' + image.url + ')',
                     'background-position': offset
                 });
             });
