@@ -47,9 +47,19 @@ class PdfViewerInterface(EcsTestCase):
 
     def testDocshot(self):
         dsdata = self.docprovider.createDocshotData(self.docblob)
+
         for shot in dsdata:
+            # simulate behavjour of ecs.mediaserver.views.docshot since the server isn't running
             url = shot['url']
             self.assertTrue(s3utils.verifyExpiringUrlString(url))
-            response = self.client.get(url)
-            self.failUnlessEqual(response.content[:8], binascii.a2b_hex('89504E470D0A1A0A'))
+                
+            parsed = urlparse.urlparse(url)
+            print parsed.path
+            _, uuid, tileset, width, pagenr, _ = parsed.path.rsplit('/', 5)
+            tx, ty = tileset.split('x')
+
+            ds = Docshot(MediaBlob(UUID(uuid)), tx, ty, width, pagenr)
+            with self.docprovider.getDocshot(ds) as f:
+                png_magic = binascii.a2b_hex('89504E470D0A1A0A')
+                self.assertTrue(f.read(8) == png_magic);            
 
