@@ -62,3 +62,8 @@ if user == "testecs":
     DEBUG = False
     TEMPLATE_DEBUG = False
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
+
+if user == "testecs":    
+    MEDIASERVER_URL = "http://test.ecsdev.ep3.at"
+elif user == "shredder":
+    MEDIASERVER_URL = "http://s.ecsdev.ep3.at"
