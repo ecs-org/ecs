@@ -1,6 +1,6 @@
 # ecs main application environment config
 """
- see source:/docs/src/ecs-sys/PacketFormat.rst
+ see source:docs/src/ecs-sys/PacketFormat.rst
 """
 
 import os
@@ -8,13 +8,14 @@ import sys
 import subprocess
 import getpass
 import shutil
+
 from uuid import uuid4
 from fabric.api import local, env
 from deployment.utils import package_merge, install_upstart, apache_setup
 
 
-# sprint 7 sources
-sprint7_bundle = """
+# packages needed for the application
+main_packages = """
 
 # database bindings
 psycopg2:req:apt:apt-get:libpq-dev
@@ -171,7 +172,7 @@ jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
 """
 
 
-# software quality testing packages
+# software quality testing packages, not strictly needed, except you do coverage analysis
 quality_packages= """
 # nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
@@ -222,26 +223,34 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
 
 
+# packages needed for full production rollout (eg. VM Rollout)
 system_packages = """
-# ecs-main via wsgi
+# apache via modwsgi is used to serve the main app
 apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
+
+# postgresql is used as primary database
 postgresql:req:apt:apt-get:postgresql
+
+# exim is used as incoming smtp firewall and as smartmx for outgoing mails
 exim:req:apt:apt-get:exim4
+
+# solr is used for fulltext indexing
 solr-jetty:req:apt:apt-get:solr-jetty
 
-# on the production system we use a REAL queuing solution
+# rabbitmq is used as AMPQ Broker in production
 rabbitmq-server:req:apt:apt-get:rabbitmq-server
 #rabbitmq-server:req:mac:macports:rabbitmq-server
 # available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
 # uncomment is if there is a possibility to specify repositories for suse
 #rabbitmq-server:req:suse:zypper:rabbitmq-server
 
+# Memcached is used for django caching, and the mediaserver uses memcached for its docshot caching
 memcached:req:apt:apt-get:memcached
 #memcached:req:mac:macports:memcached
 #memcached:req:suse:zypper:memcached
 #memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
-# btw, we only need debian packages in the system_packages
+# btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 """
 
 """
@@ -264,9 +273,9 @@ a2enmod wsgi #should be automatic active because is extra package
 # Environments
 ###############
 
-testing_bundle = sprint7_bundle
-default_bundle = sprint7_bundle
-future_bundle = sprint7_bundle
+testing_bundle = main_packages
+default_bundle = main_packages
+future_bundle = main_packages
 developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 system_bundle = package_merge((default_bundle, system_packages))
@@ -275,7 +284,6 @@ package_bundles = {
     'default': default_bundle,
     'testing': testing_bundle,
     'future': future_bundle,
-    'sprint7': sprint7_bundle,
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
