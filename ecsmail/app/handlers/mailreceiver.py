@@ -43,7 +43,7 @@ def HARD_BOUNCE(message):
     return START
 
 def __findInitiatingMessage(message):
-    ecshash = __parseEcsHash(message.bounce.final_recipient)
+    ecshash = __parseEcsHash(message.To)
 
     if ecshash:
         try:
@@ -73,6 +73,7 @@ def __findPreviousBounce(message):
     return previousBounce, ecshash
 
 def __parseEcsHash(address):
+    print "ecs hash address:", address 
     mat = re.match('ecs-([^@]+)', address)
     if mat is not None:
         groups = mat.groups()
