@@ -1,6 +1,7 @@
 
 import logging
 import re
+import hashlib
 from socket import gethostbyname
 from lamson.routing import route, route_like, stateless
 from lamson import view, queue
@@ -8,11 +9,13 @@ from lamson.bounce import bounce_to
 from lamson.server import SMTPError
 
 from django.conf import settings
+from django.contrib.auth.models import User
+
 from ecs.communication.models import Message
 from ecs.ecsmail.persil import whitewash
-import md5
 from ecs.ecsmail.models import RawMail
-from django.contrib.auth.models import User
+from hashlib import md5
+
 
 @route(".+")
 def SOFT_BOUNCE(message):
@@ -117,9 +120,7 @@ def __stripLongestQuotation(body):
     print "\n".join(before + after)
 
 def __logRawMessage(message, ecshash=None):
-    md = md5.new()
-    md.update(message.original)
-    rawMail = RawMail(message_digest_hex=md.hexdigest(), ecshash=ecshash, data=message.original)
+    rawMail = RawMail(message_digest_hex=hashlib.md5(message.original).hexdigest(), ecshash=ecshash, data=message.original)
     rawMail.save()
 
 def __checkConstraints(message):
