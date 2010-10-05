@@ -392,6 +392,7 @@ def import_submission_form(request):
 
 def _render_instance(instance, ignored_fields=[], already_rendered=[]):
     rendered_fields = {}
+    print 'render: %s pk=%s' % (instance.__class__, instance.pk)
 
     fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in ignored_fields]
 
