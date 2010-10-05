@@ -28,6 +28,14 @@ def task_backlog(request):
 
 def my_tasks(request):
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', '-assigned_at')
+    related_url = request.GET.get('url', None)
+    if related_url:
+        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
+        if len(related_tasks) == 1:
+            return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
+        elif related_tasks:
+            pass # XXX: how do we handle this case?
+
     submission_ct = ContentType.objects.get_for_model(Submission)
     taskfilter_session_key = 'tasks:filter'
     filterform = TaskListFilterForm(request.POST or request.session.get(taskfilter_session_key, {'amg': True, 'mpg': True, 'other': True, 'mine': True, 'open': True, 'proxy': True}))
@@ -89,7 +97,7 @@ def manage_task(request, task_pk=None):
     if request.method == 'POST' and form.is_valid():
         action = form.cleaned_data['action']
         if action == 'complete':
-            task.done(request.user)
+            task.done(user=request.user, choice=form.get_choice())
         
         elif action == 'delegate':
             task.assign(form.cleaned_data['assign_to'])

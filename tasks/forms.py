@@ -10,7 +10,7 @@ class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
     
 
-TASK_MANAGEMENT_CHOICES = ('delegate', 'message', 'complete', )
+TASK_MANAGEMENT_CHOICES = ('delegate', 'message',)
 TASK_QUESTION_TYPE = ('callback', 'somebody', 'related', )
 
 class TaskChoiceField(forms.ModelChoiceField):
@@ -26,10 +26,30 @@ class ManageTaskForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
+        self.task = task
         super(ManageTaskForm, self).__init__(*args, **kwargs)
         self.fields['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
         self.fields['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
         self.fields['assign_to'].queryset = User.objects.filter(groups__task_types=task.task_type)
+        if task.choices:
+            self.fields['action'].choices += [('complete_%s' % i, choice[i]) for i, choice in enumerate(task.choices)]
+        else:
+            self.fields['action'].choices += [('complete', 'complete')]
+        
+    def get_choice(self):
+        if not hasattr(self, 'choice_index'):
+            return None
+        return self.task.choices[self.choice_index][0]
+        
+    def clean_action(self):
+        action = self.cleaned_data.get('action')
+        if action.startswith('complete'):
+            try:
+                self.choice_index = int(action.split('_')[1])
+                action = 'complete'
+            except (ValueError, IndexError):
+                pass
+        return action
     
     def clean(self):
         cd = self.cleaned_data

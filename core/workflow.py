@@ -1,7 +1,8 @@
+import datetime
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.core.models import Submission, ChecklistBlueprint, Vote
-
 
 register(Submission)
 register(Vote)
@@ -63,7 +64,18 @@ class InitialReview(Activity):
         model = Submission
     
     def get_url(self):
-        return None # FIXME
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.pk})
+        
+    def get_choices(self):
+        return (
+            (True, _('Acknowledge')),
+            (False, _('Reject')),
+        )
+        
+    def pre_perform(self, choice):
+        sf = self.workflow.data.current_submission_form
+        sf.acknowledged = choice
+        sf.save()
 
 
 class Resubmission(Activity):
@@ -84,6 +96,9 @@ class CategorizationReview(Activity):
     class Meta:
         model = Submission
         
+    def is_repeatable(self):
+        return True
+        
     def get_url(self):
         return reverse('ecs.core.views.executive_review', kwargs={'submission_pk': self.workflow.data.pk})
 
@@ -91,7 +106,7 @@ class CategorizationReview(Activity):
 class PaperSubmissionReview(Activity):
     class Meta:
         model = Submission
-
+        
     def get_url(self):
         return None # FIXME
 
@@ -101,10 +116,13 @@ class ChecklistReview(Activity):
         model = Submission
         vary_on = ChecklistBlueprint
         
+    def is_reentrant(self):
+        return False
+        
     def get_url(self):
         blueprint = self.node.data
         submission_form = self.workflow.data.current_submission_form
-        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint_pk})
+        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
 
 
 class VoteRecommendation(Activity):

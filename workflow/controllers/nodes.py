@@ -142,6 +142,7 @@ class NodeController(object):
 
 class Activity(NodeController):
     def perform(self, choice=None):
+        self.pre_perform(choice)
         token = self.get_token(locked=False)
         if not token:
             token = self.get_token(locked=True)
@@ -152,9 +153,19 @@ class Activity(NodeController):
             else:
                 raise TokenRequired("Activities cannot be performed without a token")
         self.progress(token)
+        self.post_perform(choice, token=token)
         
     def is_repeatable(self):
         return False
+        
+    def get_choices(self):
+        return ()
+        
+    def pre_perform(self, option):
+        pass
+        
+    def post_perform(self, option, token=None):
+        pass
         
     def __repr__(self):
         return "<Activity:%s>" % (self.__class__)

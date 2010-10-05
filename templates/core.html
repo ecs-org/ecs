@@ -202,7 +202,7 @@
       // workflow popups
       
       ecs.showWorkflowPopup = function(options){
-          var url = '{% url ecs.tasks.views.my_tasks %}?{% block workflow_query_params %}{% endblock %}';
+          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}';
           if(options && options.url){
               url = options.url;
           }

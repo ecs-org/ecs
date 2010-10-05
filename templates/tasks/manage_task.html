@@ -9,6 +9,7 @@
 {% block htmlbody %}
 
 <form action="" method="post" id="TaskForm">
+    <a href="{% url ecs.tasks.views.my_tasks %}">{% trans 'Show all tasks' %}</a>
     <h2>{{ task }}</h2>
     {% if task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
@@ -19,15 +20,23 @@
     </span>
     {% endif %}
     <ul>
+        {% if not task.choices %}
         <li>
             <h3>
                 <input type="radio" name="action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if task.locked %} disabled="disabled"{% endif %}/>
                 <label for="id_action_complete">{% trans 'Close' %}</label>
             </h3>
-            <div>
-                
-            </div>
         </li>
+        {% else %}
+            {% for val, label in task.choices %}
+            <li>
+                <h3>
+                    <input type="radio" name="action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if task.locked %} disabled="disabled"{% endif %}/>
+                    <label for="id_action_complete_{{ forloop.counter0 }}">{{ label }}</label>
+                </h3>
+            </li>
+            {% endfor %}
+        {% endif %}
         <li>
             <h3>
                 <input type="radio" name="action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />

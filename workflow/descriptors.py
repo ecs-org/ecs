@@ -37,10 +37,10 @@ class ObjectWorkflow(object):
                 for node in nodes:
                     yield node.bind(workflow)
 
-    def do(self, activity, data=None):
+    def do(self, activity, data=None, choice=None):
         controllers = list(self.iter_controllers(activity, data=data))
         for a in controllers:
-            a.perform()
+            a.perform(choice=choice)
         if not controllers:
             raise BadActivity(activity)
 
