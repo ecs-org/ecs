@@ -98,7 +98,7 @@ class DocumentProvider(object):
                 pagenum = 1
                 while self.getDocshot(Docshot(mediablob, t, t, w , pagenum)):
                     bucket = "/mediaserver/%s/%dx%d/%d/%d/" % (mediablob.cacheID(), t, t, w, pagenum)
-                    baseurl = "http://%s:%d" % (settings.MEDIASERVER_HOST, settings.MEDIASERVER_PORT)
+                    baseurl = settings.MEDIASERVER_URL
                     expire = int(time()) + settings.S3_DEFAULT_EXPIRATION_SEC
                     linkdesc = "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w)
                     h =  w * DEFAULT_ASPECT_RATIO

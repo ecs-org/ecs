@@ -232,8 +232,7 @@ S3_DEFAULT_EXPIRATION_SEC = 5*60
 # Mediaserver settings
 #TODO Migrate mediaserver settings to a separate config file
 MEDIASERVER_KEYOWNER="43BA0B84B8C6007858854B84F122070D7FB78045"
-MEDIASERVER_HOST="localhost"
-MEDIASERVER_PORT=8000
+MEDIASERVER_URL="http://localhost:8000"
 
 DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
 DOC_DISKCACHE_MAXSIZE = 2**34
