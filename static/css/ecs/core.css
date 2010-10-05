@@ -12,10 +12,17 @@
   position: absolute;
   left: 0;
 }
-.tab_headers li {
-
+.tab_header_groups li a {
+  text-decoration: none;
+  padding: 3px 5px;
+  border: 1px solid #f4f4f4;
+  background: #b7d4e5;
+  color: #2b558e;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
-.tab_header_groups li a, .tab_headers li a {
+.tab_headers li a {
   text-decoration: none;
   padding: 3px 5px;
   border: 1px solid #b7d4e5;
@@ -163,12 +170,16 @@
 #content ul {
   margin: 0 0 20px 20px;
 }
-input, textarea, select {
+input, textarea, #content select {
   border: 1px solid #999;
   padding: 2px;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11pt;
 }
+select {
+  border: 1px solid #999;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+} 
 #userswitcher_form select {
   width: 190px;
   font-size: 10pt;
@@ -265,16 +276,13 @@ input[type=submit] {
   clear: both;
   margin-bottom: 20px;
 }
-.form.main .field h3, .form.main .tab h3 {
+.form.main .field h2, .form.main .tab h2, .form.main .field h3, .form.main .tab h3 {
   letter-spacing: 1px;
   padding: 5px 0 10px 5px;
   line-break: normal;
 }
-.form.main, .form.main * {
+.form.main table, .form.main ol, .form.main select, .form.main option, .form.main input, .form.main textarea {
   font-size: 9pt;
-}
-*html .form.main .field {
-  width: 700px;
 }
 .form.main ol {
   padding: 10px;
@@ -322,10 +330,10 @@ input[type=submit] {
 }
 .form.main .errors ul li {
   margin-left: 220px;
+  margin-bottom: 5px;
   display: block;
   float: left;
   color: #ff0000;
-  padding: 2px;
 }
 .form.main table td .errors li {
   margin: 0px;
@@ -359,6 +367,7 @@ input[type=submit] {
 .form.main ol li .help_text {
   margin: 0 0 10px 230px;
   display: block;
+  clear: both;
   color: #666;
   padding-left: 10px;
 }
@@ -367,6 +376,7 @@ input[type=submit] {
   margin: 10px 0 0 20px;
   height: 15px;
   display: block;
+  clear: both;
   color: #666;
 }
 .inline_formset .form {

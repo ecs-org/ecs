@@ -1,40 +1,113 @@
-.TaskBacklog table{
-    border: 1px solid #cccccc;
-    border-left: none;
+.TaskBacklog table {
+  border: 1px solid #cccccc;
+  border-left: none;
 }
 .TaskBacklog td,
-.TaskBacklog th{
-    text-align: left;
-    font-size: 13px;
-    padding: 3px;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    border-left: 1px solid #cccccc;
+.TaskBacklog th {
+  text-align: left;
+  font-size: 13px;
+  padding: 3px;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-left: 1px solid #cccccc;
 }
 
-.TaskBacklog th{
-    border-bottom: 1px solid #cccccc;
+.TaskBacklog th {
+  border-bottom: 1px solid #cccccc;
 }
 
-.TaskBacklog tr.closed td{
-    color: #999999;
+.TaskBacklog tr.closed td {
+  color: #999999;
 }
 
-#TaskForm li > h3{
-    font-size: 1em;
-    background-color: #eeeeee;
+/* TaskForm */
+
+#TaskForm {
+  margin: 20px;
+  font-size: 10pt;
+  max-width: 700px;
 }
-#TaskForm li > div{
-    margin-left: 4em;
+#TaskForm ul {
+  float: left;
+  display: block;
+  max-width: 100%;
 }
-#TaskForm li{
-    padding-bottom: 0.5em;
+#TaskForm li {
+  height: 30px;
+  vertical-align: text-top;
+  list-style-type: none;
+  display: block;
+  clear: both;
+}
+#TaskForm .errors {
+  color: #ff0000;
+}
+#TaskForm .lockInfo {
+  background-color: #ffff00;
+}
+#TaskForm label, #TaskForm input[type=radio], #TaskForm textarea, #TaskForm select {
+  float: left;
+  margin: 0 0 5px 10px;
+}
+#TaskForm input[type=submit] {
+  position: relative;
+  display: block;
+}
+.task_intend {
+  clear: both;
+  margin-left: 70px;
+  float: left;
+  display: block;
+  min-height: 30px;
+}
+.show_all {
+  margin-bottom: 10px;
 }
 
-#TaskForm .errors{
-    color: #ff0000;
+/* TaskList */
+
+#task_list {
+  max-width: 700px;
+  padding: 20px;
+}
+#task_list_filter {
+  margin-bottom: 10px;
+}
+#task_list_filter input[type=checkbox] {
+  margin-top: 5px;
+}
+#task_list_filter label {
+  display: inline-block;
+  margin: 5px 10px 5px 5px;
+  width: 60px;
+}
+.task_list_choose {
+  border-bottom: 1px solid #ccc;
+}
+.task_item {
+  background-color: #EFEFD1;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
-#TaskForm .lockInfo{
-    background-color: #ffff00;
+#TaskForm h2, .TaskList h2 {
+  display: block;
+  font-size: 1.4em;
+  margin-bottom: 20px;
+  font-weight: lighter;
+  letter-spacing: 1px;
+}
+#TaskForm h3, .TaskList h3 {
+  display: block;
+  font-size: 1.1em;
+  font-weight: lighter;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+a {
+  text-decoration: none;
+  color: #2b558e;
+}
+a:hover {
+  text-decoration: underline;
 }

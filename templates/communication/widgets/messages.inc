@@ -1,6 +1,6 @@
 {% load humanize core communication %}
 
-<h2>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h2>
+<h3>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h3>
 
 <div class="messages_header">
 <!--<a class="widget popup" href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a>-->

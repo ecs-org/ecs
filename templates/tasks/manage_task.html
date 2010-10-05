@@ -9,7 +9,7 @@
 {% block htmlbody %}
 
 <form action="" method="post" id="TaskForm">
-    <a href="{% url ecs.tasks.views.my_tasks %}">{% trans 'Show all tasks' %}</a>
+    <div class="show_all"><a href="{% url ecs.tasks.views.my_tasks %}">{% trans 'Show all tasks' %}</a></div>
     <h2>{{ task }}</h2>
     {% if task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
@@ -22,77 +22,72 @@
     <ul>
         {% if not task.choices %}
         <li>
-            <h3>
-                <input type="radio" name="action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if task.locked %} disabled="disabled"{% endif %}/>
-                <label for="id_action_complete">{% trans 'Close' %}</label>
-            </h3>
+            <input type="radio" name="action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if task.locked %} disabled="disabled"{% endif %}/>
+            <label for="id_action_complete">{% trans 'Close' %}</label>
         </li>
         {% else %}
             {% for val, label in task.choices %}
             <li>
-                <h3>
-                    <input type="radio" name="action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if task.locked %} disabled="disabled"{% endif %}/>
-                    <label for="id_action_complete_{{ forloop.counter0 }}">{{ label }}</label>
-                </h3>
+                <input type="radio" name="action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if task.locked %} disabled="disabled"{% endif %}/>
+                <label for="id_action_complete_{{ forloop.counter0 }}">{{ label }}</label>
             </li>
             {% endfor %}
         {% endif %}
         <li>
-            <h3>
-                <input type="radio" name="action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
-                <label for="id_action_complete">{% trans 'Delegate' %}</label></h3>
-            <div>
+            <input type="radio" name="action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
+            <label for="id_action_complete">{% trans 'Delegate' %}</label>
+            <span>
                 <label for="id_assign_to">An</label>{{ form.assign_to }}
                 {% if form.assign_to.errors %}
                     <span class="errors">{{ form.assign_to.errors }}</span>
                 {% endif %}
-            </div>
+            </span>
         </li>
         <li>
-            <h3>
-                <input type="radio" name="action" id="id_action_message" value="message"{% ifequal form|form_value:'action' 'message' %} checked="checked"{% endifequal %} />
-                <label for="id_action_message">{% trans 'Ask' %}</label>
-            </h3>
+            <input type="radio" name="action" id="id_action_message" value="message"{% ifequal form|form_value:'action' 'message' %} checked="checked"{% endifequal %} />
+            <label for="id_action_message">{% trans 'Ask' %}</label>
             {% if form.errors|contains:'question_type' %}
                 <span class="errors">{{ form.question_type.errors }}</span>
             {% endif %}
             {% if task.trail %}
-            <div>
-                <input type="radio" name="question_type" id="id_question_type_callback" value="callback"{% ifequal form|form_value:'question_type' 'callback' %} checked="checked"{% endifequal %} />
-                <label for="id_question_type_callback">letzte(r) BearbeiterIn</label>
-                {{ form.callback_task }}
-                {% if form.callback_task.errors %}
-                    <span class="errors">{{ form.callback_task.errors }}</span>
-                {% endif %}
-            </div>
-            {% endif %}
-            {% if task.related_tasks %}
-            <div>
-                <input type="radio" name="question_type" id="id_question_type_related" value="related"{% ifequal form|form_value:'question_type' 'related' %} checked="checked"{% endifequal %} />
-                <label for="id_question_type_related">andere BearbeiterIn</label>
-                {{ form.related_task }}
-                {% if form.related_task.errors %}
-                    <span class="errors">{{ form.related_task.errors }}</span>
-                {% endif %}
-            </div>
-            {% endif %}
-            <div>
-                <input type="radio" name="question_type" id="id_question_type_somebody" value="somebody"{% ifequal form|form_value:'question_type' 'somebody' %} checked="checked"{% endifequal %} />
-                <label for="id_question_type_somebody">Person</label>
-                {{ form.receiver }}
-                {% if form.receiver.errors %}
-                    <span class="errors">{{ form.receiver.errors }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {{ form.question }}
-                {% if form.question.errors %}
-                    <span class="errors">{{ form.question.errors }}</span>
-                {% endif %}
-            </div>
+              <span class="task_intend">
+                  <input type="radio" name="question_type" id="id_question_type_callback" value="callback"{% ifequal form|form_value:'question_type' 'callback' %} checked="checked"{% endifequal %} />
+                  <label for="id_question_type_callback">letzte(r) BearbeiterIn</label>
+                  {{ form.callback_task }}
+                  {% if form.callback_task.errors %}
+                      <span class="errors">{{ form.callback_task.errors }}</span>
+                  {% endif %}
+              </span>
+              {% endif %}
+              {% if task.related_tasks %}
+              <span class="task_intend">
+                  <input type="radio" name="question_type" id="id_question_type_related" value="related"{% ifequal form|form_value:'question_type' 'related' %} checked="checked"{% endifequal %} />
+                  <label for="id_question_type_related">andere BearbeiterIn</label>
+                  {{ form.related_task }}
+                  {% if form.related_task.errors %}
+                      <span class="errors">{{ form.related_task.errors }}</span>
+                  {% endif %}
+              </span>
+              {% endif %}
+              <span class="task_intend">
+                  <input type="radio" name="question_type" id="id_question_type_somebody" value="somebody"{% ifequal form|form_value:'question_type' 'somebody' %} checked="checked"{% endifequal %} />
+                  <label for="id_question_type_somebody">Person</label>
+                  {{ form.receiver }}
+                  {% if form.receiver.errors %}
+                      <span class="errors">{{ form.receiver.errors }}</span>
+                  {% endif %}
+              </span>
+              <span class="task_intend">
+                  {{ form.question }}
+                  {% if form.question.errors %}
+                      <span class="errors">{{ form.question.errors }}</span>
+                  {% endif %}
+              </span>
+        </li>
+        <li>
+          <input type="submit" value="Abschicken" />
         </li>
     </ul>
-    <input type="submit" value="Abschicken" />
 </form>
 
 {% endblock %}

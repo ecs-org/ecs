@@ -3,7 +3,7 @@
 
 {% block htmlbody %}
 <div class="message_display" style="overflow:auto">
-  <h2>{{ thread.subject }}</h2>
+  <h3>{{ thread.subject }}</h3>
   {% for message in page.object_list %}
   <div class="item {% cycle 'even' 'odd' %}">
     <ol>
