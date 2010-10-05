@@ -88,7 +88,7 @@ class DocumentProvider(object):
 
     def createDocshotData(self, mediablob):
         if not isinstance(mediablob, MediaBlob):
-            mediablob = MediaBlob(uuid.UUID(mediablob))
+            mediablob = MediaBlob(uuid.UUID(str(mediablob)))
         tiles = [ 1, 3, 5 ]
         width = [ 800, 768 ] 
         docshotData = [];
