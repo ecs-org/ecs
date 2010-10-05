@@ -11,6 +11,7 @@ ecs.pdfviewer = {
                 this.height = image.height;
                 this.width = image.width;
             }
+            console.log('load', image.page, image.url);
             this.images.push(image);
         },
         loadImage: function(url, callback){
@@ -44,13 +45,14 @@ ecs.pdfviewer = {
                 'width': this.getPageWidth() + 'px',
                 'height': this.getPageHeight() + 'px'
             });
-            this.loadImage(url, (function(){
+            var offset = this.getSpriteOffset(spriteX, spriteY);
+            this.loadImage(url, function(){
                 el.removeClass('loading');
                 el.setStyles({
                     'background-image': 'url(' + url + ')',
-                    'background-position': this.getSpriteOffset(spriteX, spriteY)
+                    'background-position': offset
                 });
-            }).bind(this));
+            });
             return el;
         }
     }),
@@ -72,7 +74,6 @@ ecs.pdfviewer = {
             this.title = options.title;
             this.header = new Element('div', {'class': 'header', html: this.title});
             this.element.grab(this.header);
-
             this.searchURL = options.searchURL;
         },
         getImageSetKey: function(x, y){
@@ -113,13 +114,14 @@ ecs.pdfviewer = {
             }
         },
         nextPage: function(delta){
+            console.log('next', this.currentPageIndex, delta);
             this.setPage(Math.min(this.currentPageIndex + (delta || 1), this.pageCount - 1));
         },
         previousPage: function(delta){
             this.setPage(Math.max(this.currentPageIndex - (delta || 1), 0));
         },
         render: function(imageSetKey, offset, w, h){
-            //console.log(arguments);
+            console.log(arguments);
             if($A(arguments).every((function(val, index){ return this.currentContent[index] == val;}).bind(this))){
                 return;
             }
@@ -171,10 +173,23 @@ ecs.pdfviewer = {
                 this.cycleController(+1);
             }
             else if(e.alt && e.key == 'right'){
-                this.nextPage(this.getController().sliceLength);
+                if(e.shift){
+                    this.setPage(this.pageCount - 1);
+                }
+                else{
+                    this.nextPage(this.getController().sliceLength);
+                }
             }
             else if(e.alt && e.key == 'left'){
-                this.previousPage(this.getController().sliceLength);
+                if(e.shift){
+                    this.setPage(0);
+                }
+                else{
+                    this.previousPage(this.getController().sliceLength);
+                }
+            }
+            else if(e.key == 'a'){
+                
             }
         },
         handleClick: function(e){
@@ -183,6 +198,7 @@ ecs.pdfviewer = {
                 this.cycleController(e.shift ? -1 : +1);
             }
             else if(target.hasClass('page')){
+                console.log(target.id);
                 var pageIndex = parseInt(target.id.split('_').getLast());
                 this.setPage(pageIndex, false);
                 this.setControllerIndex(this.controllers.length - 1);
@@ -191,15 +207,22 @@ ecs.pdfviewer = {
     }),
 
     Controller: new Class({
-        initialize: function(imageSet, x, y){
+        initialize: function(imageSet, x, y, options){
             this.imageSet = imageSet;
             this.x = x;
             this.y = y;
             this.sliceLength = x * y;
+            this.options = options || {};
         },
         render: function(viewer, pageIndex){
             var blockIndex = parseInt(Math.floor(pageIndex / this.sliceLength));
             viewer.render(this.imageSet, blockIndex * this.sliceLength, this.x, this.y);
+        }
+    }),
+    
+    Annotation: new Class({
+        initialize: function(){
+            
         }
     })
 };
