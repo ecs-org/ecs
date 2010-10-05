@@ -38,19 +38,19 @@ ecs.pdfviewer = {
             var spriteIndex = pageIndex % perImage;
             var spriteX = spriteIndex % this.sprite.x;
             var spriteY = parseInt(spriteIndex / this.sprite.x);
-            //console.log(pageIndex, this.width, this.height, this.getPageWidth(), this.getPageHeight());
             var url = this.images[imageIndex].url;
             el.setStyles({
                 'width': this.getPageWidth() + 'px',
                 'height': this.getPageHeight() + 'px'
             });
-            this.loadImage(url, (function(){
+            var offset = this.getSpriteOffset(spriteX, spriteY);
+            this.loadImage(url, function(){
                 el.removeClass('loading');
                 el.setStyles({
                     'background-image': 'url(' + url + ')',
-                    'background-position': this.getSpriteOffset(spriteX, spriteY)
+                    'background-position': offset
                 });
-            }).bind(this));
+            });
             return el;
         }
     }),
@@ -72,7 +72,6 @@ ecs.pdfviewer = {
             this.title = options.title;
             this.header = new Element('div', {'class': 'header', html: this.title});
             this.element.grab(this.header);
-
             this.searchURL = options.searchURL;
         },
         getImageSetKey: function(x, y){
@@ -119,7 +118,6 @@ ecs.pdfviewer = {
             this.setPage(Math.max(this.currentPageIndex - (delta || 1), 0));
         },
         render: function(imageSetKey, offset, w, h){
-            //console.log(arguments);
             if($A(arguments).every((function(val, index){ return this.currentContent[index] == val;}).bind(this))){
                 return;
             }
@@ -171,10 +169,23 @@ ecs.pdfviewer = {
                 this.cycleController(+1);
             }
             else if(e.alt && e.key == 'right'){
-                this.nextPage(this.getController().sliceLength);
+                if(e.shift){
+                    this.setPage(this.pageCount - 1);
+                }
+                else{
+                    this.nextPage(this.getController().sliceLength);
+                }
             }
             else if(e.alt && e.key == 'left'){
-                this.previousPage(this.getController().sliceLength);
+                if(e.shift){
+                    this.setPage(0);
+                }
+                else{
+                    this.previousPage(this.getController().sliceLength);
+                }
+            }
+            else if(e.key == 'a'){
+                
             }
         },
         handleClick: function(e){
@@ -191,15 +202,22 @@ ecs.pdfviewer = {
     }),
 
     Controller: new Class({
-        initialize: function(imageSet, x, y){
+        initialize: function(imageSet, x, y, options){
             this.imageSet = imageSet;
             this.x = x;
             this.y = y;
             this.sliceLength = x * y;
+            this.options = options || {};
         },
         render: function(viewer, pageIndex){
             var blockIndex = parseInt(Math.floor(pageIndex / this.sliceLength));
             viewer.render(this.imageSet, blockIndex * this.sliceLength, this.x, this.y);
+        }
+    }),
+    
+    Annotation: new Class({
+        initialize: function(){
+            
         }
     })
 };

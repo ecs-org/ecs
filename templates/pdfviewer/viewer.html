@@ -3,6 +3,14 @@
 {% block htmlbody %}
 
 <div id="pdfviewer"></div>
+<div id="navigation" class="hidden">
+    <div>Alt + &rarr;: Next Page</div>
+    <div>Alt + &larr;: Previous Page</div>
+    <div>Alt + Shift + &rarr;: Last Page</div>
+    <div>Alt + Shift + &larr;: First Page</div>
+    <div>Alt + &darr;: Zoom In</div>
+    <div>Alt + &uarr;: Zoom Out</div>
+</div>
 
 {% endblock %}
 
@@ -48,8 +56,14 @@
         });
         $(document.body).addClass('pdfviewer');
         
+        var navigation = $('navigation');
+        
         window.addEvent('keydown', function(e){
             viewer.handleKeyPress(e);
+            if(e.key == 'space'){
+                navigation.toggleClass('hidden');
+                return false;
+            }
         });
         viewer.element.focus();
         viewer.update();

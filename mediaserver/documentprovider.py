@@ -55,7 +55,7 @@ class DocumentProvider(object):
         filelike=None
         
         if try_render_memcache:     
-            filelike = self.render_memcache.get(docshot);
+            filelike = self.render_memcache.get(docshot.cacheID());
         
         if filelike:
             self.render_diskcache.update_access(docshot.cacheID()) # update access in docshot cache

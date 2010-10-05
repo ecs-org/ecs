@@ -2,6 +2,10 @@ body.pdfviewer{
     overflow: auto;
 }
 
+body.pdfviewer .hidden{
+    display: none;
+}
+
 body.pdfviewer .page{
     float: left;
     border: 3px solid transparent;
@@ -38,4 +42,19 @@ body.pdfviewer .page:hover > .info{
 
 body.pdfviewer .screen .row{
     clear: both;
+}
+
+body.pdfviewer #navigation{
+    background-color: #222222;
+    -moz-border-radius: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -250px;
+    margin-top: -150px;
+    width: 460px;
+    height: 260px;
+    padding: 20px;
+    opacity: 0.8;
+    color: #ffffff;
 }
