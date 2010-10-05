@@ -61,8 +61,8 @@ class Submission(models.Model):
 
     def get_creation_notification_receivers(self):
         sf = self.current_submission_form
-        emails = set(filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()]))
-        registered = set(User.objects.filter(email__in=emails))
+        emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
+        registered = User.objects.filter(email__in=emails)
         unregistered = emails.difference(registered)
         return registered, unregistered
    
@@ -408,18 +408,22 @@ class SubmissionForm(models.Model):
         return self.current_pending_vote or self.current_published_vote
 
 def attach_to_submissions(user):
+    print "attach"
     sf_by_submitter_email = SubmissionForm.objects.filter(submitter_email=user.email)
     for sf in sf_by_submitter_email:
+        print "sf submitter"
         sf.submitter = user
         sf.save()
         
     sf_by_sponsor_email = SubmissionForm.objects.filter(sponsor_email=user.email)
     for sf in sf_by_sponsor_email:
+        print "sf sponsor"
         sf.sponsor = user
         sf.save()
         
     investigator_by_email = Investigator.objects.filter(email=user.email)
     for inv in investigator_by_email:
+        print "sf investigator"
         inv.user = user
         inv.save()
 
@@ -445,7 +449,7 @@ def _post_submission_form_save(**kwargs):
     recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
     recipients = set(recipients)
 
-    send_submission_change(new_sf, recipients);
+    #send_submission_change(new_sf, recipients);
 
 def _post_submission_form_create(**kwargs):
     new_sf = kwargs['instance']
