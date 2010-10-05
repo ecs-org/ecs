@@ -178,4 +178,5 @@ def approve(request, user_pk=None):
     return render(request, 'users/approve.html', {
         'profile_user': user,
     })
-            
+
+
