@@ -390,58 +390,59 @@ def import_submission_form(request):
     })
 
 
-def _render_field_value(v, recursion_depth=3):
-    #return '' # XXX: only for testing, function does not work right now
-    if recursion_depth == 0:
-        return ''
-    recursion_depth -= 1
-    if isinstance(v, models.Model):
-        fields = [f.name for f in v.__class__._meta.fields]
-        for field in fields:
-            try:
-                w = getattr(v, field) or ''
-            except AttributeError:
-                print 'AttributeError: %s' % field
-                continue
-            
-            if hasattr(w, 'all'):
-                #w = unicode(w)
-                w = u', '.join([_render_field_value(x, recursion_depth) for x in getattr(w, 'all')()])
-            else:
-                #w = unicode(w)
-                w = _render_field_value(w, recursion_depth)
-        return w
-        
-    else:
-        return unicode(v).replace(u'\n', u'<br />\n')
+def _render_instance(instance, ignored_fields=[], already_rendered=[]):
+    rendered_fields = {}
+    print 'render: %s pk=%s' % (instance.__class__, instance.pk)
 
+    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in ignored_fields]
+
+    for field in fields:
+        try:
+            value = getattr(instance, field) or ''
+        except AttributeError:
+            try:
+                value = getattr(instance, '%s_set' % field) or ''
+            except AttributeError, e:
+                print 'Error: %s %s: %s' % (instance, field, e)
+                continue
+        except Exception, e:
+            print 'Error: %s %s: %s' % (instance, field, e)
+            
+
+        if hasattr(value, 'all'):
+            rendered = u''
+            for w in value.all():
+                if (w.__class__, w.pk,) in already_rendered:
+                    rendered += u''
+                else:
+                    already_rendered.append((w.__class__, w.pk,))
+                    rendered += unicode(_render_instance(w, already_rendered=already_rendered))
+        else:
+            if isinstance(value, models.Model):
+                if (instance.__class__, instance.pk,) in already_rendered:
+                    rendered = u''
+                else:
+                    already_rendered.append((instance.__class__, instance.pk,))
+                    rendered = unicode(_render_instance(value, already_rendered=already_rendered))
+            else:
+                rendered = unicode(value).replace(u'\n', '<br />\n')
+
+        rendered_fields[field] = rendered
+
+    return rendered_fields
 
 def diff_submission_forms(old_submission_form, new_submission_form):
     sff = SubmissionFormForm(None, instance=old_submission_form)
-    fields = [x for x in SubmissionForm._meta.get_all_field_names() if not x in ('submission', 'current_for_submission',)]
-    #fields = [x.name for x in SubmissionForm._meta.fields if not x.name in ('submission', 'current_for_submission',)]
+
     differ = diff_match_patch()
-
     diffs = []
-    for field in fields:
-        try:
-            old = getattr(old_submission_form, field) or ''
-            new = getattr(new_submission_form, field) or ''
-        except AttributeError:
-            print 'AttributeError: %s' % field
-            continue
-        except Submission.DoesNotExist:  # FIXME: remove this
-            print 'Submission.DoesNotExist: %s' % field
-            continue
 
-        if hasattr(new, 'all'):
-            old = u', '.join([_render_field_value(x) for x in getattr(old, 'all')()])
-            new = u', '.join([_render_field_value(x) for x in getattr(new, 'all')()])
-        else:
-            old = _render_field_value(old)
-            new = _render_field_value(new)
+    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission',)
+    old = _render_instance(old_submission_form, ignored_fields=ignored_fields)
+    new = _render_instance(new_submission_form, ignored_fields=ignored_fields)
 
-        diff = differ.diff_main(old, new)
+    for field in old.iterkeys():
+        diff = differ.diff_main(old[field], new[field])
         if differ.diff_levenshtein(diff):
             try:
                 label = sff.fields[field].label
@@ -451,6 +452,7 @@ def diff_submission_forms(old_submission_form, new_submission_form):
             diffs.append((label, diff))
 
     return diffs
+
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
