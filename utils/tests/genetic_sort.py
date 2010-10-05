@@ -1,3 +1,4 @@
+import random
 from django.test import TestCase
 
 from ecs.utils.genetic_sort import GeneticSorter, swap_mutation
@@ -11,7 +12,7 @@ class GeneticSorterTest(TestCase):
         # This is fragile: if we don't find a solution in 10^6 generations this test will fail.
         for i in xrange(1000):
             result = sorter.run(1000)
-            if result == range(N):
+            if result == tuple(xrange(N)):
                 break
         self.failUnlessEqual(result, tuple(xrange(N)))
         
