@@ -30,5 +30,5 @@ class Docshot(object):
         self.pagenr = pagenr
         
     def cacheID(self):
-        return "%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y ,self.width, self.pagenr)  
+        return str("%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y ,self.width, self.pagenr))
 
