@@ -67,3 +67,4 @@ if user == "testecs":
     MEDIASERVER_URL = "http://test.ecsdev.ep3.at"
 elif user == "shredder":
     MEDIASERVER_URL = "http://s.ecsdev.ep3.at"
+    
