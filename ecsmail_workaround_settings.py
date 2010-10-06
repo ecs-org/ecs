@@ -9,6 +9,8 @@ import random
 import subprocess, atexit
 import os.path
 
+print "FIXME: 'workaround' doesnt work around, disabled it for now"
+"""
 if not os.path.exists('ecsmail.lock'):
     _port = random.randint(30000, 60000)
     LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': _port} # smartmx dummy
@@ -25,4 +27,4 @@ if not os.path.exists('ecsmail.lock'):
             ecsmail.terminate()
             os.remove('ecsmail.lock')
         atexit.register(cleanup)
-        
+"""     
