@@ -13,6 +13,7 @@ from django.conf import settings
 
 from ecs.utils import gpgutils, s3utils
 from ecs.mediaserver.documentprovider import DocumentProvider
+from ecs.mediaserver import documentprovider
 from ecs.mediaserver.cacheobjects import MediaBlob,Docshot
 from ecs.utils.testcases import LoginTestCase
 from django.core.urlresolvers import reverse
@@ -36,17 +37,17 @@ class PdfViewerInterface(LoginTestCase):
         settings.RENDER_MEMCACHE_LIB  = 'mockcache'
 
         self.docblob = MediaBlob(uuid4());
-        # don't use the static instance, since we want to slip in test settings
-        self.docprovider = DocumentProvider()
+        # reinstantiate the singleton, since we want to slip in test settings
+        documentprovider.docprovider = DocumentProvider() 
 
         with open(self.pdfdoc,"rb") as f_doc:
             encrypted = gpgutils.encrypt(f_doc, settings.MEDIASERVER_KEYOWNER)
-            self.docprovider.addBlob(self.docblob, encrypted)
+            documentprovider.docprovider.addBlob(self.docblob, encrypted)
     
-        self.docprovider.getBlob(self.docblob)
+        documentprovider.docprovider.getBlob(self.docblob)
 
     def testExpiringDocshot(self):
-        dsdata = self.docprovider.createDocshotData(self.docblob)
+        dsdata = documentprovider.docprovider.createDocshotData(self.docblob)
 
         for shot in dsdata:
             # simulate behavjour of ecs.mediaserver.views.docshot since the server isn't running
@@ -59,10 +60,10 @@ class PdfViewerInterface(LoginTestCase):
             tx, ty = tileset.split('x')
 
             ds = Docshot(MediaBlob(UUID(uuid)), tx, ty, width, pagenr)
-            with self.docprovider.getDocshot(ds) as f:
+            with documentprovider.docprovider.getDocshot(ds) as f:
                 self.assertTrue(f.read(8) == self.png_magic);            
 
-    def testViews(self):
+    def testPdfDownload(self):
         response = self.client.get(reverse('ecs.mediaserver.views.download_pdf', kwargs={'uuid': self.docblob.cacheID()}))
         self.failUnlessEqual(response.status_code, 200)
         
