@@ -74,14 +74,14 @@ class Submission(models.Model):
     def get_ec_number_display(self):
         try:
             year, ec_number = self.ec_number.split('/')
+            ec_number = ec_number.lstrip('0')
+            if datetime.datetime.now().year == int(year):
+                return ec_number
+            else:
+                return '%s/%s' % (ec_number, year)
         except ValueError:
             return self.ec_number
-
-        ec_number = ec_number.lstrip('0')
-        if datetime.datetime.now().year == int(year):
-            return ec_number
-        else:
-            return '%s/%s' % (ec_number, year)
+        
     get_ec_number_display.short_description = 'EC-Number'
 
     def get_befangene(self):

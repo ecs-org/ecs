@@ -6,7 +6,7 @@ from ecs.core import bootstrap
 
 class EcsTestCase(TestCase):
     def setUp(self):
-        User.objects.create(username="root", is_superuser=True)
+        user = User.objects.create(username="root", is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
         bootstrap.templates()
     
@@ -17,9 +17,12 @@ class EcsTestCase(TestCase):
 class LoginTestCase(EcsTestCase):
     def setUp(self):
         super(LoginTestCase, self).setUp()
-        user = User(username='unittest')
+        user = User(username='unittest', is_superuser=True)
         user.set_password('password')
         user.save()
+        profile = user.get_profile()
+        profile.approved_by_office = True
+        profile.save()
         self.user = user
         self.client.login(username='unittest', password='password')
     

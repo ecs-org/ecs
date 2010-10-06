@@ -171,8 +171,8 @@ class SubmissionFormTest(EcsTestCase):
         ek1.save()
         Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1)
 
-def create_submission_form():
-    sub = Submission()
+def create_submission_form(ec_number=None):
+    sub = Submission(ec_number=ec_number)
     sub.save()
     sform = SubmissionForm(
         submission = sub,
