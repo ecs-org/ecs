@@ -1,10 +1,9 @@
 '''
 Created on Aug 19, 2010
 
-@author: elchaschab
+@author: amir
 '''
 import uuid
-import unittest
 import shutil
 import hashlib
 import tempfile
@@ -32,10 +31,3 @@ class DiskBucketsTest(EcsTestCase):
         
         for u in self.uuids: 
             self.assertEquals(self.store.get(u).read(), hashlib.md5(u).hexdigest())
-
-    def __fillStore(self):
-        pass
-    
-if __name__ == "__main__":
-    unittest.main()
-    
