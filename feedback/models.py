@@ -58,14 +58,17 @@ class Feedback(models.Model):
     def me_too_votes_add(self, user=None):
         if user is None:
             return
-        self._update_ticket_cc(user, add=True)
+
+        if settings.FEEDBACK_CONFIG['create_trac_tickets'] == True:
+            self._update_ticket_cc(user, add=True)
         self.me_too_votes.add(user)
         
     def me_too_votes_remove(self, user=None):
         if user is None:
             return
         
-        self._update_ticket_cc(user, add=False)
+        if settings.FEEDBACK_CONFIG['create_trac_tickets'] == True:
+            self._update_ticket_cc(user, add=False)
         self.me_too_votes.remove(user)
     
     def _update_ticket_cc(self, user=None, add=True):
