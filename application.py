@@ -21,12 +21,15 @@ main_packages = """
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
+psycopg2:req:openbsd:pkg:postgresql-server
+psycopg2:req:openbsd:pkg:postgresql-client
 psycopg2:inst:!win:pypi:psycopg2
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.0.13.win32-py2.6-pg8.4.1-release.exe
 
 pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
+pysqlite:req:openbsd:pkg:sqlite3
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-py2.6.exe
 
@@ -55,6 +58,8 @@ django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/m
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
+pdftotext:req:openbsd:pkg:poppler
+pdftotext:req:openbsd:pkg:poppler-data
 pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
 
 # simple testing
@@ -71,6 +76,7 @@ antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
 # antiword has to be build by hand for opensuse
 #antiword:req:suse:zypper:antiword
+antiword:req:openbsd:pkg:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
@@ -108,11 +114,13 @@ django-celery:inst:all:pypi:django-celery
 ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
+ghostscript:req:openbsd:pkg:ghostscript--
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:system:gswin32c.exe
 
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
+imagemagick:req:openbsd:pkg:ImageMagick--
 imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 
@@ -135,6 +143,7 @@ pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.e
 pdftk:req:suse:zypper:pdftk
 #FIXME, port or at least homebrew package of pdftk
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
+# XXX: no pdftk on openbsd
 
 # lamson mail server
 chardet:inst:all:pypi:chardet
@@ -157,6 +166,8 @@ xlwt:inst:all:pypi:xlwt
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
+gnupg:req:suse:zypper:gpg2
+gnupg:req:openbsd:pkg:gnupg
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:system:gpg.exe
 
 # django-sentry
@@ -211,6 +222,8 @@ simplejson:inst:all:pypi:simplejson
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 antiword:req:apt:apt-get:antiword
 antiword:req:mac:macports:antiword
+#antiword:req:suse:zypper:antiword
+antiword:req:openbsd:pkg:antiword
 antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 #graphviz is required for manage.py graph_models
 # graphviz:req:apt:apt-get:graphviz-dev
