@@ -148,5 +148,5 @@ def feedback_main(request):
         return HttpResponse("Error: you need to be logged in!")
     else:
         user = request.user
-    return render(request, 'feedback/main.html', {
-    })
+    return render(request, 'feedback/main.html', {})
+
