@@ -1,11 +1,10 @@
 '''
 Created on Sep 24, 2010
 
-@author: elchaschab
+@author: amir
 '''
 import binascii
 import urlparse
-import re
 import os
 import tempfile
 from uuid import UUID,uuid4
@@ -15,14 +14,15 @@ from django.conf import settings
 from ecs.utils import gpgutils, s3utils
 from ecs.mediaserver.documentprovider import DocumentProvider
 from ecs.mediaserver.cacheobjects import MediaBlob,Docshot
-from ecs.utils.testcases import EcsTestCase
-from ecs.utils.storagevault import getVault
+from ecs.utils.testcases import LoginTestCase
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
 
-
-class PdfViewerInterface(EcsTestCase):
+class PdfViewerInterface(LoginTestCase):
     pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')
     png_magic = binascii.a2b_hex('89504E470D0A1A0A')
-
+    pdf_magc = binascii.a2b_hex('25504446')
+    
     def setUp(self):
         # rewrite vault settings for testing
         tmpVaultDir = tempfile.mkdtemp()
@@ -36,7 +36,7 @@ class PdfViewerInterface(EcsTestCase):
         settings.RENDER_MEMCACHE_LIB  = 'mockcache'
 
         self.docblob = MediaBlob(uuid4());
-        # don't use the static instance, since we want it to slip in test settings
+        # don't use the static instance, since we want to slip in test settings
         self.docprovider = DocumentProvider()
 
         with open(self.pdfdoc,"rb") as f_doc:
@@ -45,7 +45,7 @@ class PdfViewerInterface(EcsTestCase):
     
         self.docprovider.getBlob(self.docblob)
 
-    def testDocshot(self):
+    def testExpiringDocshot(self):
         dsdata = self.docprovider.createDocshotData(self.docblob)
 
         for shot in dsdata:
@@ -60,6 +60,11 @@ class PdfViewerInterface(EcsTestCase):
 
             ds = Docshot(MediaBlob(UUID(uuid)), tx, ty, width, pagenr)
             with self.docprovider.getDocshot(ds) as f:
-                png_magic = binascii.a2b_hex('89504E470D0A1A0A')
-                self.assertTrue(f.read(8) == png_magic);            
+                self.assertTrue(f.read(8) == self.png_magic);            
+
+    def testViews(self):
+        response = self.client.get(reverse('ecs.mediaserver.views.download_pdf', kwargs={'uuid': self.docblob.cacheID()}))
+        self.failUnlessEqual(response.status_code, 200)
+        
+        print response.content.splitlines()[0]
 
