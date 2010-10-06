@@ -161,7 +161,6 @@ INSTALLED_APPS = (
     #'reversion',   # clashes with south if data migrations are done
 
     'ecs.utils.countries',
-    'ecs.utils.hashauth',
     'compressor',
     'dbtemplates',
     'haystack',
