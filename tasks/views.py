@@ -8,7 +8,7 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.communication.models import Thread
 from ecs.tasks.models import Task
-from ecs.tasks.forms import DelegateTaskForm, ManageTaskForm, TaskListFilterForm
+from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 
 def task_list(request, user=None, data=None):
     tasks = Task.objects.filter(closed_at=None)
@@ -133,16 +133,6 @@ def decline_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
-    
-def delegate_task(request, task_pk=None):
-    task = get_object_or_404(Task, pk=task_pk)
-    form = DelegateTaskForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        task.assign(form.cleaned_data['user'])
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
-    return render(request, 'tasks/delegate.html', {
-        'form': form,
-    })
     
 def do_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
