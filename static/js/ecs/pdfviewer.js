@@ -60,25 +60,66 @@ ecs.pdfviewer = {
             return el;
         }
     }),
+    
+    utils: {
+        isAtBottom: function(){
+            var win = $(window);
+            // we have to use <= 0, because firefox somehow manages to scroll one pixel beyond the window.
+            return win.getScrollHeight() - win.getScroll().y - win.getHeight() <= 0;
+        },
+        isAtTop: function(){
+            return $(window).getScroll().y == 0
+        }
+    },
 
     DocumentViewer: new Class({
         initialize: function(el, options){
             this.element = $(el);
             this.pageCount = options.pageCount;
-            this.imageSets = {};
             this.controllers = options.controllers;
+            this.wheelThreshold = options.wheelThreshold || 20.0;
+            this.title = options.title;
+            this.searchURL = options.searchURL;
+            this.metaKey = options.metaKey || '';
+
+            this.imageSets = {};
             this.currentPageIndex = 0;
             this.currentControllerIndex = 0;
             this.currentScreen = null;
             this.currentContent = [];
-            $(window).addEvent('click', (function(e){
-                this.handleClick(e);
-            }).bind(this));
+
+            this._wheelCounter = 0;
+            this._wheelTimeout = null;
+            this._wheelReset = (function(){this._wheelCounter = 0; this._wheelTimeout = null;}).bind(this);
+            $(window).addEvent('click', this.handleClick.bind(this));
+            $(window).addEvent('mousewheel', this.handleMouseWheel.bind(this));
             
-            this.title = options.title;
+            this.body = new Element('div', {'class': 'body'});
+            this.viewport = new Element('div', {'class': 'viewport'});
             this.header = new Element('div', {'class': 'header', html: this.title});
+            this.prevLink = new Element('a', {'class': 'previous', html: '<b>previous</b>'});
+            this.nextLink = new Element('a', {'class': 'next', html: '<b>next</b>'});
             this.element.grab(this.header);
-            this.searchURL = options.searchURL;
+            this.element.grab(this.body);
+            this.body.grab(this.prevLink);
+            this.body.grab(this.viewport);
+            this.body.grab(this.nextLink);
+            this.prevLink.addEvent('click', (function(){
+                this.previousPage();
+            }).bind(this));
+            this.nextLink.addEvent('click', (function(){
+                this.nextPage();
+            }).bind(this));
+        },
+        gotoAnchor: function(hash){
+            hash = hash || window.location.hash;
+            if(hash){
+                this.setPage(parseInt(hash.substring(1)) - 1, false);
+                this.setControllerIndex(this.controllers.length - 1);
+            }
+        },
+        setMetaKey: function(meta){
+            this.metaKey = meta;
         },
         getImageSetKey: function(x, y){
             return x + 'x' + y;
@@ -118,16 +159,18 @@ ecs.pdfviewer = {
             }
         },
         nextPage: function(delta){
-            this.setPage(Math.min(this.currentPageIndex + (delta || 1), this.pageCount - 1));
+            $(document.body).scrollTo(0, 0);
+            this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1));
         },
         previousPage: function(delta){
-            this.setPage(Math.max(this.currentPageIndex - (delta || 1), 0));
+            this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0));
         },
         render: function(imageSetKey, offset, w, h){
             if($A(arguments).every((function(val, index){ return this.currentContent[index] == val;}).bind(this))){
                 return;
             }
-            this.header.innerHTML = this.title + ' Seite ' + (offset + 1) + ' - ' + (offset + w*h) + ' von ' + this.pageCount;
+            window.location.hash = this.currentPageIndex + 1;
+            this.header.innerHTML = this.title + ' Page ' + (offset + 1) + (w*h > 1 ? ' - ' + (offset + w*h) : '') + ' von ' + this.pageCount;
             this.currentContent = $A(arguments);
             var imageSet = this.imageSets[imageSetKey];
             if(this.currentScreen){
@@ -147,16 +190,20 @@ ecs.pdfviewer = {
                     if(pageIndex == this.currentPageIndex){
                         pageEl.addClass('current');
                     }
-                    pageEl.grab(new Element('div', {'class': 'info', html: 'Seite ' + pageIndex}));
+                    pageEl.grab(new Element('div', {'class': 'info', html: 'Seite ' + (pageIndex + 1)}));
                     row.grab(pageEl);
                 }
                 screen.grab(row);
             }
-            this.element.grab(screen);
+            this.viewport.grab(screen);
             this.currentScreen = screen;
             return screen;
         },
         handleKeyPress: function(e){
+            var metaKey = !this.metaKey || e[this.metaKey];
+            var U = ecs.pdfviewer.utils;
+            var atTop = U.isAtTop();
+            var atBottom = U.isAtBottom();
             if(e.key == 's'){
                 var searchDialog = new ecs.Dialog(this.searchURL, {
                     size: {
@@ -167,31 +214,74 @@ ecs.pdfviewer = {
                         this.key_nav_enabled = true;
                     }).bind(this)
                 });
+                return false;
             }
-            else if(e.alt && e.key == 'up'){
-                this.cycleController(-1);
-            }
-            else if(e.alt && e.key == 'down' || e.key == 'enter'){
+            else if(e.key == 'enter'){
                 this.cycleController(+1);
+                return false;
             }
-            else if(e.alt && e.key == 'right'){
+            else if(e.key == 'up'){
+                if(metaKey){
+                    this.cycleController(-1);
+                }
+                else if(atTop){
+                    this.previousPage(this.getController().sliceLength);
+                }
+                return false;
+            }
+            else if(e.key == 'down'){
+                if(metaKey){
+                    this.cycleController(+1);
+                }
+                else if(atBottom){
+                    this.nextPage();
+                }
+                return false;
+            }
+            else if(metaKey && e.key == 'right'){
                 if(e.shift){
                     this.setPage(this.pageCount - 1);
                 }
                 else{
-                    this.nextPage(this.getController().sliceLength);
+                    this.nextPage();
                 }
+                return false;
             }
-            else if(e.alt && e.key == 'left'){
+            else if(metaKey && e.key == 'left'){
                 if(e.shift){
                     this.setPage(0);
                 }
                 else{
-                    this.previousPage(this.getController().sliceLength);
+                    this.previousPage();
                 }
+                return false;
             }
-            else if(e.key == 'a'){
+            else if(e.key == 'a' && this.getController().options.showAnnotations){
+                var hint = new Element('div', {'class': 'annotationHint', 'html': 'Annotation Mode<br/>Drag &amp; Drop or ESC to Quit'});
+                $(document.body).grab(hint);
                 
+                return false;
+            }
+        },
+        handleMouseWheel: function(e){
+            var U = ecs.pdfviewer.utils;
+            if(e.wheel > 0 && U.isAtTop() || e.wheel < 0  && U.isAtBottom()){
+                if(this._wheelTimeout){
+                    clearTimeout(this._wheelTimeout)
+                }
+                else{
+                    this._wheelTimeout = setTimeout(this._wheelReset, 100);
+                }
+                this._wheelCounter += Math.abs(e.wheel);
+                if(this._wheelCounter >= this.wheelThreshold){
+                    this._wheelCounter = 0;
+                    if(e.wheel > 0){
+                        this.previousPage();
+                    }
+                    else if(e.wheel < 0){
+                        this.nextPage();
+                    }
+                }
             }
         },
         handleClick: function(e){
@@ -213,7 +303,7 @@ ecs.pdfviewer = {
             this.x = x;
             this.y = y;
             this.sliceLength = x * y;
-            this.options = options || {};
+            this.options = options || {'showAnnotations': true};
         },
         render: function(viewer, pageIndex){
             var blockIndex = parseInt(Math.floor(pageIndex / this.sliceLength));

@@ -4,12 +4,18 @@
 
 <div id="pdfviewer"></div>
 <div id="navigation" class="hidden">
-    <div>Alt + &rarr;: Next Page</div>
-    <div>Alt + &larr;: Previous Page</div>
-    <div>Alt + Shift + &rarr;: Last Page</div>
-    <div>Alt + Shift + &larr;: First Page</div>
-    <div>Alt + &darr;: Zoom In</div>
-    <div>Alt + &uarr;: Zoom Out</div>
+    <select id="metaKeySelect">
+        <option value="">-</option>
+        <option value="alt">Alt</option>
+        <option value="control">Control</option>
+        <option value="meta">Meta</option>
+    </select>
+    <div><span class="metaKey"></span> + &rarr;: Next Page</div>
+    <div><span class="metaKey"></span> + &larr;: Previous Page</div>
+    <div><span class="metaKey"></span> + Shift + &rarr;: Last Page</div>
+    <div><span class="metaKey"></span> + Shift + &larr;: First Page</div>
+    <div><span class="metaKey"></span> + &darr;: Zoom In</div>
+    <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
 </div>
 
 {% endblock %}
@@ -36,6 +42,7 @@
                 new ecs.pdfviewer.Controller('3x3', 3, 3),
                 new ecs.pdfviewer.Controller('1x1', 1, 1)
             ],
+            metaKey: 'alt',
             searchURL: '{% url ecs.documents.views.document_search document_pk=document.pk %}'
         });
         
@@ -66,7 +73,17 @@
             }
         });
         viewer.element.focus();
+        viewer.gotoAnchor();
         viewer.update();
+        
+        var metaKeySelect = $('metaKeySelect')
+        metaKeySelect.addEvent('change', function(){
+            viewer.setMetaKey(metaKeySelect.value);
+            $$('.metaKey').each(function(mk){
+                mk.innerHTML = metaKeySelect.value.capitalize();
+            });
+        });
+        metaKeySelect.value = 'alt';
         
         // POS1: first page
         // END: last page

@@ -6,23 +6,32 @@ body.pdfviewer .hidden{
     display: none;
 }
 
-body.pdfviewer .page{
+#pdfviewer{
+    float: left;
+}
+
+#pdfviewer .body{
+    float: left;
+    position: relative;
+}
+
+#pdfviewer .page{
     float: left;
     border: 3px solid transparent;
     background-repeat: no-repeat;
     position: relative;
 }
 
-body.pdfviewer .page.current{
+#pdfviewer .page.current{
     border-color: #99ccff;
 }
 
-body.pdfviewer .page.loading{
+#pdfviewer .page.loading{
     background-position: 5px 5px;
     background-image: url(/static/images/loading.gif);
 }
 
-body.pdfviewer .page > .info{
+#pdfviewer .page > .info{
     position: absolute;
     bottom: 0px;
     width: 100%;
@@ -32,15 +41,58 @@ body.pdfviewer .page > .info{
     vertical-align: bottom;
 }
 
-body.pdfviewer .page:hover{
+#pdfviewer .page:hover{
     border-color: #cc0000;
 }
 
-body.pdfviewer .page:hover > .info{
+#pdfviewer .page:hover > .info{
     display: block;
 }
 
-body.pdfviewer .screen .row{
+#pdfviewer .viewport{
+    margin-left: 60px;
+    margin-right: 60px;
+    float: left;
+}
+
+#pdfviewer a.next{
+    right: 0px;
+}
+#pdfviewer a.previous{
+    left: 0px;
+}
+
+#pdfviewer a.next, #pdfviewer a.previous{
+    display: block;
+    width: 60px;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    z-index: 100;
+    overflow: hidden;
+    color: #ffffff;
+    opacity: 0.2;
+    font-size: 30px;
+}
+
+#pdfviewer a.next > b{
+    -moz-transform: rotate(90deg);
+}
+
+#pdfviewer a.previous > b{
+    -moz-transform: rotate(-90deg);
+}
+
+#pdfviewer a.next:hover, body.pdfviewer a.previous:hover{
+    background-color: #cccc00;
+}
+
+#pdfviewer .screen{
+    float: left;
+}
+
+#pdfviewer .screen .row{
+    float: left;
     clear: both;
 }
 
