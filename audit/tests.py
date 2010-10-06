@@ -23,6 +23,9 @@ class BasicTests(EcsTestCase):
         a = AuditTrail.objects.all()[0]
         a.get_log_line()
 
+    def test_unicode(self):
+        a = AuditTrail.objects.all()[0]
+        unicode(a)
 
 class ViewTests(EcsTestCase):
     def setUp(self, *args, **kwargs):
