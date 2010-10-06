@@ -20,6 +20,7 @@ class LoginTestCase(EcsTestCase):
         user = User(username='unittest')
         user.set_password('password')
         user.save()
+        self.user = user
         self.client.login(username='unittest', password='password')
     
     def tearDown(self):

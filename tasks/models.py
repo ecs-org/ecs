@@ -59,14 +59,20 @@ class Task(models.Model):
     
     @cached_property
     def node_controller(self):
+        if not self.workflow_token_id:
+            return None
         return self.workflow_token.node.bind(self.workflow_token.workflow)
         
     @cached_property
     def url(self):
+        if not self.node_controller:
+            return None
         return self.node_controller.get_url()
     
     @property
     def choices(self):
+        if not self.node_controller:
+            return None
         return self.node_controller.get_choices()
     
     def close(self, commit=True):
@@ -81,7 +87,7 @@ class Task(models.Model):
         if token:
             self.data.workflow.do(token, choice=choice)
         else:
-            self.close(user=user, commit=commit)
+            self.close(commit=commit)
         
     def assign(self, user, check_authorization=True, commit=True):
         if user and check_authorization:
