@@ -1,7 +1,11 @@
 import re
+
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.test.client import Client
+
 from ecs.ecsmail.testcases import MailTestCase
+from ecs.utils.testcases import EcsTestCase
 
 
 class RegistrationTest(MailTestCase):
@@ -84,4 +88,24 @@ class PasswordChangeTest(MailTestCase):
         user = User.objects.get(username='foobar')
         self.failUnless(user.check_password('1234'))
         
+class MiddlewareTest(EcsTestCase):
+    def setUp(self, *args, **kwargs):
+        testuser = User.objects.create(username='testuser')
+        testuser.set_password('4223')
+        testuser.save()
+
+        return super(MiddlewareTest, self).setUp(*args, **kwargs)
+
+    def test_single_login(self):
+        c1 = Client()
+        c2 = Client()
+
+        c1.login(username='testuser', password='4223')
+        c2.login(username='testuser', password='4223')  # now, c1 has to be logged out, because of the single login middleware
+
+        response = c2.get(reverse('ecs.dashboard.views.view_dashboard'))
+        self.failUnlessEqual(response.status_code, 200)
+
+        response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
+        self.failUnlessEqual(response.status_code, 302)
         
