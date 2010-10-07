@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
-from tracrpc import tracrpc
+from ecs.utils import tracrpc
 
 # Create your models here.
 
