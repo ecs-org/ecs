@@ -395,7 +395,8 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
     print 'RENDER: %s.%s pk=%s' % (instance.__class__.__module__, instance.__class__.__name__, instance.pk)
     print already_rendered
 
-    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in ignored_fields]
+    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
+    fields.sort()
 
     for field in fields:
         try:
@@ -411,6 +412,7 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
             
 
         if hasattr(value, 'all'):
+            #rendered = u', '.join([unicode(w) for w in value.all()])
             rendered = u''
             for w in value.all():
                 if (w.__class__, w.pk,) in already_rendered:
@@ -418,7 +420,6 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
                 else:
                     already_rendered.append((w.__class__, w.pk,))
                     rendered += '<br />\n'.join(_render_instance(w, already_rendered=already_rendered))
-                    #rendered += unicode(_render_instance(w, already_rendered=already_rendered))
         else:
             if isinstance(value, models.Model):
                 if (instance.__class__, instance.pk,) in already_rendered:
@@ -426,15 +427,17 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
                 else:
                     already_rendered.append((instance.__class__, instance.pk,))
                     rendered += '<br />\n'.join(_render_instance(value, already_rendered=already_rendered))
-                    #rendered += unicode(_render_instance(value, already_rendered=already_rendered))
             else:
                 rendered = unicode(value).replace(u'\n', '<br />\n')
 
-        rendered_fields[field] = rendered
+        rendered_fields[field] = u'%s: %s' % (field, rendered)
 
     return rendered_fields
 
-def diff_submission_forms(old_submission_form, new_submission_form):
+def diff(request, old_submission_form_pk, new_submission_form_pk):
+    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
+    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
+
     sff = SubmissionFormForm(None, instance=old_submission_form)
 
     differ = diff_match_patch()
@@ -444,7 +447,7 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     old = _render_instance(old_submission_form, ignored_fields=ignored_fields)
     new = _render_instance(new_submission_form, ignored_fields=ignored_fields)
 
-    for field in old.iterkeys():
+    for field in sorted(old.keys()):
         diff = differ.diff_main(old[field], new[field])
         if differ.diff_levenshtein(diff):
             try:
@@ -453,15 +456,6 @@ def diff_submission_forms(old_submission_form, new_submission_form):
                 label = field
             differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
-
-    return diffs
-
-
-def diff(request, old_submission_form_pk, new_submission_form_pk):
-    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
-    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
-
-    diffs = diff_submission_forms(old_submission_form, new_submission_form)
 
     return render(request, 'submissions/diff.html', {
         'submission': new_submission_form.submission,
