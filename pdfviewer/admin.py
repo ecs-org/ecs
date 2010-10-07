@@ -1,4 +1,4 @@
 from django.contrib import admin
-from ecs.pdfviewer.models import Annotation
+from ecs.pdfviewer.models import DocumentAnnotation
 
-admin.site.register(Annotation)
+admin.site.register(DocumentAnnotation)
