@@ -26,7 +26,7 @@ def task_backlog(request):
         'tasks': tasks,
     })
 
-def my_tasks(request):
+def my_tasks(request, template='tasks/mine.html'):
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', '-assigned_at')
     related_url = request.GET.get('url', None)
     if related_url:
@@ -83,13 +83,16 @@ def my_tasks(request):
     else:
         proxy_tasks = tasks.none()
 
-    return render(request, 'tasks/compact_list.html', {
+    return render(request, template, {
         'accepted_tasks': accepted_tasks,
         'assigned_tasks': assigned_tasks,
         'open_tasks': open_tasks,
         'proxy_tasks': proxy_tasks,
         'filterform': filterform,
     })
+    
+def my_tasks_widget(request):
+    return my_tasks(request, template='tasks/widget.html')
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
