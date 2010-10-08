@@ -30,7 +30,8 @@ class Feedback(models.Model):
                   'location': '',#what goes in here? cleaned version of self.origin?
                   'absoluteurl': self.origin,
                   'type': self.get_feedbacktype_display().lower(),
-                  'cc': self.user.email,
+                  'cc': '',
+                  'ecsfeedback_creator': self.user.email,
                   'milestone': settings.FEEDBACK_CONFIG['milestone']}
         #'reporter': self.user.email,
         

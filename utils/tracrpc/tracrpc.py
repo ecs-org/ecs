@@ -100,7 +100,19 @@ class TracRpc():
             if value is not None:
                 newdict[key] = value
         return newdict
-
+    
+    @staticmethod
+    def pad_ticket_w_emptystrings(ticket, fieldnames):
+        '''
+        returns new dict with fieldnames set to None if they dont exist in ticket
+        '''
+        new_ticket = {}
+        for key,val in ticket.iteritems():
+            new_ticket[key] = val if val is not None else ''
+        for name in fieldnames:
+            new_ticket[name] = ticket[name] if ticket.has_key(name) and ticket[name] is not None else ''
+        
+        return new_ticket
 
     def _get_field(self, rawticket, fieldname):
             '''
@@ -131,6 +143,7 @@ class TracRpc():
             ticket['cc'] = self._get_field(rawticket, 'cc')
             ticket['location'] = self._get_field(rawticket, 'location')
             ticket['absoluteurl'] = self._get_field(rawticket, 'absoluteurl')
+            ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
             return ticket
         
     
@@ -360,7 +373,7 @@ class TracRpc():
         success, additional = self._update_ticket(tid, ticket, action, comment)
         #fixme: check if successfull
         
-    def _get_ticket_report(self, username=None):
+    def _get_ticket_report(self, username=None, query=None):
         '''
         get a ticket report from trac
         '''
@@ -368,10 +381,11 @@ class TracRpc():
 &status=reopened&status=testing&group=type&order=priority\
 &col=id&col=summary&col=status&col=type&col=priority\
 &col=milestone&col=component"
-        if username is not None:
-            query = "%s&owner=%s" % (query_base, username)
-        else:
-            query = query_base
+        if query is None:
+            if username is not None:
+                query = "%s&owner=%s" % (query_base, username)
+            else:
+                query = query_base
         
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
         tickets = []
@@ -384,13 +398,49 @@ class TracRpc():
             tickets.append(self._get_ticket_from_rawticket(result['result']))
         
         return tickets
+    
+    def delete_tickets_by_query(self, query=None, verbose=None, doublecheck=False):
+        if query is None:
+            return None
         
-    def show_ticket_report(self, username=None, verbose=False, termwidth=80):
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        ticket_types = []
+        tickets = []
+        mc = self.multicall()
+        for tid in ticket_ids:
+            mc.ticket.get(tid)
+        results = self._safe_rpc(mc)
+        for result in results.results['result']:
+            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        
+        allowed_types_2_delete = ['praise', 'problem', 'idea', 'question']
+        #allowed_types_2_delete = ['praise', 'problem', 'question']
+        for ticket in tickets:
+            if ticket['type'] not in allowed_types_2_delete:
+                #return False, "bad ticket type in query wont delete anything"
+                raise Exception('delete_by_query_error', 'bad ticket type in query wont delete anything')
+        
+        if not doublecheck:
+            print "would delete %d tickets" % len(tickets)
+            return True,query
+        else:
+            mc = self.multicall()
+            for tid in ticket_ids:
+                #mc.ticket.delete(tid)
+                pass
+            results = self._safe_rpc(mc)
+            print "u just did a scary thing" 
+        
+        
+    
+    def show_ticket_report(self, username=None, verbose=False, termwidth=80, query=None):
         '''
         show a trac ticket report to the user
         '''
-        print "ticket report for '%s'" % username
-        tickets = self._get_ticket_report(username)
+        if query is None:
+            print "ticket report for '%s'" % username
+        
+        tickets = self._get_ticket_report(username=username, query=query)
         if verbose:
             for ticket in tickets:
                 print "Ticket:\t%d" % ticket['id']

@@ -2,8 +2,10 @@
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.feedback.models import Feedback
+from ecs.utils import tracrpc
 
 import datetime
 import random
@@ -31,19 +33,47 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
 
     description = ''
     description_error = False
-
+    rpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
+    
+     
+    
     if request.method == 'POST' and request.POST.has_key('description'):
         description = request.POST['description']
         id = request.POST['fb_id']
         if id:
             # me2 vote (via GET)
             id = int(id)
-            if id > 0:
-                fb = Feedback.objects.get(id=id)
-                fb.me_too_votes_add(user)
+            
+            if id < 0:
+                tid = id * -1
+                add = False
             else:
-                fb = Feedback.objects.get(id=-id)
-                fb.me_too_votes_remove(user)
+                tid = id
+                add = True
+            
+            ticket = rpc._get_ticket(tid)
+            ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
+            if ticket is not None:
+                emails = ticket['cc'].split(',')
+                in_cc = False
+                for email in emails:
+                    if user.email in email:
+                        in_cc = True
+                        emails.remove(email)
+                if add:
+                    #fb = Feedback.objects.get(id=id)
+                    #fb.me_too_votes_add(user)
+                    if not in_cc:
+                        update_ticket = {'cc': "%s,%s" % (ticket['cc'], user.email)}
+                        rpc._update_ticket(id, update_ticket, action='leave', comment='')
+                else:
+                    #fb = Feedback.objects.get(id=-id)
+                    #fb.me_too_votes_remove(user)
+                    update_ticket = {'cc':','.join(emails)}
+                    rpc._update_ticket(int(id)*-1, update_ticket, action='leave', comment='')
+            else:
+                pass
+            
         else:
             description_error = (description == '')
             if not (description_error):
@@ -69,28 +99,86 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     index = (page - 1) * page_size;
 
     def get_me2(fb):
+        print ""
+        print "get_me2(fb) is DEPRECATED "
         if fb.user.id == user.id:
             return 'yours'
         elif fb.me_too_votes.filter(id=user.id).count() > 0:
             return 'u2'
         else:
             return 'me2'
-
+    
     def get_count(fb):
+        print ""
+        print "get_count(fb) is DEPRECATED "
         return fb.me_too_votes.all().count()
+       
+       
+   
+    def get_me2_from_ticket(ticket):
+        if user.email in ticket['ecsfeedback_creator']:
+            return 'yours'
+        emails = ticket['cc'].split(',')
+        for email in emails:
+            if user.email in email:
+                 return 'u2'
+        
+        return 'me2'
+        
+    def get_me_too_count_from_ticket(ticket):
+        emails = ticket['cc'].split(',')
+        for email in emails:
+            if email == '':
+                emails.remove(email)
+        count = len(emails)
+        return count
+    
+    query_base = "order=id&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component"
+    #query = query_base + "&type=idea&type=question&type=problem&type=praise"
+    query = query_base + "&type=%s" % m[type].lower()
+    query += "&absoluteurl=%s" % origin
+    #query = "errortest"
+    results = None
+    ticket_count = 0
+    
+    ticket_ids = rpc._safe_rpc(rpc.jsonrpc.ticket.query, query)
+    if ticket_ids is not None:        
+        mc = rpc.multicall()
+        for tid in ticket_ids:
+            mc.ticket.get(tid)
+        results = rpc._safe_rpc(mc)
 
-    for fb in Feedback.objects.filter(feedbacktype=type).filter(origin=origin).order_by('-pub_date')[index:index+page_size]:
-        index = index + 1
-        list.append({
-            'index': index,
-            'id': fb.id,
-            'description': fb.description,
-            'me2': get_me2(fb),
-            'count': get_count(fb),
-        })
+    if results is not None:
+        ticket_count = len(results.results['result'])
+        for result in results.results['result'][index:index+page_size]:
+            ticket = rpc._get_ticket_from_rawticket(result['result'])
+            ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
+            index += 1
+            
+            list.append({
+                'index': index,
+                'id': ticket['id'],
+                'description': ticket['summary'],
+                'me2': get_me2_from_ticket(ticket),
+                'count': get_me_too_count_from_ticket(ticket),
+                'origin': origin
+            })
+        
+#    for fb in Feedback.objects.order_by('-pub_date'):
+#        print "ticket:",fb.description,'get_count(fb)',get_count(fb)
+#        index = index + 1
+#        list.append({
+#            'index': index,
+#            'id': fb.id,
+#            'description': fb.description,
+#            'me2': get_me2(fb),
+#            'count': get_count(fb),
+#        })
 
     # calculate number of pages
-    items = Feedback.objects.filter(feedbacktype=type).filter(origin=origin).count()
+    #items = Feedback.objects.filter(feedbacktype=type).filter(origin=origin).count()
+    items = ticket_count
+    
     if items > 0:
         pages = (items - 1) / page_size + 1
         if page > pages:
