@@ -1,7 +1,6 @@
 /* Created by Arian Stolwijk <http://www.aryweb.nl> */
 
 .MooDialog {
-  position: absolute;
   top: 80px !important;
   background: #fff !important;
   color: black;
