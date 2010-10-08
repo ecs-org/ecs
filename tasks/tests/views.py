@@ -39,7 +39,7 @@ class ViewTestCase(LoginTestCase, WorkflowTestCase):
         self.failUnless(task.assigned_to is None)
         
         # reassign the user and complete the task
-        task.assign(self.user)
+        task.accept(self.user)
         response = self.client.post(manage_task_url, {'action': 'complete'})
         self.failUnlessEqual(response.status_code, 302)
         task = refetch()
