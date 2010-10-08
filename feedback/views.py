@@ -78,9 +78,13 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             description_error = (description == '')
             if not (description_error):
                 feedbacktype = type
-                pub_date = datetime.datetime.now()
-                feedback = Feedback(id=None, feedbacktype=feedbacktype, description=description, origin=origin, pub_date=pub_date, user=user)
-                feedback.save()
+                #pub_date = datetime.datetime.now()
+                #feedback = Feedback(id=None, feedbacktype=feedbacktype, description=description, origin=origin, pub_date=pub_date, user=user)
+                #feedback.save()
+                if settings.FEEDBACK_CONFIG['create_trac_tickets'] == True:
+                    tdict = {'feedbacktype': feedbacktype, 'description': description, 'origin': origin, 'creatoremail': user.email}
+                    success, result = Feedback._create_trac_ticket_from_dict(tdict)
+                
                 return render(request, 'feedback/thanks.html', {
                     'type': type,
                     'description': description,

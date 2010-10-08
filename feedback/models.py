@@ -7,20 +7,22 @@ from ecs.utils import tracrpc
 
 class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'Idea'),('q','Question'),('p', 'Problem'),('l','Praise'))
-    feedbacktype = models.CharField(choices=FEEDBACK_TYPES, max_length=1)
-    summary = models.CharField(max_length=200) 
-    description = models.TextField()
-    origin = models.CharField(max_length=200)
-    user = models.ForeignKey(User, related_name='author', null=True)
-    pub_date = models.DateTimeField('date published')
-    me_too_votes = models.ManyToManyField(User, null=True, blank=True)
+    #feedbacktype = models.CharField(choices=FEEDBACK_TYPES, max_length=1)
+    #summary = models.CharField(max_length=200) 
+    #description = models.TextField()
+    #origin = models.CharField(max_length=200)
+    #user = models.ForeignKey(User, related_name='author', null=True)
+    #pub_date = models.DateTimeField('date published')
+    #me_too_votes = models.ManyToManyField(User, null=True, blank=True)
     
-    trac_ticket_id = models.IntegerField(null=True)
+    #trac_ticket_id = models.IntegerField(null=True)
     
+    @classmethod
     def _get_tracrpc(self):
         #return tracrpc.TracRpc(settings.FEEDBACK_RPC_CONFIG['username'], settings.FEEDBACK_RPC_CONFIG['password'], settings.FEEDBACK_RPC_CONFIG['proto'], settings.FEEDBACK_RPC_CONFIG['host'], settings.FEEDBACK_RPC_CONFIG['urlpath'])
         return tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
         #return tracrpc.TracRpc('sharing', 'uehkdkDijepo833', 'https', 'ecsdev.ep3.at', '/project/ecs')
+    
     
     def _create_trac_ticket(self):
         tracrpc = self._get_tracrpc()
@@ -40,12 +42,35 @@ class Feedback(models.Model):
         except:
             raise
         return success, result
+    
+    @classmethod
+    def _create_trac_ticket_from_dict(self, tdict=None):
+        if tdict is None:
+            return None
+        if tdict['description'] is None or tdict['origin'] is None or tdict['feedbacktype'] is None or tdict['creatoremail'] is None:
+            return None
+        
+        ftdict = dict(Feedback.FEEDBACK_TYPES)
+        tracrpc = self._get_tracrpc()
+        #summary = feedback.description because feedback.summary is always empty
+        ticket = {'summary': tdict['description'],
+                  'description': tdict['summary'] if tdict.has_key('summary') else '',
+                  'location': tdict['location'] if tdict.has_key('location') else '',#what goes in here? cleaned version of self.origin?
+                  'absoluteurl': tdict['origin'],
+                  'type': ftdict[tdict['feedbacktype']].lower(),
+                  'cc': '',
+                  'ecsfeedback_creator': tdict['creatoremail'],
+                  'milestone': settings.FEEDBACK_CONFIG['milestone']}
+        #'reporter': self.user.email,
+        
+        try:
+            success, result = tracrpc._create_ticket(summary=ticket['summary'], ticket=ticket, description=ticket['description'])
+        except:
+            raise
+        return success, result
 
 
     def save(self, *args, **kwargs):
-        #print ""
-        #print "saving lala"
-        #print ""
         if 'dont_create_ticket' in kwargs and kwargs['dont_create_ticket'] == True:
             super(Feedback, self).save(*args, **kwargs)
         else:
