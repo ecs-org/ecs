@@ -6,8 +6,9 @@ import traceback
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.db.models import Q
 from ecs.ecsmail.mail import send_mail
+from sets import Set
 
 
 MESSAGE_ORIGIN_ALICE = 1
@@ -100,7 +101,7 @@ class Thread(models.Model):
     receiver = models.ForeignKey(User, related_name='incoming_threads')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     last_message = models.OneToOneField('Message', null=True, related_name='head')
-
+    
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
     
@@ -149,6 +150,8 @@ class Thread(models.Model):
             raise ValueError("Threads may only be delegated by the current sender or receiver")
         self.save()
 
+    def get_participants(self):
+        return User.objects.filter(Q(outgoing_messages__thread=self) | Q(incoming_messages__thread=self)).distinct()
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
