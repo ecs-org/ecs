@@ -46,9 +46,12 @@ def my_tasks(request, template='tasks/mine.html'):
         submission_pk = int(request.GET['submission'])
     except (KeyError, ValueError):
         submission_pk = None
+
     if submission_pk:
+        submission = get_object_or_404(Submission, pk=submission_pk)
         tasks = all_tasks.filter(content_type=submission_ct, data_id=submission_pk)
     else:
+        submission = None
         amg = filterform.cleaned_data['amg']
         mpg = filterform.cleaned_data['mpg']
         other = filterform.cleaned_data['other']
@@ -84,6 +87,7 @@ def my_tasks(request, template='tasks/mine.html'):
         proxy_tasks = tasks.none()
 
     return render(request, template, {
+        'submission': submission,
         'accepted_tasks': accepted_tasks,
         'assigned_tasks': assigned_tasks,
         'open_tasks': open_tasks,

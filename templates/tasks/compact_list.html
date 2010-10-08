@@ -1,13 +1,16 @@
 {% load i18n %}
 
 <div id="task_list">
+{% if submission %}
+    <h1>{{ submission }}</h1>
+{% endif %}
 <form id="task_list_filter" action="" method="post">
     <div class="task_list_choose">
         {{ filterform.mine }} <label>{% trans "Mine" %}</label>
         {{ filterform.open }} <label>{% trans "Open" %}</label>
         {{ filterform.proxy }} <label>{% trans "Proxy" %}</label>
     </div>
-    <div class="task_list_choose">
+    <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
         {{ filterform.amg }} <label for="id_amg">{% trans "AMG" %}</label>
         {{ filterform.mpg }} <label for="id_mpg">{% trans "MPG" %}</label>
         {{ filterform.other }} <label for="id_other">{% trans "Other" %}</label>

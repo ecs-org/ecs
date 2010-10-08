@@ -100,7 +100,7 @@ class CategorizationReview(Activity):
         return True
         
     def get_url(self):
-        return reverse('ecs.core.views.executive_review', kwargs={'submission_pk': self.workflow.data.pk})
+        return reverse('ecs.core.views.executive_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
 
 class PaperSubmissionReview(Activity):
