@@ -10,6 +10,19 @@ body.pdfviewer .hidden{
     float: left;
 }
 
+#pdfviewer .header{
+    background-color: #222222;
+    color: #ffffff;
+    opacity: 0.8;
+    font-size: 11px;
+    padding: 10px;
+}
+
+#pdfviewer .header .location{
+    display: inline-block;
+    float: right;
+}
+
 #pdfviewer .body{
     float: left;
     position: relative;

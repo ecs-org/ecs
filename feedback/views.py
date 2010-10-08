@@ -96,7 +96,11 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             return 'me2'
     
     def get_count(fb):
-        return len(fb.me_too_emails)
+        count = len(fb.me_too_emails)
+        #creator_email is always in cc but shouldn't be counted here
+        #this count is only for all others but not the creator
+        count -= 1 if count > 0 else 0
+        return count
        
     
     overall_count, fb_list = Feedback.query(limit_from=index, limit_to=(index+page_size), feedbacktype=type, origin=origin)

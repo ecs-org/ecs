@@ -131,6 +131,9 @@ ecs.pdfviewer = {
             this.annotationEditor.addEvent('hide', (function(){
                 this.keyboardNavigationEnabled = true;
             }).bind(this));
+            
+            this.searchPopup = new ecs.pdfviewer.SearchPopup();
+            
         },
         gotoAnchor: function(hash){
             hash = hash || window.location.hash;
@@ -244,7 +247,7 @@ ecs.pdfviewer = {
             }
             this.currentRenderArgs = $A(arguments);
             window.location.hash = this.currentPageIndex + 1;
-            this.header.innerHTML = this.title + ' Page ' + (offset + 1) + (w*h > 1 ? ' - ' + (offset + w*h) : '') + ' von ' + this.pageCount;
+            this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? ' - ' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
             var imageSet = this.imageSets[imageSetKey];
             if(this.currentScreen){
                 this.currentScreen.dispose();
@@ -312,11 +315,16 @@ ecs.pdfviewer = {
                 this.helpContents.toggleClass('hidden');
                 return false;
             }
-
             if(metaKey && e.key == 'a' && this.getController().options.showAnnotations){
                 this.toggleAnnotationMode();
                 return false;
             }
+            
+            if(metaKey && (e.key == 's' || e.key == 'f')){
+                this.searchPopup.show();
+                return false;
+            }
+            
             if(this.annotationMode && e.key == 'esc'){
                 this.toggleAnnotationMode();
                 return;
@@ -502,6 +510,69 @@ ecs.pdfviewer = {
         }
     }),
     
+    SearchPopup: new Class({
+        Implements: Events,
+        initialize: function(viewer){
+            this.viewer = viewer;
+        },
+        init: function(){
+            if(this.element){
+                return;
+            }
+            this.cover = new Element('div', {'class': 'cover'});
+            this.element = new Element('div', {'class': 'annotationDisplay popup'});
+            var content = new Element('div', {'class': 'content'});
+            this.input = new Element('input', {type: 'text', value: ''});
+            this.input.addEvent('keypress', (function(e){
+                if(e.key == 'enter'){
+                    this.search();
+                    return false;
+                }
+            }).bind(this));
+            var background = new Element('div', {'class': 'background'});
+            var searchLink = new Element('a', {html: 'Search'});
+            searchLink.addEvent('click', (function(){
+                this.search();
+            }).bind(this));
+            this.resultList = new Element('div', {'class': 'results'});
+            this.element.grab(background);
+            this.element.grab(content);
+            content.grab(this.input);
+            content.grab(searchLink);
+            content.grab(this.resultList);
+            this.escapeListener = (function(e){
+                if(e.key == 'esc'){
+                    this.dispose();
+                    return false;
+                }
+            }).bind(this);
+            this.cover.setStyle('display', 'none');
+            this.cover.grab(this.element);
+            $(document.body).appendChild(this.cover);
+            new Drag.Move(this.element, {handle: background});
+        },
+        search: function(){
+            var request = new Request({
+                url: this.viewer.searchURL,
+                data: $H({q: this.input.value()}).toQueryString()
+            });
+            request.save();
+        },
+        show: function(query){
+            this.init();
+            this.input.value = query || '';
+            this.cover.setStyle('display', '');
+            $(window).addEvent('keydown', this.escapeListener);
+            this.input.focus();
+            this.fireEvent('show');
+        },
+        dispose: function(){
+            $(window).removeEvent(this.escapeListener);
+            this.cover.setStyle('display', 'none');
+            this.fireEvent('hide');
+        }
+    }),
+    
     AnnotationEditor: new Class({
         Implements: Events,
         initialize: function(viewer, annotation){
@@ -513,7 +584,7 @@ ecs.pdfviewer = {
                 return;
             }
             this.cover = new Element('div', {'class': 'cover'});
-            this.element = new Element('div', {'class': 'annotationDisplay'});
+            this.element = new Element('div', {'class': 'annotationDisplay popup'});
             var content = new Element('div', {'class': 'content'});
             this.textarea = new Element('textarea', {html: this.text});
             var background = new Element('div', {'class': 'background'});
@@ -554,7 +625,7 @@ ecs.pdfviewer = {
             this.cover.setStyle('display', '');
             $(window).addEvent('keydown', this.escapeListener);
             this.textarea.focus();
-            this.fireEvent('show')
+            this.fireEvent('show');
         },
         onSave: function(){
             this.annotation.text = this.textarea.value;

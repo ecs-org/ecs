@@ -53,7 +53,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
         if instance:
             kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
-    
+
     employees = []
     if instance:
         for index, investigator in enumerate(instance.investigators.order_by('id')):
@@ -103,7 +103,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     executive_review_form = ExecutiveReviewForm(instance=submission, readonly=True)
     befangene_review_form = BefangeneReviewForm(instance=submission, readonly=True)
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
-
+    
     checklist_reviews = []
     for checklist in submission.checklists.all():
         if checklist_overwrite and checklist.blueprint in checklist_overwrite:

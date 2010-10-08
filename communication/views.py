@@ -24,7 +24,8 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
         form = ReplyToMessageForm(request.POST or None, initial={
             'subject': 'Re: %s' % thread.subject,
             'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
-        })
+            
+        }, instance = Message(thread=thread))
         submission = thread.submission
     else:
         form = SendMessageForm(request.POST or None)
@@ -79,6 +80,16 @@ def read_thread(request, thread_pk=None):
     })
 
 def bump_message(request, message_pk=None):
+    if message_pk is not None:
+        reply_to = get_object_or_404(Message, pk=message_pk)
+        thread = reply_to.thread
+        form = ReplyToMessageForm(request.POST or None, initial={
+            'subject': 'Re: %s' % thread.subject,
+            'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
+            
+        }, instance = Message(thread=thread))
+        submission = thread.submission
+
     message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
     message.thread.add_message(request.user, message.text)
     return HttpResponse('OK')
@@ -92,7 +103,9 @@ def delegate_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     form = ThreadDelegationForm(request.POST or None)
     if form.is_valid():
+        message = thread.add_message(request.user, text=form.cleaned_data['text'])
         thread.delegate(request.user, form.cleaned_data['to'])
+
         return render(request, 'communication/delegate_thread_response.html', {
             'to': form.cleaned_data['to'],
             'thread': thread,
@@ -144,14 +157,16 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
 
     sort_session_key = '%s:sort' % session_prefix
     sort = request.GET.get('sort', request.session.get(sort_session_key, '-timestamp'))
+    
     if sort:
-        if not sort in ('timestamp', '-timestamp', 'user', '-user'):
+        if not sort in ('timestamp', '-timestamp', 'user', '-user', 'thread__submission', '-thread__submission'):
             sort = None
         if sort and sort.endswith('user'):
             if user_sort:
                 queryset = queryset.order_by(sort.replace('user', user_sort))
             else:
                 sort = None
+    
     request.session[sort_session_key] = sort
 
     page_session_key = 'dashboard:%s:page' % session_prefix
