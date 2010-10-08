@@ -189,6 +189,16 @@ class Edge(models.Model):
         return bind_guard(self, workflow)
 
 
+class WorkflowManager(models.Manager):
+    def create(self, **kwargs):
+        data = kwargs.get('data', None)
+        if data:
+            kwargs['content_type'] = ContentType.objects.get_for_model(type(data))
+            kwargs['data_id'] = data.pk
+        workflow = super(WorkflowManager, self).create(**kwargs)
+        workflow.data = data
+        return workflow
+
 class Workflow(models.Model):
     content_type = models.ForeignKey(ContentType)
     data_id = models.PositiveIntegerField()
@@ -196,6 +206,8 @@ class Workflow(models.Model):
     graph = models.ForeignKey(Graph, related_name='workflows')
     is_finished = models.BooleanField(default=False)
     parent = models.ForeignKey('workflow.Token', null=True, related_name='parent_workflow')
+    
+    objects = WorkflowManager()
     
     def clear_tokens(self):
         for token in self.tokens.filter(consumed_at=None):

@@ -9,6 +9,7 @@ from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory
 from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
 from ecs.utils import Args
+from ecs.users.utils import sudo
 
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
@@ -382,7 +383,8 @@ def checklist_questions():
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_ec_staff_users'))
+@sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
     submission, created = Submission.objects.get_or_create(ec_number='4321')
     if not created:

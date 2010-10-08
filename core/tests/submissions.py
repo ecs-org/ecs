@@ -5,7 +5,7 @@ from ecs.utils.testcases import EcsTestCase
 from django.db.models import Q
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
-from ecs.core.views.submissions import diff_submission_forms
+from ecs.core.views.submissions import diff
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document
 from django.contrib.auth.models import User
@@ -339,7 +339,7 @@ class SubmissionFormDiffTest(EcsTestCase):
     def test_submission_form_diff(self):
         ''' Test if the submissionForm diff function works correctly '''
         self.new_sf.project_title = 'roflcopter'
-        diff = diff_submission_forms(self.old_sf, self.new_sf)
+        diff = diff(self.old_sf, self.new_sf)
         self.failIf(not diff)
         try:
             project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
