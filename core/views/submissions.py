@@ -389,13 +389,13 @@ def import_submission_form(request):
     
     })
 
+def _render_submission_form(instance, ignored_fields=[]):
+    ignored_fields = list(ignored_fields)
 
-def _render_instance(instance, ignored_fields=[], already_rendered=[]):
+    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
+    fields.sort()
+
     rendered_fields = {}
-    print 'render: %s pk=%s' % (instance.__class__, instance.pk)
-
-    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in ignored_fields]
-
     for field in fields:
         try:
             value = getattr(instance, field) or ''
@@ -407,41 +407,34 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
                 continue
         except Exception, e:
             print 'Error: %s %s: %s' % (instance, field, e)
-            
+            continue
 
-        if hasattr(value, 'all'):
-            rendered = u''
-            for w in value.all():
-                if (w.__class__, w.pk,) in already_rendered:
-                    rendered += u''
-                else:
-                    already_rendered.append((w.__class__, w.pk,))
-                    rendered += unicode(_render_instance(w, already_rendered=already_rendered))
-        else:
-            if isinstance(value, models.Model):
-                if (instance.__class__, instance.pk,) in already_rendered:
-                    rendered = u''
-                else:
-                    already_rendered.append((instance.__class__, instance.pk,))
-                    rendered = unicode(_render_instance(value, already_rendered=already_rendered))
-            else:
-                rendered = unicode(value).replace(u'\n', '<br />\n')
+        if hasattr(value, 'all'):  # x-to-many-relation
+            rendered = u', '.join([unicode(x) for x in value.all()])
+        elif isinstance(value, models.Model):  # foreign-key
+            rendered = unicode(value)
+        else:  # all other values
+            rendered = unicode(value).replace(u'\n', u'<br />\n')
+
 
         rendered_fields[field] = rendered
 
     return rendered_fields
 
-def diff_submission_forms(old_submission_form, new_submission_form):
+def diff(request, old_submission_form_pk, new_submission_form_pk):
+    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
+    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
+
     sff = SubmissionFormForm(None, instance=old_submission_form)
 
     differ = diff_match_patch()
     diffs = []
 
-    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission',)
-    old = _render_instance(old_submission_form, ignored_fields=ignored_fields)
-    new = _render_instance(new_submission_form, ignored_fields=ignored_fields)
+    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents')
+    old = _render_submission_form(old_submission_form, ignored_fields=ignored_fields)
+    new = _render_submission_form(new_submission_form, ignored_fields=ignored_fields)
 
-    for field in old.iterkeys():
+    for field in sorted(old.keys()):
         diff = differ.diff_main(old[field], new[field])
         if differ.diff_levenshtein(diff):
             try:
@@ -451,18 +444,20 @@ def diff_submission_forms(old_submission_form, new_submission_form):
             differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
 
-    return diffs
+    old_documents = set([x.pk for x in old_submission_form.documents.all()])
+    new_documents = set([x.pk for x in new_submission_form.documents.all()])
 
+    print old_documents
+    print new_documents
 
-def diff(request, old_submission_form_pk, new_submission_form_pk):
-    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
-    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
-
-    diffs = diff_submission_forms(old_submission_form, new_submission_form)
+    for doc in old_documents:
+        if doc in new_documents:
+            new_documents.remove(doc)
 
     return render(request, 'submissions/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
+        'new_documents': Document.objects.filter(pk__in=new_documents),
     })
 
 

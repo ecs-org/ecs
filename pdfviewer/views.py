@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.conf import settings
 from django.utils import simplejson
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
-from ecs.pdfviewer.models import Annotation
 from ecs.mediaserver.documentprovider import DocumentProvider
 from ecs.mediaserver.cacheobjects import MediaBlob
+
+from ecs.pdfviewer.models import DocumentAnnotation
+from ecs.pdfviewer.forms import DocumentAnnotationForm
 
 document_provider = DocumentProvider()
 
 def show(request, id='1', page=1, zoom='1'):
     document = get_object_or_404(Document, pk=id)
-    annotations = dict([(anno.uuid, simplejson.loads(anno.layoutData)) for anno in Annotation.objects.filter(docid=id, page=page)])
+    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text'))
 
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
@@ -23,26 +26,27 @@ def show(request, id='1', page=1, zoom='1'):
         'images': simplejson.dumps(document_provider.createDocshotData(document.uuid_document)),
     })
 
+@csrf_exempt
+def edit_annotation(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    try:
+        annotation = DocumentAnnotation.objects.get(user=request.user, pk=request.POST.get('pk'))
+    except DocumentAnnotation.DoesNotExist:
+        annotation = None
+    form = DocumentAnnotationForm(request.POST or None, instance=annotation, document=document)
+    if form.is_valid():
+        annotation = form.save(commit=False)
+        annotation.document = document
+        annotation.user = request.user
+        annotation.save()
+        return HttpResponse('OK')
+    else:
+        print form.errors
+        return HttpResponseBadRequest('OK')
 
-def demo(request):
-    return render(request, 'pdfviewer/demo.html', {})
-
-def annotation(request, did, page, zoom):
-    if not request.POST:
-        return HttpResponse('POST only')
-        
-    print did, page, zoom, request.POST
-    anno = Annotation(uuid=request.POST['uuid'])
-    anno.layoutData = request.POST['layoutData']
-    anno.docid = Document.objects.get(id=did);
-    anno.page = page;
-    anno.save()
-    return HttpResponse('OK')
-
-def delete_annotation(request, did, page, zoom):
-    if not request.POST:
-        return HttpResponse('POST only')
-        
-    print did, page, zoom, request.POST
-    anno = Annotation.objects.filter(uuid=request.POST['uuid']).delete()
+@csrf_exempt
+def delete_annotation(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    annotation = get_object_or_404(DocumentAnnotation, user=request.user, pk=request.POST.get('pk'))
+    annotation.delete()
     return HttpResponse('OK')

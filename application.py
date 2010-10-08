@@ -168,8 +168,8 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:http://github.com/gak/pygooglechart/tarball/master
 django-sentry:inst:all:pypi:django-sentry
 
-# jsonrpclib is needed for ecs.feedback to talk to trac
-jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
+# jsonrpclib for ecs feedback and fab ticket
+jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 """
 
 
@@ -189,9 +189,6 @@ pylint:inst:all:pypi:pylint
 
 # packages needed or nice to have for development
 developer_packages=  """
-#jsonrpc for cmdline ticket editing
-jsonrpclib:inst:all:file:externals/jsonrpclib-0.11.1.tar.gz
-
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
