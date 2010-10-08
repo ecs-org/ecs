@@ -52,7 +52,7 @@
                 new ecs.pdfviewer.Controller('1x1', 1, 1)
             ],
             metaKey: 'alt',
-            searchURL: '{% url ecs.documents.views.document_search document_pk=document.pk %}',
+            searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
             editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
             deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
             helpContents: $('navigation')
