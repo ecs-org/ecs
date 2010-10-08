@@ -383,12 +383,13 @@ def checklist_questions():
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_ec_staff_users'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers'))
 @sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
-    submission, created = Submission.objects.get_or_create(ec_number='4321')
-    if not created:
-        return
+    with sudo(): # XXX: this fixes a visibility problem, as presenters are currently not allowed to see their own submissions
+        if Submission.objects.filter(ec_number='4321').exists():
+            return
+    submission = Submission.objects.create(ec_number='4321')
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Päd'))
     
     submission_form_data = {
