@@ -34,7 +34,7 @@
         },
         load: function(url, form){
             var request = new Request.HTML({
-                url: url || form.action || this.url,
+                url: url || (form && form.action) || this.url,
                 method: form ? form.method : 'get',
                 update: this.element,
                 data: form ? form.toQueryString() : ''
@@ -57,6 +57,7 @@
                 form.submit = submit;
             }).bind(this));
             this.element.getElements('a.widget').each(function(link){
+                console.log(link.href);
                 link.addEvent('click', function(){
                     if(link.hasClass('popup')){
                         var popup = new ecs.Dialog(link.href, {

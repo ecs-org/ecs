@@ -23,7 +23,7 @@
         {% endifchanged %}
         <div class="task_item">
             {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-            <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}popup{% endif %}">{{ task.data }}</a>
+            <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}widget popup{% endif %}">{{ task.data }}</a>
         </div>
         {% endfor %}
     </div>
@@ -37,10 +37,9 @@
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
             <div>
-                {{ task }}
-                <span class="actions">
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="api">Annehmen</a> 
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="popup">Ablehnen</a>
+                {{ task.data }}
+                     (<a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">Annehmen</a> 
+                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">Ablehnen</a>)
                 </span>
             </div>
         {% endfor %}
@@ -54,7 +53,7 @@
             {% ifchanged task.task_type %}
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="api">{{ task.data }}</a>
+            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
         {% endfor %}
     </div>
 {% endif %}
@@ -66,7 +65,7 @@
             {% ifchanged task.task_type %}
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="api">{{ task.data }} (für {{ task.assigned_to }})</a>
+            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }} (für {{ task.assigned_to }})</a>
         {% endfor %}
     </div>
 {% endif %}
