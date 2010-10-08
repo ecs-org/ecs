@@ -14,7 +14,7 @@ _autostart_disabled = False
 def register(model, autostart_if=None):
     if model in _registered_models:
         return
-    _registered_models[model] = autostart_if or (lambda: True)
+    _registered_models[model] = autostart_if or (lambda obj: True)
     from ecs.workflow.descriptors import WorkflowDescriptor
     model.workflow = WorkflowDescriptor()
     
