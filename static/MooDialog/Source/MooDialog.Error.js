@@ -25,13 +25,15 @@ MooDialog.Error = new Class({
 		focus: true
 	},
 
-	initialize: function(msg, options){
+	initialize: function(msg,options){
 		this.parent(options);
 		
-		var okButton = new Element('input', {
+		var okButton = new Element('input',{
 			type: 'button',
 			events: {
-				click: this.close.bind(this)
+				click: function(){
+					this.close();
+				}.bind(this)
 			},
 			value: this.options.okText
 		});		
@@ -39,20 +41,22 @@ MooDialog.Error = new Class({
 		this.setContent(
 			new Element('div')
 				.adopt(
-					new Element('p', {
+					new Element('p',{
 						'class': 'MooDialogError',
 						text: msg
 					})
 				).adopt(
-					new Element('div', {
+					new Element('div',{
 						'class': 'buttons'
 					}).adopt(okButton)
 				)
 		).open();
 		
-		if (this.options.focus) this.addEvent('show', function(){
-			okButton.focus();
-		});
+		if(this.options.focus){
+			this.addEvent('show',function(){
+				okButton.focus();
+			});
+		}
 	}
 });
 
