@@ -23,7 +23,7 @@
 /* TaskForm */
 
 #TaskForm {
-  margin: 20px;
+  padding: 20px;
   font-size: 10pt;
   max-width: 700px;
 }

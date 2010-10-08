@@ -70,8 +70,8 @@ var MooDialog = new Class({
 		this.content = new Element('div', {
 			styles: {
 				width: x,
-				height: y,
-				overflow: 'auto'
+				// height: y, FIXME
+				overflow: 'hidden'
 			}
 		}).inject(this.wrapper);
 
