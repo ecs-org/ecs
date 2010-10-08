@@ -389,19 +389,17 @@ def import_submission_form(request):
     
     })
 
-def _render_instance(instance, ignored_fields=None, already_rendered=None, depth=0):
-    if already_rendered is None:
-        already_rendered = []
-    if ignored_fields is None:
-        ignored_fields = []
-    rendered_fields = {}
+def _render_instance(instance, ignored_fields=[], already_rendered=[], depth=0):
+    ignored_fields = list(ignored_fields)
+    already_rendered = list(already_rendered)
+
     print '%sRENDER: %s.%s pk=%s' % ('-'*depth, instance.__class__.__module__, instance.__class__.__name__, instance.pk)
-    if depth == 0:
-        print 'ALREADY_RENDERED: %s' % already_rendered
+    print already_rendered
 
     fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
     fields.sort()
 
+    rendered_fields = {}
     for field in fields:
         try:
             value = getattr(instance, field) or ''
@@ -413,25 +411,25 @@ def _render_instance(instance, ignored_fields=None, already_rendered=None, depth
                 continue
         except Exception, e:
             print 'Error: %s %s: %s' % (instance, field, e)
-            
+            continue
 
-        if hasattr(value, 'all'):
+        if hasattr(value, 'all'):  # x-to-many-relation
             rendered = u''
             for w in value.all():
                 if (w.__class__, w.pk,) in already_rendered:
                     rendered += u'[already rendered]' + unicode(w).replace(u'\n', '<br />\n')
                 else:
                     already_rendered.append((w.__class__, w.pk,))
-                    rendered += '<br />\n'.join(_render_instance(w, already_rendered=list(already_rendered), depth=depth+1))
-        else:
-            if isinstance(value, models.Model):
-                if (instance.__class__, instance.pk,) in already_rendered:
-                    rendered = u'[already rendered]' + unicode(value).replace(u'\n', '<br />\n')
-                else:
-                    already_rendered.append((instance.__class__, instance.pk,))
-                    rendered += '<br />\n'.join(_render_instance(value, already_rendered=list(already_rendered), depth=depth+1))
+                    rendered += u'<br />\n'.join(_render_instance(w, already_rendered=already_rendered, depth=depth+1))
+        elif isinstance(value, models.Model):  # foreign-key
+            if (value.__class__, value.pk,) in already_rendered:
+                rendered = u'[already rendered]' + unicode(value).replace(u'\n', '<br />\n')
             else:
-                rendered = unicode(value).replace(u'\n', '<br />\n')
+                already_rendered.append((value.__class__, value.pk,))
+                rendered = u'<br />\n'.join(_render_instance(value, already_rendered=already_rendered, depth=depth+1))
+        else:  # all other values
+            rendered = unicode(value).replace(u'\n', u'<br />\n')
+
 
         rendered_fields[field] = u'%s: %s' % (field, rendered)
 
