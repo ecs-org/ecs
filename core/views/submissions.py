@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -33,6 +34,7 @@ from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
+from ecs.audit.models import AuditTrail
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -444,20 +446,24 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
             differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
 
-    old_documents = set([x.pk for x in old_submission_form.documents.all()])
-    new_documents = set([x.pk for x in new_submission_form.documents.all()])
+    
+    ctype = ContentType.objects.get_for_model(old_submission_form)
+    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
+    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
 
-    print old_documents
+    ctype = ContentType.objects.get_for_model(Document)
+    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
+
+    ctype = ContentType.objects.get_for_model(old_submission_form)
+    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
+    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
+
     print new_documents
-
-    for doc in old_documents:
-        if doc in new_documents:
-            new_documents.remove(doc)
 
     return render(request, 'submissions/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
-        'new_documents': Document.objects.filter(pk__in=new_documents),
+        'new_documents': new_documents,
     })
 
 

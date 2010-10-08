@@ -38,6 +38,7 @@ class AuditTrail(models.Model):
     user = models.ForeignKey(User, null=False, blank=False)
     data = models.TextField(null=False, blank=False)
     hash = models.CharField(max_length=64, null=False, blank=False)
+    object_created = models.BooleanField(default=False)
 
     objects = AuditTrailManager()
 
