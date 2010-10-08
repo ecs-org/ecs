@@ -1,0 +1,10 @@
+{% include 'tasks/compact_list.html' %}
+<script type="text/javascript">
+  window.addEvent('domready', function(){
+      $$('#task_list_filter input').each(function(input){
+          input.addEvent('change', function(){
+              $('task_list_filter').submit();
+          });
+      });
+  });
+</script>
