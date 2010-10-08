@@ -389,11 +389,15 @@ def import_submission_form(request):
     
     })
 
-
-def _render_instance(instance, ignored_fields=[], already_rendered=[]):
+def _render_instance(instance, ignored_fields=None, already_rendered=None, depth=0):
+    if already_rendered is None:
+        already_rendered = []
+    if ignored_fields is None:
+        ignored_fields = []
     rendered_fields = {}
-    print 'RENDER: %s.%s pk=%s' % (instance.__class__.__module__, instance.__class__.__name__, instance.pk)
-    print already_rendered
+    print '%sRENDER: %s.%s pk=%s' % ('-'*depth, instance.__class__.__module__, instance.__class__.__name__, instance.pk)
+    if depth == 0:
+        print 'ALREADY_RENDERED: %s' % already_rendered
 
     fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
     fields.sort()
@@ -412,21 +416,20 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
             
 
         if hasattr(value, 'all'):
-            #rendered = u', '.join([unicode(w) for w in value.all()])
             rendered = u''
             for w in value.all():
                 if (w.__class__, w.pk,) in already_rendered:
                     rendered += u'[already rendered]' + unicode(w).replace(u'\n', '<br />\n')
                 else:
                     already_rendered.append((w.__class__, w.pk,))
-                    rendered += '<br />\n'.join(_render_instance(w, already_rendered=already_rendered))
+                    rendered += '<br />\n'.join(_render_instance(w, already_rendered=list(already_rendered), depth=depth+1))
         else:
             if isinstance(value, models.Model):
                 if (instance.__class__, instance.pk,) in already_rendered:
                     rendered = u'[already rendered]' + unicode(value).replace(u'\n', '<br />\n')
                 else:
                     already_rendered.append((instance.__class__, instance.pk,))
-                    rendered += '<br />\n'.join(_render_instance(value, already_rendered=already_rendered))
+                    rendered += '<br />\n'.join(_render_instance(value, already_rendered=list(already_rendered), depth=depth+1))
             else:
                 rendered = unicode(value).replace(u'\n', '<br />\n')
 
