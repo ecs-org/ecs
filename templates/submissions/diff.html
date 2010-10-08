@@ -9,6 +9,7 @@
 
 {% block content %}
     {% include "submissions/diff.inc" %}
+    {% if new_documents|length %}
     Neue Dokumente:
     {% for doc in new_documents %}
         <div>
@@ -24,6 +25,7 @@
             {% endif %}
         </div>
     {% endfor %}
+    {% endif %}
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}

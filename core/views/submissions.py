@@ -447,6 +447,9 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_documents = set([x.pk for x in old_submission_form.documents.all()])
     new_documents = set([x.pk for x in new_submission_form.documents.all()])
 
+    print old_documents
+    print new_documents
+
     for doc in old_documents:
         if doc in new_documents:
             new_documents.remove(doc)
