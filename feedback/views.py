@@ -133,11 +133,3 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     })
 
 
-
-def feedback_main(request):
-    if not request.user.is_authenticated():
-        return HttpResponse("Error: you need to be logged in!")
-    else:
-        user = request.user
-    return render(request, 'feedback/main.html', {})
-
