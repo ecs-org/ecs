@@ -18,7 +18,7 @@ provides:
 
 var MooDialog = new Class({
 	
-	Implements: [Options,Events],
+	Implements: [Options, Events],
 
 	options: {
 		size: {
@@ -34,6 +34,8 @@ var MooDialog = new Class({
 		useEscKey: true,
 		disposeOnClose: true,
 		closeButton: true,
+		closeOnOverlayClick: true,
+		useScrollBar: true,
 		fx: {
 			type: 'tween',
 			open: 1,
@@ -52,16 +54,18 @@ var MooDialog = new Class({
 	initialize: function(options){
 		this.setOptions(options);
 		this.ie6 = Browser.Engine.trident && Browser.Engine.version <= 4;
-
-		var x = this.options.size.width,
-			y = this.options.size.height;
-						
-		this.wrapper = new Element('div', {
+		
+		options = this.options;
+		var optionsSize = options.size,
+			x = optionsSize.width,
+			y = optionsSize.height,
+			
+		wrapper = this.wrapper = new Element('div', {
 			'class': 'MooDialog',
 			styles: {
 				width: x,
 				height: y,
-				position: this.options.scroll && !this.ie6 ? 'fixed' : 'absolute',
+				position: options.scroll && !this.ie6 ? 'fixed' : 'absolute',
 				'z-index': 6000,	
 				opacity: 0
 			}
@@ -71,87 +75,85 @@ var MooDialog = new Class({
 			styles: {
 				width: x,
 				height: y,
-				overflow: 'auto'
+				overflow: options.useScrollBar ? 'auto' : 'hidden'
 			}
-		}).inject(this.wrapper);
+		}).inject(wrapper);
 
-		if(this.options.title){
-			this.title = new Element('div',{
+		if (options.title){
+			this.title = new Element('div', {
 				'class': 'title',
-				'text': this.options.title
-			}).inject(this.wrapper);
-			this.wrapper.addClass('MooDialogTitle');
+				'text': options.title
+			}).inject(wrapper);
+			wrapper.addClass('MooDialogTitle');
 		}
 		
-		if(this.options.closeButton){
-			this.closeButton = new Element('a',{
+		if (options.closeButton){
+			this.closeButton = new Element('a', {
 				'class': 'close',
 				events: {
-					click: function(){
-						this.close();
-					}.bind(this)
+					click: this.close.bind(this)
 				}
-			}).inject(this.wrapper);
+			}).inject(wrapper);
 		}
 
 		
 		// Set the position of the dialog
 		var docSize = document.id(document.body).getSize();
-		this.setPosition((docSize.x - x)/2,(docSize.y - y)/2);
+		this.setPosition((docSize.x - x)/2, (docSize.y - y)/2);
 		
 		// IE 6 scroll
-		if(this.options.scroll && this.ie6){
-			window.addEvent('scroll',function(e){
+		if (options.scroll && this.ie6){
+			window.addEvent('scroll', function(){
 				this.setPosition((docSize.x - x)/2,(docSize.y - y)/2);
 			}.bind(this));
 		}
 
 		// Add the fade in/out effects if no other effect is defined
-		if(!this.fx){
-			this.fx = this.options.fx.type == 'morph' ? 
-				new Fx.Morph(this.wrapper,this.options.fx.options) : 
-				new Fx.Tween(this.wrapper,this.options.fx.options);
+		if (!this.fx){
+			this.fx = options.fx.type == 'morph' ? 
+				new Fx.Morph(wrapper, options.fx.options) : 
+				new Fx.Tween(wrapper, options.fx.options);
 		}
-		this.fx.addEvent('complete',function(){
+		this.fx.addEvent('complete', function(){
 			this.fireEvent(this.open ? 'show' : 'hide');
-			if (this.options.disposeOnClose && !this.open) {
-				this.dispose();
-			}			
+			if (options.disposeOnClose && !this.open) this.dispose();
 		}.bind(this));
 		
 		this.overlay = new Overlay(document.body, {
-			onClick: function(){
-				this.close();
-			}.bind(this),
 			duration: this.options.fx.options.duration
 		});
+		if (options.closeOnOverlayClick) this.overlay.addEvent('click', this.close.bind(this));
 	},
 
 	setContent: function(content){
 		this.content.empty();
-		switch($type(content)){
-			case 'element':
+		switch ($type(content)){
+			case 'element': 
 				this.content.adopt(content);
-			break;
+				break;
 			case 'string':
 			case 'number':
-				this.content.set('text',content);
-			break;
+				this.content.set('text', content);
+				break;
 		}
 		return this;
 	},
 	
-	setPosition: function(x,y){
-		x += this.options.offset.x;
-		y += this.options.offset.y;
+	setPosition: function(x, y){
+		var options = this.options,
+			wrapper = this.wrapper;
+		x += options.offset.x;
+		y += options.offset.y;
 		x = x < 10 ? 10 : x;
 		y = y < 10 ? 10 : y;
-		if(this.wrapper.getStyle('position') != 'fixed'){
+		
+		if (wrapper.getStyle('position') != 'fixed'){
 			var scroll = document.id(document.body).getScroll();
 			x += scroll.x;
 			y += scroll.y
 		}
-		this.wrapper.setStyles({
+		
+		wrapper.setStyles({
 			left: x,
 			top: y
 		});
@@ -199,7 +201,7 @@ Element.implement({
 		var box = new MooDialog(options)
 			.setContent(this)
 			.open();
-		this.store('MooDialog',box);
+		this.store('MooDialog', box);
 		return this;
 	}
 });

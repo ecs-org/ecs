@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<div id="task_list">
+<div id="task_main">
 {% if submission %}
     <h1>{{ submission }}</h1>
 {% endif %}
@@ -18,7 +18,7 @@
 </form>
 
 {% if accepted_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Meine Tasks</h2>
         {% for task in accepted_tasks %}
         {% ifchanged task.task_type %}
@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if assigned_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Mir zugewiesene Tasks</h2>
         {% for task in assigned_tasks %}
             {% ifchanged task.task_type %}
@@ -43,14 +43,13 @@
                 {{ task.data }}
                      (<a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">Annehmen</a> 
                     | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">Ablehnen</a>)
-                </span>
             </div>
         {% endfor %}
     </div>
 {% endif %}
 
 {% if open_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Offene Tasks</h2>
         {% for task in open_tasks %}
             {% ifchanged task.task_type %}
@@ -62,7 +61,7 @@
 {% endif %}
 
 {% if proxy_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>{% trans 'Proxy Tasks' %}</h2>
         {% for task in proxy_tasks %}
             {% ifchanged task.task_type %}

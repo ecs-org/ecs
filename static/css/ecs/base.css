@@ -29,9 +29,10 @@ body {
 }
 #headertitle, #headertext {
   float: left;
-  width: 85%;
+  width: 90%;
   display: block;
   margin-bottom: 5px;
+  padding: 5px;
 }
 #headernav {
   position: relative;
@@ -99,23 +100,26 @@ body {
 }
 #content h1 {
   display: block;
-  font-size: 1.6em;
+  font-size: 1.4em;
+  letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h2 {
   display: block;
-  font-size: 1.4em;
+  font-size: 1.2em;
+  letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h3 {
   display: block;
-  font-size: 1.1em !important;
+  font-size: 1.0em !important;
   font-weight: lighter;
-  letter-spacing: 1px;
-  padding: 10px;
   margin-bottom: 10px;
+}
+.main.form h3 {
+  padding: 10px;
   border-bottom: 1px solid #eee;
 }
 #content h4 {

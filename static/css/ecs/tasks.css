@@ -66,9 +66,12 @@
 
 /* TaskList */
 
-#task_list {
+#task_main {
   max-width: 650px;
   padding: 10px;
+}
+.task_list {
+  margin-bottom: 10px;
 }
 #task_list_filter {
   margin-bottom: 10px;
@@ -87,19 +90,37 @@
 .task_item {
   background-color: #EFEFD1;
   padding: 5px;
-  margin-bottom: 10px;
+}
+.task_item a {
+  display: block;
+}
+.task_item:nth-child(odd) {
+  background-color: #FFFFDF;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
+}
+.task_item:nth-child(even) {
+  background-color: #EFEFD1;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
 }
 
-#TaskForm h2, .TaskList h2 {
+#task_main h1 {
   display: block;
   font-size: 1.4em;
   margin-bottom: 20px;
   font-weight: lighter;
+}
+#task_main h2, .TaskList h2 {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  font-weight: lighter;
   letter-spacing: 1px;
 }
-#TaskForm h3, .TaskList h3 {
+#task_main h3, .TaskList h3 {
   display: block;
-  font-size: 1.1em;
+  font-size: 1.0em;
   font-weight: lighter;
   margin-bottom: 10px;
   letter-spacing: 1px;

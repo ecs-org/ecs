@@ -172,7 +172,8 @@
           title: 'Feedback von {{ user.get_full_name }}',
           size: {
           width: 700,
-          height: 400
+          height: 400,
+	  useScrollBar: false
         }});
       };
       feedback_triggers.addEvent('click', feedback_handler);
@@ -208,7 +209,8 @@
           }
           var dialog = new ecs.Dialog(url, {
               title: 'Workflow',
-              size: {width: 700, height: 550}
+              size: {width: 700, height: 400},
+	      useScrollBar: true
           });
       };
       
