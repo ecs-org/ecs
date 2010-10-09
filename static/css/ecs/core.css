@@ -245,6 +245,7 @@ input[type=submit] {
   position: absolute;
   top: 57px;
   right: 155px;
+  z-index: 1000;
 }
 #account {
   font-size: 11pt;

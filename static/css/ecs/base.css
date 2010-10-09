@@ -129,10 +129,12 @@ body {
 }
 #content p {
   margin-bottom: 20px;
+  font-size: 10pt;
 }
 #content a {
   text-decoration: none;
   color: #2b558e;
+  font-size: 10pt;
 }
 #content a:hover {
   text-decoration: underline;
@@ -183,15 +185,16 @@ body {
 #toggle_sidebar_button {
   position: absolute;
   top: 55px;
-  right: 0;
-  width: 25px;
+  right: 23px;
+  width: 30px;
   height: 30px;
   z-index: 200;
 }
 #toggle_sidebar_button img {
   position: relative;
   top: 3px;
-  right: 5px;
+  right: 0;
+  padding: 2px 3px;
 }
 
 

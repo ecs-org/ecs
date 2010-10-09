@@ -7,8 +7,8 @@
 {% endblock %}
 
 {% block htmlbody %}
-
-<form action="" method="post" id="TaskForm">
+<div id="task_main">
+<form action="" method="post" id="task_form">
     <div class="show_all"><a href="{% url ecs.tasks.views.my_tasks %}">{% trans 'Show all tasks' %}</a></div>
     <h2>{{ task }}</h2>
     {% if task.locked %}
@@ -23,19 +23,19 @@
         {% if not task.choices %}
         <li>
             <input type="radio" name="action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if task.locked %} disabled="disabled"{% endif %}/>
-            <label for="id_action_complete">{% trans 'Close' %}</label>
+            <label for="id_action_complete" class="task_complete">{% trans 'Close' %}</label>
         </li>
         {% else %}
             {% for val, label in task.choices %}
             <li>
                 <input type="radio" name="action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if task.locked %} disabled="disabled"{% endif %}/>
-                <label for="id_action_complete_{{ forloop.counter0 }}">{{ label }}</label>
+                <label for="id_action_complete_{{ forloop.counter0 }}" class="task_reject">{{ label }}</label>
             </li>
             {% endfor %}
         {% endif %}
         <li>
             <input type="radio" name="action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
-            <label for="id_action_complete">{% trans 'Delegate' %}</label>
+            <label for="id_action_complete" class="task_delegate">{% trans 'Delegate' %}</label>
             <span>
                 <label for="id_assign_to">An</label>{{ form.assign_to }}
                 {% if form.assign_to.errors %}
@@ -45,7 +45,7 @@
         </li>
         <li>
             <input type="radio" name="action" id="id_action_message" value="message"{% ifequal form|form_value:'action' 'message' %} checked="checked"{% endifequal %} />
-            <label for="id_action_message">{% trans 'Ask' %}</label>
+            <label for="id_action_message" class="task_ask">{% trans 'Ask' %}</label>
             {% if form.errors|contains:'question_type' %}
                 <span class="errors">{{ form.question_type.errors }}</span>
             {% endif %}
@@ -89,7 +89,7 @@
         </li>
     </ul>
 </form>
-
+</div>
 {% endblock %}
 
 {% block jsbottom %}
