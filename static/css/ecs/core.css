@@ -287,8 +287,12 @@ input[type=submit] {
 }
 .searchbox input[type=submit] {
   float: left;
+  width: 26px;
+  height: 22px;
   font-size: 9pt;
   margin-left: 5px;
+  background: #ccc url(/static/images/core/magnifier.png) center center no-repeat;
+  border: 1px solid #999;
 }
 
 /* form layout */
