@@ -131,13 +131,13 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'reversion.middleware.RevisionMiddleware',
-    'ecs.utils.middleware.SignedCookiesMiddleware',
-    'ecs.users.middleware.SingleLogin',  # deactivate previous users sessions on login
+    'ecs.users.middleware.GlobalUserMiddleware',
     'ecs.utils.forceauth.ForceAuth',
+    'ecs.utils.middleware.SignedCookiesMiddleware',
+    'ecs.users.middleware.SingleLoginMiddleware',  # deactivate previous users sessions on login
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'ecs.users.middleware.GlobalUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )   
 
@@ -229,7 +229,6 @@ S3_DEFAULT_EXPIRATION_SEC = 5*60
 
 
 # Mediaserver settings
-#TODO Migrate mediaserver settings to a separate config file
 MEDIASERVER_KEYOWNER="43BA0B84B8C6007858854B84F122070D7FB78045"
 MEDIASERVER_URL="http://localhost:8000"
 

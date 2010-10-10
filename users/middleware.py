@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import threading
+from datetime import datetime
 
 from django.contrib.sessions.models import Session
 
 from ecs.users.models import UserProfile
 
 
-class SingleLogin(object):
+class SingleLoginMiddleware(object):
     def process_request(self, request):
         """
         If active, users can only have one active session. This prevents
@@ -27,9 +28,12 @@ class SingleLogin(object):
         profile.session_key = current_session.session_key
         profile.save()
 
-        if old_session_key and Session.objects.filter(session_key=old_session_key):
-            Session.objects.filter(session_key=old_session_key).delete()
-            request.single_login_enforced = True
+        if old_session_key and Session.objects.filter(session_key=old_session_key).count():
+            for session in Session.objects.filter(session_key=old_session_key):
+                session.expire_date = datetime.now()
+                session.save()
+            profile.single_login_enforced = True
+            profile.save()
 
 
 current_user_store = threading.local()

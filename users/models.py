@@ -19,9 +19,18 @@ class UserProfile(models.Model):
     internal = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
+    single_login_enforced = models.BooleanField(default=False)
     
     def __unicode__(self):
         return unicode(self.user.username)
+
+    def get_single_login_enforced(self):
+        if self.single_login_enforced:
+            self.single_login_enforced = False
+            self.save()
+            return True
+        else:
+            return False
     
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
