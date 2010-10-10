@@ -6,17 +6,35 @@
   <form action="" method="post" class="form message">
       <ol>
           <li>
-              <label>Nachrichtenstrang</label>
-              <span>{{ thread.subject }}</span>
-          </li>
-          <li>
-              <label for="id_to">Delegieren an</label>
+              <label for="id_to">abgeben an:</label>
               {{ form.to }}
               {% if form.to.errors %}
                   <span class="errors">{{ form.to.errors }}</span>
               {% endif %}
           </li>
+          <li>
+              <label>Nachrichtenstrang</label>
+              <span>{{ thread.subject }}</span>
+          </li>
+          <li>
+              <label for="id_text">Nachricht</label>
+              {{ form.text }}
+              {% if form.text.errors %}
+                  <span class="errors">{{ form.text.errors }}</span>
+              {% endif %}
+          </li>
       </ol>
+            
+      {% if thread.last_message %}
+          <ol>
+          <li><span>Letze Meldung</span></li>
+          <li><span>Betreff: {{thread.subject}}</span></li>
+          <li><span>Von: {{ thread.last_message.sender }}</span></li>
+          <li><span>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }}</span></li>
+          <li><span>{{ thread.last_message.text }}</span></li>
+          </ol>
+      {% endif %}
+
       <input type="submit" value="Delegieren" />
   </form>
 </div>

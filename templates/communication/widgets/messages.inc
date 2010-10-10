@@ -5,14 +5,19 @@
 <div class="messages_header">
 <!--<a class="widget popup" href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a>-->
 | <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="sortieren" />
- <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
+<a class="widget" href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a>
+| <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
+
 </div>
 <ol class="messages">
 {% for thread in page.object_list %}
     <li class="message {% cycle 'even' 'odd' %}{% if thread.last_message.unread %} unread{% endif %}">
         <span class="head">
             {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
+           	{% if incoming and thread.last_message.unread %} 
+            [NEU]
+            {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
         </span>
         <a class="widget popup title" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">{{ thread.subject|truncatewords:10 }}</a>
@@ -21,8 +26,8 @@
             {% if not incoming %}
                 <a class="widget api" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
             {% else %}
-                <a class="widget popup" href="{% url ecs.communication.views.delegate_thread thread_pk=thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
                 <a class="widget popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /></a>
+                <a class="widget popup" href="{% url ecs.communication.views.delegate_thread thread_pk=thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
             {% endif %}
             <a class="widget api" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
         </span>

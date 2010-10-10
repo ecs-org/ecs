@@ -4,8 +4,6 @@ a class for interfacing with Trac via jsonrpc
 """
 
 import os, sys, tempfile, datetime, subprocess
-if __name__ == "__main__":
-    sys.path.insert(0, "../../")
     
 import json_hack
 import jsonrpclib
@@ -36,15 +34,16 @@ class TracRpc():
     makes the communication with Trac
     '''
     jsonrpc = None
+    _url = None
     
     def __init__(self, username, password, protocol, hostname, urlpath):
         '''
         example: TracRpc('user', 'password', 'https', 'ecsdev.ep3.at', '/project/ecs')
         '''
         C_TRAC_AUTH_JSON = "login/jsonrpc"
-        url = '%s://%s:%s@%s%s/%s' % (protocol, username, password, hostname,
+        self._url = '%s://%s:%s@%s%s/%s' % (protocol, username, password, hostname,
                                       urlpath, C_TRAC_AUTH_JSON)
-        self.jsonrpc = jsonrpclib.ServerProxy(url)
+        self.jsonrpc = jsonrpclib.Server(self._url)
     
     #see http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
     @classmethod
@@ -58,10 +57,13 @@ class TracRpc():
         '''
         try:
             result = func(*args, **kwargs)
-        except jsonrpclib.jsonrpclib.ProtocolError as (strerror):
+        except jsonrpclib.ProtocolError as (strerror):
             print "Json RPC ProtocolError: %s" % strerror
             return None
         return result
+    
+    def multicall(self):
+        return jsonrpclib.MultiCall_agilo(self.jsonrpc)
 
     @staticmethod
     def _ticket2text(ticket):
@@ -99,35 +101,51 @@ class TracRpc():
                 newdict[key] = value
         return newdict
     
-    def _get_ticket_fields(self):
-        '''just returns a list of all available fields for a ticket in trac'''
-        result = self._safe_rpc(self.jsonrpc.ticket.getTicketFields)
-        return result
+    @staticmethod
+    def pad_ticket_w_emptystrings(ticket, fieldnames):
+        '''
+        returns new dict with fieldnames set to None if they dont exist in ticket
+        '''
+        new_ticket = {}
+        for key,val in ticket.iteritems():
+            new_ticket[key] = val if val is not None else ''
+        for name in fieldnames:
+            new_ticket[name] = ticket[name] if ticket.has_key(name) and ticket[name] is not None else ''
+        
+        return new_ticket
+
+    def _get_field(self, rawticket, fieldname):
+            '''
+            return field value or None out of the list returned by rpc call
+            '''
+            return rawticket[3][fieldname] if rawticket[3].has_key(fieldname) else None
     
     def _get_ticket(self, tid):
         '''
         fetches a ticket and return simple dict w/ ticket contents
         '''
-        def _get_field(rawticket, fieldname):
-            '''
-            return field value or None out of the list returned by rpc call
-            '''
-            return rawticket[3][fieldname] if rawticket[3].has_key(fieldname) else None
-
         rawticket = self._safe_rpc(self.jsonrpc.ticket.get, tid)
-        
+        if not rawticket:
+            return None
+        ticket = self._get_ticket_from_rawticket(rawticket)
+        return ticket
+    
+    def _get_ticket_from_rawticket(self, rawticket):
         if not rawticket:
             return None
         else:
             ticket = {}
-            ticket['summary'] = _get_field(rawticket, 'summary')
-            ticket['description'] = _get_field(rawticket, 'description')
-            ticket['remaining_time'] = _get_field(rawticket, 'remaining_time')
-            ticket['type'] = _get_field(rawticket, 'type')
-            ticket['cc'] = _get_field(rawticket, 'cc')
-            ticket['location'] = _get_field(rawticket, 'location')
-            ticket['absoluteurl'] = _get_field(rawticket, 'absoluteurl')
+            ticket['id'] = rawticket[0]
+            ticket['summary'] = self._get_field(rawticket, 'summary')
+            ticket['description'] = self._get_field(rawticket, 'description')
+            ticket['remaining_time'] = self._get_field(rawticket, 'remaining_time')
+            ticket['type'] = self._get_field(rawticket, 'type')
+            ticket['cc'] = self._get_field(rawticket, 'cc')
+            ticket['location'] = self._get_field(rawticket, 'location')
+            ticket['absoluteurl'] = self._get_field(rawticket, 'absoluteurl')
+            ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
             return ticket
+        
     
     def _update_ticket(self, tid, ticket, action=None, comment=None):
         '''
@@ -355,7 +373,7 @@ class TracRpc():
         success, additional = self._update_ticket(tid, ticket, action, comment)
         #fixme: check if successfull
         
-    def _get_ticket_report(self, username=None):
+    def _get_ticket_report(self, username=None, query=None):
         '''
         get a ticket report from trac
         '''
@@ -363,26 +381,66 @@ class TracRpc():
 &status=reopened&status=testing&group=type&order=priority\
 &col=id&col=summary&col=status&col=type&col=priority\
 &col=milestone&col=component"
-        if username is not None:
-            query = "%s&owner=%s" % (query_base, username)
-        else:
-            query = query_base
+        if query is None:
+            if username is not None:
+                query = "%s&owner=%s" % (query_base, username)
+            else:
+                query = query_base
         
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
         tickets = []
+        mc = self.multicall()
         for tid in ticket_ids:
-            ticket = self._get_ticket(tid)
-            ticket['id'] = tid
-            tickets.append(ticket)
+            mc.ticket.get(tid)
+        results = self._safe_rpc(mc)
+        
+        for result in results.results['result']:
+            tickets.append(self._get_ticket_from_rawticket(result['result']))
         
         return tickets
+    
+    def delete_tickets_by_query(self, query=None, verbose=None, doublecheck=False):
+        if query is None:
+            return None
         
-    def show_ticket_report(self, username=None, verbose=False, termwidth=80):
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        ticket_types = []
+        tickets = []
+        mc = self.multicall()
+        for tid in ticket_ids:
+            mc.ticket.get(tid)
+        results = self._safe_rpc(mc)
+        for result in results.results['result']:
+            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        
+        allowed_types_2_delete = ['praise', 'problem', 'idea', 'question']
+        #allowed_types_2_delete = ['praise', 'problem', 'question']
+        for ticket in tickets:
+            if ticket['type'] not in allowed_types_2_delete:
+                #return False, "bad ticket type in query wont delete anything"
+                raise Exception('delete_by_query_error', 'bad ticket type in query wont delete anything')
+        
+        if not doublecheck:
+            print "would delete %d tickets" % len(tickets)
+            return True,query
+        else:
+            mc = self.multicall()
+            for tid in ticket_ids:
+                #mc.ticket.delete(tid)
+                pass
+            results = self._safe_rpc(mc)
+            print "u just did a scary thing" 
+        
+        
+    
+    def show_ticket_report(self, username=None, verbose=False, termwidth=80, query=None):
         '''
         show a trac ticket report to the user
         '''
-        print "ticket report for '%s'" % username
-        tickets = self._get_ticket_report(username)
+        if query is None:
+            print "ticket report for '%s'" % username
+        
+        tickets = self._get_ticket_report(username=username, query=query)
         if verbose:
             for ticket in tickets:
                 print "Ticket:\t%d" % ticket['id']
@@ -391,7 +449,7 @@ class TracRpc():
                 print "Description:"
                 for line in ticket['description'].splitlines():
                     print "\t%s" % line
-                print "remaining time: %sh" % ticket['remaining_time']
+                print "remaining time: %sh" % ticket['remaining_time'] if ticket['remaining_time'] is not None else '-'
                 print ""
             
         else:
@@ -401,7 +459,7 @@ class TracRpc():
                 print "%4s %s %s%sh" % (ticket['id'],
                                         ticket['summary'][0:termwidth-10],
                                         ' '*(termwidth-10-len(truncated_line)),
-                                        ticket['remaining_time'])
+                                        ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
         
 
     

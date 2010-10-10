@@ -23,9 +23,9 @@
 /* TaskForm */
 
 #TaskForm {
-  margin: 20px;
+  padding: 10px;
   font-size: 10pt;
-  max-width: 700px;
+  max-width: 650px;
 }
 #TaskForm ul {
   float: left;
@@ -67,8 +67,8 @@
 /* TaskList */
 
 #task_list {
-  max-width: 700px;
-  padding: 20px;
+  max-width: 650px;
+  padding: 10px;
 }
 #task_list_filter {
   margin-bottom: 10px;

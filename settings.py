@@ -306,6 +306,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 FEEDBACK_CONFIG = {}
 if 'test' in sys.argv:
     FEEDBACK_CONFIG['create_trac_tickets'] = False
+    FEEDBACK_CONFIG['store_in_db'] = True
 
 # thirdparty settings
 ######################

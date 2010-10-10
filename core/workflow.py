@@ -4,7 +4,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.core.models import Submission, ChecklistBlueprint, Vote
 
-register(Submission)
+register(Submission, autostart_if=lambda s: bool(s.current_submission_form_id))
 register(Vote)
 
 @guard(model=Submission)
@@ -58,7 +58,7 @@ def has_accepted_recommendation(wf):
 @guard(model=Submission)
 def needs_external_review(wf):
     return wf.data.external_reviewer
-
+    
 class InitialReview(Activity):
     class Meta:
         model = Submission
@@ -100,7 +100,7 @@ class CategorizationReview(Activity):
         return True
         
     def get_url(self):
-        return reverse('ecs.core.views.executive_review', kwargs={'submission_pk': self.workflow.data.pk})
+        return reverse('ecs.core.views.executive_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
 
 class PaperSubmissionReview(Activity):

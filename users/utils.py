@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from contextlib import contextmanager
 from django.contrib.auth.models import User
+from django.utils.functional import wraps
 
 from ecs.users.middleware import current_user_store
 
@@ -12,10 +12,26 @@ def get_current_user():
         # FIXME: what do we return during testing or management commands? Do we really query the user table every time?
         #return User.objects.get(username='root')
         
-@contextmanager
-def sudo(user):
-    from ecs.users.middleware import current_user_store
-    _previous_user = getattr(current_user_store, 'user', None)
-    current_user_store.user = user
-    yield
-    current_user_store.user = _previous_user
+class sudo(object):
+    def __init__(self, user=None):
+        self.user = user
+
+    def __enter__(self):
+        from ecs.users.middleware import current_user_store
+        self._previous_user = getattr(current_user_store, 'user', None)
+        user = self.user
+        if callable(user):
+            user = user()
+        current_user_store.user = user
+        
+    def __exit__(self, *exc):
+        from ecs.users.middleware import current_user_store
+        current_user_store.user = self._previous_user
+        
+    def __call__(self, func):
+        @wraps(func)
+        def decorated(*args, **kwargs):
+            with self:
+                return func(*args, **kwargs)
+        return decorated
+        

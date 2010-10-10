@@ -2,9 +2,11 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from django import forms
 from django.template.defaultfilters import slugify
+from django.utils import simplejson
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
+from haystack.utils import Highlighter
 
 from ecs.documents.models import Page, Document
 
@@ -80,4 +82,17 @@ document_search = search_view_factory(
     form_class=HighlightedSearchForm,
 )
 
-
+def document_search_json(request, document_pk=None):
+    q = request.GET.get('q', '')
+    results = []
+    if q:
+        qs = SearchQuerySet().models(Page).order_by('doc_pk', 'page').filter(doc_pk=document_pk).auto_query(q)
+        results = []
+        highlighter = Highlighter(q, max_length=100)
+        for result in qs:
+            results.append({
+                'page_number': result.page,
+                'highlight': highlighter.highlight(result.text),
+            })
+    return HttpResponse(simplejson.dumps(results), content_type='text/plain')
+    

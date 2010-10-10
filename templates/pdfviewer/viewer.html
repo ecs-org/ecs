@@ -16,6 +16,15 @@
     <div><span class="metaKey"></span> + Shift + &larr;: First Page</div>
     <div><span class="metaKey"></span> + &darr;: Zoom In</div>
     <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
+    <div><span class="metaKey"></span> + A: Enter/Leave Annotation Mode</div>
+    <div>ESC: Leave Annotation Mode / Close Annotation Popup</div>
+    
+    <p>
+        Use the mousewheel or arrow keys for scrolling. When the end of a page is reached, scrolling further will load the next page.
+    </p>
+    <p>
+        Annotations: Double click on overlay or single click on marker to edit; drag and drop to move, resize by dragging the lower right cover.
+    </p>
 </div>
 
 {% endblock %}
@@ -35,15 +44,18 @@
     $(window).addEvent('domready', function(){
         var viewer = new ecs.pdfviewer.DocumentViewer($('pdfviewer'), {
             pageCount: {{ document.pages }},
-            title: '{{ document.parent_object }} ({{ document.original_file_name }})',
+            title: '{{ document }}, {{ document.parent_object|default:'-' }} ({{ document.original_file_name }})',
             controllers: [
                 new ecs.pdfviewer.Controller('5x5', 5, 5),
-                new ecs.pdfviewer.Controller('3x3', 6, 2),
+                new ecs.pdfviewer.Controller('3x3', 4, 2),
                 new ecs.pdfviewer.Controller('3x3', 3, 3),
                 new ecs.pdfviewer.Controller('1x1', 1, 1)
             ],
             metaKey: 'alt',
-            searchURL: '{% url ecs.documents.views.document_search document_pk=document.pk %}'
+            searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
+            editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
+            deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
+            helpContents: $('navigation')
         });
         
         var IMAGE_TILING = [1, 3, 5];
@@ -63,18 +75,13 @@
         });
         $(document.body).addClass('pdfviewer');
         
-        var navigation = $('navigation');
-        
-        window.addEvent('keydown', function(e){
-            viewer.handleKeyPress(e);
-            if(e.key == 'space'){
-                navigation.toggleClass('hidden');
-                return false;
-            }
+        {{ annotations|safe }}.each(function(a){
+            viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height));
         });
-        viewer.element.focus();
+
         viewer.gotoAnchor();
         viewer.update();
+        
         
         var metaKeySelect = $('metaKeySelect')
         metaKeySelect.addEvent('change', function(){

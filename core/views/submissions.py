@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -33,6 +34,7 @@ from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
+from ecs.audit.models import AuditTrail
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -51,7 +53,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
         if instance:
             kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
-    
+
     employees = []
     if instance:
         for index, investigator in enumerate(instance.investigators.order_by('id')):
@@ -101,7 +103,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     executive_review_form = ExecutiveReviewForm(instance=submission, readonly=True)
     befangene_review_form = BefangeneReviewForm(instance=submission, readonly=True)
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
-
+    
     checklist_reviews = []
     for checklist in submission.checklists.all():
         if checklist_overwrite and checklist.blueprint in checklist_overwrite:
@@ -389,13 +391,13 @@ def import_submission_form(request):
     
     })
 
+def _render_submission_form(instance, ignored_fields=[]):
+    ignored_fields = list(ignored_fields)
 
-def _render_instance(instance, ignored_fields=[], already_rendered=[]):
+    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
+    fields.sort()
+
     rendered_fields = {}
-    print 'render: %s pk=%s' % (instance.__class__, instance.pk)
-
-    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in ignored_fields]
-
     for field in fields:
         try:
             value = getattr(instance, field) or ''
@@ -407,41 +409,34 @@ def _render_instance(instance, ignored_fields=[], already_rendered=[]):
                 continue
         except Exception, e:
             print 'Error: %s %s: %s' % (instance, field, e)
-            
+            continue
 
-        if hasattr(value, 'all'):
-            rendered = u''
-            for w in value.all():
-                if (w.__class__, w.pk,) in already_rendered:
-                    rendered += u''
-                else:
-                    already_rendered.append((w.__class__, w.pk,))
-                    rendered += unicode(_render_instance(w, already_rendered=already_rendered))
-        else:
-            if isinstance(value, models.Model):
-                if (instance.__class__, instance.pk,) in already_rendered:
-                    rendered = u''
-                else:
-                    already_rendered.append((instance.__class__, instance.pk,))
-                    rendered = unicode(_render_instance(value, already_rendered=already_rendered))
-            else:
-                rendered = unicode(value).replace(u'\n', '<br />\n')
+        if hasattr(value, 'all'):  # x-to-many-relation
+            rendered = u', '.join([unicode(x) for x in value.all()])
+        elif isinstance(value, models.Model):  # foreign-key
+            rendered = unicode(value)
+        else:  # all other values
+            rendered = unicode(value).replace(u'\n', u'<br />\n')
+
 
         rendered_fields[field] = rendered
 
     return rendered_fields
 
-def diff_submission_forms(old_submission_form, new_submission_form):
+def diff(request, old_submission_form_pk, new_submission_form_pk):
+    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
+    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
+
     sff = SubmissionFormForm(None, instance=old_submission_form)
 
     differ = diff_match_patch()
     diffs = []
 
-    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission',)
-    old = _render_instance(old_submission_form, ignored_fields=ignored_fields)
-    new = _render_instance(new_submission_form, ignored_fields=ignored_fields)
+    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents')
+    old = _render_submission_form(old_submission_form, ignored_fields=ignored_fields)
+    new = _render_submission_form(new_submission_form, ignored_fields=ignored_fields)
 
-    for field in old.iterkeys():
+    for field in sorted(old.keys()):
         diff = differ.diff_main(old[field], new[field])
         if differ.diff_levenshtein(diff):
             try:
@@ -451,18 +446,24 @@ def diff_submission_forms(old_submission_form, new_submission_form):
             differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
 
-    return diffs
+    
+    ctype = ContentType.objects.get_for_model(old_submission_form)
+    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
+    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
 
+    ctype = ContentType.objects.get_for_model(Document)
+    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
 
-def diff(request, old_submission_form_pk, new_submission_form_pk):
-    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
-    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
+    ctype = ContentType.objects.get_for_model(old_submission_form)
+    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
+    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
 
-    diffs = diff_submission_forms(old_submission_form, new_submission_form)
+    print new_documents
 
     return render(request, 'submissions/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
+        'new_documents': new_documents,
     })
 
 

@@ -202,13 +202,13 @@
       // workflow popups
       
       ecs.showWorkflowPopup = function(options){
-          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}';
+          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&submission={{ submission_form.submission_id }}{% endif %}';
           if(options && options.url){
               url = options.url;
           }
           var dialog = new ecs.Dialog(url, {
               title: 'Workflow',
-              size: {width: 900, height: 600}
+              size: {width: 700, height: 550}
           });
       };
       

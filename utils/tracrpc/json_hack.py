@@ -7,7 +7,40 @@ Created on Sep 22, 2010
 
 from jsonrpclib.jsonclass import *
 from datetime import datetime
+
+#from jsonrpclib import jsonrpc
+from jsonrpclib import MultiCall
+from jsonrpclib.jsonrpc import *
+
+class MultiCall_agilo(MultiCall):
+    def _request(self):
+        if len(self._job_list) < 1:
+            # Should we alert? This /is/ pretty obvious.
+            return
+
+        request_body = {'method': 'system.multicall', 'params':
+                        [job.request_non_dump() for job in self._job_list]
+                        , 'id': 233}
+        request_body = jdumps(request_body)
         
+        #request_body = '[ %s ]' % ','.join([job.request() for
+        #                                  job in self._job_list])
+        
+        responses = self._server._run_request(request_body)
+        del self._job_list[:]
+        if not responses:
+            responses = []
+        return MultiCallIterator(responses)
+    
+    __call__ = _request
+
+jsonrpclib.MultiCall_agilo = MultiCall_agilo
+
+def request_non_dump(self, encoding=None, rpcid=None):
+        return {'method':self.method, 'params': self.params, 'jsonrpc': 2.0, 'id':random_id() if rpcid is None else rpcid}
+
+MultiCallMethod.request_non_dump = request_non_dump
+
 def monkey_load(obj):
     #print "MY monkeyload"
     if type(obj) in string_types+numeric_types+value_types:
@@ -15,13 +48,13 @@ def monkey_load(obj):
     if type(obj) is types.ListType:
         return_list = []
         for entry in obj:
-            return_list.append(monkey_load(entry))
+            return_list.append(load(entry))
         return return_list
     # Othewise, it's a dict type
     if '__jsonclass__' not in obj.keys():
         return_dict = {}
         for key, value in obj.iteritems():
-            new_value = monkey_load(value)
+            new_value = load(value)
             return_dict[key] = new_value
         return return_dict
     # It's a dict, and it's a __jsonclass__
@@ -68,11 +101,9 @@ def monkey_load(obj):
         #import pdb; pdb.set_trace()
         new_obj = datetime.strptime(params, "%Y-%m-%dT%H:%M:%S")
     else:
-        print ""
-        print "JSONRPCLIB:"
-        print "json_class: %s" % json_class
-        print "type(json_class): %s" % type(json_class)
-        print "params: %s" % params
+        #print "json_class: %s" % json_class
+        #print "type(json_class): %s" % type(json_class)
+        #print "params: %s" % params
         raise TranslationError('Constructor args must be a dict or list.')
     for key, value in obj.iteritems():
         if key == '__jsonclass__':
