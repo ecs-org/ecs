@@ -179,8 +179,8 @@
       feedback_triggers.addEvent('click', feedback_handler);
       
       // single login popup
-      {% if request.single_login_enforced %}
-        ecs.messages.alert('Single Login enforced', 'The old session is now void.');
+      {% if user.ecs_profile.get_single_login_enforced %}
+        ecs.messages.alert('{% trans 'Single Login enforced' %}', '{% trans 'The old session is now void.' %}');
       {% endif %}
       
       // message popups
