@@ -9,7 +9,7 @@
 
 body {
   background: white;
-  overflow: hidden;
+  overflow: auto;
 }
 #container {
   position: absolute;

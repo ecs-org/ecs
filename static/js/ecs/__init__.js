@@ -23,9 +23,10 @@ $extend(ecs, {
                     open: 1,
                     close: 0,
                     options: {
-                        duration: 0
+                    duration: 0
                     }
-                }
+                },
+                useScrollBar: false
             });
             this.parent(url, options);
         }
