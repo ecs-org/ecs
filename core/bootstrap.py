@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import os, datetime, random
+import os, random
+from datetime import datetime
+
 from django.core.management.base import CommandError
 from django.contrib.auth.models import Group, User
 from django.contrib.sites.models import Site
+from django.contrib.contenttypes.models import ContentType
+from django.core.files import File
 
 from ecs import bootstrap
 from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
@@ -10,7 +14,7 @@ from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
 from ecs.utils import Args
 from ecs.users.utils import sudo
-
+from ecs.documents.models import Document, DocumentType
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 
@@ -36,7 +40,7 @@ def templates():
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
                 content = open(path, 'r').read()
                 tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
-                if not created and tpl.last_changed < datetime.datetime.fromtimestamp(os.path.getmtime(path)):
+                if not created and tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
                     tpl.content = content
                     tpl.save()
 
@@ -383,7 +387,7 @@ def checklist_questions():
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers', 'ecs.documents.bootstrap.document_types',))
 @sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
     with sudo(): # XXX: this fixes a visibility problem, as presenters are currently not allowed to see their own submissions
@@ -444,9 +448,10 @@ def testsubmission():
         'subject_planned_total_duration': u'8 months',
         'project_type_medical_device_with_ce': False,
         'submitter_is_sponsor': False,
-        'german_summary': u'bla bla bla',
+        'german_summary': u'Bei diesem Projekt handelt es sich um ein sowieso bla blu',
         'insurance_contract_number': u'WF-07218230-8',
         'study_plan_power': u'0.80',
+        'study_plan_multiple_test_correction_algorithm': u'Keines',
         'sponsor_phone': u'+43 1 40170',
         'subject_maxage': 21,
         'subject_noncompetents': True,
@@ -529,19 +534,31 @@ def testsubmission():
         'study_plan_cross_over': False,
         'german_consent_info': u'bla bla bla',
         'medtech_departure_from_regulations': u'',
-        'german_project_title': u'bla bla bla',
+        'german_project_title': u'Riskikoreiche Neuroblastom Studie 1 von SIOP-Europe (SIOPEN)',
         'submitter_organisation': u'St. Anna Kinderspital',
-        'study_plan_multiple_test_correction_algorithm': u'',
         'sponsor_address1': u'Kinderspitalg. 6',
         'invoice_name': u'',
         'sponsor_address2': u'',
         'german_statistical_info': u'bla bla bla',
     }
     
+    patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')
+    with open(patienteninformation_filename) as patienteninformation:
+        ctype = ContentType.objects.get_for_model(Document)
+        doc = Document()
+        doc.version = '1'
+        doc.doctype = DocumentType.objects.get(identifier='patientinformation')
+        doc.date = datetime.now()
+        doc.file = File(patienteninformation)
+        doc.save()
+
     submission_form = SubmissionForm.objects.create(**submission_form_data)
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='AT'))
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='DE'))
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='US'))
+
+    doc.parent_object = submission_form
+    doc.save()
     
     Investigator.objects.create(
         contact_last_name=u'Univ. Doz. Dr. Ruth Ladenstein',
@@ -565,5 +582,7 @@ def testsubmission():
                 'answer': random.choice((True, False, None,))
             }
         )
+
+
 
 
