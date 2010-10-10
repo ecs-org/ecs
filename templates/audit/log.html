@@ -13,16 +13,15 @@ Audit Trail
 {{ entry.get_log_line }}{% endfor %}
 </pre>
 
-<div>
-
-<a href="{% url ecs.audit.views.log format="html" %}">newest</a>
+<div style="text-align:center;">
 {% if next_pk %}
-| <a href="{% url ecs.audit.views.log format="html",limit=limit,since=next_pk %}">newer</a>
+    <a href="{% url ecs.audit.views.log format="html" %}">newest</a>
+    | <a href="{% url ecs.audit.views.log format="html",limit=limit,since=next_pk %}">newer</a>
 {% endif %}
+{% if next_pk and previous_pk %} | {% endif %}
 {% if previous_pk %}
-| <a href="{% url ecs.audit.views.log format="html",limit=limit,until=previous_pk %}">older</a>
+    <a href="{% url ecs.audit.views.log format="html",limit=limit,until=previous_pk %}">older</a>
 {% endif %}
-
 </div>
 
 {% endblock %}
