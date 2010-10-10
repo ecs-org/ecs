@@ -397,13 +397,11 @@ try:
 except ImportError:
     ECS_VERSION = 'unknown'
 
-
 # debug toolbar config:
 # MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
 # INSTALLED_APPS +=('debug_toolbar',) # anywhere
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
-
 
 # hack some settings
 if 'test' in sys.argv:

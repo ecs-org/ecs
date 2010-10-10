@@ -17,22 +17,23 @@ from deployment.utils import package_merge, install_upstart, apache_setup
 # packages needed for the application
 main_packages = """
 
-# database bindings
+# postgresql database bindings
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:inst:!win:pypi:psycopg2
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.0.13.win32-py2.6-pg8.4.1-release.exe
 
+# sqlite database bindings
 pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-py2.6.exe
 
-
 # timezone handling
 pytz:inst:all:pypi:pytz
+
 
 # django main
 django:inst:all:pypi:django==1.2.3
@@ -44,51 +45,11 @@ django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
 docutils:inst:all:pypi:docutils
 django-dbtemplates:inst:all:pypi:django-dbtemplates
+# django caching uses memcache if available
+python-memcached:inst:all:pypi:python-memcached
 
-#search
-# django-haystack currently has an issue with whoosh 1.x, so we use 0.3.18 or therelike
-whoosh:inst:all:pypi:whoosh\<=0.4
-# pysolr uses httplib2 with fallback to httplib
-httplib2:inst:all:pypi:httplib2
-pysolr:inst:all:pypi:pysolr
-django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
-pdftotext:req:apt:apt-get:poppler-utils
-pdftotext:req:mac:macports:poppler
-pdftotext:req:suse:zypper:poppler-tools
-pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
 
-# simple testing
-nose:inst:all:pypi:nose
-django-nose:inst:all:pypi:django-nose
-#http://github.com/jbalogh/django-nose/tarball/master
-
-#debugging
-django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
-# did throw errors in own code itself, instead of doing its job of logging errors django-db-log:inst:all:pypi:django-db-log
-
-# needed for deployment: massimport
-antiword:req:apt:apt-get:antiword
-antiword:req:mac:macports:antiword
-# antiword has to be build by hand for opensuse
-#antiword:req:suse:zypper:antiword
-antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
-
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
-# mpmath needed for massimport statistic function
-mpmath:inst:all:pypi:mpmath
-
-# pdf validation
-pdfminer:inst:all:pypi:pdfminer
-
-# pisa / pdf generation
-# deprecated for ecs in favour of pdfminer, and optional for pisa:  pyPDF:inst:all:pypi:pyPDF
-html5lib:inst:all:pypi:html5lib
-reportlab:req:apt:apt-get:libfreetype6-dev
-reportlab:inst:!win:pypi:reportlab
-reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
-pisa:inst:all:pypi:pisa
-
-# celery 
+# queuing: celery 
 amqplib:inst:all:pypi:amqplib
 carrot:inst:all:pypi:carrot
 importlib:inst:all:pypi:importlib
@@ -104,21 +65,86 @@ ghettoq:inst:all:pypi:ghettoq
 pyparsing:inst:all:pypi:pyparsing
 django-celery:inst:all:pypi:django-celery
 
-# pdf document server rendering (includes mockcache for easier testing)
-ghostscript:req:apt:apt-get:ghostscript
-ghostscript:req:mac:macports:ghostscript
-ghostscript:req:suse:zypper:ghostscript-library
-ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:system:gswin32c.exe
 
-imagemagick:req:apt:apt-get:imagemagick
-imagemagick:req:mac:macports:imagemagick
-imagemagick:req:suse:zypper:ImageMagick
-imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
-# we check for montage.exe because on windows convert.exe exists already ... :-(
+# mail: ecsmail, communication: lamson mail server
+chardet:inst:all:pypi:chardet
+jinja2:inst:all:pypi:jinja2
+lockfile:inst:all:pypi:lockfile
+mock:inst:all:pypi:mock
+# we dont use python-daemon functionality in lamson, but lamson.utils imports daemon and fails
+# so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
+python-daemon:inst:all:dir:ecs/utils/fake-daemon/
+lamson:inst:all:pypi:lamson
+beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 
+
+# ecs/mediaserver: file encryption, used for storage vault 
+gnupg:req:apt:apt-get:gnupg
+gnupg:req:mac:macports:gnupg
+gnupg:req:mac:homebrew:gnupg
+gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
+
+
+# search
+# TODO: django-haystack currently has an issue with whoosh 1.x, so we use 0.3.18 or therelike
+whoosh:inst:all:pypi:whoosh\<=0.4
+# pysolr uses httplib2 with fallback to httplib
+httplib2:inst:all:pypi:httplib2
+pysolr:inst:all:pypi:pysolr
+django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
+# pdf text extract
+pdftotext:req:apt:apt-get:poppler-utils
+pdftotext:req:mac:macports:poppler
+pdftotext:req:suse:zypper:poppler-tools
+pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
+
+
+# excel generation / xlwt
+xlwt:inst:all:pypi:xlwt
+
+
+# pdf generation / pisa
+# pyPDF is deprecated for ecs in favour of pdfminer, and optional for pisa:  pyPDF:inst:all:pypi:pyPDF
+html5lib:inst:all:pypi:html5lib
+reportlab:req:apt:apt-get:libfreetype6-dev
+reportlab:inst:!win:pypi:reportlab
+reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
+pisa:inst:all:pypi:pisa
+
+
+# (ecs/mediaserver): pdf validation (is_valid, pages_nr)
+pdfminer:inst:all:pypi:pdfminer
+
+
+# mediaserver image generation
+# ############################
+
+# pdf manipulation, barcode stamping
+pdftk:req:apt:apt-get:pdftk
+pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
+# Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
+pdftk:req:suse:zypper:pdftk
+#FIXME, port or at least homebrew package of pdftk
+#pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
+
+# mediaserver: python-memcached (and mockcache for testing) 
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 
+# mediaserver: needs ghostscript for rendering
+ghostscript:req:apt:apt-get:ghostscript
+ghostscript:req:mac:macports:ghostscript
+ghostscript:req:suse:zypper:ghostscript-library
+ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
+
+# mediaserver: image magick is used for rendering tasks as well
+imagemagick:req:apt:apt-get:imagemagick
+imagemagick:req:mac:macports:imagemagick
+imagemagick:req:suse:zypper:ImageMagick
+# we check for montage.exe because on windows convert.exe exists already ... :-(
+imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
+
+# TODO: are we using python-pil, or we need only imagemagick 
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 # PIL requirements for opensuse
 libjpeg-devel:req:suse:zypper:libjpeg-devel
@@ -128,38 +154,32 @@ liblcms1:req:suse:zypper:liblcms1
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
-#barcode stamping
-pdftk:req:apt:apt-get:pdftk
-pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
-# Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
-pdftk:req:suse:zypper:pdftk
-#FIXME, port or at least homebrew package of pdftk
-#pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
-# lamson mail server
-chardet:inst:all:pypi:chardet
-jinja2:inst:all:pypi:jinja2
-lockfile:inst:all:pypi:lockfile
-mock:inst:all:pypi:mock
-# we dont use python-daemon functionality in lamson, but lamson.utils imports daemon and fails
-# so we fake it for windows and for the rest
-# python-daemon:inst:!win:pypi:python-daemon==1.5.5
-python-daemon:inst:all:dir:ecs/utils/fake-daemon/
-lamson:inst:all:pypi:lamson
-beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
+# deployment: manage.py massimport
+antiword:req:apt:apt-get:antiword
+antiword:req:mac:macports:antiword
+# antiword has to be build by hand for opensuse
+#antiword:req:suse:zypper:antiword
+antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
+# antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
+beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+# mpmath needed for massimport statistic function
+mpmath:inst:all:pypi:mpmath
 
-# excel output
-xlwt:inst:all:pypi:xlwt
 
-# architecture decission: we will not use django-reversion:inst:all:pypi:django-reversion
+# feedback: jsonrpclib for ecs feedback and fab ticket
+jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 
-#file encryption
-gnupg:req:apt:apt-get:gnupg
-gnupg:req:mac:macports:gnupg
-gnupg:req:mac:homebrew:gnupg
-gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:system:gpg.exe
 
-# django-sentry
+# testing
+nose:inst:all:pypi:nose
+django-nose:inst:all:pypi:django-nose
+#http://github.com/jbalogh/django-nose/tarball/master
+
+# debugging
+django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
+
+# logging: django-sentry
 django-indexer:inst:all:pypi:django-indexer
 django-paging:inst:all:pypi:django-paging
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
@@ -168,8 +188,6 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:http://github.com/gak/pygooglechart/tarball/master
 django-sentry:inst:all:pypi:django-sentry
 
-# jsonrpclib for ecs feedback and fab ticket
-jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 """
 
 
@@ -202,23 +220,18 @@ mutt:req:mac:macports:mutt
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 
-# fudge:inst:all:pypi:fudge
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+# FIXME: where do we need simplejson
 simplejson:inst:all:pypi:simplejson
-# antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
-antiword:req:apt:apt-get:antiword
-antiword:req:mac:macports:antiword
-antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
-#graphviz is required for manage.py graph_models
-# graphviz:req:apt:apt-get:graphviz-dev
-# graphviz:inst:apt:pypi:pygraphviz
-#levenshtein is needed for the massimport statistics and for diff-match-patch
+
+# deployment: massimport statistics and diff-match-patch
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0
 #pyasn1:inst:all:pypi:pyasn1
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
+
+# maybe interesting: fudge:inst:all:pypi:fudge
 
 
 # packages needed for full production rollout (eg. VM Rollout)

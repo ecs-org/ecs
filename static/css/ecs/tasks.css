@@ -1,9 +1,9 @@
-.TaskBacklog table {
+.task_back_log table {
   border: 1px solid #cccccc;
   border-left: none;
 }
-.TaskBacklog td,
-.TaskBacklog th {
+.task_back_log td,
+.task_back_log th {
   text-align: left;
   font-size: 13px;
   padding: 3px;
@@ -12,50 +12,50 @@
   border-left: 1px solid #cccccc;
 }
 
-.TaskBacklog th {
+.task_back_log th {
   border-bottom: 1px solid #cccccc;
 }
 
-.TaskBacklog tr.closed td {
+.task_back_log tr.closed td {
   color: #999999;
 }
 
 /* TaskForm */
 
-#TaskForm {
-  margin: 20px;
+#task_form {
+  padding: 10px;
   font-size: 10pt;
-  max-width: 700px;
+  max-width: 650px;
 }
-#TaskForm ul {
+#task_form ul {
   float: left;
   display: block;
   max-width: 100%;
 }
-#TaskForm li {
+#task_form li {
   height: 30px;
   vertical-align: text-top;
   list-style-type: none;
   display: block;
   clear: both;
 }
-#TaskForm .errors {
+#task_form .errors {
   color: #ff0000;
 }
-#TaskForm .lockInfo {
+#task_form .lockInfo {
   background-color: #ffff00;
 }
-#TaskForm label, #TaskForm input[type=radio], #TaskForm textarea, #TaskForm select {
+#task_form label, #task_form input[type=radio], #task_form textarea, #task_form select {
   float: left;
   margin: 0 0 5px 10px;
 }
-#TaskForm input[type=submit] {
+#task_form input[type=submit] {
   position: relative;
   display: block;
 }
-.task_intend {
+#task_form .task_intend {
   clear: both;
-  margin-left: 70px;
+  margin-left: 90px;
   float: left;
   display: block;
   min-height: 30px;
@@ -63,12 +63,30 @@
 .show_all {
   margin-bottom: 10px;
 }
+.task_complete, .task_reject, .task_delegate, .task_ask {
+  padding-left: 20px;
+}
+.task_complete {
+  background: url(/static/images/core/tick.png) no-repeat top left;
+}
+.task_reject {
+  background: url(/static/images/core/arrow-curve-180-left.png) no-repeat top left;
+}
+.task_delegate {
+  background: url(/static/images/core/arrow-curve.png) no-repeat top left;
+}
+.task_ask {
+  background: url(/static/images/core/balloon-white.png) no-repeat top left;
+}
 
 /* TaskList */
 
-#task_list {
-  max-width: 700px;
-  padding: 20px;
+#task_main {
+  max-width: 650px;
+  padding: 10px;
+}
+.task_list {
+  margin-bottom: 10px;
 }
 #task_list_filter {
   margin-bottom: 10px;
@@ -78,8 +96,8 @@
 }
 #task_list_filter label {
   display: inline-block;
-  margin: 5px 10px 5px 5px;
-  width: 60px;
+  margin: 5px 5px 5px 2px;
+  width: 50px;
 }
 .task_list_choose {
   border-bottom: 1px solid #ccc;
@@ -87,21 +105,42 @@
 .task_item {
   background-color: #EFEFD1;
   padding: 5px;
-  margin-bottom: 10px;
+}
+.task_item a {
+  display: block;
+}
+.task_list a, #task_main label, #task_main table {
+  font-size: 10pt;
+}
+.task_item:nth-child(odd) {
+  background-color: #FFFFDF;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
+}
+.task_item:nth-child(even) {
+  background-color: #EFEFD1;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
 }
 
-#TaskForm h2, .TaskList h2 {
+#task_main h1 {
   display: block;
   font-size: 1.4em;
   margin-bottom: 20px;
   font-weight: lighter;
+}
+#task_main h2, .TaskList h2 {
+  display: block;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  font-weight: lighter;
   letter-spacing: 1px;
 }
-#TaskForm h3, .TaskList h3 {
+#task_main h3, .TaskList h3 {
   display: block;
-  font-size: 1.1em;
+  font-size: 1.0em;
   font-weight: lighter;
-  margin-bottom: 10px;
+  margin: 10px 0;
   letter-spacing: 1px;
 }
 a {
@@ -110,4 +149,26 @@ a {
 }
 a:hover {
   text-decoration: underline;
+}
+
+.task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_other {
+  padding-left: 20px;
+}
+.task_mine {
+  background: url(/static/images/core/user_blue.png) no-repeat top left;
+}
+.task_open {
+  background: url(/static/images/core/users.png) no-repeat top left;
+}
+.task_proxy {
+  background: url(/static/images/core/home.png) no-repeat top left;
+}
+.task_amg {
+  background: url(/static/images/core/pill.png) no-repeat top left;
+}
+.task_mpg {
+  background: url(/static/images/core/bandaid.png) no-repeat top left;
+}
+.task_other {
+  background: url(/static/images/core/question-frame.png) no-repeat top left;
 }

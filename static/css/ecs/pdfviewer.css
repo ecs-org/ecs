@@ -244,3 +244,30 @@ body.pdfviewer .cover{
     height: 100%;
     z-index: 9000;
 }
+
+body.pdfviewer .searchPopup input{
+    font-size: 14px;
+    padding: 3px;
+    margin: 3px;
+}
+body.pdfviewer .searchPopup .results{
+    color: #99ddff;
+    margin: 3px;
+    font-size: 13px;
+    overflow: auto;
+    height: 160px;
+    clear: both;
+}
+
+body.pdfviewer .searchPopup .results div{
+    margin-bottom: 3px;
+    padding: 3px;
+}
+body.pdfviewer .searchPopup .results div:hover{
+    background-color: #222222;
+}
+
+body.pdfviewer .searchPopup .results .highlighted{
+    background-color: #000000;
+    color: #ffffff;
+}

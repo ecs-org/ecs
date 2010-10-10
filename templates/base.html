@@ -28,8 +28,8 @@
 	    {% endblock %}
     </div>
 
-    <div id="toggle_sidebar_button"><a href="#" id="toggle_sidebar" title="Sidebar verstecken/wiederherstellen"><img src="{{ MEDIA_URL }}/images/toggle.png" alt="toggle sidebar"/></a></div>
-  
+  <span id="toggle_sidebar_button"><a href="#" id="toggle_sidebar" title="Sidebar verstecken/wiederherstellen"><img src="{{ MEDIA_URL }}/images/toggle.png" alt="toggle sidebar"/></a></span>
+    
     <div id="sidebar">
         {% block sidebar %}
             <div id="logo">
@@ -40,7 +40,7 @@
             </div>
             <div id="account">
                 {% block account %}
-                {% endblock %}
+                {% endblock %}	        
             </div>
             <div id="searchbox">
                 {% block searchbox %}

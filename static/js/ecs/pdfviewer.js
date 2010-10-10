@@ -125,14 +125,14 @@ ecs.pdfviewer = {
             this.annotationOverlay = new Element('div', {'class': 'annotationOverlay'})
             this.annotationEditor = new ecs.pdfviewer.AnnotationEditor(this);
             
-            this.annotationEditor.addEvent('show', (function(){
-                this.keyboardNavigationEnabled = false;
-            }).bind(this));
-            this.annotationEditor.addEvent('hide', (function(){
-                this.keyboardNavigationEnabled = true;
-            }).bind(this));
+            var disableKeyNav = (function(){this.keyboardNavigationEnabled = false;}).bind(this)
+            var enableKeyNav = (function(){this.keyboardNavigationEnabled = true;}).bind(this)
+            this.annotationEditor.addEvent('show', disableKeyNav);
+            this.annotationEditor.addEvent('hide', enableKeyNav);
             
-            this.searchPopup = new ecs.pdfviewer.SearchPopup();
+            this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
+            this.searchPopup.addEvent('show', disableKeyNav);
+            this.searchPopup.addEvent('hide', enableKeyNav);
             
         },
         gotoAnchor: function(hash){
@@ -520,7 +520,7 @@ ecs.pdfviewer = {
                 return;
             }
             this.cover = new Element('div', {'class': 'cover'});
-            this.element = new Element('div', {'class': 'annotationDisplay popup'});
+            this.element = new Element('div', {'class': 'searchPopup annotationDisplay popup'});
             var content = new Element('div', {'class': 'content'});
             this.input = new Element('input', {type: 'text', value: ''});
             this.input.addEvent('keypress', (function(e){
@@ -552,15 +552,30 @@ ecs.pdfviewer = {
             new Drag.Move(this.element, {handle: background});
         },
         search: function(){
-            var request = new Request({
+            var popup = this;
+            var request = new Request.JSON({
                 url: this.viewer.searchURL,
-                data: $H({q: this.input.value()}).toQueryString()
+                data: $H({q: this.input.value}).toQueryString(),
+                method: 'get',
+                onSuccess: (function(results){
+                    this.resultList.innerHTML = '';
+                    results.each((function(result){
+                        var el = new Element('div', {'html': '<span class="pageNumber">Seite ' + result.page_number + '</span>: ' + result.highlight});
+                        el.addEvent('click', function(){
+                            popup.viewer.setPage(result.page_number - 1, false);
+                            popup.viewer.setControllerIndex(popup.viewer.controllers.length - 1);
+                        });
+                        this.resultList.grab(el);
+                    }).bind(this));
+                }).bind(this)
             });
-            request.save();
+            request.send();
         },
         show: function(query){
             this.init();
-            this.input.value = query || '';
+            if($defined(query)){
+                this.input.value = query;
+            }
             this.cover.setStyle('display', '');
             $(window).addEvent('keydown', this.escapeListener);
             this.input.focus();

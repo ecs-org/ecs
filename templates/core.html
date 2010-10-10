@@ -21,7 +21,7 @@
   <div class="searchbox">
     <form action="{% url ecs.core.views.submission_form_list %}" method="post" enctype="multipart/form-data">
       <input type="text" name="keyword" />
-      <input type="submit" value="Go" />
+      <input type="submit" value="" title="suchen" />
     </form>
   </div>
 {% endblock %}
@@ -173,7 +173,8 @@
           title: 'Feedback von {{ user.get_full_name }}',
           size: {
           width: 700,
-          height: 400
+          height: 400,
+	  useScrollBar: false
         }});
       };
       feedback_triggers.addEvent('click', feedback_handler);
@@ -209,7 +210,8 @@
           }
           var dialog = new ecs.Dialog(url, {
               title: 'Workflow',
-              size: {width: 900, height: 600}
+              size: {width: 700, height: 500},
+	      useScrollBar: true
           });
       };
       

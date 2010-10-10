@@ -1,24 +1,24 @@
 {% load i18n %}
 
-<div id="task_list">
+<div id="task_main">
 {% if submission %}
     <h1>{{ submission }}</h1>
 {% endif %}
 <form id="task_list_filter" action="" method="post">
     <div class="task_list_choose">
-        {{ filterform.mine }} <label>{% trans "Mine" %}</label>
-        {{ filterform.open }} <label>{% trans "Open" %}</label>
-        {{ filterform.proxy }} <label>{% trans "Proxy" %}</label>
+        {{ filterform.mine }} <label class="task_mine">{% trans "Mine" %}</label>
+        {{ filterform.open }} <label class="task_open">{% trans "Open" %}</label>
+        {{ filterform.proxy }} <label class="task_proxy">{% trans "Proxy" %}</label>
     </div>
     <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        {{ filterform.amg }} <label for="id_amg">{% trans "AMG" %}</label>
-        {{ filterform.mpg }} <label for="id_mpg">{% trans "MPG" %}</label>
-        {{ filterform.other }} <label for="id_other">{% trans "Other" %}</label>
+        {{ filterform.amg }} <label for="id_amg" class="task_amg">{% trans "AMG" %}</label>
+        {{ filterform.mpg }} <label for="id_mpg" class="task_mpg">{% trans "MPG" %}</label>
+        {{ filterform.other }} <label for="id_other" class="task_other">{% trans "Other" %}</label>
     </div>
 </form>
 
 {% if accepted_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Meine Tasks</h2>
         {% for task in accepted_tasks %}
         {% ifchanged task.task_type %}
@@ -33,7 +33,7 @@
 {% endif %}
 
 {% if assigned_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Mir zugewiesene Tasks</h2>
         {% for task in assigned_tasks %}
             {% ifchanged task.task_type %}
@@ -43,14 +43,13 @@
                 {{ task.data }}
                      (<a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">Annehmen</a> 
                     | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">Ablehnen</a>)
-                </span>
             </div>
         {% endfor %}
     </div>
 {% endif %}
 
 {% if open_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>Offene Tasks</h2>
         {% for task in open_tasks %}
             {% ifchanged task.task_type %}
@@ -62,7 +61,7 @@
 {% endif %}
 
 {% if proxy_tasks %}
-    <div class="TaskList">
+    <div class="task_list">
         <h2>{% trans 'Proxy Tasks' %}</h2>
         {% for task in proxy_tasks %}
             {% ifchanged task.task_type %}
