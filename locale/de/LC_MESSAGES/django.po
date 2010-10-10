@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-28 13:29+0200\n"
+"POT-Creation-Date: 2010-10-10 20:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,21 @@ msgstr ""
 msgid "German"
 msgstr "Deutsch"
 
-#: core/views/submissions.py:236
+#: core/workflow.py:71
+msgid "Acknowledge"
+msgstr "Bestätigen"
+
+#: core/workflow.py:72
+msgid "Reject"
+msgstr "Ablehnen"
+
+#: core/views/submissions.py:244
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
-msgstr "Sie koennen noch keine Studien abschicken, da ihr Account noch nicht bestaetigt wurde "
+msgstr ""
+"Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
+"bestaetigt wurde "
 
 #: templates/core.html:35
 msgid "Dashboard"
@@ -47,9 +57,38 @@ msgstr "Sitzungen"
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:68
+#: templates/core.html:65 templates/users/indisposed_list.html:7
+msgid "Indisposed Users"
+msgstr "Verhinderte Benutzer"
+
+#: templates/core.html:66
+msgid "Audit Trail"
+msgstr "Kontrollprotokoll"
+
+#: templates/core.html:70
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
+
+#: templates/core.html:85
+#, python-format
+msgid ""
+"\n"
+"          You are currently marked indisposed. To reclaim your tasks, please "
+"visit your <a href=\"%(profile_url)s\">profile</a>.\n"
+"      "
+msgstr ""
+
+#: templates/audit/log.html:19
+msgid "newest"
+msgstr "neuerste"
+
+#: templates/audit/log.html:20
+msgid "newer"
+msgstr "neuer"
+
+#: templates/audit/log.html:24
+msgid "older"
+msgstr "älter"
 
 #: templates/notifications/form.html:9
 #, fuzzy
@@ -64,86 +103,150 @@ msgstr "Einreichung"
 msgid "Centers"
 msgstr "Zentren"
 
-#: templates/submissions/readonly_form.html:23
+#: templates/submissions/readonly_form.html:11
+msgid "Edit"
+msgstr ""
+
+#: templates/submissions/readonly_form.html:21
 #, fuzzy
 msgid "Status"
 msgstr "Studien"
 
-#: templates/submissions/readonly_form.html:37
+#: templates/submissions/readonly_form.html:35
 msgid "Review"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:65
+#: templates/submissions/readonly_form.html:63
 msgid "Communication"
 msgstr "Nachrichten"
 
-#: templates/submissions/readonly_form.html:67
-#: templates/submissions/readonly_form.html:229
+#: templates/submissions/readonly_form.html:65
+#: templates/submissions/readonly_form.html:227
 msgid "My Communication"
-msgstr ""
+msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:68
-#: templates/submissions/readonly_form.html:235
+#: templates/submissions/readonly_form.html:66
+#: templates/submissions/readonly_form.html:233
 msgid "Communication Overview"
-msgstr ""
+msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:72
+#: templates/submissions/readonly_form.html:70
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:74
-#: templates/submissions/readonly_form.html:159
+#: templates/submissions/readonly_form.html:72
+#: templates/submissions/readonly_form.html:157
 msgid "Pending Votes"
-msgstr ""
+msgstr "Ausstehende Voten"
 
-#: templates/submissions/readonly_form.html:75
-#: templates/submissions/readonly_form.html:171
+#: templates/submissions/readonly_form.html:73
+#: templates/submissions/readonly_form.html:169
 msgid "Published Votes"
-msgstr ""
+msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:79
+#: templates/submissions/readonly_form.html:77
 #, fuzzy
 msgid "Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/submissions/readonly_form.html:81
-#: templates/submissions/readonly_form.html:133
+#: templates/submissions/readonly_form.html:79
+#: templates/submissions/readonly_form.html:131
 #, fuzzy
 msgid "Pending Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/submissions/readonly_form.html:82
-#: templates/submissions/readonly_form.html:146
+#: templates/submissions/readonly_form.html:80
+#: templates/submissions/readonly_form.html:144
 #, fuzzy
 msgid "Answered Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/submissions/readonly_form.html:141
+#: templates/submissions/readonly_form.html:139
 msgid "There are no pending notifications."
 msgstr ""
 
-#: templates/submissions/readonly_form.html:143
-#: templates/submissions/readonly_form.html:156
+#: templates/submissions/readonly_form.html:141
+#: templates/submissions/readonly_form.html:154
 msgid "Create a new notification"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:154
+#: templates/submissions/readonly_form.html:152
 msgid "There are no answered notifications."
 msgstr ""
 
-#: templates/submissions/readonly_form.html:167
+#: templates/submissions/readonly_form.html:165
 msgid "There are no pending votes."
-msgstr ""
+msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:179
+#: templates/submissions/readonly_form.html:177
 msgid "There are no published votes."
-msgstr ""
+msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:232
+#: templates/submissions/readonly_form.html:230
 msgid "Write a new message"
+msgstr "Neue Nachricht"
+
+#: templates/tasks/compact_list.html:9
+msgid "Mine"
 msgstr ""
 
-#: users/forms.py:18
+#: templates/tasks/compact_list.html:10
+msgid "Open"
+msgstr "Öffnen"
+
+#: templates/tasks/compact_list.html:11
+msgid "Proxy"
+msgstr "Stellvertreter"
+
+#: templates/tasks/compact_list.html:14
+msgid "AMG"
+msgstr "AMG"
+
+#: templates/tasks/compact_list.html:15
+msgid "MPG"
+msgstr "MPG"
+
+#: templates/tasks/compact_list.html:16
+msgid "Other"
+msgstr "Andere"
+
+#: templates/tasks/compact_list.html:65
+msgid "Proxy Tasks"
+msgstr "Vertetene Tätigkeiten"
+
+#: templates/tasks/compact_list.html:76
+msgid "There are no tasks for you."
+msgstr "Keine Tätigkeiten"
+
+#: templates/tasks/manage_task.html:12
+msgid "Show all tasks"
+msgstr "Alle Tätigkeiten anzeigen."
+
+#: templates/tasks/manage_task.html:26
+msgid "Close"
+msgstr "Schliessen"
+
+#: templates/tasks/manage_task.html:38
+msgid "Delegate"
+msgstr "Abgeben"
+
+#: templates/tasks/manage_task.html:48
+msgid "Ask"
+msgstr ""
+
+#: templates/users/indisposed_list.html:8
+msgid "Add"
+msgstr ""
+
+#: templates/users/mark_indisposed.html:7
+msgid "Mark User Indisposed"
+msgstr "Benutzer als verhindert markieren"
+
+#: templates/users/mark_indisposed.html:10
+msgid "Mark Indisposed"
+msgstr "Verhindert markieren"
+
+#: users/forms.py:19
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -169,11 +272,11 @@ msgstr ""
 
 #: utils/countries/models.py:30
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: utils/countries/models.py:31
 msgid "Countries"
-msgstr ""
+msgstr "Länder"
 
 #: utils/countries/models.py:52
 msgid "State name"
@@ -181,7 +284,7 @@ msgstr ""
 
 #: utils/countries/models.py:53
 msgid "Abbreviation"
-msgstr ""
+msgstr "Abkürzung"
 
 #: utils/countries/models.py:57
 msgid "US State"
