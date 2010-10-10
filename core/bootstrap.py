@@ -544,12 +544,8 @@ def testsubmission():
     
     patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')
     with open(patienteninformation_filename) as patienteninformation:
-        ctype = ContentType.objects.get_for_model(Document)
-        doc = Document()
-        doc.version = '1'
-        doc.doctype = DocumentType.objects.get(identifier='patientinformation')
-        doc.date = datetime.now()
-        doc.file = File(patienteninformation)
+        doctype = DocumentType.objects.get(identifier='patientinformation')
+        doc = Document.objects.create_from_buffer(patienteninformation.read(), version='1', doctype=doctype, date=datetime.now())
         doc.save()
 
     submission_form = SubmissionForm.objects.create(**submission_form_data)
