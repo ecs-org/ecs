@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-10 20:04+0200\n"
+"POT-Creation-Date: 2010-10-10 20:21+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,16 +79,16 @@ msgid ""
 msgstr ""
 
 #: templates/audit/log.html:19
-msgid "newest"
-msgstr "neuerste"
+msgid "Newest Entries"
+msgstr "Neuerste Einträge"
 
 #: templates/audit/log.html:20
-msgid "newer"
-msgstr "neuer"
+msgid "Newer Entries"
+msgstr "Neuere Einträge"
 
 #: templates/audit/log.html:24
-msgid "older"
-msgstr "älter"
+msgid "Older Entries"
+msgstr "Ältere Einträge"
 
 #: templates/notifications/form.html:9
 #, fuzzy
@@ -188,11 +188,11 @@ msgstr "Neue Nachricht"
 
 #: templates/tasks/compact_list.html:9
 msgid "Mine"
-msgstr ""
+msgstr "Meine"
 
 #: templates/tasks/compact_list.html:10
 msgid "Open"
-msgstr "Öffnen"
+msgstr "Offen"
 
 #: templates/tasks/compact_list.html:11
 msgid "Proxy"
@@ -293,6 +293,15 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "newest"
+#~ msgstr "neuerste"
+
+#~ msgid "newer"
+#~ msgstr "neuer"
+
+#~ msgid "older"
+#~ msgstr "älter"
 
 #~ msgid "creating new submission form"
 #~ msgstr "erstelle neue einreichung"
