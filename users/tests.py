@@ -101,8 +101,10 @@ class MiddlewareTest(EcsTestCase):
         c2 = Client()
 
         c1.login(username='testuser', password='4223')
-        c2.login(username='testuser', password='4223')  # now, c1 has to be logged out, because of the single login middleware
+        response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
+        self.failUnlessEqual(response.status_code, 200)
 
+        c2.login(username='testuser', password='4223')  # now, c1 has to be logged out, because of the single login middleware
         response = c2.get(reverse('ecs.dashboard.views.view_dashboard'))
         self.failUnlessEqual(response.status_code, 200)
 
