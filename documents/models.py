@@ -76,7 +76,7 @@ class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage())
-    original_file_name = models.CharField(max_length=100, null=True, blank=True)
+    original_file_name = models.CharField(max_length=250, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
