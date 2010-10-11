@@ -24,9 +24,11 @@ def log(request, format, limit=50, until=None, since=None):
     limit = int(limit)
 
     if until is not None:
+        until = int(until)
         entries = list(AuditTrail.objects.filter(pk__lte=until).order_by('-pk')[:limit])
 
     elif since is not None:
+        since = int(since)
         entries = list(AuditTrail.objects.filter(pk__gte=since).order_by('pk')[:limit])
         entries.reverse()
 

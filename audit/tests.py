@@ -68,3 +68,16 @@ class ViewTests(EcsTestCase):
         response = self.client.get(reverse('ecs.audit.views.log', args=('foo',)))
         self.failUnlessEqual(response.status_code, 404)  # foo is not a valid log format
 
+    def test_paging(self):
+        for i in xrange(100): # create a lot of audit trail entries
+            User.objects.create(username='audittrailpagingtest%d' % i)
+
+        first_entry = AuditTrail.objects.all().order_by('pk')[0]
+        last_entry = AuditTrail.objects.all().order_by('-pk')[0]
+
+        self.client.login(username='inspector', password='4223')
+        response = self.client.get(reverse('ecs.audit.views.log', kwargs={'format': 'html', 'limit': '50', 'since': str(first_entry.pk)}))
+        self.failUnlessEqual(response.status_code, 200)
+        response = self.client.get(reverse('ecs.audit.views.log', kwargs={'format': 'html', 'limit': '50', 'until': str(last_entry.pk)}))
+        self.failUnlessEqual(response.status_code, 200)
+
