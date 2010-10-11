@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.4
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # (c) 2009 Medizinische Universität Wien
@@ -8,11 +8,6 @@ URL map for feedback backend.
 """
 
 from django.conf.urls.defaults import *
-
-def test(*args, **kw):
-    print "args", args
-    print "kw", kw
-    return None
 
 urlpatterns = patterns(
     '',

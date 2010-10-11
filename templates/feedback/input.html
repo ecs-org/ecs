@@ -35,7 +35,8 @@
   {% if description_error %}
       <li id="id_description_error" class="fb_error">Beschreibung fehlt!</li>
   {% endif %}
-      <li><textarea id="id_description" cols="30" rows="6" name="description">{{ description }}</textarea></li>
+      <li>Titel: <input id="id_summary" name="summary" class="fb_summary" style="width:100%"></li>
+      <li><textarea id="id_description" name="description" rows="9" cols="30" style="width:100%" >{{ description }}</textarea></li>
       <li><input id="id_submit" type="submit" value="Abschicken" /></li>
     </ol>
   </div>
@@ -48,6 +49,7 @@
   {% if list %}
     {% for fb in list %}
     <li class="fb_list_item">
+      <span class="fb_summary"">{{fb.summary|truncate:38}}</span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
@@ -58,7 +60,7 @@
       <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
     {% endifequal %}
       <br/>
-      <div class="fb_description">{{ fb.description|wordwrap:40|truncate:80 }}</div>
+      <div class="fb_description" >{{ fb.description|wordwrap:45|truncate:90 }}</div>
       <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
     </li>
     {% endfor %}

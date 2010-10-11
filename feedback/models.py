@@ -6,7 +6,7 @@ from ecs.utils import tracrpc
 # Create your models here.
 
 class Feedback(models.Model):
-    FEEDBACK_TYPES=(('i', 'Idea'),('q','Question'),('p', 'Problem'),('l','Praise'))
+    FEEDBACK_TYPES=(('i', 'idea'),('q','question'),('p', 'problem'),('l','praise'))
     ftdict = dict(FEEDBACK_TYPES)
     tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
     rpc_query_base = "order=id&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component"
@@ -26,25 +26,28 @@ class Feedback(models.Model):
         super(Feedback, self).__init__(*args, **kwargs)
         
     @classmethod
-    def _get_tracrpc(cls):
+    def _get_tracrpc(self):
+        return self.tracrpc
         #return tracrpc.TracRpc(settings.FEEDBACK_RPC_CONFIG['username'], settings.FEEDBACK_RPC_CONFIG['password'], settings.FEEDBACK_RPC_CONFIG['proto'], settings.FEEDBACK_RPC_CONFIG['host'], settings.FEEDBACK_RPC_CONFIG['urlpath'])
         #return tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
-        return cls.tracrpc
         #return tracrpc.TracRpc('sharing', 'uehkdkDijepo833', 'https', 'ecsdev.ep3.at', '/project/ecs')
-    
     
     def _create_trac_ticket(self):
         tracrpc = self._get_tracrpc()
-        #summary = feedback.description because feedback.summary is always empty
-        #summary = description is on purpose
-        ticket = {'summary': self.description,
-                  'description': self.summary,
+        trac_tickettype = tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.type.get, self.feedbacktype)
+        if not trac_tickettype:
+            trac_tickettype = "1"
+        
+        ticket = {'summary': self.summary,
+                  'description': self.description, 
                   'location': '',#what goes in here? cleaned version of self.origin?
                   'absoluteurl': self.origin,
                   'type': self.feedbacktype,
                   'cc': self.creator_email,
                   'ecsfeedback_creator': self.creator_email,
-                  'milestone': settings.FEEDBACK_CONFIG['milestone']}
+                  'component': settings.FEEDBACK_CONFIG['component'],                  
+                  'milestone': settings.FEEDBACK_CONFIG['milestone'],
+                  }
         
         try:        
             success, result = tracrpc._create_ticket(summary=self.summary, ticket=ticket, description=self.description)
@@ -53,57 +56,57 @@ class Feedback(models.Model):
         return success, result
 
     @classmethod
-    def get(cls, tid):
-        ticket = cls.tracrpc._get_ticket(tid)
+    def get(self, tid):
+        ticket = self.tracrpc._get_ticket(tid)
         if ticket is None:
             return None
         ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
-        return cls.init_from_dict(ticket)
+        return self.init_from_dict(ticket)
     
     @classmethod
-    def init_from_dict(cls, ticket):
+    def init_from_dict(self, ticket):
         fb = Feedback()
         fb.trac_ticket_id = ticket['id'] if ticket.has_key('id') else None
         fb.feedbacktype = ticket['type']
-        #summary = description is on purpose
-        fb.summary = ticket['description'] 
-        fb.description = ticket['summary']
+        fb.summary = ticket['summary'] 
+        fb.description = ticket['description']
         fb.origin = ticket['absoluteurl']
         #fb.user = user wont work this way - user lookup via email is not unique and waste of time 
         fb.pub_date = ''
         fb.me_too_emails_string = ticket['cc']
-        fb.me_too_emails = cls.comma_string_2_list(ticket['cc'])
+        fb.me_too_emails = self.comma_string_2_list(ticket['cc'])
         fb.me_too_votes = len(fb.me_too_emails)
         fb.creator_email = ticket['ecsfeedback_creator']
         return fb
     
     @classmethod
-    def query(cls, limit_from=0, limit_to=9999, feedbacktype=None, origin=None):
+    def query(self, limit_from=0, limit_to=9999, feedbacktype=None, origin=None):
         fb_list = []
-        query = cls.rpc_query_base
+        query = self.rpc_query_base
         if feedbacktype is not None:
-            query += "&type=%s" % cls.ftdict[feedbacktype].lower()
+            query += "&type=%s" % self.ftdict[feedbacktype].lower()
         if origin is not None:
             query += "&absoluteurl=%s" % origin
+        query +="&status=accepted&status=assigned&status=new&status=reopened&status=testing"
     
-        ticket_ids = cls.tracrpc._safe_rpc(cls.tracrpc.jsonrpc.ticket.query, query)
+        ticket_ids = self.tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.query, query)
         if ticket_ids is None:
             return 0,[]
         
         overall_count = len(ticket_ids)
-        mc = cls.tracrpc.multicall()
+        mc = self.tracrpc.multicall()
         for tid in ticket_ids[limit_from:limit_to]:
             mc.ticket.get(tid)
-        mc_results = cls.tracrpc._safe_rpc(mc)
+        mc_results = self.tracrpc._safe_rpc(mc)
         
         if mc_results is None:
             return 0,[]
         
         ticket_count = len(mc_results.results['result'])
         for result in mc_results.results['result']:
-            ticket = cls.tracrpc._get_ticket_from_rawticket(result['result'])
+            ticket = self.tracrpc._get_ticket_from_rawticket(result['result'])
             ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
-            fb_list.append(cls.init_from_dict(ticket))
+            fb_list.append(self.init_from_dict(ticket))
         return overall_count, fb_list
     
     @staticmethod

@@ -1,91 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
-from django.conf import settings
-from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.feedback.models import Feedback
-from ecs.utils import tracrpc
-
 import datetime
 import random
 import types
 
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 
-def is_int(x):
-    try:
-        i = int(x)
-        return True
-    except:
-        return False
-  
+from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.feedback.models import Feedback
+from ecs.utils import tracrpc
 
 def feedback_input(request, type='i', page=1, origin='TODO'):
-    if not request.user.is_authenticated():
-        return HttpResponse("Error: you need to be logged in!")
-    else:
-        user = request.user
-        if user is None:
-            return HttpResponse("Error: user is none!")
-
-    m = dict(Feedback.FEEDBACK_TYPES)
-    if not m.has_key(type):
-        return HttpResponse("Error: unknown feedback type '%s'!" % type)
-
-    description = ''
-    description_error = False
-    rpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
-    
-    
-    if request.method == 'POST' and request.POST.has_key('description'):
-        description = request.POST['description']
-        id = request.POST['fb_id']
-        if id:
-            # me2 vote (via GET)
-            id = int(id)
-            
-            if id < 0:
-                tid = id * -1
-                fb = Feedback.get(tid)
-                if fb is not None:
-                    fb.me_too_votes_remove(user)
-            else:
-                tid = id
-                fb = Feedback.get(tid)
-                if fb is not None:
-                    fb.me_too_votes_add(user)
-            
-            
-        else:
-            description_error = (description == '')
-            if not (description_error):
-                feedbacktype = type
-                pub_date = datetime.datetime.now()
-                
-                
-                #summary = description is on purpose
-                ticket = {'type': Feedback.ftdict[feedbacktype].lower(), 'summary': description, 'absoluteurl': origin, 'ecsfeedback_creator': user.email}
-                ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
-                #ugly but works for now
-                feedback = Feedback.init_from_dict(ticket)
-                feedback.save()
-                
-                return render(request, 'feedback/thanks.html', {
-                    'type': type,
-                    'description': description,
-                })
-
-    types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
- 
-    if not is_int(page) or page < 1:
-        return HttpResponse("Error: invalid parameter page = '%s'!" % page)
-    page = int(page)
-
-    page_size = 4  # TODO emphasize parameter
-
-    # create display list from database fb records
-    list = []
-    index = (page - 1) * page_size;
 
     def get_me2(fb):
         if user.email in fb.creator_email:
@@ -101,7 +28,70 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         #this count is only for all others but not the creator
         count -= 1 if count > 0 else 0
         return count
-       
+
+    if not request.user.is_authenticated():
+        return HttpResponse("Error: you need to be logged in!")
+    else:
+        user = request.user
+        if user is None:
+            return HttpResponse("Error: user is none!")
+
+    m = dict(Feedback.FEEDBACK_TYPES)
+    if not m.has_key(type):
+        return HttpResponse("Error: unknown feedback type '%s'!" % type)
+
+    feedback_error = False
+    summary = description = ''
+    rpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
+    
+    if request.method == 'POST' and request.POST.has_key('summary'):
+        summary = request.POST['summary']
+        description = request.POST['description'] if request.POST.has_key('description') else ""
+        id = request.POST['fb_id']
+        
+        if id: # me2 vote (via GET)
+            id = int(id)
+            if id < 0:
+                tid = id * -1
+                fb = Feedback.get(tid)
+                if fb is not None:
+                    fb.me_too_votes_remove(user)
+            else:
+                tid = id
+                fb = Feedback.get(tid)
+                if fb is not None:
+                    fb.me_too_votes_add(user)    
+        else:
+            feedback_error = not summary
+            if not (feedback_error):
+                ticket = {'type': Feedback.ftdict[type].lower(), 
+                          'summary': summary, 
+                          'description': description,
+                          'absoluteurl': origin,
+                          'ecsfeedback_creator': user.email}
+                ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
+                # XXX ugly but works for now
+                feedback = Feedback.init_from_dict(ticket)
+                feedback.save()
+                
+                return render(request, 'feedback/thanks.html', {
+                    'type': type,
+                    'summary': summary,
+                    'description': description,
+                })
+
+    try:
+        page = int(page)
+        if page < 1:
+            raise ValueError("page is 1 based (why)")
+    except ValueError:
+        return HttpResponse("Error: invalid parameter page = '%s'!" % page)
+    page_size = 3  # TODO emphasize parameter
+    
+    types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
+    # create display list from database fb records
+    list = []
+    index = (page - 1) * page_size;
     
     overall_count, fb_list = Feedback.query(limit_from=index, limit_to=(index+page_size), feedbacktype=type, origin=origin)
     
@@ -110,6 +100,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         list.append({
             'index': index,
             'id': fb.trac_ticket_id,
+            'summary': fb.summary,
             'description': fb.description,
             'me2': get_me2(fb),
             'count': get_count(fb),
@@ -132,8 +123,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         'items': items,
         'pages': pages,
         'origin': origin,
+        'summary': summary,
         'description': description,
-        'description_error': description_error,
+        'feedback_error': feedback_error,
     })
 
 

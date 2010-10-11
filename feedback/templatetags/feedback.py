@@ -77,7 +77,7 @@ def fb_motivate(type):
 
 others_de = {
     (0, 'yours', 'i'): u'Sie haben diese Idee beschrieben',
-    (0, 'u2',    'i'): u'(das sollte nun wirklich gar nicht vorkommen)',
+    (0, 'u2',    'i'): u'Sie und Sie haben diese Idee beschrieben ?WTF',
     (0, 'me2',   'i'): u'Eine Person hat diese Idee beschrieben',
     (1, 'yours', 'i'): u'Einer weiteren Person gefällt Ihre Idee',
     (1, 'u2',    'i'): u'Einer Person und Ihnen gefällt diese Idee',
@@ -87,7 +87,7 @@ others_de = {
     (2, 'me2',   'i'): u'%s Personen gefällt diese Idee',
 
     (0, 'yours', 'q'): u'Sie haben diese Frage beschrieben',
-    (0, 'u2',    'q'): u'(wenn das der Admin sieht)',
+    (0, 'u2',    'q'): u'Sie und Sie haben diese Frage beschrieben ?WTF',
     (0, 'me2',   'q'): u'Eine Person hat diese Frage beschrieben',
     (1, 'yours', 'q'): u'Eine weitere Person hat ebenfalls Ihre Frage',
     (1, 'u2',    'q'): u'Eine Person und Sie haben diese Frage',
@@ -97,7 +97,7 @@ others_de = {
     (2, 'me2',   'q'): u'%s Personen haben diese Frage',
 
     (0, 'yours', 'p'): u'Sie haben dieses Problem beschrieben',
-    (0, 'u2',    'p'): u'(jodeldü)',
+    (0, 'u2',    'p'): u'Sie und Sie haben dieses Problem beschrieben ?WTF',
     (0, 'me2',   'p'): u'Eine Person hat dieses Problem beschrieben',
     (1, 'yours', 'p'): u'Eine weitere Person hat ebenfalls Ihr Problem',
     (1, 'u2',    'p'): u'Eine Person und Sie haben dieses Problem',
@@ -107,7 +107,7 @@ others_de = {
     (2, 'me2',   'p'): u'%s Personen haben dieses Problem',
 
     (0, 'yours', 'l'): u'Sie haben dieses Lob ausgesprochen',
-    (0, 'u2',    'l'): u'(meine CPU ist heissgelaufen)',
+    (0, 'u2',    'l'): u'Sie und Sie haben dieses Lob ausgesprochen ?WTF',
     (0, 'me2',   'l'): u'Eine Person hat dieses Lob ausgesprochen',
     (1, 'yours', 'l'): u'Eine weitere Person hat sich Ihrem Lob angeschlossen',
     (1, 'u2',    'l'): u'Eine Person und Sie haben dieses Lob ausgesprochen',
