@@ -39,12 +39,12 @@ LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '127.0.0.1', 'port': 8823
 
 if user == "shredder":
     LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
-    LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8833} # listen here 
+    LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '0.0.0.0', 'port': 8833} # listen here 
     FROM_DOMAIN = "s.ecsdev.ep3.at"
     LAMSON_SEND_THROUGH_RECEIVER = True
 elif user == "testecs":
     LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.189']
-    LAMSON_RECEIVER_CONFIG = {'host': '0.0.0.0', 'port': 8843} # listen here 
+    LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '0.0.0.0', 'port': 8843} # listen here 
     FROM_DOMAIN = "test.ecsdev.ep3.at"
     LAMSON_SEND_THROUGH_RECEIVER = True
 
