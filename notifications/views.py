@@ -11,6 +11,7 @@ from ecs.core.forms.layout import NOTIFICATION_FORM_TABS
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
+from ecs.core.forms import DocumentForm
 
 from ecs.core.models import SubmissionForm, Investigator, Submission
 from ecs.notifications.models import Notification, NotificationType
@@ -52,7 +53,7 @@ def create_notification(request, notification_type_pk=None):
     else:
         form = notification_type.form_cls(request.POST or None)
 
-    document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    document_form = DocumentForm(request.POST or None, request.FILES or None, document_pks=[x.pk for x in request.docstash.get('documents', [])], prefix='document')
     
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -69,10 +70,16 @@ def create_notification(request, notification_type_pk=None):
         if autosave:
             return HttpResponse('autosave successful')
         
-        if document_formset.is_valid():
-            request.docstash['documents'] = request.docstash['documents'] + document_formset.save()
-            document_form = DocumentForm(prefix='document')
-        
+        if document_form.is_valid():
+            documents = set(request.docstash['documents'])
+            documents.add(document_form.save())
+            replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
+            for doc in replaced_documents:  # remove replaced documents
+                if doc in documents:
+                    documents.remove(doc)
+            request.docstash['documents'] = list(documents)
+            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+
         if submit and form.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
