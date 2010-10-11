@@ -551,9 +551,9 @@ def testsubmission():
     
     patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')
     doctype = DocumentType.objects.get(identifier='patientinformation')
-    doc = Document(version="1", doctype=doctype, date=datetime.now(), 
-                   file=File(file=open(patienteninformation_filename, "rb")))
-    doc.save()
+    with open(patienteninformation_filename, 'rb') as f:
+        doc = Document(version="1", doctype=doctype, date=datetime.now(),file=File(f)) 
+        oc.save()
 
     submission_form = SubmissionForm.objects.create(**submission_form_data)
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='AT'))
