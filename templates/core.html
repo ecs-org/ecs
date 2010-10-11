@@ -169,8 +169,9 @@
       var feedback_handler = function(event) { 
         event.stop();
         var url = '/feedback/input/i/1/' + get_origin() + '/';
+        // TODO: fix for feedback and userswitcher target (should display original_user)
         new ecs.Dialog(url, {
-          title: 'Feedback von {{ user.get_full_name }}',
+          title: 'Feedback von {% if request.original_user %}{{ request.original_user.get_full_name }}{% else %}{{ user.get_full_name }}{% endif %}',
           size: {
           width: 700,
           height: 400 }

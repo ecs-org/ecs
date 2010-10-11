@@ -426,7 +426,7 @@ class TracRpc():
         else:
             mc = self.multicall()
             for tid in ticket_ids:
-                #mc.ticket.delete(tid)
+                mc.ticket.delete(tid)
                 pass
             results = self._safe_rpc(mc)
             print "u just did a scary thing" 

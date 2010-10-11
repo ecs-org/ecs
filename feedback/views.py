@@ -14,10 +14,10 @@ from ecs.utils import tracrpc
 
 def feedback_input(request, type='i', page=1, origin='TODO'):
 
-    def get_me2(fb):
-        if user.email in fb.creator_email:
+    def get_me2(email, fb):
+        if email in fb.creator_email:
             return 'yours'
-        elif user.email in fb.me_too_emails_string:
+        elif email in fb.me_too_emails_string:
             return 'u2'
         else:
             return 'me2'
@@ -35,7 +35,10 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         user = request.user
         if user is None:
             return HttpResponse("Error: user is none!")
-
+        
+        if hasattr(request, "original_user"): # TODO: is hack to get original user (and email address) in case of userswitcher 
+            user = request.original_user
+            
     m = dict(Feedback.FEEDBACK_TYPES)
     if not m.has_key(type):
         return HttpResponse("Error: unknown feedback type '%s'!" % type)
@@ -83,7 +86,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     try:
         page = int(page)
         if page < 1:
-            raise ValueError("page is 1 based (why)")
+            raise ValueError("page is 1 based (why?)")
     except ValueError:
         return HttpResponse("Error: invalid parameter page = '%s'!" % page)
     page_size = 3  # TODO emphasize parameter
@@ -102,12 +105,11 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             'id': fb.trac_ticket_id,
             'summary': fb.summary,
             'description': fb.description,
-            'me2': get_me2(fb),
+            'me2': get_me2(user.email, fb),
             'count': get_count(fb),
         })
 
-    items = overall_count
-    
+    items = overall_count   
     if items > 0:
         pages = (items - 1) / page_size + 1
         if page > pages:
