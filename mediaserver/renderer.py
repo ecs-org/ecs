@@ -10,11 +10,11 @@ from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
 
 
 MONTAGE_PATH = which('montage').next()
-DEFAULT_ASPECT_RATIO = 1.41428
-DEFAULT_DPI = 72
-DEFAULT_DEPTH = 8
     
-def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=DEFAULT_ASPECT_RATIO, dpi=DEFAULT_DPI, depth=DEFAULT_DEPTH):    
+def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y):
+    aspect_ratio = settings.MEDIASERVER_DEFAULT_ASPECT_RATIO
+    dpi = settings.MEDIASERVER_DEFAULT_DPI
+    depth = settings.MEDIASERVER_DEFAULT_DEPTH   
     margin_x = 0
     margin_y = 0
     
@@ -25,6 +25,7 @@ def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=
     height = width * aspect_ratio
     tile_width = (width / tiles_x) - margin_x
     tile_height = (height / tiles_y) - margin_y
+
     
     tmp_renderdir = tempfile.mkdtemp() 
     tmp_docshot_prefix = os.path.join(tmp_renderdir, '%s_%s_%sx%s_' % (uuid, width, tiles_x, tiles_y)) + "%04d"
@@ -44,8 +45,8 @@ def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y, aspect_ratio=
         yield Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
 def renderDefaultDocshots(pdfblob, filelike):
-    tiles = [ 1, 3, 5 ]
-    width = [ 800, 768 ] 
+    tiles = settings.MEDIASERVER_TILES
+    width = settings.MEDIASERVER_RESOLUTIONS
     
     # prepare the temporary render src
     tmp_rendersrc = tempfile.mktemp();

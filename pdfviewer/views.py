@@ -8,13 +8,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
-from ecs.mediaserver.documentprovider import DocumentProvider
-from ecs.mediaserver.cacheobjects import MediaBlob
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm
+from ecs.pdfviewer.utils import createmediaurls
 
-document_provider = DocumentProvider()
 
 def show(request, id='1', page=1, zoom='1'):
     document = get_object_or_404(Document, pk=id)
@@ -23,7 +21,7 @@ def show(request, id='1', page=1, zoom='1'):
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
         'annotations': simplejson.dumps(annotations),
-        'images': simplejson.dumps(document_provider.createDocshotData(document.uuid_document)),
+        'images': simplejson.dumps(createmediaurls(document)),
     })
 
 @csrf_exempt

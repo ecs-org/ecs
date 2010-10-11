@@ -12,7 +12,7 @@ from django.conf import settings
 
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
-from ecs.mediaserver.renderer import renderDefaultDocshots,DEFAULT_ASPECT_RATIO
+from ecs.mediaserver.renderer import renderDefaultDocshots
 from ecs.utils.pdfutils import pdf_isvalid
 from ecs.mediaserver.cacheobjects import Docshot, MediaBlob
 from ecs.utils import s3utils, gpgutils
@@ -37,7 +37,7 @@ class DocumentProvider(object):
     def addBlob(self, mediablob, filelike):
         self.vault.add(mediablob.cacheID(), filelike);
     
-    def getBlob(self, mediablob, try_doc_diskcache=True, try_vault=True):
+    def getBlob(self, mediablob, try_doc_diskcache=True, try_vault=True, rerender_always=False):
         filelike=None
             
         if try_doc_diskcache:
@@ -48,6 +48,8 @@ class DocumentProvider(object):
             decrypted = gpgutils.decrypt(filelike, settings.MEDIASERVER_KEYOWNER)
             self._cacheBlob(mediablob, decrypted)
             self._cacheDocshots(mediablob, decrypted)
+        elif rerender_always == True:
+            self._cacheDocshots(mediablob, filelike)
  
         return filelike
 
@@ -65,7 +67,7 @@ class DocumentProvider(object):
                 filelike = self.render_diskcache.get(docshot.cacheID()) # do not update access because get of diskcache makes it
 
                 if not filelike: # still not here, so we need to recache from scratch
-                    self.getBlob(docshot.mediablob) # This primes caches
+                    self.getBlob(docshot.mediablob, rerender_always=True) # This primes caches
                     
                     filelike = self.render_diskcache.get(docshot.cacheID())
                     if not filelike:
@@ -85,12 +87,13 @@ class DocumentProvider(object):
         for docshot, data in renderDefaultDocshots(pdfblob,filelike):
             self.addDocshot(docshot, data, use_render_diskcache=True)
         return True
-
+    
+        """
     def createDocshotData(self, mediablob):
         if not isinstance(mediablob, MediaBlob):
             mediablob = MediaBlob(uuid.UUID(str(mediablob)))
-        tiles = [ 1, 3, 5 ]
-        width = [ 800, 768 ] 
+        tiles = settings.MEDIASERVER_TILES
+        width = settings.MEDIASERVER_RESOLUTIONS
         docshotData = [];
     
         for t in tiles:
@@ -115,6 +118,7 @@ class DocumentProvider(object):
                     pagenum += 1
 
         return docshotData
+        """    
             
 class VolatileCache(object):
     '''
