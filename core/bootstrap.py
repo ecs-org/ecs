@@ -553,7 +553,7 @@ def testsubmission():
     doctype = DocumentType.objects.get(identifier='patientinformation')
     with open(patienteninformation_filename, 'rb') as f:
         doc = Document(version="1", doctype=doctype, date=datetime.now(),file=File(f)) 
-        oc.save()
+        doc.save()
 
     submission_form = SubmissionForm.objects.create(**submission_form_data)
     submission_form.substance_p_c_t_countries.add(Country.objects.get(iso='AT'))
