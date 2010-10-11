@@ -293,7 +293,13 @@ def auth_user_developers():
         user.email = dev[3]
         user.set_password(dev[4])
         user.is_staff = True
+        user.groups.add(Group.objects.get(name="Presenter"))
         user.save()
+        profile = user.get_profile()
+        profile.approved_by_office = True
+        profile.save()
+        
+        
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups','ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
@@ -350,6 +356,7 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         profile.board_member = True
+        profile.approved_by_office = True
         profile.save()
 
         for medcategory in medcategories:
