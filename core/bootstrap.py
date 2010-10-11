@@ -293,13 +293,7 @@ def auth_user_developers():
         user.email = dev[3]
         user.set_password(dev[4])
         user.is_staff = True
-        user.groups.add(Group.objects.get(name="Presenter"))
         user.save()
-        profile = user.get_profile()
-        profile.approved_by_office = True
-        profile.save()
-        
-        
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups','ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
@@ -356,7 +350,6 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         profile.board_member = True
-        profile.approved_by_office = True
         profile.save()
 
         for medcategory in medcategories:
@@ -550,9 +543,9 @@ def testsubmission():
     }
     
     patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')
-    doctype = DocumentType.objects.get(identifier='patientinformation')
-    with open(patienteninformation_filename, 'rb') as f:
-        doc = Document(version="1", doctype=doctype, date=datetime.now(),file=File(f)) 
+    with open(patienteninformation_filename, 'rb') as patienteninformation:
+        doctype = DocumentType.objects.get(identifier='patientinformation')
+        doc = Document.objects.create_from_buffer(patienteninformation.read(), version='1', doctype=doctype, date=datetime.now())
         doc.save()
 
     submission_form = SubmissionForm.objects.create(**submission_form_data)
