@@ -7,7 +7,7 @@ def shoot(request):
     trac = xmlrpclib.ServerProxy('https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc')
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
-        "milestone":"Milestone 8", 
+        "milestone":"Milestone 9", 
         # XXX deleted because only persons assigned to a sprint can be owner of this type of ticket "sprint":"Sprint 7", 
         "absoluteurl": request.POST.get('absoluteurl', ''),
     }, True)
