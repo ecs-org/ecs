@@ -158,7 +158,6 @@ INSTALLED_APPS = (
     'django_nose',
     'djcelery',
     'ghettoq', 
-    #'reversion',   # clashes with south if data migrations are done
 
     'ecs.utils.countries',
     'compressor',
@@ -308,10 +307,6 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
-if 'test' in sys.argv:
-    FEEDBACK_CONFIG['create_trac_tickets'] = False
-    FEEDBACK_CONFIG['store_in_db'] = True
-
 # thirdparty settings
 ######################
 
@@ -364,13 +359,10 @@ SENTRY_REMOTE_TIMEOUT = 3
 # settings override 
 ###################
 
-
 #XXX: these are local fixes, they default to a sane value if unset
 #ECS_AUTO_PDF_BARCODE = True # default to true, skips pdftk stamping if set to false
-
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
 # needs to be overriden in local_settings for eg. windows
-
 #ECS_GNUPG = "absolute path to gpg executable" # defaults to which('gpg') if empty
 # needs to be overriden in local_settings for eg. windows 
 
@@ -408,6 +400,10 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
 # hack some settings
+if 'test' in sys.argv: # FIXME: what does this do ?
+    FEEDBACK_CONFIG['create_trac_tickets'] = False
+    FEEDBACK_CONFIG['store_in_db'] = True
+    
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     
