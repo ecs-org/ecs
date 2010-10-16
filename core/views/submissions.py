@@ -27,7 +27,6 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
-from ecs.core.forms.wizard import get_wizard_form
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -470,6 +469,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
 
 @with_docstash_transaction
 def wizard(request):
+    from ecs.core.forms.wizard import get_wizard_form
     if request.method == 'GET' and request.docstash.value:
         form = request.docstash['form']
         screen_form = get_wizard_form('start')(prefix='wizard')
@@ -482,7 +482,14 @@ def wizard(request):
                 request.docstash.group = 'ecs.core.views.submissions.create_submission_form'
                 request.docstash.save()
                 return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': request.docstash.key}))
-            screen_form = screen_form.get_next()(prefix='wizard')
+
+            typ, obj = screen_form.get_next()
+            if typ == 'wizard':
+                screen_form = obj(prefix='wizard')
+            elif typ == 'redirect':
+                return HttpResponseRedirect(obj)
+            else:
+                raise ValueError
 
     return render(request, 'submissions/wizard.html', {
         'form': screen_form,
