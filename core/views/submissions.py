@@ -27,6 +27,7 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
+from ecs.core.forms.wizard import get_wizard_form
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -35,6 +36,7 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
 from ecs.audit.models import AuditTrail
+
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -464,6 +466,26 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
         'submission': new_submission_form.submission,
         'diffs': diffs,
         'new_documents': new_documents,
+    })
+
+@with_docstash_transaction
+def wizard(request):
+    if request.method == 'GET' and request.docstash.value:
+        form = request.docstash['form']
+        screen_form = get_wizard_form('start')(prefix='wizard')
+    else:
+        form = SubmissionFormForm(request.POST or None)
+        name = request.POST.get('wizard-name', 'start')
+        screen_form = get_wizard_form(name)(request.POST or None, prefix='wizard')
+        if screen_form.is_valid():
+            if screen_form.is_terminal():
+                request.docstash.group = 'ecs.core.views.submissions.create_submission_form'
+                request.docstash.save()
+                return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': request.docstash.key}))
+            screen_form = screen_form.get_next()(prefix='wizard')
+
+    return render(request, 'submissions/wizard.html', {
+        'form': screen_form,
     })
 
 

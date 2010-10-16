@@ -1,0 +1,19 @@
+{% extends "core.html" %}
+{% load core %}
+{% load i18n %}
+
+{% block title %}{% trans "ECS Submission Wizard" %}{% endblock %}
+
+{% block headertitle %}
+    {% trans "Submission Wizard" %}
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {{ form }}
+        <input type="submit" value="{% trans 'Next' %}" />
+    </form>
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}
+
