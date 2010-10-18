@@ -113,7 +113,7 @@ class Task(models.Model):
     @property
     def trail(self):
         if not self.workflow_token:
-            return set()
+            return Task.objects.none()
         return Task.objects.filter(workflow_token__in=self.workflow_token.activity_trail)
         
     @property
