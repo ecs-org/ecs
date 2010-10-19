@@ -16,6 +16,8 @@ def _create_wizard_form(name, definition):
     }
     _fields.update(definition['fields'])
 
+    
+
     class _WizardForm(forms.ModelForm):
         def is_terminal(self):
             return self.cleaned_data['next'] == 'end'
@@ -24,7 +26,7 @@ def _create_wizard_form(name, definition):
             definition = wizard_forms[self.cleaned_data['next']]
             obj = None
             if definition['type'] == 'wizard':
-                obj = _create_wizard_form(name, definition)
+                obj = _create_wizard_form(self.cleaned_data['next'], definition)
             elif definition['type'] == 'redirect':
                 obj = definition['redirect_url']
 
