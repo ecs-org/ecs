@@ -166,6 +166,7 @@ INSTALLED_APPS = (
 
     'paging',
     'indexer',
+    'sentry',
     'sentry.client',
 
     'ecs.core',
@@ -349,12 +350,7 @@ COMPRESS_JS_FILTERS = []
 
 
 # ### django-sentry ###
-SENTRY_TESTING = True # log exceptions even when DEBUG=False
-SENTRY_KEY = 'okdzo74fungotd9t89ec1ffi0f56bmvwlgd'
-SENTRY_REMOTE_URL = "http://127.0.0.1:8090/store/"
-SENTRY_REMOTE_TIMEOUT = 3
-
-
+SENTRY_TESTING = True # log exceptions when DEBUG=True
 
 # settings override 
 ###################

@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     url(r'^', include('ecs.notifications.urls')),
 
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
-    url(r'^trigger500/$', lambda request: 1/0),
+    url(r'^trigger500/$', lambda request: 1/0), # FIXME: this should be removed in production
     url(r'^bugshot/', include('ecs.bugshot.urls')),
     url(r'^search/', include('haystack.urls')),
     url(r'^test/', direct_to_template, {'template': 'test.html'}),
