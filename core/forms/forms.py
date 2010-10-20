@@ -70,19 +70,29 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     class Meta:
         model = SubmissionForm
         fields = (
-            'project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted', 
+            'project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted', 'external_reviewer_suggestions',
+            
             'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register', 
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_education_context', 
-            'project_type_misc', 'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 'subject_childbearing', 
-            'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration', 'submitter_contact_gender', 
-            'submitter_contact_first_name', 'submitter_contact_last_name', 'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 
-            'submitter_is_main_investigator', 'submitter_is_sponsor', 'submitter_is_authorized_by_sponsor', 'submitter_agrees_to_publishing', 'sponsor_name', 
-            'sponsor_contact_gender', 'sponsor_contact_first_name', 'sponsor_contact_last_name', 'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
-            'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email', 'invoice_differs_from_sponsor', 'invoice_name', 'invoice_contact_gender', 
-            'invoice_contact_first_name', 'invoice_contact_last_name', 'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 
-            'invoice_fax', 'invoice_email', 'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 'pharma_checked_substance', 'pharma_reference_substance', 
+            'project_type_misc', 
+            
+            'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 'subject_childbearing', 
+            'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration', 
+            
+            'submitter_contact_gender', 'submitter_contact_title', 'submitter_contact_first_name', 'submitter_contact_last_name', 
+            'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 
+            'submitter_is_main_investigator', 'submitter_is_sponsor', 'submitter_is_authorized_by_sponsor', 'sponsor_agrees_to_publishing', 'sponsor_name', 
+            
+            'sponsor_contact_gender', 'sponsor_contact_title', 'sponsor_contact_first_name', 'sponsor_contact_last_name', 
+            'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+            'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email', 'invoice_differs_from_sponsor', 
+            
+            'invoice_name', 'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name', 
+            'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
+            'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 'pharma_checked_substance', 'pharma_reference_substance', 
+            
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'medtech_checked_product', 'medtech_reference_substance', 
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol', 
@@ -98,7 +108,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio', 'study_plan_population_intention_to_treat', 
             'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
-            'study_plan_dataprotection_anonalgoritm', 'submitter_email',
+            'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
         )
         
     def clean(self):
@@ -171,7 +181,7 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Investigator
         fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 
-            'contact_gender', 'contact_first_name', 'contact_last_name',
+            'contact_gender', 'contact_title', 'contact_first_name', 'contact_last_name',
             'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):

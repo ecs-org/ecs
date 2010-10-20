@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from ecs.meetings.models import TimetableEntry
 from ecs.documents.models import Document
@@ -146,6 +147,15 @@ class Submission(models.Model):
     class Meta:
         app_label = 'core'
 
+SUBMISSION_TYPE_MONOCENTRIC = 1
+SUBMISSION_TYPE_MULTICENTRIC = 2
+SUBMISSION_TYPE_MULTICENTRIC_LOCAL = 6
+
+SUBMISSION_TYPE_CHOICES = (
+    (SUBMISSION_TYPE_MONOCENTRIC, _('monocentric')), 
+    (SUBMISSION_TYPE_MULTICENTRIC, _('multicentric, main ethics commission')),
+    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, _('multicentric, local ethics commission')),
+)
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
@@ -156,6 +166,9 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True)
+    protocol_number = models.CharField(max_length=60, blank=True)
+    external_reviewer_suggestions = models.TextField(null=True, blank=True)
+    #submission_type = models.CharField(choices=SUBMISSION_TYPE_CHOICES, default=1)
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
@@ -178,8 +191,9 @@ class SubmissionForm(models.Model):
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
-    sponsor_fax = models.CharField(max_length=30, null=True)
+    sponsor_fax = models.CharField(max_length=30, null=True, blank=True)
     sponsor_email = models.EmailField(null=True)
+    sponsor_agrees_to_publishing = models.BooleanField(default=True)
     
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
@@ -368,7 +382,6 @@ class SubmissionForm(models.Model):
     submitter_is_main_investigator = models.BooleanField()
     submitter_is_sponsor = models.BooleanField()
     submitter_is_authorized_by_sponsor = models.BooleanField()
-    submitter_agrees_to_publishing = models.BooleanField(default=True)
     
     date_of_receipt = models.DateField(null=True, blank=True)
    
@@ -400,14 +413,6 @@ class SubmissionForm(models.Model):
         protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
         if protocol_doc:
             return protocol_doc[0]
-        else:
-            return None
-
-    @property
-    def protocol_number(self):
-        protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
-        if protocol_doc:
-            return protocol_doc[0].version
         else:
             return None
 

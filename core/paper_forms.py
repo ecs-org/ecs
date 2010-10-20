@@ -92,13 +92,15 @@ FormInfo(NonTestedUsedDrug, fields=(
 FormInfo(SubmissionForm, fields=(
     # 1. Allgemeines
     FieldInfo('1.1', 'project_title', u'Projekttitel', short_label='Projekttitel (englisch)'),
-    FieldInfo('1.2', None, u'Protokollnummer/-bezeichnung'), #'protocol_number'
+    FieldInfo('1.2', 'protocol_number', u'Protokollnummer/-bezeichnung'),
     FieldInfo('1.3', None, u'Datum des Protokolls'), #'date_of_protocol'
     FieldInfo('1.2.1', 'eudract_number', u'EudraCT-Nr.'),
     FieldInfo('1.3.1', None, u'ISRCTN-Nr.'), #'isrctn_number'
+    FieldInfo(None, 'external_reviewer_suggestions', None, short_label=u'Vorschläge für Externe Gutachter', help_text=u'Nicht notwendig für Diplomarbeiten oder retrospektive bzw. nicht interventionelle Studien'),
     # 1.5 u'Sponsor / Rechnungsempfänger/in (Kontaktperson in der Buchhaltung)'
     FieldInfo('1.5.1', 'sponsor_name', u'Name'),
     FieldInfo('1.5.3', 'sponsor_contact_gender', u'Anrede der Kontaktperson'),
+    FieldInfo('1.5.3', 'sponsor_contact_title', u'Titel der Kontaktperson'),
     FieldInfo('1.5.3', 'sponsor_contact_first_name', u'Vorname der Kontaktperson'),
     FieldInfo('1.5.3', 'sponsor_contact_last_name', u'Nachname der Kontaktperson'),
     FieldInfo('1.5.2', 'sponsor_address1', u'Adresse', short_label='Adresse 1'),
@@ -110,6 +112,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.6', 'sponsor_email', u'e-mail'),
     FieldInfo('1.5.1', 'invoice_name', u'Name'),
     FieldInfo('1.5.3', 'invoice_contact_gender', u'Anrede der Kontaktperson'),
+    FieldInfo('1.5.3', 'invoice_contact_title', u'Titel der Kontaktperson'),
     FieldInfo('1.5.3', 'invoice_contact_first_name', u'Vorname der Kontaktperson'),
     FieldInfo('1.5.3', 'invoice_contact_last_name', u'Nachname der Kontaktperson'),
     FieldInfo('1.5.2', 'invoice_address1', u'Adresse', short_label='Adresse 1'),
@@ -150,7 +153,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.4.1', 'medtech_checked_product', u'Prüfprodukt(e)'),
     FieldInfo('2.4.2', 'medtech_reference_substance', u'Referenzprodukt'),
     FieldInfo('2.5', 'clinical_phase', u'Klinische Phase', help_text=u'unbedingt angeben, bei Medizinprodukten die am ehesten zutreffende Phase'),
-    FieldInfo('2.8', 'already_voted', u'Liegen bereits Voten anderer Ethikkommissionen vor?', help_text=u'Falls ja, laden sie die Voten über den Reiter Unterlagen hoch'),
+    FieldInfo('2.8', 'already_voted', u'Es liegen bereits Voten anderer Ethikkommissionen vor.', help_text=u'Falls ja, laden sie die Voten über den Reiter Unterlagen hoch'),
     FieldInfo('2.9', 'subject_count', u'Geplante Anzahl der Prüfungsteilnehmer/innen gesamt', help_text=u'alle teilnehmenden Zentren'),
     # 2.10 Charakterisierung der Prüfungsteilnehmer/innen
     FieldInfo('2.10.1', 'subject_minage', u'Mindestalter'),
@@ -262,6 +265,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.6.3', 'study_plan_dataprotection_anonalgoritm', u'Wie erfolgt die Anonymisierung?'),
     # Name und Unterschrift der Antragstellerin/des Antragstellers
     FieldInfo('9.1', 'submitter_contact_gender', None, short_label=u'Anrede'),
+    FieldInfo('9.1', 'submitter_contact_title', None, short_label=u'Titel'),
     FieldInfo('9.1', 'submitter_contact_first_name', None, short_label=u'Vorname'),
     FieldInfo('9.1', 'submitter_contact_last_name', None, short_label=u'Nachname'),
     FieldInfo(None, 'submitter_email', None, short_label=u'E-Mail'),
@@ -273,7 +277,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.4.2', 'submitter_is_main_investigator', u'Hauptprüfer/in (monozentrische Studie)'),
     FieldInfo('9.4.3', 'submitter_is_sponsor', u'Sponsor bzw. Vertreter/in des Sponsors'),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', u'vom Sponsor autorisierte Person/Organisation'),
-    FieldInfo(None, 'submitter_agrees_to_publishing', None, short_label=u'Einreicher stimmt der Veröffentlichung zu'),
+    FieldInfo(None, 'sponsor_agrees_to_publishing', None, short_label=u'Der Sponsor stimmt der Veröffentlichung zu.'),
 ))
 
 
@@ -282,6 +286,7 @@ FormInfo(Investigator, fields=(
     FieldInfo('', 'ethics_commission', u'Ethik-Kommission'),
     FieldInfo('', 'main', u'Hauptprüfer'),
     FieldInfo('10.1', 'contact_gender', None, short_label=u'Anrede des Prüfarztes'),
+    FieldInfo('10.1', 'contact_title', None, short_label=u'Titel des Prüfarztes'),
     FieldInfo('10.1', 'contact_first_name', None, short_label=u'Vorname des Prüfarztes'),
     FieldInfo('10.1', 'contact_last_name', None, short_label=u'Nachname des Prüfarztes'),
     FieldInfo('10.3', 'phone', u'Telefon'),

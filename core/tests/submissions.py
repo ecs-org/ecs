@@ -28,6 +28,7 @@ class SubmissionFormTest(EcsTestCase):
             sponsor_phone="+43 1 40170",
             sponsor_fax="+43 1 4017070",
             sponsor_email="helmut.gadner@stanna.at",
+            sponsor_agrees_to_publishing=False,
             invoice_name="",
             invoice_address1="",
             invoice_address2="",
@@ -151,8 +152,9 @@ class SubmissionFormTest(EcsTestCase):
             study_plan_dataprotection_anonalgoritm="to long",
             study_plan_dataprotection_dvr="",
             study_plan_dataprotection_reason="",
-            submitter_contact_gender="w",
-            submitter_contact_first_name="Univ. Doz. Dr.Ruth",
+            submitter_contact_gender="f",
+            submitter_contact_first_name="Ruth",
+            submitter_contact_title="Univ. Doz. Dr.",
             submitter_contact_last_name="Ladenstein",
             submitter_organisation="St. Anna Kinderspital",
             submitter_jobtitle="OA am St. Anna Kinderspital",
@@ -160,7 +162,6 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            submitter_agrees_to_publishing=False,
             )
         sform.save()
         sform.substance_registered_in_countries = []
@@ -186,6 +187,7 @@ def create_submission_form(ec_number=None):
         sponsor_phone="+43 1 40170",
         sponsor_fax="+43 1 4017070",
         sponsor_email="helmut.gadner@stanna.at",
+        sponsor_agrees_to_publishing=False,
         invoice_name="",
         invoice_address1="",
         invoice_address2="",
@@ -309,8 +311,9 @@ def create_submission_form(ec_number=None):
         study_plan_dataprotection_anonalgoritm="to long",
         study_plan_dataprotection_dvr="",
         study_plan_dataprotection_reason="",
-        submitter_contact_gender="w",
-        submitter_contact_first_name="Univ. Doz. Dr.Ruth",
+        submitter_contact_gender="f",
+        submitter_contact_first_name="Ruth",
+        submitter_contact_title="Univ. Doz. Dr.",
         submitter_contact_last_name="Ladenstein",
         submitter_organisation="St. Anna Kinderspital",
         submitter_jobtitle="OA am St. Anna Kinderspital",
@@ -318,7 +321,6 @@ def create_submission_form(ec_number=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
-        submitter_agrees_to_publishing=False,
         )
     sform.save()
     sform.substance_registered_in_countries = []

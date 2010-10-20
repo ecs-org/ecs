@@ -19,12 +19,13 @@ class NameField(object):
     def __get__(self, obj, obj_type=None):
         if not obj:
             return self
-        return Name(**dict((field, getattr(obj, '%s_%s' % (self.name, field))) for field in ('gender', 'first_name', 'last_name')))
+        return Name(**dict((field, getattr(obj, '%s_%s' % (self.name, field))) for field in ('gender', 'title', 'first_name', 'last_name')))
         
     def contribute_to_class(self, cls, name):
         self.name = name
         fields = {
             'gender': models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')), blank=True, null=True),
+            'title': models.CharField(max_length=30, blank=True),
             'first_name': models.CharField(max_length=50, blank=True),
             'last_name': models.CharField(max_length=50, blank=True),
         }
