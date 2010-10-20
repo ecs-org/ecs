@@ -499,7 +499,7 @@ def testsubmission():
         'medtech_certified_for_exact_indications': False,
         'sponsor_city': u'Wien',
         'medtech_manual_included': False,
-        'submitter_agrees_to_publishing': True,
+        'sponsor_agrees_to_publishing': True,
         'study_plan_alternative_hypothesis': None,
         'medtech_checked_product': u'',
         'study_plan_sample_frequency': None,
