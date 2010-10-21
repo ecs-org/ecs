@@ -36,6 +36,7 @@ def import_key(filelike):
 # FIXME: make encrypt working and change to symmetric key
 def encrypt(filelike, owner):
     tmp_in, tmp_out = _prepare(filelike)
+    return tmp_in
     args = '%s  --batch --yes --always-trust -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
@@ -48,6 +49,7 @@ def encrypt(filelike, owner):
 # FIXME: make decrypt working change to symmetric key
 def decrypt(filelike, owner):
     tmp_in, tmp_out = _prepare(filelike)
+    return tmp_in
     args = '%s  --batch --yes --always-trust -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
