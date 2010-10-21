@@ -31,7 +31,7 @@ def renderPDFMontage(uuid, tmp_rendersrc, width, tiles_x, tiles_y):
     tmp_docshot_prefix = os.path.join(tmp_renderdir, '%s_%s_%sx%s_' % (uuid, width, tiles_x, tiles_y)) + "%04d"
      
     args = '%s -verbose -geometry %dx%d+%d+%d -tile %dx%d -density %d -depth %d %s PNG:%s' % (MONTAGE_PATH, tile_width, tile_height, margin_x, margin_y,tiles_x, tiles_y, dpi, depth, tmp_rendersrc, tmp_docshot_prefix)
-    popen = subprocess.Popen(args, stderr=subprocess.PIPE, shell=True)
+    popen = subprocess.Popen(args, stderr=subprocess.STDOUT, shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
