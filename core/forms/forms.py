@@ -12,7 +12,7 @@ from ecs.notifications.models import Notification, CompletionReportNotification,
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField, MultiselectWidget
-from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin, extend_field
+from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -59,12 +59,6 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
-    substance_registered_in_countries = extend_field(SubmissionForm, 'substance_registered_in_countries', required=False, widget=MultiselectWidget(
-        url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'}),
-    ))
-    substance_p_c_t_countries = extend_field(SubmissionForm, 'substance_p_c_t_countries', required=False, widget=MultiselectWidget(
-        url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'}),
-    ))
 
     medtech_certified_for_exact_indications = NullBooleanField(required=False)
     medtech_certified_for_other_indications = NullBooleanField(required=False)
@@ -117,6 +111,10 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
             'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
         )
+        widgets = {
+            'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
+            'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
+        }
         
     def clean(self):
         cleaned_data = super(SubmissionFormForm, self).clean()

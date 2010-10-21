@@ -3,7 +3,7 @@ from django.forms.models import modelformset_factory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from ecs.core.models import Submission
-from ecs.core.forms.utils import ReadonlyFormMixin, extend_field
+from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget
 
 class ExecutiveReviewForm(ReadonlyFormMixin, forms.ModelForm):

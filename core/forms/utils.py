@@ -1,18 +1,6 @@
 from django import forms
 from django.db.models import FieldDoesNotExist
 
-def extend_field(model, name, **kwargs):
-    field = None
-    try:
-        field = model._meta.get_field(name)
-    except FieldDoesNotExist:
-        for f in model._meta.many_to_many:
-            if f.name == name:
-                field = f
-                break
-        raise
-    return field.formfield(**kwargs)
-
 
 def mark_readonly(form):
     form.readonly = True
