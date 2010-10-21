@@ -6,10 +6,10 @@ Created on Sep 17, 2010
 from django.test.testcases import TestCase
 from ecs.utils.gpgutils import encrypt, decrypt
 
-class gpgutilstest(TestCase):
+class Gpgutilstest(TestCase):
     testdata="im very happy to be testdata"        
     
     def testConsistency(self):
-        encrypted = encrypt(self.testdata, self.testfingerprint);
-        decrypted = decrypt(encrypted, self.testfingerprint);
-        self.assertEqual(self.testdata, decrypted);
+        encrypted = encrypt(self.testdata, "mediaserver");
+        decrypted = decrypt(encrypted, "mediaserver");
+        self.assertEqual(self.testdata, decrypted.read());

@@ -24,12 +24,20 @@ def _prepare(filelike):
     f_in.close();
     return tmp_in, tmp_out
 
-# FIXME: make encrypt working and change to symmetric key
-def encrypt(filelike, fingerprint):
+def import_key(filelike):
     tmp_in, tmp_out = _prepare(filelike)
-    return open(tmp_in, 'rb')
-    args = '%s --always-trust --batch --yes -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, fingerprint, tmp_out, tmp_in)
-    popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
+    args = '%s --batch --yes --import %s' % (GPG_EXECUTABLE, tmp_in)
+    popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
+    returncode = popen.wait()
+    
+    if returncode != 0:
+        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
+   
+# FIXME: make encrypt working and change to symmetric key
+def encrypt(filelike, owner):
+    tmp_in, tmp_out = _prepare(filelike)
+    args = '%s  --batch --yes --always-trust -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
+    popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
@@ -38,11 +46,10 @@ def encrypt(filelike, fingerprint):
     return open(tmp_out, 'rb')
 
 # FIXME: make decrypt working change to symmetric key
-def decrypt(filelike, fingerprint):
+def decrypt(filelike, owner):
     tmp_in, tmp_out = _prepare(filelike)
-    return open(tmp_in, 'rb')
-    args = '%s --always-trust --batch --yes -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, fingerprint, tmp_out, tmp_in)
-    popen = subprocess.Popen(args, stderr=subprocess.PIPE ,shell=True)
+    args = '%s  --batch --yes --always-trust -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
+    popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
