@@ -46,6 +46,7 @@ class SubmissionManager(AuthorizationManager):
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
+    keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
@@ -56,7 +57,7 @@ class Submission(models.Model):
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
     external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    remission = models.BooleanField(default=False)    
+    remission = models.BooleanField(default=False)
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     insurance_review_required = models.BooleanField(default=True)

@@ -19,8 +19,8 @@
 
 {% block searchbox %}
   <div class="searchbox">
-    <form action="{% url ecs.core.views.submission_form_list %}" method="post" enctype="multipart/form-data">
-      <input type="text" name="keyword" />
+    <form action="{% url ecs.core.views.submission_form_list %}" method="get" enctype="multipart/form-data">
+      <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"/>
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
