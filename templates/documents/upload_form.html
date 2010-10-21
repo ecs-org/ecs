@@ -18,21 +18,21 @@
 {% endif %}
 </div>
 
-<form action="" method="post">
-    <div class="form">
-        {% with document_form as form %}
-        <ol>
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form %}
-                {% if not field.is_hidden %}
-                    {% include "forms/field.html" %}
-                {% endif %}
-            {% endfor %}
-        </ol>
-        {% endwith %}
-    </div>
-</form>
+
+<div class="form">
+    {% with document_form as form %}
+    <ol>
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form %}
+            {% if not field.is_hidden %}
+                {% include "forms/field.html" %}
+            {% endif %}
+        {% endfor %}
+    </ol>
+    {% endwith %}
+</div>
+
 <input type="submit" id="document_upload_button" name="upload" value="Upload" />
 

@@ -358,14 +358,14 @@ input[type=submit] {
 .form.main th.label {
   text-align: left;
 }
-.form.main .errors ul.errorlist li {
+.form.main ul.errorlist li {
   margin-left: 220px;
   margin-bottom: 5px;
   display: block;
   float: left;
   color: #ff0000;
 }
-.form.main table td .errors li {
+.form.main table td li {
   margin: 0px;
   float: none;
 }
@@ -443,6 +443,16 @@ div.inline_formset .form a.delete_row {
   overflow: hidden;
   cursor: pointer;
   text-indent: -9999px;
+}
+table.inline_formset td{
+    vertical-align: top;
+}
+.form.main table.inline_formset td ul.errorlist li{
+    margin-left: 0px;
+}
+#content .form.main table.inline_formset td ul.errorlist{
+    margin-left: 0px;
+    width: 100%;
 }
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;

@@ -7,7 +7,7 @@
 {% for field in form %}
     {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
         {% with field|get_field_info as field_info %}
-        <td valign="top" class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
+        <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
             {# FIXME: hack! hack! hack! why do we need this? #}
             {% ifequal field.field|type_name "CharField" %}{% with field.field.max_length as maxlength %}
             <textarea class="flext growme {% if maxlength %}maxlength maxlength-{{ maxlength }}{% endif %} {{ field|class_for_field }}" id="id_{{ field.html_name }}" name="{{ field.html_name }}">{{ form|form_value:field.name|default:'' }}</textarea>
@@ -15,9 +15,7 @@
                 {{ field }}
             {% endifequal %}
             {% if field.errors %}
-                <span class="errors">
-                    {{ field.errors }}
-                </span>
+                {{ field.errors }}
             {% endif %}
         </td>
         {% endwith %}

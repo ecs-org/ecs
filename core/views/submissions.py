@@ -214,7 +214,7 @@ def create_submission_form(request):
         form = SubmissionFormForm(request.POST or None)
         formsets = get_submission_formsets(request.POST or None)
     
-    doc_post = 'document_file' in request.FILES
+    doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
         document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'

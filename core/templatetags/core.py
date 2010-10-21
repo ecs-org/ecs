@@ -35,7 +35,13 @@ def get_field_info(formfield):
         return paper_forms.get_field_info(model=formfield.form._meta.model, name=formfield.name)
     else:
         return None
-        
+
+@register.filter
+def id_for_label(field):
+    widget = field.field.widget
+    id_ = widget.attrs.get('id') or field.auto_id
+    return widget.id_for_label(id_)
+
 @register.filter
 def form_value(form, fieldname):
     if form.data:
