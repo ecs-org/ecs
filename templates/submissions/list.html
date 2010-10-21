@@ -6,7 +6,7 @@
 Liste aller Studien
 {% endblock %}
 
-{% block quicksearch_keyword %}{{ keyword }}{% endblock %}
+{% block quicksearch_keyword %}{{ keyword|default:'' }}{% endblock %}
 
 {% block content %}
 
