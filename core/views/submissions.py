@@ -213,8 +213,12 @@ def create_submission_form(request):
     else:
         form = SubmissionFormForm(request.POST or None)
         formsets = get_submission_formsets(request.POST or None)
-
-    document_form = DocumentForm(request.POST or None, request.FILES or None, document_pks=[x.pk for x in request.docstash.get('documents', [])], prefix='document')
+    
+    doc_post = 'document_file' in request.FILES
+    document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
+        document_pks=[x.pk for x in request.docstash.get('documents', [])], 
+        prefix='document'
+    )
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -239,6 +243,7 @@ def create_submission_form(request):
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
             document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+            
 
         if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
             if not request.user.get_profile().approved_by_office:

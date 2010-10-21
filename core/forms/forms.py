@@ -4,15 +4,15 @@ from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.safestring import mark_safe
-
+from django.core.urlresolvers import reverse
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
-from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField
-from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
+from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField, MultiselectWidget
+from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin, extend_field
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -53,11 +53,18 @@ class SubmissionEditorForm(forms.ModelForm):
     class Meta:
         model = Submission
 
+
 class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
 
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
+    substance_registered_in_countries = extend_field(SubmissionForm, 'substance_registered_in_countries', required=False, widget=MultiselectWidget(
+        url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'}),
+    ))
+    substance_p_c_t_countries = extend_field(SubmissionForm, 'substance_p_c_t_countries', required=False, widget=MultiselectWidget(
+        url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'}),
+    ))
 
     medtech_certified_for_exact_indications = NullBooleanField(required=False)
     medtech_certified_for_other_indications = NullBooleanField(required=False)

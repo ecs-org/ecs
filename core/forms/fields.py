@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*
 from django import forms
+from django.utils.safestring import mark_safe
 
 from ecs.core.models import Investigator
 from ecs.utils.timedelta import parse_timedelta
@@ -56,3 +57,24 @@ class NullBooleanField(forms.NullBooleanField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('widget', NullBooleanWidget)
         super(NullBooleanField, self).__init__(*args, **kwargs)
+        
+class MultiselectWidget(forms.TextInput):
+    def __init__(self, *args, **kwargs):
+        self.url = kwargs.pop('url')
+        super(MultiselectWidget, self).__init__(*args, **kwargs)
+
+    def render(self, name, value, attrs=None, choices=()):
+        value_list = ",".join(map(str, value))
+        attrs['class'] = 'autocomplete'
+        url = self.url
+        if callable(url):
+            url = url()
+        attrs['x-autocomplete-url'] = url
+        return super(MultiselectWidget, self).render(name, value_list, attrs=attrs)
+        
+    def value_from_datadict(self, data, files, name):
+        val = data.get(name, '')
+        if not val:
+            return []
+        return val.split(',')
+        

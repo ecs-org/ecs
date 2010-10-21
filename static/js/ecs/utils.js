@@ -58,6 +58,38 @@ ecs.setupFormFieldHelpers = function(context){
         allowEmpty: true,
         toggleElements: context.getElements('.datepicker_toggler')
     });
+    context.getElements('.ModelMultipleChoiceField input.autocomplete').each(function(multiselect){
+        var currentValues = multiselect.value.split(',');
+        multiselect.value = '';
+        var tbl = null;
+        if(!multiselect.disabled){
+            tbl = new TextboxList(multiselect, {unique: true, plugins: {autocomplete: {onlyFromValues: true}}});
+            tbl.container.addClass('textboxlist-loading');
+        }
+        new Request.JSON({url: multiselect.getProperty('x-autocomplete-url'), onSuccess: function(response){
+            if(!multiselect.disabled){
+                tbl.plugins['autocomplete'].setValues(response);
+                tbl.container.removeClass('textboxlist-loading');
+            }
+            var labels = [];
+            if(multiselect.name == 'medical_categories'){
+                console.log(currentValues);
+            }
+            response.each(function(item){
+                if(currentValues.contains(item[0])){
+                    if(!multiselect.disabled){
+                        tbl.add(item[1], item[0], item[2]);
+                    }
+                    else{
+                        labels.push(item[1]);
+                    }
+                }
+            });
+            if(multiselect.disabled){
+                (new Element('span', {html: labels.join(', ')})).replaces(multiselect);
+            }
+        }}).send();
+    });
     context.getElements('li,th.label').each(function(field){
         var notes = [];
         var input = null;

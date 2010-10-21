@@ -358,7 +358,7 @@ input[type=submit] {
 .form.main th.label {
   text-align: left;
 }
-.form.main .errors ul li {
+.form.main .errors ul.errorlist li {
   margin-left: 220px;
   margin-bottom: 5px;
   display: block;
@@ -649,6 +649,8 @@ content ol.submission_list li .actions {
   visibility: hidden; 
 }
 
-
-
+.form.main .textboxlist-bit{
+    list-style-type: none;
+    clear: none;
+}
 
