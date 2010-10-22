@@ -542,7 +542,7 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
     if usersettings.show_thesis_submissions:
         submission_pks += [x['pk'] for x in submissions.thesis().values('pk')]
     if usersettings.show_other_submissions:
-        submission_pks += [x['pk'] for x in submissions.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).values('pk')]
+        submission_pks += [x['pk'] for x in submissions.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).filter(current_submission_form__project_type_education_context=None).values('pk')]
     submissions = submissions.filter(pk__in=submission_pks).order_by('-current_submission_form__pk')
     if limit:
         submissions = submissions[:limit]

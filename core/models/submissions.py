@@ -51,7 +51,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(pk__in=filtered_submission_pks)
         
     def thesis(self):
-        return self.filter(thesis=True)
+        return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
         
         
 class SubmissionManager(AuthorizationManager):
