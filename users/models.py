@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django_extensions.db.fields.json import JSONField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
@@ -34,15 +35,8 @@ class UserProfile(models.Model):
     
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
-
-    # submission filter stuff
-    show_new_submissions = models.BooleanField(default=True)
-    show_next_meeting_submissions = models.BooleanField(default=True)
-    show_b2_submissions = models.BooleanField(default=True)
-    show_amg_submissions = models.BooleanField(default=True)
-    show_mpg_submissions = models.BooleanField(default=True)
-    show_thesis_submissions = models.BooleanField(default=True)
-    show_other_submissions = models.BooleanField(default=True)
+    submission_filter = JSONField()
+    task_filter = JSONField()
 
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)

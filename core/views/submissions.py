@@ -492,52 +492,40 @@ def wizard(request):
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def submission_widget(request, template='submissions/widget.html', limit=5):
     usersettings = request.user.ecs_settings
-
-    filter_dict = {
-        'new': usersettings.show_new_submissions,
-        'next_meeting': usersettings.show_next_meeting_submissions,
-        'b2': usersettings.show_b2_submissions,
-        'amg': usersettings.show_amg_submissions,
-        'mpg': usersettings.show_mpg_submissions,
-        'thesis': usersettings.show_thesis_submissions,
-        'other': usersettings.show_other_submissions,
-    }
     submissionfilter_session_key = 'submissions:filter'
-    filterform = SubmissionListFilterForm(request.POST or request.session.get(submissionfilter_session_key, filter_dict))
+    filter_defaults = dict((x, True) for x in SubmissionListFilterForm.base_fields.iterkeys())
+
+    filterdict = request.POST or request.session.get(submissionfilter_session_key, usersettings.submission_filter) or filter_defaults
+    filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
+
+    # save the filter in the session and in the user settings
     request.session[submissionfilter_session_key] = filterform.cleaned_data
     request.session.save()
-    
-    usersettings.show_new_submissions = filterform.cleaned_data['new']
-    usersettings.show_next_meeting_submissions = filterform.cleaned_data['next_meeting']
-    usersettings.show_b2_submissions = filterform.cleaned_data['b2']
-    usersettings.show_amg_submissions = filterform.cleaned_data['amg']
-    usersettings.show_mpg_submissions = filterform.cleaned_data['mpg']
-    usersettings.show_thesis_submissions = filterform.cleaned_data['thesis']
-    usersettings.show_other_submissions = filterform.cleaned_data['other']
+    usersettings.submission_filter = filterform.cleaned_data
     usersettings.save()
-
+    
     submissions_stage1 = Submission.objects.filter(pk=None)
-    if usersettings.show_new_submissions:
+    if filterform.cleaned_data['new']:
         submissions_stage1 |= Submission.objects.new()
-    if usersettings.show_next_meeting_submissions:
+    if filterform.cleaned_data['next_meeting']:
         try:
             next_meeting = Meeting.objects.all().order_by('-start')[0]
         except IndexError:
             pass
         else:
             submissions_stage1 |= next_meeting.submissions.all()
-    if usersettings.show_b2_submissions:
+    if filterform.cleaned_data['b2']:
         submissions_stage1 |= Submission.objects.b2()
 
     submissions_stage2 = submissions_stage1.filter(pk=None)
-    if usersettings.show_amg_submissions:
+    if filterform.cleaned_data['amg']:
         submissions_stage2 |= submissions_stage1.amg()
-    if usersettings.show_mpg_submissions:
+    if filterform.cleaned_data['mpg']:
         submissions_stage2 |= submissions_stage1.mpg()
-    if usersettings.show_thesis_submissions:
+    if filterform.cleaned_data['thesis']:
         submissions_stage2 |= submissions_stage1.thesis()
-    if usersettings.show_other_submissions:
+    if filterform.cleaned_data['other']:
         submissions_stage2 |= submissions_stage1.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).filter(current_submission_form__project_type_education_context=None)
 
     submissions = submissions_stage2.order_by('-current_submission_form__pk')
