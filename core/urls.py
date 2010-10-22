@@ -24,6 +24,8 @@ urlpatterns = patterns(
     url(r'^submission_form/import/$', 'ecs.core.views.import_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
     url(r'^submission_form/(?P<old_submission_form_pk>\d+)/(?P<new_submission_form_pk>\d+)/diff/$', 'ecs.core.views.diff'),
+    url(r'^submission_widget/$', 'ecs.core.views.submission_widget'),
+    url(r'^submission_list/$', 'ecs.core.views.submission_list'),
     
     url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_pdf/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_pdf'),

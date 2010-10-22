@@ -15,6 +15,7 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import user_passes_test
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -22,7 +23,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -35,6 +36,7 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.utils.diff_match_patch import diff_match_patch
 from ecs.audit.models import AuditTrail
+from ecs.core.models import Vote
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -494,5 +496,75 @@ def wizard(request):
     return render(request, 'submissions/wizard.html', {
         'form': screen_form,
     })
+
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def submission_widget(request, template='submissions/widget.html', limit=5):
+    usersettings = request.user.ecs_settings
+
+    filter_dict = {
+        'new': usersettings.show_new_submissions,
+        'next_meeting': usersettings.show_next_meeting_submissions,
+        'b2': usersettings.show_b2_submissions,
+        'amg': usersettings.show_amg_submissions,
+        'mpg': usersettings.show_mpg_submissions,
+        'thesis': usersettings.show_thesis_submissions,
+        'other': usersettings.show_other_submissions,
+    }
+    submissionfilter_session_key = 'submissions:filter'
+    filterform = SubmissionListFilterForm(request.POST or request.session.get(submissionfilter_session_key, filter_dict))
+    filterform.is_valid()  # force clean
+    request.session[submissionfilter_session_key] = filterform.cleaned_data
+    request.session.save()
+    
+    usersettings.show_new_submissions = filterform.cleaned_data['new']
+    usersettings.show_next_meeting_submissions = filterform.cleaned_data['next_meeting']
+    usersettings.show_b2_submissions = filterform.cleaned_data['b2']
+    usersettings.show_amg_submissions = filterform.cleaned_data['amg']
+    usersettings.show_mpg_submissions = filterform.cleaned_data['mpg']
+    usersettings.show_thesis_submissions = filterform.cleaned_data['thesis']
+    usersettings.show_other_submissions = filterform.cleaned_data['other']
+    usersettings.save()
+
+    submission_pks=[]
+    if usersettings.show_new_submissions:
+        submission_pks += [x['pk'] for x in Submission.objects.new().values('pk')]
+    if usersettings.show_next_meeting_submissions:
+        try:
+            next_meeting = Meeting.objects.all().order_by('-start')[0]
+        except IndexError:
+            pass
+        else:
+            submission_pks += [x.pk for x in next_meeting.submissions.all()]
+    if usersettings.show_b2_submissions:
+        submission_pks += [x['pk'] for x in Submission.objects.b2().values('pk')]
+    submissions = Submission.objects.filter(pk__in=submission_pks)
+
+    print submissions
+
+    submission_pks=[]
+    print submission_pks
+    if usersettings.show_amg_submissions:
+        submission_pks += [x['pk'] for x in submissions.amg().values('pk')]
+    if usersettings.show_mpg_submissions:
+        submission_pks += [x['pk'] for x in submissions.mpg().values('pk')]
+    if usersettings.show_thesis_submissions:
+        submission_pks += [x['pk'] for x in submissions.thesis().values('pk')]
+        print 'thesis'
+        print submission_pks
+    if usersettings.show_other_submissions:
+        submission_pks += [x['pk'] for x in submissions.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).values('pk')]
+    submissions = submissions.filter(pk__in=submission_pks).order_by('-current_submission_form__pk')
+    if limit:
+        submissions = submissions[:limit]
+
+    return render(request, template, {
+        'submissions': submissions,
+        'submissions_count': Submission.objects.count(),
+        'filterform': filterform,
+    })
+
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def submission_list(request, template='submissions/internal_list.html'):
+    return submission_widget(request, template=template, limit=None)
 
 
