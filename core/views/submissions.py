@@ -541,8 +541,6 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
         submission_pks += [x['pk'] for x in submissions.mpg().values('pk')]
     if usersettings.show_thesis_submissions:
         submission_pks += [x['pk'] for x in submissions.thesis().values('pk')]
-        print 'thesis'
-        print submission_pks
     if usersettings.show_other_submissions:
         submission_pks += [x['pk'] for x in submissions.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).values('pk')]
     submissions = submissions.filter(pk__in=submission_pks).order_by('-current_submission_form__pk')
