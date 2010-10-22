@@ -18,7 +18,7 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
     vault = getVault()
     with open(doc.file.path,"rb") as f:
         try:
-            encrypted = gpgutils.encrypt(f, settings.MEDIASERVER_KEYOWNER)
+            encrypted = gpgutils.encrypt(f, settings.DOCUMENTS_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
             vault.add(doc.uuid_document, encrypted)
         except KeyError as exceptobj:
             logger = encrypt_and_upload_to_storagevault.get_logger(**kwargs)

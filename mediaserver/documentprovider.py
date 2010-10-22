@@ -45,7 +45,7 @@ class DocumentProvider(object):
                         
         if not filelike and try_vault:
             filelike = self.vault.get(mediablob.cacheID())
-            decrypted = gpgutils.decrypt(filelike, settings.MEDIASERVER_KEYOWNER)
+            decrypted = gpgutils.decrypt(filelike, settings.MEDIASERVER_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
             self._cacheBlob(mediablob, decrypted)
             self._cacheDocshots(mediablob, decrypted)
         elif rerender_always == True:
