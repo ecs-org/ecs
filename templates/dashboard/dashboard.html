@@ -94,9 +94,9 @@
         }
     });
     window.addEvent('domready', function(){
-        new Widget('{% url ecs.communication.views.outgoing_message_widget %}');
-        new Widget('{% url ecs.communication.views.incoming_message_widget %}');
-        new Widget('{% url ecs.tasks.views.my_tasks_widget %}');
+        {% for url in widgets %}
+            new Widget('{{ url }}');
+        {% endfor %}
 
         $$('a.popup').each(function(link){
             link.addEvent('click', function(){

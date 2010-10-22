@@ -208,3 +208,12 @@ class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMi
 
 InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 
+class SubmissionListFilterForm(forms.Form):
+    new = forms.BooleanField(required=False)
+    next_meeting = forms.BooleanField(required=False)
+    b2 = forms.BooleanField(required=False)
+    amg = forms.BooleanField(required=False)
+    mpg = forms.BooleanField(required=False)
+    thesis = forms.BooleanField(required=False)
+    other = forms.BooleanField(required=False)
+

@@ -659,8 +659,42 @@ content ol.submission_list li .actions {
   visibility: hidden; 
 }
 
+.submission_amg, .submission_mpg, .submission_other {
+  padding-left: 20px;
+}
+
 .form.main .textboxlist-bit{
     list-style-type: none;
     clear: none;
+}
+
+.submission_amg {
+  background: url(/static/images/core/pill.png) no-repeat top left;
+}
+.submission_mpg {
+  background: url(/static/images/core/bandaid.png) no-repeat top left;
+}
+.submission_other {
+  background: url(/static/images/core/question-frame.png) no-repeat top left;
+}
+
+.submission_list_choose {
+  border-bottom: 1px solid #ccc;
+}
+
+#submission_list_filter {
+  margin-bottom: 10px;
+  padding: 0px 10px;
+}
+#submission_list_filter input[type=checkbox] {
+  margin-top: 5px;
+}
+#submission_list_filter label {
+  display: inline-block;
+  margin: 5px 5px 5px 2px;
+  width: 50px;
+}
+#submission_widget label, #submission_widget ol {
+  font-size: 10pt;
 }
 

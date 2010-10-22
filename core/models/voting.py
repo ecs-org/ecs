@@ -28,7 +28,7 @@ class Vote(models.Model):
     text = models.TextField(blank=True, verbose_name=u'Kommentar')
     is_final = models.BooleanField(default=False)
     published = models.BooleanField(default=False)
-    
+
     class Meta:
         app_label = 'core'
         

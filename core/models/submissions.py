@@ -15,6 +15,8 @@ from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
 from ecs.utils.common_messages import send_submission_change,\
     send_submission_creation, send_submission_invitation
+from ecs.meetings.models import Meeting
+from ecs.core.models.voting import Vote
     
     
 class SubmissionQuerySet(models.query.QuerySet):
@@ -30,6 +32,26 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(is_mpg=True) | (
             Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
         ))
+
+    def b2(self):
+        b2_votes = Vote.objects.filter(result='2')
+        submission_pks = [x.submission_form.submission.pk for x in b2_votes]
+        return self.filter(pk__in=submission_pks)
+
+    def new(self):
+        filtered_submission_pks = set([x['pk'] for x in Submission.objects.all().values('pk')])
+        meeting_submissions = set()
+        for meeting in Meeting.objects.all():
+            for submission in meeting.submissions.all():
+                meeting_submissions.add(submission.pk)
+
+        for pk in meeting_submissions:
+            filtered_submission_pks.remove(pk)
+
+        return self.filter(pk__in=filtered_submission_pks)
+        
+    def thesis(self):
+        return self.filter(thesis=True)
         
         
 class SubmissionManager(AuthorizationManager):
@@ -43,6 +65,15 @@ class SubmissionManager(AuthorizationManager):
         
     def mpg(self):
         return self.all().mpg()
+
+    def new(self):
+        return self.all().new()
+
+    def b2(self):
+        return self.all().b2()
+
+    def thesis(self):
+        return self.all().thesis()
 
 class Submission(models.Model):
     ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345

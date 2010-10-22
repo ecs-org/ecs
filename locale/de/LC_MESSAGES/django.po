@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-10 22:50+0200\n"
+"POT-Creation-Date: 2010-10-22 15:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,36 @@ msgstr "Bestätigen"
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/views/submissions.py:244
+#: core/forms/wizard.py:50
+msgid "Empty Study"
+msgstr ""
+
+#: core/forms/wizard.py:51
+msgid "Thesis"
+msgstr ""
+
+#: core/forms/wizard.py:52
+msgid "AMG-Study"
+msgstr ""
+
+#: core/forms/wizard.py:53
+msgid "MPG-Study"
+msgstr ""
+
+#: core/forms/wizard.py:54
+#, fuzzy
+msgid "Import Submission"
+msgstr "Einreichung"
+
+#: core/forms/wizard.py:62
+msgid "at Medical University Vienna"
+msgstr ""
+
+#: core/forms/wizard.py:63
+msgid "other University"
+msgstr ""
+
+#: core/views/submissions.py:247
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
@@ -78,11 +107,11 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:183
+#: templates/core.html:184
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:183
+#: templates/core.html:184
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
@@ -111,9 +140,26 @@ msgstr "Einreichung"
 msgid "Centers"
 msgstr "Zentren"
 
+#: templates/submissions/internal_list.html:23
+#: templates/submissions/widget.html:16
+#, fuzzy
+msgid "Categories"
+msgstr "Kategorien"
+
+#: templates/submissions/internal_list.html:28
+#: templates/submissions/widget.html:21
+msgid "ExpeditedReviewCategories"
+msgstr ""
+
+#: templates/submissions/internal_list.html:34
+#: templates/submissions/widget.html:27
+#, fuzzy
+msgid "No Submissions."
+msgstr "Keine Einreichung."
+
 #: templates/submissions/readonly_form.html:11
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: templates/submissions/readonly_form.html:21
 #, fuzzy
@@ -193,6 +239,28 @@ msgstr "Es existieren derzeit keine veröffentlichten Voten."
 #: templates/submissions/readonly_form.html:230
 msgid "Write a new message"
 msgstr "Neue Nachricht"
+
+#: templates/submissions/widget.html:32
+msgid "More"
+msgstr ""
+
+#: templates/submissions/widget.html:33
+msgid "von"
+msgstr ""
+
+#: templates/submissions/wizard.html:5
+#, fuzzy
+msgid "ECS Submission Wizard"
+msgstr "ECS Einreichung Wizard"
+
+#: templates/submissions/wizard.html:8
+#, fuzzy
+msgid "Submission Wizard"
+msgstr "Einreichung Wizard"
+
+#: templates/submissions/wizard.html:14
+msgid "Next"
+msgstr ""
 
 #: templates/tasks/compact_list.html:9
 msgid "Mine"
