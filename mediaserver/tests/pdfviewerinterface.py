@@ -41,7 +41,7 @@ class PdfViewerInterface(LoginTestCase):
         documentprovider.docprovider = DocumentProvider() 
 
         with open(self.pdfdoc,"rb") as f_doc:
-            encrypted = gpgutils.encrypt(f_doc, settings.MEDIASERVER_KEYOWNER)
+            encrypted = gpgutils.encrypt(f_doc, settings.DOCUMENTS_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
             documentprovider.docprovider.addBlob(self.docblob, encrypted)
     
         documentprovider.docprovider.getBlob(self.docblob)
