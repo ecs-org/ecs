@@ -36,11 +36,19 @@ def my_tasks(request, template='tasks/mine.html'):
         elif related_tasks:
             pass # XXX: how do we handle this case?
 
+    usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
     taskfilter_session_key = 'tasks:filter'
-    filterform = TaskListFilterForm(request.POST or request.session.get(taskfilter_session_key, {'amg': True, 'mpg': True, 'other': True, 'mine': True, 'open': True, 'proxy': True}))
+    default_filter = dict((x, True) for x in TaskListFilterForm.base_fields.iterkeys())
+    
+    filterdict = request.POST or request.session.get(taskfilter_session_key, usersettings.task_filter) or default_filter
+    filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
+
     request.session[taskfilter_session_key] = filterform.cleaned_data
+    request.session.save()
+    usersettings.task_filter = filterform.cleaned_data
+    usersettings.save()
     
     try:
         submission_pk = int(request.GET['submission'])
