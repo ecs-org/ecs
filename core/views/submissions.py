@@ -517,33 +517,30 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
     usersettings.show_other_submissions = filterform.cleaned_data['other']
     usersettings.save()
 
-    submission_pks=[]
+    submissions_stage1 = Submission.objects.filter(pk=None)
     if usersettings.show_new_submissions:
-        submission_pks += [x['pk'] for x in Submission.objects.new().values('pk')]
+        submissions_stage1 |= Submission.objects.new()
     if usersettings.show_next_meeting_submissions:
         try:
             next_meeting = Meeting.objects.all().order_by('-start')[0]
         except IndexError:
             pass
         else:
-            submission_pks += [x.pk for x in next_meeting.submissions.all()]
+            submissions_stage1 |= next_meeting.submissions.all()
     if usersettings.show_b2_submissions:
-        submission_pks += [x['pk'] for x in Submission.objects.b2().values('pk')]
-    submissions = Submission.objects.filter(pk__in=submission_pks)
+        submissions_stage1 |= Submission.objects.b2()
 
-    print submissions
-
-    submission_pks=[]
-    print submission_pks
+    submissions_stage2 = submissions_stage1.filter(pk=None)
     if usersettings.show_amg_submissions:
-        submission_pks += [x['pk'] for x in submissions.amg().values('pk')]
+        submissions_stage2 |= submissions_stage1.amg()
     if usersettings.show_mpg_submissions:
-        submission_pks += [x['pk'] for x in submissions.mpg().values('pk')]
+        submissions_stage2 |= submissions_stage1.mpg()
     if usersettings.show_thesis_submissions:
-        submission_pks += [x['pk'] for x in submissions.thesis().values('pk')]
+        submissions_stage2 |= submissions_stage1.thesis()
     if usersettings.show_other_submissions:
-        submission_pks += [x['pk'] for x in submissions.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).filter(current_submission_form__project_type_education_context=None).values('pk')]
-    submissions = submissions.filter(pk__in=submission_pks).order_by('-current_submission_form__pk')
+        submissions_stage2 |= submissions_stage1.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).filter(current_submission_form__project_type_education_context=None)
+
+    submissions = submissions_stage2.order_by('-current_submission_form__pk')
     if limit:
         submissions = submissions[:limit]
 
