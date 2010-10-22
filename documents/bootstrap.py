@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
+from django.conf import settings
+from ecs.utils import gpgutils
 
 @bootstrap.register()
 def document_types():
@@ -23,3 +25,9 @@ def document_types():
         d, created = DocumentType.objects.get_or_create(name=name, identifier=identifier)
         d.helptext= helptext
         d.save()
+
+@bootstrap.register()
+def import_mediaserver_pub_key():
+    keyfile = open(settings.MEDIASERVER_PUB_KEY, 'rb')
+    gpgutils.reset_keystore(settings.DOCUMENTS_GPG_HOME)
+    gpgutils.import_key(keyfile, settings.DOCUMENTS_GPG_HOME)

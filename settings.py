@@ -237,6 +237,12 @@ MEDIASERVER_DEFAULT_ASPECT_RATIO = 1.41428
 MEDIASERVER_DEFAULT_DPI = 96 # 72
 MEDIASERVER_DEFAULT_DEPTH = 8
 
+#TODO generate production keys (without password protection or the bootstrap will freeze!)
+DOCUMENTS_GPG_HOME = os.path.join(PROJECT_DIR, "documents", "gpg")
+MEDIASERVER_GPG_HOME = os.path.join(PROJECT_DIR, "mediaserver", "gpg")
+MEDIASERVER_PUB_KEY = os.path.join(PROJECT_DIR, "documents", "gpg", "keys", "mediaserverpub.gpg")
+MEDIASERVER_PRIV_KEY = os.path.join(PROJECT_DIR, "mediaserver", "gpg", "keys", "mediaserverpriv.asc")
+
 DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
 DOC_DISKCACHE_MAXSIZE = 2**34
 RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))

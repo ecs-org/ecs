@@ -24,37 +24,39 @@ def _prepare(filelike):
     f_in.close();
     return tmp_in, tmp_out
 
-def import_key(filelike):
+def reset_keystore(gpg_home):
+    for f in os.listdir(gpg_home):
+        path = os.path.join(gpg_home, f);
+        if os.path.isfile(path):
+            os.remove(path)
+
+def import_key(filelike, gpg_home):
     tmp_in, tmp_out = _prepare(filelike)
-    args = '%s --batch --yes --import %s' % (GPG_EXECUTABLE, tmp_in)
+    args = '%s --homedir %s --batch --yes --import %s' % (GPG_EXECUTABLE, gpg_home, tmp_in)
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
-        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
+        raise IOError('gpg returned error code:%d' % (returncode))
    
-# FIXME: make encrypt working and change to symmetric key
-def encrypt(filelike, owner):
+def encrypt(filelike, gpg_home, owner):
     tmp_in, tmp_out = _prepare(filelike)
-    return tmp_in
-    args = '%s  --batch --yes --always-trust -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
+    args = '%s --homedir %s --batch --yes --always-trust -r %s --output %s --encrypt %s' % (GPG_EXECUTABLE, gpg_home, owner, tmp_out, tmp_in)
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
-        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
+        raise IOError('gpg returned error code:%d' % (returncode))
     
     return open(tmp_out, 'rb')
 
-# FIXME: make decrypt working change to symmetric key
-def decrypt(filelike, owner):
+def decrypt(filelike, gpg_home, owner):
     tmp_in, tmp_out = _prepare(filelike)
-    return tmp_in
-    args = '%s  --batch --yes --always-trust -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, owner, tmp_out, tmp_in)
+    args = '%s --homedir %s --batch --yes --always-trust -r %s --output %s --decrypt %s' % (GPG_EXECUTABLE, gpg_home, owner, tmp_out, tmp_in)
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT ,shell=True)
     returncode = popen.wait()
     
     if returncode != 0:
-        raise IOError('gpg returned error code:%d %s' % (returncode, popen.stderr.read()))
+        raise IOError('gpg returned error code:%d' % (returncode))
     
     return open(tmp_out, 'rb')
