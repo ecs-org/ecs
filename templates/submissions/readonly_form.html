@@ -2,7 +2,7 @@
 {% load core i18n %} 
 
 {% block headertext %}
-  {{ submission_form.submission.ec_number }} {{ submission_form.project_title }}
+  {{ submission_form.submission|ec_number }} {{ submission_form.project_title }}
 {% endblock %}
 
 {% block header_actions %}

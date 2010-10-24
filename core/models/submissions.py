@@ -17,8 +17,9 @@ from ecs.utils.common_messages import send_submission_change,\
     send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
-    
-    
+
+MIN_EC_NUMBER = 1000
+
 class SubmissionQuerySet(models.query.QuerySet):
     def amg(self):
         return self.filter(Q(is_amg=True) | (
@@ -76,7 +77,7 @@ class SubmissionManager(AuthorizationManager):
         return self.all().thesis()
 
 class Submission(models.Model):
-    ec_number = models.CharField(max_length=50, null=True, blank=True, unique=True, db_index=True) # e.g.: 2010/0345
+    ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
@@ -104,16 +105,11 @@ class Submission(models.Model):
     
     objects = SubmissionManager()
 
-    def get_ec_number_display(self):
-        try:
-            year, ec_number = self.ec_number.split('/')
-            ec_number = ec_number.lstrip('0')
-            if datetime.datetime.now().year == int(year):
-                return ec_number
-            else:
-                return '%s/%s' % (ec_number, year)
-        except ValueError:
-            return self.ec_number
+    def get_ec_number_display(self, short=False, separator=u'/'):
+        year, num = divmod(self.ec_number, 10000)
+        if short and datetime.datetime.now().year == int(year):
+            return unicode(num)
+        return u"%s%s%s" % (num, separator, year)
         
     get_ec_number_display.short_description = 'EC-Number'
 
@@ -168,9 +164,15 @@ class Submission(models.Model):
         
     def save(self, **kwargs):
         if not self.ec_number:
-            # FIXME: how do we really assign ec-numbers for new submissions? (FMD1)
-            from random import randint
-            self.ec_number = "EK-%s" % randint(10000, 100000)
+            year = datetime.datetime.now().year
+            max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
+            if max_num is None:
+                max_num = 10000 * year + MIN_EC_NUMBER
+            else:
+                year, num = divmod(max_num, 10000)
+                max_num = year * 10000 + max(num, MIN_EC_NUMBER)
+            # XXX: this breaks if there are more than 9999 studies per year
+            self.ec_number = max_num + 1
         super(Submission, self).save(**kwargs)
         
     def __unicode__(self):
@@ -418,7 +420,7 @@ class SubmissionForm(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
    
     def __unicode__(self):
-        return "%s: %s" % (self.submission.ec_number, self.project_title)
+        return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
     
     @property
     def multicentric(self):

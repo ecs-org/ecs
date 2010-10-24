@@ -14,7 +14,7 @@
 {% for thread in page.object_list %}
     <li class="message {% cycle 'even' 'odd' %}{% if thread.last_message.unread %} unread{% endif %}">
         <span class="head">
-            {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
+            {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
            	{% if incoming and thread.last_message.unread %} 
             [NEU]
             {% endif %}

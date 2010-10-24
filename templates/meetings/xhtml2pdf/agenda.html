@@ -1,4 +1,5 @@
 {% extends 'db/xhtml2pdf/skeleton.html' %}
+{% load core %}
 
 {% block title %}Meeting Agenda{% endblock %}
 
@@ -16,7 +17,7 @@
         <span style="font-weight:bold;">#{{ entry }}</span>
         {% if entry.submission %}
             <span style="font-weight:bold;">EK Nr.</span>
-                {{ entry.submission.ec_number }}<br />
+                {{ entry.submission|ec_number }}<br />
             <span style="font-weight:bold;">Antragsteller:</span>
                 {{ entry.submission.current_submission_form.submitter_name }}<br />
             <span style="font-weight:bold;">Institut:</span>

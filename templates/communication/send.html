@@ -12,7 +12,7 @@
           {% if submission %}
           <li>
               <label>Studie</label>
-              <span>{{ submission.ec_number }} {{ submission.project_title|smart_truncate:50 }}</span>
+              <span>{{ submission|ec_number }} {{ submission.project_title|smart_truncate:50 }}</span>
           </li>
 
           {% endif %}

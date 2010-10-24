@@ -28,5 +28,5 @@ class Command(BaseCommand):
             'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         })
         
-        open('%s.pdf' % ec_number.replace('/', '-'), 'w').write(pdf)
+        open('%s.pdf' % s.get_ec_number_display(separator='-'), 'w').write(pdf)
 

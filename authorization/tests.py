@@ -11,7 +11,8 @@ from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo
 
 class SubmissionAuthTestCase(EcsTestCase):
-    EC_NUMBER = 'EK-d0eced4b-bc20-4c98-aace-e2cc08cd7bf5'
+    BASE_EC_NUMBER = 9742
+    EC_NUMBER = 20100000 + BASE_EC_NUMBER
 
     def _create_test_user(self, name, **profile_attrs):
         user = User(username=name)
@@ -63,7 +64,7 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         self.sf = sf
         
-    def test_submission_auth(self):        
+    def test_submission_auth(self):
         with sudo(self.unapproved_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
         with sudo(self.anyone):
@@ -113,7 +114,7 @@ class SubmissionAuthTestCase(EcsTestCase):
             if expect404:
                 self.failUnlessEqual(response.status_code, allowed and 200 or 404)
             else:
-                self.failUnlessEqual(self.EC_NUMBER in response.content, allowed)
+                self.failUnlessEqual(str(self.BASE_EC_NUMBER) in response.content, allowed)
                 
     def _check_view(self, expect404, viewname, *args, **kwargs):
         url = reverse(viewname, args=args, kwargs=kwargs)

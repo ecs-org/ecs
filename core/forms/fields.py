@@ -64,7 +64,7 @@ class MultiselectWidget(forms.TextInput):
         super(MultiselectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, choices=()):
-        value_list = ",".join(map(str, value))
+        value_list = ",".join(map(str, value or ()))
         attrs['class'] = 'autocomplete'
         url = self.url
         if callable(url):

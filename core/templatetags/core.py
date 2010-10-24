@@ -24,10 +24,15 @@ register.filter('multiply', lambda a, b: a * b)
 register.filter('euro', lambda val: (u"€ %.2f" % float(val)).replace('.', ','))
 
 @register.filter
+def ec_number(submission):
+    if submission:
+        return submission.get_ec_number_display()
+    return None
+
+@register.filter
 def repeat(s, n):
     return mark_safe(s*n)
 repeat.is_safe = True
-
 
 @register.filter
 def get_field_info(formfield):

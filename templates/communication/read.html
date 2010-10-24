@@ -1,5 +1,5 @@
 {% extends "communication/popup.html" %}
-{% load communication %}
+{% load communication core %}
 
 {% block htmlbody %}
 <div class="message_display" style="overflow:auto;">
@@ -12,7 +12,7 @@
       <li><strong>Datum:</strong> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</li>
       <li><strong>Betreff:</strong> 
           {% if message.thread.submission %}
-              {{ message.thread.submission.ec_number }} -
+              {{ message.thread.submission|ec_number }} -
           {% endif %}
           {{ message.thread.subject }}
       </li>

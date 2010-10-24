@@ -21,7 +21,7 @@ class Command(BaseCommand):
         if not sf:
             raise CommandError("This submission does not have an attached SubmissionForm.")
 
-        f = file(options['out'] or "%s.ecx" % ec_number.replace('/', '-'), 'w')
+        f = file(options['out'] or "%s.ecx" % s.get_ec_number_display(separator='-'), 'w')
         ecxf = Serializer()
         ecxf.write(sf, f)
         f.close()

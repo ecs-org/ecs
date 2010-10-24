@@ -1,7 +1,9 @@
+{% load core %}
+
 <ol class="submission_list">
 {% for submission in submissions %}
     <li class="{% cycle 'even' 'odd' %}">
-        <h3><span class="ecnr">{{ submission.ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
+        <h3><span class="ecnr">{{ submission|ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
             <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
              | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>

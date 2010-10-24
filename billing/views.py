@@ -82,7 +82,7 @@ def submission_billing(request):
             submission_form = submission.current_submission_form
             xls.write_row(i + 1, [
                 "%s." % r,
-                submission.ec_number,
+                submission.get_ec_number_display(),
                 _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
                 submission_form.eudract_number or '?',
                 submission_form.submitter_contact.full_name,
@@ -149,7 +149,7 @@ def external_review_payment(request):
             xls.write_row(i + 1, [
                 len(submissions),
                 reviewer.get_full_name(),
-                ", ".join(s.ec_number for s in submissions),
+                ", ".join(s.get_ec_number_display() for s in submissions),
                 len(submissions) * price.price,
             ])
         r = len(reviewers) + 1

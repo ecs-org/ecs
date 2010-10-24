@@ -185,7 +185,7 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
     
     # if we don't explicitly look for a TOP, try an exact ec_number lookup
     if not explict_top:
-        tops = meeting.timetable_entries.filter(submission__ec_number__iexact=q).order_by('timetable_index')
+        tops = meeting.timetable_entries.filter(submission__ec_number__endswith=q).order_by('timetable_index')
         if len(tops) == 1:
             top = tops[0]
     # if we found no TOP yet, try an exact TOP index lookup

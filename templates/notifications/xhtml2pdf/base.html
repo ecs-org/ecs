@@ -1,4 +1,5 @@
 {% extends 'db/xhtml2pdf/skeleton.html' %}
+{% load core %}
 
 {% block title %}Meldung{% endblock %}
 
@@ -27,7 +28,7 @@
     {% for investigator in notification.investigators.all %}
     <tr>
       <td>{{ investigator.ethics_commission.name }}</td>
-      <td>{{ investigator.submission_form.submission.ec_number }}</td>
+      <td>{{ investigator.submission_form.submission|ec_number }}</td>
       <td>{{ investigator.submission.date_of_protocol }}<!-- TODO: date_of_vote? -->
       <td>{{ investigator.name }}</td>
     </tr>

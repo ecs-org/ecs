@@ -399,9 +399,9 @@ def checklist_questions():
 @sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
     with sudo(): # XXX: this fixes a visibility problem, as presenters are currently not allowed to see their own submissions
-        if Submission.objects.filter(ec_number='4321').exists():
+        if Submission.objects.filter(ec_number=20104321).exists():
             return
-    submission = Submission.objects.create(ec_number='4321')
+    submission = Submission.objects.create(ec_number=20104321)
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Päd'))
     
     submission_form_data = {

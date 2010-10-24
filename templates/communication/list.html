@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load communication %}
+{% load communication core %}
 
 {% block menuSelection %}messages{% endblock %}
 
@@ -21,7 +21,7 @@
           <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>
               <a class="popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">
-                  {% if thread.submission %}{{ thread.submission.ec_number }} - {% endif %}
+                  {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
                   {{ thread.subject }}
               </a>
           </td>

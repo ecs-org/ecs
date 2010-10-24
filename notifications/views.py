@@ -110,7 +110,7 @@ def notification_pdf(request, notification_pk=None):
         'url': request.build_absolute_uri(),
     }))
     pdf = xhtml2pdf(html)
-    ec_num = '_'.join(s['ec_number'] for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
+    ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s" % (ec_num, notification.type.name))
     return response

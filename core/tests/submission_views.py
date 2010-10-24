@@ -30,25 +30,24 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(response.content[:4], '%PDF')
         
     def test_submission_form_search(self):
-        create_submission_form('X2020/1')
-        create_submission_form('2020/0042')
-        create_submission_form('2020/9942')
+        create_submission_form(20200001)
+        create_submission_form(20200042)
+        create_submission_form(20209942)
         url = reverse('ecs.core.views.submission_form_list')
         
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(len(response.context['unscheduled_submissions']), 3)
         
-        response = self.client.post(url, {'keyword': '42'})
+        response = self.client.get(url, {'keyword': '42'})
         self.failUnless(response.status_code, 200)
         self.failUnlessEqual(len(response.context['unscheduled_submissions']), 2)
         
-        response = self.client.post(url, {'keyword': '2020/42'})
+        response = self.client.get(url, {'keyword': '2020/42'})
         self.failUnless(response.status_code, 200)
-        print response.context['unscheduled_submissions']
         self.failUnlessEqual(len(response.context['unscheduled_submissions']), 1)
 
-        response = self.client.post(url, {'keyword': '42/2020'})
+        response = self.client.get(url, {'keyword': '42/2020'})
         self.failUnless(response.status_code, 200)
         self.failUnlessEqual(len(response.context['unscheduled_submissions']), 1)
         

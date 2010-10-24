@@ -21,7 +21,7 @@ SUBMISSION_FORM_DATA = {
 
 class SerializerTest(EcsTestCase):
     def create_submission_form(self):
-        s = Submission.objects.create(ec_number='EK-FOO')
+        s = Submission.objects.create(ec_number=20109942)
         sf = SubmissionForm.objects.create(submission=s, **SUBMISSION_FORM_DATA)
         docs = []
         for i in range(3):

@@ -1,4 +1,5 @@
 {% extends "core.html" %}
+{% load core %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -41,7 +42,7 @@
             <td>{{ task.workflow_token.pk }}</td>
             <td>{{ task.workflow_token.node_id }}</td>
             <td>{{ task.workflow_token.workflow_id }}</td>
-            <td>{{ task.data.ec_number }}</td>
+            <td>{{ task.data|ec_number }}</td>
             <td>{{ task.accepted|yesno }}</td>
             <td>{{ task.locked|yesno }}</td>
             <td>{{ task.created_at|date:'d.m.Y H:i:s' }}</td>

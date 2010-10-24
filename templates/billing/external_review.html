@@ -14,7 +14,7 @@
     <form action="" method="post">
     {% for submission in submissions %}
         <div class="{% cycle 'even' 'odd' %}">
-            <input type="checkbox" name="pay_{{ submission.pk }}" checked="checked" /> {{ submission.external_reviewer_name }} ({{ submission.ec_number }}: {{ submission.project_title }})
+            <input type="checkbox" name="pay_{{ submission.pk }}" checked="checked" /> {{ submission.external_reviewer_name }} ({{ submission|ec_number }}: {{ submission.project_title }})
             <div><span class="price">{{ price.price|euro }}</span> ({{ price.text }})</div>
         </div>
     {% endfor %}

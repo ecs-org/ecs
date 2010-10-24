@@ -296,7 +296,7 @@ def view_submission_form(request, submission_form_pk=None):
 
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
-    filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.ec_number.replace('/','-')
+    filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.get_ec_number_display(separator='-')
     
     if not submission_form.pdf_document:
         pdf = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
@@ -323,9 +323,7 @@ def submission_form_list(request):
         if m:
             num = int(m.group(1))
             year = int(m.group(2))
-            q |= Q(ec_number=('%04d/%04d' % (year, num)))
-            q |= Q(ec_number=('%04d/%04d' % (num, year)))
-
+            q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
             q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
@@ -374,7 +372,7 @@ def export_submission(request, submission_pk):
     buf = StringIO()
     serializer.write(submission_form, buf)
     response = HttpResponse(buf.getvalue(), mimetype='application/ecx')
-    response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.ec_number.replace('/', '-')
+    response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')
     return response
 
 def import_submission_form(request):

@@ -3,7 +3,7 @@
 
 {% block meeting_assistant_body %}
     <form id="meeting_assistant_form" action="" method="post">
-        <h3>{{ top }}, {{ submission.ec_number|default:top.title }}</h3>
+        <h3>{{ top }}, {{ submission|ec_number|default:top.title }}</h3>
         {{ submission.project_title|default:top.title }}
         <span class="meta">
             Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
