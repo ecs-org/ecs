@@ -370,20 +370,21 @@ class Command(BaseCommand):
             raise Exception(standard_error.strip())
 
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
-        x=s.findAll(text=re.compile("EK Nr."))
-        y=[a.next.strip().split("/") for a in x]
+        x = s.findAll(text=re.compile("EK Nr."))
+        y = [a.next.strip().split("/") for a in x]
         documents = [os.path.join(os.path.dirname(filename), '%s_%s.doc' % (x[0], x[1])) for x in y]
-
+        
         self._import_files(documents, dont_exit_on_fail=True)
 
         title = re.match('(.*).doc', os.path.basename(filename)).group(1)
         Meeting.objects.filter(title=title).delete()
         meeting = Meeting.objects.create(title=title, start=start)
-
-        ec_numbers = ['%s/%04d' % (a[1], int(a[0])) for a in y]
+        
+        ec_numbers = ['%s%04d' % (a[1], int(a[0])) for a in y]
         submission_count = len(ec_numbers)
         fail_count = 0
         for ec_number in ec_numbers:
+            #print "ec_number:",ec_number
             try:
                 submission = Submission.objects.get(ec_number=ec_number)
                 meeting.add_entry(submission=submission, duration_in_seconds=450)
