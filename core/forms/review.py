@@ -6,7 +6,7 @@ from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget
 
-class ExecutiveReviewForm(ReadonlyFormMixin, forms.ModelForm):
+class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
     external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True), required=False)
 
     class Meta:

@@ -1,4 +1,4 @@
-{% load core %}
+{% load core i18n %}
 
 <ol class="submission_list">
 {% for submission in submissions %}
@@ -12,9 +12,8 @@
                  {% if submission_form %}
                      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
                      | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
-                     <!--| <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">Copy</a>-->
-                     | <a href="{% url ecs.core.views.executive_review submission_form_pk=submission_form.pk %}">Executive Review</a>
-                     | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">Thesis Review</a>
+                     | <a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}">{% trans "Categorization Review" %}</a>
+                     | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">{% trans "Thesis Review" %}</a>
                      | <a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a>
                      | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
                      {% with submission.get_most_recent_vote as vote %}

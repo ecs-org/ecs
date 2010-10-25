@@ -25,7 +25,7 @@ from ecs.meetings.models import Meeting
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
     InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm
 from ecs.core.forms.checklist import make_checklist_form
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, ExecutiveReviewForm, BefangeneReviewForm
+from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
 
@@ -103,7 +103,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission = submission_form.submission
 
     retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission, readonly=True)
-    executive_review_form = ExecutiveReviewForm(instance=submission, readonly=True)
+    categorization_review_form = CategorizationReviewForm(instance=submission, readonly=True)
     befangene_review_form = BefangeneReviewForm(instance=submission, readonly=True)
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
     
@@ -123,7 +123,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission_form': submission_form,
         'vote': vote,
         'retrospective_thesis_review_form': retrospective_thesis_review_form,
-        'executive_review_form': executive_review_form,
+        'categorization_review_form': categorization_review_form,
         'vote_review_form': vote_review_form,
         'checklist_reviews': checklist_reviews,
         'befangene_review_form': befangene_review_form,
@@ -148,12 +148,12 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'retrospective_thesis_review_form': form,})
 
 
-def executive_review(request, submission_form_pk=None):
+def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = ExecutiveReviewForm(request.POST or None, instance=submission_form.submission)
+    form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'executive_review_form': form,})
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 def befangene_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)

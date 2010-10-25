@@ -34,8 +34,8 @@
         <li>
             <a href="#">{% trans "Review" %}</a>
             <ul class="tab_headers">
-                <li{% if not executive_review_form.readonly %} class="readonly_review active"{% endif %}>
-                    <a href="#executive_review_tab">Executive Review</a>
+                <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                 </li>
                 <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
                     <a href="#retrospective_thesis_review_tab">Thesis Review</a>
@@ -177,9 +177,9 @@
             <p>{% trans "There are no published votes." %}</p>
         {% endif %}
     </div>
-    <div id="executive_review_tab" class="tab">
-        {% block executive_review_tab_content %}
-            {% with executive_review_form as review_form %}
+    <div id="categorization_review_tab" class="tab">
+        {% block categorization_review_tab_content %}
+            {% with categorization_review_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
         {% endblock %}
