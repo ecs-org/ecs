@@ -448,7 +448,7 @@ class SubmissionForm(models.Model):
         
     @property
     def project_type_medical_device_or_method(self):
-        return self.project_type_medical_method or self.project_type_medical_device
+        return self.project_type_medical_method or self.project_type_medical_device or self.project_type_medical_device_performance_evaluation
         
     @property
     def protocol(self):

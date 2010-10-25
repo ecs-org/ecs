@@ -115,9 +115,11 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
             'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
         }
-        
+    
     def clean(self):
         cleaned_data = super(SubmissionFormForm, self).clean()
+        cleaned_data['project_type_reg_drug'] = any(self.cleaned_data.get(f, False) for f in ('project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication'))
+        cleaned_data['project_type_medical_device'] = any(self.cleaned_data.get(f, False) for f in ('project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 'project_type_medical_device_performance_evaluation'))
         return cleaned_data
 
 ## documents ##

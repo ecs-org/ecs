@@ -172,6 +172,22 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', ecs.setupForms);
+        window.addEvent('domready', function(){
+            ecs.setupForms();
+            new ecs.FormFieldController('id_project_type_reg_drug', {
+                disable: true, 
+                sourceFieldClass: 'subchoice',
+                sources: ['id_project_type_reg_drug_within_indication', 'id_project_type_reg_drug_not_within_indication'],
+            });
+            new ecs.FormFieldController('id_project_type_medical_device', {
+                disable: true,
+                sourceFieldClass: 'subchoice',
+                sources: [
+                    'id_project_type_medical_device_with_ce', 
+                    'id_project_type_medical_device_without_ce',
+                    'id_project_type_medical_device_performance_evaluation'
+                ]
+            });
+        });
     </script>
 {% endblock %}

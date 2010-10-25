@@ -261,3 +261,47 @@ ecs.setupForms = function(){
         });
     });
 };
+
+ecs.FormFieldController = new Class({
+    initialize: function(field, options){
+        field = $(field);
+        this.field = field;
+        if(options.disable){
+            field.disabled = "disabled";
+        }
+        this.auto = options.auto || function(values){ 
+            return values.some(function(x){ return !!x;});
+        };
+        this.sources = [];
+        if(options.sources){
+            options.sources.each(function(el){
+                el = $(el);
+                this.sources.push(el);
+                el.addEvent('change', this.onChange.bind(this));
+                if(options.sourceFieldClass){
+                    el.addClass(options.sourceFieldClass);
+                }
+            }, this);
+        }
+        this.onChange();
+    },
+    onChange: function(e){
+        var values = this.sources.map(this.getValue, this);
+        this.setValue(this.auto(values));
+    },
+    getValue: function(field){
+        field = field || this.field;
+        if(field.type == 'checkbox'){
+            return field.checked;
+        }
+        return field.value;
+    },
+    setValue: function(val){
+        if(this.field.type == 'checkbox'){
+            this.field.checked = !!val;
+        }
+        else{
+            this.field.value = value;
+        }
+    }
+});

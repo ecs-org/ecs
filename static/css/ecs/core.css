@@ -383,6 +383,11 @@ input[type=submit] {
 .form.main ol li.BooleanField input {
   float: left;
 }
+
+.form.main .field input.subchoice{
+    margin-left: 30px;
+}
+
 .form.main ol li div.input{
   float: left;
 }
