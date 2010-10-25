@@ -89,7 +89,7 @@ class Submission(models.Model):
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
     external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    remission = models.BooleanField(default=False)
+    remission = models.BooleanField(default=True)
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     insurance_review_required = models.BooleanField(default=True)
@@ -443,6 +443,14 @@ class SubmissionForm(models.Model):
         return self.study_plan_blind == 2
         
     @property
+    def project_type_drug(self):
+        return self.project_type_non_reg_drug or self.project_type_reg_drug
+        
+    @property
+    def project_type_medical_device_or_method(self):
+        return self.project_type_medical_method or self.project_type_medical_device
+        
+    @property
     def protocol(self):
         protocol_doc = self.documents.filter(deleted=False, doctype__name='Protokoll').order_by('-date', '-version')[:1]
         if protocol_doc:
@@ -500,9 +508,14 @@ def attach_to_submissions(user):
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
-    
     old_sf = submission.current_submission_form
     submission.current_submission_form = new_sf
+
+    # set defaults
+    if submission.is_amg is None:
+        submission.is_amg = new_sf.project_type_drug
+    if submission.is_mpg is None:
+        submission.is_mpg = new_sf.project_type_medical_device_or_method
     submission.save(force_update=True)
     
     if not old_sf:
@@ -521,6 +534,7 @@ def _post_submission_form_save(**kwargs):
 
     #send_submission_change(new_sf, recipients);
 
+# FIXME: why do we have two signal handlers for SubmissionForm post_save ?
 def _post_submission_form_create(**kwargs):
     new_sf = kwargs['instance']
        

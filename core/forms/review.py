@@ -8,7 +8,7 @@ from ecs.core.forms.fields import MultiselectWidget
 
 class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
     external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True), required=False)
-
+    
     class Meta:
         model = Submission
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
