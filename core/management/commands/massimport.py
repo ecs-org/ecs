@@ -102,7 +102,7 @@ class Command(BaseCommand):
         regex = re.match('(\d{1,4})_(\d{4})(_.*)?.doc', os.path.basename(filename))
         basename = re.match('(.*).doc', os.path.basename(filename)).group(1)
         try:
-            ec_number = '%s/%04d' % (regex.group(2), int(regex.group(1)))
+            ec_number = '%s%04d' % (regex.group(2), int(regex.group(1)))
         except IndexError:
             ec_number = basename
         
