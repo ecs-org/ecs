@@ -2,7 +2,7 @@ import os
 from django.core.urlresolvers import reverse
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
-from ecs.notifications.models import NotificationType
+from ecs.notifications.models import NotificationType, Notification
 
 from ecs.core.tests.submissions import create_submission_form
 
@@ -67,7 +67,21 @@ class NotificationFormTest(LoginTestCase):
         obj = response.context['notification']
         self.failUnlessEqual(obj.comments, 'foo comment')
         self.failUnlessEqual(obj.submission_forms.all()[0], submission_form)
-        
+
+    def test_submission_data_for_notification(self):
+        notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
+        notification = Notification.objects.create(type=notification_type)
+        submission_form = create_submission_form()
+        response = self.client.get(reverse('ecs.notifications.views.submission_data_for_notification'), {'submission_form': submission_form.pk})
+        self.failUnlessEqual(response.status_code, 200)
+
+    def test_notification_pdf(self):
+        notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
+        notification = Notification.objects.create(type=notification_type)
+        response = self.client.get(reverse('ecs.notifications.views.notification_pdf', kwargs={'notification_pk': notification.pk}))
+        self.failUnlessEqual(response.status_code, 200)
+        self.failUnless(response['Content-Type'], 'application/pdf')
+
     def _setup_POST_url(self):
         notification_type = NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': notification_type.pk}))
