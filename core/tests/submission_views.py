@@ -1,3 +1,4 @@
+import os
 from urlparse import urlsplit
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
@@ -39,7 +40,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'medtech_technical_safety_regulations': [u''], u'foreignparticipatingcenter-MAX_NUM_FORMS': [u''], u'german_aftercare_info': [u'bla bla bla'], 
     u'investigator-1-fax': [u''], u'study_plan_null_hypothesis': [u''], u'investigator-1-mobile': [u''], u'invoice_address1': [u''], 
     u'substance_preexisting_clinical_tries': [u'2'], u'substance_p_c_t_phase': [u'III'], u'subject_males': [u'on'], u'investigator-0-phone': [u''], 
-    u'substance_p_c_t_period': [u'Anti-GD2-Phase I: 1989-1992, Phase III 2002'], u'submit': [u'submit'], u'german_benefits_info': [u'bla bla bla'], 
+    u'substance_p_c_t_period': [u'Anti-GD2-Phase I: 1989-1992, Phase III 2002'], u'german_benefits_info': [u'bla bla bla'], 
     u'german_abort_info': [u'bla bla bla'], u'insurance_address_1': [u'Schwarzenbergplatz 15'], u'german_additional_info': [u'bla bla bla'], 
     u'investigatoremployee-MAX_NUM_FORMS': [u''], u'investigatoremployee-0-organisation': [u''], u'study_plan_primary_objectives': [u''], 
     u'study_plan_number_of_groups': [u''], u'invoice_contact_last_name': [u''], u'document-replaces_document': [u''], u'investigator-TOTAL_FORMS': [u'2'], 
@@ -74,12 +75,22 @@ class SubmissionViewsTestCase(LoginTestCase):
         super(SubmissionViewsTestCase, self).setUp()
         bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
-    
-    def test_create_submission_form(self):
+        
+    def get_docstash_url(self):
         url = reverse('ecs.core.views.create_submission_form')
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 302)
         url = response['Location']
+        return url
+        
+    def get_post_data(self, update=None):
+        data = VALID_SUBMISSION_FORM_DATA.copy()
+        if update:
+            data.update(update)
+        return data
+
+    def test_create_submission_form(self):
+        url = self.get_docstash_url()
         
         # post some data
         response = self.client.post(url, {})
@@ -89,9 +100,38 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
         
-        response = self.client.post(url, VALID_SUBMISSION_FORM_DATA)
+        # document upload
+        with open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb') as f:
+            response = self.client.post(url, self.get_post_data({
+                'document-file': f,
+                'document-doctype': '',
+                'document-version': '3.1415',
+                'document-date': '26.10.2010',
+            }))
+        self.failUnlessEqual(response.status_code, 200)
+        first_doc = response.context['documents'][0]
+        self.failUnlessEqual(first_doc.version, '3.1415')
+        
+        # replace document
+        with open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb') as f:
+            response = self.client.post(url, self.get_post_data({
+                'document-file': f,
+                'document-doctype': '',
+                'document-version': '3',
+                'document-date': '26.10.2010',
+                'document-replaces_document': first_doc.pk,
+            }))
+        self.failUnlessEqual(response.status_code, 200)
+        docs = response.context['documents']
+        self.failUnlessEqual(len(docs), 1)
+        self.failUnlessEqual(docs[0].version, '3')
+        
+        # posting valid data
+        response = self.client.post(url, self.get_post_data({'submit': 'submit'}))
         self.failUnlessEqual(response.status_code, 302)
-        self.failUnless(SubmissionForm.objects.filter(project_title=u'FOOBAR POST Test').exists())
+        sf = SubmissionForm.objects.get(project_title=u'FOOBAR POST Test')
+        self.failUnlessEqual(sf.documents.count(), 1)
+        self.failUnlessEqual(sf.documents.all()[0].version, '3')
         
     def test_readonly_submission_form(self):
         submission_form = create_submission_form()
