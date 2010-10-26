@@ -285,7 +285,46 @@
                 update: $('communication_overview_messages')
             });
             msgRequest.send();
-
+            
+            new ecs.FormFieldController(['id_external_reviewer', 'id_external_reviewer_name'], {
+                sources: ['id_thesis', 'id_expedited'], 
+                auto: function(values){
+                    if(values.some(function(val){ return val == 2;})){
+                        this.setDisabled(true);
+                        this.setValues([3, ""]);
+                    }
+                    else{
+                        this.setDisabled(false);
+                    }
+                }
+            });
+            
+            new ecs.FormFieldController(['id_expedited'], {
+                sources: ['id_thesis'],
+                auto: function(values, initial){
+                    if(values[0] == 2){
+                        this.setValues([3]);
+                        this.setDisabled(true);
+                    }
+                    else{
+                        this.setDisabled(false);
+                    }
+                }
+            });
+            
+            new ecs.FormFieldController(['id_thesis'], {
+                sources: ['id_expedited'],
+                auto: function(values, initial){
+                    if(values[0] == 2){
+                        this.setValues([3]);
+                        this.setDisabled(true);
+                    }
+                    else{
+                        this.setDisabled(false);
+                    }
+                }
+            });
+            
         });
     </script>
 {% endblock %}

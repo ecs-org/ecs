@@ -263,14 +263,17 @@ ecs.setupForms = function(){
 };
 
 ecs.FormFieldController = new Class({
-    initialize: function(field, options){
-        field = $(field);
-        this.field = field;
+    initialize: function(fields, options){
+        fields = fields.map($);
+        this.fields = fields;
         if(options.disable){
-            field.disabled = "disabled";
+            this.setDisabled();
         }
-        this.auto = options.auto || function(values){ 
-            return values.some(function(x){ return !!x;});
+        this.auto = options.auto || function(values){
+            var autoValue = values.some(function(x){ return !!x;})
+            for(var i=0;i<this.fields.length;i++){
+                this.setValue(i, autoValue);
+            }
         };
         this.sources = [];
         if(options.sources){
@@ -283,25 +286,43 @@ ecs.FormFieldController = new Class({
                 }
             }, this);
         }
-        this.onChange();
+        this.onChange(null, true);
     },
-    onChange: function(e){
+    onChange: function(e, initial){
         var values = this.sources.map(this.getValue, this);
-        this.setValue(this.auto(values));
+        this.auto.call(this, values, !!initial);
+    },
+    setDisabled: function(disable){
+        this.fields.each(function(f){
+            if(disable){
+                f.setProperty("disabled", "disabled");
+            }
+            else{
+                f.removeProperty("disabled");
+            }
+        });
+    },
+    getValues: function(){
+        return this.fields.map(this.getValue, this);
     },
     getValue: function(field){
-        field = field || this.field;
         if(field.type == 'checkbox'){
             return field.checked;
         }
         return field.value;
     },
-    setValue: function(val){
-        if(this.field.type == 'checkbox'){
-            this.field.checked = !!val;
+    setValue: function(i, val){
+        var f = this.fields[i];
+        if(f.type == 'checkbox'){
+            f.checked = !!val;
         }
         else{
-            this.field.value = value;
+            f.value = val;
         }
+    },
+    setValues: function(values){
+        values.each(function(val, i){
+            this.setValue(i, val);
+        }, this);
     }
 });

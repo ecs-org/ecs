@@ -92,7 +92,7 @@ class Submission(models.Model):
     remission = models.BooleanField(default=True)
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
-    insurance_review_required = models.BooleanField(default=True)
+    insurance_review_required = models.NullBooleanField()
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     
@@ -516,6 +516,8 @@ def _post_submission_form_save(**kwargs):
         submission.is_amg = new_sf.project_type_drug
     if submission.is_mpg is None:
         submission.is_mpg = new_sf.project_type_medical_device_or_method
+    if submission.insurance_review_required is None:
+        submission.insurance_review_required = bool(new_sf.insurance_name)
     submission.save(force_update=True)
     
     if not old_sf:

@@ -1,5 +1,9 @@
 {% load core %}
 
+{% if form.errors %}
+    {{ form.errors }}
+{% endif %}
+
 {% if not review_form.readonly %}
     <form action="" method="post">
 {% endif %}

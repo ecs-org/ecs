@@ -150,7 +150,7 @@
 
 /* readonly */
 
-.readonly input, .readonly textarea, .readonly select, .readonly .rte_display {
+.readonly input[disabled], .readonly textarea[disabled], .readonly select[disabled], .readonly .rte_display {
   color: #333;
   background: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
