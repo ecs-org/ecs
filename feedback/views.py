@@ -52,7 +52,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         description = request.POST['description'] if request.POST.has_key('description') else ""
         id = request.POST['fb_id']
         
-        if id: # me2 vote (via GET)
+        if id: # me2 vote
             id = int(id)
             if id < 0:
                 tid = id * -1

@@ -11,19 +11,6 @@ from django.contrib.auth.models import User
 from ecs.utils.testcases import EcsTestCase
 from ecs.feedback.models import Feedback
 
-class SimpleTest(EcsTestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
-
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
-
->>> 1 + 1 == 2
-True
-"""}
 
 class ViewTests(EcsTestCase):
     def setUp(self, *args, **kwargs):
@@ -37,19 +24,6 @@ class ViewTests(EcsTestCase):
         self.failUnlessEqual(response.status_code, 302)
         self.client.login(username='feedbackuser', password='4223')
         response = self.client.post(reverse('ecs.feedback.views.feedback_input', kwargs={'type': 'q'}), {'description': 'Does it work?', 'fb_id': ''})
-        self.failUnlessEqual(response.status_code, 200)
-
-    def test_mee_too(self):
-        self.client.login(username='feedbackuser', password='4223')
-        response = self.client.post(reverse('ecs.feedback.views.feedback_input', kwargs={'type': 'i'}), {'description': 'Lets test the mee too feature', 'fb_id': ''})
-        self.failUnlessEqual(response.status_code, 200)
-        self.client.logout()
-
-        fb_id = Feedback.objects.all()[0].id
-        response = self.client.post(reverse('ecs.feedback.views.feedback_input', kwargs={'type': 'i'}), {'description': 'Me likes it too', 'fb_id': fb_id})
-        self.failUnlessEqual(response.status_code, 302)
-        self.client.login(username='feedbackuser', password='4223')
-        response = self.client.post(reverse('ecs.feedback.views.feedback_input', kwargs={'type': 'i'}), {'description': 'Me likes it too', 'fb_id': fb_id})
         self.failUnlessEqual(response.status_code, 200)
 
 
