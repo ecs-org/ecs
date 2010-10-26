@@ -79,10 +79,10 @@ class NotificationFormTest(LoginTestCase):
         doctype = DocumentType.objects.create(name='foo doctype')
         f = open(os.path.join(os.path.dirname(__file__), '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf'), 'rb')
         data.update({
-            'document-0-file': f,
-            'document-0-doctype': doctype.pk,
-            'document-0-version': '3.1415',
-            'document-0-date': '17.03.2010',
+            'document-file': f,
+            'document-doctype': doctype.pk,
+            'document-version': '3.1415',
+            'document-date': '17.03.2010',
         })
         response = self.client.post(url, data)
         f.close()
