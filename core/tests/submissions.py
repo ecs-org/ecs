@@ -333,21 +333,21 @@ def create_submission_form(ec_number=None):
     return sform
 
 
-class SubmissionFormDiffTest(EcsTestCase):
-    def setUp(self):
-        self.old_sf = create_submission_form()
-        self.new_sf = create_submission_form()
-
-    def test_submission_form_diff(self):
-        ''' Test if the submissionForm diff function works correctly '''
-        self.new_sf.project_title = 'roflcopter'
-        diff = diff(self.old_sf, self.new_sf)
-        self.failIf(not diff)
-        try:
-            project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
-        except IndexError:
-            self.fail()
-        self.failIf(not (1, 'roflcopter') in x[1])
+#class SubmissionFormDiffTest(EcsTestCase):
+#    def setUp(self):
+#        self.old_sf = create_submission_form()
+#        self.new_sf = create_submission_form()
+#
+#    def test_submission_form_diff(self):
+#        ''' Test if the submissionForm diff function works correctly '''
+#        self.new_sf.project_title = 'roflcopter'
+#        diff = diff(self.old_sf, self.new_sf)
+#        self.failIf(not diff)
+#        try:
+#            project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
+#        except IndexError:
+#            self.fail()
+#        self.failIf(not (1, 'roflcopter') in x[1])
 
 
 class SubmissionAttachUserTest(EcsTestCase):

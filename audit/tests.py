@@ -16,8 +16,8 @@ class BasicTests(EcsTestCase):
            
     def test_create_user(self):
         audit_trail_entries_count = AuditTrail.objects.count()
-        User.objects.create(username='audit_trail_test_user')  # User and UserProfile are being created
-        self.failUnlessEqual(audit_trail_entries_count+2, AuditTrail.objects.count())
+        User.objects.create(username='audit_trail_test_user')  # there are being created some objects (User,UserProfile,UserSettings)
+        self.assertNotEqual(audit_trail_entries_count, AuditTrail.objects.count())
     
     def test_line_formatting(self):
         a = AuditTrail.objects.all()[0]
