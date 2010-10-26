@@ -1,7 +1,10 @@
 from urlparse import urlsplit
 from django.core.urlresolvers import reverse
+from django.utils import simplejson
+
 from ecs.utils.testcases import LoginTestCase
 from ecs.core.tests.submissions import create_submission_form
+from ecs.core.models import MedicalCategory
 from ecs.core import bootstrap
 from ecs.core.models import SubmissionForm
 
@@ -138,4 +141,9 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(response.context['form'].initial.get('project_title'), submission_form.project_title)
         
-        
+    def test_autocomplete(self):
+        medical_categories_count = MedicalCategory.objects.all().count()
+        response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(len(simplejson.loads(response.content)), medical_categories_count)
+
