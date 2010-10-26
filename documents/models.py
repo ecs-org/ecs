@@ -33,8 +33,8 @@ class DocumentType(models.Model):
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
-    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid_document, instance.original_file_name))
-    #print("incoming document to: original file name %s , target_name %s " % (instance.original_file_name, target_name))
+    _, file_ext = os.path.splitext(filename)
+    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid_document + file_ext[:5]))
     return target_name
     
 class DocumentFileStorage(FileSystemStorage):
@@ -53,6 +53,7 @@ class DocumentFileStorage(FileSystemStorage):
             # file_ext includes the dot.
             counter += 1
             name = os.path.join(dir_name, "%s_%04d%s" % (file_root, counter, file_ext))
+        print name
         return name
 
     def path(self, name):
@@ -75,7 +76,7 @@ class DocumentManager(AuthorizationManager):
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
-    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage())
+    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')

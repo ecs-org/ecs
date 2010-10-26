@@ -8,7 +8,7 @@ class Migration(DataMigration):
 
     def forwards(self, orm):
         for user in orm['auth.User'].objects.all():
-            orm.UserSettings.get_or_create(user=user)
+            orm.UserSettings.objects.get_or_create(user=user)
 
     def backwards(self, orm):
         raise RuntimeError("Cannot reverse this migration.")
