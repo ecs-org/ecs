@@ -17,9 +17,3 @@ class CoreUrlsTest(LoginTestCase):
         response = self.client.get(reverse('ecs.core.views.submission_form_list'))
         self.failUnlessEqual(response.status_code, 200)
 
-    def test_autocomplete(self):
-        response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
-        self.failUnlessEqual(response.status_code, 200)
-        
-
-
