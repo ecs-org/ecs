@@ -285,15 +285,6 @@ def create_submission_form(request):
     return render(request, 'submissions/form.html', context)
 
 
-def view_submission_form(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    return render(request, 'submissions/view.html', {
-        'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-        'submission_form': submission_form,
-        'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
-    })
-
-
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
     filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.get_ec_number_display(separator='-')
@@ -343,19 +334,6 @@ def submission_form_list(request):
         'keyword': keyword,
     })
 
-
-def edit_submission(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    
-    form = SubmissionEditorForm(request.POST or None, instance=submission)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
-    
-    return render(request, 'submissions/editor.html', {
-        'form': form,
-        'submission': submission,
-    })
 
 # FIXME: for testing purposes only (FMD1)
 def start_workflow(request, submission_pk=None):

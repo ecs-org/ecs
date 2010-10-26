@@ -132,7 +132,6 @@ class SubmissionAuthTestCase(EcsTestCase):
 
     def test_views(self):
         self._check_view(False, 'ecs.core.views.submission_form_list')
-        self._check_view(False, 'ecs.core.views.view_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(False, 'ecs.core.views.readonly_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.export_submission', submission_pk=self.sf.submission.pk)

@@ -21,7 +21,7 @@ def send_submission_message(submission, subject, text, recipients, username='roo
 
 def send_submission_creation(sf, registered_recipients, username='root'):
     text = u'Die Studie EK-Nr. %s wurde angelegt.\n' % (sf.submission.get_ec_number_display())
-    url = reverse('ecs.core.views.view_submission_form', kwargs={ 'submission_form_pk': sf.pk })
+    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': sf.pk })
     text += u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.' % (url)
     subject = u'Neue Studie EK-Nr. %s' % (sf.submission.get_ec_number_display())
     send_submission_message(sf.submission, subject, text, registered_recipients, username=username)
