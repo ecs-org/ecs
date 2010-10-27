@@ -372,6 +372,8 @@ class Command(BaseCommand):
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
         x = s.findAll(text=re.compile("EK Nr."))
         y = [a.next.strip().split("/") for a in x]
+        for q in y:
+            q[0] = q[0].lstrip('0')
         documents = [os.path.join(os.path.dirname(filename), '%s_%s.doc' % (x[0], x[1])) for x in y]
         
         self._import_files(documents, dont_exit_on_fail=True)
