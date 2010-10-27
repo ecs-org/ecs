@@ -1,0 +1,16 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block content %}
+
+<h2>{% blocktrans with request.user as user %}Profile of {{ user }}{% endblocktrans %}</h2>
+
+<form action="" method="post">
+    <table>
+    {{ user_form.as_table }}
+    {{ profile_form.as_table }}
+    </table>
+    <input type="submit" value="{% trans 'Save' %}" />
+</form>
+
+{% endblock %}
