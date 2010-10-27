@@ -26,11 +26,6 @@ if user in DBPWD_DICT:
     CARROT_BACKEND = ""
     # use queueing 
     CELERY_ALWAYS_EAGER = False
-    
-# on ecsdev we use memcache instead of mockcache
-RENDER_MEMCACHE_LIB  = 'memcache'
-RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
-RENDER_MEMCACHE_PORT = 11211
 
 
 # lamson config
@@ -53,6 +48,19 @@ LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.
 EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']
 EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']
 
+
+# Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
+if user == "testecs":    
+    MS_CLIENT ["url"] = "http://test.ecsdev.ep3.at"
+elif user == "shredder":
+    MS_CLIENT ["url"] = "http://s.ecsdev.ep3.at"
+
+# on ecsdev we use memcache instead of mockcache
+MS_SERVER ["render_memcache_lib"] = 'memcache'
+MS_SERVER ["render_memcache_host"] = '127.0.0.1'
+MS_SERVER ["render_memcache_host"] = 11211
+
+
 if user == "testecs":
     # fulltext search engine override (testecs uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"
@@ -63,8 +71,3 @@ if user == "testecs":
     TEMPLATE_DEBUG = False
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 
-if user == "testecs":    
-    MEDIASERVER_URL = "http://test.ecsdev.ep3.at"
-elif user == "shredder":
-    MEDIASERVER_URL = "http://s.ecsdev.ep3.at"
-    
