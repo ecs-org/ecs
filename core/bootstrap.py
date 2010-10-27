@@ -285,6 +285,8 @@ def auth_user_developers():
         ('amir', u'amir', u'hassan', 'amir@viel-zu.org'),
         ('scripty', u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com'),
         ('froema', u'Markus', u'Froehlich', 'froema@ep3.at'),
+        ('nadia', u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
+        ('max', u' Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
     )
     
     for dev in developers:
