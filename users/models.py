@@ -6,7 +6,6 @@ from django_extensions.db.fields.json import JSONField
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
-    gender = models.CharField(max_length=1, choices=(('w', 'Frau'), ('m', 'Herr')))
     last_password_change = models.DateTimeField(default=datetime.datetime.now)
     approved_by_office = models.BooleanField(default=False)
     indisposed = models.BooleanField(default=False)
@@ -21,6 +20,22 @@ class UserProfile(models.Model):
 
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
+    
+    gender = models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')))
+    title = models.CharField(max_length=30, blank=True)
+    organisation = models.CharField(max_length=180, blank=True)
+    jobtitle = models.CharField(max_length=130, blank=True)
+    swift_bic = models.CharField(max_length=11, blank=True)
+    iban = models.CharField(max_length=40, blank=True)
+    
+    address1 = models.CharField(max_length=60, blank=True)
+    address2 = models.CharField(max_length=60, blank=True)
+    zip_code = models.CharField(max_length=10, blank=True)
+    city = models.CharField(max_length=80, blank=True)
+    phone = models.CharField(max_length=50, blank=True)
+    fax = models.CharField(max_length=45, blank=True)
+    
+    social_security_number = models.CharField(max_length=10, blank=True)
     
     def __unicode__(self):
         return unicode(self.user.username)

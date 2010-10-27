@@ -14,7 +14,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import send_html_email
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, MarkUserIndisposedForm
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, MarkUserIndisposedForm, UserForm, ProfileForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -166,6 +166,20 @@ def indisposed_userlist(request):
 def profile(request):
     return render(request, 'users/profile.html', {
         'profile_user': request.user,
+    })
+    
+def edit_profile(request):
+    user_form = UserForm(request.POST or None, prefix='user', instance=request.user)
+    profile_form = ProfileForm(request.POST or None, prefix='profile', instance=request.user.get_profile())
+    
+    if profile_form.is_valid() and user_form.is_valid():
+        user_form.save()
+        profile_form.save()
+        return HttpResponseRedirect(reverse('ecs.users.views.profile'))
+        
+    return render(request, 'users/profile_form.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
     })
 
 def mark_indisposed(request):

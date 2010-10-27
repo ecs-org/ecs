@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from ecs.users.models import UserProfile
 
 class RegistrationForm(forms.Form):
     gender = forms.ChoiceField(choices=(('f', 'Frau'), ('m', 'Herr')))
@@ -25,3 +26,16 @@ class RequestPasswordResetForm(forms.Form):
 
 class MarkUserIndisposedForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all())
+    
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('gender', 'title', 'organisation', 'jobtitle', 'swift_bic', 'iban',
+            'address1', 'address2', 'zip_code', 'city', 'phone', 'fax', 'social_security_number',
+        )
+        
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
+

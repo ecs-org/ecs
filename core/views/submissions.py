@@ -215,6 +215,19 @@ def create_submission_form(request):
     else:
         form = SubmissionFormForm(request.POST or None)
         formsets = get_submission_formsets(request.POST or None)
+        if request.method == 'GET':
+            # neither docstash nor POST data: this is a completely new submission
+            # => prepopulate submitter_* fields
+            profile = request.user.get_profile()
+            form.initial.update({
+                'submitter_contact_first_name': request.user.first_name,
+                'submitter_contact_last_name': request.user.last_name,
+                'submitter_email': request.user.email,
+                'submitter_contact_gender': profile.gender,
+                'submitter_contact_title': profile.title,
+                'submitter_organisation': profile.organisation,
+                'submitter_jobtitle': profile.jobtitle,
+            })
     
     doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
