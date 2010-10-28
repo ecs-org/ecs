@@ -87,9 +87,6 @@ ecs.setupFormFieldHelpers = function(context){
                 tbl.container.removeClass('textboxlist-loading');
             }
             var labels = [];
-            if(multiselect.name == 'medical_categories'){
-                console.log(currentValues);
-            }
             response.each(function(item){
                 if(currentValues.contains(item[0])){
                     if(!multiselect.disabled){
@@ -289,6 +286,9 @@ ecs.FormFieldController = new Class({
             this.setDisabled(true);
         }
         this.auto = options.auto || function(values){
+            if(!values.length){
+                return;
+            }
             var autoValue = values.some(function(x){ return !!x;})
             for(var i=0;i<this.fields.length;i++){
                 this.setValue(i, autoValue);
@@ -307,6 +307,9 @@ ecs.FormFieldController = new Class({
         }
         this.toggleTab = options.toggleTab;
         if(this.toggleTab){
+            this.fields.each(function(f){
+                f.addEvent('change', this.onFieldValueChange.bind(this));
+            }, this);
             this.onFieldValueChange(null, true);
         }
         this.onChange(null, true);
@@ -347,7 +350,7 @@ ecs.FormFieldController = new Class({
         else{
             f.value = val;
         }
-        this.onFieldValueChange(null, false);
+        f.fireEvent('change');
     },
     setValues: function(values){
         values.each(function(val, i){

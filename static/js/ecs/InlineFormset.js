@@ -16,7 +16,6 @@ ecs.InlineFormSet = new Class({
         offset: 0
     },
     initialize: function(containers, options){
-        console.log(containers);
         this.containers = $$(containers);
         this.setOptions(options);
         this.forms = containers.getElements(this.options.formSelector).flatten();

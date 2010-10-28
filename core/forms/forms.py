@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.forms.formsets import BaseFormSet, formset_factory
+from django.core.validators import EMPTY_VALUES
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 
@@ -54,6 +55,23 @@ class SubmissionEditorForm(forms.ModelForm):
         model = Submission
 
 
+AMG_FIELDS = (
+    'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
+    'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'submission_type', 'eudract_number', 
+    'pharma_checked_substance', 'pharma_reference_substance', 
+)
+
+MPG_FIELDS = (
+    'medtech_checked_product', 'medtech_reference_substance', 
+    'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol', 
+    'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations', 
+)
+
+def require_fields(form, fields):
+    for f in fields:
+        if f not in form.cleaned_data or form.cleaned_data[f] in EMPTY_VALUES:
+            form._errors[f] = form.error_class([form.fields[f].error_messages['required']])
+
 class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
 
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
@@ -71,7 +89,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     class Meta:
         model = SubmissionForm
         fields = (
-            'project_title', 'german_project_title', 'eudract_number', 'specialism', 'clinical_phase', 'already_voted', 'external_reviewer_suggestions',
+            'project_title', 'german_project_title', 'specialism', 'clinical_phase', 'already_voted', 'external_reviewer_suggestions',
             
             'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 
@@ -92,19 +110,15 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             
             'invoice_name', 'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name', 
             'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
-            'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 'pharma_checked_substance', 'pharma_reference_substance', 
+            'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 
+                        
+            'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity', 'additional_therapy_info', 
+            'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 'german_ethical_info', 
+            'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 'german_benefits_info', 'german_relationship_info', 
+            'german_concurrent_study_info', 'german_sideeffects_info', 'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 
+            'german_abort_info', 'german_dataaccess_info', 'german_financing_info', 'german_additional_info', 
             
-            'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
-            'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'submission_type',
-            
-            'medtech_checked_product', 'medtech_reference_substance', 
-            'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol', 
-            'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations', 'insurance_name', 'insurance_address_1', 
-            'insurance_phone', 'insurance_contract_number', 'insurance_validity', 'additional_therapy_info', 'german_summary', 'german_preclinical_results', 
-            'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 
-            'german_consent_info', 'german_risks_info', 'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
-            'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 'german_abort_info', 'german_dataaccess_info', 
-            'german_financing_info', 'german_additional_info', 'study_plan_blind', 'study_plan_observer_blinded', 'study_plan_randomized', 'study_plan_parallelgroups', 
+            'study_plan_blind', 'study_plan_observer_blinded', 'study_plan_randomized', 'study_plan_parallelgroups', 
             'study_plan_controlled', 'study_plan_cross_over', 'study_plan_placebo', 'study_plan_factorized', 'study_plan_pilot_project', 'study_plan_equivalence_testing', 
             'study_plan_misc', 'study_plan_number_of_groups', 'study_plan_stratification', 'study_plan_sample_frequency', 'study_plan_primary_objectives', 
             'study_plan_null_hypothesis', 'study_plan_alternative_hypothesis', 'study_plan_secondary_objectives', 'study_plan_alpha', 'study_plan_power', 
@@ -112,7 +126,8 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
             'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
-        )
+        ) + AMG_FIELDS + MPG_FIELDS
+
         widgets = {
             'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
             'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
@@ -122,6 +137,13 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         cleaned_data = super(SubmissionFormForm, self).clean()
         cleaned_data['project_type_reg_drug'] = any(self.cleaned_data.get(f, False) for f in ('project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication'))
         cleaned_data['project_type_medical_device'] = any(self.cleaned_data.get(f, False) for f in ('project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 'project_type_medical_device_performance_evaluation'))
+        
+        if any(cleaned_data.get(f, False) for f in ('project_type_reg_drug', 'project_type_non_reg_drug')):
+            require_fields(self, AMG_FIELDS)
+
+        if cleaned_data.get('project_type_medical_device', False):
+            require_fields(self, MPG_FIELDS)
+
         return cleaned_data
 
 ## documents ##
