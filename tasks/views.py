@@ -17,7 +17,7 @@ def task_backlog(request):
     })
 
 def my_tasks(request, template='tasks/mine.html'):
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', '-assigned_at')
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('workflow_token__deadline', 'assigned_at', 'task_type__name')
     related_url = request.GET.get('url', None)
     if related_url:
         related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
