@@ -67,6 +67,10 @@ MPG_FIELDS = (
     'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations', 
 )
 
+INSURANCE_FIELDS = (
+    'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
+)
+
 def require_fields(form, fields):
     for f in fields:
         if f not in form.cleaned_data or form.cleaned_data[f] in EMPTY_VALUES:
@@ -111,8 +115,8 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'invoice_name', 'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name', 
             'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 
-                        
-            'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity', 'additional_therapy_info', 
+            
+            'additional_therapy_info', 
             'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 'german_ethical_info', 
             'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 'german_benefits_info', 'german_relationship_info', 
             'german_concurrent_study_info', 'german_sideeffects_info', 'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 
@@ -126,7 +130,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_population_per_protocol', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
             'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
-        ) + AMG_FIELDS + MPG_FIELDS
+        ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
         widgets = {
             'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
@@ -143,6 +147,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
         if cleaned_data.get('project_type_medical_device', False):
             require_fields(self, MPG_FIELDS)
+            
+        if any(cleaned_data.get(f, False) for f in ('project_type_medical_device_without_ce', 'project_type_reg_drug', 'project_type_non_reg_drug')):
+            require_fields(self, INSURANCE_FIELDS)
 
         return cleaned_data
 
