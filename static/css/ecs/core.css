@@ -221,6 +221,13 @@ li.TypedChoiceField select {
 li.NullBooleanField select {
   width: 8em;
 }
+li.TypedChoiceField ul{
+    float: left;
+}
+li.TypedChoiceField ul > li label{
+    float: none;
+    margin-left: none;
+}
 input[type=submit] {
   float: right;
   color: #fff;

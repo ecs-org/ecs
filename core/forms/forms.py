@@ -95,7 +95,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 'pharma_checked_substance', 'pharma_reference_substance', 
             
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
-            'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'medtech_checked_product', 'medtech_reference_substance', 
+            'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'submission_type',
+            
+            'medtech_checked_product', 'medtech_reference_substance', 
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol', 
             'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations', 'insurance_name', 'insurance_address_1', 
             'insurance_phone', 'insurance_contract_number', 'insurance_validity', 'additional_therapy_info', 'german_summary', 'german_preclinical_results', 

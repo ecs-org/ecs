@@ -32,6 +32,7 @@
                 '{{ nontesteduseddrug_formset.prefix }}', 
                 '{{ foreignparticipatingcenter_formset.prefix }}', 
             ].map(function(prefix){
+                console.log(prefix);
                 return new ecs.InlineFormSet($(prefix + '_formset'), {
                     prefix: prefix
                 });

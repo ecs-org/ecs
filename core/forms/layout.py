@@ -61,6 +61,7 @@ SUBMISSION_FORM_TABS = (
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
             'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
+            'submission_type',
         ]),
     ]),
     (u'MPG', [

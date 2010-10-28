@@ -175,6 +175,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('3.2.4', 'substance_p_c_t_application_type', u'Anwendungsart(en)'),
     FieldInfo('3.2.5', 'substance_p_c_t_gcp_rules', u'Wurde(n), die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt?'),
     FieldInfo('3.2.6', 'substance_p_c_t_final_report', u'Liegt ein Abschlußbericht vor?', help_text=u"Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein Gutachten des Arzneimittelbeirates über den Reiter Unterlagen hoch"),
+    FieldInfo(None, 'submission_type', u'Einreichen als'),
     # 4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt
     FieldInfo('4.1', 'medtech_product_name', u'Bezeichnung des Produktes'),
     FieldInfo('4.2', 'medtech_manufacturer', u'Hersteller'),
