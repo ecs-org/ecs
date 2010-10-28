@@ -22,20 +22,9 @@ class MailTestCase(EcsTestCase):
         settings.EMAIL_WHITELIST=[]
               
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
-        import ecs.ecsmail.config.boot
+        import ecs.ecsmail.config
         self.mailclient = RouterConversation("somedude@notexisting.blu", "requests_tests")
 
-        #from ecs.utils.raise_thread import ThreadWithExc
-        #import asyncore 
-        #logloader = lambda: utils.make_fake_settings('127.0.0.1', settings.RELAY_CONFIG['port']) 
-        #sys.path.append(os.getcwd()) 
-        #self.logserver = logloader()
-        #self.logserver.receiver.start()
-        #logging.info("SMTPReceiver started on %s:%d." % ('127.0.0.1', settings.RELAY_CONFIG['port']))
-        #self.logserver.poller = ThreadWithExc(target=asyncore.loop, kwargs={'timeout':0.1, 'use_poll':True})
-        #self.logserver.poller.start() 
-        #print (self.logserver.poller)
-       
     @classmethod
     def teardownClass(self):
         settings.EMAIL_WHITELIST=  self.saved_EMAIL_WHITELIST
