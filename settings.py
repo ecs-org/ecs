@@ -412,3 +412,5 @@ if 'test' in sys.argv:
 if 'test' in sys.argv or 'runserver' in sys.argv:
     from ecsmail_workaround_settings import *
 
+import djcelery
+djcelery.setup_loader()
