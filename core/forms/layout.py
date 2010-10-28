@@ -70,8 +70,8 @@ SUBMISSION_FORM_TABS = (
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
     ]),
-    (u'Massnahmen', [
-        (u'Massnahmen', ['additional_therapy_info',]),
+    (u'Maßnahmen', [
+        (u'Maßnahmen', ['additional_therapy_info',]),
     ]),
     (u'Biometrie', [
         (u'Biometrie', [

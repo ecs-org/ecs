@@ -181,8 +181,8 @@ class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseForm
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
-MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=1)
-RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=1)
+MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=0)
+RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=0)
 
 class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
