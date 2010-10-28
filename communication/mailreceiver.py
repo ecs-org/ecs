@@ -2,9 +2,10 @@
 import logging
 import re
 import hashlib
+
 from socket import gethostbyname
+
 from lamson.routing import route, route_like, stateless
-from lamson import view, queue
 from lamson.bounce import bounce_to
 from lamson.server import SMTPError
 

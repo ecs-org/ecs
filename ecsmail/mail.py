@@ -48,7 +48,6 @@ def __to_message(message):
         #    message.base.content_encoding['Content-Type'] = ('multipart/mixed', {}) 
         #else:
         #   message.base.content_encoding['Content-Type'] = ('multipart/alternative', {}) 
-   
     if message.multipart: 
         message.base.body = None 
         if message.Body: 
@@ -57,30 +56,32 @@ def __to_message(message):
             message.base.attach_text(message.Html, 'text/html') 
         for args in message.attachments: 
             message._encode_attachment(**args) 
-   
     elif message.Body: 
         message.base.body = message.Body 
         message.base.content_encoding['Content-Type'] = ('text/plain', {}) 
-   
     elif message.Html: 
         message.base.body = message.Html 
         message.base.content_encoding['Content-Type'] = ('text/html', {}) 
    
     return encoding.to_message(message.base)             
 
-def send_mail(subject, message, from_email, recipient_list, message_html=None, attachments=None, **kwargs):
+
+def send_mail(subject, message, from_email, recipient_list, message_html=None, attachments=None, callback=None, **kwargs):
     '''
     send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), 
-    puts messages to send into celery queue and returns list of messageids of messages to be sent
+    puts messages to send into celery queue
+    returns a list of (messageid, rawmessage) for each messages to be sent
+    if callback is set to a celery task:
+       it will be called on every single recipient delivery with callback(msgid, status)
     '''
-    # XXX: make a list if only one recipient (and therefore string) is there
+    # make a list if only one recipient (and therefore string) is there
     if isinstance(recipient_list, basestring):
         recipient_list = [recipient_list]
  
     # filter out recipients which are not in the whitelist
     mylist = set(recipient_list)
     bad = None
-    if settings.EMAIL_WHITELIST:
+    if hasattr(settings, "EMAIL_WHITELIST") and settings.EMAIL_WHITELIST:
         bad = set([x for x in recipient_list if x not in settings.EMAIL_WHITELIST])
     if bad:
         print 'BAD EMAILS:', mylist, bad
@@ -96,12 +97,8 @@ def send_mail(subject, message, from_email, recipient_list, message_html=None, a
         mess['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
         mess['Message-ID'] = messageid
         mess = __to_message(mess)
-        queued_mail_send.delay(mess, To=recipient, From=from_email)
-        sentids += messageid
+
+        # for each recipient, make one entry in the queue 
+        queued_mail_send.delay(messageid, mess, To=recipient, From=from_email, callback)
+        sentids += (messageid, mess)
     return sentids
- 
-def send_html_email(subject, message_html, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, attachments=None, **kwargs):
-    from ecs.ecsmail.persil import whitewash
-    message = whitewash(message_html)
-    kwargs.setdefault('fail_silently', False)
-    return send_mail(subject, message, from_email, recipient_list, message_html, attachments=attachments, **kwargs)

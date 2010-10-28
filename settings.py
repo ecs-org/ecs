@@ -259,9 +259,9 @@ RENDER_MEMCACHE_MAXSIZE = 2**29
 
 # mail lamson config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 # EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 
 # ecsmail server settings
 ECSMAIL = {
@@ -270,7 +270,7 @@ ECSMAIL = {
     'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
-    'handlers': ['ecs.ecsmail.app.handlers.mailreceiver'],
+    'handlers': ['ecs.communication.mailreceiver'],
     'trusted_sources': ['127.0.0.1'],
     'authoritative_domain': 'localhost',
     }
