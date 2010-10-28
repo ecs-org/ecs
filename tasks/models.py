@@ -50,6 +50,13 @@ class Task(models.Model):
     accepted = models.BooleanField(default=False)
     
     objects = TaskManager()
+
+    def save(self, *args, **kwargs):
+        rval = super(Task, self).save(*args, **kwargs)
+        if not self.workflow_token.deadline:
+            self.workflow_token.deadline = datetime.datetime.now() + datetime.timedelta(days=30)
+            self.workflow_token.save()
+        return rval
     
     @property
     def locked(self):
