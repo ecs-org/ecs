@@ -6,6 +6,9 @@ ecs.setupRichTextEditor = function(textArea, readonly){
         return
     }
     display.addEvent('click', function(e){
+        if(textArea.disabled){
+            return;
+        }
         textArea.show();
         var editable = textArea.retrieve('MooEditable');
         if(editable){
@@ -33,7 +36,7 @@ ecs.setupRichTextEditor = function(textArea, readonly){
 };
 
 ecs.clearFormFields = function(context){
-    context = $(context || document);
+    context = $(context || document.body);
     context.getElements('input[type=text], textarea').each(function(input){
         input.setProperty('value', '');
     });
@@ -42,6 +45,18 @@ ecs.clearFormFields = function(context){
     });
     context.getElements('span.errors').each(function(errors){
         errors.dispose();
+    });
+};
+
+ecs.disabledFormFields = function(context, disable){
+    context = $(context || document.body);
+    context.getElements('input, select, textarea').each(function(field){
+        if(!$defined(disable) || disable){
+            field.setProperty('disabled', 'disabled');
+        }
+        else{
+            field.removeProperty('disabled');
+        }
     });
 };
 
@@ -219,6 +234,7 @@ ecs.setupInvestigatorFormSet = function(tabController, readonly){
 
 ecs.setupForms = function(){
     var tabHeaders = $$('.tab_headers');
+    var setup = {};
     if(tabHeaders.length){
         var tabController = new ecs.TabController($$('.tab_header_groups > li'));
         var mainForm = document.getElement('form.tabbed.main');
@@ -227,12 +243,14 @@ ecs.setupForms = function(){
                 tabController: tabController,
                 autosaveInterval: 120
             });
+            setup.mainForm = form;
         }
         var readonly = true;
         if(document.getElement('.form.main').tagName == 'FORM'){
             readonly = false;
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);
+        setup.tabController = tabController;
     }
     ecs.setupFormFieldHelpers();
 
@@ -260,6 +278,7 @@ ecs.setupForms = function(){
             return false;
         });
     });
+    return setup;
 };
 
 ecs.FormFieldController = new Class({
@@ -267,7 +286,7 @@ ecs.FormFieldController = new Class({
         fields = fields.map($);
         this.fields = fields;
         if(options.disable){
-            this.setDisabled();
+            this.setDisabled(true);
         }
         this.auto = options.auto || function(values){
             var autoValue = values.some(function(x){ return !!x;})
@@ -286,7 +305,16 @@ ecs.FormFieldController = new Class({
                 }
             }, this);
         }
+        this.toggleTab = options.toggleTab;
+        if(this.toggleTab){
+            this.onFieldValueChange(null, true);
+        }
         this.onChange(null, true);
+    },
+    onFieldValueChange: function(e, initial){
+        if(this.toggleTab){
+            this.toggleTab.tab.setDisabled(!this.getValues().some(function(x){ return !!x;}));
+        }
     },
     onChange: function(e, initial){
         var values = this.sources.map(this.getValue, this);
@@ -319,6 +347,7 @@ ecs.FormFieldController = new Class({
         else{
             f.value = val;
         }
+        this.onFieldValueChange(null, false);
     },
     setValues: function(values){
         values.each(function(val, i){

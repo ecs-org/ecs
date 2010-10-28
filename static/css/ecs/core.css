@@ -84,6 +84,10 @@
   color: #fff !important;
   border: 1px solid #ff0000;
 }
+.tab_headers .disabled a {
+    background-color: #ccccdd;
+    color: #999999;
+}
 .header_actions {
   position: absolute;
   right: 0;

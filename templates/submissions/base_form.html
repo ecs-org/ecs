@@ -173,12 +173,18 @@
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function(){
-            ecs.setupForms();
+            var setup = ecs.setupForms();
+
             new ecs.FormFieldController(['id_project_type_reg_drug'], {
                 disable: true, 
                 sourceFieldClass: 'subchoice',
                 sources: ['id_project_type_reg_drug_within_indication', 'id_project_type_reg_drug_not_within_indication'],
+                toggleTab: {
+                    tab: setup.tabController.getTabForElement($('tabs-6')),
+                    message: '{% trans "This tab may only be used when 2.1.2 is selected." %}'
+                }
             });
+
             new ecs.FormFieldController(['id_project_type_medical_device'], {
                 disable: true,
                 sourceFieldClass: 'subchoice',
@@ -186,8 +192,13 @@
                     'id_project_type_medical_device_with_ce', 
                     'id_project_type_medical_device_without_ce',
                     'id_project_type_medical_device_performance_evaluation'
-                ]
+                ],
+                toggleTab: {
+                    tab: setup.tabController.getTabForElement($('tabs-7')),
+                    message: '% trans "This tab may only be used when 2.1.4 is selected." %}'
+                }
             });
+
         });
     </script>
 {% endblock %}

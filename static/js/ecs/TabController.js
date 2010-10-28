@@ -21,6 +21,10 @@ ecs.Tab = new Class({
         this.selected = selected;
         this.fireEvent(selected ? 'select' : 'deselect', this);
     },
+    setDisabled: function(disabled){
+        this.setClass('disabled', disabled);
+        ecs.disabledFormFields(this.panel, disabled);
+    },
     remove: function(){
         this.header.removeEvent('click', this.clickHandler);
         this.clickHandler = null;

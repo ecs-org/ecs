@@ -199,7 +199,7 @@ class SubmissionForm(models.Model):
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 
     project_title = models.TextField()
-    eudract_number = models.CharField(max_length=60, null=True)
+    eudract_number = models.CharField(max_length=60, null=True, blank=True)
     protocol_number = models.CharField(max_length=60, blank=True)
     external_reviewer_suggestions = models.TextField(null=True, blank=True)
     #submission_type = models.CharField(choices=SUBMISSION_TYPE_CHOICES, default=1)
