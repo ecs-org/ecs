@@ -78,3 +78,10 @@ class TaskListFilterForm(forms.Form):
     mine = forms.BooleanField(required=False)
     open = forms.BooleanField(required=False)
     proxy = forms.BooleanField(required=False)
+
+    sorting = forms.ChoiceField(required=False, choices=(
+        ('deadline', 'Deadline'),
+        ('oldest', 'Oldest'),
+        ('newest', 'Newest'),
+    ))
+

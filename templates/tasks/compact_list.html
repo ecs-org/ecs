@@ -6,6 +6,9 @@
 {% endif %}
 <form id="task_list_filter" action="" method="post">
     <div class="task_list_choose">
+        <label class="task_sorting">{% trans "Sorting" %}</label> {{ filterform.sorting }}
+    </div>
+    <div class="task_list_choose">
         {{ filterform.mine }} <label class="task_mine">{% trans "Mine" %}</label>
         {{ filterform.open }} <label class="task_open">{% trans "Open" %}</label>
         {{ filterform.proxy }} <label class="task_proxy">{% trans "Proxy" %}</label>

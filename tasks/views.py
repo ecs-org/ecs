@@ -17,15 +17,6 @@ def task_backlog(request):
     })
 
 def my_tasks(request, template='tasks/mine.html'):
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', 'workflow_token__deadline', 'assigned_at', 'task_type__name')
-    related_url = request.GET.get('url', None)
-    if related_url:
-        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
-        if len(related_tasks) == 1:
-            return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
-        elif related_tasks:
-            pass # XXX: how do we handle this case?
-
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
     filter_defaults = dict((x, True) for x in TaskListFilterForm.base_fields.iterkeys())
@@ -37,6 +28,28 @@ def my_tasks(request, template='tasks/mine.html'):
     usersettings.task_filter = filterform.cleaned_data
     usersettings.save()
     
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type')
+    sorting = filterform.cleaned_data['sorting']
+    order_by = ['task_type__name']
+    if sorting == 'deadline':
+        order_by.append('workflow_token__deadline')
+    elif sorting == 'oldest':
+        order_by.append('workflow_token__created_at')
+    elif sorting == 'newest':
+        order_by.append('-workflow_token__created_at')
+    order_by.append('assigned_at')
+    print order_by
+
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by(*order_by)
+    related_url = request.GET.get('url', None)
+    if related_url:
+        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
+        if len(related_tasks) == 1:
+            return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
+        elif related_tasks:
+            pass # XXX: how do we handle this case?
+
+
     try:
         submission_pk = int(request.GET['submission'])
     except (KeyError, ValueError):

@@ -6,5 +6,10 @@
               $('task_list_filter').submit();
           });
       });
+      $$('#task_list_filter select').each(function(input){
+          input.addEvent('change', function(){
+              $('task_list_filter').submit();
+          });
+      });
   });
 </script>
