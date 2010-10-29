@@ -1,7 +1,11 @@
-from email.Utils import make_msgid
+# -*- coding: utf-8 -*-
+
+import logging
 from time import gmtime, strftime
+from email.Utils import make_msgid
 
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 from lamson import encoding
 from lamson.mail import MailResponse
@@ -84,7 +88,8 @@ def send_mail(subject, message, from_email, recipient_list, message_html=None, a
     if hasattr(settings, "EMAIL_WHITELIST") and settings.EMAIL_WHITELIST:
         bad = set([x for x in recipient_list if x not in settings.EMAIL_WHITELIST])
     if bad:
-        print 'BAD EMAILS:', mylist, bad
+        logger = logging.getLogger()
+        logger.warning('BAD EMAILS: %s are bad out of %s' % (str(bad), str(mylist)))
         recipient_list = list(mylist - bad)
 
     sentids = []
@@ -99,6 +104,13 @@ def send_mail(subject, message, from_email, recipient_list, message_html=None, a
         mess = __to_message(mess)
 
         # for each recipient, make one entry in the queue 
-        queued_mail_send.delay(messageid, mess, To=recipient, From=from_email, callback)
-        sentids += (messageid, mess)
+        queued_mail_send.apply_async(args=[messageid, mess, recipient, from_email], countdown=3) # , callback
+        sentids += [[messageid, mess]]
     return sentids
+
+
+def send_html_email(subject, message_html, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, attachments=None, callback=None, **kwargs):
+    from ecs.ecsmail.persil import whitewash
+    message = whitewash(message_html)
+    kwargs.setdefault('fail_silently', False)
+    return send_mail(subject, message, from_email, recipient_list, message_html, attachments=attachments, callback=callback, **kwargs)

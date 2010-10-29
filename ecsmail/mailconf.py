@@ -17,7 +17,7 @@ relay.deliver = ecs.ecsmail.monkey.deliver
 
 receiver = SMTPReceiver(settings.ECSMAIL ['listen'], settings.ECSMAIL ['port'])
 
-Router.defaults({'host': '.+'})
+Router.defaults(host= '.+')
 Router.load(settings.ECSMAIL ['handlers'])
 Router.RELOAD = False
-Router.UNDELIVERABLE_QUEUE = queue.Queue(os.path.join(settings.ECSMAIL ['queue_dir'], "undeliverable"))
+Router.UNDELIVERABLE_QUEUE = queue.Queue(settings.ECSMAIL ['queue_dir'])

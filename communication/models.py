@@ -3,6 +3,7 @@
 import datetime, uuid
 import traceback
 import hashlib
+import logging
 
 from django.conf import settings
 from django.db import models
@@ -20,7 +21,7 @@ MESSAGE_ORIGIN_BOB = 2
 DELIVERY_STATES = (
     ("new", "new"),
     ("pending", "pending"),
-    ("started", "started")
+    ("started", "started"),
     ("success", "success"),
     ("failure", "failure"),
     ("retry", "retry"),
@@ -169,9 +170,9 @@ class Message(models.Model):
     soft_bounced = models.BooleanField(default=False)
     text = models.TextField()
     
-    rawmsg = models.TextField()
-    rawmsg_msgid = models.CharField(max_length=250, db_index=True)
-    rawmsg_digest_hex = models.CharField(max_length=32, db_index=True) 
+    rawmsg = models.TextField(null=True)
+    rawmsg_msgid = models.CharField(max_length=250, null=True, db_index=True)
+    rawmsg_digest_hex = models.CharField(max_length=32, null=True, db_index=True) 
     
     origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
     
@@ -189,7 +190,7 @@ class Message(models.Model):
     
     @property
     def return_address(self):
-        return '%s@%s' % (self.return_username, settings.FROM_DOMAIN)
+        return '%s@%s' % (self.return_username, settings.ECSMAIL ['authoritative_domain'])
     
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
@@ -199,8 +200,10 @@ class Message(models.Model):
                     from_email=self.return_address, recipient_list=self.receiver.email,
                     callback=subtask(update_smtp_delivery))
                 self.smtp_delivery_state = "pending"
+                logger = logging.getLogger("communication")
+                logger.info("test: %s %s" % (self.return_address, self.receiver.email))
                 self.rawmsg_msgid, self.rawmsg = msg_list[0]
-                self.rawmsg_digest_hex=hashlib.md5(self.rawmsg).hexdigest()
+                self.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
             except:
                 traceback.print_exc()
                 self.smtp_delivery_state = 'failure'

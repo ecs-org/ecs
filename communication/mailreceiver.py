@@ -14,13 +14,12 @@ from django.contrib.auth.models import User
 
 from ecs.communication.models import Message
 from ecs.ecsmail.persil import whitewash
-from ecs.ecsmail.models import RawMail
 
 @route(".+")
 def SOFT_BOUNCE(message):
     __checkConstraints(message)
     prevBounce, ecshash = __findPreviousBounce(message)
-    __logRawMessage(message, ecshash)
+    # __logRawMessage(message, ecshash)
     
     # notify users about soft bounces only once
     if prevBounce is None:
@@ -36,7 +35,7 @@ def SOFT_BOUNCE(message):
 def HARD_BOUNCE(message):
     __checkConstraints(message)
     ecsmsg, ecshash = __findInitiatingMessage(message)
-    __logRawMessage(message, ecshash)
+    # __logRawMessage(message, ecshash)
     
     if ecsmsg:
         body = __prepareBody(message)
@@ -120,9 +119,6 @@ def __stripLongestQuotation(body):
 
     print "\n".join(before + after)
 
-def __logRawMessage(message, ecshash=None):
-    rawMail = RawMail(message_digest_hex=hashlib.md5(message.original).hexdigest(), ecshash=ecshash, data=message.original)
-    rawMail.save()
 
 def __checkConstraints(message):
     if len(message.original) > 1024*1024:
@@ -132,17 +128,18 @@ def __checkConstraints(message):
 @bounce_to(soft=SOFT_BOUNCE, hard=HARD_BOUNCE)
 @stateless
 def START(message, address=None, host=None):
-    from ecs.ecsmail.config.boot import relay
+    from ecs.ecsmail.mailconf import relay
     __checkConstraints(message)
 
     if host == settings.FROM_DOMAIN: # we acccept mail for this address
         ecsmsg,ecshash = __findInitiatingMessage(message)
 
-        __logRawMessage(message, ecshash)
         logging.info('REPLY %s %s %s %s %s' % ( ecshash, ecsmsg, address, host, type(message)))
 
         body = __prepareBody(message)        
-        ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg)
+        ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg, 
+            raww_msgid= message.id, rawmsg=message.original, rawmsg_digest=hashlib.md5(message.original).hexdigest())
+    
     elif message.Peer[0] in settings.LAMSON_ALLOWED_RELAY_HOSTS:
         host_addr = gethostbyname(host);
         local_addr = gethostbyname("localhost")

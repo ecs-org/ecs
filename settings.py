@@ -2,7 +2,6 @@
 
 import os.path, platform, sys
 from django.core.exceptions import ImproperlyConfigured
-from celery.conf import SERVER_EMAIL
 
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
@@ -261,6 +260,7 @@ RENDER_MEMCACHE_MAXSIZE = 2**29
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
 
 # ecsmail server settings
@@ -328,8 +328,9 @@ CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.meetings.task_queue',
-    'ecs.documents.task_queue',
+    'ecs.communication.task_queue'
     'ecs.ecsmail.task_queue',
+    'ecs.documents.task_queue',
     'ecs.workflow.task_queue'
     #ecs.mediaserver.task_queue',
 )
@@ -404,3 +405,5 @@ if 'test' in sys.argv:
 elif 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+import djcelery
+djcelery.setup_loader()
