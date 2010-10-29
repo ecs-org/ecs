@@ -17,7 +17,7 @@ def task_backlog(request):
     })
 
 def my_tasks(request, template='tasks/mine.html'):
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('workflow_token__deadline', 'assigned_at', 'task_type__name')
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by('task_type__name', 'workflow_token__deadline', 'assigned_at', 'task_type__name')
     related_url = request.GET.get('url', None)
     if related_url:
         related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
@@ -28,15 +28,12 @@ def my_tasks(request, template='tasks/mine.html'):
 
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
-    taskfilter_session_key = 'tasks:filter'
-    default_filter = dict((x, True) for x in TaskListFilterForm.base_fields.iterkeys())
+    filter_defaults = dict((x, True) for x in TaskListFilterForm.base_fields.iterkeys())
     
-    filterdict = request.POST or request.session.get(taskfilter_session_key, usersettings.task_filter) or default_filter
+    filterdict = request.POST or usersettings.task_filter or filter_defaults
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
-    request.session[taskfilter_session_key] = filterform.cleaned_data
-    request.session.save()
     usersettings.task_filter = filterform.cleaned_data
     usersettings.save()
     
@@ -52,20 +49,24 @@ def my_tasks(request, template='tasks/mine.html'):
         submission = None
         amg = filterform.cleaned_data['amg']
         mpg = filterform.cleaned_data['mpg']
+        thesis = filterform.cleaned_data['thesis']
         other = filterform.cleaned_data['other']
-        if amg and mpg and other:
+        if amg and mpg and thesis and other:
             tasks = all_tasks
         else:
             tasks = all_tasks.exclude(content_type=submission_ct)
             amg_q = Q(data_id__in=Submission.objects.amg().values('pk').query)
             mpg_q = Q(data_id__in=Submission.objects.mpg().values('pk').query)
+            thesis_q = Q(data_id__in=Submission.objects.thesis().values('pk').query)
             submission_tasks = all_tasks.filter(content_type=submission_ct)
             if amg:
                 tasks |= submission_tasks.filter(amg_q)
             if mpg:
                 tasks |= submission_tasks.filter(mpg_q)
+            if thesis:
+                tasks |= submission_tasks.filter(thesis_q)
             if other:
-                tasks |= submission_tasks.filter(~amg_q & ~mpg_q)
+                tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~thesis_q)
 
     if filterform.cleaned_data['mine']:
         accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)

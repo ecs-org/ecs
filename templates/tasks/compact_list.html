@@ -13,6 +13,7 @@
     <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
         {{ filterform.amg }} <label for="id_amg" class="task_amg">{% trans "AMG" %}</label>
         {{ filterform.mpg }} <label for="id_mpg" class="task_mpg">{% trans "MPG" %}</label>
+        {{ filterform.thesis }} <label for="id_thesis" class="submission_thesis">{% trans "thesis" %}</label>
         {{ filterform.other }} <label for="id_other" class="task_other">{% trans "Other" %}</label>
     </div>
 </form>
@@ -41,8 +42,9 @@
             {% endifchanged %}
             <div>
                 {{ task.data }}
-                     (<a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">Annehmen</a> 
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">Ablehnen</a>)
+                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+                    | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
+                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">{% trans "Decline" %}</a>)
             </div>
         {% endfor %}
     </div>
@@ -55,7 +57,9 @@
             {% ifchanged task.task_type %}
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
+            {{ task.data }}
+            <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+            | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
         {% endfor %}
     </div>
 {% endif %}
@@ -67,7 +71,8 @@
             {% ifchanged task.task_type %}
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
-            <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }} (für {{ task.assigned_to }})</a>
+            <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+            | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
         {% endfor %}
     </div>
 {% endif %}
