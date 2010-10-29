@@ -40,16 +40,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(pk__in=submission_pks)
 
     def new(self):
-        filtered_submission_pks = set([x['pk'] for x in Submission.objects.all().values('pk')])
-        meeting_submissions = set()
-        for meeting in Meeting.objects.all():
-            for submission in meeting.submissions.all():
-                meeting_submissions.add(submission.pk)
-
-        for pk in meeting_submissions:
-            filtered_submission_pks.remove(pk)
-
-        return self.filter(pk__in=filtered_submission_pks)
+        return self.filter(meetings__isnull=True)
         
     def thesis(self):
         return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
