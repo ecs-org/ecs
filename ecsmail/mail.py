@@ -104,7 +104,8 @@ def send_mail(subject, message, from_email, recipient_list, message_html=None, a
         mess = __to_message(mess)
 
         # for each recipient, make one entry in the queue 
-        queued_mail_send.apply_async(args=[messageid, mess, recipient, from_email], countdown=3) # , callback
+        #queued_mail_send.apply_async(args=[messageid, mess, recipient, from_email], countdown=3) # , callback
+        queued_mail_send(messageid, mess, recipient, from_email) # , callback
         sentids += [[messageid, mess]]
     return sentids
 

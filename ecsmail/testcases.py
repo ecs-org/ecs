@@ -5,6 +5,7 @@ from time import gmtime, strftime
 from email.Utils import make_msgid
 
 from django.conf import settings
+import django.core.mail
 from django.core.mail import get_connection
 
 from lamson import routing
@@ -42,22 +43,22 @@ class MailTestCase(EcsTestCase):
         
     @classmethod
     def queue_clear(self):
-        self.connection.outbox = []
+        django.core.mail.outbox = []
         
     @classmethod
     def queue_count(self):
-        return len(self.connection.outbox) if hasattr(self.connection, "outbox") else 0
+        return len(django.core.mail.outbox) if hasattr(django.core.mail, "outbox") else 0
     
     @classmethod
     def queue_list(self):
-        return self.connection.outbox if hasattr(self.connection, "outbox") else []
+        return django.core.mail.outbox if hasattr(django.core.mail, "outbox") else []
     
     @classmethod
     def queue_get(self, key):
-        if not hasattr(self.connection, "outbox"): 
+        if not hasattr(django.core.mail, "outbox"): 
             raise KeyError("Empty Outbox")
         else:
-            return self.connection.outbox [key]
+            return django.core.mail.outbox [key]
     
     @classmethod
     def deliver(self, To, From, Subject, Body):
@@ -78,10 +79,10 @@ class MailTestCase(EcsTestCase):
     def is_delivered(self, pattern):
         ''' returns message that matches the regex (searched = msgbody), or False if not found '''
         regp = re.compile(pattern)
-        if not hasattr(self.connection, "outbox"):
+        if not hasattr(django.core.mail, "outbox"):
             return False # empty outbox, so pattern does not match
         
-        for key, msg in enumerate(self.connection.outbox):
+        for key, msg in enumerate(django.core.mail.outbox):
             if regp.search(str(msg)):
                 return msg
     

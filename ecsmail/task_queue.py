@@ -19,6 +19,8 @@ def queued_mail_send(msgid, message, To, From, callback=None, **kwargs):
         connection = mail.get_connection()
         connection.send_messages(list(message))
     except Exception as exc:
+        logger.error(str(exc))
+        raise
         """
         if callback:
             subtask(callback).delay(msgid, "retry")

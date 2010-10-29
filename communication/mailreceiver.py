@@ -72,8 +72,7 @@ def __findPreviousBounce(message):
         
     return previousBounce, ecshash
 
-def __parseEcsHash(address):
-    print "ecs hash address:", address 
+def __parseEcsHash(address): 
     mat = re.match('ecs-([^@]+)', address)
     if mat is not None:
         groups = mat.groups()
@@ -117,7 +116,7 @@ def __stripLongestQuotation(body):
     before = lines[:longestRange[0]]
     after = lines[longestRange[1]:]
 
-    print "\n".join(before + after)
+    #print "\n".join(before + after)
 
 
 def __checkConstraints(message):
@@ -131,7 +130,7 @@ def START(message, address=None, host=None):
     from ecs.ecsmail.mailconf import relay
     __checkConstraints(message)
 
-    if host == settings.FROM_DOMAIN: # we acccept mail for this address
+    if host == settings.ECSMAIL ['authoritative_domain']: # we acccept mail for this address
         ecsmsg,ecshash = __findInitiatingMessage(message)
 
         logging.info('REPLY %s %s %s %s %s' % ( ecshash, ecsmsg, address, host, type(message)))
@@ -140,7 +139,7 @@ def START(message, address=None, host=None):
         ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg, 
             raww_msgid= message.id, rawmsg=message.original, rawmsg_digest=hashlib.md5(message.original).hexdigest())
     
-    elif message.Peer[0] in settings.LAMSON_ALLOWED_RELAY_HOSTS:
+    elif message.Peer[0] in settings.ECSMAIL ['trusted_sources']:
         host_addr = gethostbyname(host);
         local_addr = gethostbyname("localhost")
 

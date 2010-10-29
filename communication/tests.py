@@ -1,4 +1,6 @@
+from nose.tools import ok_, eq_
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from ecs.core.models import Submission
 from ecs.communication.models import Message, Thread
@@ -7,6 +9,27 @@ from ecs.communication.testcases import CommunicationTestCase
 
 class CommunicationTest(CommunicationTestCase):        
     
+    def test_from_ecs_to_outside_and_back_to_us(self):
+        ''' 
+        this makes a new ecs internal message (which currently will send an email to the user)
+        and then answer to that email which is then forwared back to the original sender
+        '''
+        import logging
+        logger = logging.getLogger()
+        logger.info("list: %s" % str(self.queue_list()))
+        thread= self.create_thread("testsubject", "first message", self.alice, self.bob)
+        logger.info("list: %s" % str(self.queue_list()))
+        eq_(self.queue_count(), 1)
+        ok_(self.is_delivered("first message"))
+        
+        
+        self.queue_clear()
+        self.receive("".join(("ecs-", message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
+            "fromoutside@someplace.org", "testsubject", "second message")
+        eq_(self.queue_count(), 1)
+        # FIXME: this is naive, because it just tests if ecsmail is sending, but doesnt further
+
+
     def test_send_message(self):
         self.client.login(username='alice', password='password')
 
