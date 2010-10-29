@@ -249,4 +249,6 @@ class SubmissionListFilterForm(forms.Form):
     mpg = forms.BooleanField(required=False)
     thesis = forms.BooleanField(required=False)
     other = forms.BooleanField(required=False)
+    page = forms.CharField(required=False, widget=forms.HiddenInput())
+
 

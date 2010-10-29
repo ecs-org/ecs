@@ -5,7 +5,7 @@
 {% include "submissions/filterform.inc" %}
 
 <ol class="submission_widget_list">
-{% for submission in submissions %}
+{% for submission in submissions.object_list %}
     <li class="{% cycle 'even' 'odd' %}">
         {% with submission.current_submission_form as submission_form %}
             <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission.ec_number }}</a>
@@ -23,25 +23,63 @@
         {% endwith %}
     </li>
 {% endfor %}
-{% if not submissions|length %}
+{% if not submissions.object_list|length %}
     <li><em>{% trans "No Submissions." %}</em></li>
 {% endif %}
 </ol>
 
 <div class="paginator">
     <a href="{% url ecs.core.views.submission_list %}">{% trans "More" %}</a>
-    {{ submissions|length }} {% trans "von" %} {{ submissions_count }}
+    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
+    {% if not submissions.number == 1 %}
+        <a href="#" id="submission_widget_first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+    {% endif %}
+    {% if submissions.has_previous %}
+        <a href="#" id="submission_widget_prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+    {% endif %}
+    {% if submissions.has_next %}
+        <a href="#" id="submission_widget_next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+    {% endif %}
+    {% if not submissions.number == submissions.paginator.num_pages %}
+        <a href="#" id="submission_widget_last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+    {% endif %}
 </div>
 
 </div>
 
 <script type="text/javascript">
   window.addEvent('domready', function(){
+      var submission_list_filter = $('submission_list_filter');
+      var submission_list_page_input = submission_list_filter.getElementById('id_page');
       $$('#submission_list_filter input').each(function(input){
           input.addEvent('change', function(){
-              $('submission_list_filter').submit();
+              submission_list_filter.submit();
           });
       });
+{% if not submissions.number == 1 %}
+      $('submission_widget_first_page').addEvent('click', function(){
+          submission_list_page_input.value = 1;
+          submission_list_filter.submit();
+      });
+{% endif %}
+{% if submissions.has_previous %}
+      $('submission_widget_prev_page').addEvent('click', function(){
+          submission_list_page_input.value = parseInt(submission_list_page_input.value, 10) - 1;
+          submission_list_filter.submit();
+      });
+{% endif %}
+{% if submissions.has_next %}
+      $('submission_widget_next_page').addEvent('click', function(){
+          submission_list_page_input.value = parseInt(submission_list_page_input.value, 10) + 1;
+          submission_list_filter.submit();
+      });
+{% endif %}
+{% if not submissions.number == submissions.paginator.num_pages %}
+      $('submission_widget_last_page').addEvent('click', function(){
+          submission_list_page_input.value = {{ submissions.paginator.num_pages }};
+          submission_list_filter.submit();
+      });
+{% endif %}
   });
 </script>
 

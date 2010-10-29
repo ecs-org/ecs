@@ -12,5 +12,6 @@
         {{ filterform.thesis }} <label for="id_thesis" class="submission_thesis">{% trans "thesis" %}</label>
         {{ filterform.other }} <label for="id_other" class="submission_other">{% trans "Other" %}</label>
     </div>
+    {{ filterform.page }}
 </form>
 

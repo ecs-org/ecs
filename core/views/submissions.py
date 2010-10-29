@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import user_passes_test
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
@@ -479,7 +480,7 @@ def wizard(request):
     })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
-def submission_widget(request, template='submissions/widget.html', limit=5):
+def submission_list(request, template='submissions/internal_list.html', limit=10):
     usersettings = request.user.ecs_settings
     filter_defaults = dict((x, True) for x in SubmissionListFilterForm.base_fields.iterkeys())
 
@@ -487,10 +488,6 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
     filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
-    # save the filter the user settings
-    usersettings.submission_filter = filterform.cleaned_data
-    usersettings.save()
-    
     submissions_stage1 = Submission.objects.none()
     if filterform.cleaned_data['new']:
         submissions_stage1 |= Submission.objects.new()
@@ -519,17 +516,25 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
         submissions_stage2 |= submissions_stage1.filter(~amg_q & ~mpg_q & ~thesis_q)
 
     submissions = submissions_stage2.order_by('-current_submission_form__pk')
-    if limit:
-        submissions = submissions[:limit]
+    paginator = Paginator(submissions, limit, allow_empty_first_page=True)
+    try:
+        submissions = paginator.page(int(filterform.cleaned_data['page']))
+    except EmptyPage, InvalidPage:
+        submissions = paginator.page(1)
+        filterform.cleaned_data['page'] = 1
+        filterform = SubmissionListFilterForm(filterform.cleaned_data)
+        filterform.is_valid()
 
+    # save the filter in the user settings
+    usersettings.submission_filter = filterform.cleaned_data
+    usersettings.save()
+    
     return render(request, template, {
         'submissions': submissions,
-        'submissions_count': Submission.objects.count(),
         'filterform': filterform,
     })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
-def submission_list(request, template='submissions/internal_list.html'):
-    return submission_widget(request, template=template, limit=None)
-
+def submission_widget(request, template='submissions/widget.html'):
+    return submission_list(request, template=template, limit=5)
 
