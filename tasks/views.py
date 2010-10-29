@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.communication.models import Thread
@@ -19,8 +20,18 @@ def task_backlog(request):
 def my_tasks(request, template='tasks/mine.html'):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
-    filter_defaults = dict((x, True) for x in TaskListFilterForm.base_fields.iterkeys())
-    
+
+    filter_defaults = {
+        'amg': 'on',
+        'mpg': 'on',
+        'thesis': 'on',
+        'other': 'on',
+        'mine': 'on',
+        'open': 'on',
+        'proxy': 'on',
+        'sorting': 'deadline',
+    }
+
     filterdict = request.POST or usersettings.task_filter or filter_defaults
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean

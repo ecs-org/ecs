@@ -482,7 +482,17 @@ def wizard(request):
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def submission_list(request, template='submissions/internal_list.html', limit=10):
     usersettings = request.user.ecs_settings
-    filter_defaults = dict((x, True) for x in SubmissionListFilterForm.base_fields.iterkeys())
+
+    filter_defaults = {
+        'amg': 'on',
+        'mpg': 'on',
+        'thesis': 'on',
+        'other': 'on',
+        'new': 'on',
+        'next_meeting': 'on',
+        'b2': 'on',
+        'page': '1',
+    }
 
     filterdict = request.POST or usersettings.submission_filter or filter_defaults
     filterform = SubmissionListFilterForm(filterdict)
