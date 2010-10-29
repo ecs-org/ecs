@@ -115,7 +115,7 @@ class Command(BaseCommand):
             if not match:
                 continue
             
-            doctype_str = 'Patienteninformation' if match.group(2) else "PI's Curriculum Vit\xc3\xa6"
+            doctype_str = 'Patienteninformation' if match.group(2) else "Curriculum Vitae (CV)"
             doctype = DocumentType.objects.get(name=doctype_str)
 
             documents.append({
