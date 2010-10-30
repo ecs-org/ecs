@@ -1,3 +1,5 @@
+import logging
+
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -8,6 +10,7 @@ class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):    
         bootstrap.templates()
+        self.logger = logging.getLogger("EcsTestCase") 
         
     @classmethod
     def teardownClass(self):
@@ -45,4 +48,3 @@ class LoginTestCase(EcsTestCase):
         super(LoginTestCase, self).tearDown()
         self.client.logout()
 
-            

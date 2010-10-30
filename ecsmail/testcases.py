@@ -1,46 +1,52 @@
 # -*- coding: utf-8 -*-
 
 import re
-from time import gmtime, strftime
-from email.Utils import make_msgid
 
-from django.conf import settings
 import django.core.mail
-from django.core.mail import get_connection
+from django.conf import settings
+from django.core.mail import make_msgid
 
 from lamson import routing
-from lamson.mail import MailRequest, MailResponse
+from lamson.mail import MailRequest
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.ecsmail.mail import send_mail
+from ecs.ecsmail.mail import deliver as ecsmail_deliver
+from ecs.ecsmail.mail import create_mail
 
 
 class MailTestCase(EcsTestCase):
     '''
-    TestCase Class, for testing Mail
-    if you play with receive, you probably want to "from lamson.server import SMTPError" inside your tests, to check for smtperrorcodes
+    TestCase Class, for testing Mail inside the ecs environment
+    if you play with self.receive, you probably want to "from lamson.server import SMTPError" inside your tests,
+    to check for smtperrorcodes
     '''
     @classmethod
-    def setUpClass(self):      
+    def setUpClass(self):    
         # permit emails sent to all
         self.saved_EMAIL_WHITELIST = settings.EMAIL_WHITELIST
         settings.EMAIL_WHITELIST =[]
-              
+        
+        super(MailTestCase, self).setUpClass()      
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
         import ecs.ecsmail.mailconf as lamson_settings
 
     @classmethod
     def teardownClass(self):
         settings.EMAIL_WHITELIST = self.saved_EMAIL_WHITELIST
+        super(MailTestCase, self).teardownClass()
 
     def setUp(self):
         routing.Router.clear_states()
-        self.connection = get_connection()  # get django default mailbackend 
+        self.queue_clear()
         super(MailTestCase, self).setUp()
 
     def tearDown(self):
         super(MailTestCase, self).tearDown()
         
+    @staticmethod
+    def _entry_transform(entry):
+        return unicode(entry.message())
+    
     @classmethod
     def queue_clear(self):
         django.core.mail.outbox = []
@@ -51,41 +57,47 @@ class MailTestCase(EcsTestCase):
     
     @classmethod
     def queue_list(self):
-        return django.core.mail.outbox if hasattr(django.core.mail, "outbox") else []
+        if hasattr(django.core.mail, "outbox"):
+            return [self._entry_transform(x) for x in django.core.mail.outbox]
+        else:
+            return []
     
     @classmethod
     def queue_get(self, key):
         if not hasattr(django.core.mail, "outbox"): 
             raise KeyError("Empty Outbox")
         else:
-            return django.core.mail.outbox [key]
+            return self._entry_transform(django.core.mail.outbox [key])
     
     @classmethod
-    def deliver(self, To, From, Subject, Body):
+    def deliver(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, callback=None):
         ''' just call our standard email deliver '''
-        send_mail(Subject, Body, From, To)
+        return ecsmail_deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
         
     @classmethod
-    def receive(self, To, From, Subject, Body):
+    def receive(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, ):
         ''' Fakes an incoming message trough ecsmail server '''
-        messageid = make_msgid()
-        sample = MailResponse(To=To, From=From, Subject=Subject, Body=Body)
-        sample['Date'] = strftime("%a, %d %b %Y %H:%M:%S +0000", gmtime())
-        sample['Message-ID'] = messageid
-        msg = MailRequest('localhost', sample['From'], sample['To'], str(sample))
-        routing.Router.deliver(msg)
+        if isinstance(recipient_list, basestring):
+            recipient_list = [recipient_list]
 
+        sentids = []
+        for recipient in recipient_list:
+            msgid = make_msgid()
+            msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
+            routing.Router.deliver(MailRequest('localhost', from_email, recipient, str(msg.message())))
+            sentids += [[msgid, msg.message()]]
+            
+        return sentids
+    
     @classmethod
     def is_delivered(self, pattern):
         ''' returns message that matches the regex (searched = msgbody), or False if not found '''
         regp = re.compile(pattern)
-        if not hasattr(django.core.mail, "outbox"):
+        if self.queue_count() == 0:
             return False # empty outbox, so pattern does not match
         
-        for key, msg in enumerate(django.core.mail.outbox):
+        for msg in self.queue_list():
             if regp.search(str(msg)):
                 return msg
     
         return False # didn't find anything
-
-    

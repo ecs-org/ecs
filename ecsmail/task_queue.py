@@ -1,23 +1,24 @@
+import logging
+
 from celery.decorators import task
 from celery.task.sets import subtask
 from celery.exceptions import MaxRetriesExceededError
 
 from django.conf import settings
 from django.core import mail
-import logging
 
 @task() # (max_retries= 3)
-def queued_mail_send(msgid, message, To, From, callback=None, **kwargs):
+def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs):
     logger = queued_mail_send.get_logger(**kwargs)
     logger.debug("queued mail deliver id %s, from %s, to %s, callback %s, msg %s" %
-                (msgid, From, To, str(callback), repr(message)))
+                (msgid, from_email, recipient, str(callback), repr(msg)))
 
     if callback:
         subtask(callback).delay(msgid, "pending")
     
     try:
         connection = mail.get_connection()
-        connection.send_messages(list(message))
+        connection.send_messages([msg])
     except Exception as exc:
         logger.error(str(exc))
         raise

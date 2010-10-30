@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
 from django.contrib.auth.models import User
 
 from ecs.ecsmail.testcases import MailTestCase
@@ -27,4 +26,3 @@ class CommunicationTestCase(MailTestCase):
         thread = Thread.objects.create(subject=subject, sender=sender, receiver=receiver, task=task, submission=submission)
         thread.add_message(sender, message)
         return thread
-     

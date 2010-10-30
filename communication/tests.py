@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from nose.tools import ok_, eq_
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -14,22 +16,15 @@ class CommunicationTest(CommunicationTestCase):
         this makes a new ecs internal message (which currently will send an email to the user)
         and then answer to that email which is then forwared back to the original sender
         '''
-        import logging
-        logger = logging.getLogger()
-        logger.info("list: %s" % str(self.queue_list()))
         thread= self.create_thread("testsubject", "first message", self.alice, self.bob)
-        logger.info("list: %s" % str(self.queue_list()))
         eq_(self.queue_count(), 1)
         ok_(self.is_delivered("first message"))
         
+        self.receive("testsubject", "second message",
+            "fromoutside@someplace.org", 
+            "".join(("ecs-", message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
+            )
         
-        self.queue_clear()
-        self.receive("".join(("ecs-", message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
-            "fromoutside@someplace.org", "testsubject", "second message")
-        eq_(self.queue_count(), 1)
-        # FIXME: this is naive, because it just tests if ecsmail is sending, but doesnt further
-
-
     def test_send_message(self):
         self.client.login(username='alice', password='password')
 
@@ -127,6 +122,3 @@ class CommunicationTest(CommunicationTestCase):
         self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
-
-        
-
