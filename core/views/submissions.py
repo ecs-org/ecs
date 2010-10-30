@@ -481,20 +481,17 @@ def wizard(request):
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def submission_widget(request, template='submissions/widget.html', limit=5):
     usersettings = request.user.ecs_settings
-    submissionfilter_session_key = 'submissions:filter'
     filter_defaults = dict((x, True) for x in SubmissionListFilterForm.base_fields.iterkeys())
 
-    filterdict = request.POST or request.session.get(submissionfilter_session_key, usersettings.submission_filter) or filter_defaults
+    filterdict = request.POST or usersettings.submission_filter or filter_defaults
     filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
-    # save the filter in the session and in the user settings
-    request.session[submissionfilter_session_key] = filterform.cleaned_data
-    request.session.save()
+    # save the filter the user settings
     usersettings.submission_filter = filterform.cleaned_data
     usersettings.save()
     
-    submissions_stage1 = Submission.objects.filter(pk=None)
+    submissions_stage1 = Submission.objects.none()
     if filterform.cleaned_data['new']:
         submissions_stage1 |= Submission.objects.new()
     if filterform.cleaned_data['next_meeting']:
@@ -507,15 +504,19 @@ def submission_widget(request, template='submissions/widget.html', limit=5):
     if filterform.cleaned_data['b2']:
         submissions_stage1 |= Submission.objects.b2()
 
-    submissions_stage2 = submissions_stage1.filter(pk=None)
+    submissions_stage2 = submissions_stage1.none()
+    amg_q = Q(pk__in=Submission.objects.amg().values('pk').query)
+    mpg_q = Q(pk__in=Submission.objects.mpg().values('pk').query)
+    thesis_q = Q(pk__in=Submission.objects.thesis().values('pk').query)
+
     if filterform.cleaned_data['amg']:
-        submissions_stage2 |= submissions_stage1.amg()
+        submissions_stage2 |= submissions_stage1.filter(amg_q)
     if filterform.cleaned_data['mpg']:
-        submissions_stage2 |= submissions_stage1.mpg()
+        submissions_stage2 |= submissions_stage1.filter(mpg_q)
     if filterform.cleaned_data['thesis']:
-        submissions_stage2 |= submissions_stage1.thesis()
+        submissions_stage2 |= submissions_stage1.filter(thesis_q)
     if filterform.cleaned_data['other']:
-        submissions_stage2 |= submissions_stage1.exclude(is_amg=True).exclude(is_mpg=True).exclude(thesis=True).filter(current_submission_form__project_type_education_context=None)
+        submissions_stage2 |= submissions_stage1.filter(~amg_q & ~mpg_q & ~thesis_q)
 
     submissions = submissions_stage2.order_by('-current_submission_form__pk')
     if limit:

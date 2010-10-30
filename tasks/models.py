@@ -4,10 +4,12 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
+from django.core.urlresolvers import reverse
 
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
+from ecs.core.models import Submission
 
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
@@ -57,7 +59,13 @@ class Task(models.Model):
             self.workflow_token.deadline = datetime.datetime.now() + datetime.timedelta(days=30)
             self.workflow_token.save()
         return rval
-    
+
+    def get_preview_url(self):
+        if self.content_type == ContentType.objects.get_for_model(Submission):
+            return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.data.current_submission_form.pk})
+        else:
+            return None
+
     @property
     def locked(self):
         if not self.workflow_token_id:

@@ -72,8 +72,16 @@ class ManageTaskForm(forms.Form):
 class TaskListFilterForm(forms.Form):
     amg = forms.BooleanField(required=False)
     mpg = forms.BooleanField(required=False)
+    thesis = forms.BooleanField(required=False)
     other = forms.BooleanField(required=False)
 
     mine = forms.BooleanField(required=False)
     open = forms.BooleanField(required=False)
     proxy = forms.BooleanField(required=False)
+
+    sorting = forms.ChoiceField(required=False, choices=(
+        ('deadline', 'Deadline'),
+        ('oldest', 'Oldest'),
+        ('newest', 'Newest'),
+    ))
+
