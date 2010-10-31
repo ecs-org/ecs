@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core %} 
+{% load core i18n %} 
 
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
@@ -47,7 +47,7 @@
                 return false;
             });
             $('submit-button').addEvent('click', function(){
-                ecs.mainForm.submit('submit');
+                ecs.mainForm.submit('validate');
                 return false;
             });
             
@@ -65,6 +65,12 @@
             ].each(function(id){
                 ecs.setupRichTextEditor($(id));
             });
+            
+            {% if valid %}
+                new MooDialog.Confirm('{% trans "You filled out the form correctly. Do want to submit the study?" %}', function(){
+                    ecs.mainForm.submit('submit');
+                });
+            {% endif %}
         });
     </script>
 {% endblock %}

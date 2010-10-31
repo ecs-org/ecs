@@ -235,6 +235,7 @@ def create_submission_form(request):
         document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
+    valid = False
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -260,8 +261,9 @@ def create_submission_form(request):
             request.docstash['documents'] = list(documents)
             document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
             
+        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and (not doc_post or document_form.is_valid())
 
-        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
+        if submit and valid:
             if not request.user.get_profile().approved_by_office:
                 messages.add_message(request, messages.INFO, _('You cannot submit studies yet. Please wait until the office has approved your account.'))
             else:
@@ -293,6 +295,7 @@ def create_submission_form(request):
         'tabs': SUBMISSION_FORM_TABS,
         'document_form': document_form,
         'documents': request.docstash.get('documents', []),
+        'valid': valid,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
