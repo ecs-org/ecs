@@ -106,8 +106,10 @@
   background-color: #EFEFD1;
   padding: 5px;
 }
-.task_item a {
-  display: block;
+.task_item li {
+  float: left;
+  display: inline;
+  margin-right: 5px;
 }
 .task_list a, #task_main label, #task_main table {
   font-size: 10pt;
@@ -132,7 +134,7 @@
 #task_main h2, .TaskList h2 {
   display: block;
   font-size: 1.2em;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   font-weight: lighter;
   letter-spacing: 1px;
 }
@@ -140,7 +142,7 @@
   display: block;
   font-size: 1.0em;
   font-weight: lighter;
-  margin: 10px 0;
+  margin: 0 0 5px 0;
   letter-spacing: 1px;
 }
 a {

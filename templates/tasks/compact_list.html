@@ -23,31 +23,34 @@
 
 {% if accepted_tasks %}
     <div class="task_list">
-        <h2>Meine Tasks</h2>
-        {% for task in accepted_tasks %}
-        {% ifchanged task.task_type %}
-            <h3>{{ task.task_type }}</h3>
-        {% endifchanged %}
-        <div class="task_item">
-            {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-            <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}widget popup{% endif %}">{{ task.data }}</a>
-        </div>
+        <h2>{% trans "My Tasks" %}</h2>
+        {% regroup accepted_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
+                    <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}widget popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
         {% endfor %}
     </div>
 {% endif %}
 
 {% if assigned_tasks %}
     <div class="task_list">
-        <h2>Mir zugewiesene Tasks</h2>
-        {% for task in assigned_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            <div>
-                {{ task.data }}
+        <h2>{% trans "Tasks assigned to me" %}</h2>
+        {% regroup assigned_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>
-                    | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">{% trans "Decline" %}</a>)
+                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
             </div>
         {% endfor %}
     </div>
@@ -55,27 +58,34 @@
 
 {% if open_tasks %}
     <div class="task_list">
-        <h2>Offene Tasks</h2>
-        {% for task in open_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            {{ task.data }}
-            <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>
-            | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
+        <h2>{% trans "Open Tasks" %}</h2>
+        {% regroup open_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
+                    <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
         {% endfor %}
     </div>
 {% endif %}
 
 {% if proxy_tasks %}
     <div class="task_list">
-        <h2>{% trans 'Proxy Tasks' %}</h2>
-        {% for task in proxy_tasks %}
-            {% ifchanged task.task_type %}
-                <h3>{{ task.task_type }}</h3>
-            {% endifchanged %}
-            <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
-            | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
+        <h2>{% trans "Proxy Tasks" %}</h2>
+        {% regroup proxy_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
+                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
         {% endfor %}
     </div>
 {% endif %}
