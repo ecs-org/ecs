@@ -45,7 +45,7 @@
             {% endifchanged %}
             <div>
                 {{ task.data }}
-                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+                    <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>
                     | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
                     | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">{% trans "Decline" %}</a>)
             </div>
@@ -61,7 +61,7 @@
                 <h3>{{ task.task_type }}</h3>
             {% endifchanged %}
             {{ task.data }}
-            <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+            <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>
             | <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{% trans "Accept" %}</a>
         {% endfor %}
     </div>
