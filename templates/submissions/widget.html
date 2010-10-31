@@ -32,16 +32,16 @@
     <a href="{% url ecs.core.views.submission_list %}">{% trans "More" %}</a>
     {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if not submissions.number == 1 %}
-        <a href="#" id="submission_widget_first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+        <a href="#" class="first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" id="submission_widget_prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+        <a href="#" class="prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
     {% endif %}
     {% if submissions.has_next %}
-        <a href="#" id="submission_widget_next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+        <a href="#" class="next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" id="submission_widget_last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+        <a href="#" class="last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
     {% endif %}
 </div>
 
@@ -49,35 +49,36 @@
 
 <script type="text/javascript">
   window.addEvent('domready', function(){
-      var submission_list_filter = $('submission_list_filter');
-      var submission_list_page_input = submission_list_filter.getElementById('id_page');
-      $$('#submission_list_filter input').each(function(input){
+      var widget = $('submission_widget');
+      var form = $('submission_list_filter');
+      form.getElements('input').each(function(input){
           input.addEvent('change', function(){
-              submission_list_filter.submit();
+              form.submit();
           });
       });
+      var page_input = form.getElement('input[name="page"]');
 {% if not submissions.number == 1 %}
-      $('submission_widget_first_page').addEvent('click', function(){
-          submission_list_page_input.value = 1;
-          submission_list_filter.submit();
+      widget.getElement('a.first_page').addEvent('click', function(){
+          page_input.value = 1;
+          form.submit();
       });
 {% endif %}
 {% if submissions.has_previous %}
-      $('submission_widget_prev_page').addEvent('click', function(){
-          submission_list_page_input.value = parseInt(submission_list_page_input.value, 10) - 1;
-          submission_list_filter.submit();
+      widget.getElement('a.prev_page').addEvent('click', function(){
+          page_input.value = parseInt(page_input.value, 10) - 1;
+          form.submit();
       });
 {% endif %}
 {% if submissions.has_next %}
-      $('submission_widget_next_page').addEvent('click', function(){
-          submission_list_page_input.value = parseInt(submission_list_page_input.value, 10) + 1;
-          submission_list_filter.submit();
+      widget.getElement('a.next_page').addEvent('click', function(){
+          page_input.value = parseInt(page_input.value, 10) + 1;
+          form.submit();
       });
 {% endif %}
 {% if not submissions.number == submissions.paginator.num_pages %}
-      $('submission_widget_last_page').addEvent('click', function(){
-          submission_list_page_input.value = {{ submissions.paginator.num_pages }};
-          submission_list_filter.submit();
+      widget.getElement('a.last_page').addEvent('click', function(){
+          page_input.value = {{ submissions.paginator.num_pages }};
+          form.submit();
       });
 {% endif %}
   });

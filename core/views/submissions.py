@@ -480,7 +480,7 @@ def wizard(request):
     })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
-def submission_list(request, template='submissions/internal_list.html', limit=10):
+def submission_list(request, template='submissions/internal_list.html', limit=20):
     usersettings = request.user.ecs_settings
 
     filter_defaults = {
