@@ -185,7 +185,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
 
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={'checklist_document_form': checklist_document_form})
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={'checklist_document_form': document_form})
 
 
 def vote_review(request, submission_form_pk=None):
