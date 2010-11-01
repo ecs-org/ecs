@@ -253,19 +253,8 @@
                 'id_medtech_technical_safety_regulations',
                 'id_medtech_departure_from_regulations',
                 'id_additional_therapy_info',
-        
             ].each(function(id){
                 ecs.setupRichTextEditor($(id), true);
-            });
-            
-            var updateChecklistCommentVisibility = function(select){
-                $(select.id.replace(/q/, 'c')).getParent('li').setClass('checklist_field_hidden', select.value != 3);
-            };
-            
-            $$('.checklist_review_tab').each(function(tabBody){
-                tabBody.getElements('.NullBooleanField>select').each(function(select){
-                    select.addEvent('change', updateChecklistCommentVisibility.bind(window, select));
-                });
             });
             
             var msgRequest = new Request.HTML({

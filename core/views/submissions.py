@@ -171,13 +171,20 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
     form_class = make_checklist_form(checklist)
     form = form_class(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
+
+    if blueprint.min_document_count is not None:
+        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    else:
+        document_form = None
+
+    if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
         for i, question in enumerate(blueprint.questions.order_by('text')):
             answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
             answer.answer = form.cleaned_data['q%s' % i]
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form})
+
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={'checklist_document_form': document_form})
 
 
 def vote_review(request, submission_form_pk=None):
@@ -234,6 +241,7 @@ def create_submission_form(request):
         document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
+    valid = False
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -259,8 +267,9 @@ def create_submission_form(request):
             request.docstash['documents'] = list(documents)
             document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
             
+        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and (not doc_post or document_form.is_valid())
 
-        if submit and form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()):
+        if submit and valid:
             if not request.user.get_profile().approved_by_office:
                 messages.add_message(request, messages.INFO, _('You cannot submit studies yet. Please wait until the office has approved your account.'))
             else:
@@ -292,6 +301,7 @@ def create_submission_form(request):
         'tabs': SUBMISSION_FORM_TABS,
         'document_form': document_form,
         'documents': request.docstash.get('documents', []),
+        'valid': valid,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
