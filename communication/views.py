@@ -1,16 +1,20 @@
+# -*- coding: utf-8 -*-
 import traceback
 import datetime
+
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
+
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.communication.models import Message, Thread
 from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
 from ecs.tracking.decorators import tracking_hint
+from ecs.communication.forms import ThreadListFilterForm
 
 def send_message(request, submission_pk=None, reply_to_pk=None):
     submission, task, reply_to = None, None, None
@@ -190,20 +194,35 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
         context.update(extra_context)
     return render(request, template, context)
 
-def inbox(request):
-    return message_widget(request, 
-        template='communication/inbox.html',
-        queryset=Thread.objects.incoming(request.user).order_by('-last_message__timestamp'),
-        session_prefix='messages:inbox',
-        user_sort='sender__username',
-        page_size=3,
-    )
+def threads(request):
+    usersettings = request.user.ecs_settings
 
-def outbox(request):
+    filter_defaults = {
+        'incoming': 'on',
+        'outgoing': 'on',
+    }
+
+    filterdict = request.POST or usersettings.communication_filter or filter_defaults
+    filterform = ThreadListFilterForm(filterdict)
+    filterform.is_valid() # force clean
+
+    usersettings.communication_filter = filterform.cleaned_data
+    usersettings.save()
+
+    queryset = Thread.objects.none()
+    if filterform.cleaned_data['incoming']:
+        queryset |= Thread.objects.incoming(request.user)
+    if filterform.cleaned_data['outgoing']:
+        queryset |= Thread.objects.outgoing(request.user)
+
     return message_widget(request, 
-        template='communication/outbox.html',
-        queryset=Thread.objects.outgoing(request.user).order_by('-last_message__timestamp'),
-        session_prefix='messages:outbox',
+        template='communication/threads.html',
+        queryset=queryset.order_by('-last_message__timestamp'),
+        session_prefix='messages:unified',
         user_sort='receiver__username',
         page_size=3,
+        extra_context={'filterform': filterform},
     )
+
+
+

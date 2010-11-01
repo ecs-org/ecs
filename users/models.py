@@ -52,6 +52,7 @@ class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
     submission_filter = JSONField()
     task_filter = JSONField()
+    communication_filter = JSONField()
 
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)

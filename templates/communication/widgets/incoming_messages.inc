@@ -5,4 +5,4 @@
 
 {% block message_user %}{{ thread.last_message|sender_name:request.user }}{% endblock %}
 
-{% block more_link %}<a href="{% url ecs.communication.views.inbox %}">Weitere</a>{% endblock %}
+{% block more_link %}<a href="{% url ecs.communication.views.threads %}">Weitere</a>{% endblock %}

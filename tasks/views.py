@@ -27,6 +27,7 @@ def my_tasks(request, template='tasks/mine.html'):
         'thesis': 'on',
         'other': 'on',
         'mine': 'on',
+        'assigned': 'on',
         'open': 'on',
         'proxy': 'on',
         'sorting': 'deadline',

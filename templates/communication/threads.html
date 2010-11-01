@@ -1,0 +1,59 @@
+{% extends "communication/list.html" %}
+{% load communication i18n %}
+
+{% block content %}
+<div class="messages_overview">
+  <div class="messages_header">
+    <h2>{% trans "Messages" %} ({{ page.paginator.count }})</h2>
+
+    <form id="thread_list_filter" action="" method="post">
+        <div class="thread_list_choose">
+            {{ filterform.incoming }} <label class="thread_incoming">{% trans "Incoming" %}</label>
+            {{ filterform.outgoing }} <label class="thread_outgoing">{% trans "Outgoing" %}</label>
+        </div>
+    </form>
+
+    <a class="widget popup" href="{% url ecs.communication.views.send_message %}">{% trans "New Message" %}</a>
+    <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="{% trans "sort" %}" />
+    <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
+    | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
+  </div>
+</div>
+{{ block.super }}
+{% endblock %}
+
+
+{% block message_actions %}
+    {{ block.super }}
+    {% if thread.last_message.sender == request.user %}
+        <a class="api" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+    {% else %}
+        <a class="popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
+    {% endif %}
+{% endblock %}
+
+{% block extra_message_table_headers %}
+    <th>{% trans "Von/An" %}</th>
+{% endblock %}
+
+{% block extra_message_table_cells %}
+    {% if thread.last_message.sender == request.user %}
+        <td>{% trans "an" %} {{ thread.last_message|receiver_name:request.user }}</td>
+    {% else %}
+        <td>{% trans "von" %} {{ thread.last_message|sender_name:request.user }}</td>
+    {% endif %}
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+      window.addEvent('domready', function(){
+          $$('#thread_list_filter input').each(function(input){
+              input.addEvent('change', function(){
+                  $('thread_list_filter').submit();
+              });
+          });
+      });
+    </script>
+{% endblock %}
+
