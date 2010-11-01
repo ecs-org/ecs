@@ -77,19 +77,20 @@ ecs.setupFormFieldHelpers = function(context){
         var currentValues = multiselect.value.split(',');
         multiselect.value = '';
         var tbl = null;
-        if(!multiselect.disabled){
+        var active = !!multiselect.getParent('form');
+        if(active){
             tbl = new TextboxList(multiselect, {unique: true, plugins: {autocomplete: {onlyFromValues: true}}});
             tbl.container.addClass('textboxlist-loading');
         }
         new Request.JSON({url: multiselect.getProperty('x-autocomplete-url'), onSuccess: function(response){
-            if(!multiselect.disabled){
+            if(active){
                 tbl.plugins['autocomplete'].setValues(response);
                 tbl.container.removeClass('textboxlist-loading');
             }
             var labels = [];
             response.each(function(item){
                 if(currentValues.contains(item[0])){
-                    if(!multiselect.disabled){
+                    if(active){
                         tbl.add(item[1], item[0], item[2]);
                     }
                     else{
