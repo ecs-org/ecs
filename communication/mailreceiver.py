@@ -136,9 +136,12 @@ def START(message, address=None, host=None):
 
         logging.info('REPLY %s %s %s %s %s' % ( ecshash, ecsmsg, address, host, type(message)))
 
-        body = __prepareBody(message)        
+        body = __prepareBody(message)
+        rawmsg = message.to_message().as_string()
+                
         ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg, 
-            raww_msgid= message.id, rawmsg=message.original, rawmsg_digest=hashlib.md5(message.original).hexdigest())
+            rawmsg_msgid= message ['Message-ID'], rawmsg=rawmsg, 
+            rawmsg_digest_hex= hashlib.md5(rawmsg).hexdigest())
     
     elif message.Peer[0] in settings.ECSMAIL ['trusted_sources']:
         host_addr = gethostbyname(host);

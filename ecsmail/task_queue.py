@@ -14,14 +14,17 @@ def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs)
                 (msgid, from_email, recipient, str(callback), repr(msg)))
 
     if callback:
-        subtask(callback).delay(msgid, "pending")
+        subtask(callback).delay(msgid, "started")
     
     try:
         connection = mail.get_connection()
         connection.send_messages([msg])
     except Exception as exc:
         logger.error(str(exc))
+        if callback:
+            subtask(callback).delay(msgid, "failure")
         raise
+        
         """
         if callback:
             subtask(callback).delay(msgid, "retry")
@@ -29,10 +32,7 @@ def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs)
             queued_mail_send.retry(exc=exc)
         except MaxRetriesExceededError:
         """
-        if callback:
-            subtask(callback).delay(msgid, "failure")
-            return
-
+        
     if callback:
         subtask(callback).delay(msgid, "success")
         

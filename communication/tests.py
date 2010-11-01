@@ -13,17 +13,18 @@ class CommunicationTest(CommunicationTestCase):
     
     def test_from_ecs_to_outside_and_back_to_us(self):
         ''' 
-        this makes a new ecs internal message (which currently will send an email to the user)
-        and then answer to that email which is then forwared back to the original sender
+        standard test setup makes a new ecs internal message (which currently will send an email to the user)
+        and then answer to that email which is then forwarded back to the original sender
         '''
-        thread= self.create_thread("testsubject", "first message", self.alice, self.bob)
         eq_(self.queue_count(), 1)
-        ok_(self.is_delivered("first message"))
+        ok_(self.is_delivered("test message"))
         
-        self.receive("testsubject", "second message",
-            "fromoutside@someplace.org", 
-            "".join(("ecs-", message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
+        self.receive("testsubject", "second message", self.bob.email,  
+            "".join(("ecs-", self.last_message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
             )
+        eq_(self.queue_count(), 2)
+        ok_(self.is_delivered("second message"))
+        
         
     def test_send_message(self):
         self.client.login(username='alice', password='password')
@@ -77,13 +78,10 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(response.status_code, 404)
 
     def test_reply_message(self):
-        thread = Thread.objects.create(subject='foo', sender=self.alice, receiver=self.bob)
-        message = thread.add_message(self.alice, text="text")
-
+        message = self.last_message
         self.client.login(username='bob', password='password')
-        response = self.client.post(reverse('ecs.communication.views.send_message', kwargs={'reply_to_pk': message.pk}), {
-            'text': 'REPLY TEXT',
-        })
+        response = self.client.post(reverse('ecs.communication.views.send_message', 
+            kwargs={'reply_to_pk': message.pk}), {'text': 'REPLY TEXT',})
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()

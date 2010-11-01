@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 
 from celery.task.sets import subtask
-from ecs.ecsmail.mail import send_mail
+from ecs.ecsmail.mail import deliver
 from ecs.communication.task_queue import update_smtp_delivery
 
 
@@ -20,6 +20,7 @@ MESSAGE_ORIGIN_BOB = 2
 
 DELIVERY_STATES = (
     ("new", "new"),
+    ("received", "received"),
     ("pending", "pending"),
     ("started", "started"),
     ("success", "success"),
@@ -125,7 +126,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None):
+    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -134,12 +135,19 @@ class Thread(models.Model):
             origin = MESSAGE_ORIGIN_ALICE
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s." % (self.sender, self.receiver))
+        
+        smtp_delivery_state = "received" if is_received else "new"
+        
         msg = self.messages.create(
             sender=user, 
             receiver=receiver, 
             text=text, 
             reply_to=reply_to, 
             origin=origin,
+            smtp_delivery_state= smtp_delivery_state,
+            rawmsg= rawmsg,
+            rawmsg_msgid= rawmsg_msgid,
+            rawmsg_digest_hex= rawmsg_digest_hex
         )
         self.last_message = msg
         self.closed_by_sender = False
@@ -195,13 +203,11 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
             try:
-                msg_list = send_mail(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
+                msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
                     message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
-                    from_email=self.return_address, recipient_list=self.receiver.email,
-                    callback=subtask(update_smtp_delivery))
-                self.smtp_delivery_state = "pending"
-                logger = logging.getLogger("communication")
-                logger.info("test: %s %s" % (self.return_address, self.receiver.email))
+                    from_email=self.return_address, recipient_list=self.receiver.email,)
+                    # FIXME callback=subtask(update_smtp_delivery))
+                self.smtp_delivery_state = "pending"              
                 self.rawmsg_msgid, self.rawmsg = msg_list[0]
                 self.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
             except:
@@ -209,3 +215,24 @@ class Message(models.Model):
                 self.smtp_delivery_state = 'failure'
         super(Message, self).save(*args, **kwargs)
 
+"""
+
+def _post_message_save(sender, **kwargs):
+    m = kwargs['instance']
+    if m.smtp_delivery_state=='new':
+        try:
+            msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (m.sender, m.receiver), 
+                message='Betreff: %s\r\n%s' % (m.thread.subject, m.text),
+                from_email=m.return_address, recipient_list=m.receiver.email,
+                callback=subtask(update_smtp_delivery))
+            m.smtp_delivery_state = "pending"              
+            m.rawmsg_msgid, self.rawmsg = msg_list[0]
+            m.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
+        except:
+            traceback.print_exc()
+            self.smtp_delivery_state = 'failure'
+    
+
+post_save.connect(_post_message_save, sender=Message)
+
+"""

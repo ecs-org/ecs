@@ -81,8 +81,8 @@ def deliver(subject, message, from_email, recipient_list, message_html=None, att
         msgid = make_msgid()
         msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
         
-        #queued_mail_send.apply_async(args=[msgid, mess, from_email, recipient], countdown=3) # , callback
-        queued_mail_send(msgid, msg, from_email, recipient) # , callback
+        queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
+        #queued_mail_send(msgid, msg, from_email, recipient, callback)
         sentids += [[msgid, msg.message()]]
     return sentids
 

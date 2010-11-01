@@ -17,7 +17,7 @@ from ecs.meetings.forms import MeetingForm, TimetableEntryForm, FreeTimetableEnt
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.meetings.task_queue import optimize_timetable_task
 
-from ecs.ecsmail.mail import send_mail
+from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
 
 
@@ -409,13 +409,13 @@ def agenda_htmlemail(request, meeting_pk=None):
         }))
         plainmail = whitewash(htmlmail)
 
-        send_mail(subject='Invitation to meeting', 
-                 message=plainmail,
-                 message_html=htmlmail,
-                 attachments=[(filename, pdf,'application/pdf'),],
-                 from_email=settings.DEFAULT_FROM_EMAIL,
-                 recipient_list=settings.AGENDA_RECIPIENT_LIST, fail_silently=False)
-        
+        deliver(subject='Invitation to meeting', 
+            message=plainmail,
+            message_html=htmlmail,
+            attachments=[(filename, pdf,'application/pdf'),],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=settings.AGENDA_RECIPIENT_LIST)
+
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_list'))
 
 def timetable_htmlemailpart(request, meeting_pk=None):

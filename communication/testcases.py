@@ -8,13 +8,15 @@ from ecs.communication.models import Message, Thread
 
 class CommunicationTestCase(MailTestCase):
     '''
-    Dereived from MailTestCase; additions: self.alice, self.bob, self.thread, alice did send test message
+    Dereived from MailTestCase; Alice did create a new Communication.Thread with a test message "test subject", "test message"
+    additions: self.alice, self.bob, self.thread, self.last_message 
     '''
     def setUp(self):
         super(CommunicationTestCase, self).setUp()
         self.alice = User.objects.get(username='alice')
         self.bob = User.objects.get(username='bob')
         self.thread = self.create_thread('test subject', 'test message', self.alice, self.bob)
+        self.last_message = self.thread.last_message
         
     @classmethod    
     def create_thread(self, subject="", message="", sender=None, receiver=None, task=None, submission=None):

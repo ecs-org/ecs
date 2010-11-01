@@ -10,13 +10,14 @@ class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):    
         bootstrap.templates()
-        self.logger = logging.getLogger("EcsTestCase") 
         
     @classmethod
     def teardownClass(self):
         pass
     
     def setUp(self):
+        self.logger = logging.getLogger() 
+        
         user = User.objects.create(username="root", email = "root@example.org", is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
         
