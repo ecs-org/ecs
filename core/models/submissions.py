@@ -35,9 +35,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         ))
 
     def b2(self):
-        b2_votes = Vote.objects.filter(result='2')
-        submission_pks = [x.submission_form.submission.pk for x in b2_votes]
-        return self.filter(pk__in=submission_pks)
+        return self.filter(pk__in=Vote.objects.filter(result='2').values('submission_form__submission__pk').query)
 
     def new(self):
         return self.filter(meetings__isnull=True)
