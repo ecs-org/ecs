@@ -8,6 +8,7 @@ from ecs.core.models.submissions import Submission
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
+    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, 'one optional document'), (1, 'one mandatory document')))
 
     class Meta:
         app_label = 'core'
@@ -32,6 +33,7 @@ class Checklist(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     #object = GenericForeignKey()  # Postponed
     user = models.ForeignKey('auth.user')
+    document = models.ForeignKey('documents.Document', null=True)
 
     class Meta:
         app_label = 'core'
@@ -66,7 +68,7 @@ class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)
     answer = models.NullBooleanField(null=True)
-    comment = models.CharField(max_length=100, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
 
     class Meta:
         app_label = 'core'

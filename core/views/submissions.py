@@ -172,13 +172,20 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
     form_class = make_checklist_form(checklist)
     form = form_class(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
+
+    if blueprint.min_document_count is not None:
+        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    else:
+        document_form = None
+
+    if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
         for i, question in enumerate(blueprint.questions.order_by('text')):
             answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
             answer.answer = form.cleaned_data['q%s' % i]
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form})
+
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={'checklist_document_form': checklist_document_form})
 
 
 def vote_review(request, submission_form_pk=None):
