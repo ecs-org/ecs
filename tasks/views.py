@@ -22,16 +22,10 @@ def my_tasks(request, template='tasks/mine.html'):
     submission_ct = ContentType.objects.get_for_model(Submission)
 
     filter_defaults = {
-        'amg': 'on',
-        'mpg': 'on',
-        'thesis': 'on',
-        'other': 'on',
-        'mine': 'on',
-        'assigned': 'on',
-        'open': 'on',
-        'proxy': 'on',
         'sorting': 'deadline',
     }
+    for key in ('amg', 'mpg', 'thesis', 'other', 'mine', 'assigned', 'open', 'proxy'):
+        filter_defaults[key] = 'on'
 
     filterdict = request.POST or usersettings.task_filter or filter_defaults
     filterform = TaskListFilterForm(filterdict)
@@ -41,16 +35,12 @@ def my_tasks(request, template='tasks/mine.html'):
     usersettings.save()
     
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type')
-    sorting = filterform.cleaned_data['sorting']
-    order_by = ['task_type__name']
-    if sorting == 'deadline':
-        order_by.append('workflow_token__deadline')
-    elif sorting == 'oldest':
-        order_by.append('workflow_token__created_at')
-    elif sorting == 'newest':
-        order_by.append('-workflow_token__created_at')
-    order_by.append('assigned_at')
-    print order_by
+    sortings = {
+        'deadline': 'workflow_token__deadline',
+        'oldest': 'workflow_token__created_at',
+        'newest': '-workflow_token__created_at',
+    }
+    order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting']], 'assigned_at']
 
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by(*order_by)
     related_url = request.GET.get('url', None)

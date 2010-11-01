@@ -484,15 +484,10 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     usersettings = request.user.ecs_settings
 
     filter_defaults = {
-        'amg': 'on',
-        'mpg': 'on',
-        'thesis': 'on',
-        'other': 'on',
-        'new': 'on',
-        'next_meeting': 'on',
-        'b2': 'on',
         'page': '1',
     }
+    for key in ('amg', 'mpg', 'thesis', 'other', 'new', 'next_meeting', 'b2'):
+        filter_defaults[key] = 'on'
 
     filterdict = request.POST or usersettings.submission_filter or filter_defaults
     filterform = SubmissionListFilterForm(filterdict)
@@ -512,18 +507,17 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
         submissions_stage1 |= Submission.objects.b2()
 
     submissions_stage2 = submissions_stage1.none()
-    amg_q = Q(pk__in=Submission.objects.amg().values('pk').query)
-    mpg_q = Q(pk__in=Submission.objects.mpg().values('pk').query)
-    thesis_q = Q(pk__in=Submission.objects.thesis().values('pk').query)
 
-    if filterform.cleaned_data['amg']:
-        submissions_stage2 |= submissions_stage1.filter(amg_q)
-    if filterform.cleaned_data['mpg']:
-        submissions_stage2 |= submissions_stage1.filter(mpg_q)
-    if filterform.cleaned_data['thesis']:
-        submissions_stage2 |= submissions_stage1.filter(thesis_q)
-    if filterform.cleaned_data['other']:
-        submissions_stage2 |= submissions_stage1.filter(~amg_q & ~mpg_q & ~thesis_q)
+    queries = {
+        'amg': Q(pk__in=Submission.objects.amg().values('pk').query),
+        'mpg': Q(pk__in=Submission.objects.mpg().values('pk').query),
+        'thesis': Q(pk__in=Submission.objects.thesis().values('pk').query),
+    }
+    queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
+
+    for key, query in queries.items():
+        if filterform.cleaned_data[key]:
+            submissions_stage2 |= submissions_stage1.filter(query)
 
     submissions = submissions_stage2.order_by('-current_submission_form__pk')
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
