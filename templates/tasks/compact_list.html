@@ -10,6 +10,7 @@
     </div>
     <div class="task_list_choose">
         {{ filterform.mine }} <label class="task_mine">{% trans "Mine" %}</label>
+        {{ filterform.assigned }} <label class="task_assigned">{% trans "Assigned" %}</label>
         {{ filterform.open }} <label class="task_open">{% trans "Open" %}</label>
         {{ filterform.proxy }} <label class="task_proxy">{% trans "Proxy" %}</label>
     </div>
@@ -21,10 +22,10 @@
     </div>
 </form>
 
-{% if accepted_tasks %}
+{% if mine_tasks %}
     <div class="task_list">
         <h2>{% trans "My Tasks" %}</h2>
-        {% regroup accepted_tasks by task_type as task_type_list %}
+        {% regroup mine_tasks by task_type as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
@@ -90,7 +91,7 @@
     </div>
 {% endif %}
 
-{% if not accepted_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
+{% if not mine_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
     <em>{% trans "There are no tasks for you." %}</em>
 {% endif %}
 </div>

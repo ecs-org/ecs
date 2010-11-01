@@ -92,31 +92,23 @@ def my_tasks(request, template='tasks/mine.html'):
             if other:
                 tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~thesis_q)
 
-    if filterform.cleaned_data['mine']:
-        accepted_tasks = tasks.filter(assigned_to=request.user, accepted=True)
-        assigned_tasks = tasks.filter(assigned_to=request.user, accepted=False)
-    else:
-        accepted_tasks = tasks.none()
-        assigned_tasks = tasks.none()
-
-    if filterform.cleaned_data['open']:
-        open_tasks = tasks.filter(assigned_to=None)
-    else:
-        open_tasks = tasks.none()
-        
-    if filterform.cleaned_data['proxy']:
-        proxy_tasks = tasks.filter(assigned_to__ecs_profile__indisposed=True)
-    else:
-        proxy_tasks = tasks.none()
-
-    return render(request, template, {
+    data = {
         'submission': submission,
-        'accepted_tasks': accepted_tasks,
-        'assigned_tasks': assigned_tasks,
-        'open_tasks': open_tasks,
-        'proxy_tasks': proxy_tasks,
         'filterform': filterform,
-    })
+    }
+
+    task_flavors = {
+        'mine': lambda tasks: tasks.filter(assigned_to=request.user, accepted=True),
+        'assigned': lambda tasks: tasks.filter(assigned_to=request.user, accepted=False),
+        'open': lambda tasks: tasks.filter(assigned_to=None),
+        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__indisposed=True),
+    }
+
+    for key, func in task_flavors.items():
+        context_key = '%s_tasks' % key
+        data[context_key] = func(tasks) if filterform.cleaned_data[key] else tasks.none()
+
+    return render(request, template, data)
     
 def my_tasks_widget(request):
     return my_tasks(request, template='tasks/widget.html')
