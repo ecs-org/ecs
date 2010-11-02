@@ -44,21 +44,21 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(message.sender, self.alice)
         self.failUnlessEqual(message.receiver, self.bob)
         
-        response = self.client.get(reverse('ecs.communication.views.outbox'))
+        response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless(message.thread in response.context['page'].object_list)
-        response = self.client.get(reverse('ecs.communication.views.inbox'))
+        response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
         self.failIf(message.thread in response.context['page'].object_list)
 
         self.client.logout()
         self.client.login(username='bob', password='password')
 
-        response = self.client.get(reverse('ecs.communication.views.inbox'))
+        response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless(message.thread in response.context['page'].object_list)
 
-        response = self.client.get(reverse('ecs.communication.views.outbox'))
+        response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
         self.failIf(message.thread in response.context['page'].object_list)
 
