@@ -12,9 +12,9 @@ class RegistrationTest(MailTestCase):
     def test_registration(self):
         response = self.client.post(reverse('ecs.users.views.register'), {
             'gender': 'm',
-            'first_name': 'foo',
-            'last_name': 'bar',
-            'email': 'foobar@test.test',
+            'first_name': 'New',
+            'last_name': 'User',
+            'email': 'new.user@example.org',
         })
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(self.queue_count(),1)
@@ -27,24 +27,24 @@ class RegistrationTest(MailTestCase):
         response = self.client.get(activation_url)
         self.failUnlessEqual(response.status_code, 200)
         response = self.client.post(activation_url, {
-            'username': 'foobar',
-            'password': 'test',
-            'password_again': 'test',
+            'username': 'new.user@example.org',
+            'password': 'password',
+            'password_again': 'password',
         })
         self.failUnlessEqual(response.status_code, 200)
-        user = User.objects.get(username='foobar')
-        self.failUnlessEqual(user.first_name, 'foo')
+        user = User.objects.get(username='new.user@example.org')
+        self.failUnlessEqual(user.first_name, 'New')
         self.failUnlessEqual(user.get_profile().gender, 'm')
-        self.failUnless(user.check_password('test'))
+        self.failUnless(user.check_password('password'))
         
 
 class PasswordChangeTest(MailTestCase):
     def test_password_reset(self):
-        user = User(username='foobar', email='foobar@test.test')
-        user.set_password('test')
+        user = User(username='new.user@example.org', email='new.user@example.org')
+        user.set_password('password')
         user.save()
         response = self.client.post(reverse('ecs.users.views.request_password_reset'), {
-            'email': 'foobar@test.test',
+            'email': 'new.user@example.org',
         })
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(self.queue_count(), 1)
@@ -62,7 +62,7 @@ class PasswordChangeTest(MailTestCase):
             'new_password2': '1234',
         })
         self.failUnlessEqual(response.status_code, 200)
-        user = User.objects.get(username='foobar')
+        user = User.objects.get(username='new.user@example.org')
         self.failUnless(user.check_password('1234'))
         
         response = self.client.get(password_reset_url)
