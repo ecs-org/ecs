@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
 
 from ecs.communication.models import Message
-from ecs.ecsmail.mail import send_mail
+from ecs.ecsmail.mail import deliver
 from ecs.utils.datastructures import OrderedSet
 
 class Command(BaseCommand):
@@ -31,8 +31,6 @@ class Command(BaseCommand):
             })
             print message
             
-            send_mail(subject='Ungelesene ECS Nachrichten fuer %s' % (user,), 
-                                                             message=message,
-                                                             from_email=settings.DEFAULT_FROM_EMAIL,
-                      recipient_list=[user.email], fail_silently=False)
+            deliver(subject='Ungelesene ECS Nachrichten fuer %s' % (user,), 
+                message=message, from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=[user.email])
             print 'MAIL SENT'

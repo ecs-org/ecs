@@ -17,10 +17,11 @@ class RegistrationTest(MailTestCase):
             'email': 'foobar@test.test',
         })
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len(self.queue_list()), 1)
-        key, message = self.queue.pop()
+        self.failUnlessEqual(self.queue_count(),1)
+        mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
+        
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
-        match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message.body())
+        match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message)
         self.failUnless(match)
         activation_url = match.group(1)
         response = self.client.get(activation_url)
@@ -46,10 +47,11 @@ class PasswordChangeTest(MailTestCase):
             'email': 'foobar@test.test',
         })
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len(self.queue_list()), 1)
-        key, message = self.queue.pop()
+        self.failUnlessEqual(self.queue_count(), 1)
+        mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
+        
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
-        match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message.body())
+        match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message)
         self.failUnless(match)
         password_reset_url = match.group(1)
         response = self.client.get(password_reset_url)

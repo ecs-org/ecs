@@ -1,32 +1,33 @@
+# -*- coding: utf-8 -*-
+
+from nose.tools import ok_, eq_
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
+from django.conf import settings
 
-from ecs.communication.models import Message, Thread
-from ecs.utils.testcases import EcsTestCase
 from ecs.core.models import Submission
-from ecs.communication.models import Thread
+from ecs.communication.models import Message, Thread
+from ecs.communication.testcases import CommunicationTestCase
 
-class CommunicationTest(EcsTestCase):
-    def setUp(self):
-        for name in ('alice', 'bob', ):
-            user = User(username=name)
-            user.set_password('...')
-            user.save()
-            setattr(self, name, user)
-    
-        self.thread = Thread.objects.create(
-            subject='test',
-            sender=self.alice,
-            receiver=self.bob,
-            task=None,
-            submission=None,
-        )
-        self.thread.add_message(self.alice, 'test')
 
-        return super(CommunicationTest, self).setUp()
+class CommunicationTest(CommunicationTestCase):        
     
+    def test_from_ecs_to_outside_and_back_to_us(self):
+        ''' 
+        standard test setup makes a new ecs internal message (which currently will send an email to the user)
+        and then answer to that email which is then forwarded back to the original sender
+        '''
+        eq_(self.queue_count(), 1)
+        ok_(self.is_delivered("test message"))
+        
+        self.receive("testsubject", "second message", self.bob.email,  
+            "".join(("ecs-", self.last_message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
+            )
+        eq_(self.queue_count(), 2)
+        ok_(self.is_delivered("second message"))
+        
+        
     def test_send_message(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
 
         response = self.client.get(reverse('ecs.communication.views.send_message'))
         self.failUnlessEqual(response.status_code, 200)
@@ -51,7 +52,7 @@ class CommunicationTest(EcsTestCase):
         self.failIf(message.thread in response.context['page'].object_list)
 
         self.client.logout()
-        self.client.login(username='bob', password='...')
+        self.client.login(username='bob', password='password')
 
         response = self.client.get(reverse('ecs.communication.views.inbox'))
         self.failUnlessEqual(response.status_code, 200)
@@ -64,7 +65,7 @@ class CommunicationTest(EcsTestCase):
         self.client.logout()
 
     def test_send_message_invalid_submission(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         try:
             non_existing_pk = Submission.objects.all().order_by('-pk')[0].pk+1
         except IndexError:
@@ -77,13 +78,10 @@ class CommunicationTest(EcsTestCase):
         self.failUnlessEqual(response.status_code, 404)
 
     def test_reply_message(self):
-        thread = Thread.objects.create(subject='foo', sender=self.alice, receiver=self.bob)
-        message = thread.add_message(self.alice, text="text")
-
-        self.client.login(username='bob', password='...')
-        response = self.client.post(reverse('ecs.communication.views.send_message', kwargs={'reply_to_pk': message.pk}), {
-            'text': 'REPLY TEXT',
-        })
+        message = self.last_message
+        self.client.login(username='bob', password='password')
+        response = self.client.post(reverse('ecs.communication.views.send_message', 
+            kwargs={'reply_to_pk': message.pk}), {'text': 'REPLY TEXT',})
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()
@@ -91,37 +89,34 @@ class CommunicationTest(EcsTestCase):
         self.failUnlessEqual(message.sender, self.bob)
 
     def test_read_thread(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': self.thread.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
-        self.client.login(username='bob', password='...')
+        self.client.login(username='bob', password='password')
         response = self.client.get(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': self.thread.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
     def test_bump_message(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.bump_message', kwargs={'message_pk': self.thread.last_message.pk}))
         self.failUnlessEqual(response.status_code, 200)
 
     def test_close_thread(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
-        self.client.login(username='bob', password='...')
+        self.client.login(username='bob', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
         self.failUnlessEqual(response.status_code, 200)
 
     def test_incoming_message_widget(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
 
     def test_outgoing_message_widget(self):
-        self.client.login(username='alice', password='...')
+        self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
-
-        
-

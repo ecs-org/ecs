@@ -1,24 +1,38 @@
-from celery.decorators import task
-from django.conf import settings
 import logging
 
-@task()
-def queued_mail_send(message, To, From, **kwargs):
-    logger = queued_mail_send.get_logger(**kwargs)
-    from django.conf import settings
-    from lamson.server import Relay
-    if not hasattr(settings,'LAMSON_SEND_THROUGH_RECEIVER'): 
-        settings.LAMSON_SEND_THROUGH_RECEIVER = False
-    if settings.LAMSON_SEND_THROUGH_RECEIVER == True:
-        print"through receiver"
-        relay = Relay(host=settings.LAMSON_RECEIVER_CONFIG['host'],
-        port=settings.LAMSON_RECEIVER_CONFIG['port'])
-    else:
-        port = settings.LAMSON_RELAY_CONFIG['port']
-        print"through relay", port
-        relay = Relay(host=settings.LAMSON_RELAY_CONFIG['host'],
-        port=port) #settings.LAMSON_RELAY_CONFIG['port'])
+from celery.decorators import task
+from celery.task.sets import subtask
+from celery.exceptions import MaxRetriesExceededError
 
-    logger.info("".join(("queued mail deliver using ", str(relay), ", from ", From, ", to ", To, ", msg ", repr(message))))
-    relay.deliver(message, To, From)
-    # FIXME needs errror handling and return value 
+from django.conf import settings
+from django.core import mail
+
+@task() # (max_retries= 3)
+def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs):
+    logger = queued_mail_send.get_logger(**kwargs)
+    logger.debug("queued mail deliver id %s, from %s, to %s, callback %s, msg %s" %
+                (msgid, from_email, recipient, str(callback), repr(msg)))
+
+    if callback:
+        subtask(callback).delay(msgid, "started")
+    
+    try:
+        connection = mail.get_connection()
+        connection.send_messages([msg])
+    except Exception as exc:
+        logger.error(str(exc))
+        if callback:
+            subtask(callback).delay(msgid, "failure")
+        raise
+        
+        """
+        if callback:
+            subtask(callback).delay(msgid, "retry")
+        try:
+            queued_mail_send.retry(exc=exc)
+        except MaxRetriesExceededError:
+        """
+        
+    if callback:
+        subtask(callback).delay(msgid, "success")
+        
