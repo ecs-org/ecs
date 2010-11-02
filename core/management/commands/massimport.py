@@ -439,27 +439,32 @@ class Command(BaseCommand):
         
         failed_users = []
         failed_submissions = []
-        
+        failed_tentrys = []
+            
         for (username, ec_numbers) in dataset:
+            
             username = username.lower()
             try:
                 sid = transaction.savepoint()
                 user = User.objects.get(Q(username=username)|Q(username__startswith=username)|Q(username__endswith=username))
-
+                
                 for ec_number in ec_numbers:
                     try:
-                        ec_number = '%04d' % int(ec_number)
+                        #ec_number = '%04d' % int(ec_number)
+                        #ec_number = int(ec_number)
+                        pass
                     except ValueError, e:
                         failed_submissions.append(ec_number)
                         continue
-
+                    
                     try:
+                        print "ec_number:",ec_number
                         rofl = transaction.savepoint()
                         t_entry = meeting.timetable_entries.get(submission__ec_number__endswith=ec_number)
                         Participation.objects.create(entry=t_entry, user=user)
                     except Exception, e:
                         transaction.savepoint_rollback(rofl)
-                        failed_submissions.append(ec_number)
+                        failed_tentrys.append(ec_number)
                         continue
                     else:
                         transaction.savepoint_commit(rofl)
@@ -476,10 +481,12 @@ class Command(BaseCommand):
         
         if failed_users:
             self._warn('\nCould not find users: %s\n' % (' '.join(failed_users)))
-        
+        if failed_tentrys:
+            self._warn('\nCould not find timetable entries for submissions: %s\n' % (' '.join(unicode(s) for s in failed_tentrys)))
         if failed_submissions:
-            self._warn('\nCould not find submissions: %s\n' % (' '.join(failed_submissions)))
-
+            self._warn('\nCould not find submissions: %s\n' % (' '.join(unicode(s) for s in failed_submissions)))
+        
+        
         print '== %d/%d participants imported ==' % (importcount - failcount, len(dataset))
         if failcount:
             self._abort('Failed to import %d participants' % failcount)
@@ -541,8 +548,13 @@ class Command(BaseCommand):
             try:
                 sid = transaction.savepoint()
                 medcat = MedicalCategory.objects.get(abbrev=medabbrev)
-
+                
                 for ec_number in ec_numbers:
+                    
+                    ec_number_parts = ec_number.split("/")
+                    if len(ec_number_parts) > 1:
+                        ec_number = '%s%04d' % (ec_number_parts[0], int(ec_number_parts[1].lstrip("0")))
+                    #print "ec_number_new:",ec_number
                     try:
                         rofl = transaction.savepoint()
                         s = Submission.objects.get(ec_number=ec_number)
