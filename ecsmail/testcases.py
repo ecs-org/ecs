@@ -25,18 +25,13 @@ class MailTestCase(EcsTestCase):
     to check for smtperrorcodes
     '''
     @classmethod
-    def setUpClass(self):    
-        # permit emails sent to all
-        self.saved_EMAIL_WHITELIST = settings.EMAIL_WHITELIST
-        settings.EMAIL_WHITELIST =[]
-        
+    def setUpClass(self):          
         super(MailTestCase, self).setUpClass()      
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
         import ecs.ecsmail.mailconf as lamson_settings
 
     @classmethod
     def teardownClass(self):
-        settings.EMAIL_WHITELIST = self.saved_EMAIL_WHITELIST
         super(MailTestCase, self).teardownClass()
 
     def setUp(self):
@@ -93,7 +88,7 @@ class MailTestCase(EcsTestCase):
         ''' just call our standard email deliver, prefilled values: subject, message, from_email, recipient_list '''
         return ecsmail_deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
         
-    def receive(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, ):
+    def receive(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, connecting_host="localhost"):
         ''' Fakes an incoming message trough ecsmail server '''
         if isinstance(recipient_list, basestring):
             recipient_list = [recipient_list]
@@ -103,13 +98,13 @@ class MailTestCase(EcsTestCase):
             msgid = make_msgid()
             msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
             self.logger.debug("Receiving Mail from %s to %s, message= %s" % (from_email, recipient, str(msg.message())))
-            routing.Router.deliver(MailRequest('localhost', from_email, recipient, str(msg.message())))
+            routing.Router.deliver(MailRequest(connecting_host, from_email, recipient, str(msg.message())))
             sentids += [[msgid, msg.message()]]
             
         return sentids
         
     def is_delivered(self, pattern):
-        ''' returns message that matches the regex (searched = msgbody), or False if not found '''
+        ''' returns message that matches the regex (searched = rawmessage), or False if not found '''
         regp = re.compile(pattern)
         if self.queue_count() == 0:
             return False # empty outbox, so pattern does not match

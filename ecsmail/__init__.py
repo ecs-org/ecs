@@ -7,26 +7,28 @@
 skinparam sequenceLifeLineBackgroundColor #FFBBBB
 
 actor alice
-alice -> communication.message: save()\nstate: NEW
-activate communication.message 
-communication.message -> ecsmail.mail: deliver
+alice -> comm...message: save()\nstate: NEW
+activate comm...message 
+comm...message -> ecsmail.mail: deliver
 activate ecsmail.mail 
 ecsmail.mail -->> ecsmail.task_queue: queue_send
 activate ecsmail.task_queue 
-ecsmail.mail -> communication.message: msg_ids, raw_message
+ecsmail.mail -> comm...message:msgid,\nraw_message
 deactivate ecsmail.mail
-deactivate communication.message
-ecsmail.task_queue -->> communication.task_queue: msgid, state:PENDING
-activate communication.task_queue 
-communication.task_queue --> communication.message: update state
-deactivate communication.task_queue
+comm...message -> comm...message: msgid:\nstate:PENDING
+deactivate comm...message
+ecsmail.task_queue -->> comm...task_queue: msgid,\nstate:STARTED
+activate comm...task_queue 
+comm...task_queue --> comm...message: update state
+deactivate comm...task_queue
 ecsmail.task_queue -> django.core.mail: send message
 activate django.core.mail 
 django.core.mail -> smartmx: smtp transfer
 activate smartmx 
+
 alt transfer OK
     smartmx -> django.core.mail: OK
-    smartmx -->> targetmx: transfer mail
+    smartmx -->> targetmx: smtp transfer
     deactivate smartmx
     activate targetmx 
     actor bob
@@ -34,39 +36,56 @@ alt transfer OK
     deactivate targetmx
     django.core.mail -> ecsmail.task_queue
     deactivate django.core.mail 
-    ecsmail.task_queue -->> communication.task_queue: msgid, state:SUCCESS
+    ecsmail.task_queue -->> comm...task_queue: msgid,\nstate:SUCCESS
     deactivate ecsmail.task_queue 
-    activate communication.task_queue 
-    communication.task_queue --> communication.message: update state
-    deactivate communication.task_queue
+    activate comm...task_queue 
+    comm...task_queue --> comm...message: update state
+    deactivate comm...task_queue
+
 else transfer temporary Failure [3 retries]
     activate smartmx
     activate django.core.mail
     activate ecsmail.task_queue
      
-    smartmx -> django.core.mail: TEMPORARY FAILURE
+    smartmx -> django.core.mail: temporary Failure
     deactivate smartmx
     django.core.mail -> ecsmail.task_queue
     deactivate django.core.mail 
-    ecsmail.task_queue -->> communication.task_queue: msgid, state:RETRY 
-    activate communication.task_queue 
-    communication.task_queue --> communication.message: update state
-    deactivate communication.task_queue
+    ecsmail.task_queue -->> comm...task_queue: msgid,\nstate:RETRY 
+    activate comm...task_queue 
+    comm...task_queue --> comm...message: update state
+    deactivate comm...task_queue
     ecsmail.task_queue -> django.core.mail: send message
     activate django.core.mail 
     django.core.mail -> smartmx: smtp transfer
     activate smartmx 
 
 else transfer permanent Failure
-    smartmx -> django.core.mail: PERMANENT FAILURE
+    smartmx -> django.core.mail: permanent Failure
     deactivate smartmx
     django.core.mail -> ecsmail.task_queue
     deactivate django.core.mail 
-    ecsmail.task_queue -->> communication.task_queue: msgid, state:FAILURE
+    ecsmail.task_queue -->> comm...task_queue: msgid,\nstate:FAILURE
     deactivate ecsmail.task_queue 
-    activate communication.task_queue 
-    communication.task_queue --> communication.message: update state
-    deactivate communication.task_queue
+    activate comm...task_queue 
+    comm...task_queue --> comm...message: update state
+    deactivate comm...task_queue
 @enduml
+
+
+@startuml
+skinparam sequenceLifeLineBackgroundColor #FFBBBB
+
+Actor Bob
+Bob --> homemx: smtp transfer
+activate homemx
+homemx --> ecsmail.server: smtp transfer
+activate ecsmail.server
+ecsmail.server -> comm...mailhandler
+activate comm...mailhandler
+@enduml
+    
+    
+
 
 """
