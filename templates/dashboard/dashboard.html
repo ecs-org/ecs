@@ -27,7 +27,7 @@
     var Widget = new Class({
         initialize: function(url){
             this.url = null;
-            this.element = new Element('div', {'class': 'dashboard_widget'});
+            this.element = new Element('div', {'class': 'dashboard_widget clearfix'});
             this.element.inject($('dashboard'));
             widgets.push(this);
             this.load(url);
