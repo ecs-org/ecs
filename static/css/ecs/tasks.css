@@ -82,8 +82,7 @@
 /* TaskList */
 
 #task_main {
-  max-width: 650px;
-  padding: 10px;
+  padding: 5px;
 }
 .task_list {
   margin-bottom: 10px;
@@ -96,11 +95,17 @@
 }
 #task_list_filter label {
   display: inline-block;
-  margin: 5px 5px 5px 2px;
-  width: 50px;
+  margin: 5px 5px 3px 1px;
+  width: 55px;
+  cursor: pointer;
 }
-.task_list_choose {
+#task_main .task_list_choose {
+  min-width: 100px;
   border-bottom: 1px solid #ccc;
+  padding-bottom: 3px;
+}
+#task_main .task_list_choose select {
+  padding: 0 !important;
 }
 .task_item {
   background-color: #EFEFD1;
@@ -153,11 +158,14 @@ a:hover {
   text-decoration: underline;
 }
 
-.task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_other {
+.task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
   padding-left: 20px;
 }
 .task_mine {
   background: url(/static/images/core/user_blue.png) no-repeat top left;
+}
+.task_assigned {
+  background: url(/static/images/core/clipboard--exclamation.png) no-repeat top left;
 }
 .task_open {
   background: url(/static/images/core/users.png) no-repeat top left;
@@ -170,6 +178,9 @@ a:hover {
 }
 .task_mpg {
   background: url(/static/images/core/bandaid.png) no-repeat top left;
+}
+.task_thesis {
+  background: url(/static/images/core/book-brown.png) no-repeat top left;
 }
 .task_other {
   background: url(/static/images/core/question-frame.png) no-repeat top left;

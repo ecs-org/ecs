@@ -6,19 +6,19 @@
 
 <ol class="submission_widget_list">
 {% for submission in submissions.object_list %}
-    <li class="{% cycle 'even' 'odd' %}">
+    <li class="submission_item">
         {% with submission.current_submission_form as submission_form %}
             <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission.get_ec_number_display }}</a>
         {% endwith %}
-        {{ submission.project_title|default:'<i>{% trans "No title." %}</i>' }}
+        {{ submission.project_title|default:'<em>{% trans "No title." %}</em>' }}
         {% with submission.medical_categories.all as categories %}
             {% if categories %}
-                <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">{% trans "Categories" %}: {% for cat in categories %}<em>{{ cat }}</em>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.expedited_review_categories.all as er_categories %}
             {% if categories %}
-                <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<em>{{ cat }}</em>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
     </li>

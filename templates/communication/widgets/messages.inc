@@ -4,7 +4,7 @@
 
 <div class="messages_header">
 <!--<a class="widget popup" href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a>-->
-| <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="sortieren" />
+<img src="{{ MEDIA_URL }}/images/core/sort.png" alt="sortieren" />  
 <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a>
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>

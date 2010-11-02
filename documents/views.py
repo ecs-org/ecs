@@ -10,6 +10,13 @@ from haystack.utils import Highlighter
 
 from ecs.documents.models import Page, Document
 
+HIGHLIGHT_PREFIX_WORD_COUNT = 3
+
+class DocumentHighlighter(Highlighter):
+    def find_window(self, highlight_locations):
+        best_start, best_end = super(DocumentHighlighter, self).find_window(highlight_locations)
+        return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
+
 
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
@@ -88,7 +95,7 @@ def document_search_json(request, document_pk=None):
     if q:
         qs = SearchQuerySet().models(Page).order_by('doc_pk', 'page').filter(doc_pk=document_pk).auto_query(q)
         results = []
-        highlighter = Highlighter(q, max_length=100)
+        highlighter = DocumentHighlighter(q, max_length=100)
         for result in qs:
             results.append({
                 'page_number': result.page,
