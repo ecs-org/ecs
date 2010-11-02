@@ -308,15 +308,16 @@ input[type=submit] {
 
 /* form layout */
 
+.form {
+  border: 1px solid #eee;
+}
 .form.main .field, .form.main .tab {
   background: #f9feff;
   min-width: 700px;
   display: block;
 }
 .form.main #tabs {
-  border: 1px solid #eee;
   clear: both;
-  margin-bottom: 20px;
 }
 .form.main .field h2, .form.main .tab h2, .form.main .field h3, .form.main .tab h3 {
   letter-spacing: 1px;
@@ -549,6 +550,16 @@ fieldset.disabled {
 .form .narrow {
   width: 10em;
 }
+.form.main .textboxlist-bit{
+  list-style-type: none;
+  clear: none;
+}
+.form.main .textboxlist-autocomplete {
+  margin: -20px  0 0 240px;
+}
+.textboxlist-autocomplete ul {
+  margin: 0 !important;
+}
 
 /* specific formset styles */
 
@@ -673,14 +684,5 @@ content ol.submission_list li .actions {
 }
 .checklist_field_hidden { 
   visibility: hidden; 
-}
-
-.submission_amg, .submission_mpg, .submission_other {
-  padding-left: 20px;
-}
-
-.form.main .textboxlist-bit{
-    list-style-type: none;
-    clear: none;
 }
 
