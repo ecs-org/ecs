@@ -73,6 +73,10 @@ body.pdfviewer .hidden{
     display: block;
 }
 
+#pdfviewer .screen.i1x1 .page:hover > .info{
+    display: none;
+}
+
 #pdfviewer .viewport{
     margin-left: 60px;
     margin-right: 60px;
@@ -270,4 +274,20 @@ body.pdfviewer .searchPopup .results div:hover{
 body.pdfviewer .searchPopup .results .highlighted{
     background-color: #000000;
     color: #ffffff;
+}
+
+body.pdfviewer .popup > a.close{
+    position: absolute;
+    top: -10px;
+    right: 0px;
+    color: #ffffff;
+    z-index: 1000;
+    border: none;
+    font-size: 30px;
+    display: inline-block;
+}
+
+body.pdfviewer .popup > a.close:hover{
+    text-decoration: none;
+    color: #cc0000;
 }
