@@ -33,7 +33,7 @@ class Checklist(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     #object = GenericForeignKey()  # Postponed
     user = models.ForeignKey('auth.user')
-    document = models.ForeignKey('documents.Document', null=True)
+    documents = models.ManyToManyField('documents.Document')
 
     class Meta:
         app_label = 'core'

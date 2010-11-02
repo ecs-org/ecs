@@ -52,7 +52,9 @@ body {
   background: #fff;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: 20px;
+}
+.innerwrap {
+  margin: 10px;
 }
 
 #sidebar {

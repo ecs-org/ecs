@@ -259,7 +259,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         if(this.currentScreen){
             this.currentScreen.dispose();
         }
-        var screen = new Element('div', {'class': 'screen'});
+        var screen = new Element('div', {'class': 'screen i' + imageSetKey});
         for(var y = 0; y < h; y++){
             var row = new Element('div', {'class': 'row'});
             for(var x = 0; x < w; x++){
@@ -529,11 +529,14 @@ ecs.pdfviewer.Popup = new Class({
         this.element = new Element('div', {'class': 'searchPopup annotationDisplay popup'});
         var background = new Element('div', {'class': 'background'});
         var content = new Element('div', {'class': 'content'});
+        var closeButton = new Element('a', {'class': 'close', 'html': '&times;'});
         this.element.grab(background);
         this.element.grab(content);
+        this.element.grab(closeButton);
 
         this.initContent(content);
         
+        closeButton.addEvent('click', this.dispose.bind(this));
         this.escapeListener = (function(e){
             if(e.key == 'esc'){
                 this.dispose();
@@ -587,7 +590,7 @@ ecs.pdfviewer.SearchPopup = new Class({
             data: $H({q: this.input.value}).toQueryString(),
             method: 'get',
             onSuccess: (function(results){
-                this.resultList.innerHTML = '';
+                this.resultList.innerHTML = results.length ? '' : '<i>No results.</i>';
                 results.each((function(result){
                     var el = new Element('div', {'html': '<span class="pageNumber">Seite ' + result.page_number + '</span>: ' + result.highlight});
                     el.addEvent('click', function(){

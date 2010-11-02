@@ -51,10 +51,10 @@ def submission_workflow():
         ChecklistReview, ExternalReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
-    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Statistik') 
-    insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Insurance Review')
-    legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Legal and Patient Review')
-    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(name='Board Member Review')
+    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Statistik').order_by('-pk')[:1][0]
+    insurance_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Insurance Review').order_by('-pk')[:1][0]
+    legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Legal and Patient Review').order_by('-pk')[:1][0]
+    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Board Member Review').order_by('-pk')[:1][0]
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -372,7 +372,7 @@ def auth_ec_staff_users():
     
     for blueprint in blueprints:
         #FIXME: we need a unique constraint on name for this to be idempotent
-        ChecklistBlueprint.objects.get_or_create(name=blueprint)
+        ChecklistBlueprint.objects.get_or_create(**blueprint)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
 def checklist_questions():
@@ -391,7 +391,7 @@ def checklist_questions():
     }
 
     for bp_name in questions.keys():
-        blueprint = ChecklistBlueprint.objects.get(name=bp_name)
+        blueprint = ChecklistBlueprint.objects.filter(name=bp_name).order_by('-pk')[:1][0]
         print blueprint
         #FIXME: there is no unique constraint, so this is not idempotent
         for q in questions[bp_name]:
