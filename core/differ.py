@@ -1,40 +1,72 @@
 # -*- coding: utf-8 -*-
+import datetime
+from django.utils.translation import ugettext as _
 from ecs.utils.diff_match_patch import diff_match_patch
 
-
-class SubmissionFormDiff(list):
-
-def _render_submission_form(instance, ignored_fields=[]):
-    ignored_fields = list(ignored_fields)
-
-    fields = [x for x in instance.__class__._meta.get_all_field_names() if not x in list(ignored_fields)+['id']]
-    fields.sort()
-
-    rendered_fields = {}
-    for field in fields:
-        try:
-            value = getattr(instance, field) or ''
-        except AttributeError:
-            try:
-                value = getattr(instance, '%s_set' % field) or ''
-            except AttributeError, e:
-                print 'Error: %s %s: %s' % (instance, field, e)
-                continue
-        except Exception, e:
-            print 'Error: %s %s: %s' % (instance, field, e)
-            continue
-
-        if hasattr(value, 'all'):  # x-to-many-relation
-            rendered = u', '.join([unicode(x) for x in value.all()])
-        elif isinstance(value, models.Model):  # foreign-key
-            rendered = unicode(value)
-        else:  # all other values
-            rendered = unicode(value).replace(u'\n', u'<br />\n')
+from ecs.core.models import SubmissionForm
 
 
-        rendered_fields[field] = rendered
+DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
+DATE_FORMAT = '%Y-%m-%d'
 
-    return rendered_fields
+
+class ModelRenderer(object):
+    exclude = ('id')
+    fields = ()
+    follow = {}
+
+    def __init__(self, model, exclude=None, fields=None, follow=None):
+        self.model = model
+        if exclude:
+            self.exclude = exclude
+        if fields:
+            self.fields = fields
+        if follow:
+            self.follow = follow
+
+    def get_field_names(self):
+        names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
+        if self.fields:
+            names = names.intersection(self.fields)
+        return names.union(self.follow.keys())
+
+    def render_field(self, instance, name):
+        value = getattr(instance, name)
+        if value is None:
+            return _('No Information')
+        elif value is True:
+            return _('Yes')
+        elif value is False:
+            return _('No')
+        elif isinstance(value, datetime.date):
+            return value.strftime(DATE_FORMAT)
+        elif isinstance(value, datetime.date):
+            return value.strftime(DATETIME_FORMAT)
+        else:
+            return unicode(value)
+
+    def render(self, instance):
+        d = {}
+
+        for name in self.get_field_names():
+            d[name] = self.render_field(instance, name)
+
+        return d
+
+
+_renderers = {
+    SubmissionForm: ModelRenderer(SubmissionForm,
+        exclude=('submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents'),
+        follow = {
+            'foreignparticipatingcenter_set': 'submission_form',
+            'investigators': 'submission_form',
+            'measures': 'submission_form',
+            'documents': 'parent_object',
+            'nontesteduseddrug_set': 'submission_form',
+        },
+    ),
+}
+
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
@@ -45,7 +77,6 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     differ = diff_match_patch()
     diffs = []
 
-    ignored_fields = ('submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents')
     old = _render_submission_form(old_submission_form, ignored_fields=ignored_fields)
     new = _render_submission_form(new_submission_form, ignored_fields=ignored_fields)
 
