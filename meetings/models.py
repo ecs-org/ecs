@@ -115,7 +115,10 @@ class Meeting(models.Model):
     submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     started = models.DateTimeField(null=True)
     ended = models.DateTimeField(null=True)
-
+    #new, yet unused fields:
+    deadline = models.DateTimeField(null=True)
+    deadline_diplomathesis = models.DateTimeField(null=True)
+    
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         

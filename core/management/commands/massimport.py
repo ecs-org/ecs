@@ -79,6 +79,7 @@ class Command(BaseCommand):
         make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
         make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
         make_option('--analyze', '-a', action='store', dest='analyze_dir', help='analyze a bunch of doc files'),
+        make_option('--meeting_dates', '-m', action='store', dest='meeting_dates', help='import meeting dates from .py file'),
     )
 
     def _abort(self, message, dont_exit=False):
@@ -599,9 +600,44 @@ class Command(BaseCommand):
                 t_entry.save()
         sys.stdout.write('\033[32mdone\033[0m\n')
 
-
+    @transaction.commit_on_success
+    def _import_meeting_dates(self, filename):
+        print "import_meeting_dates"
+        from pprint import pprint
+        
+        parsed_dates = None
+        
+        try:
+            #from deployment.utils import import_from
+            #t = import_from(filename)
+            #from parsed_dates import parsed_dates
+            #cant import form src/deployment (import_from):
+            import imp
+            path, file = os.path.split(os.path.abspath(filename))
+            name, ext = os.path.splitext(file)
+            if not os.path.exists(filename):
+                raise ImportError, name
+            m = imp.load_source(name, filename)
+            if not m:
+                raise ImportError, name
+            parsed_dates = m.parsed_dates
+        except ImportError:
+            self._abort('Failed to import %s' % filename)
+            return None
+        
+        print "import magic done"
+        for mdates in parsed_dates:
+            mdate = mdates['meeting']
+            tmpm = Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month)
+            print tmpm
+            #Meeting.objects.filter(title=title).delete()
+            #meeting = Meeting.objects.create(title=title, start=start)
+        
+        
+    
+    
     def handle(self, *args, **kwargs):
-        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir']] if x])
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir'], kwargs['meeting_dates']] if x])
         if options_count is not 1:
             self._abort('please specifiy one of -d/-s/-t/-c/-p/-a')
 
@@ -617,7 +653,8 @@ class Command(BaseCommand):
             self._import_categorize(kwargs['categorize'])
         elif kwargs['analyze_dir']:
             self._analyze_dir(kwargs['analyze_dir'])
-
+        elif kwargs['meeting_dates']:
+            self._import_meeting_dates(kwargs['meeting_dates'])
         sys.exit(0)
 
 
