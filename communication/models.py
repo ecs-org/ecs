@@ -136,6 +136,7 @@ class Thread(models.Model):
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s." % (self.sender, self.receiver))
         
+        # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
         smtp_delivery_state = "received" if is_received else "new"
         
         msg = self.messages.create(
@@ -206,7 +207,7 @@ class Message(models.Model):
                 msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
                     message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
                     from_email=self.return_address, recipient_list=self.receiver.email,)
-                    # FIXME callback=subtask(update_smtp_delivery))
+                    # FIXME callback=subtask(update_smtp_delivery)) does not work, because it never finds a valid communication.message object, maybe we should try with post-save
                 self.smtp_delivery_state = "pending"              
                 self.rawmsg_msgid, self.rawmsg = msg_list[0]
                 self.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()

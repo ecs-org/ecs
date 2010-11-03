@@ -24,7 +24,7 @@ def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs)
         if callback:
             subtask(callback).delay(msgid, "failure")
         raise
-        
+        # FIXME: retry does not work, the way i think it should work
         """
         if callback:
             subtask(callback).delay(msgid, "retry")
