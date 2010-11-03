@@ -55,7 +55,9 @@
             searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
             editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
             deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
-            helpContents: $('navigation')
+            helpContents: $('navigation'),
+            wheelScrollThreshold: 1,//30,
+            wheelTimeThreshold: 333
         });
         
         var IMAGE_TILING = [1, 3, 5];

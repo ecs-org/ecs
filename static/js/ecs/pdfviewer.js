@@ -67,6 +67,8 @@ ecs.pdfviewer.ImageSet = new Class({
 });
 
 ecs.pdfviewer.utils = {
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
     isAtBottom: function(){
         var win = $(window);
         // we have to use <= 0, because firefox somehow manages to scroll one pixel beyond the window.
@@ -74,6 +76,13 @@ ecs.pdfviewer.utils = {
     },
     isAtTop: function(){
         return $(window).getScroll().y == 0
+    },
+    scrollToTop: function(){
+        $(document.body).scrollTo(0, 0);
+    },
+    scrollToBottom: function(){
+        var win = $(window);
+        $(document.body).scrollTo(0, win.getScrollHeight() - win.getHeight());
     }
 };
 
@@ -82,7 +91,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.element = $(el);
         this.pageCount = options.pageCount;
         this.controllers = options.controllers;
-        this.wheelThreshold = options.wheelThreshold || 30.0;
+        this.wheelScrollThreshold = options.wheelScrollThreshold || 1.0;
+        this.wheelTimeThreshold = options.wheelTimeThreshold || 1;
         this.title = options.title;
         this.helpContents = options.helpContents;
         this.searchURL = options.searchURL;
@@ -99,7 +109,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
 
         this._wheelCounter = 0;
         this._wheelTimeout = null;
-        this._wheelReset = (function(){this._wheelCounter = 0; this._wheelTimeout = null;}).bind(this);
+        this._wheelTimestamp = null;
+        this._wheelReset = (function(){this._wheelCounter = 0; this._wheelTimeout = null; this._wheelTimestamp = null;}).bind(this);
         $(window).addEvent('click', this.handleClick.bind(this));
         $(window).addEvent('mousewheel', this.handleMouseWheel.bind(this));
         $(window).addEvent('keydown', this.handleKeyPress.bind(this));
@@ -186,10 +197,11 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
     },
     nextPage: function(delta){
-        $(document.body).scrollTo(0, 0);
+        ecs.pdfviewer.utils.scrollToTop();
         this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1));
     },
     previousPage: function(delta){
+        ecs.pdfviewer.utils.scrollToBottom();
         this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0));
     },
     gotoPage: function(pageIndex){
@@ -327,11 +339,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
             return false;
         }
         
-        if(metaKey && (e.key == 's' || e.key == 'f')){
-            this.searchPopup.show();
-            return false;
-        }
-        
         if(this.annotationMode && e.key == 'esc'){
             this.toggleAnnotationMode();
             return;
@@ -339,7 +346,32 @@ ecs.pdfviewer.DocumentViewer = new Class({
         if(this.annotationMode){
             return;
         }
-
+        
+        if(metaKey && e.key == '1' || e.code == U.PAGE_UP){
+            if(!atTop){
+                U.scrollToTop();
+            }
+            else{
+                this.previousPage();
+            }
+            return false;
+        }
+        
+        if(metaKey && e.key == '9' || e.code == U.PAGE_DOWN){
+            if(!atBottom){
+                U.scrollToBottom();
+            }
+            else{
+                this.nextPage();
+            }
+            return false;
+        }
+        
+        if(metaKey && (e.key == 's' || e.key == 'f')){
+            this.searchPopup.show();
+            return false;
+        }
+        
         if(e.key == 'enter'){
             this.cycleController(+1);
             return false;
@@ -398,11 +430,14 @@ ecs.pdfviewer.DocumentViewer = new Class({
                 clearTimeout(this._wheelTimeout)
             }
             else{
-                this._wheelTimeout = setTimeout(this._wheelReset, 100);
+                this._wheelTimestamp = (new Date()).getTime();
             }
+            this._wheelTimeout = setTimeout(this._wheelReset, 100);
             this._wheelCounter += Math.abs(e.wheel);
-            if(this._wheelCounter >= this.wheelThreshold){
+            var scrollTime = (new Date()).getTime() - this._wheelTimestamp;
+            if(this._wheelCounter >= this.wheelScrollThreshold && scrollTime >= this.wheelTimeThreshold){
                 this._wheelCounter = 0;
+                this._wheelTimestamp = 0;
                 if(e.wheel > 0){
                     this.previousPage();
                 }
