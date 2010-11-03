@@ -131,14 +131,15 @@ body.pdfviewer #navigation{
     position: fixed;
     top: 50%;
     left: 50%;
-    margin-left: -250px;
-    margin-top: -150px;
-    width: 460px;
-    height: 260px;
+    margin-left: -270px;
+    margin-top: -170px;
+    width: 500px;
+    height: 300px;
     padding: 20px;
     opacity: 0.9;
     color: #ffffff;
     z-index: 10000;
+    font-size: 90%;
 }
 
 #pdfviewer .annotation{
@@ -290,4 +291,21 @@ body.pdfviewer .popup > a.close{
 body.pdfviewer .popup > a.close:hover{
     text-decoration: none;
     color: #cc0000;
+}
+
+body.pdfviewer .popup span.label{
+    color: #ffffff;
+}
+
+body.pdfviewer .slider{
+    width: 200px;
+    height: 8px;
+    background-color: #ffffff;
+    opacity: 0.9;
+}
+
+body.pdfviewer .slider .knob{
+    width: 8px;
+    height: 8px;
+    background-color: #cc0000;
 }

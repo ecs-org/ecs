@@ -138,6 +138,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
 
         this.annotationEditor = new ecs.pdfviewer.AnnotationEditor(this);
         this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
+        this.gotoPagePopup = new ecs.pdfviewer.GotoPagePopup(this);
         
         var disableKeyNav = (function(){this.keyboardNavigationEnabled = false;}).bind(this)
         var enableKeyNav = (function(){this.keyboardNavigationEnabled = true;}).bind(this)
@@ -147,6 +148,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         
         this.searchPopup.addEvent('show', disableKeyNav);
         this.searchPopup.addEvent('hide', enableKeyNav);
+        
+        this.gotoPagePopup.addEvent('show', disableKeyNav);
+        this.gotoPagePopup.addEvent('hide', enableKeyNav);
         
     },
     gotoAnchor: function(hash){
@@ -189,6 +193,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.setControllerIndex(index);
     },
     setPage: function(pageIndex, update){
+        if(pageIndex < 0 || pageIndex >= this.pageCount){
+            return;
+        }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
@@ -369,6 +376,11 @@ ecs.pdfviewer.DocumentViewer = new Class({
         
         if(metaKey && (e.key == 's' || e.key == 'f')){
             this.searchPopup.show();
+            return false;
+        }
+        
+        if(metaKey && e.key == 'g'){
+            this.gotoPagePopup.show();
             return false;
         }
         
@@ -597,6 +609,23 @@ ecs.pdfviewer.Popup = new Class({
     },
     onShow: function(){},
     initContent: function(content){}
+});
+
+ecs.pdfviewer.GotoPagePopup = new Class({
+    Extends: ecs.pdfviewer.Popup,
+    initContent: function(content){
+        this.input = new Element('input', {type: 'text'});
+        this.input.addEvent('change', (function(){
+            var p = parseInt(this.input.value);
+            this.viewer.gotoPage(p - 1);
+        }).bind(this));
+        content.grab(new Element('span', {'class': 'label', 'html': 'Goto Page:'}))
+        content.grab(this.input);
+
+    },
+    onShow: function(){
+        this.input.value = this.viewer.currentPageIndex + 1;
+    }
 });
 
 ecs.pdfviewer.SearchPopup = new Class({
