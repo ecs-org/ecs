@@ -90,23 +90,7 @@
 {% endblock %}
 
 {% block jsbottom %}
-    {{ block.super }}
-    {% compress js %}
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/flext.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooEditable/Source/MooEditable/MooEditable.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/Overlay.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Iframe.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Confirm.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}bugshot/bugshot.js"></script>
-    {% endcompress %}
-
+  {{ block.super }}
   <script type="text/javascript">
     function get_origin() {
       {% comment %}
