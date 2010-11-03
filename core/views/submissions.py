@@ -402,7 +402,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
 
     diffs = diff_submission_forms(old_submission_form, new_submission_form)
 
-    return render(request, 'submissions/diff.html', {
+    return render(request, 'submissions/diff/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
     })

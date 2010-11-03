@@ -2,20 +2,69 @@
 import datetime
 from django.utils.translation import ugettext as _
 from django.db import models
+from django.http import HttpRequest
 from ecs.utils.diff_match_patch import diff_match_patch
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter
 from ecs.documents.models import Document, DocumentType
 from ecs.core.forms import SubmissionFormForm
+from ecs.utils.viewutils import render_html
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
 DATE_FORMAT = '%d.%m.%Y'
 
+class Node(object):
+    type = None
+    def __init__(self, content):
+        self.content = content
+
+    def diff(self, other):
+        raise NotImplementedError
+
+    def __unicode__(self):
+        return unicode(self.content)
+
+class TextNode(Node):
+    type = 'text'
+
+    def diff(self, other):
+        differ = diff_match_patch()
+
+        diff = differ.diff_main(self.content, other.content)
+        differ.diff_cleanupSemantic(diff)
+
+        return diff
+
+class AtomicTextNode(Node):
+    type = 'atomic_text'
+
+    def diff(self, other):
+        if self.content == other.content:
+            return [(0, self.content)]
+        else:
+            return [(-1, self.content), (1, other.content)]
+
+class ListNode(Node):
+    type = 'list'
+
+    def diff(self, other):
+        diff = []
+        all_elements = set(self.content).union(other.content)
+
+        for elem in all_elements:
+            if not elem in self.content:   # new
+                diff.append((1, unicode(elem)))
+            elif not elem in other.content: # old
+                diff.append((-1, unicode(elem)))
+            else:
+                diff.append((0, unicode(elem)))
+
+        return diff
 
 class ModelRenderer(object):
-    exclude = ('id')
+    exclude = ()
     fields = ()
     follow = {}
 
@@ -37,33 +86,50 @@ class ModelRenderer(object):
     def render_field(self, instance, name):
         val = getattr(instance, name)
         if val is None:
-            return _('No Information')
+            return AtomicTextNode(_('No Information'))
         elif val is True:
-            return _('Yes')
+            return AtomicTextNode(_('Yes'))
         elif val is False:
-            return _('No')
+            return AtomicTextNode(_('No'))
         elif isinstance(val, datetime.date):
-            return val.strftime(DATE_FORMAT)
+            return AtomicTextNode(val.strftime(DATE_FORMAT))
         elif isinstance(val, datetime.date):
-            return val.strftime(DATETIME_FORMAT)
+            return AtomicTextNode(val.strftime(DATETIME_FORMAT))
         elif hasattr(val, 'all') and hasattr(val, 'count'):
-            return [render_model_instance(x) for x in val.all()]
+            return ListNode([TextNode(render_model_instance(x, plain=True)) for x in val.all()])
         
         field = self.model._meta.get_field(name)
 
         if isinstance(field, models.ForeignKey):
-            return render_model_instance(val)
+            return TextNode(render_model_instance(val, plain=True))
         else:
-            return unicode(val)
+            return TextNode(unicode(val))
         
-    def render(self, instance):
+    def render(self, instance, plain=False):
         d = {}
 
         for name in self.get_field_names():
             d[name] = self.render_field(instance, name)
 
+        if plain:
+            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items()])
+            d += '<br />\n'
+
         return d
 
+
+class DocumentRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = Document
+        return super(DocumentRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        html = render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': instance})
+        if plain:
+            return html
+        else:
+            return {'link': html}
+        
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
@@ -80,15 +146,15 @@ _renderers = {
         exclude=('id', 'submission_form',),
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
-    Document: ModelRenderer(Document, fields=('doctype', 'file', 'date', 'version', 'mimetype')),
+    Document: DocumentRenderer(),
     DocumentType: ModelRenderer(DocumentType, fields=('name',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelRenderer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
 }
 
-def render_model_instance(instance):
-    return _renderers[instance.__class__].render(instance)
+def render_model_instance(instance, plain=False):
+    return _renderers[instance.__class__].render(instance, plain=plain)
 
 
 def diff_submission_forms(old_submission_form, new_submission_form):
@@ -102,13 +168,12 @@ def diff_submission_forms(old_submission_form, new_submission_form):
 
     diffs = []
     for field in sorted(old.keys()):
-        diff = differ.diff_main(unicode(old[field]), unicode(new[field]))
-        if differ.diff_levenshtein(diff):
+        diff = old[field].diff(new[field])
+        if differ.diff_levenshtein(diff or []):
             try:
                 label = form.fields[field].label
             except KeyError:
                 label = field
-            differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
     
     return diffs
