@@ -169,14 +169,21 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
-    form_class = make_checklist_form(checklist)
-    form = form_class(request.POST or None)
+    checklist_documents = checklist.documents.all()
 
-    if blueprint.min_document_count is not None:
-        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
-    else:
+    form = make_checklist_form(checklist)(request.POST or None)
+
+    if blueprint.min_document_count is None:
         document_form = None
-
+    elif 'document-file' in request.FILES or len(checklist_documents) < blueprint.min_document_count:
+        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+        if document_form.is_valid():
+            doc = document_form.save()
+            checklist.documents.add(doc)
+            document_form = DocumentForm(prefix='document')
+    else:
+        document_form = DocumentForm(prefix='document')
+        
     if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
         for i, question in enumerate(blueprint.questions.order_by('text')):
             answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
@@ -184,7 +191,10 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
             answer.comment = form.cleaned_data['c%s' % i]
             answer.save()
 
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={'checklist_document_form': document_form})
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={
+        'checklist_document_form': document_form,
+        'checklist_documents': checklist_documents,
+    })
 
 
 def vote_review(request, submission_form_pk=None):

@@ -2,13 +2,17 @@
 
 import datetime, uuid
 import traceback
+import hashlib
+import logging
 
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models import Q
-from ecs.ecsmail.mail import send_mail
-from sets import Set
+from django.contrib.auth.models import User
+
+from celery.task.sets import subtask
+from ecs.ecsmail.mail import deliver
+from ecs.communication.task_queue import update_smtp_delivery
 
 
 MESSAGE_ORIGIN_ALICE = 1
@@ -16,10 +20,13 @@ MESSAGE_ORIGIN_BOB = 2
 
 DELIVERY_STATES = (
     ("new", "new"),
+    ("received", "received"),
+    ("pending", "pending"),
     ("started", "started"),
-    ("sent", "sent"),
-    ("failed", "failed"),
-    ("skipped", "skipped"),
+    ("success", "success"),
+    ("failure", "failure"),
+    ("retry", "retry"),
+    ("revoked", "revoked"),
 )
 
 
@@ -38,7 +45,8 @@ class ThreadQuerySet(models.query.QuerySet):
         
     def open(self, user):
         return self.filter(models.Q(closed_by_receiver=False, receiver=user) | models.Q(closed_by_sender=False, sender=user))
-        
+
+
 class ThreadManager(models.Manager):
     def get_query_set(self):
         return ThreadQuerySet(self.model)
@@ -75,8 +83,7 @@ class MessageQuerySet(models.query.QuerySet):
         
     def incoming(self, user):
         return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
-        
-    
+  
 
 class MessageManager(models.Manager):
     def get_query_set(self):
@@ -119,7 +126,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None):
+    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -128,12 +135,20 @@ class Thread(models.Model):
             origin = MESSAGE_ORIGIN_ALICE
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s." % (self.sender, self.receiver))
+        
+        # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
+        smtp_delivery_state = "received" if is_received else "new"
+        
         msg = self.messages.create(
             sender=user, 
             receiver=receiver, 
             text=text, 
             reply_to=reply_to, 
             origin=origin,
+            smtp_delivery_state= smtp_delivery_state,
+            rawmsg= rawmsg,
+            rawmsg_msgid= rawmsg_msgid,
+            rawmsg_digest_hex= rawmsg_digest_hex
         )
         self.last_message = msg
         self.closed_by_sender = False
@@ -153,6 +168,7 @@ class Thread(models.Model):
     def get_participants(self):
         return User.objects.filter(Q(outgoing_messages__thread=self) | Q(incoming_messages__thread=self)).distinct()
 
+
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
     sender = models.ForeignKey(User, related_name='outgoing_messages')
@@ -162,6 +178,11 @@ class Message(models.Model):
     unread = models.BooleanField(default=True)
     soft_bounced = models.BooleanField(default=False)
     text = models.TextField()
+    
+    rawmsg = models.TextField(null=True)
+    rawmsg_msgid = models.CharField(max_length=250, null=True, db_index=True)
+    rawmsg_digest_hex = models.CharField(max_length=32, null=True, db_index=True) 
+    
     origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
     
     smtp_delivery_state = models.CharField(max_length=7, 
@@ -178,19 +199,41 @@ class Message(models.Model):
     
     @property
     def return_address(self):
-        return '%s@%s' % (self.return_username, settings.FROM_DOMAIN)
+        return '%s@%s' % (self.return_username, settings.ECSMAIL ['authoritative_domain'])
     
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
             try:
-                self.smtp_delivery_state='started'
-                send_mail(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
+                msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
                     message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
-                    from_email=self.return_address, recipient_list=self.receiver.email)
-                self.smtp_delivery_state='sent'
+                    from_email=self.return_address, recipient_list=self.receiver.email,)
+                    # FIXME callback=subtask(update_smtp_delivery)) does not work, because it never finds a valid communication.message object, maybe we should try with post-save
+                self.smtp_delivery_state = "pending"              
+                self.rawmsg_msgid, self.rawmsg = msg_list[0]
+                self.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
             except:
                 traceback.print_exc()
-                self.smtp_delivery_state='failed'
+                self.smtp_delivery_state = 'failure'
         super(Message, self).save(*args, **kwargs)
 
+"""
 
+def _post_message_save(sender, **kwargs):
+    m = kwargs['instance']
+    if m.smtp_delivery_state=='new':
+        try:
+            msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (m.sender, m.receiver), 
+                message='Betreff: %s\r\n%s' % (m.thread.subject, m.text),
+                from_email=m.return_address, recipient_list=m.receiver.email,
+                callback=subtask(update_smtp_delivery))
+            m.smtp_delivery_state = "pending"              
+            m.rawmsg_msgid, self.rawmsg = msg_list[0]
+            m.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
+        except:
+            traceback.print_exc()
+            self.smtp_delivery_state = 'failure'
+    
+
+post_save.connect(_post_message_save, sender=Message)
+
+"""

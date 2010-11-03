@@ -2,6 +2,7 @@
 
 import os.path, platform, sys
 from django.core.exceptions import ImproperlyConfigured
+from copy import deepcopy
 
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
@@ -256,30 +257,26 @@ RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
 RENDER_MEMCACHE_MAXSIZE = 2**29
 
 
-# lamson config, 
-# defaults to send outgoing django mail directly to dummy smartmx (ecsmail log) and store results in maildir (ecsmail/run/queue)
-# for production override LAMSON_SEND_THROUGH_RECEIVER, RECEIVER_CONFIG, RELAY_CONFIG, FROM_DOMAIN, DEFAULT_FROM_EMAIL, EMAIL_HOST, EMAIL_PORT
-LAMSON_BOUNCES_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "bounces") # bounce queue 
-LAMSON_UNDELIVERABLE_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "undeliverable") # undeliverable queue
-LAMSON_TESTING_QUEUE = os.path.join(PROJECT_DIR, "ecsmail", "run", "queue") # queue where lamson log delivers
-LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '127.0.0.1', 'port': 8823} # listen here 
-LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 8825}
-LAMSON_HANDLERS = ['ecs.ecsmail.app.handlers.mailreceiver']
-LAMSON_ROUTER_DEFAULTS = {'host': '.+'}
-LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1']
-LAMSON_SEND_THROUGH_RECEIVER = False ; # this is set to True on production systems where mail should actually been routed
-# used both by django AND lamson, XXX lamson and django should be on the same machine
-FROM_DOMAIN = 'example.net' # outgoing/incoming mail domain name (gets overriden on host ecsdev)
-DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-if LAMSON_SEND_THROUGH_RECEIVER:
-    EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host'] 
-    EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port'] 
-else:
-    EMAIL_HOST = '127.0.0.1' # LAMSON_RELAY_CONFIG['host'] 
-    EMAIL_PORT = 4789 #LAMSON_RELAY_CONFIG['port'] 
+# mail lamson config, standard django values
+EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+# EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
 
-        
-# FIXME: lamson currently only sends to email addresses listed in EMAIL_WHITELST
+# ecsmail server settings
+ECSMAIL_DEFAULT = {
+    'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
+    'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
+    'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
+    'listen': '0.0.0.0', 
+    'port': 8823,
+    'handlers': ['ecs.communication.mailreceiver'],
+    'trusted_sources': ['127.0.0.1'],
+    'authoritative_domain': 'localhost',
+    }
+ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
+
+# FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}
 # FIXME: Agenda, Billing is send to whitelist instead of invited people
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
@@ -332,8 +329,9 @@ CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.meetings.task_queue',
-    'ecs.documents.task_queue',
+    'ecs.communication.task_queue'
     'ecs.ecsmail.task_queue',
+    'ecs.documents.task_queue',
     'ecs.workflow.task_queue'
     #ecs.mediaserver.task_queue',
 )
@@ -401,16 +399,12 @@ except ImportError:
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
-# hack some settings
-if 'test' in sys.argv: # FIXME: what does this do ?
-    FEEDBACK_CONFIG['create_trac_tickets'] = False
-    FEEDBACK_CONFIG['store_in_db'] = True
-    
+
+# hack some settings for test and runserver    
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-    
-if 'test' in sys.argv or 'runserver' in sys.argv:
-    from ecsmail_workaround_settings import *
+elif 'runserver' in sys.argv:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 import djcelery
 djcelery.setup_loader()

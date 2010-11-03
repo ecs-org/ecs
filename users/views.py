@@ -13,7 +13,7 @@ from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
-from ecs.ecsmail.mail import send_html_email
+from ecs.ecsmail.mail import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, MarkUserIndisposedForm, UserForm, ProfileForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
@@ -73,7 +73,8 @@ def register(request):
             'activation_url': activation_url,
             'form': form,
         }))
-        send_html_email(subject='ECS - Anmeldung', message_html=htmlmail, recipient_list=form.cleaned_data['email'])
+        deliver(subject='ECS - Anmeldung', message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/registration/registration_complete.html', {})
         
     return render(request, 'users/registration/registration_form.html', {
@@ -125,7 +126,8 @@ def request_password_reset(request):
         htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
             'reset_url': reset_url,
         }))
-        send_html_email(subject='ECS - Passwort vergessen', message_html=htmlmail, recipient_list=form.cleaned_data['email'])
+        deliver(subject='ECS - Passwort vergessen', message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/password_reset/request_complete.html', {
             'email': form.cleaned_data['email'],
         })

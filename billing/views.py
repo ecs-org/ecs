@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from ecs.core.models import Submission
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, render_html
-from ecs.ecsmail.mail import send_mail
+from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
 
 from ecs.billing.models import Price
@@ -102,13 +102,12 @@ def submission_billing(request):
         htmlmail = unicode(render_html(request, 'billing/email/submissions.html', {}))
         plainmail = whitewash(htmlmail)
 
-        send_mail(subject='Billing request', 
+        deliver(subject='Billing request', 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('billing-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=settings.BILLING_RECIPIENT_LIST, 
-            fail_silently=False
         )
 
         summary, total = collect_submission_billing_stats(selected_for_billing)
@@ -170,13 +169,12 @@ def external_review_payment(request):
         htmlmail = unicode(render_html(request, 'billing/email/external_review.html', {}))
         plainmail = whitewash(htmlmail)
         
-        send_mail(subject='Payment request', 
+        deliver(subject='Payment request', 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('externalreview-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=settings.BILLING_RECIPIENT_LIST, 
-            fail_silently=False
         )
         
         return render(request, 'billing/external_review_summary.html', {

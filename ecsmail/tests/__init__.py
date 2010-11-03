@@ -1,2 +1,2 @@
-from ecsmailtest import ecsmailTest, simpleMessagesTest
+from ecsmailtest import *
 from persil import PersilTest
