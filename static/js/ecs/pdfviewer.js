@@ -99,6 +99,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.editAnnotationURL = options.editAnnotationURL;
         this.deleteAnnotationURL = options.deleteAnnotationURL;
         this.metaKey = options.metaKey || '';
+        this.minAnnotationWidth = options.minAnnotationWidth || 20;
+        this.minAnnotationHeight = options.minAnnotationHeight || 20;
+
         this.keyboardNavigationEnabled = true;
 
         this.imageSets = {};
@@ -135,6 +138,19 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.annotations = $H({});
         this.annotationMode = false;
         this.annotationOverlay = new Element('div', {'class': 'annotationOverlay'})
+        this.annotationFrame = new ecs.dragdrop.Frame(this.annotationOverlay);
+        
+        this.annotationFrame.addEvent('complete', (function(f){
+            console.log(f);
+            if(f.w > this.minAnnotationWidth || f.h > this.minAnnotationHeight){
+                var rel = this.annotationOverlay.getCoordinates();
+                var annotation = new ecs.pdfviewer.Annotation(null, "", f.x / rel.width, f.y / rel.height, f.w / rel.width, f.h / rel.height);
+                this.addAnnotation(this.currentPageIndex, annotation);
+                var pageEl = this.currentScreen.getElement('.page');
+                var annotationElement = this.renderAnnotation(pageEl, annotation);
+                annotation.startAnnotationMode(annotationElement);
+            }
+        }).bind(this));
 
         this.annotationEditor = new ecs.pdfviewer.AnnotationEditor(this);
         this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
@@ -463,15 +479,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var target = $(e.target);
         var pageEl = target.hasClass('page') ? target : target.getParent('.page');
         if(this.annotationMode){
-            if(pageEl && !target.getParent('.annotation')){
-                var rel = this.annotationOverlay.getCoordinates();
-                var x = (e.page.x - rel.left) / rel.width;
-                var y = (e.page.y - rel.top) / rel.height;
-                var annotation = new ecs.pdfviewer.Annotation(null, "", x - 0.01, y - 0.01, 0.02, 0.02);
-                this.addAnnotation(this.currentPageIndex, annotation);
-                var annotationElement = this.renderAnnotation(pageEl, annotation);
-                annotation.startAnnotationMode(annotationElement);
-            }
             return;
         }
         if(e.alt){

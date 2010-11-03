@@ -65,6 +65,12 @@ body.pdfviewer .hidden{
     z-index: 10;
 }
 
+#pdfviewer .page > .annotationOverlay .ecs-DragDropFrameOverlay{
+    background-color: #ffff00;
+    border: 1px dashed #ff0000;
+    opacity: 1;
+}
+
 #pdfviewer .page:hover{
     border-color: #cc0000;
 }
