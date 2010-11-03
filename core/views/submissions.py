@@ -37,6 +37,7 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.audit.models import AuditTrail
 from ecs.core.models import Vote
+from ecs.core.diff import diff_submission_forms
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -398,27 +399,12 @@ def import_submission_form(request):
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
     new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
-    assert(old_submission_form.submission == new_submission_form.submission)
 
-    diffs = SubmissionFormDiff(old_submission_form, new_submission_form)
-    
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
+    diffs = diff_submission_forms(old_submission_form, new_submission_form)
 
-    ctype = ContentType.objects.get_for_model(Document)
-    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
-
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
-    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
-
-    print new_documents
-
-    return render(request, 'submissions/diff.html', {
+    return render(request, 'submissions/diff/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
-        'new_documents': new_documents,
     })
 
 @with_docstash_transaction

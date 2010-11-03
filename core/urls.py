@@ -22,7 +22,7 @@ urlpatterns = patterns(
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
     url(r'^submission_form/import/$', 'ecs.core.views.import_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_form_list'),
-    url(r'^submission_form/(?P<old_submission_form_pk>\d+)/(?P<new_submission_form_pk>\d+)/diff/$', 'ecs.core.views.diff'),
+    url(r'^diff_submission_forms/(?P<old_submission_form_pk>\d+)/(?P<new_submission_form_pk>\d+)/$', 'ecs.core.views.diff'),
     url(r'^submission_widget/$', 'ecs.core.views.submission_widget'),
     url(r'^submission_list/$', 'ecs.core.views.submission_list'),
     
