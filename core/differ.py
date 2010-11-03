@@ -6,8 +6,8 @@ from ecs.utils.diff_match_patch import diff_match_patch
 from ecs.core.models import SubmissionForm
 
 
-DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
-DATE_FORMAT = '%Y-%m-%d'
+DATETIME_FORMAT = '%d.%m.%Y %H:%M'
+DATE_FORMAT = '%d.%m.%Y'
 
 
 class ModelRenderer(object):
