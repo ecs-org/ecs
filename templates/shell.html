@@ -10,13 +10,13 @@
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
             {% compress css %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/ecs/base.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/datepicker.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/Roar.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooEditable/Assets/MooEditable/MooEditable.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/base.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/core.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/meetings.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/communication.css" />
@@ -36,14 +36,14 @@
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
             {% compress js %}
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/GrowingInput.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/dbug.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.4-core.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.4.4-more.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/datepicker.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/Roar/Roar.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/GrowingInput.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/dbug.js"></script>
              {% endcompress %}
         {% endblock %}
     </body>
