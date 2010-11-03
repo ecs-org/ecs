@@ -2,6 +2,7 @@
 
 import os.path, platform, sys
 from django.core.exceptions import ImproperlyConfigured
+from copy import deepcopy
 
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
@@ -263,7 +264,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 # EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
 
 # ecsmail server settings
-ECSMAIL = {
+ECSMAIL_DEFAULT = {
     'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
     'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
     'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
@@ -273,6 +274,7 @@ ECSMAIL = {
     'trusted_sources': ['127.0.0.1'],
     'authoritative_domain': 'localhost',
     }
+ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
 # FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST
 EMAIL_WHITELIST = {}

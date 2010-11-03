@@ -1,8 +1,6 @@
-'''
-Created on 26.09.2010
+# -*- coding: utf-8 -*-
 
-@author: felix
-'''
+import os
 # use different settings if on host ecsdev.ep3.at depending username
 import getpass
 user = getpass.getuser()
@@ -36,8 +34,8 @@ RENDER_MEMCACHE_PORT = 11211
 # ecsmail server settings
 # FIXME: we should only change settings but not carbon copy it from settings.py
 ECSMAIL = {
-    'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
-    'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
+    'queue_dir': os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-mail"),
+    'log_dir':   os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-log"),
     'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
