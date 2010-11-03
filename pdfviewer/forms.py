@@ -8,7 +8,7 @@ class DocumentAnnotationForm(forms.ModelForm):
         
     class Meta:
         model = DocumentAnnotation
-        exclude = ('document', 'user')
+        exclude = ('document', 'user', 'author')
         
     def clean_page_number(self):
         page_num = self.cleaned_data['page_number']
