@@ -33,25 +33,23 @@ RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211
 
 
-# lamson config
-FROM_DOMAIN = 'ecsdev.ep3.at'
-LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '127.0.0.1', 'port': 8823} # listen here 
+# ecsmail server settings
+ECSMAIL ['port']= 8823
+ECSMAIL ['authoritative_domain']= 'ecsdev.ep3.at'
 
 if user == "shredder":
-    LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.188']
-    LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '0.0.0.0', 'port': 8833} # listen here 
-    FROM_DOMAIN = "s.ecsdev.ep3.at"
-    LAMSON_SEND_THROUGH_RECEIVER = True
+    ECSMAIL ['port']= 8833
+    ECSMAIL ['authoritative_domain']= 's.ecsdev.ep3.at'
+    ECSMAIL ['trusted_sources'] = ['127.0.0.1', '78.46.72.188']
 elif user == "testecs":
-    LAMSON_ALLOWED_RELAY_HOSTS = ['127.0.0.1', '78.46.72.189']
-    LAMSON_RECEIVER_CONFIG = {'listen': '0.0.0.0', 'host': '0.0.0.0', 'port': 8843} # listen here 
-    FROM_DOMAIN = "test.ecsdev.ep3.at"
-    LAMSON_SEND_THROUGH_RECEIVER = True
+    ECSMAIL ['port']= 8843
+    ECSMAIL ['authoritative_domain']= 'test.ecsdev.ep3.at'
+    ECSMAIL ['trusted_sources'] = ['127.0.0.1', '78.46.72.189']
 
-DEFAULT_FROM_EMAIL = 'noreply@%s' % (FROM_DOMAIN,) # unless we have a reply path, we send with this.
-LAMSON_RELAY_CONFIG = {'host': '127.0.0.1', 'port': 25} # our smartmx on ecsdev.ep3.at
-EMAIL_HOST = LAMSON_RECEIVER_CONFIG['host']
-EMAIL_PORT = LAMSON_RECEIVER_CONFIG['port']
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL ['authoritative_domain']) 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
 
 if user == "testecs":
     # fulltext search engine override (testecs uses solr instead of whoosh)
