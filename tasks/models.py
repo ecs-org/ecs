@@ -55,7 +55,7 @@ class Task(models.Model):
 
     def save(self, *args, **kwargs):
         rval = super(Task, self).save(*args, **kwargs)
-        if not self.workflow_token.deadline:
+        if self.workflow_token and not self.workflow_token.deadline:
             self.workflow_token.deadline = datetime.datetime.now() + datetime.timedelta(days=30)
             self.workflow_token.save()
         return rval
