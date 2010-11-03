@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.utils.translation import ugettext as _
+from django.db import models
 from ecs.utils.diff_match_patch import diff_match_patch
 
-from ecs.core.models import SubmissionForm
+from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
+    Measure, NonTestedUsedDrug, ForeignParticipatingCenter
+from ecs.documents.models import Document, DocumentType
+from ecs.core.forms import SubmissionFormForm
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -31,20 +35,27 @@ class ModelRenderer(object):
         return names.union(self.follow.keys())
 
     def render_field(self, instance, name):
-        value = getattr(instance, name)
-        if value is None:
+        val = getattr(instance, name)
+        if val is None:
             return _('No Information')
-        elif value is True:
+        elif val is True:
             return _('Yes')
-        elif value is False:
+        elif val is False:
             return _('No')
-        elif isinstance(value, datetime.date):
-            return value.strftime(DATE_FORMAT)
-        elif isinstance(value, datetime.date):
-            return value.strftime(DATETIME_FORMAT)
-        else:
-            return unicode(value)
+        elif isinstance(val, datetime.date):
+            return val.strftime(DATE_FORMAT)
+        elif isinstance(val, datetime.date):
+            return val.strftime(DATETIME_FORMAT)
+        elif hasattr(val, 'all') and hasattr(val, 'count'):
+            return [render_model_instance(x) for x in val.all()]
+        
+        field = self.model._meta.get_field(name)
 
+        if isinstance(field, models.ForeignKey):
+            return render_model_instance(val)
+        else:
+            return unicode(val)
+        
     def render(self, instance):
         d = {}
 
@@ -56,7 +67,7 @@ class ModelRenderer(object):
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents'),
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents'),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
@@ -65,32 +76,45 @@ _renderers = {
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
+    Investigator: ModelRenderer(Investigator,
+        exclude=('id', 'submission_form',),
+    ),
+    EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
+    Document: ModelRenderer(Document, fields=('doctype', 'file', 'date', 'version', 'mimetype')),
+    DocumentType: ModelRenderer(DocumentType, fields=('name',)),
+    Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
+    NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
+    ForeignParticipatingCenter: ModelRenderer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
 }
 
+def render_model_instance(instance):
+    return _renderers[instance.__class__].render(instance)
 
-def diff(request, old_submission_form_pk, new_submission_form_pk):
-    old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
-    new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
 
-    sff = SubmissionFormForm(None, instance=old_submission_form)
+def diff_submission_forms(old_submission_form, new_submission_form):
+    assert(old_submission_form.submission == new_submission_form.submission)
 
+    form = SubmissionFormForm(None, instance=old_submission_form)
     differ = diff_match_patch()
+
+    old = render_model_instance(old_submission_form)
+    new = render_model_instance(new_submission_form)
+
     diffs = []
-
-    old = _render_submission_form(old_submission_form, ignored_fields=ignored_fields)
-    new = _render_submission_form(new_submission_form, ignored_fields=ignored_fields)
-
     for field in sorted(old.keys()):
-        diff = differ.diff_main(old[field], new[field])
+        diff = differ.diff_main(unicode(old[field]), unicode(new[field]))
         if differ.diff_levenshtein(diff):
             try:
-                label = sff.fields[field].label
+                label = form.fields[field].label
             except KeyError:
                 label = field
             differ.diff_cleanupSemantic(diff)
             diffs.append((label, diff))
-
     
+    return diffs
+
+
+def rofl():
     ctype = ContentType.objects.get_for_model(old_submission_form)
     old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
     new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
