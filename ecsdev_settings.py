@@ -34,8 +34,17 @@ RENDER_MEMCACHE_PORT = 11211
 
 
 # ecsmail server settings
-ECSMAIL ['port']= 8823
-ECSMAIL ['authoritative_domain']= 'ecsdev.ep3.at'
+# FIXME: we should only change settings but not carbon copy it from settings.py
+ECSMAIL = {
+    'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
+    'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
+    'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
+    'listen': '0.0.0.0', 
+    'port': 8823,
+    'handlers': ['ecs.communication.mailreceiver'],
+    'trusted_sources': ['127.0.0.1'],
+    'authoritative_domain': 'ecsdev.ep3.at',
+    }
 
 if user == "shredder":
     ECSMAIL ['port']= 8833
