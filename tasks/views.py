@@ -40,7 +40,7 @@ def my_tasks(request, template='tasks/mine.html'):
         'oldest': 'workflow_token__created_at',
         'newest': '-workflow_token__created_at',
     }
-    order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting']], 'assigned_at']
+    order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by(*order_by)
     related_url = request.GET.get('url', None)
