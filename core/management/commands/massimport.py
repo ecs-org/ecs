@@ -625,17 +625,88 @@ class Command(BaseCommand):
             self._abort('Failed to import %s' % filename)
             return None
         
-        print "import magic done"
+        print "import module magic done, creating meetings"
+        failed_meetings = 0
+        imported_meetings = 0
+        skipped_meetings = 0
+        
+        failed_deadlines = 0
+        imported_deadlines = 0
+        skipped_deadlines = 0
+        
+        failed_deadlines_diploma = 0
+        imported_deadlines_diploma = 0
+        skipped_deadlines_diploma = 0
+        
         for mdates in parsed_dates:
             mdate = mdates['meeting']
+            deadline_diplomathesis = mdates['deadline_diplomathesis']
+            deadline = mdates['deadline']
+            #deadline is "inclusive" .. i guess
+            if deadline.hour == 0:
+                deadline = deadline.replace(hour=23,minute=59)
+            if deadline_diplomathesis.hour == 0:
+                deadline_diplomathesis = deadline_diplomathesis.replace(hour=23,minute=59)
             tmpm = Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month)
-            print tmpm
+            if len(tmpm) > 0:
+                for m in tmpm:
+                    #check if deadline fields are set for the already existing meetings 
+                    if not m.deadline:
+                        #try catch failed_deadlines++
+                        m.deadline = str(deadline)
+                        m.save()
+                        imported_deadlines += 1
+                    else:
+                        skipped_deadlines += 1
+                    if not m.deadline_diplomathesis:
+                        #try catch failed_deadlines++
+                        m.deadline_diplomathesis = str(deadline_diplomathesis)
+                        m.save()
+                        imported_deadlines_diploma += 1
+                    else:
+                        skipped_deadlines_diploma += 1
+                
+                #print "skipping %s" % mdate
+                skipped_meetings += 1
+                #temphack
+                #Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month).delete()
+                
+            else:
+                #create meeting
+                #try:
+                title = "%s Meeting" % mdate.strftime("%b")
+                deadline_diplomathesis = mdates['deadline_diplomathesis']
+                deadline = mdates['deadline']
+                if mdate.hour == 0:
+                    mdate = mdate.replace(hour=10)
+                
+                meeting = Meeting.objects.create(title=title, start=str(mdate), deadline=str(deadline), deadline_diplomathesis=str(deadline_diplomathesis))
+                print "created meeting %s, %s" % (meeting.title, meeting.start)
+                imported_meetings += 1
+                imported_deadlines += 1
+                imported_deadlines_diploma += 1
+                
+                #except:
+                #    failed_meetings += 1
+                #finally:
+                #     pass
             #Meeting.objects.filter(title=title).delete()
             #meeting = Meeting.objects.create(title=title, start=start)
         
         
-    
-    
+        if skipped_deadlines > 0:
+            print "skipped %d meeting deadlines" % skipped_deadlines
+        if skipped_deadlines_diploma > 0:
+            print "skipped %d meeting deadlines_diploma" % skipped_deadlines_diploma
+        print "imported %d meeting deadlines" % imported_deadlines_diploma
+        print "imported %d meeting deadlines_diploma" % imported_deadlines
+        
+        if failed_meetings > 0:
+            print "failed to import %d meeting dates" % failed_meetings
+        if skipped_meetings > 0:
+            print "skipped %d meeting dates" % skipped_meetings
+        print "imported %d meeting dates" % imported_meetings
+        
     def handle(self, *args, **kwargs):
         options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir'], kwargs['meeting_dates']] if x])
         if options_count is not 1:
