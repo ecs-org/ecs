@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 import datetime
-from ecs.utils.countries.models import Country
-from ecs.utils.testcases import EcsTestCase
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.core.views.submissions import diff
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document
-from django.contrib.auth.models import User
 from ecs.core.models.submissions import attach_to_submissions
-from django.core.urlresolvers import reverse
+from ecs.utils.countries.models import Country
+from ecs.utils.testcases import EcsTestCase
+from ecs.core.diff import diff_submission_forms
 
 class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
@@ -333,21 +334,26 @@ def create_submission_form(ec_number=None):
     return sform
 
 
-#class SubmissionFormDiffTest(EcsTestCase):
-#    def setUp(self):
-#        self.old_sf = create_submission_form()
-#        self.new_sf = create_submission_form()
-#
-#    def test_submission_form_diff(self):
-#        ''' Test if the submissionForm diff function works correctly '''
-#        self.new_sf.project_title = 'roflcopter'
-#        diff = diff(self.old_sf, self.new_sf)
-#        self.failIf(not diff)
-#        try:
-#            project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
-#        except IndexError:
-#            self.fail()
-#        self.failIf(not (1, 'roflcopter') in x[1])
+class SubmissionFormDiffTest(EcsTestCase):
+    def setUp(self, *args, **kwargs):
+        rval = super(SubmissionFormDiffTest, self).setUp(*args, **kwargs)
+        self.old_sf = create_submission_form()
+        self.new_sf = create_submission_form()
+
+        # both submission forms have to belong to the same submission
+        self.new_sf.submission.current_submission_form = None
+        self.new_sf.submission.save()
+        self.new_sf.submission = self.old_sf.submission
+        self.new_sf.save()
+
+        return rval
+
+    def test_submission_form_diff(self):
+        self.new_sf.project_title = 'roflcopter'
+        diff = diff_submission_forms(self.old_sf, self.new_sf)
+        self.failIf(not diff)
+        self.failUnless(dict(diff).get('Project title', None))
+        self.failIf(not (1, 'roflcopter') in dict(diff)['Project title'])
 
 
 class SubmissionAttachUserTest(EcsTestCase):
