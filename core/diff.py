@@ -3,6 +3,7 @@ import datetime
 from django.utils.translation import ugettext as _
 from django.db import models
 from django.http import HttpRequest
+from django.contrib.contenttypes.models import ContentType
 from ecs.utils.diff_match_patch import diff_match_patch
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
@@ -10,6 +11,7 @@ from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
 from ecs.documents.models import Document, DocumentType
 from ecs.core.forms import SubmissionFormForm
 from ecs.utils.viewutils import render_html
+from ecs.audit.models import AuditTrail
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -133,12 +135,11 @@ class DocumentRenderer(ModelRenderer):
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents'),
-        follow = {
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission'),
+        follow={
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
             'measures': 'submission_form',
-            'documents': 'parent_object',
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
@@ -146,7 +147,6 @@ _renderers = {
         exclude=('id', 'submission_form',),
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
-    Document: DocumentRenderer(),
     DocumentType: ModelRenderer(DocumentType, fields=('name',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
@@ -176,26 +176,20 @@ def diff_submission_forms(old_submission_form, new_submission_form):
                 label = field
             diffs.append((label, diff))
     
-    return diffs
-
-
-def rofl():
+    # FIXME: change the relation between document and submissionForms to remove this hack
     ctype = ContentType.objects.get_for_model(old_submission_form)
-    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
+    since = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
+    until = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
 
     ctype = ContentType.objects.get_for_model(Document)
-    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
+    new_documents_query = AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
 
     ctype = ContentType.objects.get_for_model(old_submission_form)
-    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
-    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
+    submission_forms_query = new_submission_form.submission.forms.all().values('pk').query
+    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_query)
 
-    print new_documents
+    if new_documents.count():
+        diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))
 
-    return render(request, 'submissions/diff.html', {
-        'submission': new_submission_form.submission,
-        'diffs': diffs,
-        'new_documents': new_documents,
-    })
+    return diffs
 

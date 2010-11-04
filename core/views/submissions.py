@@ -35,7 +35,6 @@ from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.audit.models import AuditTrail
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 
