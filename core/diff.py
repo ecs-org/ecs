@@ -57,11 +57,14 @@ class ListNode(Node):
 
         for elem in all_elements:
             if not elem in self.content:   # new
-                diff.append((1, elem))
+                status = 1
             elif not elem in other.content: # old
-                diff.append((-1, elem))
+                status = -1
             else:
-                diff.append((0, elem))
+                status = 0
+
+            html = u'<div class="elem">%s</div>' % elem
+            diff.append((status, html))
 
         return diff
 
@@ -159,6 +162,7 @@ def render_model_instance(instance, plain=False):
 
 def diff_submission_forms(old_submission_form, new_submission_form):
     assert(old_submission_form.submission == new_submission_form.submission)
+    submission = new_submission_form.submission
 
     form = SubmissionFormForm(None, instance=old_submission_form)
     differ = diff_match_patch()
@@ -177,16 +181,16 @@ def diff_submission_forms(old_submission_form, new_submission_form):
             diffs.append((label, diff))
     
     # FIXME: change the relation between document and submissionForms to remove this hack
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    since = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    until = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
+    sf_ctype = ContentType.objects.get_for_model(old_submission_form)
+    d_ctype = ContentType.objects.get_for_model(Document)
 
-    ctype = ContentType.objects.get_for_model(Document)
-    new_documents_query = AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
+    since = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=old_submission_form.id, object_created=True).created_at
+    until = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=new_submission_form.id, object_created=True).created_at
 
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    submission_forms_query = new_submission_form.submission.forms.all().values('pk').query
-    new_documents = list(Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_query))
+    new_documents_q = AuditTrail.objects.filter(content_type__pk=d_ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
+
+    submission_forms_query = submission.forms.all().values('pk').query
+    new_documents = list(Document.objects.filter(content_type__pk=sf_ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_q))
 
     if new_documents:
         diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))

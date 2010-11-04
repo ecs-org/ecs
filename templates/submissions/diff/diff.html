@@ -14,24 +14,26 @@
         | <a href="#" id="diff_show_all">{% trans "all" %}</a>
     </div>
     
+    <ul class="diff">
     {% for field, diff in diffs %}
-    <p>
-        <div>{{ field|escape }}:</div>
-        <div class="diff" style="margin-left:20px;">
-        {% for type, content in diff %}
-            {% if type == 0 %}
-                <span>{{ content|safe }}</span>
-            {% endif %}
-            {% if type == -1 %}
-                <span class="deleted">{{ content|safe }}</span>
-            {% endif %}
-            {% if type == 1 %}
-                <span class="inserted">{{ content|safe }}</span>
-            {% endif %}
-        {% endfor %}
-        </div>
-    </p>
+        <li>
+            <div>{{ field|escape }}:</div>
+            <div class="indent">
+            {% for type, content in diff %}
+                {% if type == 0 %}
+                    <span>{{ content|safe }}</span>
+                {% endif %}
+                {% if type == -1 %}
+                    <span class="deleted">{{ content|safe }}</span>
+                {% endif %}
+                {% if type == 1 %}
+                    <span class="inserted">{{ content|safe }}</span>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </li>
     {% endfor %}
+    </ul>
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}
