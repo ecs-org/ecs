@@ -57,11 +57,11 @@ class ListNode(Node):
 
         for elem in all_elements:
             if not elem in self.content:   # new
-                diff.append((1, unicode(elem)))
+                diff.append((1, elem))
             elif not elem in other.content: # old
-                diff.append((-1, unicode(elem)))
+                diff.append((-1, elem))
             else:
-                diff.append((0, unicode(elem)))
+                diff.append((0, elem))
 
         return diff
 
@@ -98,7 +98,7 @@ class ModelRenderer(object):
         elif isinstance(val, datetime.date):
             return AtomicTextNode(val.strftime(DATETIME_FORMAT))
         elif hasattr(val, 'all') and hasattr(val, 'count'):
-            return ListNode([TextNode(render_model_instance(x, plain=True)) for x in val.all()])
+            return ListNode([render_model_instance(x, plain=True) for x in val.all()])
         
         field = self.model._meta.get_field(name)
 
@@ -114,7 +114,7 @@ class ModelRenderer(object):
             d[name] = self.render_field(instance, name)
 
         if plain:
-            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items()])
+            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items() if x[1]])
             d += '<br />\n'
 
         return d
@@ -171,7 +171,7 @@ def diff_submission_forms(old_submission_form, new_submission_form):
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
             try:
-                label = form.fields[field].label
+                label = form.fields[field].label or field
             except KeyError:
                 label = field
             diffs.append((label, diff))
@@ -186,9 +186,9 @@ def diff_submission_forms(old_submission_form, new_submission_form):
 
     ctype = ContentType.objects.get_for_model(old_submission_form)
     submission_forms_query = new_submission_form.submission.forms.all().values('pk').query
-    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_query)
+    new_documents = list(Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_query))
 
-    if new_documents.count():
+    if new_documents:
         diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))
 
     return diffs

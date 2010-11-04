@@ -1,0 +1,9 @@
+/* submission diff */
+
+.diff .deleted {
+    color: #ff0000;
+}
+.diff .inserted {
+    color: #00ff00;
+}
+

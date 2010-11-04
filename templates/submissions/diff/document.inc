@@ -10,4 +10,5 @@
         {% if doc.replaces_document.original_file_name %}(Dateiname: {{ doc.replaces_document.original_file_name }}){% endif %}
     </a>
 {% endif %}
+<br />
 
