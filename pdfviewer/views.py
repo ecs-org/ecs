@@ -36,11 +36,11 @@ def edit_annotation(request, document_pk=None):
         annotation = form.save(commit=False)
         annotation.document = document
         annotation.user = request.user
+        annotation.author = request.user
         annotation.save()
         return HttpResponse('OK')
     else:
-        print form.errors
-        return HttpResponseBadRequest('OK')
+        return HttpResponseBadRequest('invalid data: %s' % form.errors)
 
 @csrf_exempt
 def delete_annotation(request, document_pk=None):
@@ -48,3 +48,10 @@ def delete_annotation(request, document_pk=None):
     annotation = get_object_or_404(DocumentAnnotation, user=request.user, pk=request.POST.get('pk'))
     annotation.delete()
     return HttpResponse('OK')
+
+def my_annotations(request, submission_form_pk=None):
+    sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    
+    return render(request, 'pdfviewer/annotations/list.html', {
+        'annotations': DocumentAnnotation.objects.filter(user=request.user).filter(document__submission_forms=sf).order_by('page_number', 'y'),
+    })

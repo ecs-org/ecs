@@ -211,3 +211,9 @@ body {
 .profile_data td, .profile_data th{
     vertical-align: top;
 }
+
+.ecs-DragDropFrameOverlay{
+    background-color: #ff0000;
+    opacity: 0.5;
+    position: absolute;
+}
