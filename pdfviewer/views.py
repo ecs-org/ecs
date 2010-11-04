@@ -14,8 +14,8 @@ from ecs.pdfviewer.forms import DocumentAnnotationForm
 from ecs.pdfviewer.utils import createmediaurls
 
 
-def show(request, id='1', page=1, zoom='1'):
-    document = get_object_or_404(Document, pk=id)
+def show(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
     annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text'))
 
     return render(request, 'pdfviewer/viewer.html', {
@@ -55,3 +55,18 @@ def my_annotations(request, submission_form_pk=None):
     return render(request, 'pdfviewer/annotations/list.html', {
         'annotations': DocumentAnnotation.objects.filter(user=request.user).filter(document__submission_forms=sf).order_by('page_number', 'y'),
     })
+    
+def share_annotations(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    annotations = DocumentAnnotation.objects.filter(user=request.user, pk__in=request.POST.getlist('annotation'))
+    
+    form = AnnotationSharingForm(request.POST or None)
+    
+    if request.method == 'POST':
+        for annotation in annotations:
+            annotation.pk = None
+            annotation.user = form.cleaned_data['user']
+            
+    
+    
+    
