@@ -214,7 +214,7 @@ PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
 # PDF Signing settings
-PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
+PDFAS_SERVICE = 'http://localhost:8080/pdf-as/'
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))

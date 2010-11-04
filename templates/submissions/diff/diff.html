@@ -8,25 +8,58 @@
 {% endblock %}
 
 {% block content %}
+    <div class="diff_toggles">
+        <a href="#" id="diff_show_old">{% trans "old" %}</a>
+        | <a href="#" id="diff_show_new">{% trans "new" %}</a>
+        | <a href="#" id="diff_show_all">{% trans "all" %}</a>
+    </div>
+    
+    <ul class="diff">
     {% for field, diff in diffs %}
-    <p>
-        <div>{{ field|escape }}:</div>
-        <div class="diff" style="margin-left:20px;">
-        {% for type, content in diff %}
-            {% if type == 0 %}
-                <span>{{ content|safe }}</span>
-            {% endif %}
-            {% if type == -1 %}
-                <del style="color:#ff0000;">{{ content|safe }}</del>
-            {% endif %}
-            {% if type == 1 %}
-                <ins style="color:#00ff00;">{{ content|safe }}</ins>
-            {% endif %}
-        {% endfor %}
-        </div>
-    </p>
+        <li>
+            <div>{{ field|escape }}:</div>
+            <div class="indent">
+            {% for type, content in diff %}
+                {% if type == 0 %}
+                    <span>{{ content|safe }}</span>
+                {% endif %}
+                {% if type == -1 %}
+                    <span class="deleted">{{ content|safe }}</span>
+                {% endif %}
+                {% if type == 1 %}
+                    <span class="inserted">{{ content|safe }}</span>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </li>
     {% endfor %}
+    </ul>
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/diff.css" />
+{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript">
+  window.addEvent('domready', function(){
+    $('diff_show_old').addEvent('click', function() {
+      $$('.diff .deleted').show();
+      $$('.diff .inserted').hide();
+    });
+    $('diff_show_new').addEvent('click', function() {
+      $$('.diff .deleted').hide();
+      $$('.diff .inserted').show();
+    });
+    $('diff_show_all').addEvent('click', function() {
+      $$('.diff .deleted').show();
+      $$('.diff .inserted').show();
+    });
+  });
+  </script>
+{% endblock %}
 

@@ -3,6 +3,7 @@ import datetime
 from django.utils.translation import ugettext as _
 from django.db import models
 from django.http import HttpRequest
+from django.contrib.contenttypes.models import ContentType
 from ecs.utils.diff_match_patch import diff_match_patch
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
@@ -10,6 +11,7 @@ from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
 from ecs.documents.models import Document, DocumentType
 from ecs.core.forms import SubmissionFormForm
 from ecs.utils.viewutils import render_html
+from ecs.audit.models import AuditTrail
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -55,11 +57,14 @@ class ListNode(Node):
 
         for elem in all_elements:
             if not elem in self.content:   # new
-                diff.append((1, unicode(elem)))
+                status = 1
             elif not elem in other.content: # old
-                diff.append((-1, unicode(elem)))
+                status = -1
             else:
-                diff.append((0, unicode(elem)))
+                status = 0
+
+            html = u'<div class="elem">%s</div>' % elem
+            diff.append((status, html))
 
         return diff
 
@@ -96,7 +101,7 @@ class ModelRenderer(object):
         elif isinstance(val, datetime.date):
             return AtomicTextNode(val.strftime(DATETIME_FORMAT))
         elif hasattr(val, 'all') and hasattr(val, 'count'):
-            return ListNode([TextNode(render_model_instance(x, plain=True)) for x in val.all()])
+            return ListNode([render_model_instance(x, plain=True) for x in val.all()])
         
         field = self.model._meta.get_field(name)
 
@@ -112,7 +117,7 @@ class ModelRenderer(object):
             d[name] = self.render_field(instance, name)
 
         if plain:
-            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items()])
+            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items() if x[1]])
             d += '<br />\n'
 
         return d
@@ -133,12 +138,11 @@ class DocumentRenderer(ModelRenderer):
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'documents'),
-        follow = {
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission'),
+        follow={
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
             'measures': 'submission_form',
-            'documents': 'parent_object',
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
@@ -146,7 +150,6 @@ _renderers = {
         exclude=('id', 'submission_form',),
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
-    Document: DocumentRenderer(),
     DocumentType: ModelRenderer(DocumentType, fields=('name',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
@@ -159,6 +162,7 @@ def render_model_instance(instance, plain=False):
 
 def diff_submission_forms(old_submission_form, new_submission_form):
     assert(old_submission_form.submission == new_submission_form.submission)
+    submission = new_submission_form.submission
 
     form = SubmissionFormForm(None, instance=old_submission_form)
     differ = diff_match_patch()
@@ -171,31 +175,25 @@ def diff_submission_forms(old_submission_form, new_submission_form):
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
             try:
-                label = form.fields[field].label
+                label = form.fields[field].label or field
             except KeyError:
                 label = field
             diffs.append((label, diff))
     
+    # FIXME: change the relation between document and submissionForms to remove this hack
+    sf_ctype = ContentType.objects.get_for_model(old_submission_form)
+    d_ctype = ContentType.objects.get_for_model(Document)
+
+    since = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=old_submission_form.id, object_created=True).created_at
+    until = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=new_submission_form.id, object_created=True).created_at
+
+    new_documents_q = AuditTrail.objects.filter(content_type__pk=d_ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
+
+    submission_forms_query = submission.forms.all().values('pk').query
+    new_documents = list(Document.objects.filter(content_type__pk=sf_ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_q))
+
+    if new_documents:
+        diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))
+
     return diffs
-
-
-def rofl():
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
-
-    ctype = ContentType.objects.get_for_model(Document)
-    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
-
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
-    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
-
-    print new_documents
-
-    return render(request, 'submissions/diff.html', {
-        'submission': new_submission_form.submission,
-        'diffs': diffs,
-        'new_documents': new_documents,
-    })
 

@@ -68,7 +68,7 @@ MPG_FIELDS = (
 )
 
 INSURANCE_FIELDS = (
-    'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
+    'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
 )
 
 def require_fields(form, fields):
@@ -109,11 +109,11 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'submitter_is_main_investigator', 'submitter_is_sponsor', 'submitter_is_authorized_by_sponsor', 'sponsor_agrees_to_publishing', 'sponsor_name', 
             
             'sponsor_contact_gender', 'sponsor_contact_title', 'sponsor_contact_first_name', 'sponsor_contact_last_name', 
-            'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+            'sponsor_address', 'sponsor_zip_code', 
             'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email', 'invoice_differs_from_sponsor', 
             
             'invoice_name', 'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name', 
-            'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
+            'invoice_address', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 
             
             'additional_therapy_info', 
