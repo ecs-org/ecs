@@ -638,62 +638,82 @@ class Command(BaseCommand):
         imported_deadlines_diploma = 0
         skipped_deadlines_diploma = 0
         
-        for mdates in parsed_dates:
-            mdate = mdates['meeting']
-            deadline_diplomathesis = mdates['deadline_diplomathesis']
-            deadline = mdates['deadline']
-            #deadline is "inclusive" .. i guess
-            if deadline.hour == 0:
-                deadline = deadline.replace(hour=23,minute=59)
-            if deadline_diplomathesis.hour == 0:
-                deadline_diplomathesis = deadline_diplomathesis.replace(hour=23,minute=59)
-            tmpm = Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month)
-            if len(tmpm) > 0:
-                for m in tmpm:
-                    #check if deadline fields are set for the already existing meetings 
-                    if not m.deadline:
-                        #try catch failed_deadlines++
-                        m.deadline = str(deadline)
-                        m.save()
+        sp = transaction.savepoint()
+        
+        try:
+            for mdates in parsed_dates:
+                pdsp = transaction.savepoint()
+                try:
+                    mdate = mdates['meeting']
+                    deadline_diplomathesis = mdates['deadline_diplomathesis']
+                    deadline = mdates['deadline']
+                    #deadline is "inclusive" .. i guess
+                    if deadline.hour == 0:
+                        deadline = deadline.replace(hour=23,minute=59)
+                    if deadline_diplomathesis.hour == 0:
+                        deadline_diplomathesis = deadline_diplomathesis.replace(hour=23,minute=59)
+                    tmpm = Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month)
+                    if len(tmpm) > 0:
+                        for m in tmpm:
+                            #check if deadline fields are set for the already existing meetings 
+                            if not m.deadline:
+                                dsp = transaction.savepoint()
+                                try:
+                                    m.deadline = str(deadline)
+                                    m.save()
+                                except Exception, e:
+                                    transaction.savepoint_rollback(dsp)
+                                    failed_deadlines += 1
+                                else:
+                                    transaction.savepoint_commit(dsp)
+                                    imported_deadlines += 1
+                            else:
+                                skipped_deadlines += 1
+                            
+                            if not m.deadline_diplomathesis:
+                                dtsp = transaction.savepoint()
+                                try:
+                                    m.deadline_diplomathesis = str(deadline_diplomathesis)
+                                    m.save()
+                                except Exception, e:
+                                    transaction.savepoint_rollback(dtsp)
+                                    failed_deadlines_diploma += 1
+                                else:
+                                    transaction.savepoint_commit(dtsp)
+                                    imported_deadlines_diploma += 1
+                                    
+                            else:
+                                skipped_deadlines_diploma += 1
+                        
+                        skipped_meetings += 1
+                        #temphack
+                        #Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month).delete()
+                        
+                    else:
+                        #create meeting
+                        #try:
+                        title = "%s Meeting" % mdate.strftime("%b")
+                        deadline_diplomathesis = mdates['deadline_diplomathesis']
+                        deadline = mdates['deadline']
+                        if mdate.hour == 0:
+                            mdate = mdate.replace(hour=10)
+                        
+                        meeting = Meeting.objects.create(title=title, start=str(mdate), deadline=str(deadline), deadline_diplomathesis=str(deadline_diplomathesis))
+                        print "created meeting %s, %s" % (meeting.title, meeting.start)
+                        imported_meetings += 1
                         imported_deadlines += 1
-                    else:
-                        skipped_deadlines += 1
-                    if not m.deadline_diplomathesis:
-                        #try catch failed_deadlines++
-                        m.deadline_diplomathesis = str(deadline_diplomathesis)
-                        m.save()
                         imported_deadlines_diploma += 1
-                    else:
-                        skipped_deadlines_diploma += 1
-                
-                #print "skipping %s" % mdate
-                skipped_meetings += 1
-                #temphack
-                #Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month).delete()
-                
-            else:
-                #create meeting
-                #try:
-                title = "%s Meeting" % mdate.strftime("%b")
-                deadline_diplomathesis = mdates['deadline_diplomathesis']
-                deadline = mdates['deadline']
-                if mdate.hour == 0:
-                    mdate = mdate.replace(hour=10)
-                
-                meeting = Meeting.objects.create(title=title, start=str(mdate), deadline=str(deadline), deadline_diplomathesis=str(deadline_diplomathesis))
-                print "created meeting %s, %s" % (meeting.title, meeting.start)
-                imported_meetings += 1
-                imported_deadlines += 1
-                imported_deadlines_diploma += 1
-                
-                #except:
-                #    failed_meetings += 1
-                #finally:
-                #     pass
-            #Meeting.objects.filter(title=title).delete()
-            #meeting = Meeting.objects.create(title=title, start=start)
-        
-        
+                except Exception, e:
+                    transaction.savepoint_rollback(pdsp)
+                    failed_meetings += 1
+                else:
+                    transaction.savepoint_commit(pdsp)
+            
+        except Exception, e:
+            transaction.savepoint_rollback_sql(sp)
+        else:
+            transaction.savepoint_commit(sp)
+
         if skipped_deadlines > 0:
             print "skipped %d meeting deadlines" % skipped_deadlines
         if skipped_deadlines_diploma > 0:
@@ -706,7 +726,8 @@ class Command(BaseCommand):
         if skipped_meetings > 0:
             print "skipped %d meeting dates" % skipped_meetings
         print "imported %d meeting dates" % imported_meetings
-        
+
+
     def handle(self, *args, **kwargs):
         options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir'], kwargs['meeting_dates']] if x])
         if options_count is not 1:
