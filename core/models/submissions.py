@@ -209,8 +209,7 @@ class SubmissionForm(models.Model):
     sponsor = models.ForeignKey(User, null=True, related_name="sponsored_submission_forms")
     sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contact = NameField()
-    sponsor_address1 = models.CharField(max_length=60, null=True)
-    sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
+    sponsor_address = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
@@ -220,8 +219,7 @@ class SubmissionForm(models.Model):
     
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
-    invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
-    invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
+    invoice_address = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
     invoice_city = models.CharField(max_length=80, null=True, blank=True)
     invoice_phone = models.CharField(max_length=50, null=True, blank=True)
@@ -315,7 +313,7 @@ class SubmissionForm(models.Model):
     
     # 5.x
     insurance_name = models.CharField(max_length=125, null=True, blank=True)
-    insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
+    insurance_address = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
     insurance_validity = models.CharField(max_length=60, null=True, blank=True)

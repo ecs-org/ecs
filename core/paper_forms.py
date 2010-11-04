@@ -103,8 +103,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.3', 'sponsor_contact_title', u'Titel der Kontaktperson'),
     FieldInfo('1.5.3', 'sponsor_contact_first_name', u'Vorname der Kontaktperson'),
     FieldInfo('1.5.3', 'sponsor_contact_last_name', u'Nachname der Kontaktperson'),
-    FieldInfo('1.5.2', 'sponsor_address1', u'Adresse', short_label='Adresse 1'),
-    FieldInfo('1.5.2', 'sponsor_address2', None, short_label='Adresse 2'),
+    FieldInfo('1.5.2', 'sponsor_address', u'Adresse'),
     FieldInfo('1.5.2', 'sponsor_zip_code', None, short_label='Postleitzahl'),
     FieldInfo('1.5.2', 'sponsor_city', None, short_label='Stadt'),
     FieldInfo('1.5.4', 'sponsor_phone', u'Telefon'),
@@ -115,8 +114,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.3', 'invoice_contact_title', u'Titel der Kontaktperson'),
     FieldInfo('1.5.3', 'invoice_contact_first_name', u'Vorname der Kontaktperson'),
     FieldInfo('1.5.3', 'invoice_contact_last_name', u'Nachname der Kontaktperson'),
-    FieldInfo('1.5.2', 'invoice_address1', u'Adresse', short_label='Adresse 1'),
-    FieldInfo('1.5.2', 'invoice_address2', None, short_label='Adresse 2'),
+    FieldInfo('1.5.2', 'invoice_address', u'Adresse'),
     FieldInfo('1.5.2', 'invoice_zip_code', None, short_label='Postleitzahl'),
     FieldInfo('1.5.2', 'invoice_city', None, short_label='Stadt'),
     FieldInfo('1.5.4', 'invoice_phone', u'Telefon'),
@@ -188,7 +186,7 @@ FormInfo(SubmissionForm, fields=(
     # 5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)
     # Diese Angaben müssen in der Patienten- / Probandeninformation enthalten sein!
     FieldInfo('5.1.1', 'insurance_name', u'Versicherungsgesellschaft'),
-    FieldInfo('5.1.2', 'insurance_address_1', u'Adresse'),
+    FieldInfo('5.1.2', 'insurance_address', u'Adresse'),
     FieldInfo('5.1.3', 'insurance_phone', u'Telefon'),
     FieldInfo('5.1.4', 'insurance_contract_number', u'Polizzennummer'),
     FieldInfo('5.1.5', 'insurance_validity', u'Gültigkeitsdauer'),
