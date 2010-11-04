@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 from ecs.documents.models import Document
 
 class DocumentAnnotation(models.Model):
@@ -16,12 +17,10 @@ class DocumentAnnotation(models.Model):
     
     @property
     def human_readable_location(self):
-        loc = ''
-        print self.y
-        if self.y < 1.0/3:
-            loc = "oben"
-        elif self.y < 2.0/3:
-            loc = "mitte"
+        y = self.y + self.height / 2
+        if y < 1.0/3:
+            return _("top")
+        elif y < 2.0/3:
+            return _("middle")
         else:
-            loc = "unten"
-        return "Seite %s %s" % (self.page_number, loc)
+            return _("bottom")
