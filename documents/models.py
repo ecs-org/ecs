@@ -143,7 +143,7 @@ def _post_doc_save(sender, **kwargs):
     print("doc file %s , path %s, original %s" % (str(doc.file.name), str(doc.file.path), str(doc.original_file_name)))
     
     if doc.pages and doc.mimetype == 'application/pdf':
-        # FIXME: we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
+        # FIXME:92we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
         extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
     
     # upload it via celery to the storage vault
