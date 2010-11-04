@@ -213,8 +213,8 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# PDF Signing settings
-PDFAS_SERVICE = 'http://localhost:8080/pdf-as/'
+# PDF Signing settings, use port 4780 per default (as stated in source:/signing/readme.txt)
+PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
