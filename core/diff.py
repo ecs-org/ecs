@@ -121,7 +121,7 @@ class ModelRenderer(object):
 
         text = ''
         for field, value in d.items():
-            field_info = paper_forms.get_field_info(instance.__class__, field, None)
+            field_info = paper_forms.get_field_info(self.model, field, None)
             if field_info is not None:
                 label = field_info.label
             else:
@@ -154,6 +154,21 @@ class ForeignParticipatingCenterRenderer(ModelRenderer):
 
         return _(u'Name: %(name)s, Investigator: %(investigator)s') % {'name': instance.name, 'investigator': instance.investigator_name}
 
+class NonTestedUsedDrugRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = NonTestedUsedDrug
+        kwargs['exclude'] = ('id', 'submission_form')
+        return super(NonTestedUsedDrugRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return _(u'Generic Name: %(generic_name)s, Preparation Form: %(preparation_form)s, Dosage: %(dosage)s') % {
+            'generic_name': instance.generic_name,
+            'preparation_form': instance.preparation_form,
+            'dosage': instance.dosage,
+        }
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
@@ -165,7 +180,7 @@ _renderers = {
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
-    NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
+    NonTestedUsedDrug: NonTestedUsedDrugRenderer(),
     ForeignParticipatingCenter: ForeignParticipatingCenterRenderer(),
     Document: DocumentRenderer(),
 }
@@ -183,25 +198,28 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     old = render_model_instance(old_submission_form)
     new = render_model_instance(new_submission_form)
 
-    label_lookup = {}
+    label_lookup = []
     for field_info in paper_forms.get_field_info_for_model(SubmissionForm):
-        label_lookup[field_info.name] = field_info.label
+        if field_info.number:
+            label_lookup.append((field_info.name, u'%s %s' % (field_info.number, field_info.label)))
+        else:
+            label_lookup.append((field_info.name, field_info.label))
 
-    label_lookup.update({
-        'foreignparticipatingcenter_set': _(u'Auslandszentren'),
-        'investigators': _(u'Zentren'),
-        'measures': _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik'),
-        'nontesteduseddrug_set': _(u'Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind'),
-        'documents': _(u'Dokumente'),
-    })
+    label_lookup += [
+        ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
+        ('investigators', _(u'Zentren')),
+        ('measures', _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
+        ('nontesteduseddrug_set', _(u'Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
+        ('documents', _(u'Dokumente')),
+    ]
 
 
     diffs = []
-    for field in sorted(old.keys()):
+    sorted_keys = [x[0] for x in label_lookup if x[0] in old.keys()]
+    for field in sorted_keys:
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
-            label = label_lookup[field]
-
+            label = dict(label_lookup)[field]
             diffs.append((label, diff))
     
     return diffs
