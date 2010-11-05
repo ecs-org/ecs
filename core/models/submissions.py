@@ -183,7 +183,6 @@ SUBMISSION_TYPE_CHOICES = (
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
-    documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 
@@ -197,6 +196,7 @@ class SubmissionForm(models.Model):
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
     current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
+    documents = models.ManyToManyField('documents.Document', null=True, related_name='_submission_forms')
     
     class Meta:
         app_label = 'core'

@@ -289,6 +289,10 @@ def create_submission_form(request):
                 submission_form.save()
                 form.save_m2m()
                 submission_form.documents = request.docstash['documents']
+                submission_form.save()
+                for doc in request.docstash['documents']:
+                    doc.parent_object = submission_form
+                    doc.save()
             
                 formsets = formsets.copy()
                 investigators = formsets.pop('investigator').save(commit=False)

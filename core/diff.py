@@ -71,7 +71,7 @@ class ListNode(Node):
 class ModelRenderer(object):
     exclude = ()
     fields = ()
-    follow = {}
+    follow = ()
 
     def __init__(self, model, exclude=None, fields=None, follow=None):
         self.model = model
@@ -86,7 +86,7 @@ class ModelRenderer(object):
         names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
         if self.fields:
             names = names.intersection(self.fields)
-        return names.union(self.follow.keys())
+        return names.union(self.follow)
 
     def render_field(self, instance, name):
         val = getattr(instance, name)
@@ -138,22 +138,17 @@ class DocumentRenderer(ModelRenderer):
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission'),
-        follow={
-            'foreignparticipatingcenter_set': 'submission_form',
-            'investigators': 'submission_form',
-            'measures': 'submission_form',
-            'nontesteduseddrug_set': 'submission_form',
-        },
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'pdf_document'),
+        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents'),
     ),
     Investigator: ModelRenderer(Investigator,
         exclude=('id', 'submission_form',),
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
-    DocumentType: ModelRenderer(DocumentType, fields=('name',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelRenderer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
+    Document: DocumentRenderer(),
 }
 
 def render_model_instance(instance, plain=False):
@@ -180,20 +175,5 @@ def diff_submission_forms(old_submission_form, new_submission_form):
                 label = field
             diffs.append((label, diff))
     
-    # FIXME: change the relation between document and submissionForms to remove this hack
-    sf_ctype = ContentType.objects.get_for_model(old_submission_form)
-    d_ctype = ContentType.objects.get_for_model(Document)
-
-    since = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    until = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=new_submission_form.id, object_created=True).created_at
-
-    new_documents_q = AuditTrail.objects.filter(content_type__pk=d_ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
-
-    submission_forms_query = submission.forms.all().values('pk').query
-    new_documents = list(Document.objects.filter(content_type__pk=sf_ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_q))
-
-    if new_documents:
-        diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))
-
     return diffs
 
