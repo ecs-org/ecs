@@ -275,7 +275,7 @@ _serializers = {
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
             'measures': 'submission_form',
-            'documents': 'parent_object',
+            'documents': 'submission_forms',
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
