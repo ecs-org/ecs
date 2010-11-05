@@ -391,6 +391,7 @@ class TimetableEntry(models.Model):
                 break
         return users
     
+    @cached_property
     def broetchen(self, padding_before=timedelta(hours=1), padding_after=timedelta(hours=1)):
         waiting_users = set(User.objects.filter(
                 meeting_participations__entry__meeting=self.meeting, 
