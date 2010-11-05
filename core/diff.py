@@ -9,9 +9,9 @@ from ecs.utils.diff_match_patch import diff_match_patch
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter
 from ecs.documents.models import Document, DocumentType
-from ecs.core.forms import SubmissionFormForm
 from ecs.utils.viewutils import render_html
 from ecs.audit.models import AuditTrail
+from ecs.core import paper_forms
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -116,11 +116,20 @@ class ModelRenderer(object):
         for name in self.get_field_names():
             d[name] = self.render_field(instance, name)
 
-        if plain:
-            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items() if x[1]])
-            d += '<br />\n'
+        if not plain:
+            return d
 
-        return d
+        text = ''
+        for field, value in d.items():
+            field_info = paper_forms.get_field_info(instance.__class__, field, None)
+            if field_info is not None:
+                label = field_info.label
+            else:
+                label = field
+
+            text += '%s: %s<br />\n' % (label, value)
+
+        return text
 
 
 class DocumentRenderer(ModelRenderer):
@@ -129,12 +138,22 @@ class DocumentRenderer(ModelRenderer):
         return super(DocumentRenderer, self).__init__(**kwargs)
 
     def render(self, instance, plain=False):
-        html = render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': instance})
-        if plain:
-            return html
-        else:
-            return {'link': html}
-        
+        if not plain:
+            raise NotImplementedError
+
+        return render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': instance})
+
+class ForeignParticipatingCenterRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = ForeignParticipatingCenter
+        return super(ForeignParticipatingCenterRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return _(u'Name: %(name)s, Investigator: %(investigator)s') % {'name': instance.name, 'investigator': instance.investigator_name}
+
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
@@ -147,7 +166,7 @@ _renderers = {
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    ForeignParticipatingCenter: ModelRenderer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
+    ForeignParticipatingCenter: ForeignParticipatingCenterRenderer(),
     Document: DocumentRenderer(),
 }
 
@@ -159,7 +178,6 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     assert(old_submission_form.submission == new_submission_form.submission)
     submission = new_submission_form.submission
 
-    form = SubmissionFormForm(None, instance=old_submission_form)
     differ = diff_match_patch()
 
     old = render_model_instance(old_submission_form)
@@ -169,10 +187,12 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     for field in sorted(old.keys()):
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
-            try:
-                label = form.fields[field].label or field
-            except KeyError:
+            field_info = paper_forms.get_field_info(SubmissionForm, field, None)
+            if field_info is not None:
+                label = field_info.label
+            else:
                 label = field
+
             diffs.append((label, diff))
     
     return diffs
