@@ -21,6 +21,7 @@ from ecs.utils import forceauth
 from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
+from uuid import UUID, uuid4
 
 
 def votes_signing(request, meeting_pk=None):
@@ -96,15 +97,16 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_name = vote_filename(meeting, vote)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
+    document_uuid = uuid4();
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)
     pdf_len = len(pdf)
     pdf_id = get_random_id()
     t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
     t_name = t.name
-    t.write(pdf)
+    pdf_barcodestamp(pdf, t, document_uuid)
     t.close()
-    id_set(pdf_id, 'vote sign:%s:%s' % (t_name, pdf_name))
+    id_set(pdf_id, 'vote sign:%s:%s:%s' % (t_name, pdf_name,document_uuid))
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -122,7 +124,6 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     t_name = a[1]
     pdf_data = file(t_name, 'rb')
     return HttpResponse(pdf_data, mimetype='application/pdf')
-
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
