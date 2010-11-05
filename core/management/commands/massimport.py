@@ -34,7 +34,13 @@ if platform.platform().lower().startswith('win'):
     
 def _popen_ooffice(filename):
     """doc2ooxml -d document -f odt 342_2010.doc"""
-    return Popen(['doc2ooxml'] + ['-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
+    print 'doc2ooxmlcall:'
+    #print ['doc2ooxml'] + ['-d document', '-f odt', filename]
+    print '/usr/bin/doc2ooxmll -d document -f odt %s' % filename 
+    #return None
+    #print sys.path
+    return Popen('doc2ooxml -d document -f odt %s' % filename, stdout=PIPE, stderr=PIPE)
+    #return Popen(['doc2ooxml'] + ['-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
     
 
 def _popen_antiword(filename):
@@ -137,9 +143,6 @@ class Command(BaseCommand):
             raise Exception(standard_error.strip())
     
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
-        tmpf = open("tmpfucker.docbook","w")
-        tmpf.write(docbook)
-        tmpf.close()
         # look for paragraphs where a number is inside (x.y[.z])
         y = s.findAll('para', text=re.compile(r'\d+(\.\d+)+\.?\s+'), role='bold')
 
@@ -204,8 +207,17 @@ class Command(BaseCommand):
                 set field in submissionform_data
         """
         tmp = _popen_ooffice(filename)
+        print "calling popen.communicate"
+        blabla, standard_error = tmp.communicate()
+        print "popen return:",blabla
+        if tmp.returncode:
+            print "doc2ooxml error..."
+            raise Exception(standard_error.strip())
+
         try:
-            odtf = os.path.basename(filename) + ".odt"
+            #odtf = os.path.splitext(os.path.basename(filename))[1] + ".odt"
+            odtf = os.path.splitext(filename)[0] + ".odt"
+            print "trying:",odtf
             import zipfile
             try:
                 zip = zipfile.ZipFile(odtf, 'r')
