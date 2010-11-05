@@ -12,13 +12,16 @@ from django.shortcuts import get_object_or_404
 from ecs.utils.viewutils import render, render_pdf, pdf_response
 from ecs.core.models import Submission, Vote
 from ecs.meetings.models import Meeting, TimetableEntry
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentType
 from ecs.meetings.forms import MeetingForm, SubmissionSchedulingForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
 
 from ecs.utils import forceauth
-from ecs.utils.pdfutils import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
+from django.core.files.base import File
+from django.views.decorators.csrf import csrf_exempt
+from uuid import UUID, uuid4
 
 
 def votes_signing(request, meeting_pk=None):
@@ -94,15 +97,16 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_name = vote_filename(meeting, vote)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
+    document_uuid = uuid4();
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)
     pdf_len = len(pdf)
     pdf_id = get_random_id()
     t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
     t_name = t.name
-    t.write(pdf)
+    pdf_barcodestamp(pdf, t, document_uuid)
     t.close()
-    id_set(pdf_id, 'vote sign:%s:%s' % (t_name, pdf_name))
+    id_set(pdf_id, 'vote sign:%s:%s:%s' % (t_name, pdf_name,document_uuid))
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -121,14 +125,17 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     pdf_data = file(t_name, 'rb')
     return HttpResponse(pdf_data, mimetype='application/pdf')
 
-
+@csrf_exempt
+def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
+ 
 @forceauth.exempt
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print 'vote_sign_receive meeting "%s", vote "%s", jsessionid "%s"' % (meeting_pk, vote_pk, jsessionid)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
         pdf_id = request.REQUEST['pdf-id']
-        num_bytes = request.REQUEST['num-bytes']
+        num_bytes = int(request.REQUEST['num-bytes'])
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
         value = id_get(pdf_id)
@@ -143,14 +150,14 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         f = urllib2.urlopen(url)
         t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
         t_name = t.name
-        t.write(f.read())
+        t.write(f.read(num_bytes))
         t.close()
         f.close()
         print 'wrote "%s" as "%s"' % (pdf_name, t_name)
         t = open(t_name, 'rb')
         d = datetime.datetime.now()
-        document = Document(file=t, original_file_name=pdf_name, date=d)
-        document.save()
+        doctype = DocumentType.objects.create(name="Votum", identifier="votes")
+        document = Document.objects.create(doctype=doctype, file=File(t), original_file_name=pdf_name, date=d)
         print 'stored "%s" as "%s"' % (pdf_name, document.pk)
         t.close()
         os.remove(t_name)
