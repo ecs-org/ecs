@@ -295,7 +295,7 @@ class TimetableEntry(models.Model):
     def _get_index(self):
         return self.timetable_index
         
-    #@transaction.???
+    # XXX: @transaction.???
     def _set_index(self, index):
         if index < 0 or index >= len(self.meeting):
             raise IndexError()
@@ -379,6 +379,30 @@ class TimetableEntry(models.Model):
         if entries:
             return entries[0]
         return None
+    
+    def _collect_users(self, padding, r):
+        users = set()
+        offset = timedelta()
+        for i in r:
+            entry = self.meeting[i]
+            users.update(entry.users)
+            offset += entry.duration
+            if offset >= padding:
+                break
+        return users
+    
+    def broetchen(self, padding_before=timedelta(hours=1), padding_after=timedelta(hours=1)):
+        waiting_users = set(User.objects.filter(
+                meeting_participations__entry__meeting=self.meeting, 
+                meeting_participations__entry__timetable_index__lte=self.timetable_index,
+            ).filter(
+                meeting_participations__entry__meeting=self.meeting, 
+                meeting_participations__entry__timetable_index__gte=self.timetable_index,
+            ).distinct()
+        )
+        before = self._collect_users(padding_before, xrange(self.index - 1, -1, -1)).difference(waiting_users)
+        after = self._collect_users(padding_after, xrange(self.index + 1, len(self.meeting))).difference(waiting_users)
+        return len(before), len(waiting_users), len(after)
 
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
