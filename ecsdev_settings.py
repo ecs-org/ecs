@@ -30,7 +30,13 @@ RENDER_MEMCACHE_LIB  = 'memcache'
 RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
 RENDER_MEMCACHE_PORT = 11211
 
-
+# change urls of signing application depending username
+if user == "shredder":
+    PDFAS_SERVICE = 'http://s.ecsdev.ep3.at:4780/pdf-as/'
+elif user == "testecs":
+    PDFAS_SERVICE = 'http://test.ecsdev.ep3.at:4780/pdf-as/'
+    
+    
 # ecsmail server settings
 # FIXME: we should only change settings but not carbon copy it from settings.py
 ECSMAIL = {

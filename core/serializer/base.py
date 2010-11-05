@@ -270,12 +270,12 @@ class SubmissionSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
-        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 'pdf_document'),
+        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor'),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
             'measures': 'submission_form',
-            'documents': 'parent_object',
+            'documents': '_submission_forms',
             'nontesteduseddrug_set': 'submission_form',
         },
     ),

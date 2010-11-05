@@ -51,6 +51,10 @@
             <div>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
             </div>
+            {% else %}
+            <div>
+                Brötchen: {{ entry.broetchen }}
+            </div>
             {% endif %}
         </li>
     {% endfor %}
@@ -73,7 +77,7 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="{% url ecs.meetings.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
+                    <a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
                     </div>
                 </li>
             {% endfor %}

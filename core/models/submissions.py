@@ -183,7 +183,6 @@ SUBMISSION_TYPE_CHOICES = (
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
-    documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
 
@@ -197,6 +196,7 @@ class SubmissionForm(models.Model):
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
     current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
+    documents = models.ManyToManyField('documents.Document', null=True, related_name='_submission_forms')
     
     class Meta:
         app_label = 'core'
@@ -209,8 +209,7 @@ class SubmissionForm(models.Model):
     sponsor = models.ForeignKey(User, null=True, related_name="sponsored_submission_forms")
     sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contact = NameField()
-    sponsor_address1 = models.CharField(max_length=60, null=True)
-    sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
+    sponsor_address = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
@@ -220,8 +219,7 @@ class SubmissionForm(models.Model):
     
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
-    invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
-    invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
+    invoice_address = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
     invoice_city = models.CharField(max_length=80, null=True, blank=True)
     invoice_phone = models.CharField(max_length=50, null=True, blank=True)
@@ -315,7 +313,7 @@ class SubmissionForm(models.Model):
     
     # 5.x
     insurance_name = models.CharField(max_length=125, null=True, blank=True)
-    insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
+    insurance_address = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
     insurance_validity = models.CharField(max_length=60, null=True, blank=True)

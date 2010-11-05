@@ -9,9 +9,9 @@ from ecs.utils.diff_match_patch import diff_match_patch
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter
 from ecs.documents.models import Document, DocumentType
-from ecs.core.forms import SubmissionFormForm
 from ecs.utils.viewutils import render_html
 from ecs.audit.models import AuditTrail
+from ecs.core import paper_forms
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -71,7 +71,7 @@ class ListNode(Node):
 class ModelRenderer(object):
     exclude = ()
     fields = ()
-    follow = {}
+    follow = ()
 
     def __init__(self, model, exclude=None, fields=None, follow=None):
         self.model = model
@@ -86,7 +86,7 @@ class ModelRenderer(object):
         names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
         if self.fields:
             names = names.intersection(self.fields)
-        return names.union(self.follow.keys())
+        return names.union(self.follow)
 
     def render_field(self, instance, name):
         val = getattr(instance, name)
@@ -116,11 +116,20 @@ class ModelRenderer(object):
         for name in self.get_field_names():
             d[name] = self.render_field(instance, name)
 
-        if plain:
-            d = '<br />\n'.join([u'%s: %s' % (x[0], x[1]) for x in d.items() if x[1]])
-            d += '<br />\n'
+        if not plain:
+            return d
 
-        return d
+        text = ''
+        for field, value in d.items():
+            field_info = paper_forms.get_field_info(instance.__class__, field, None)
+            if field_info is not None:
+                label = field_info.label
+            else:
+                label = field
+
+            text += '%s: %s<br />\n' % (label, value)
+
+        return text
 
 
 class DocumentRenderer(ModelRenderer):
@@ -129,31 +138,36 @@ class DocumentRenderer(ModelRenderer):
         return super(DocumentRenderer, self).__init__(**kwargs)
 
     def render(self, instance, plain=False):
-        html = render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': instance})
-        if plain:
-            return html
-        else:
-            return {'link': html}
-        
+        if not plain:
+            raise NotImplementedError
+
+        return render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': instance})
+
+class ForeignParticipatingCenterRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = ForeignParticipatingCenter
+        return super(ForeignParticipatingCenterRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return _(u'Name: %(name)s, Investigator: %(investigator)s') % {'name': instance.name, 'investigator': instance.investigator_name}
+
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission'),
-        follow={
-            'foreignparticipatingcenter_set': 'submission_form',
-            'investigators': 'submission_form',
-            'measures': 'submission_form',
-            'nontesteduseddrug_set': 'submission_form',
-        },
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'pdf_document'),
+        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents'),
     ),
     Investigator: ModelRenderer(Investigator,
         exclude=('id', 'submission_form',),
     ),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
-    DocumentType: ModelRenderer(DocumentType, fields=('name',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelRenderer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    ForeignParticipatingCenter: ModelRenderer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
+    ForeignParticipatingCenter: ForeignParticipatingCenterRenderer(),
+    Document: DocumentRenderer(),
 }
 
 def render_model_instance(instance, plain=False):
@@ -164,7 +178,6 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     assert(old_submission_form.submission == new_submission_form.submission)
     submission = new_submission_form.submission
 
-    form = SubmissionFormForm(None, instance=old_submission_form)
     differ = diff_match_patch()
 
     old = render_model_instance(old_submission_form)
@@ -174,26 +187,13 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     for field in sorted(old.keys()):
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
-            try:
-                label = form.fields[field].label or field
-            except KeyError:
+            field_info = paper_forms.get_field_info(SubmissionForm, field, None)
+            if field_info is not None:
+                label = field_info.label
+            else:
                 label = field
+
             diffs.append((label, diff))
     
-    # FIXME: change the relation between document and submissionForms to remove this hack
-    sf_ctype = ContentType.objects.get_for_model(old_submission_form)
-    d_ctype = ContentType.objects.get_for_model(Document)
-
-    since = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    until = AuditTrail.objects.get(content_type__pk=sf_ctype.id, object_id=new_submission_form.id, object_created=True).created_at
-
-    new_documents_q = AuditTrail.objects.filter(content_type__pk=d_ctype.id, created_at__gt=since, created_at__lte=until).values('object_id').query
-
-    submission_forms_query = submission.forms.all().values('pk').query
-    new_documents = list(Document.objects.filter(content_type__pk=sf_ctype.id, object_id__in=submission_forms_query, pk__in=new_documents_q))
-
-    if new_documents:
-        diffs.append(('documents', [(1, DocumentRenderer().render(x, plain=True)) for x in new_documents]))
-
     return diffs
 

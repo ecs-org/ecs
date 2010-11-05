@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 import datetime
-from ecs.utils.countries.models import Country
-from ecs.utils.testcases import EcsTestCase
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.core.views.submissions import diff
 from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document
-from django.contrib.auth.models import User
 from ecs.core.models.submissions import attach_to_submissions
-from django.core.urlresolvers import reverse
+from ecs.utils.countries.models import Country
+from ecs.utils.testcases import EcsTestCase
+from ecs.core.diff import diff_submission_forms
 
 class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
@@ -21,8 +22,7 @@ class SubmissionFormTest(EcsTestCase):
             project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
             eudract_number="2006-001489-17",
             sponsor_name="CCRI",
-            sponsor_address1="Kinderspitalg. 6",
-            sponsor_address2="",
+            sponsor_address="Kinderspitalg. 6",
             sponsor_zip_code="1090",
             sponsor_city="Wien",
             sponsor_phone="+43 1 40170",
@@ -30,8 +30,7 @@ class SubmissionFormTest(EcsTestCase):
             sponsor_email="helmut.gadner@stanna.at",
             sponsor_agrees_to_publishing=False,
             invoice_name="",
-            invoice_address1="",
-            invoice_address2="",
+            invoice_address="",
             invoice_zip_code="",
             invoice_city="",
             invoice_phone="",
@@ -90,7 +89,7 @@ class SubmissionFormTest(EcsTestCase):
             medtech_technical_safety_regulations="",
             medtech_departure_from_regulations="",
             insurance_name="Zürich Veresicherungs-Aktiengesellschaft",
-            insurance_address_1="Schwarzenbergplatz 15",
+            insurance_address="Schwarzenbergplatz 15",
             insurance_phone="50125",
             insurance_contract_number="WF-07218230-8",
             insurance_validity="01.10.2005 bis 01.10.2006",
@@ -180,8 +179,7 @@ def create_submission_form(ec_number=None):
         project_title="High Risk Neuroblastoma Study 1 of SIOP-Europe (SIOPEN)",
         eudract_number="2006-001489-17",
         sponsor_name="CCRI",
-        sponsor_address1="Kinderspitalg. 6",
-        sponsor_address2="",
+        sponsor_address="Kinderspitalg. 6",
         sponsor_zip_code="1090",
         sponsor_city="Wien",
         sponsor_phone="+43 1 40170",
@@ -189,8 +187,7 @@ def create_submission_form(ec_number=None):
         sponsor_email="helmut.gadner@stanna.at",
         sponsor_agrees_to_publishing=False,
         invoice_name="",
-        invoice_address1="",
-        invoice_address2="",
+        invoice_address="",
         invoice_zip_code="",
         invoice_city="",
         invoice_phone="",
@@ -249,7 +246,7 @@ def create_submission_form(ec_number=None):
         medtech_technical_safety_regulations="",
         medtech_departure_from_regulations="",
         insurance_name=u"Zürich Veresicherungs-Aktiengesellschaft",
-        insurance_address_1="Schwarzenbergplatz 15",
+        insurance_address="Schwarzenbergplatz 15",
         insurance_phone="50125",
         insurance_contract_number="WF-07218230-8",
         insurance_validity="01.10.2005 bis 01.10.2006",
@@ -333,21 +330,26 @@ def create_submission_form(ec_number=None):
     return sform
 
 
-#class SubmissionFormDiffTest(EcsTestCase):
-#    def setUp(self):
-#        self.old_sf = create_submission_form()
-#        self.new_sf = create_submission_form()
-#
-#    def test_submission_form_diff(self):
-#        ''' Test if the submissionForm diff function works correctly '''
-#        self.new_sf.project_title = 'roflcopter'
-#        diff = diff(self.old_sf, self.new_sf)
-#        self.failIf(not diff)
-#        try:
-#            project_title_diff = [x for x in diff if x[0] == u'Project title'][0]
-#        except IndexError:
-#            self.fail()
-#        self.failIf(not (1, 'roflcopter') in x[1])
+class SubmissionFormDiffTest(EcsTestCase):
+    def setUp(self, *args, **kwargs):
+        rval = super(SubmissionFormDiffTest, self).setUp(*args, **kwargs)
+        self.old_sf = create_submission_form()
+        self.new_sf = create_submission_form()
+
+        # both submission forms have to belong to the same submission
+        self.new_sf.submission.current_submission_form = None
+        self.new_sf.submission.save()
+        self.new_sf.submission = self.old_sf.submission
+        self.new_sf.save()
+
+        return rval
+
+    def test_submission_form_diff(self):
+        self.new_sf.project_title = 'roflcopter'
+        diff = diff_submission_forms(self.old_sf, self.new_sf)
+        self.failIf(not diff)
+        self.failUnless(dict(diff).get('Project title', None))
+        self.failIf(not (1, 'roflcopter') in dict(diff)['Project title'])
 
 
 class SubmissionAttachUserTest(EcsTestCase):
