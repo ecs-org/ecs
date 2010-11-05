@@ -183,15 +183,24 @@ def diff_submission_forms(old_submission_form, new_submission_form):
     old = render_model_instance(old_submission_form)
     new = render_model_instance(new_submission_form)
 
+    label_lookup = {}
+    for field_info in paper_forms.get_field_info_for_model(SubmissionForm):
+        label_lookup[field_info.name] = field_info.label
+
+    label_lookup.update({
+        'foreignparticipatingcenter_set': _(u'Auslandszentren'),
+        'investigators': _(u'Zentren'),
+        'measures': _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik'),
+        'nontesteduseddrug_set': _(u'Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind'),
+        'documents': _(u'Dokumente'),
+    })
+
+
     diffs = []
     for field in sorted(old.keys()):
         diff = old[field].diff(new[field])
         if differ.diff_levenshtein(diff or []):
-            field_info = paper_forms.get_field_info(SubmissionForm, field, None)
-            if field_info is not None:
-                label = field_info.label
-            else:
-                label = field
+            label = label_lookup[field]
 
             diffs.append((label, diff))
     
