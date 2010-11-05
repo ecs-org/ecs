@@ -49,12 +49,19 @@ def delete_annotation(request, document_pk=None):
     annotation.delete()
     return HttpResponse('OK')
 
-def my_annotations(request, submission_form_pk=None):
+def get_annotations(request, submission_form_pk=None):
     sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    
-    return render(request, 'pdfviewer/annotations/list.html', {
-        'annotations': DocumentAnnotation.objects.filter(user=request.user).filter(document__submission_forms=sf).order_by('page_number', 'y'),
-    })
+    # FIXME: filter by submission
+    annotations = DocumentAnnotation.objects.filter(user=request.user).select_related('document').order_by('document', 'page_number', 'y')
+    data = []
+    for annotation in annotations:
+        data.append({
+            'pk': annotation.pk,
+            'text': annotation.text,
+            'page_number': annotation.page_number,
+            'document': {
+            }
+        })
     
 def share_annotations(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
