@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 import os
+import tempfile
 
 def which(file, mode=os.F_OK | os.X_OK, path=None):
     """
@@ -18,3 +21,9 @@ def which(file, mode=os.F_OK | os.X_OK, path=None):
             full_ext = full_path + ext
             if os.path.exists(full_ext) and os.access(full_ext, mode):
                 yield full_ext
+
+def tempfilecopy(filelike):
+    with tempfile.NamedTemporaryFile(delete=False) as outputfile:
+        outputfilename = outputfile.name
+        outputfile.write(filelike.read())
+    return outputfilename

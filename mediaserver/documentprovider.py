@@ -1,140 +1,136 @@
-'''
-Created on Aug 26, 2010
+# -*- coding: utf-8 -*-
 
-@author: amir
-'''
-import getpass
-import os
-import uuid
-from time import time
+import os, getpass, tempfile
 
 from django.conf import settings
 
+from ecs.utils.pathutils import tempfilecopy
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets
-from ecs.mediaserver.renderer import renderDefaultDocshots
 from ecs.utils.pdfutils import pdf_isvalid
-from ecs.mediaserver.cacheobjects import Docshot, MediaBlob
-from ecs.utils import s3utils, gpgutils
+from ecs.utils import gpgutils
+
+from ecs.mediaserver.renderer import renderDefaultDocshots
+ 
  
 class DocumentProvider(object):
     '''
-        The central document storage and retrieval facility. Implements caching layers and rules as well as storage logic
+    The central document storage and retrieval facility.
+    Implements caching layers and rules as well as storage logic
     '''
+
     def __init__(self):
         self.render_memcache = VolatileCache()
-        self.render_diskcache = DiskCache(os.path.join(settings.RENDER_DISKCACHE, "docshots"), settings.RENDER_DISKCACHE_MAXSIZE)
-        self.doc_diskcache = DiskCache(os.path.join(settings.DOC_DISKCACHE, "blobs") , settings.DOC_DISKCACHE_MAXSIZE)
+        self.render_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["render_diskcache"], "docshots"),
+            settings.MS_SERVER ["render_diskcache_maxsize"])
+        self.doc_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["doc_diskcache"], "blobs"),
+            settings.MS_SERVER ["doc_diskcache_maxsize"])
         self.vault = getVault()
+
+
+    def addBlob(self, mediablob, filelike): # xxx: this is a test function and should not be used normal
+        self.vault.add(mediablob.cacheID(), filelike);
 
         
     def addDocshot(self, docshot, filelike, use_render_memcache=False, use_render_diskcache=False):
         if use_render_memcache:
-            self.render_memcache.add(docshot.cacheID(), filelike)
+            self.render_memcache.create_or_update(docshot.cacheID(), filelike)
         if use_render_diskcache:
-            self.render_diskcache.add(docshot.cacheID(), filelike)
-           
-    def addBlob(self, mediablob, filelike):
-        self.vault.add(mediablob.cacheID(), filelike);
+            self.render_diskcache.create_or_update(docshot.cacheID(), filelike)
+       
     
     def getBlob(self, mediablob, try_doc_diskcache=True, try_vault=True, rerender_always=False):
         filelike=None
-            
+        
         if try_doc_diskcache:
             filelike = self.doc_diskcache.get(mediablob.cacheID());
-                        
+        
         if not filelike and try_vault:
-            filelike = self.vault.get(mediablob.cacheID())
-            decrypted = gpgutils.decrypt(filelike, settings.MEDIASERVER_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
-            self._cacheBlob(mediablob, decrypted)
-            self._cacheDocshots(mediablob, decrypted)
-        elif rerender_always == True:
-            self._cacheDocshots(mediablob, filelike)
+            filelike = self._getBlob(mediablob)
+            rerender_always = True
+            
+        if rerender_always == True and filelike is not None:
+            if not self._cacheDocshots(mediablob, filelike):
+                print "caching of docshots went wrong"
  
         return filelike
 
+
     def getDocshot(self, docshot, try_render_memcache=True, try_render_diskcache=True):
-        filelike=None
+        filelike = None
         
         if try_render_memcache:     
             filelike = self.render_memcache.get(docshot.cacheID());
         
         if filelike:
             self.render_diskcache.update_access(docshot.cacheID()) # update access in docshot cache
-            self.doc_diskcache.update_access(docshot.mediablob.cacheID())   # update access in mediablob cache
+            self.doc_diskcache.update_access(docshot.mediablob.cacheID()) # update access in mediablob cache
         else:
             if try_render_diskcache:
                 filelike = self.render_diskcache.get(docshot.cacheID()) # do not update access because get of diskcache makes it
-
                 if not filelike: # still not here, so we need to recache from scratch
-                    self.getBlob(docshot.mediablob, rerender_always=True) # This primes caches
-                    
-                    filelike = self.render_diskcache.get(docshot.cacheID())
+                    filelike = self.getBlob(docshot.mediablob, rerender_always=True) # This primes caches
                     if not filelike:
                         return None
-                        
                 self.render_memcache.add(docshot.cacheID(), filelike)
                 filelike.seek(0)
         return filelike
+
  
+    def _getBlob(self, mediablob):        
+        filelike = self.vault.get(mediablob.cacheID())
+        if not filelike:
+            return None 
+        elif hasattr(filelike, "name"):
+            inputfilename = filelike.name
+        else:
+            inputfilename = tempfilecopy(filelike) 
+        
+        try:
+            osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
+            gpgutils.decrypt(inputfilename, decryptedfilename, settings.STORAGE_DECRYPT["gpghome"],
+                settings.STORAGE_DECRYPT ["owner"])
+        except IOError as exceptobj:
+            raise # FIXME: if something fails here (decryption of blob) it should return some error
+
+        with open(decryptedfilename, "rb") as filelike:
+            self._cacheBlob(mediablob, filelike)
+        
+        filelike = self.doc_diskcache.get(mediablob.cacheID());
+        return filelike
+
+
     def _cacheBlob(self, mediablob, filelike):
-        self.doc_diskcache.add(mediablob.cacheID(), filelike)
+        self.doc_diskcache.create_or_update(mediablob.cacheID(), filelike)
+
 
     def _cacheDocshots(self, pdfblob, filelike):
+        from ecs.mediaserver.task_queue import rerender_docshots
+        
         if not pdf_isvalid(filelike):
             return False
         
-        for docshot, data in renderDefaultDocshots(pdfblob,filelike):
-            self.addDocshot(docshot, data, use_render_diskcache=True)
-        return True
-    
-        """
-    def createDocshotData(self, mediablob):
-        if not isinstance(mediablob, MediaBlob):
-            mediablob = MediaBlob(uuid.UUID(str(mediablob)))
-        tiles = settings.MEDIASERVER_TILES
-        width = settings.MEDIASERVER_RESOLUTIONS
-        docshotData = [];
-    
-        for t in tiles:
-            for w in width:
-                pagenum = 1
-                while self.getDocshot(Docshot(mediablob, t, t, w , pagenum)):
-                    bucket = "/mediaserver/%s/%dx%d/%d/%d/" % (mediablob.cacheID(), t, t, w, pagenum)
-                    baseurl = settings.MEDIASERVER_URL
-                    expire = int(time()) + settings.S3_DEFAULT_EXPIRATION_SEC
-                    linkdesc = "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w)
-                    h =  w * DEFAULT_ASPECT_RATIO
-                    # "linkdescription": ["expiringURL", page, tiles_x, tiles_y, width, height]
-                    docshotData.append({
-                        'description': linkdesc,
-                        'url': s3utils.createExpiringUrl(baseurl, bucket, '', settings.S3_DEFAULT_KEY, expire), 
-                        'page': pagenum, 
-                        'tx': t,
-                        'ty': t,
-                        'width': w, 
-                        'height': h,
-                    })
-                    pagenum += 1
+        result = rerender_docshots(pdfblob)
+        return result
 
-        return docshotData
-        """    
-            
+
+        
 class VolatileCache(object):
     '''
     A volatile cache using memcache
     '''
+
     def __init__(self):
-        # TODO configure memcache qoutas
-        if settings.RENDER_MEMCACHE_LIB == 'memcache':
+        if settings.MS_SERVER ["render_memcache_lib"] == 'memcache':
             import memcache as memcache
-        elif settings.RENDER_MEMCACHE_LIB == 'mockcache' or settings.RENDER_MEMCACHE_LIB == '' :
+        elif settings.MS_SERVER ["render_memcache_lib"] == 'mockcache' or settings.MS_SERVER ["render_memcache_lib"] == '' :
             import mockcache as memcache
         else:
-            raise NotImplementedError('i do not know about %s as RENDER_MEMCACHE_LIB' % settings.RENDER_MEMCACHE_LIB)
+            raise NotImplementedError('i do not know about %s as render_memcache_lib' % settings.MS_SERVER ["render_memcache_lib"])
 
         self.ns = '%s.ms' % getpass.getuser()
-        self.mc = memcache.Client(['%s:%d' % (settings.RENDER_MEMCACHE_HOST, settings.RENDER_MEMCACHE_PORT)], debug=False)
+        self.mc = memcache.Client(['%s:%d' % (settings.MS_SERVER ["render_memcache_host"],
+            settings.MS_SERVER ["render_memcache_port"])], debug=False)
 
     def add(self, identifier, filelike):
         # FIXME: self.ns (identifier part which is the current running os user of the process) should be incooperated into memcache identifier to avoid collissions
@@ -149,6 +145,7 @@ class VolatileCache(object):
     def entries(self):
         return self.mc.dictionary.values() 
 
+
 class DiskCache(DiskBuckets):
     '''
     Persistent cache using directory buckets which are derived from the cache id of storage unit
@@ -159,7 +156,10 @@ class DiskCache(DiskBuckets):
 
     def add(self, identifier, filelike):
         super(DiskCache, self).add(identifier, filelike)
-         
+    
+    def create_or_update(self, identifier, filelike):
+        super(DiskCache, self).create_or_update(identifier, filelike)
+             
     def update_access(self, identifier):
         os.utime(self._generate_path(identifier), None)
 
@@ -192,7 +192,4 @@ class DiskCache(DiskBuckets):
     def _raw_entries(self):
         files = os.walk(self.root_dir)
         return files
-
-# we don't want parallel instances in the webapp
-docprovider = DocumentProvider()
 
