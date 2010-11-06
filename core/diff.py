@@ -12,6 +12,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render_html
 from ecs.audit.models import AuditTrail
 from ecs.core import paper_forms
+from ecs.utils.countries.models import Country
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -108,7 +109,10 @@ class ModelRenderer(object):
         if isinstance(field, models.ForeignKey):
             return TextNode(render_model_instance(val, plain=True))
         else:
-            return TextNode(unicode(val))
+            if field.choices:
+                return TextNode(unicode(dict(field.choices)[val]))
+            else:
+                return TextNode(unicode(val))
         
     def render(self, instance, plain=False):
         d = {}
@@ -154,6 +158,17 @@ class ForeignParticipatingCenterRenderer(ModelRenderer):
 
         return _(u'Name: %(name)s, Investigator: %(investigator)s') % {'name': instance.name, 'investigator': instance.investigator_name}
 
+class CountryRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = ForeignParticipatingCenter
+        return super(CountryRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return unicode(instance.printable_name)
+
 class NonTestedUsedDrugRenderer(ModelRenderer):
     def __init__(self, **kwargs):
         kwargs['model'] = NonTestedUsedDrug
@@ -173,7 +188,7 @@ class NonTestedUsedDrugRenderer(ModelRenderer):
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'pdf_document'),
-        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents'),
+        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
     ),
     Investigator: ModelRenderer(Investigator,
         exclude=('id', 'submission_form',),
@@ -183,6 +198,7 @@ _renderers = {
     NonTestedUsedDrug: NonTestedUsedDrugRenderer(),
     ForeignParticipatingCenter: ForeignParticipatingCenterRenderer(),
     Document: DocumentRenderer(),
+    Country: CountryRenderer(),
 }
 
 def render_model_instance(instance, plain=False):
