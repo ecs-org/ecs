@@ -4,7 +4,7 @@ from time import time
 from urlparse import urlparse, parse_qs
 from ecs.utils.django_signed.signed import base64_hmac
 
-class s3url(object):
+class S3url(object):
     def __init__(self, KeyId, KeySecret):
         self.keystore = {KeyId: KeySecret}
         

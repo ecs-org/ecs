@@ -237,8 +237,9 @@ MS_SHARED = {"url_expiration_sec": 5*60, "tiles": [1, 3, 5], "resolutions": [800
              "aspect_ratio": 1.41428, "dpi": 96, "depth": 8}
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-MS_CLIENT = {"url": "http://localhost:8000", "key_id": "mykey", "key_secret": "mysecret" }
-
+MS_CLIENT = {"url": "http://localhost:8000",  # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
+    "key_id": "b2SpFfUvfD44LUzHDu7w", "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN" }
+               
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
     "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
@@ -253,11 +254,11 @@ MS_SERVER = {
     }
 
 
-# mail lamson config, standard django values
+# mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-# EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
+# EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
 ECSMAIL_DEFAULT = {

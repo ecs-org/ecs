@@ -65,8 +65,12 @@ if user in ["shredder", "testecs"]:
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 if user == "testecs":    
     MS_CLIENT ["url"] = "http://test.ecsdev.ep3.at"
+    MS_CLIENT ["key_id"] = "GHz36o6OJHOm8uKmYiD1"
+    MS_CLIENT ["key_secret"] = "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6"
 elif user == "shredder":
     MS_CLIENT ["url"] = "http://s.ecsdev.ep3.at"
+    MS_CLIENT ["key_id"] = "Skj45A6R2z36gVKF17i2"
+    MS_CLIENT ["key_secret"] = "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw"
 
 # on ecsdev we use memcache instead of mockcache
 MS_SERVER ["render_memcache_lib"] = 'memcache'

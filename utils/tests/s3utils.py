@@ -1,35 +1,30 @@
-'''
-Created on Sep 19, 2010
+# -*- coding: utf-8 -*-
 
-@author: elchaschab
-'''
-from django.test.testcases import TestCase
-from ecs.utils.s3utils import createExpiringUrl, verifyExpiringUrl, parseS3UrlFeatures,\
-    _createSignatur
+from ecs.utils.testcases import EcsTestCase
+from ecs.utils.s3utils import S3url
 from uuid import uuid4
 from time import time
 
-class S3UtilsTest(TestCase):
+class S3UtilsTest(EcsTestCase):
+    
     baseurl =  "http://void"
     bucket = "/"
-    keyid = "UnitTestKey"
-    
+    keyid = "CyKK3sUdWCVxOMIvoyW8"
+    keysecret = "7GEVGvImpCIxidINqA3MEOU5zBJDeCf"
+        
     def testConsistency(self):
         uuid = uuid4()
         hasExpired = int(time())
         willExpire = hasExpired + 60
         
-        url = createExpiringUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, willExpire)
-        bucket, objectid, keyId, expires, signature = parseS3UrlFeatures(url)
-        self.assertEqual(verifyExpiringUrl(bucket, objectid, keyId, expires, signature), True);
+        s3url = S3url(self.keyid, self.keysecret)
+        url = s3url.createUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, willExpire)
+        bucket, objectid, keyid, expires, signature = s3url.parseS3UrlFeatures(url)
+        self.assertEqual(s3url.verifyUrl(bucket, objectid, keyid, expires, signature), True)
+        self.assertEqual(s3url.verifyUrlString(url), True)
         
-        url = createExpiringUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, hasExpired)
-        bucket, objectid, keyId, expires, signature = parseS3UrlFeatures(url)
-        self.assertEqual(verifyExpiringUrl(bucket, objectid, keyId, expires, signature), False);
-
-        try:
-            self.failIf(_createSignatur(self.bucket, uuid.get_hex(), "unknown key", willExpire))
-        except KeyError:
-            pass
-        except:
-            self.fail("Unknown key didn't cause KeyError")
+        url = s3url.createUrl(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, hasExpired)
+        bucket, objectid, keyid, expires, signature = s3url.parseS3UrlFeatures(url)
+        self.assertEqual(s3url.verifyUrl(bucket, objectid, keyid, expires, signature), False)
+        self.assertEqual(s3url.verifyUrlString(url), False)
+        

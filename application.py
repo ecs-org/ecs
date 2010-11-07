@@ -52,20 +52,23 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 python-memcached:inst:all:pypi:python-memcached
 
 # queuing: celery 
-amqplib:inst:all:pypi:amqplib
-carrot:inst:all:pypi:carrot
+amqplib:inst:all:pypi:amqplib\>=0.6
+carrot:inst:all:pypi:carrot\>=0.10.7
 importlib:inst:all:pypi:importlib
 python-dateutil:inst:all:pypi:python-dateutil
-mailer:inst:all:pypi:mailer
-sqlalchemy:inst:all:pypi:sqlalchemy
 anyjson:inst:all:pypi:anyjson
-billard:inst:all:pypi:billiard
-django-picklefield:inst:all:pypi:django-picklefield
-celery:inst:all:pypi:celery
-# use ghettoq if development instead rabbitmq
-ghettoq:inst:all:pypi:ghettoq
 pyparsing:inst:all:pypi:pyparsing
-django-celery:inst:all:pypi:django-celery
+celery:inst:all:pypi:celery\>=2.1.2
+
+django-picklefield:inst:all:pypi:django-picklefield
+django-celery:inst:all:pypi:django-celery\>=2.1.2
+
+odict:inst:all:pypi:odict
+ghettoq:inst:all:pypi:ghettoq
+# use ghettoq if development instead rabbitmq
+#old mailer:inst:all:pypi:mailer
+#old sqlalchemy:inst:all:pypi:sqlalchemy
+#old billard:inst:all:pypi:billiard
 
 
 # mail: ecsmail, communication: lamson mail server
@@ -149,7 +152,7 @@ imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
-imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.4-Q16-windows.zip:unzipflatsecond:montage.exe
+imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
 
 # TODO: are we using python-pil, or we need only imagemagick 
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
