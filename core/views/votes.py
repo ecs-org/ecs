@@ -10,19 +10,17 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from ecs.utils.viewutils import render, render_pdf, pdf_response
-from ecs.core.models import Submission, Vote
-from ecs.meetings.models import Meeting, TimetableEntry
+from ecs.core.models import Vote
+from ecs.meetings.models import Meeting
 from ecs.documents.models import Document, DocumentType
-from ecs.meetings.forms import MeetingForm, SubmissionSchedulingForm
-from ecs.core.forms.voting import VoteForm, SaveVoteForm
-from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
+from ecs.pdfsigner.views import sign
 
 from ecs.utils import forceauth
 from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
-from uuid import UUID, uuid4
-
+from uuid import uuid4
+from ecs.pdfsigner.UnsignedVoteDepot import votesDepot
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -101,12 +99,12 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)
     pdf_len = len(pdf)
-    pdf_id = get_random_id()
+
     t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-    t_name = t.name
     pdf_barcodestamp(pdf, t, document_uuid)
     t.close()
-    id_set(pdf_id, 'vote sign:%s:%s:%s' % (t_name, pdf_name,document_uuid))
+
+    pdf_id = votesDepot.deposit(t, pdf_name)
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -117,13 +115,11 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
         pdf_id = request.REQUEST['pdf-id']
     else:
         return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-    value = id_get(pdf_id)
-    if value is None:
+    pdf_file, display_name = votesDepot.pickup(pdf_id)
+    if pdf_file is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-    a = value.split(':')
-    t_name = a[1]
-    pdf_data = file(t_name, 'rb')
-    return HttpResponse(pdf_data, mimetype='application/pdf')
+
+    return HttpResponse(pdf_file, mimetype='application/pdf')
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
@@ -138,29 +134,25 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         num_bytes = int(request.REQUEST['num-bytes'])
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-        value = id_get(pdf_id)
-        if value is None:
+        pdf_file, display_name = votesDepot.pickup(pdf_id)
+        if pdf_file is None:
             return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-        a = value.split(':')
-        t_name = a[1]
-        pdf_name = a[2]
-        os.remove(t_name)
-        id_delete(pdf_id)
-        # f is not seekable, so we have to store it as local file first
-        f = urllib2.urlopen(url)
-        t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-        t_name = t.name
-        t.write(f.read(num_bytes))
-        t.close()
-        f.close()
-        print 'wrote "%s" as "%s"' % (pdf_name, t_name)
-        t = open(t_name, 'rb')
+
+        # f_pdfas is not seekable, so we have to store it as local file first
+        sock_pdfas = urllib2.urlopen(url)
+        t_pdfas = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+        t_pdfas.write(sock_pdfas.read(num_bytes))
+        t_pdfas.close()
+        sock_pdfas.close()
+
+        print 'wrote "%s" as "%s"' % (display_name, t_pdfas.name)
+
         d = datetime.datetime.now()
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
-        document = Document.objects.create(doctype=doctype, file=File(t), original_file_name=pdf_name, date=d)
-        print 'stored "%s" as "%s"' % (pdf_name, document.pk)
-        t.close()
-        os.remove(t_name)
+        document = Document.objects.create(document_uuid=pdf_id, doctype=doctype, file=File(pdf_file), original_file_name=display_name, date=d)
+        pdf_file.close()
+
+        print 'stored "%s" as "%s"' % (display_name, document.pk)
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
