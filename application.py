@@ -308,6 +308,10 @@ package_bundles = {
     'system': system_bundle,
 }
 
+logrotate_targets = {
+    'default': '*.log'
+}
+
 upstart_targets = {
     'mainapp_celery': './manage.py celeryd',
     'mailserver': './manage.py ecsmail server',
@@ -322,10 +326,11 @@ test_flavors = {
 }
 
 def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
-    install_upstart(appname, use_sudo=use_sudo, dry=dry)
-    apache_setup(appname, use_sudo=use_sudo, dry=dry, hostname=hostname, ip=ip)
     local('sudo openssl req -config /root/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
         (hostname, hostname))
+    install_upstart(appname, use_sudo=use_sudo, dry=dry)
+    apache_setup(appname, use_sudo=use_sudo, dry=dry, hostname=hostname, ip=ip)
+    """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
 
     os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
     wsgi_bootstrap = ['sudo'] if use_sudo else []

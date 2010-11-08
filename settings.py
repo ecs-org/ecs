@@ -216,6 +216,10 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 
 
+# directory where to store logfiles, used by every daemon and apache
+LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
+
+
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
@@ -263,7 +267,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 # ecsmail server settings
 ECSMAIL_DEFAULT = {
     'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
-    'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
+    'log_dir':   LOGFILE_DIR,
     'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
@@ -332,6 +336,17 @@ CELERY_IMPORTS = (
     'ecs.workflow.task_queue',
     'ecs.communication.task_queue',
 )
+"""
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "runs-every-30-seconds": {
+        "task": "ecs.celerytest.i_write_hello_world",
+        "schedule": crontab(minute="*/1"),
+        "args": ("why not"),
+        }
+    }
+"""                     
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
