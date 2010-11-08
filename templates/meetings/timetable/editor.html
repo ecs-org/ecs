@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
@@ -53,7 +53,7 @@
             </div>
             {% else %}
             <div>
-                Brötchen: {{ entry.broetchen }}
+                Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
             </div>
             {% endif %}
         </li>
