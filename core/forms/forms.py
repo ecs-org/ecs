@@ -204,6 +204,12 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Measure
         exclude = ('submission_form',)
+        widgets = {
+            'type': forms.Textarea(),
+            'count': forms.Textarea(),
+            'period': forms.Textarea(),
+            'total': forms.Textarea(),
+        }
         
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))

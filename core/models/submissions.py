@@ -517,7 +517,8 @@ def _post_submission_form_save(**kwargs):
 
     meetings = set([x.meeting for x in timetable_entries])
     assigned_medical_categories = [x.category for x in sum([list(x.medical_categories.all()) for x in meetings], []) if x.category in submission.medical_categories.all()]
-    recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
+    # FIXME: the following line is broken ('MedicalCategory' object has no attribute 'board_members')
+    #recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
     recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
     recipients = set(recipients)
 
