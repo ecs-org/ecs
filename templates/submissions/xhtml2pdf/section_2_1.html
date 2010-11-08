@@ -53,7 +53,7 @@
     <p style="margin-top: 0.11cm;   ">
     {{ submission_form.project_type_misc|checkbox }} 2.1.7 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
     spezifizieren:</p>
-    <p style="page-break-inside: avoid" class="value">{{ submission_form.project_type_misc|default_if_none:""|safe }}</p>
+    <p style="page-break-inside: avoid" class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>
 
     <p style="margin-top: 0.11cm;  border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm;  ">
     <b>Zusatzinformation:</b> 
