@@ -34,7 +34,6 @@ def send_submission_invitation(sf, unregistered_recipients, username='root'):
     send_submission_message(sf.submission, subject, text, unregistered_recipients, username=username)
 
 def send_submission_change(old_sf, new_sf, recipients, username='root'):
-    from ecs.core.models import SubmissionForm
     text = u'An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n' % new_sf.submission.get_ec_number_display()
     url = reverse('ecs.core.views.diff', kwargs={'old_submission_form_pk': old_sf.pk, 'new_submission_form_pk': new_sf.pk})
     text += u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.' % url
