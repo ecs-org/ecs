@@ -4,12 +4,16 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.conf import settings
 
-from ecs.core import bootstrap
+from ecs.core import bootstrap as core_bootstrap
+from ecs.mediaserver import bootstrap as mediaserver_bootstrap
+from ecs.documents import bootstrap as documents_bootstrap
 
 class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):    
-        bootstrap.templates()
+        core_bootstrap.templates()
+        mediaserver_bootstrap.import_decryption_key()
+        documents_bootstrap.import_encryption_key()
         
     @classmethod
     def teardownClass(self):

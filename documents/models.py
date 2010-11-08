@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import hashlib
 import os
-import posixpath
 import tempfile
 import datetime
 import mimetypes
@@ -18,7 +18,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 
-from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
+from ecs.utils.pdfutils import pdf_pages, pdf_isvalid
 from ecs.authorization import AuthorizationManager
 
 
@@ -29,7 +29,6 @@ class DocumentType(models.Model):
 
     def __unicode__(self):
         return self.name
-
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
@@ -100,6 +99,8 @@ class Document(models.Model):
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def save(self, **kwargs):
+        from ecs.documents.task_queue import encrypt_and_upload_to_storagevault
+              
         if not self.file:
             raise ValueError('no file')
 
@@ -120,41 +121,27 @@ class Document(models.Model):
                 m.update(data)
             self.file.seek(0)
             self.hash = m.hexdigest()
-
+                       
         if self.mimetype == 'application/pdf':
             self.pages = pdf_pages(self.file) # calculate number of pages
-                    
-        return super(Document, self).save(**kwargs)
 
+        first_save = True if self.pk is None else False
+        super(Document, self).save(**kwargs)
+        
+        if first_save:
+            #print("doc file %s , path %s, original %s" % (str(self.file.name), str(self.file.path), str(self.original_file_name)))
+            # upload it via celery to the storage vault
+            encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
-    text = models.TextField()
-
-
-def _post_doc_save(sender, **kwargs):
-    from ecs.documents.task_queue import extract_and_index_pdf_text
-    from ecs.documents.task_queue import encrypt_and_upload_to_storagevault
-    
-    doc = kwargs['instance']
-    doc.page_set.all().delete()
-    
-    print("doc file %s , path %s, original %s" % (str(doc.file.name), str(doc.file.path), str(doc.original_file_name)))
-    
-    if doc.pages and doc.mimetype == 'application/pdf':
-        # FIXME:92we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
-        extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
-    
-    # upload it via celery to the storage vault
-    encrypt_and_upload_to_storagevault.apply_async(args=[doc.pk], countdown=3)
-        
+    text = models.TextField()        
         
 def _post_page_delete(sender, **kwargs):
     from haystack import site
     site.get_index(Page).remove_object(kwargs['instance'])
 
-post_save.connect(_post_doc_save, sender=Document)
 post_delete.connect(_post_page_delete, sender=Page)
 
 

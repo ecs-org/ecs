@@ -1,39 +1,43 @@
 # -*- coding: utf-8 -*-
 
-from uuid import  UUID
+from uuid import UUID
 
-from django.http import HttpResponse, HttpResponseNotFound, \
-    HttpResponseBadRequest
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
 from ecs.mediaserver.documentprovider import DocumentProvider
 from ecs.mediaserver.cacheobjects import MediaBlob, Docshot
-from ecs.utils import s3utils
+
+from ecs.utils.s3utils import S3url
 from ecs.utils import forceauth
 
-docprovider = DocumentProvider()
 
 @forceauth.exempt
 def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
-    if not s3utils.verifyExpiringUrlString(request.get_full_path()):
+    s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest("Invalid expiring url");
     
+    docprovider = DocumentProvider()    
     f = docprovider.getDocshot(Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr))
 
     if not f:
         return HttpResponseNotFound()
-    if hasattr(f, 'read'):
-        f = f.read()
+    
+    data = f.read() if hasattr(f, 'read') else f
     return HttpResponse(f, mimetype='image/png')
         
-
-def download_pdf(request, uuid):
-    if not s3utils.verifyExpiringUrlString(request.get_full_path()):
+@forceauth.exempt
+def download_pdf(request, uuid, mimetype= "application/pdf"):
+    s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest("Invalid expiring url");
     
+    docprovider = DocumentProvider() 
     f = docprovider.getBlob(MediaBlob(UUID(uuid)))
 
     if f:
-        return HttpResponse(f.read(), mimetype='application/pdf')
+        return HttpResponse(f.read(), mimetype=mimetype) 
     else:
         return HttpResponseNotFound()
     

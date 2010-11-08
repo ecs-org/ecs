@@ -1,12 +1,9 @@
-'''
-Created on Aug 19, 2010
-
-@author: amir
-'''
+# -*- coding: utf-8 -*-
 
 from django.utils.importlib import import_module
 from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
+
 from ecs.utils.diskbuckets import DiskBuckets
 
 def getVault():
@@ -21,20 +18,24 @@ class LocalFileStorageVault(DiskBuckets):
     def __init__(self):
         rootdir = settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir']        
         super(LocalFileStorageVault, self).__init__(rootdir)
+    
+    def create_or_update(self, identifier, filelike):
+        raise NotImplementedError   # StorageVault does not allow update
+
+    def purge(self, indentifier):
+        raise NotImplementedError   # StorageVault does not allow purge
 
 class S3StorageVault():
     def __init__(self):
-        self.id = settings.STORAGE_VAULT_OPTIONS['authid']
-        self.key = settings.STORAGE_VAULT_OPTIONS['authkey']
+        self.key_id = settings.STORAGE_VAULT_OPTIONS['key_id']
+        self.key_secret = settings.STORAGE_VAULT_OPTIONS['key_secret']
         raise NotImplementedError
  
-    def add(self, uuid, filelike):
+    def add(self, identifier, filelike):    
         raise NotImplementedError
 
-    def get(self, uuid):
+    def get(self, identifier):
         raise NotImplementedError
 
-    def exists(self, uuid):
+    def exists(self, identifier):
         raise NotImplementedError
-
-        

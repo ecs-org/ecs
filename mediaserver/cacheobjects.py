@@ -1,23 +1,19 @@
-'''
-Created on Sep 3, 2010
-
-@author: elchaschab
-'''
+# -*- coding: utf-8 -*-
 
 class MediaBlob(object):
     '''
     A generic cacheable blob
     '''
     def __init__(self, uuid):
-        self.uuid = uuid 
+        self.uuid = uuid
 
     def cacheID(self):
         return self.uuid.get_hex()
-        
+
     def __str__(self):
         return self.cacheID()
 
-    
+
 class Docshot(object):
     '''
     A cacheable preview image of an actual document
@@ -28,7 +24,7 @@ class Docshot(object):
         self.tiles_y = tiles_y
         self.width = width
         self.pagenr = pagenr
-        
+
     def cacheID(self):
-        return str("%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y ,self.width, self.pagenr))
+        return str("%s_%s_%s_%s_%s" % (self.mediablob.cacheID(), self.tiles_x, self.tiles_y , self.width, self.pagenr))
 

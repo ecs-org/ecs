@@ -20,6 +20,7 @@ class DocumentHighlighter(Highlighter):
 
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
+    # FIXME: get object via redirect to mediaserver
     response = HttpResponse(doc.file, content_type=doc.mimetype)
     ext = 'pdf'
     if 'excel' in doc.mimetype:
