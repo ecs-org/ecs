@@ -194,6 +194,11 @@ body.pdfviewer #navigation{
     margin-left: -11px;
 }
 
+#pdfviewer .annotation.foreign > .overlay,
+#pdfviewer .annotation.foreign > .marker{
+    background-color: #00ffff;
+}
+
 #pdfviewer .annotation:hover > .text{
     display: block;
 }
@@ -231,6 +236,28 @@ body.pdfviewer .annotationDisplay textarea{
     width: 280px;
     padding: 10px;
     height: 150px;
+}
+
+body.pdfviewer .annotationDisplay.foreign textarea{
+    height: 130px;
+}
+
+body.pdfviewer .annotationDisplay .authorInfo{
+    display: none;
+    height: 18px;
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    border-bottom: none;
+    padding-right: 10px;
+    padding-left: 10px;
+    padding-top: 2px;
+    width: 280px;
+    font-size: 90%;
+    font-style: italic;
+}
+
+body.pdfviewer .annotationDisplay.foreign .authorInfo{
+    display: block;
 }
 
 body.pdfviewer .annotationDisplay a{
@@ -315,3 +342,4 @@ body.pdfviewer .slider .knob{
     height: 8px;
     background-color: #cc0000;
 }
+

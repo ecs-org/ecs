@@ -506,18 +506,20 @@ ecs.pdfviewer.Controller = new Class({
 });
 
 ecs.pdfviewer.Annotation = new Class({
-    initialize: function(pk, text, x, y, w, h){
+    initialize: function(pk, text, x, y, w, h, author){
         this.pk = pk;
         this.text = text;
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.author = author;
     },
     attachTo: function(el, onShow){
         var a = new Element('div', {'class': 'annotation'});
         var dim = el.getSize();
         a.setStyle('top', (this.y * dim.y) + 'px');
+        a.setClass('foreign', !!this.author);
         var overlay = new Element('div', {'class': 'overlay'});
     
         overlay.setStyles({
@@ -567,6 +569,8 @@ ecs.pdfviewer.Annotation = new Class({
         this.h = parseInt(bounds.height) / pageSize.y;
         annotationElement.setStyle('top', (parseInt(annotationElement.getStyle('top')) + parseInt(bounds.top)) + 'px');
         overlay.setStyle('top', '0px');
+        annotationElement.removeClass('foreign');
+        this.author = null;
     }
 });
 
@@ -685,9 +689,11 @@ ecs.pdfviewer.AnnotationEditor = new Class({
     Extends: ecs.pdfviewer.Popup,
     initContent: function(content){
         this.textarea = new Element('textarea', {html: this.text});
+        this.authorInfo = new Element('div', {'class': 'authorInfo'});
         var saveLink = new Element('a', {html: 'Save'});
         var cancelLink = new Element('a', {html: 'Cancel'});
         var deleteLink = new Element('a', {html: 'Delete'});
+        content.grab(this.authorInfo);
         content.grab(this.textarea);
         content.grab(saveLink);
         content.grab(cancelLink);
@@ -703,12 +709,18 @@ ecs.pdfviewer.AnnotationEditor = new Class({
         this.annotation = annotation;
         this.annotationElement = element;
         this.textarea.value = annotation.text;
+        this.element.setClass('foreign', !!annotation.author);
+        this.authorInfo.innerHTML = 'Anmerkung von ' + annotation.author + ':';
         this.textarea.focus();
     },
     onSave: function(){
-        this.annotation.text = this.textarea.value;
-        if(!this.viewer.annotationMode){
-            this.viewer.sendAnnotationUpdate(this.annotation);
+        if(this.annotation.text != this.textarea.value){
+            this.annotation.text = this.textarea.value;
+            this.annotation.author = null;
+            this.annotationElement.removeClass('foreign');
+            if(!this.viewer.annotationMode){
+                this.viewer.sendAnnotationUpdate(this.annotation);
+            }
         }
         this.dispose();
     },

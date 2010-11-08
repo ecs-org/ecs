@@ -74,8 +74,10 @@
         });
         $(document.body).addClass('pdfviewer');
         
+        var USER_ID = {{ request.user.pk }};
+        
         {{ annotations|safe }}.each(function(a){
-            viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height));
+            viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height, a.author__id != USER_ID ? a.author__username : null));
         });
 
         viewer.gotoAnchor();
@@ -90,14 +92,6 @@
             });
         });
         metaKeySelect.value = 'alt';
-        
-        // POS1: first page
-        // END: last page
-        // s: search
-        // ?: help
-        // RIGHT: next page
-        // LEFT: next page
-        // mousewheel: zoom
         
     });
 </script>

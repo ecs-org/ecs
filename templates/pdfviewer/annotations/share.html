@@ -1,0 +1,14 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block content %}
+<form action="" method="post">
+    {{ form.user }}
+    {% for annotation in annotations %}
+        <div>
+            <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/>Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text }}
+        </div>
+    {% endfor %}
+    <input type="submit" value="{% trans 'Share' %}" />
+</form>
+{% endblock %}

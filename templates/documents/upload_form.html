@@ -5,15 +5,17 @@
     {% for doc in documents %}
         {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
         <div>
+            {% get_annotations for doc as annotations %}
             <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
                 Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
             </a>
             <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
-            <a href="" class="delete_document">{% trans "Delete" %}</a>
+            {% if annotations %}
+                | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}">{% trans "Share Annotations" %}</a>
+            {% endif %}
+            | <a href="" class="delete_document">{% trans "Delete" %}</a>
             <input type="hidden" name="documents" value="{{ doc.pk }}" />
-            
-            {% get_annotations for doc as annotations %}
             {% if annotations %}
                 <ul>
                 {% for annotation in annotations %}

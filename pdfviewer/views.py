@@ -10,13 +10,13 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
 
 from ecs.pdfviewer.models import DocumentAnnotation
-from ecs.pdfviewer.forms import DocumentAnnotationForm
+from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
 from ecs.pdfviewer.utils import createmediaurls
 
 
 def show(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
-    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text'))
+    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
 
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
@@ -65,15 +65,21 @@ def get_annotations(request, submission_form_pk=None):
     
 def share_annotations(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
-    annotations = DocumentAnnotation.objects.filter(user=request.user, pk__in=request.POST.getlist('annotation'))
-    
+    annotations = DocumentAnnotation.objects.filter(user=request.user).order_by('page_number', 'y')
     form = AnnotationSharingForm(request.POST or None)
     
-    if request.method == 'POST':
-        for annotation in annotations:
+    if form.is_valid():
+        user = form.cleaned_data['user']
+        for annotation in annotations.filter(pk__in=request.POST.getlist('annotation')):
             annotation.pk = None
-            annotation.user = form.cleaned_data['user']
-            
+            annotation.user = user
+            annotation.save()
+        return HttpResponse('OK')
+        
+    return render(request, 'pdfviewer/annotations/share.html', {
+        'form': form,
+        'annotations': annotations,
+    })
     
     
     

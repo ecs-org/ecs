@@ -184,7 +184,8 @@ class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
-    pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
+    pdf_document = models.ForeignKey(Document, related_name="submission_form", null=True) # FIXME: make this a OneToOneField
+    documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -196,7 +197,6 @@ class SubmissionForm(models.Model):
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
     current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
-    documents = models.ManyToManyField('documents.Document', null=True, related_name='_submission_forms')
     
     class Meta:
         app_label = 'core'
