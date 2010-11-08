@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
@@ -183,3 +183,9 @@ class VotePublication(Activity):
 
     def get_url(self):
         return None # FIXME
+
+    def pre_perform(self, choice):
+        vote = self.workflow.data
+        vote.published_at = datetime.now()
+        vote.save()
+

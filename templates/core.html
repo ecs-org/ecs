@@ -64,6 +64,7 @@
           <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
           <li><a href="{% url ecs.users.views.indisposed_userlist %}">{% trans 'Indisposed Users' %}</a></li>
           <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
+          <li><a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Catalog' %}</a></li>
       </ul>
     </li>
     <li>
@@ -75,6 +76,7 @@
               <li><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
           {% endfor %}
       </ul>
+    </li>
   </ul>
 {% endblock %}
 

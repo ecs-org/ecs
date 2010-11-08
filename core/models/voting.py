@@ -27,7 +27,7 @@ class Vote(models.Model):
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=u'Kommentar')
     is_final = models.BooleanField(default=False)
-    published = models.BooleanField(default=False)
+    published_at = models.DateTimeField(null=True)
 
     class Meta:
         app_label = 'core'
@@ -79,9 +79,9 @@ class Vote(models.Model):
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
     submission_form = vote.submission_form
-    if (vote.published and submission_form.current_published_vote_id == vote.pk) or (not vote.published and submission_form.current_pending_vote_id == vote.pk):
+    if (vote.published_at and submission_form.current_published_vote_id == vote.pk) or (not vote.published_at and submission_form.current_pending_vote_id == vote.pk):
         return
-    if vote.published:
+    if vote.published_at:
         if submission_form.current_pending_vote_id == vote.pk:
             submission_form.current_pending_vote = None
         submission_form.current_published_vote = vote

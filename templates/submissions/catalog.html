@@ -1,0 +1,35 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+
+{% block headertitle %}
+{% trans "Catalog of public Submissions" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="submission_list">
+
+<h2>{% trans "Catalog of all Approved Studies" %}</h2>
+
+{% regroup votes by top.meeting as meetings %}
+
+{% for meeting in meetings %}
+    {% trans "Meeting" %}: {{ meeting.grouper }}
+    <ul>
+    {% for vote in meeting.list %}
+        {% with vote.submission_form  as submission_form %}
+        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.project_title|default:'<i>No title</i>' }}</li>
+        {% endwith %}
+    {% endfor %}
+    </ul>
+
+{% endfor %}
+
+</div>
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}
+
+
