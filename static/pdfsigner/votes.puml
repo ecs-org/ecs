@@ -1,0 +1,31 @@
+@startuml img/sequence_img001.png
+Actor Alice #orange
+participant Ecs #lightgreen
+participant PDFas #pink
+participant Applet #yellow
+
+Alice -> Ecs: View available votes
+
+activate Ecs #orange
+	Alice -> Ecs: Request signing of a vote
+	Ecs -> PDFas: Bump start signing,\nimpart unsigned vote download url 
+	activate PDFas #lightgreen
+		activate Ecs #pink
+			Ecs -> Alice: Redirect to signing applet
+			PDFas -> Ecs : Download unsigned vote
+			Alice -> Applet: Provide security token 
+			activate Applet #orange
+				Applet -> PDFas: Autenticate,\ndeliver security token
+				activate PDFas #yellow
+					PDFas -> Ecs : Bump signed vote ready,\nimpart signed vote download url
+					PDFas -> Applet: Notify success
+				deactivate Applet #orange
+			deactivate PDFas #yellow
+			Ecs -> PDFas : Download signed vote
+		deactivate PDFas #lightgreen
+	deactivate Ecs #pink
+	Ecs -> Alice : Redirect to show vote view
+	Alice -> Ecs: View signed vote
+deactivate Ecs #orange
+
+@enduml
