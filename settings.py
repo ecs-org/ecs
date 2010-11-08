@@ -329,11 +329,10 @@ CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
     'ecs.core.tests.task_queue',
     'ecs.meetings.task_queue',
-    'ecs.communication.task_queue'
+    'ecs.communication.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.documents.task_queue',
-    'ecs.workflow.task_queue'
-    #ecs.mediaserver.task_queue',
+    'ecs.workflow.task_queue',
 )
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
