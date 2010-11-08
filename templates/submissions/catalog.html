@@ -1,22 +1,22 @@
-{% extends 'core.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 
 {% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
 
 {% block headertitle %}
-{% trans "Catalog of public Submissions" %}
+{% trans "Catalog of Approved Studies" %}
 {% endblock %}
 
 {% block content %}
 
 <div class="submission_list">
 
-<h2>{% trans "Catalog of all Approved Studies" %}</h2>
+<h2>{% trans "Catalog of Approved Studies" %}</h2>
 
 {% regroup votes by top.meeting as meetings %}
 
 {% for meeting in meetings %}
-    {% trans "Meeting" %}: {{ meeting.grouper }}
+    {% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}
     <ul>
     {% for vote in meeting.list %}
         {% with vote.submission_form  as submission_form %}

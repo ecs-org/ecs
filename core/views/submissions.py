@@ -38,6 +38,7 @@ from ecs.docstash.models import DocStash
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
+from ecs.users.utils import sudo
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -504,7 +505,8 @@ def submission_widget(request, template='submissions/widget.html'):
 
 @forceauth.exempt
 def catalog(request):
-    votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+    with sudo():
+        votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
 
     return render(request, 'submissions/catalog.html', {
         'votes': votes,
