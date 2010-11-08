@@ -285,7 +285,7 @@ _serializers = {
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    Document: ModelSerializer(Document, fields=('doctype', 'file', 'date', 'version', 'mimetype')),
+    Document: ModelSerializer(Document, fields=('doctype', 'file', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
 }

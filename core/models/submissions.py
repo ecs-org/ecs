@@ -9,7 +9,7 @@ from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from ecs.meetings.models import TimetableEntry
+from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
@@ -495,8 +495,12 @@ def attach_to_submissions(user):
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
-    old_sf = submission.current_submission_form
-    submission.current_submission_form = new_sf
+
+    if new_sf == submission.current_submission_form:
+        old_sf = None
+    else:
+        old_sf = submission.current_submission_form
+        submission.current_submission_form = new_sf
 
     # set defaults
     if submission.is_amg is None:
@@ -509,20 +513,20 @@ def _post_submission_form_save(**kwargs):
     
     if not old_sf:
         return
-    
-    recipients = list(User.objects.filter(username__in=settings.DIFF_REVIEW_LIST))
 
-    timetable_entries = TimetableEntry.objects.filter(submission=submission)
-    recipients += sum([list(x.users) for x in timetable_entries], [])
+    timetable_entries_q = submission.timetable_entries.all().values('pk').query
+    meetings_q = Meeting.objects.filter(timetable_entries__in=timetable_entries_q).values('pk').query
+    assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(meeting__in=meetings_q).values('pk').query
 
-    meetings = set([x.meeting for x in timetable_entries])
-    assigned_medical_categories = [x.category for x in sum([list(x.medical_categories.all()) for x in meetings], []) if x.category in submission.medical_categories.all()]
-    # FIXME: the following line is broken ('MedicalCategory' object has no attribute 'board_members')
-    #recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
-    recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
-    recipients = set(recipients)
+                                                                                        # filter for following users:
+    recipients_q = Q(username__in=settings.DIFF_REVIEW_LIST)                            # static reviewer list
+    recipients_q |= Q(meeting_participations__entry__in=timetable_entries_q)            # assigned to the top
+    recipients_q |= Q(assigned_medical_categories__in=assigned_medical_categories_q)    # assigned for medical category
+    recipients_q |= Q(email__in=(old_sf.sponsor_email, new_sf.sponsor_email,))          # sponsors
 
-    #send_submission_change(new_sf, recipients);
+    recipients = list(User.objects.filter(recipients_q).distinct())
+
+    send_submission_change(old_sf, new_sf, recipients);
 
 # FIXME: why do we have two signal handlers for SubmissionForm post_save ?
 def _post_submission_form_create(**kwargs):
