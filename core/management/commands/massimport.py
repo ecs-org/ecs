@@ -34,14 +34,9 @@ if platform.platform().lower().startswith('win'):
     
 def _popen_ooffice(filename):
     """doc2ooxml -d document -f odt 342_2010.doc"""
-    print 'doc2ooxmlcall:'
-    #print ['doc2ooxml'] + ['-d document', '-f odt', filename]
-    print '/usr/bin/doc2ooxmll -d document -f odt %s' % filename 
-    #return None
-    #print sys.path
-    return Popen('doc2ooxml -d document -f odt %s' % filename, stdout=PIPE, stderr=PIPE)
-    #return Popen(['doc2ooxml'] + ['-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
-    
+    #return Popen('/usr/bin/doc2ooxml -d document -f odt %s' % filename, stdout=PIPE, stderr=PIPE)
+    #return Popen(['doc2ooxml', '-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
+    return Popen(['/usr/bin/doc2ooxml', '-d', 'document', '-f', 'odt', filename])
 
 def _popen_antiword(filename):
     return Popen(['antiword'] + getattr(settings, 'ANTIWORD_ARGS', []) + ['-x', 'db', filename], stdout=PIPE, stderr=PIPE)
@@ -182,7 +177,8 @@ class Command(BaseCommand):
             try:
                 key = fields[entry[0]]
                 if key and not re.match(u'UNKNOWN:', entry[1]):
-                    submissionform_data[key] = entry[1]
+                    #submissionform_data[key] = entry[1]
+                    pass
             except KeyError:
                 pass
 
@@ -206,10 +202,9 @@ class Command(BaseCommand):
             check if has form:state="checked"
                 set field in submissionform_data
         """
-        tmp = _popen_ooffice(filename)
-        print "calling popen.communicate"
+        tmp = _popen_ooffice(os.path.abspath(filename))
         blabla, standard_error = tmp.communicate()
-        print "popen return:",blabla
+        
         if tmp.returncode:
             print "doc2ooxml error..."
             raise Exception(standard_error.strip())
@@ -217,7 +212,7 @@ class Command(BaseCommand):
         try:
             #odtf = os.path.splitext(os.path.basename(filename))[1] + ".odt"
             odtf = os.path.splitext(filename)[0] + ".odt"
-            print "trying:",odtf
+            
             import zipfile
             try:
                 zip = zipfile.ZipFile(odtf, 'r')
@@ -228,7 +223,7 @@ class Command(BaseCommand):
                 print '   ERROR: not an OpenOffice.org Open Document Format document:', odtf
                 self._abort("")
             xml_contents = zip.read("content.xml")
-            soup = BeautifulStoneSoup(xml_contents)
+            soup = BeautifulSoup.BeautifulStoneSoup(xml_contents)
             """
             we r looking for this:
             <form:checkbox form:name="A2x1x5" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control10" form:id="control10" form:state="checked" form:current-state="checked" form:image-position="center">
@@ -239,9 +234,11 @@ class Command(BaseCommand):
             """
             cbs = soup.findAll("form:checkbox")
             for cb in cbs:
+                sys.stdout.write("%d chckboxes" % len(cbs))
                 if cb.has_key("form:state") and cb["form:state"] == "checked":
                     #TODO nicer cleanup of the fieldname
                     fieldname = cb['name'].replace("x",".").replace("A","")
+                    sys.stdout.write("setting field: %s" % fieldname)
                     submissionform_data[fieldname] = True
             
             os.remove(odtf)
@@ -290,7 +287,9 @@ class Command(BaseCommand):
         
         warnings = ''
         for f in files:
+            #self._import_doc(f)
             try:
+                #pass
                 self._import_doc(f)
             except Exception, e:
                 warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
