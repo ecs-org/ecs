@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-22 15:28+0200\n"
+"POT-Creation-Date: 2010-11-08 12:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: settings.py:57
+#: settings.py:58
 msgid "German"
 msgstr "Deutsch"
+
+#: core/diff.py:95
+msgid "No Information"
+msgstr "Keine Angaben"
+
+#: core/diff.py:97
+msgid "Yes"
+msgstr "Ja"
+
+#: core/diff.py:99
+msgid "No"
+msgstr "Nein"
+
+#: core/diff.py:159
+#, python-format
+msgid "Name: %(name)s, Investigator: %(investigator)s"
+msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
+
+#: core/diff.py:182
+#, python-format
+msgid ""
+"Generic Name: %(generic_name)s, Preparation Form: %(preparation_form)s, "
+"Dosage: %(dosage)s"
+msgstr ""
+
+#: core/diff.py:225
+msgid "Auslandszentren"
+msgstr ""
+
+#: core/diff.py:226
+msgid "Zentren"
+msgstr ""
+
+#: core/diff.py:227
+msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
+msgstr ""
+
+#: core/diff.py:228
+msgid ""
+"Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit "
+"und/oder Sicherheit nicht Gegenstand der Prüfung sind"
+msgstr ""
+
+#: core/diff.py:229
+msgid "Dokumente"
+msgstr ""
 
 #: core/workflow.py:71
 msgid "Acknowledge"
@@ -29,26 +75,29 @@ msgstr "Bestätigen"
 msgid "Reject"
 msgstr "Ablehnen"
 
+#: core/forms/review.py:28
+msgid "Studies cannot be classified 'expedited' and 'thesis' at the same time."
+msgstr ""
+
 #: core/forms/wizard.py:50
 msgid "Empty Study"
 msgstr ""
 
 #: core/forms/wizard.py:51
 msgid "Thesis"
-msgstr ""
+msgstr "Diplomarbeit"
 
 #: core/forms/wizard.py:52
 msgid "AMG-Study"
-msgstr ""
+msgstr "AMG-Studie"
 
 #: core/forms/wizard.py:53
 msgid "MPG-Study"
-msgstr ""
+msgstr "MPG-Studie"
 
 #: core/forms/wizard.py:54
-#, fuzzy
 msgid "Import Submission"
-msgstr "Einreichung"
+msgstr "Einreichung importieren"
 
 #: core/forms/wizard.py:62
 msgid "at Medical University Vienna"
@@ -58,13 +107,37 @@ msgstr ""
 msgid "other University"
 msgstr ""
 
-#: core/views/submissions.py:247
+#: core/models/submissions.py:178
+msgid "monocentric"
+msgstr "monozentrisch"
+
+#: core/models/submissions.py:179
+msgid "multicentric, main ethics commission"
+msgstr ""
+
+#: core/models/submissions.py:180
+msgid "multicentric, local ethics commission"
+msgstr ""
+
+#: core/views/submissions.py:286
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
 msgstr ""
 "Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
+
+#: pdfviewer/models.py:22
+msgid "top"
+msgstr ""
+
+#: pdfviewer/models.py:24
+msgid "middle"
+msgstr ""
+
+#: pdfviewer/models.py:26
+msgid "bottom"
+msgstr ""
 
 #: templates/core.html:35
 msgid "Dashboard"
@@ -94,11 +167,16 @@ msgstr "Verhinderte Benutzer"
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:70
+#: templates/core.html:67 templates/submissions/catalog.html:7
+#: templates/submissions/catalog.html:14
+msgid "Catalog of Approved Studies"
+msgstr "Register der Genehmigten Studien"
+
+#: templates/core.html:71
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:85
+#: templates/core.html:87
 #, python-format
 msgid ""
 "\n"
@@ -107,11 +185,11 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:184
+#: templates/core.html:172
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:184
+#: templates/core.html:172
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
@@ -127,10 +205,57 @@ msgstr "Neuere Einträge"
 msgid "Older Entries"
 msgstr "Ältere Einträge"
 
+#: templates/communication/threads.html:7
+msgid "Messages"
+msgstr "Nachrichten"
+
+#: templates/communication/threads.html:11
+msgid "Incoming"
+msgstr "Einkommend"
+
+#: templates/communication/threads.html:12
+msgid "Outgoing"
+msgstr "Ausgehend"
+
+#: templates/communication/threads.html:16
+msgid "New Message"
+msgstr "Neue Nachricht"
+
+#: templates/communication/threads.html:17
+msgid "sort"
+msgstr "sortieren"
+
+#: templates/communication/threads.html:18
+msgid "Person"
+msgstr "Person"
+
+#: templates/communication/threads.html:19
+msgid "Old/New"
+msgstr "Alt/Neu"
+
+#: templates/communication/threads.html:36
+msgid "Von/An"
+msgstr "Von/An"
+
+#: templates/communication/threads.html:41
+msgid "an"
+msgstr "an"
+
+#: templates/communication/threads.html:43
+msgid "von"
+msgstr "von"
+
+#: templates/documents/upload_form.html:12
+msgid "View"
+msgstr ""
+
+#: templates/documents/upload_form.html:13
+msgid "Delete"
+msgstr "Löschen"
+
 #: templates/notifications/form.html:9
-#, fuzzy
 msgid "New Notification"
-msgstr "Studien Meldungen"
+msgstr "Neue Meldungen"
 
 #: templates/submissions/base_form.html:12
 msgid "Submission"
@@ -140,9 +265,21 @@ msgstr "Einreichung"
 msgid "Centers"
 msgstr "Zentren"
 
+#: templates/submissions/base_form.html:202
+msgid "This tab may only be used when 2.1.2 is selected."
+msgstr ""
+
+#: templates/submissions/catalog.html:19
+msgid "Meeting from"
+msgstr "Sitzung vom"
+
+#: templates/submissions/form.html:70
+msgid "You filled out the form correctly. Do want to submit the study?"
+msgstr ""
+"Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
+
 #: templates/submissions/internal_list.html:23
 #: templates/submissions/widget.html:16
-#, fuzzy
 msgid "Categories"
 msgstr "Kategorien"
 
@@ -153,22 +290,34 @@ msgstr ""
 
 #: templates/submissions/internal_list.html:34
 #: templates/submissions/widget.html:27
-#, fuzzy
 msgid "No Submissions."
 msgstr "Keine Einreichung."
+
+#: templates/submissions/internal_list.html:38
+#: templates/submissions/widget.html:39
+msgid "Page"
+msgstr "Seite"
+
+#: templates/submissions/internal_list.html:38
+#: templates/submissions/widget.html:39
+msgid "of"
+msgstr "von"
 
 #: templates/submissions/readonly_form.html:11
 msgid "Edit"
 msgstr "Bearbeiten"
 
 #: templates/submissions/readonly_form.html:21
-#, fuzzy
 msgid "Status"
-msgstr "Studien"
+msgstr "Status"
 
 #: templates/submissions/readonly_form.html:35
 msgid "Review"
-msgstr ""
+msgstr "Review"
+
+#: templates/submissions/readonly_form.html:38
+msgid "Categorization Review"
+msgstr "Einstufungs-Review"
 
 #: templates/submissions/readonly_form.html:63
 msgid "Communication"
@@ -199,21 +348,18 @@ msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
 #: templates/submissions/readonly_form.html:77
-#, fuzzy
 msgid "Notifications"
-msgstr "Studien Meldungen"
+msgstr "Meldungen"
 
 #: templates/submissions/readonly_form.html:79
 #: templates/submissions/readonly_form.html:131
-#, fuzzy
 msgid "Pending Notifications"
-msgstr "Studien Meldungen"
+msgstr "Ausstehende Meldungen"
 
 #: templates/submissions/readonly_form.html:80
 #: templates/submissions/readonly_form.html:144
-#, fuzzy
 msgid "Answered Notifications"
-msgstr "Studien Meldungen"
+msgstr "Beantwortete Meldungen"
 
 #: templates/submissions/readonly_form.html:139
 msgid "There are no pending notifications."
@@ -242,55 +388,98 @@ msgstr "Neue Nachricht"
 
 #: templates/submissions/widget.html:32
 msgid "More"
-msgstr ""
-
-#: templates/submissions/widget.html:33
-msgid "von"
-msgstr ""
+msgstr "Mehr"
 
 #: templates/submissions/wizard.html:5
-#, fuzzy
 msgid "ECS Submission Wizard"
-msgstr "ECS Einreichung Wizard"
+msgstr "ECS Einreichungs-Helfer"
 
 #: templates/submissions/wizard.html:8
-#, fuzzy
 msgid "Submission Wizard"
-msgstr "Einreichung Wizard"
+msgstr "Einreichungs-Helfer"
 
 #: templates/submissions/wizard.html:14
 msgid "Next"
 msgstr ""
 
+#: templates/submissions/diff/diff.html:4
+msgid "ECS Elektronische Einreichung"
+msgstr ""
+
+#: templates/submissions/diff/diff.html:12
+msgid "old"
+msgstr "alt"
+
+#: templates/submissions/diff/diff.html:13
+msgid "new"
+msgstr "neu"
+
+#: templates/submissions/diff/diff.html:14
+msgid "all"
+msgstr "alle"
+
 #: templates/tasks/compact_list.html:9
+msgid "Sort by"
+msgstr "Sortieren nach"
+
+#: templates/tasks/compact_list.html:12
 msgid "Mine"
 msgstr "Meine"
 
-#: templates/tasks/compact_list.html:10
+#: templates/tasks/compact_list.html:13
+msgid "Assigned"
+msgstr "Zugewiesen"
+
+#: templates/tasks/compact_list.html:14
 msgid "Open"
 msgstr "Offen"
 
-#: templates/tasks/compact_list.html:11
+#: templates/tasks/compact_list.html:15
 msgid "Proxy"
 msgstr "Stellvertreter"
 
-#: templates/tasks/compact_list.html:14
+#: templates/tasks/compact_list.html:18
 msgid "AMG"
 msgstr "AMG"
 
-#: templates/tasks/compact_list.html:15
+#: templates/tasks/compact_list.html:19
 msgid "MPG"
 msgstr "MPG"
 
-#: templates/tasks/compact_list.html:16
+#: templates/tasks/compact_list.html:20
+msgid "thesis"
+msgstr "Diplomarbeit"
+
+#: templates/tasks/compact_list.html:21
 msgid "Other"
 msgstr "Andere"
 
-#: templates/tasks/compact_list.html:65
+#: templates/tasks/compact_list.html:27
+msgid "My Tasks"
+msgstr "Meine Tätigkeiten"
+
+#: templates/tasks/compact_list.html:44
+msgid "Tasks assigned to me"
+msgstr ""
+
+#: templates/tasks/compact_list.html:51 templates/tasks/compact_list.html:69
+#: templates/tasks/compact_list.html:86
+msgid "Preview"
+msgstr "Vorschau"
+
+#: templates/tasks/compact_list.html:52
+msgid "Decline"
+msgstr "Ablehnen"
+
+#: templates/tasks/compact_list.html:62
+msgid "Open Tasks"
+msgstr "Offene Tätigkeiten"
+
+#: templates/tasks/compact_list.html:79
 msgid "Proxy Tasks"
 msgstr "Vertetene Tätigkeiten"
 
-#: templates/tasks/compact_list.html:76
+#: templates/tasks/compact_list.html:95
 msgid "There are no tasks for you."
 msgstr "Keine Tätigkeiten"
 
@@ -310,6 +499,14 @@ msgstr "Abgeben"
 msgid "Ask"
 msgstr ""
 
+#: templates/tasks/widget.html:20
+msgid "Collapse"
+msgstr "Weniger"
+
+#: templates/tasks/widget.html:24
+msgid "Expand"
+msgstr "Mehr"
+
 #: templates/users/indisposed_list.html:8
 msgid "Add"
 msgstr ""
@@ -322,7 +519,24 @@ msgstr "Benutzer als verhindert markieren"
 msgid "Mark Indisposed"
 msgstr "Verhindert markieren"
 
-#: users/forms.py:19
+#: templates/users/profile.html:10
+msgid "Edit Profile"
+msgstr "Profile bearbeiten"
+
+#: templates/users/profile.html:12
+msgid "Change Password"
+msgstr "Passwort ändern"
+
+#: templates/users/profile_form.html:6
+#, python-format
+msgid "Profile of %(user)s"
+msgstr "Profil von %(user)s"
+
+#: templates/users/profile_form.html:13
+msgid "Save"
+msgstr "Speichern"
+
+#: users/forms.py:20
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -372,12 +586,6 @@ msgstr ""
 
 #~ msgid "newest"
 #~ msgstr "neuerste"
-
-#~ msgid "newer"
-#~ msgstr "neuer"
-
-#~ msgid "older"
-#~ msgstr "älter"
 
 #~ msgid "creating new submission form"
 #~ msgstr "erstelle neue einreichung"

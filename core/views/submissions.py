@@ -37,6 +37,8 @@ from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
+from ecs.utils import forceauth
+from ecs.users.utils import sudo
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -129,8 +131,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'befangene_review_form': befangene_review_form,
         'pending_notifications': submission_form.notifications.all(),
         'answered_notficiations': [], # FIXME (FMD1)
-        'pending_votes': submission_form.submission.votes.filter(published=False),
-        'published_votes': submission_form.submission.votes.filter(published=True),
+        'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
+        'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
     }
     if extra_context:
         context.update(extra_context)
@@ -500,4 +502,13 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def submission_widget(request, template='submissions/widget.html'):
     return submission_list(request, template=template, limit=5)
+
+@forceauth.exempt
+def catalog(request):
+    with sudo():
+        votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+
+    return render(request, 'submissions/catalog.html', {
+        'votes': votes,
+    })
 

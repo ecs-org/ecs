@@ -103,6 +103,9 @@ ecs.setupFormFieldHelpers = function(context){
             }
         }}).send();
     });
+    context.getElements('.CharField > textarea').each(function(textarea){
+        new ecs.textarea.TextArea(textarea);
+    });
     context.getElements('li,th.label').each(function(field){
         var notes = [];
         var input = null;

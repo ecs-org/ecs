@@ -37,5 +37,8 @@ urlpatterns = patterns(
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 
     url(r'^wizard/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.wizard'),
+
+    # public
+    url(r'^catalog/$', 'ecs.core.views.submissions.catalog'),
 )
 

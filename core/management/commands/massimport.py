@@ -32,6 +32,17 @@ PLATFORM = 'unix'
 if platform.platform().lower().startswith('win'):
     PLATFORM = 'win'
     
+def _popen_ooffice(filename):
+    """doc2ooxml -d document -f odt 342_2010.doc"""
+    print 'doc2ooxmlcall:'
+    #print ['doc2ooxml'] + ['-d document', '-f odt', filename]
+    print '/usr/bin/doc2ooxmll -d document -f odt %s' % filename 
+    #return None
+    #print sys.path
+    return Popen('doc2ooxml -d document -f odt %s' % filename, stdout=PIPE, stderr=PIPE)
+    #return Popen(['doc2ooxml'] + ['-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
+    
+
 def _popen_antiword(filename):
     return Popen(['antiword'] + getattr(settings, 'ANTIWORD_ARGS', []) + ['-x', 'db', filename], stdout=PIPE, stderr=PIPE)
 
@@ -132,7 +143,6 @@ class Command(BaseCommand):
             raise Exception(standard_error.strip())
     
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
-    
         # look for paragraphs where a number is inside (x.y[.z])
         y = s.findAll('para', text=re.compile(r'\d+(\.\d+)+\.?\s+'), role='bold')
 
@@ -166,7 +176,7 @@ class Command(BaseCommand):
                 data.append((nr, text,))
 
         fields = dict([(x.number, x.name,) for x in paper_forms.get_field_info_for_model(SubmissionForm) if x.number and x.name])
-    
+        
         submissionform_data = {}
         for entry in data:
             try:
@@ -179,7 +189,65 @@ class Command(BaseCommand):
         submission_data = {
             'ec_number': ec_number,
         }
+        
+        ##new better checkbox parsing:
+        import pprint
+        #pprint.pprint(fields)
+        #pprint.pprint(submissionform_data)
+        """
+        parse checkboxes:
+        convert .doc to odt
+        unzip odt
+        open content.xml
+        soup
+        findAll form:checkbox tags
+        for all tags
+            clean name
+            check if has form:state="checked"
+                set field in submissionform_data
+        """
+        tmp = _popen_ooffice(filename)
+        print "calling popen.communicate"
+        blabla, standard_error = tmp.communicate()
+        print "popen return:",blabla
+        if tmp.returncode:
+            print "doc2ooxml error..."
+            raise Exception(standard_error.strip())
 
+        try:
+            #odtf = os.path.splitext(os.path.basename(filename))[1] + ".odt"
+            odtf = os.path.splitext(filename)[0] + ".odt"
+            print "trying:",odtf
+            import zipfile
+            try:
+                zip = zipfile.ZipFile(odtf, 'r')
+            except IOError, (errno, why):
+                print '   ERROR: Cannot open file', odtf, ':', why
+                self._abort("")
+            except zipfile.BadZipfile:
+                print '   ERROR: not an OpenOffice.org Open Document Format document:', odtf
+                self._abort("")
+            xml_contents = zip.read("content.xml")
+            soup = BeautifulStoneSoup(xml_contents)
+            """
+            we r looking for this:
+            <form:checkbox form:name="A2x1x5" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control10" form:id="control10" form:state="checked" form:current-state="checked" form:image-position="center">
+            form:name tells us where this checkbox belongs
+            if it is checked it has these keys with value "checked"
+            form:state="checked"
+            form:current-state="checked"
+            """
+            cbs = soup.findAll("form:checkbox")
+            for cb in cbs:
+                if cb.has_key("form:state") and cb["form:state"] == "checked":
+                    #TODO nicer cleanup of the fieldname
+                    fieldname = cb['name'].replace("x",".").replace("A","")
+                    submissionform_data[fieldname] = True
+            
+            os.remove(odtf)
+        except Exception, e:
+            print "kaboom:",Exception,e
+        
         return (submission_data, submissionform_data, documents)
 
     @transaction.commit_on_success
