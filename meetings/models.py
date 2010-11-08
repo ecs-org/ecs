@@ -99,7 +99,7 @@ class TimetableMetrics(object):
 
 class AssignedMedicalCategory(models.Model):
     category = models.ForeignKey('core.MedicalCategory')
-    board_member = models.ForeignKey(User, null=True)
+    board_member = models.ForeignKey(User, null=True, related_name='assigned_medical_categories')
     meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
     class Meta:
