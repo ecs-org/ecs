@@ -28,7 +28,7 @@ class DiskBuckets(object):
             bucketdir = os.path.dirname(path);
             if not os.path.isdir(bucketdir):
                 print ("bucketdir: %s, path: %s" % (bucketdir, path))
-                os.makedirs(os.path.dirname(bucketdir), DiskBuckets.DEFAULT_MKDIR_MODE)
+                os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
             if hasattr(filelike, "read"):
                 open(path, "wb").write(filelike.read())
