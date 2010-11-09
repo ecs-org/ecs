@@ -74,7 +74,7 @@ def share_annotations(request, document_pk=None):
             annotation.save()
         return render(request, 'pdfviewer/annotations/sharing/success.html', {
             'document': document,
-            'user': user,
+            'target_user': user,
             'annotations': annotations,
         })
         
