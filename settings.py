@@ -12,7 +12,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # standard django settings
 ##########################
 
-# admins is used to send django 500, 404 and celery errror messages per email, DEBUG needs to be false for this
+# admins is used to send django 500, 404 and celery error messages per email, DEBUG needs to be false for this
 MANAGERS = ADMINS = ()
 # eg. this could be MANAGERS = ADMINS = (('Felix Erkinger', 'felix@erkinger.at'),)
 SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
@@ -335,21 +335,8 @@ CELERY_IMPORTS = (
     'ecs.ecsmail.tasks',
     'ecs.workflow.tasks',
     'ecs.communication.tasks',
-    'ecs.celerytest',
-)
-
-from celery.schedules import crontab
-from datetime import timedelta
-
-CELERY_BEAT_SCHEDULE = {
-    "runs-every-30-seconds": {
-        "task": "ecs.celerytest.i_write_hello_world",
-        "schedule": timedelta(seconds=30),
-    # crontab(minute="*/1"),
-        "args": ("why not"),
-        }
-    }
-                    
+    'ecs.integration.tasks',
+)                 
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
