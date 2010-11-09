@@ -77,9 +77,9 @@ elif user == "shredder":
 # Mediaserver Server Access
 # FIXME: we should only change settings but not carbon copy it from settings.py
 MS_SERVER = {
-    "doc_diskcache": os.path.realpath(os.path.dirname(os.path.abspath(__file__), "..", "..", "ecs-doccache")),
+    "doc_diskcache": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-doccache"),
     "doc_diskcache_maxsize" : 2**34,
-    "render_diskcache":  os.path.realpath(os.path.dirname(os.path.abspath(__file__), "..", "..", "ecs-rendercache")),
+    "render_diskcache":  os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-rendercache"),
     "render_diskcache_maxsize": 2**33,
     "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
     "render_memcache_host": "127.0.0.1",    # host= localhost, 
