@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 from celery.task.sets import subtask
 from ecs.ecsmail.mail import deliver
-from ecs.communication.task_queue import update_smtp_delivery
+from ecs.communication.tasks import update_smtp_delivery
 
 
 MESSAGE_ORIGIN_ALICE = 1

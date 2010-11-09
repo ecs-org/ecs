@@ -99,7 +99,7 @@ class Document(models.Model):
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def save(self, **kwargs):
-        from ecs.documents.task_queue import encrypt_and_upload_to_storagevault
+        from ecs.documents.tasks import encrypt_and_upload_to_storagevault
               
         if not self.file:
             raise ValueError('no file')

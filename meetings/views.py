@@ -15,7 +15,7 @@ from ecs.meetings.models import Meeting, Participation, TimetableEntry, Assigned
 from ecs.documents.models import Document
 from ecs.meetings.forms import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
-from ecs.meetings.task_queue import optimize_timetable_task
+from ecs.meetings.tasks import optimize_timetable_task
 
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash

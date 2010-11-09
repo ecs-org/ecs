@@ -328,19 +328,18 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
-    'ecs.core.tests.task_queue',
-    'ecs.meetings.task_queue',
-    'ecs.documents.task_queue',
-    'ecs.mediaserver.task_queue', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp
-    'ecs.ecsmail.task_queue',
-    'ecs.workflow.task_queue',
-    'ecs.communication.task_queue',
+    'ecs.core.tests.tasks',
+    'ecs.meetings.tasks',
+    'ecs.documents.tasks',
+    'ecs.mediaserver.tasks', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp
+    'ecs.ecsmail.tasks',
+    'ecs.workflow.tasks',
+    'ecs.communication.tasks',
     'ecs.celerytest',
 )
 
 from celery.schedules import crontab
 from datetime import timedelta
-
 
 CELERY_BEAT_SCHEDULE = {
     "runs-every-30-seconds": {

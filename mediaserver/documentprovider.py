@@ -105,7 +105,7 @@ class DocumentProvider(object):
 
 
     def _cacheDocshots(self, pdfblob, filelike):
-        from ecs.mediaserver.task_queue import rerender_docshots
+        from ecs.mediaserver.tasks import rerender_docshots
         
         if not pdf_isvalid(filelike):
             return False
