@@ -12,7 +12,7 @@
             </a>
             <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
             {% if annotations %}
-                | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}">{% trans "Share Annotations" %}</a>
+                | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
             {% endif %}
             | <a href="" class="delete_document">{% trans "Delete" %}</a>
             <input type="hidden" name="documents" value="{{ doc.pk }}" />

@@ -1,0 +1,41 @@
+.ecs-Widget{
+    
+}
+
+.ecs-Popup{
+    position: fixed;
+    top: 200px;
+    left: 300px;
+    z-index: 1000000;
+    background-color: #ffffff;
+    border: 3px solid #B7D4E5;
+    -moz-border-radius: 10px;
+    padding: 10px;
+}
+
+.ecs-Popup > .head{
+    margin: -10px;
+    margin-bottom: 0px;;
+    -moz-border-radius: 7px 7px 0px 0px;
+    padding: 2px;
+    background-color: #B7D4E5;
+    padding-left: 10px;
+}
+
+.ecs-Popup > .head > a{
+    color: #ffffff;
+}
+
+.ecs-Popup > .head > a.close{
+}
+
+.ecs-ModalOverlay{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    opacity: 0.2;
+    z-index: 999999;
+}

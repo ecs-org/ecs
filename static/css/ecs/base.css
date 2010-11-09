@@ -231,6 +231,11 @@ body {
 .ecs-FullscreenEditor textarea{
     width: 90%;
     height: 90%;
-    margin: 3%;
+    margin: 20px;
     background-color: #ffffff;
+}
+
+.ecs-FullscreenEditor .ecs-TextAreaToolbar{
+    margin: 20px;
+    margin-bottom: 0px;
 }
