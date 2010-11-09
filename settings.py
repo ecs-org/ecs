@@ -335,18 +335,22 @@ CELERY_IMPORTS = (
     'ecs.ecsmail.task_queue',
     'ecs.workflow.task_queue',
     'ecs.communication.task_queue',
+    'ecs.celerytest',
 )
-"""
+
 from celery.schedules import crontab
+from datetime import timedelta
+
 
 CELERY_BEAT_SCHEDULE = {
     "runs-every-30-seconds": {
         "task": "ecs.celerytest.i_write_hello_world",
-        "schedule": crontab(minute="*/1"),
+        "schedule": timedelta(seconds=30),
+    # crontab(minute="*/1"),
         "args": ("why not"),
         }
     }
-"""                     
+                    
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
