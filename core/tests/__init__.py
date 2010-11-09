@@ -3,3 +3,5 @@ from ecs.core.tests.submissions import SubmissionFormTest, SubmissionFormDiffTes
 from ecs.core.tests.task_queue import CeleryTest
 from ecs.core.tests.serializer import SerializerTest
 from ecs.core.tests.submission_views import SubmissionViewsTestCase
+from ecs.core.tests.voting import VoteRemindersTest
+

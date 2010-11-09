@@ -136,7 +136,6 @@ class ModelRenderer(object):
 
             text += u'%s: %s<br />\n' % (label, value)
 
-        print text
         return text
 
 

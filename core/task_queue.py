@@ -64,7 +64,10 @@ def send_vote_reminder_office(vote):
 
 
 @periodic_task(run_every=timedelta(days=1))
-def send_reminder_messages():
+def send_reminder_messages(today=None):
+    if today is None:
+        today = datetime.today().date()
+
     votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2')
     for vote in votes:
         try:
@@ -72,13 +75,15 @@ def send_reminder_messages():
         except IndexError:
             continue
         
-        deadline = until_meeting.deadline  # FIXME: use the other deadline for thesis
-        now = datetime.now()
-
-        if now < deadline:
-            days_until_deadline = (deadline - now).days
+        if vote.submission_form.submission.thesis or not vote.submission_form.project_type_education_context is None:
+            deadline = until_meeting.deadline_diplomathesis.date()
         else:
-            days_until_deadline = 0 - (now - deadline).days
+            deadline = until_meeting.deadline.date()
+
+        if today < deadline:
+            days_until_deadline = (deadline - today).days
+        else:
+            days_until_deadline = 0 - (today - deadline).days
 
         if days_until_deadline == 21:
             send_vote_reminder_submitter(vote)
