@@ -102,6 +102,17 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.minAnnotationWidth = options.minAnnotationWidth || 20;
         this.minAnnotationHeight = options.minAnnotationHeight || 20;
 
+        this.keyboard = {
+            toggleHelp: function(meta, e){ return e.key == 'space';},
+            toggleAnnotationMode: function(meta, e){ return meta && e.key == 'a';},
+            quitAnnotationMode: function(meta, e){ return e.key == 'esc';},
+            pageUp: function(meta, e){ return meta && e.key == '1' || e.code == ecs.pdfviewer.utils.PAGE_UP;},
+            pageDown: function(meta, e){ return e.key == '9' || e.code == ecs.pdfviewer.utils.PAGE_DOWN;},
+            search: function(meta, e){ return meta && (e.key == 's' || e.key == 'f');},
+            gotoPage: function(meta, e){ return meta && e.key == 'g';},
+            cycleController: function(meta, e){ return e.key == 'enter';}
+        };
+
         this.keyboardNavigationEnabled = true;
 
         this.imageSets = {};
@@ -353,24 +364,22 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var atTop = U.isAtTop();
         var atBottom = U.isAtBottom();
 
-        if(e.key == 'space'){
+        if(this.keyboard.toggleHelp(metaKey, e)){
             this.helpContents.toggleClass('hidden');
             return false;
         }
-        if(metaKey && e.key == 'a' && this.getController().options.showAnnotations){
+        if(this.keyboard.toggleAnnotationMode(metaKey, e) && this.getController().options.showAnnotations){
             this.toggleAnnotationMode();
             return false;
         }
-        
-        if(this.annotationMode && e.key == 'esc'){
+        if(this.annotationMode && this.keyboard.quitAnnotationMode(metaKey, e)){
             this.toggleAnnotationMode();
             return;
         }
         if(this.annotationMode){
             return;
         }
-        
-        if(metaKey && e.key == '1' || e.code == U.PAGE_UP){
+        if(this.keyboard.pageUp(metaKey, e)){
             if(!atTop){
                 U.scrollToTop();
             }
@@ -379,8 +388,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
             }
             return false;
         }
-        
-        if(metaKey && e.key == '9' || e.code == U.PAGE_DOWN){
+        if(this.keyboard.pageDown(metaKey, e)){
             if(!atBottom){
                 U.scrollToBottom();
             }
@@ -389,18 +397,15 @@ ecs.pdfviewer.DocumentViewer = new Class({
             }
             return false;
         }
-        
-        if(metaKey && (e.key == 's' || e.key == 'f')){
+        if(this.keyboard.search(metaKey, e)){
             this.searchPopup.show();
             return false;
         }
-        
-        if(metaKey && e.key == 'g'){
+        if(this.keyboard.gotoPage(metaKey, e)){
             this.gotoPagePopup.show();
             return false;
         }
-        
-        if(e.key == 'enter'){
+        if(this.keyboard.cycleController(metaKey, e)){
             this.cycleController(+1);
             return false;
         }
