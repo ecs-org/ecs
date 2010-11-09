@@ -63,7 +63,7 @@ def send_vote_reminder_office(vote):
     send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
 
 
-@periodic_task(run_every=timedelta(seconds=5))
+@periodic_task(run_every=timedelta(days=1))
 def send_reminder_messages():
     votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2')
     for vote in votes:
