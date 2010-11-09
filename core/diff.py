@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.utils.diff_match_patch import diff_match_patch
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
-    Measure, NonTestedUsedDrug, ForeignParticipatingCenter
+    Measure, NonTestedUsedDrug, ForeignParticipatingCenter, InvestigatorEmployee
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render_html
 from ecs.audit.models import AuditTrail
@@ -62,12 +62,15 @@ class ListNode(Node):
             elif not elem in other.content: # old
                 status = -1
             else:
-                status = 0
+                continue
 
             html = u'<div class="elem">%s</div>' % elem
             diff.append((status, html))
 
         return diff
+
+    def __unicode__(self):
+        return '\n'.join('<div class="elem">%s</div>' % x for x in self.content)
 
 class ModelRenderer(object):
     exclude = ()
@@ -123,7 +126,7 @@ class ModelRenderer(object):
         if not plain:
             return d
 
-        text = ''
+        text = u''
         for field, value in d.items():
             field_info = paper_forms.get_field_info(self.model, field, None)
             if field_info is not None:
@@ -131,8 +134,9 @@ class ModelRenderer(object):
             else:
                 label = field
 
-            text += '%s: %s<br />\n' % (label, value)
+            text += u'%s: %s<br />\n' % (label, value)
 
+        print text
         return text
 
 
@@ -185,14 +189,36 @@ class NonTestedUsedDrugRenderer(ModelRenderer):
             'dosage': instance.dosage,
         }
 
+class InvestigatorEmployeeRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = InvestigatorEmployee
+        kwargs['exclude'] = ('id', 'submission_form')
+        kwargs['follow'] = ('employee',)
+        return super(InvestigatorEmployeeRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return u'%s %s %s %s (%s)' % (
+            self.render_field(instance, 'sex'),
+            self.render_field(instance, 'title'),
+            self.render_field(instance, 'surname'),
+            self.render_field(instance, 'firstname'),
+            self.render_field(instance, 'organisation'),
+        )
+
+
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'pdf_document'),
+        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 'pdf_document', 'current_pending_vote', 'current_published_vote'),
         follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
     ),
     Investigator: ModelRenderer(Investigator,
         exclude=('id', 'submission_form',),
+        follow=('employees',),
     ),
+    InvestigatorEmployee: InvestigatorEmployeeRenderer(),
     EthicsCommission: ModelRenderer(EthicsCommission, exclude=('uuid',)),
     Measure: ModelRenderer(Measure, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: NonTestedUsedDrugRenderer(),
