@@ -51,6 +51,10 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
+# testing
+nose:inst:all:pypi:nose
+django-nose:inst:all:pypi:django-nose
+
 # queuing: celery 
 amqplib:inst:all:pypi:amqplib\>=0.6
 carrot:inst:all:pypi:carrot\>=0.10.7
@@ -76,6 +80,7 @@ chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
 mock:inst:all:pypi:mock
+nose:inst:all:pypi:nose
 # we dont use python-daemon functionality in lamson, but lamson.utils imports daemon and fails
 # so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:all:dir:ecs/utils/fake-daemon/
@@ -178,11 +183,6 @@ mpmath:inst:all:pypi:mpmath
 
 # feedback: jsonrpclib for ecs feedback and fab ticket
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
-
-# testing
-nose:inst:all:pypi:nose
-django-nose:inst:all:pypi:django-nose
-#http://github.com/jbalogh/django-nose/tarball/master
 
 # debugging
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
