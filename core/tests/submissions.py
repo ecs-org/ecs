@@ -347,9 +347,8 @@ class SubmissionFormDiffTest(EcsTestCase):
     def test_submission_form_diff(self):
         self.new_sf.project_title = 'roflcopter'
         diff = diff_submission_forms(self.old_sf, self.new_sf)
-        self.failIf(not diff)
-        self.failUnless(dict(diff).get('Project title', None))
-        self.failIf(not (1, 'roflcopter') in dict(diff)['Project title'])
+        self.failUnless(dict(diff).get(u'1.1 Projekttitel (englisch)', None))
+        self.failIf(not (1, 'roflcopter') in dict(diff)[u'1.1 Projekttitel (englisch)'])
 
 
 class SubmissionAttachUserTest(EcsTestCase):
