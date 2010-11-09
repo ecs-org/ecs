@@ -14,67 +14,61 @@ from ecs.meetings.models import Meeting
 from ecs.utils.common_messages import send_submission_message
 
 def send_vote_expired(vote):
-    submitter = vote.submission_form.submitter
-    if not submitter:
-        try:
-            submitter = User.objects.get(email=vote.submission_form.submitter_email)
-        except User.DoesNotExist:
-            submitter = None
-    postmaster = User.objects.get(username=settings.ECSMAIL['postmaster'])
-    recipients = [postmaster]
-    if submitter:
-        recipients.append(submitter)
+    recipients_q = Q(username=settings.ECSMAIL['postmaster'])
+    if vote.submission_form.submitter:
+        recipients_q |= Q(pk=vote.submission_form.submitter.pk)
+    if vote.submission_form.submitter_email:
+        recipients_q |= Q(email=vote.submission_form.submitter_email)
 
-    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(meeting_date)s ist abgelaufen.\n') % {
+    recipients = User.objects.filter(recipients_q)
+
+    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s ist abgelaufen.\n') % {
+        'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),
         'meeting_date': vote.top.meeting.start.strftime('%d.%m.%Y'),
     }
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
-    text += _(u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.') % (url)
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
     send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
 
 def send_vote_reminder_submitter(vote):
-    submitter = vote.submission_form.submitter
-    if not submitter:
-        try:
-            submitter = User.objects.get(email=vote.submission_form.submitter_email)
-        except User.DoesNotExist:
-            return
+    recipients = User.objects.none()
+    if vote.submission_form.submitter:
+        recipients |= User.objects.filter(pk=vote.submission_form.submitter.pk)
+    if vote.submission_form.submitter_email:
+        recipients |= User.objects.filter(email=vote.submission_form.submitter_email)
 
-    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(meeting_date)s läuft in drei Wochen ab.\n') % {
+    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s läuft in drei Wochen ab.\n') % {
+        'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),
         'meeting_date': vote.top.meeting.start.strftime('%d.%m.%Y'),
     }
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
-    text += _(u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.') % (url)
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, [submitter], username='root')
+    send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
     
 def send_vote_reminder_office(vote):
-    postmaster = User.objects.get(username=settings.ECSMAIL['postmaster'])
+    recipients = User.objects.filter(username=settings.ECSMAIL['postmaster'])
 
-    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(meeting_date)s läuft in einer Woche ab.\n') % {
+    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s läuft in einer Woche ab.\n') % {
+        'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),
         'meeting_date': vote.top.meeting.start.strftime('%d.%m.%Y'),
     }
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
-    text += _(u'Um sie anzusehen klicken sie <a href="#" onclick="window.parent.location.href=\'%s\';">hier</a>.') % (url)
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, [postmaster], username='root')
+    send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
 
 
-@periodic_task(run_every=timedelta(days=1))
-def send_remainder_messages():
-    print 'send_remainder_messages called'
-
+@periodic_task(run_every=timedelta(seconds=5))
+def send_reminder_messages():
     votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2')
     for vote in votes:
         try:
-            until_meeting = Meeting.objects.filter(start__gt=vote.top.meeting.start).order_by('start')[3]
+            until_meeting = Meeting.objects.filter(start__gt=vote.top.meeting.start).order_by('start')[2]
         except IndexError:
             continue
         

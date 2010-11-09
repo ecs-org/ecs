@@ -267,7 +267,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 ECSMAIL_DEFAULT = {
     'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
     'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
-    'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
+    'postmaster': 'natano', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
     'handlers': ['ecs.communication.mailreceiver'],
