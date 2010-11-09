@@ -4,6 +4,7 @@ ecs.textarea = {
         textarea: null,
         screen: null,
         sourceTextarea: null,
+        toolbar: null,
         show: function(textarea){
             if(!this.screen){
                 this.screen = new Element('div', {'class': 'ecs-FullscreenEditor'});
@@ -20,8 +21,12 @@ ecs.textarea = {
                 }).bind(this));
                 document.body.appendChild(this.screen);
             }
+            if(this.toolbar){
+                this.toolbar.dispose();
+            }
             this.sourceTextarea = textarea;
             this.textarea.value = textarea.value;
+            this.toolbar = ecs.textarea.installToolbar(textarea, null, this.textarea);
             this.screen.setStyle('display', 'block');
             this.textarea.focus();
         }
@@ -37,6 +42,9 @@ ecs.textarea = {
         this.helper.setStyles(textarea.getStyles('font-family', 'letter-spacing', 'font-size', 'font-weight', 'font-variant', 'line-height', 'padding-left', 'padding-top', 'border'));
         this.helper.innerHTML = textarea.value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g, '<br/>') + '.';
         return this.helper.getSize().y;
+    },
+    installToolbar: function(el, items, target){
+        return $(el).retrieve('ecs.textarea.TextArea').installToolbar(items, target);
     }
 };
 
@@ -44,6 +52,7 @@ ecs.textarea.TextArea = new Class({
     initialize: function(textarea, options){
         options = options || {};
         this.textarea = textarea;
+        this.toolbar = options.toolbar || [];
         this.updater = this.updateHeight.bind(this);
         this.textarea.addEvent('keydown', this.onKeyDown.bind(this));
         this.textarea.addEvent('keyup', this.updater);
@@ -52,6 +61,7 @@ ecs.textarea.TextArea = new Class({
         this.interval = null;
         this.minHeight = options.minHeight || 20;
         this.updateHeight();
+        this.textarea.store('ecs.textarea.TextArea', this);
     },
     updateHeight: function(){
         var h = Math.max(this.minHeight, ecs.textarea.measureHeight(this.textarea, this.textarea.getSize().x));
@@ -72,5 +82,19 @@ ecs.textarea.TextArea = new Class({
             this.interval = null;
         }
         this.updateHeight();
+    },
+    installToolbar: function(items, ta){
+        ta = ta || this.textarea;
+        items = items || this.toolbar;
+        if(!items){
+            return null;
+        }
+        this.toolbar = items;
+        var toolbar = new Element('div', {'class': 'ecs-TextAreaToolbar'});
+        items.each(function(item){
+            toolbar.grab(item(ta));
+        });
+        toolbar.inject(ta, 'before');
+        return toolbar;
     }
 });
