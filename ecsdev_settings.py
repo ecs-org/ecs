@@ -64,14 +64,29 @@ if user in ["shredder", "testecs"]:
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 if user == "testecs":    
-    MS_CLIENT ["url"] = "http://test.ecsdev.ep3.at"
-    MS_CLIENT ["key_id"] = "GHz36o6OJHOm8uKmYiD1"
-    MS_CLIENT ["key_secret"] = "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6"
+    MS_CLIENT = {"url": "http://test.ecsdev.ep3.at",
+        "key_id": "GHz36o6OJHOm8uKmYiD1",
+        "key_secret": "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6",
+        }
 elif user == "shredder":
-    MS_CLIENT ["url"] = "http://s.ecsdev.ep3.at"
-    MS_CLIENT ["key_id"] = "Skj45A6R2z36gVKF17i2"
-    MS_CLIENT ["key_secret"] = "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw"
+    MS_CLIENT = {"url": "http://s.ecsdev.ep3.at",
+        "key_id": "Skj45A6R2z36gVKF17i2",
+        "key_secret": "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw",
+        }
 
+# Mediaserver Server Access
+# FIXME: we should only change settings but not carbon copy it from settings.py
+MS_SERVER = {
+    "doc_diskcache": os.path.realpath(os.path.dirname(os.path.abspath(__file__), "..", "..", "ecs-doccache")),
+    "doc_diskcache_maxsize" : 2**34,
+    "render_diskcache":  os.path.realpath(os.path.dirname(os.path.abspath(__file__), "..", "..", "ecs-rendercache")),
+    "render_diskcache_maxsize": 2**33,
+    "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
+    "render_memcache_host": "127.0.0.1",    # host= localhost, 
+    "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
+    "render_memcache_maxsize": 2**29,
+    # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
+    }
 # on ecsdev we use memcache instead of mockcache
 MS_SERVER ["render_memcache_lib"] = 'memcache'
 MS_SERVER ["render_memcache_host"] = '127.0.0.1'
