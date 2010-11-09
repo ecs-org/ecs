@@ -64,7 +64,11 @@
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME #}
                         <div class="field">
-                            {% include "documents/upload_form.html" %}
+                            {% if not readonly %}
+                                {% include "documents/upload_form.html" %}
+                            {% else %}
+                                {% include "documents/compact_list.html" %}
+                            {% endif %}
                         </div>
                     {% endifequal %}
                     
