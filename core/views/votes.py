@@ -13,16 +13,49 @@ from ecs.utils.viewutils import render, render_pdf, pdf_response
 from ecs.core.models import Vote
 from ecs.meetings.models import Meeting
 from ecs.documents.models import Document, DocumentType
-from ecs.pdfsigner.views import sign
 
 from ecs.utils import forceauth
-from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
+from ecs.utils.pdfutils import xhtml2pdf
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
-from uuid import uuid4
-from ecs.pdfsigner.UnsignedVoteDepot import UnsignedVoteDepot
+from ecs.utils.votedepot import VoteDepot
+from io import BytesIO
 
-votesDepot = UnsignedVoteDepot();
+'''
+@startuml img/sequence_img001.png
+Actor Alice #orange
+participant Ecs #lightgreen
+participant PDFas #pink
+participant Applet #yellow
+
+Alice -> Ecs: View available votes
+
+activate Ecs #orange
+    Alice -> Ecs: Request signing of a vote
+    Ecs -> PDFas: Bump start signing,\nimpart unsigned vote download url 
+    activate PDFas #lightgreen
+        activate Ecs #pink
+            Ecs -> Alice: Redirect to signing applet
+            PDFas -> Ecs : Download unsigned vote
+            Alice -> Applet: Provide security token 
+            activate Applet #orange
+                Applet -> PDFas: Autenticate,\ndeliver security token
+                activate PDFas #yellow
+                    PDFas -> Ecs : Bump signed vote ready,\nimpart signed vote download url
+                    PDFas -> Applet: Notify success
+                deactivate Applet #orange
+            deactivate PDFas #yellow
+            Ecs -> PDFas : Download signed vote
+        deactivate PDFas #lightgreen
+    deactivate Ecs #pink
+    Ecs -> Alice : Redirect to show vote view
+    Alice -> Ecs: View signed vote
+deactivate Ecs #orange
+
+@enduml
+'''
+
+votesDepot = VoteDepot();
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -97,16 +130,11 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_name = vote_filename(meeting, vote)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
-    document_uuid = uuid4();
     html = render(request, template, context).content
     pdf = xhtml2pdf(html)
     pdf_len = len(pdf)
 
-    t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-    pdf_barcodestamp(pdf, t, document_uuid)
-    t.close()
-
-    pdf_id = votesDepot.deposit(t, pdf_name)
+    pdf_id = votesDepot.deposit(BytesIO(pdf), pdf_name)
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -158,8 +186,44 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
+# TODO BKUApplet - setting background from 
+# http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png
+# to something ECS branded
+
+def sign(request, pdf_id, pdf_data_size, pdf_name):
+    url_sign = '%sSign' % settings.PDFAS_SERVICE
+    url_send = request.build_absolute_uri('send')
+    url_error = request.build_absolute_uri('error')
+    url_receive = request.build_absolute_uri('receive')
+    print 'url_sign: "%s"' % url_sign
+    print 'url_send: "%s"' % url_send
+    print 'url_error: "%s"' % url_error
+    print 'url_receive: "%s"' % url_receive
+    values = {
+        'preview': 'false',
+        'connector': 'moc',  # undocumented feature! selects ONLINE CCE/BKU
+        'mode': 'binary',
+        'sig_type': 'SIGNATURBLOCK_DE',
+        'inline': 'false',
+        'filename': pdf_name,
+        'num-bytes': '%s' % pdf_data_size,
+        'pdf-url': url_send,
+        'pdf-id': pdf_id,
+        'invoke-app-url': url_receive, 
+        'invoke-app-error-url': url_error,
+        # session-id=9085B85B364BEC31E7D38047FE54577D
+        'locale': 'de',
+    }
+    data = urllib.urlencode(values)
+    redirect = '%s?%s' % (url_sign, data)
+    print 'sign: redirect to [%s]' % redirect
+    return HttpResponseRedirect(redirect)
 
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
+    if request.REQUEST.has_key('pdf-id'):
+        t_file, display_name = votesDepot.pickup(request.REQUEST['pdf-id'])
+        os.remove(t_file)
+        
     if request.REQUEST.has_key('error'):
         error = urllib.unquote_plus(request.REQUEST['error'])
     else:
