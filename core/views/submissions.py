@@ -24,7 +24,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm, SimpleDocumentForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -181,15 +181,15 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     if blueprint.min_document_count is None:
         document_form = None
     elif 'document-file' in request.FILES:
-        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+        document_form = SimpleDocumentForm(request.POST or None, request.FILES or None, prefix='document')
         if document_form.is_valid():
             doc = document_form.save()
             checklist.documents.add(doc)
-            document_form = DocumentForm(prefix='document')
+            document_form = SimpleDocumentForm(prefix='document')
         else:
             document_form_is_empty = False
     else:
-        document_form = DocumentForm(prefix='document')
+        document_form = SimpleDocumentForm(prefix='document')
         
     if request.method == 'POST':
         if form.is_valid() and (not document_form or document_form_is_empty or document_form.is_valid()):

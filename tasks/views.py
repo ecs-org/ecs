@@ -51,7 +51,6 @@ def my_tasks(request, template='tasks/mine.html'):
         elif related_tasks:
             pass # XXX: how do we handle this case?
 
-
     try:
         submission_pk = int(request.GET['submission'])
     except (KeyError, ValueError):
