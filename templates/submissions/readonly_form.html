@@ -230,7 +230,7 @@
             msgRequest.send();
             
             new ecs.widgets.Widget('submission_workflow_widget', {
-                url: '{% url ecs.tasks.views.my_tasks_widget %}?submission={{ submission_form.submission.pk }}'
+                url: '{% url ecs.tasks.views.my_tasks %}?submission={{ submission_form.submission.pk }}'
             });
             
             new ecs.FormFieldController(['id_external_reviewer', 'id_external_reviewer_name'], {

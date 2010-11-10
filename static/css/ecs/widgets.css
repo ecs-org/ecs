@@ -29,6 +29,11 @@
 .ecs-Popup > .head > a.close{
 }
 
+.ecs-Popup > .ecs-Widget{
+    overflow: auto;
+    height: 95%;
+}
+
 .ecs-ModalOverlay{
     position: fixed;
     top: 0px;
