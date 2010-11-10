@@ -175,7 +175,6 @@ INSTALLED_APPS = (
     'ecs.feedback',
     'ecs.docstash',
     'ecs.userswitcher',
-    'ecs.pdfsigner',
     'ecs.pdfviewer',
     'ecs.mediaserver',
     'ecs.workflow',
