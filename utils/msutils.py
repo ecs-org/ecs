@@ -26,7 +26,7 @@ def generate_mediaurls(name, pages):
                 h =  w * aspect_ratio
                 docshotData.append({
                     'description': "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w),
-                    'url': s3utils.s3url(key_id, key_secret).createUrl(baseurl, bucket, '', key_id, expires), 
+                    'url': s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, '', key_id, expires), 
                     'page': pagenum, 
                     'tx': t,
                     'ty': t,

@@ -6,6 +6,8 @@ import binascii
 import urlparse
 import uuid
 
+from time import time
+
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
@@ -41,7 +43,7 @@ class PdfViewerInterface(LoginTestCase):
         
         for shot in dsdata:
             url = shot['url']
-            self.assertTrue(s3utils.s3url(key_id, key_secret).verifyUrlString(url))
+            self.assertTrue(s3utils.S3url(key_id, key_secret).verifyUrlString(url))
                             
             parsed = urlparse.urlparse(url)
             print parsed.path
@@ -55,7 +57,14 @@ class PdfViewerInterface(LoginTestCase):
                 self.assertTrue(current_magic == self.png_magic);
 
     def testPdfDownload(self):
-        response = self.client.get(reverse('ecs.mediaserver.views.download_pdf', kwargs={'uuid': self.docblob.cacheID()}))
+        baseurl = ""
+        bucket = reverse('ecs.mediaserver.views.download_pdf', kwargs={'uuid': self.docblob.cacheID()})
+        expiration_sec = settings.MS_SHARED ["url_expiration_sec"]
+        expires = int(time()) + expiration_sec
+        key_id = settings.MS_CLIENT ["key_id"]
+        key_secret = settings.MS_CLIENT ["key_secret"]
+        fullurl = s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, '', key_id, expires)
+        response = self.client.get(fullurl)
         self.failUnlessEqual(response.status_code, 200)
 
         print response.content.splitlines()[0]
