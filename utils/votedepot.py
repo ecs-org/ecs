@@ -9,7 +9,7 @@ import tempfile
 from ecs.utils.pdfutils import pdf_barcodestamp
 from django.core.cache import cache
 
-class UnsignedVoteDepot(object):
+class VoteDepot(object):
     __DEFAULT_TIMEOUT_SEC=60
     depot = dict()
    
