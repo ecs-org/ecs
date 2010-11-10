@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
+from ecs.core.models import SubmissionForm
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
@@ -49,19 +50,15 @@ def delete_annotation(request, document_pk=None):
     annotation.delete()
     return HttpResponse('OK')
 
-def get_annotations(request, submission_form_pk=None):
-    sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    # FIXME: filter by submission
+def copy_annotations(request):
+    submission_form_pk = request.GET.get('submission_form_pk', None)
     annotations = DocumentAnnotation.objects.filter(user=request.user).select_related('document').order_by('document', 'page_number', 'y')
-    data = []
-    for annotation in annotations:
-        data.append({
-            'pk': annotation.pk,
-            'text': annotation.text,
-            'page_number': annotation.page_number,
-            'document': {
-            }
-        })
+    if submission_form_pk:
+        sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+        annotations.filter(document__submission_forms=sf)
+    return render(request, 'pdfviewer/annotations/copy.html', {
+        'annotations': annotations,
+    })
     
 def share_annotations(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
@@ -70,13 +67,19 @@ def share_annotations(request, document_pk=None):
     
     if form.is_valid():
         user = form.cleaned_data['user']
-        for annotation in annotations.filter(pk__in=request.POST.getlist('annotation')):
+        annotations = annotations.filter(pk__in=request.POST.getlist('annotation'))
+        for annotation in annotations:
             annotation.pk = None
             annotation.user = user
             annotation.save()
-        return HttpResponse('OK')
+        return render(request, 'pdfviewer/annotations/sharing/success.html', {
+            'document': document,
+            'target_user': user,
+            'annotations': annotations,
+        })
         
-    return render(request, 'pdfviewer/annotations/share.html', {
+    return render(request, 'pdfviewer/annotations/sharing/share.html', {
+        'document': document,
         'form': form,
         'annotations': annotations,
     })

@@ -1,54 +1,28 @@
+{% extends 'documents/compact_list.html' %}
 {# context: documents, document_formset #}
 {% load pdfviewer i18n %}
-<div class="doclist">
-{% if documents %}
-    {% for doc in documents %}
-        {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
-        <div>
-            {% get_annotations for doc as annotations %}
-            <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
-                Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
-            </a>
-            <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
-            {% if annotations %}
-                | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}">{% trans "Share Annotations" %}</a>
-            {% endif %}
-            | <a href="" class="delete_document">{% trans "Delete" %}</a>
-            <input type="hidden" name="documents" value="{{ doc.pk }}" />
-            {% if annotations %}
-                <ul>
-                {% for annotation in annotations %}
-                    <li>
-                        <a href="{% url pdf_show doc.pk %}#{{ annotation.page_number }}">
-                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<i>Kein Text</i>' }}
-                        </a>
-                    </li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-    {% endfor %}
-{% else %}
-    <p>Noch keine Unterlagen</p>
-{% endif %}
-</div>
 
+{% block actions %}
+    {{ block.super }}
+    | <a href="" class="delete_document">{% trans "Delete" %}</a>
+    <input type="hidden" name="documents" value="{{ doc.pk }}" />
+{% endblock %}
 
-<div class="form">
-    {% with document_form as form %}
-    <ol>
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form %}
-            {% if not field.is_hidden %}
-                {% include "forms/field.html" %}
-            {% endif %}
-        {% endfor %}
-    </ol>
-    {% endwith %}
-</div>
-
-<input type="submit" id="document_upload_button" name="upload" value="Upload" />
-
+{% block document_list %}
+    {{ block.super }}
+    <div class="form">
+        {% with document_form as form %}
+        <ol>
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    {% include "forms/field.html" %}
+                {% endif %}
+            {% endfor %}
+        </ol>
+        {% endwith %}
+    </div>
+    <input type="submit" id="document_upload_button" name="upload" value="Upload" />
+{% endblock %}

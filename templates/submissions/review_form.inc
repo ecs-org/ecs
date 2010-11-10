@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if not review_form.readonly %}
-    <form action="" method="post" enctype="multipart/form-data" >
+    <form action="" method="post" enctype="multipart/form-data" class="review">
     {% with checklist_document_form as document_form %}
         {% with checklist_documents as documents %}
             {% include 'documents/upload_form.html' %}

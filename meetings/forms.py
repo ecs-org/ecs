@@ -1,19 +1,24 @@
 # -*- coding: utf-8 -*
 from datetime import datetime
+
 from django import forms
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
+
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
 
 class MeetingForm(forms.ModelForm):
-    start = DateTimeField(label=u'Datum und Uhrzeit', initial=datetime.now)
-    title = forms.CharField(label=u'Titel', required=False)
+    start = DateTimeField(label=_(u'Datum und Uhrzeit'), initial=datetime.now)
+    title = forms.CharField(label=_(u'Titel'), required=False)
+    deadline = DateTimeField(label=_(u'Deadline'), initial=datetime.now)
+    deadline_diplomathesis = DateTimeField(label=_(u'Deadline Diplomathesis'), initial=datetime.now)
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'deadline', 'deadline_diplomathesis')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
 
 class TimetableEntryForm(forms.Form):
     duration = TimedeltaField()

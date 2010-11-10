@@ -328,6 +328,7 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
+    'ecs.core.task_queue',
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',

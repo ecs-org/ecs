@@ -177,8 +177,8 @@ class Command(BaseCommand):
             try:
                 key = fields[entry[0]]
                 if key and not re.match(u'UNKNOWN:', entry[1]):
-                    #submissionform_data[key] = entry[1]
-                    pass
+                    submissionform_data[key] = entry[1]
+                    #pass
             except KeyError:
                 pass
 
@@ -186,6 +186,9 @@ class Command(BaseCommand):
             'ec_number': ec_number,
         }
         
+        return (submission_data, submissionform_data, documents)
+        #to be finished lat0r...:
+ 
         ##new better checkbox parsing:
         import pprint
         #pprint.pprint(fields)
@@ -526,7 +529,7 @@ class Command(BaseCommand):
                         continue
                     
                     try:
-                        print "ec_number:",ec_number
+                        #print "ec_number:",ec_number
                         rofl = transaction.savepoint()
                         t_entry = meeting.timetable_entries.get(submission__ec_number__endswith=ec_number)
                         Participation.objects.create(entry=t_entry, user=user)

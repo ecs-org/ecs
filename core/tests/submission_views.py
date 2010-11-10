@@ -8,6 +8,7 @@ from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import MedicalCategory
 from ecs.core import bootstrap
 from ecs.core.models import SubmissionForm
+from ecs.core.models import EthicsCommission
 
 VALID_SUBMISSION_FORM_DATA = {
     u'investigator-0-ethics_commission': [u'1'], u'study_plan_abort_crit': [u'Peto'], u'submitter_contact_title': [u'Univ. Doz. Dr.'], 
@@ -33,7 +34,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'sponsor_phone': [u'+43 1 40170'], u'subject_maxage': [u'21'], u'investigator-1-ethics_commission': [u''], u'subject_noncompetents': [u'on'], 
     u'german_dataprotection_info': [u'bla bla bla'], u'german_risks_info': [u'bla bla bla'], 
     u'german_ethical_info': [u'bla bla bla'], u'foreignparticipatingcenter-0-id': [u''], u'investigatoremployee-TOTAL_FORMS': [u'1'], 
-    u'specialism': [u'P\xe4diatrische Onkologie / Immunologie'], u'investigator-1-subject_count': [u''], u'medtech_certified_for_other_indications': [u'3'], 
+    u'specialism': [u'P\xe4diatrische Onkologie / Immunologie'], u'investigator-1-subject_count': [u'1'], u'medtech_certified_for_other_indications': [u'3'], 
     u'german_payment_info': [u'bla bla bla'], u'investigator-0-contact_title': [u''], 
     u'study_plan_dataprotection_anonalgoritm': [u'Electronically generated unique patient number within SIOPEN-R-Net'], 
     u'additional_therapy_info': [u'long blabla'], u'german_inclusion_exclusion_crit': [u'bla bla bla'], 
@@ -75,6 +76,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         super(SubmissionViewsTestCase, self).setUp()
         bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
+        VALID_SUBMISSION_FORM_DATA[u'investigator-0-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
+        VALID_SUBMISSION_FORM_DATA[u'investigator-1-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
         
     def get_docstash_url(self):
         url = reverse('ecs.core.views.create_submission_form')

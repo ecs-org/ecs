@@ -1,0 +1,11 @@
+{% load core i18n %}
+
+{% for annotation in annotations %}
+    {% ifchanged annotation.document %}
+        <div class="document">{{ annotation.document }} ({{ annotation.document.original_file_name }})</div>
+    {% endifchanged %}
+    <div class="annotation">
+        <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/><span class="text">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}:
+{{ annotation.text }}</span>
+    </div>
+{% endfor %}
