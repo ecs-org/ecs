@@ -19,7 +19,6 @@ from ecs.utils.pdfutils import xhtml2pdf
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
 from ecs.utils.votedepot import VoteDepot
-from io import BytesIO
 
 '''
 @startuml img/sequence_img001.png
@@ -131,10 +130,10 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
     html = render(request, template, context).content
-    pdf = xhtml2pdf(html)
-    pdf_len = len(pdf)
+    pdf_data = xhtml2pdf(html)
+    pdf_len = len(pdf_data)
 
-    pdf_id = votesDepot.deposit(BytesIO(pdf), pdf_name)
+    pdf_id = votesDepot.deposit(pdf_data, pdf_name)
     return sign(request, pdf_id, pdf_len, pdf_name)
 
 
@@ -181,10 +180,28 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
         document = Document.objects.create(document_uuid=pdf_id, doctype=doctype, file=File(pdf_file), original_file_name=display_name, date=d)
         pdf_file.close()
-
+        os.remove(pdf_file)
+        
         print 'stored "%s" as "%s"' % (display_name, document.pk)
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
+
+def vote_sign_error(request, meeting_pk=None, vote_pk=None):
+    if request.REQUEST.has_key('pdf-id'):
+        pdf_file, display_name = votesDepot.pickup(request.REQUEST['pdf-id'])
+        pdf_file.close();
+        os.remove(pdf_file)
+        
+    if request.REQUEST.has_key('error'):
+        error = urllib.unquote_plus(request.REQUEST['error'])
+    else:
+        error = ''
+    if request.REQUEST.has_key('cause'):
+        cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
+    else:
+        cause = ''
+    # no pdf id, no explicit cleaning possible
+    return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
 
 # TODO BKUApplet - setting background from 
 # http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png
@@ -219,18 +236,3 @@ def sign(request, pdf_id, pdf_data_size, pdf_name):
     print 'sign: redirect to [%s]' % redirect
     return HttpResponseRedirect(redirect)
 
-def vote_sign_error(request, meeting_pk=None, vote_pk=None):
-    if request.REQUEST.has_key('pdf-id'):
-        t_file, display_name = votesDepot.pickup(request.REQUEST['pdf-id'])
-        os.remove(t_file)
-        
-    if request.REQUEST.has_key('error'):
-        error = urllib.unquote_plus(request.REQUEST['error'])
-    else:
-        error = ''
-    if request.REQUEST.has_key('cause'):
-        cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
-    else:
-        cause = ''
-    # no pdf id, no explicit cleaning possible
-    return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
