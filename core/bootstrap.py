@@ -55,6 +55,7 @@ def submission_workflow():
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Insurance Review').order_by('-pk')[:1][0]
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Legal and Patient Review').order_by('-pk')[:1][0]
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Board Member Review').order_by('-pk')[:1][0]
+    external_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='External Review').order_by('-pk')[:1][0]
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -84,7 +85,7 @@ def submission_workflow():
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review", group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ExternalReview, group=EXTERNAL_REVIEW_GROUP),
+            'external_review': Args(ChecklistReview, data=external_review_checklist_blueprint, name=u"External Review", group=EXTERNAL_REVIEW_GROUP),
             'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
@@ -372,7 +373,14 @@ def auth_ec_staff_users():
     
     for blueprint in blueprints:
         #FIXME: we need a unique constraint on name for this to be idempotent
-        ChecklistBlueprint.objects.get_or_create(**blueprint)
+        b, _ = ChecklistBlueprint.objects.get_or_create(name=blueprint['name'])
+        changed = False
+        for name, value in blueprint.items():
+            if getattr(b, name) != value:
+                setattr(b, name, value)
+                changed = True
+        if changed:
+            b.save()
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
 def checklist_questions():
@@ -382,12 +390,13 @@ def checklist_questions():
             u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
             u'3. Ist die Studienpopulation ausreichend definiert?',
             u'4. Sind die Zielvariablen geeignet definiert?',
-            u'5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?',
-            u'6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?',
+            u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',
+            u'6. Ist die Größe der Stichprobe ausreichend begründet?',
         ),
         u'Legal and Patient Review': (u"42 ?",),
         u'Insurance Review': (u"42 ?",),
         u'Board Member Review': (u"42 ?",),
+        u'External Review': (u"42 ?",),
     }
 
     for bp_name in questions.keys():

@@ -275,7 +275,12 @@ ecs.setupForms = function(){
     $$('.doclist a.delete_document').each(function(link){
         link.addEvent('click', function(){
             link.getParent('div').getElement('input').dispose();
-            form.submit('upload');
+            if(form){
+                form.submit('upload');
+            }
+            else{
+                link.getParent('form').submit();
+            }
             return false;
         });
     });

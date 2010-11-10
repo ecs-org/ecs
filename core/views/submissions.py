@@ -164,34 +164,42 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
-def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
+def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, defaults={'user': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+    if request.method == 'POST':
+        checklist.documents = Document.objects.filter(pk__in=request.POST.getlist('documents'))
     checklist_documents = checklist.documents.all()
 
     form = make_checklist_form(checklist)(request.POST or None)
-
+    
+    document_form_is_empty = True
     if blueprint.min_document_count is None:
         document_form = None
-    elif 'document-file' in request.FILES or len(checklist_documents) < blueprint.min_document_count:
+    elif 'document-file' in request.FILES:
         document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
         if document_form.is_valid():
             doc = document_form.save()
             checklist.documents.add(doc)
             document_form = DocumentForm(prefix='document')
+        else:
+            document_form_is_empty = False
     else:
         document_form = DocumentForm(prefix='document')
         
-    if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
-        for i, question in enumerate(blueprint.questions.order_by('text')):
-            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-            answer.answer = form.cleaned_data['q%s' % i]
-            answer.comment = form.cleaned_data['c%s' % i]
-            answer.save()
+    if request.method == 'POST':
+        if form.is_valid() and (not document_form or document_form_is_empty or document_form.is_valid()):
+            for i, question in enumerate(blueprint.questions.order_by('text')):
+                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+                answer.answer = form.cleaned_data['q%s' % i]
+                answer.comment = form.cleaned_data['c%s' % i]
+                answer.save()
+
+        checklist.save() # touch the checklist instance to trigger the post_save signal
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={
         'checklist_document_form': document_form,
