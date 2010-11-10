@@ -77,7 +77,7 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ti
     '''
     takes source pdf, stamps a barcode into it and output it to dest
     raises IOError if something goes wrong (including exit errorcode and stderr output attached)
-    '''
+    '''  
     if barcode2:
         raise(NotImplementedError)
         # TODO: barcode2_content is currently unimplemented
