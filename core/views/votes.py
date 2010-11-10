@@ -20,7 +20,9 @@ from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
 from uuid import uuid4
-from ecs.pdfsigner.UnsignedVoteDepot import votesDepot
+from ecs.pdfsigner.UnsignedVoteDepot import UnsignedVoteDepot
+
+votesDepot = UnsignedVoteDepot();
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
