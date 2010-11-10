@@ -15,6 +15,12 @@
     Beginn: {{meeting.start|date:'H:i'}}<br />
     Ende: {{meeting.end|date:'H:i'}}<br />
     <pdf:spacer height="0.5cm" />
+    
+    {% if meeting.comments %}
+    <div>
+        {{ meeting.comments|linebreaks }}
+    </div>
+    {% endif %}
 
     {% for top, vote in tops %}
         <span style="font-weight:bold;">#{{ top }}</span>

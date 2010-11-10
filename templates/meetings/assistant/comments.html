@@ -1,0 +1,24 @@
+{% extends 'meetings/assistant/base.html' %}
+{% load core %}
+
+{% block meeting_assistant_body %}
+    <form id="meeting_comments_form" action="" method="post">
+        {{ form.comments }}
+        <input type="submit" value="Speichern und Zurück" />
+    </form>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+    $(window).addEvent('unload', function(){
+        var request = new Request({
+            url: '{{ request.path }}',
+            data: $extend($('meeting_comments_form').toQueryString().parseQueryString(), {
+                autosave: '1'
+            })
+        });
+        request.send();
+    });
+</script>
+{% endblock %}

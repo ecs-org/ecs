@@ -24,6 +24,10 @@ class TimetableEntryForm(forms.Form):
     duration = TimedeltaField()
     optimal_start = forms.TimeField(required=False)
 
+class MeetingAssistantForm(forms.ModelForm):
+    class Meta:
+        model = Meeting
+        fields = ('comments',)
 
 class FreeTimetableEntryForm(forms.Form):
     title = forms.CharField(required=True, label=u'Titel')

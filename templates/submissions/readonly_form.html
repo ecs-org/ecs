@@ -93,39 +93,7 @@
 
 {% block tabs %}
     <div id="status_tab">
-        <h3>Status</h3>
-        <table>
-            <tr><th>Eingereicht am:</th><td>?</td></tr>
-            <tr><th>Eingereicht von:</th><td>?</td></tr>
-            <tr><th>Akzeptiert:</th><td>?</td></tr>
-            <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
-            <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
-            <tr><th>Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
-            <tr><th>Leitethikkommission:</th><td>{{ submission_form.main_ethics_commission|default:'<i>Keine Angabe</i>' }}</td></tr>
-            <tr><th>Sitzungen:</th><td>
-                <ul>
-                    {% for meeting in submission_form.submission.meetings.all %}
-                        <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            </td></tr>
-            <tr><th>Voten:</th><td>
-                <ul>
-                    {% for vote in submission_form.submission.votes.all %}
-                        <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
-                    {% endfor %}
-                </ul>
-            </td></tr>
-            <tr><th>Kategorien:</th><td>
-                {% for cat in submission_form.submission.medical_categories.all %}
-                    {{ cat }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td></tr>
-            <tr><th>Exedited Review:</th><td>{{ submission_form.submission.expedited|yesno }}</td></tr>
-            <tr><th>Dokumente:</th><td>
-                {% include 'documents/compact_list.html' %}
-            </td></tr>
-        </table>
+        {% include 'submissions/tabs/status.html' %}
     </div>
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Pending Notifications" %}
@@ -234,7 +202,7 @@
         <div id="communication_overview_messages"></div>
     </div>
     <div id="workflow_tab" class="tab">
-        <h3>Workflow</h3>
+        {% include 'submissions/tabs/workflow.html' %}
     </div>
     {{ block.super }}
 {% endblock %}
@@ -260,6 +228,10 @@
                 update: $('communication_overview_messages')
             });
             msgRequest.send();
+            
+            new ecs.widgets.Widget('submission_workflow_widget', {
+                url: '{% url ecs.tasks.views.my_tasks_widget %}?submission={{ submission_form.submission.pk }}'
+            });
             
             new ecs.FormFieldController(['id_external_reviewer', 'id_external_reviewer_name'], {
                 sources: ['id_thesis', 'id_expedited'], 
