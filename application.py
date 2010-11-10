@@ -1,7 +1,4 @@
 # ecs main application environment config
-"""
- see source:docs/src/ecs-sys/PacketFormat.rst
-"""
 
 import os
 import subprocess
@@ -10,7 +7,6 @@ import getpass
 from uuid import uuid4
 from fabric.api import local, env
 from deployment.utils import package_merge, install_upstart, apache_setup
-from deployment.appsupport import dry
 
 
 # packages needed for the application
