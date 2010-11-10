@@ -1,11 +1,12 @@
 import os
 import binascii
 
-from django_extensions.utils.uuid import uuid4
+from django.conf import settings
+from uuid import uuid4
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.utils.pdfutils import pdf_pages
-from ecs.mediaserver.renderer import renderPDFMontage
+from ecs.mediaserver.renderer import pdf2pngs
 
 class RendererTest(EcsTestCase):
     pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')
@@ -16,14 +17,16 @@ class RendererTest(EcsTestCase):
         self.pages = pdf_pages(self.f_pdfdoc)
 
     def testPngRendering(self):
-        tiles = [ 1, 3, 5 ]
-        width = [ 800, 768 ] 
-        
-        
+        tiles = settings.MS_SHARED ["tiles"]
+        width = settings.MS_SHARED ["resolutions"]
+        aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
+        dpi = settings.MS_SHARED ["dpi"]
+        depth = settings.MS_SHARED ["depth"]   
+
         for t in tiles:
             for w in width:
                 pagenum = 0
-                for docshots, data in renderPDFMontage(self.uuid, self.pdfdoc, w, t, t):
+                for docshots, data in pdf2pngs(self.uuid, self.pdfdoc, width, tiles, tiles, aspect_ratio, dpi, depth):
                     pagenum += 1                    
                     # check for png magic
                     magic = binascii.a2b_hex('89504E470D0A1A0A')
