@@ -82,11 +82,14 @@ class NodeController(object):
         return True
 
     def unlock(self):
-        if self.is_locked():
-            return False
-        for token in self.get_tokens(locked=True):
-            token.unlock()
-        return True
+        locked = self.is_locked()
+        if locked:
+            for token in self.get_tokens(locked=False):
+                token.lock()
+        else:
+            for token in self.get_tokens(locked=True):
+                token.unlock()
+        return locked
     
     def emit_token(self, deadline=False, trail=()):
         for edge in self.node.edges.filter(deadline=deadline).select_related('to_node'):

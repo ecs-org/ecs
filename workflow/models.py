@@ -252,6 +252,14 @@ class Token(models.Model):
         self.save()
         token_unlocked.send(self)
         return True
+        
+    def lock(self):
+        if self.locked:
+            return False
+        self.locked = True
+        self.save()
+        #token_locked.send(self)
+        return True
 
     @property
     def is_consumed(self):
