@@ -358,8 +358,8 @@ def protocol_pdf(request, meeting_pk=None):
         tops.append((top, vote,))
 
     b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
-    submissions = [x.submission for x in b2_votes]
-    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission__in=submissions).order_by('submission__ec_number')
+    submission_forms = [x.submission_form for x in b2_votes]
+    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
         'meeting': meeting,
