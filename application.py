@@ -4,14 +4,13 @@
 """
 
 import os
-import sys
 import subprocess
 import getpass
-import shutil
 
 from uuid import uuid4
 from fabric.api import local, env
 from deployment.utils import package_merge, install_upstart, apache_setup
+from deployment.appsupport import dry
 
 
 # packages needed for the application
@@ -55,6 +54,7 @@ python-memcached:inst:all:pypi:python-memcached
 nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
 
+
 # queuing: celery 
 amqplib:inst:all:pypi:amqplib\>=0.6
 carrot:inst:all:pypi:carrot\>=0.10.7
@@ -67,12 +67,9 @@ celery:inst:all:pypi:celery\>=2.1.2
 django-picklefield:inst:all:pypi:django-picklefield
 django-celery:inst:all:pypi:django-celery\>=2.1.2
 
+# use ghettoq if development instead rabbitmq
 odict:inst:all:pypi:odict
 ghettoq:inst:all:pypi:ghettoq
-# use ghettoq if development instead rabbitmq
-#old mailer:inst:all:pypi:mailer
-#old sqlalchemy:inst:all:pypi:sqlalchemy
-#old billard:inst:all:pypi:billiard
 
 
 # mail: ecsmail, communication: lamson mail server
@@ -95,6 +92,7 @@ gnupg:req:mac:homebrew:gnupg
 gnupg:req:suse:zypper:gpg2
 gnupg:req:openbsd:pkg:gnupg
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
+
 
 # search
 # TODO: django-haystack currently has an issue with whoosh 1.x, so we use 0.3.18 or therelike
@@ -313,37 +311,55 @@ logrotate_targets = {
 }
 
 upstart_targets = {
-    'mainapp_celery': './manage.py celeryd',
-    'mailserver': './manage.py ecsmail server',
+    'celeryd': './manage.py celeryd -l warning -L ../../ecs-log/celeryd.log',
+    'celerybeat': './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -L ../../ecs-log/celerybeat.log',
+    'ecsmail': './manage.py ecsmail server ../../ecs-log/ecsmail.log', 
 }
 
 test_flavors = {
     'default': './manage.py test',
     'mainapp': './manage.py test',
     'mediaserver': 'false',  # include in the mainapp tests
-    'mailserver': '.false', # included in the mainapp tests
-    'signing': 'false', # TODO: how to test the signing application?
+    'mailserver': 'false', # included in the mainapp tests
 }
 
-def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
-    local('sudo openssl req -config /root/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
-        (hostname, hostname))
-    install_upstart(appname, use_sudo=use_sudo, dry=dry)
-    apache_setup(appname, use_sudo=use_sudo, dry=dry, hostname=hostname, ip=ip)
-    """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
 
-    os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
-    wsgi_bootstrap = ['sudo'] if use_sudo else []
-    wsgi_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
-    local(subprocess.list2cmdline(wsgi_bootstrap))
-
-    dirname = os.path.dirname(__file__)
-    username = getpass.getuser()
-
-    celery_password = uuid4().get_hex()
-
-    local_settings = open(os.path.join(dirname, 'local_settings.py'), 'w')
-    local_settings.write("""
+class SetupApplication(object): 
+    def __init__(self, use_sudo=True, dry=False, hostname=None, ip=None):
+        self.use_sudo = use_sudo
+        self.dry = dry
+        self.hostname = hostname
+        self.ip = ip
+        self.dirname = os.path.dirname(__file__)
+        self.username = getpass.getuser()
+        self.queuing_password = uuid4().get_hex()
+    
+    def update(self, *args):
+        pass
+    
+    def system_setup(self):
+        self.homedir_config()
+        self.sslcert_config()
+        self.upstart_install()
+        self.apache_config()
+        """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
+        self.env_baseline()
+        self.local_settings_config()
+        self.db_clear()
+        self.db_update()
+        self.queuing_config()                       
+        self.search_config()
+ 
+    def homedir_config(self):   
+        os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
+        
+    def sslcert_config(self):
+        local('sudo openssl req -config /root/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
+        (self.hostname, self.hostname))
+    
+    def local_settings_config(self):
+        local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
+        local_settings.write("""
 # database settings
 local_db = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -353,7 +369,7 @@ local_db = {
 
 # rabbitmq/celery settings
 BROKER_USER = '%(username)s'
-BROKER_PASSWORD = '%(celery_password)s'
+BROKER_PASSWORD = '%(queuing_password)s'
 BROKER_VHOST = '%(username)s'
 CARROT_BACKEND = ''
 CELERY_ALWAYS_EAGER = False
@@ -364,35 +380,76 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
 DEBUG = False
 TEMPLATE_DEBUG = False
-    """ % {
-        'username': username,
-        'celery_password': celery_password,
-    })
+            """ % {
+            'username': self.username,
+            'queuing_password': self.queuing_password,
+        })
+        local_settings.close()
     
-    local_settings.close()
+    def apache_config(self):
+        apache_setup('ecs', use_sudo=self.use_sudo, dry=self.dry, hostname=self.hostname, ip=self.ip)
+    
+    def apache_restart(self):
+        pass
+    
+    def wsgi_reload(self):
+        pass
+    
+    def upstart_install(self):
+        install_upstart('ecs', use_sudo=self.use_sudo, dry=self.dry)
+    def upstart_stop(self):
+        pass
+    def upstart_start(self):
+        pass
 
-    local('sudo su - postgres -c \'createuser -S -d -R %s\'' % (username))
-    local('createdb %s' % username)
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate')
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
+    def db_clear(self):
+        local("sudo su - postgres -c \'createuser -S -d -R %s\'" % (self.username))
+        local('dropdb %s' % self.username)
+        local('createdb %s' % self.username)
+         
+    def db_update(self):
+        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
+        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate --noinput')
+        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
 
-    # setup rabbitmq
-    local('sudo rabbitmqctl add_user %s %s' % (username, celery_password))
-    local('sudo rabbitmqctl add_vhost %s' % username)
-    local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (username, username))
+    def env_clear(self):
+        pass
+    def env_boot(self):
+        pass
+    def env_update(self):
+        pass
+    
+    def env_baseline(self):        
+        baseline_bootstrap = ['sudo'] if self.use_sudo else []
+        baseline_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
+        local(subprocess.list2cmdline(baseline_bootstrap))
+ 
+    def queuing_config(self):
+        local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
+        local('sudo rabbitmqctl add_vhost %s' % self.username)
+        local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (self.username, self.username))
 
-    # setup solr-jetty
-    local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % username)
-    local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % username)
-
-    jetty_cnf = open(os.path.expanduser('~/jetty.cnf'), 'w')
-    jetty_cnf.write("""
+    def search_config(self):
+        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % self.username)
+        local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
+        
+        jetty_cnf = open(os.path.expanduser('~/jetty.cnf'), 'w')
+        jetty_cnf.write("""
 NO_START=0
 VERBOSE=yes
 JETTY_PORT=8983
-    """)
-    jetty_cnf.close()
-    local('sudo cp ~%s /etc/default/jetty' % username)
-    local('sudo /etc/init.d/jetty start')
+        """)
+        jetty_cnf.close()
+        local('sudo cp ~%s /etc/default/jetty' % self.username)
+        local('sudo /etc/init.d/jetty start')
 
+    def search_update(self):
+        pass
+    def massimport(self):
+        pass
+
+
+def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
+    s = SetupApplication(use_sudo, dry, hostname, ip)
+    s.system_setup()
+    
