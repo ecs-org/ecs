@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
 
@@ -21,6 +21,7 @@ Sitzungsassistent
                 {% if not meeting.ended and open_top_count == 0 %}
                     <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
+                <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
             {% endif %}
             <ol class="info">
                 <li>TOPs: {{ meeting|length }}</li>
