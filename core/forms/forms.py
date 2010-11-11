@@ -154,17 +154,10 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         return cleaned_data
 
 ## documents ##
-        
-class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
+
+class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
 
-    def __init__(self, *args, **kwargs):
-        document_pks = kwargs.get('document_pks', [])
-        if 'document_pks' in kwargs.keys():
-            del kwargs['document_pks']
-        super(DocumentForm, self).__init__(*args, **kwargs)
-        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
-    
     def clean(self):
         file = self.cleaned_data.get('file')
         if not self.cleaned_data.get('original_file_name') and file:
@@ -172,7 +165,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         return self.cleaned_data
         
     def save(self, commit=True):
-        obj = super(DocumentForm, self).save(commit=False)
+        obj = super(SimpleDocumentForm, self).save(commit=False)
         obj.original_file_name = self.cleaned_data.get('original_file_name')
         if commit:
             obj.save()
@@ -180,7 +173,21 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     
     class Meta:
         model = Document
+        fields = ('file', 'date', 'version')
+
+
+class DocumentForm(SimpleDocumentForm):
+    def __init__(self, *args, **kwargs):
+        document_pks = kwargs.get('document_pks', [])
+        if 'document_pks' in kwargs.keys():
+            del kwargs['document_pks']
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
+    
+    class Meta:
+        model = Document
         exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
+
 
 ## ##
 

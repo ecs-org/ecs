@@ -26,7 +26,6 @@
                      {% endwith %}
                  {% endif %}
              {% endwith %}
-             | <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}">Export</a>
         </div>
         {% with submission.medical_categories.all as categories %}
             {% if categories %}

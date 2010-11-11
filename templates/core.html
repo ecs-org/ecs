@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block usertoolbar %} 
-  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
+  <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
         
 {% block usermenu %}
@@ -190,22 +190,6 @@
       {% endfor %}
       
       // workflow popups
-      
-      ecs.showWorkflowPopup = function(options){
-          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&submission={{ submission_form.submission_id }}{% endif %}';
-          if(options && options.url){
-              url = options.url;
-          }
-          var dialog = new ecs.Dialog(url, {
-              title: 'Workflow',
-              size: {width: 700, height: 400}
-          });
-      };
-      
-      $('workflow_button').addEvent('click', function(){
-          ecs.showWorkflowPopup();
-          return false;
-      });
       
       $('help_button').addEvent('click', function(e){
           var link = $(e.target);

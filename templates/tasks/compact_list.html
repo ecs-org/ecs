@@ -4,7 +4,7 @@
 {% if submission %}
     <h1>{{ submission }}</h1>
 {% endif %}
-<form id="task_list_filter" action="" method="post">
+<form id="{{ form_id }}" action="{% url ecs.tasks.views.my_tasks %}" method="post" class="open-in-widget">
     <div class="task_list_choose">
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
     </div>
@@ -31,7 +31,7 @@
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
                     {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-                    <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}widget popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
+                    <a href="{{ task.url|default:manage_url }}" class="{% if task.url %}escape_popup{% else %}widget popup open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -47,9 +47,9 @@
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
+                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget open-in-widget">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
+                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}" class="widget open-in-widget">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -65,7 +65,7 @@
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget">{{ task.data }}</a>
+                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}" class="widget open-in-widget">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}" class="escape_popup">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
@@ -95,4 +95,52 @@
     <em>{% trans "There are no tasks for you." %}</em>
 {% endif %}
 </div>
+
+<script type="text/javascript">
+  window.addEvent('domready', function(){
+      $$('#{{ form_id }} input').each(function(input){
+          input.addEvent('change', function(){
+              $('{{ form_id }}').submit();
+          });
+      });
+      $$('#{{ form_id }} select').each(function(input){
+          input.addEvent('change', function(){
+              $('{{ form_id }}').submit();
+          });
+      });
+
+      var toggle_collapse = function(){
+          var item = this.getParent();
+          var lis = item.getElement('ul').getElements('li');
+          if(item.hasClass('collapsed')) {
+              this.innerHTML = '{% trans "Collapse" %}';
+              lis.show();
+              lis.pop().hide();
+          } else {
+              this.innerHTML = '{% trans "Expand" %}';
+              lis.splice(0, 3);
+              lis.hide();
+              lis.pop().show();
+          }
+          item.toggleClass('collapsed');
+      };
+      $$('#task_main .task_item.toggle_collapse').each(function(item){
+          var toggler = new Element('a', {
+              'text': 'roflcopter',
+              'events': {
+                  'click': toggle_collapse
+              },
+              'styles': {
+                  'float': 'right'
+              }
+          });
+          item.insertBefore(toggler, item.getFirst());
+          var elipsis = new Element('li', {
+              'text': '...'
+          });
+          elipsis.inject(item.getElement('ul'));
+          toggle_collapse.apply(toggler);
+      });
+  });
+</script>
 
