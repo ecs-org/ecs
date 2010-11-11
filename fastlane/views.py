@@ -3,7 +3,7 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.viewutils import render
 from ecs.fastlane.forms import FastLaneMeetingForm, AssignedFastLaneCategoryForm, FastLaneTopForm
@@ -50,13 +50,20 @@ def assistant(request, meeting_pk, page_num=1):
     page_num = int(page_num)
 
     paginator = Paginator(meeting.tops.all(), 1)
-    page = paginator.page(page_num)
-    top = page.object_list[0]
+    try:
+        page = paginator.page(page_num)
+    except EmptyPage, InvalidPage:
+        # out of pages
+        page = None
+        top = None
+        form = None
+    else:
+        top = page.object_list[0]
 
-    form = FastLaneTopForm(request.POST or None, instance=top)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        return HttpResponseRedirect(reverse('ecs.fastlane.views.assistant', kwargs={'meeting_pk': meeting.pk, 'page_num': page_num+1}))
+        form = FastLaneTopForm(request.POST or None, instance=top)
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('ecs.fastlane.views.assistant', kwargs={'meeting_pk': meeting.pk, 'page_num': page_num+1}))
         
 
     return render(request, 'fastlane/assistant.html', {
