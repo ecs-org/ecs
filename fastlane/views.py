@@ -19,7 +19,7 @@ def new(request):
     form = FastLaneMeetingForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         meeting = form.save()
-        for submission in Submission.objects.filter(expedited=True).next_meeting():
+        for submission in Submission.objects.next_meeting().filter(expedited=True, fast_lane_meetings__isnull=True):
             meeting.add_top(submission)
 
         return HttpResponseRedirect(reverse('ecs.fastlane.views.participation', kwargs={'meeting_pk': meeting.pk}))

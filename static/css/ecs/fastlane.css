@@ -1,0 +1,15 @@
+/* fast lane list */
+
+#fastlane_list ul {
+  list-style: none;
+}
+#fastlane_list .actions {
+  margin-bottom: 10px;
+}
+#fastlane_list .submissions {
+  padding-left: 15px;
+}
+#fastlane_list li {
+  margin-bottom: 20px;
+}
+
