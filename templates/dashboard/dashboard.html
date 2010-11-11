@@ -59,22 +59,7 @@
             this.element.getElements('a.widget').each(function(link){
                 console.log(link.href);
                 link.addEvent('click', function(){
-                    if(link.hasClass('popup')){
-                        var popup = new ecs.Dialog(link.href, {
-                            title: 'Nachricht',
-                            size: {width: 700, height: 400},
-                            onClose: function(){
-                                reloadAll();
-                            }
-                        });
-                        var iframe = popup.content.getFirst('iframe')
-                        var makeClosable = function(i){
-                            iframe.contentWindow.close = popup.close.bind(popup);
-                        };
-                        iframe.addEvent('load', makeClosable);
-                        makeClosable();
-                    }
-                    else if(link.hasClass('api')){
+                    if(link.hasClass('api')){
                         var request = new Request({
                             url: link.href,
                             onSuccess: function(){
@@ -94,22 +79,12 @@
         }
     });
     window.addEvent('domready', function(){
+        var el;
         {% for url in widgets %}
-            new Widget('{{ url }}');
+            el = new Element('div', {'class': 'dashboard_widget'});
+            $('dashboard').grab(el);
+            new ecs.widgets.Widget(el, {url: '{{ url }}'});
         {% endfor %}
-
-        $$('a.popup').each(function(link){
-            link.addEvent('click', function(){
-                new ecs.Dialog(link.href, {
-                    title: 'Nachricht',
-                    size: {width: 700, height: 400},
-                    onClose: function(){
-                        window.location.reload();
-                    }
-                });
-                return false;
-            });
-        });
     });
     })();
   </script>

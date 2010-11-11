@@ -33,7 +33,7 @@ ecs.widgets.Widget = new Class({
             this.load();
         }
     },
-    load: function(url, form){
+    load: function(url, form, callback){
         var request = new Request.HTML({
             url: url || (form ? form.getProperty('action') : this.url),
             method: form ? form.method : 'get',
@@ -43,11 +43,20 @@ ecs.widgets.Widget = new Class({
         if(url){
             this.url = url;
         }
-        request.addEvent('success', this.onSuccess.bind(this));
+        request.addEvent('success', (function(){
+            if(callback){
+                var stop = callback();
+                if($defined(stop) && !stop){
+                    return;
+                }
+            }
+            this.onSuccess();
+        }).bind(this));
         request.send();
     },
     onSuccess: function(){
         var self = this;
+        this.element.scrollTo(0, 0);
         ecs.widgets.enablePopupHandlers(this.element);
         this.element.getElements('form.open-in-widget').each(function(form){
             var submit = function(){
@@ -77,6 +86,7 @@ ecs.widgets.Popup = new Class({
         options = options || {};
         this.parent(new Element('div'), options);
         this.popup = new Element('div', {'class': 'ecs-Popup'});
+        this.popup.store('ecs.widgets.Popup', this);
         if(options.width){
             this.popup.setStyle('width', options.width + 'px');
         }
@@ -141,6 +151,19 @@ ecs.widgets.enablePopupHandlers = function(context){
             catch(e){
                 console.log(e);
             }
+            return false;
+        });
+    });
+    context.getElements('a.close-popup').each(function(link){
+        var parent = link.getParent('.ecs-Popup');
+        if(!parent){
+            return;
+        }
+        var popup = parent.retrieve('ecs.widgets.Popup');
+        link.addEvent('click', function(){
+            popup.load(link.href, null, function(){
+                popup.dispose();
+            });
             return false;
         });
     });

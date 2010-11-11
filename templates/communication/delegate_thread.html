@@ -1,9 +1,7 @@
-{% extends "shell.html" %}
 {% load core %}
 
-{% block htmlbody %}
 <div class="message_display">
-  <form action="" method="post" class="form message">
+  <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       <ol>
           <li>
               <label for="id_to">abgeben an:</label>
@@ -38,4 +36,3 @@
       <input type="submit" value="Delegieren" />
   </form>
 </div>
-{% endblock %}
