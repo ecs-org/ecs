@@ -18,7 +18,7 @@ class FastLaneMeeting(models.Model):
 
 
 class FastLaneTop(models.Model):
-    submission = models.ForeignKey('core.Submission', related_name='fast_lane_tops', unique=True)
+    submission = models.OneToOneField('core.Submission', related_name='fast_lane_top', unique=True)
     meeting = models.ForeignKey('fastlane.FastLaneMeeting', related_name='tops')
     recommendation = models.NullBooleanField(blank=True, default=None)
     recommendation_comment = models.TextField(blank=True)
