@@ -45,24 +45,31 @@
           {% if form.receiver %}
           <li>
               <label for="id_receiver">Empfänger</label>
-              {% if submission or task %}
-                  <div class="input">
-                  {% if submission %}
-                      <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.submitter }}) <br/>
-                  {% endif %}
-
-                  {% if task %}
-                      {% for t in task.trail %}
-                          <input type="radio" value="" name="receiver_type" /> {{ t.assigned_to }} ({{ t }}) <br/>
-                      {% endfor %}
-                  {% endif %}
-                  <input type="radio" value="" name="receiver_type" /> Andere {{ form.receiver }}
-                  </div>
+              {% if to_user %}
+                <div class="input">
+                    {{ to_user }}
+                    <input type="hidden" name="receiver" value="{{ to_user.pk }}"/>
+                </div>
               {% else %}
-                  {{ form.receiver }}
-              {% endif %}
-              {% if form.receiver.errors %}
-                  <span class="errors">{{ form.receiver.errors }}</span>
+                  {% if submission or task %}
+                      <div class="input">
+                      {% if submission %}
+                          <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.submitter }}) <br/>
+                      {% endif %}
+
+                      {% if task %}
+                          {% for t in task.trail %}
+                              <input type="radio" value="" name="receiver_type" /> {{ t.assigned_to }} ({{ t }}) <br/>
+                          {% endfor %}
+                      {% endif %}
+                      <input type="radio" value="" name="receiver_type" /> Andere {{ form.receiver }}
+                      </div>
+                  {% else %}
+                      {{ form.receiver }}
+                  {% endif %}
+                  {% if form.receiver.errors %}
+                      <span class="errors">{{ form.receiver.errors }}</span>
+                  {% endif %}
               {% endif %}
           </li>
           {% endif %}
