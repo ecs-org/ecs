@@ -15,7 +15,7 @@ from ecs.meetings.models import Meeting
 from ecs.documents.models import Document, DocumentType
 
 from ecs.utils import forceauth
-from ecs.utils.pdfutils import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
 from ecs.utils.votedepot import VoteDepot
@@ -130,12 +130,24 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_name = vote_filename(meeting, vote)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
-    html = render(request, template, context).content
-    pdf_data = xhtml2pdf(html)
-    pdf_len = len(pdf_data)
+    html_data = render(request, template, context).content
+    pdf_data = xhtml2pdf(html_data)
+    document_uuid = uuid4().get_hex();
 
-    pdfas_id = votesDepot.deposit(pdf_data, uuid4(), pdf_name)
-    return sign(request, pdfas_id, pdf_len, pdf_name)
+    t_in = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+    t_out = tempfile.NamedTemporaryFile(prefix='vote_sign_stamped_', suffix='.pdf', delete=False)
+    t_in.write(pdf_data)
+
+    t_in.seek(0)
+    pdf_barcodestamp(t_in, t_out, document_uuid)
+    t_in.close();
+
+    t_out.seek(0)
+    pdf_data_stamped = t_out.read()
+    t_out.close();
+
+    pdfas_id = votesDepot.deposit(pdf_data_stamped, html_data, document_uuid, pdf_name)
+    return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
 
 
 @forceauth.exempt
@@ -153,14 +165,26 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
 
     print "send: votedoc found"
     t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
-    t_pdfas.write(votedoc["data"])
+    t_pdfas.write(votedoc["pdf_data"])
     t_pdfas.seek(0)
-    print "send: votedoc tmp written"
+    data = t_pdfas.read()
+    print "send: %s" % (len(data))
+    
+    return HttpResponse(data, mimetype='application/pdf')
 
-    return HttpResponse(t_pdfas, mimetype='application/pdf')
+@csrf_exempt
+def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    print "preview"
+    pdf_id = request.REQUEST['pdf-id']
+    if pdf_id is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+    votedoc = votesDepot.get(pdf_id)
+    
+    return HttpResponse(votedoc["html_data"])
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    print "landing"
     return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
  
 @forceauth.exempt
@@ -181,18 +205,17 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         sock_pdfas = urllib2.urlopen(url)
         t_pdfas = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
         t_pdfas.write(sock_pdfas.read(num_bytes))
-        t_pdfas.close()
         sock_pdfas.close()
          
         d = datetime.datetime.now()
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
-        document = Document.objects.create(document_uuid=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
+        document = Document.objects.create(uuid_document=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
         t_pdfas.close()
-        os.remove(t_pdfas)
+        os.remove(t_pdfas.name)
         
         print 'stored "%s" as "%s"' % (votedoc["name"], votedoc["uuid"])
         
-        return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
+        return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'document_pk': document.pk}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 @csrf_exempt
@@ -220,6 +243,7 @@ def sign(request, pdf_id, pdf_data_size, pdf_name):
     url_send = request.build_absolute_uri('send')
     url_error = request.build_absolute_uri('error')
     url_receive = request.build_absolute_uri('receive')
+    url_preview = request.build_absolute_uri('preview')
     print 'url_sign: "%s"' % url_sign
     print 'url_send: "%s"' % url_send
     print 'url_error: "%s"' % url_error
@@ -236,6 +260,7 @@ def sign(request, pdf_id, pdf_data_size, pdf_name):
         'pdf-id': pdf_id,
         'invoke-app-url': url_receive, 
         'invoke-app-error-url': url_error,
+        'invoke-preview-url': url_preview,
         # session-id=9085B85B364BEC31E7D38047FE54577D
         'locale': 'de',
     }
