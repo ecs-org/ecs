@@ -45,6 +45,9 @@
   margin: 0px 0px 20px 220px;
   padding: 5px;
 }
+#fastlane_assistant .body .submission {
+  padding: 10px;
+}
 #fastlane_assistant .paginator {
   margin-bottom: 20px;
 }

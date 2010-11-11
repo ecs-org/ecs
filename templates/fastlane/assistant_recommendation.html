@@ -31,6 +31,18 @@
 {% endblock %}
 
 {% block body %}
+    <div class="submission">
+        <h2>{{ top.submission|ec_number }}</h2>
+        <div>{{ top.submission.project_title }}</div>
+        <div>
+            {% trans "Categories" %}:
+            {% for category in top.submission.expedited_review_categories.all %}
+                {{ category.name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
     <form action="" method="post">
         <table> {{ form.as_table }} </table>
         <input type="submit" value="{% trans "Save" %}" />
