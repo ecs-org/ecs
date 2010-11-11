@@ -12,7 +12,8 @@
 
 <form action="" method="post">
     {% for form in forms %}
-        {{ form.instance.category.name }} {{ form }}
+        {{ form.instance.category.name }}:
+        <table> {{ form.as_table }} </table>
     {% endfor %}
     <input type="submit" value="{% trans "Save" %}" />
 </form>

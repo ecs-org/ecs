@@ -35,9 +35,7 @@ def participation(request, meeting_pk):
     for category in meeting.categories.all():
         form = AssignedFastLaneCategoryForm(request.POST or None, instance=category, prefix=category.pk)
         if request.method == 'POST' and form.is_valid():
-            # form.save()
-            print 'Would save now()'
-            pass
+            form.save()
             
         forms.append(form)
 
