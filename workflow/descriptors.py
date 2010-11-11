@@ -10,9 +10,13 @@ class ObjectWorkflow(object):
             content_type=ContentType.objects.get_for_model(type(obj)), 
             data_id=obj.pk,
         )
-
+    
+    @property
+    def tokens(self):
+        return Token.objects.filter(workflow__in=self.workflows.values('pk').query)
+    
     def _get_activity_tokens(self, *acts):
-        tokens = Token.objects.filter(workflow__in=self.workflows.values('pk').query, consumed_at=None, node__node_type__category=NODE_TYPE_CATEGORY_ACTIVITY).select_related('node', 'workflow')
+        tokens = self.tokens.filter(consumed_at=None, node__node_type__category=NODE_TYPE_CATEGORY_ACTIVITY).select_related('node', 'workflow')
         if acts:
             tokens = tokens.filter(node__node_type__in=[act._meta.node_type for act in acts])
         return tokens

@@ -13,10 +13,10 @@ from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from ecs.utils.common_messages import send_submission_change,\
-    send_submission_creation, send_submission_invitation
+from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
+from ecs.core.parties import get_involved_parties
 
 MIN_EC_NUMBER = 1000
 
@@ -477,6 +477,10 @@ class SubmissionForm(models.Model):
     @property
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
+        
+    def get_involved_parties(self, include_workflow=True):
+        return get_involved_parties(self, include_workflow=include_workflow)
+
 
 def attach_to_submissions(user):
     print "attach"
