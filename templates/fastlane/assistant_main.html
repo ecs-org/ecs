@@ -16,7 +16,7 @@
         {% endblocktrans %}
     {% else %}
         {% blocktrans with meeting.start|date:'d.m.Y H:i' as start %}
-            The meeting is scheduled for {{ started }}
+            The meeting is scheduled for {{ start }}
         {% endblocktrans %}
     {% endif %}
 {% endblock %}
