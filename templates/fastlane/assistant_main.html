@@ -1,0 +1,23 @@
+{% extends 'fastlane/assistant.html' %}
+{% load core i18n %}
+
+{% block nav %}
+    {% if not meeting.started %}
+        <div class="button">
+            <a href="{% url ecs.fastlane.views.start_assistant meeting_pk=meeting.pk%}">{% trans "Start Meeting" %}</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if meeting.started and meeting.ended %}
+        {% blocktrans with meeting.started|date:'d.m.Y H:i' as started and meeting.ended|date:'d.m.Y H:i' as ended %}
+            The meeting started at {{ started }} and ended at {{ ended }}
+        {% endblocktrans %}
+    {% else %}
+        {% blocktrans with meeting.start|date:'d.m.Y H:i' as start %}
+            The meeting is scheduled for {{ started }}
+        {% endblocktrans %}
+    {% endif %}
+{% endblock %}
+
