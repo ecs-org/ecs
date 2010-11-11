@@ -10,12 +10,15 @@ from django.utils.datastructures import SortedDict
 from django.db.models import Count
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.users.utils import user_flag_required
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
-from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
-from ecs.documents.models import Document
-from ecs.meetings.forms import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
+from ecs.documents.models import Document
+
 from ecs.meetings.tasks import optimize_timetable_task
+from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
+from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
+    SubmissionSchedulingForm, SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm)
 
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
@@ -45,6 +48,23 @@ def schedule_submission(request, submission_pk=None):
         timetable_entry = meeting.add_entry(submission=submission, duration=datetime.timedelta(minutes=7.5), **kwargs)
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'submissions/schedule.html', {
+        'submission': submission,
+        'form': form,
+    })
+
+@user_flag_required('executive_board_member')
+def reschedule_submission(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    form = SubmissionReschedulingForm(request.POST or None, submission=submission)
+    if form.is_valid():
+        from_meeting = form.cleaned_data['from_meeting']
+        to_meeting = form.cleaned_data['to_meeting']
+        old_entries = from_meeting.timetable_entries.filter(submission=submission)
+        for entry in old_entries:
+            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title)
+        old_entries.delete()
+        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': to_meeting.pk}))
+    return render(request, 'meetings/reschedule.html', {
         'submission': submission,
         'form': form,
     })
@@ -242,6 +262,19 @@ def meeting_assistant_stop(request, meeting_pk=None):
     meeting.ended = datetime.datetime.now()
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    
+def meeting_assistant_comments(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
+    form = MeetingAssistantForm(request.POST or None, instance=meeting)
+    if form.is_valid():
+        form.save()
+        if request.POST.get('autosave', False):
+            return HttpResponse('OK')
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
+    return render(request, 'meetings/assistant/comments.html', {
+        'meeting': meeting,
+        'form': form,
+    })
 
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -345,8 +378,8 @@ def protocol_pdf(request, meeting_pk=None):
         tops.append((top, vote,))
 
     b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
-    submissions = [x.submission for x in b2_votes]
-    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission__in=submissions).order_by('submission__ec_number')
+    submission_forms = [x.submission_form for x in b2_votes]
+    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
         'meeting': meeting,

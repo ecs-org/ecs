@@ -33,9 +33,9 @@ ecs.widgets.Widget = new Class({
             this.load();
         }
     },
-    load: function(url, form){
+    load: function(url, form, callback){
         var request = new Request.HTML({
-            url: url || (form && form.action) || this.url,
+            url: url || (form ? form.getProperty('action') : this.url),
             method: form ? form.method : 'get',
             update: this.element,
             data: form ? form.toQueryString() : ''
@@ -43,11 +43,21 @@ ecs.widgets.Widget = new Class({
         if(url){
             this.url = url;
         }
-        request.addEvent('success', this.onSuccess.bind(this));
+        request.addEvent('success', (function(){
+            if(callback){
+                var stop = callback();
+                if($defined(stop) && !stop){
+                    return;
+                }
+            }
+            this.onSuccess();
+        }).bind(this));
         request.send();
     },
     onSuccess: function(){
         var self = this;
+        this.element.scrollTo(0, 0);
+        ecs.widgets.enablePopupHandlers(this.element, this);
         this.element.getElements('form.open-in-widget').each(function(form){
             var submit = function(){
                 self.load(null, form);
@@ -65,6 +75,9 @@ ecs.widgets.Widget = new Class({
         });
         this.fireEvent('load', this);
     },
+    onPopupSpawned: function(popup){
+        this.fireEvent('popupSpawned', popup);
+    },
     dispose: function(){
         this.element.eliminate('ecs.widgets.Widget');
     }
@@ -76,11 +89,12 @@ ecs.widgets.Popup = new Class({
         options = options || {};
         this.parent(new Element('div'), options);
         this.popup = new Element('div', {'class': 'ecs-Popup'});
+        this.popup.store('ecs.widgets.Popup', this);
         if(options.width){
-            this.element.setStyle('width', options.width + 'px');
+            this.popup.setStyle('width', options.width + 'px');
         }
         if(options.height){
-            this.element.setStyle('height', options.height + 'px');
+            this.popup.setStyle('height', options.height + 'px');
         }
         this.headElement = new Element('div', {'class': 'head'});
         this.popup.grab(this.headElement);
@@ -105,6 +119,12 @@ ecs.widgets.Popup = new Class({
     show: function(){
         ecs.widgets.showModalOverlay();
         this.popup.setStyle('display', 'block');
+        var windowSize = window.getSize();
+        var popupSize = this.popup.getSize();
+        this.popup.setStyles({
+            left: ((windowSize.x - popupSize.x) / 2) + 'px',
+            top: ((windowSize.y - popupSize.y) / 2) + 'px'
+        });
     },
     hide: function(){
         this.popup.setStyle('display', 'none');
@@ -121,11 +141,18 @@ ecs.widgets.Popup = new Class({
     }
 });
 
-window.addEvent('domready', function(){
-    $$('a.open-in-popup').each(function(link){
+ecs.widgets.enablePopupHandlers = function(context, widget){
+    context.getElements('a.open-in-popup').each(function(link){
+        if(link.getParent('.ecs-Popup')){
+            link.addClass('open-in-widget');
+            return;
+        }
         link.addEvent('click', function(){
             try{
-                new ecs.widgets.Popup({url: link.href, width: 300, height: 200});
+                var popup = new ecs.widgets.Popup({url: link.href, width: 700, height: 300});
+                if(widget){
+                    widget.onPopupSpawned(popup);
+                }
             }
             catch(e){
                 console.log(e);
@@ -133,4 +160,21 @@ window.addEvent('domready', function(){
             return false;
         });
     });
+    context.getElements('a.close-popup').each(function(link){
+        var parent = link.getParent('.ecs-Popup');
+        if(!parent){
+            return;
+        }
+        var popup = parent.retrieve('ecs.widgets.Popup');
+        link.addEvent('click', function(){
+            popup.load(link.href, null, function(){
+                popup.dispose();
+            });
+            return false;
+        });
+    });
+};
+
+window.addEvent('domready', function(){
+    ecs.widgets.enablePopupHandlers(document.body);
 });

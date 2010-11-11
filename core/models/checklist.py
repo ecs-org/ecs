@@ -8,7 +8,7 @@ from ecs.core.models.submissions import Submission
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
-    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, 'one optional document'), (1, 'one mandatory document')))
+    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, 'optional documents'), (1, 'one mandatory document')))
 
     class Meta:
         app_label = 'core'
@@ -43,7 +43,12 @@ class Checklist(models.Model):
         
     @property
     def is_complete(self):
-        return self.answers.filter(answer=None).count() == 0
+        if self.answers.filter(answer=None).count() == 0:
+            mindocs = self.blueprint.min_document_count
+            print mindocs, self.documents.count()
+            if mindocs is None or self.documents.count() >= mindocs:
+                return True
+        return False
         
     @property
     def is_positive(self):

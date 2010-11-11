@@ -1,0 +1,25 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headertitle %}
+    {% trans "Fast Lane Participation" %}
+{% endblock %}
+
+{% block content %}
+<h2>{{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title }}</h2>
+
+<form action="" method="post">
+    <ul>
+    {% for form in forms %}
+        <li>{{ form.instance.category.name }}: {{ form.as_p }}
+    {% endfor %}
+    </ul>
+    <input type="submit" value="{% trans "Save" %}" />
+</form>
+
+{% endblock %}
+
+{% block menuSelection %}fastlane{% endblock %}
+

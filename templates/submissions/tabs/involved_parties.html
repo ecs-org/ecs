@@ -1,0 +1,30 @@
+{% load i18n %}
+<h3>{% trans 'Involved Parties' %}</h3>
+<table>
+    <thead>
+        <th>{% trans 'Involvement' %}</th>
+        <th>{% trans 'Name' %}</th>
+        <th>{% trans 'Organization' %}</th>
+        <th>{% trans 'E-Mail' %}</th>
+        <th></th>
+    </thead>
+    <tbody>
+        {% for party in submission_form.get_involved_parties %}
+            <tr>
+                <td>{{ party.involvement }}</td>
+                <td>{{ party.name|default:'' }}</td>
+                <td>{{ party.organization|default:'' }}</td>
+                <td>{{ party.email|default:'' }}</td>
+                <td>
+                    {% if party.user %}
+                        <a class="open-in-popup" href="{% url ecs.communication.views.send_message submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}">
+                        {% blocktrans with party.user as user %}
+                            Send a message to {{ user }}
+                        {% endblocktrans %}
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

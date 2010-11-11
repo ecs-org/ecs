@@ -1,0 +1,27 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headertitle %}{% trans "Fast Lane Assistant" %}{% endblock %}
+
+{% block content %}
+<div id="fastlane_assistant">
+
+<h2>{% trans "Fast Lane Assistant" %}</h2>
+
+<div class="nav">
+    {% block nav %}
+    {% endblock %}
+</div>
+
+<div class="body">
+    {% block body %}
+    {% endblock %}
+</div>
+
+</div>
+{% endblock %}
+
+{% block menuSelection %}fastlane{% endblock %}
+

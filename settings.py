@@ -174,7 +174,6 @@ INSTALLED_APPS = (
     'ecs.feedback',
     'ecs.docstash',
     'ecs.userswitcher',
-    'ecs.pdfsigner',
     'ecs.pdfviewer',
     'ecs.mediaserver',
     'ecs.workflow',
@@ -193,6 +192,7 @@ INSTALLED_APPS = (
     'ecs.notifications',
     'ecs.authorization',
     'ecs.integration',
+    'ecs.fastlane',
 )
 
 

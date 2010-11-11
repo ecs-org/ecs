@@ -24,6 +24,10 @@ class TimetableEntryForm(forms.Form):
     duration = TimedeltaField()
     optimal_start = forms.TimeField(required=False)
 
+class MeetingAssistantForm(forms.ModelForm):
+    class Meta:
+        model = Meeting
+        fields = ('comments',)
 
 class FreeTimetableEntryForm(forms.Form):
     title = forms.CharField(required=True, label=u'Titel')
@@ -54,6 +58,20 @@ class SubmissionSchedulingForm(forms.Form):
     title = forms.CharField(required=False)
     sponsor_invited = forms.BooleanField(required=False)
     
+
+class SubmissionReschedulingForm(forms.Form):
+    from_meeting = forms.ModelChoiceField(Meeting.objects.none())
+    to_meeting = forms.ModelChoiceField(Meeting.objects.none())
+    
+    def __init__(self, *args, **kwargs):
+        submission = kwargs.pop('submission')
+        super(SubmissionReschedulingForm, self).__init__(*args, **kwargs)
+        now = datetime.now()
+        current_meetings = submission.meetings.filter(start__gt=now).order_by('start')
+        self.fields['from_meeting'].queryset = current_meetings
+        self.fields['to_meeting'].queryset = Meeting.objects.filter(start__gt=now).exclude(pk__in=[m.pk for m in current_meetings])
+    
+
 class AssignedMedicalCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.meeting = kwargs.pop('meeting')

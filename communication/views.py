@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
+from django.contrib.auth.models import User
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
@@ -16,11 +17,14 @@ from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadD
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 
-def send_message(request, submission_pk=None, reply_to_pk=None):
-    submission, task, reply_to = None, None, None
+def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None):
+    submission, task, reply_to, to_user = None, None, None, None
 
     if submission_pk is not None:
         submission = get_object_or_404(Submission, pk=submission_pk)
+    
+    if to_user_pk is not None:
+        to_user = get_object_or_404(User, pk=to_user_pk)
     
     if reply_to_pk is not None:
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
@@ -55,6 +59,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None):
 
     return render(request, 'communication/send.html', {
         'submission': submission,
+        'to_user': to_user,
         'task': task,
         'form': form,
         'thread': thread,
@@ -84,24 +89,14 @@ def read_thread(request, thread_pk=None):
     })
 
 def bump_message(request, message_pk=None):
-    if message_pk is not None:
-        reply_to = get_object_or_404(Message, pk=message_pk)
-        thread = reply_to.thread
-        form = ReplyToMessageForm(request.POST or None, initial={
-            'subject': 'Re: %s' % thread.subject,
-            'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
-            
-        }, instance = Message(thread=thread))
-        submission = thread.submission
-
     message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
     message.thread.add_message(request.user, message.text)
-    return HttpResponse('OK')
+    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
 
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
-    return HttpResponse('OK')
+    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
     
 def delegate_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)

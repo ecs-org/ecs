@@ -20,7 +20,7 @@
       <tr>
           <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>
-              <a class="popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">
+              <a class="open-in-popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">
                   {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
                   {{ thread.subject }}
               </a>
@@ -33,9 +33,9 @@
           {% endblock %}
           <td>
               {% block message_actions %}
-                  <a class="popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
+                  <a class="open-in-popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-open-document.png" alt="lesen" title="lesen" /></a>
                   {% if not message.thread.closed %}
-                  <a class="api" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
+                  <a class="open-in-widget" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" title="erledigt" /></a>
                   {% endif %}
               {% endblock %}
           </td>
@@ -45,49 +45,16 @@
   
   <div class="paginator">
       {% if page.has_previous %}
-          <a class="widget" href="{{ request.path }}?p=1"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="Anfang" title="Anfang" /></a>
-          <a class="widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="zurück" title="zurück" /></a>
+          <a class="open-in-widget" href="{{ request.path }}?p=1"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="Anfang" title="Anfang" /></a>
+          <a class="open-in-widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="zurück" title="zurück" /></a>
       {% endif %}
 
       {{ page.number }} von {{ page.paginator.num_pages }}
       
       {% if page.has_next %}
-          <a class="widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="weiter" title="weiter" /></a>
-          <a class="widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="Ende" title="Ende" /></a>
+          <a class="open-in-widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="weiter" title="weiter" /></a>
+          <a class="open-in-widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="Ende" title="Ende" /></a>
       {% endif %}
   
   </div>
-{% endblock %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript">
-        // FIXME: if we keep the popup ui, this should be reusable (e.g. by dashboard)
-        window.addEvent('domready', function(){
-            $$('a.popup').each(function(link){
-                link.addEvent('click', function(){
-                    new MooDialog.Iframe(link.href, {
-                        title: 'Nachricht',
-                        size: {width: 700, height: 400},
-                        onClose: function(){
-                            window.location.reload();
-                        }
-                    });
-                    return false;
-                });
-            });
-            $$('a.api').each(function(link){
-                link.addEvent('click', function(){
-                    var request = new Request({
-                        url: link.href,
-                        onSuccess: function(){
-                            window.location.reload();
-                        }
-                    });
-                    request.send();
-                    return false;
-                });
-            });
-        });
-    </script>
 {% endblock %}

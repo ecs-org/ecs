@@ -24,7 +24,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm, SimpleDocumentForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -164,34 +164,42 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
-def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
+def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, defaults={'user': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+    if request.method == 'POST':
+        checklist.documents = Document.objects.filter(pk__in=request.POST.getlist('documents'))
     checklist_documents = checklist.documents.all()
 
     form = make_checklist_form(checklist)(request.POST or None)
-
+    
+    document_form_is_empty = True
     if blueprint.min_document_count is None:
         document_form = None
-    elif 'document-file' in request.FILES or len(checklist_documents) < blueprint.min_document_count:
-        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    elif 'document-file' in request.FILES:
+        document_form = SimpleDocumentForm(request.POST or None, request.FILES or None, prefix='document')
         if document_form.is_valid():
             doc = document_form.save()
             checklist.documents.add(doc)
-            document_form = DocumentForm(prefix='document')
+            document_form = SimpleDocumentForm(prefix='document')
+        else:
+            document_form_is_empty = False
     else:
-        document_form = DocumentForm(prefix='document')
+        document_form = SimpleDocumentForm(prefix='document')
         
-    if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
-        for i, question in enumerate(blueprint.questions.order_by('text')):
-            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-            answer.answer = form.cleaned_data['q%s' % i]
-            answer.comment = form.cleaned_data['c%s' % i]
-            answer.save()
+    if request.method == 'POST':
+        if form.is_valid() and (not document_form or document_form_is_empty or document_form.is_valid()):
+            for i, question in enumerate(blueprint.questions.order_by('text')):
+                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+                answer.answer = form.cleaned_data['q%s' % i]
+                answer.comment = form.cleaned_data['c%s' % i]
+                answer.save()
+
+        checklist.save() # touch the checklist instance to trigger the post_save signal
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={
         'checklist_document_form': document_form,
@@ -454,26 +462,23 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
+    queries = {
+        'new': Q(pk__in=Submission.objects.new().values('pk').query),
+        'next_meeting': Q(pk__in=Submission.objects.next_meeting().values('pk').query),
+        'b2': Q(pk__in=Submission.objects.b2().values('pk').query),
+    }
     submissions_stage1 = Submission.objects.none()
-    if filterform.cleaned_data['new']:
-        submissions_stage1 |= Submission.objects.new()
-    if filterform.cleaned_data['next_meeting']:
-        try:
-            next_meeting = Meeting.objects.all().order_by('-start')[0]
-        except IndexError:
-            pass
-        else:
-            submissions_stage1 |= next_meeting.submissions.all()
-    if filterform.cleaned_data['b2']:
-        submissions_stage1 |= Submission.objects.b2()
+    for key, query in queries.items():
+        if filterform.cleaned_data[key]:
+            submissions_stage1 |= Submission.objects.filter(query)
 
-    submissions_stage2 = submissions_stage1.none()
 
     queries = {
         'amg': Q(pk__in=Submission.objects.amg().values('pk').query),
         'mpg': Q(pk__in=Submission.objects.mpg().values('pk').query),
         'thesis': Q(pk__in=Submission.objects.thesis().values('pk').query),
     }
+    submissions_stage2 = submissions_stage1.none()
     queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
 
     for key, query in queries.items():

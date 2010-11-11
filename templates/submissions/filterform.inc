@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form id="submission_list_filter" action="" method="post">
+<form id="submission_list_filter" action="{{ request.path }}" method="post" class="open-in-widget">
     <div class="submission_list_choose">
         {{ filterform.new }} <label for="id_new" class="submission_new">{% trans "New" %}</label>
         {{ filterform.next_meeting }} <label for="id_next_meeting" class="submission_next_meeting">{% trans "Next Meeting" %}</label>

@@ -31,17 +31,17 @@
 <div class="paginator">
     <a href="{% url ecs.core.views.submission_list %}">{% trans "More" %}</a>
     {% if not submissions.number == 1 %}
-        <a href="#" class="first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+        <a href="#" class="first_page open-in-widget"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" class="prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+        <a href="#" class="prev_page open-in-widget"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
     {% endif %}
     {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
-        <a href="#" class="next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+        <a href="#" class="next_page open-in-widget"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" class="last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+        <a href="#" class="last_page open-in-widget"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
     {% endif %}
 </div>
 

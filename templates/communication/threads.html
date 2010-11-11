@@ -13,10 +13,10 @@
         </div>
     </form>
 
-    <a class="widget popup" href="{% url ecs.communication.views.send_message %}">{% trans "New Message" %}</a>
+    <a class="open-in-popup" href="{% url ecs.communication.views.send_message %}">{% trans "New Message" %}</a>
     <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="{% trans "sort" %}" />
-    <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
-    | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
+    <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
+    | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
   </div>
 </div>
 {{ block.super }}
@@ -26,9 +26,9 @@
 {% block message_actions %}
     {{ block.super }}
     {% if thread.last_message.sender == request.user %}
-        <a class="api" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+        <a href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
     {% else %}
-        <a class="popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
+        <a class="open-in-popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" title="antworten" /></a>
     {% endif %}
 {% endblock %}
 
