@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
 
-from ecs.fastlane.models import FastLaneMeeting, AssignedFastLaneCategory
+from ecs.fastlane.models import FastLaneMeeting, AssignedFastLaneCategory, FastLaneTop
 from ecs.core.forms.fields import DateTimeField
 
 class FastLaneMeetingForm(forms.ModelForm):
@@ -27,4 +27,9 @@ class AssignedFastLaneCategoryForm(forms.ModelForm):
     class Meta:
         model = AssignedFastLaneCategory
         fields = ('user',)
+
+class FastLaneTopForm(forms.ModelForm):
+    class Meta:
+        model = FastLaneTop
+        fields = ('recommendation', 'recommendation_comment', )
 

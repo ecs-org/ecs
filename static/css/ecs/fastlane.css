@@ -13,3 +13,19 @@
   margin-bottom: 20px;
 }
 
+/* fast lane assistant */
+
+#fastlane_assistant .top {
+  position: absolute;
+  left: 0px;
+  width: 150px;
+  padding: 10px;
+}
+#fastlane_assistant .body {
+  border: 1px solid #cccccc;
+  -moz-border-radius: 5px;
+  float: left;
+  margin: 0px 0px 20px 200px;
+  padding: 5px;
+}
+
