@@ -24,7 +24,7 @@ class FastLaneTop(models.Model):
     recommendation_comment = models.TextField(blank=True)
 
 class AssignedFastLaneCategory(models.Model):
-    meeting = models.ForeignKey('fastlane.FastLaneMeeting')
+    meeting = models.ForeignKey('fastlane.FastLaneMeeting', related_name='categories', null=True)
     user = models.ForeignKey('auth.User', related_name='assigned_fastlane_categories', null=True, blank=True)
     category = models.ForeignKey('core.ExpeditedReviewCategory', related_name='assigned_fastlane_categories', unique=True)
 

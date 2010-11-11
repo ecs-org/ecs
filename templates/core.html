@@ -58,6 +58,13 @@
       </ul>
     </li>
     <li>
+      <span class="togglers">{% trans "Fast Lane" %}</span>
+      <ul class="elements">
+        <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Meetings" %}</a></li>
+        <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Meeting" %}</a></li>
+      </ul>
+    </li>
+    <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
           <li><a href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a></li>
@@ -121,7 +128,8 @@
       'submissions': 0,
       'notifications': 1,
       'meetings': 2,
-      'demo': 3
+      'fastlane': 3,
+      'demo': 4
     };
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {

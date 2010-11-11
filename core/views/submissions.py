@@ -470,8 +470,8 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     submissions_stage1 = Submission.objects.none()
     for key, query in queries.items():
         if filterform.cleaned_data[key]:
-            print key
             submissions_stage1 |= Submission.objects.filter(query)
+
 
     queries = {
         'amg': Q(pk__in=Submission.objects.amg().values('pk').query),

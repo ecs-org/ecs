@@ -1,0 +1,26 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headertitle %}{% trans "Fast Lanes" %}{% endblock %}
+
+{% block content %}
+<ul>
+{% for meeting in meetings %}
+    <li>
+        <h2>{{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title }}</h2>
+        <a href="{% url ecs.fastlane.views.participation meeting_pk=meeting.pk%}">{% trans "Participation" %}</a>
+        {% for submission in meeting.submissions.all %}
+            <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">
+                {{ submission|ec_number }} {{ submission.project_title|default:'<i>Ohne Titel</i>' }}
+            </a>
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+{% block menuSelection %}fastlane{% endblock %}
+

@@ -3,7 +3,7 @@
 
 {% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
 
-{% block headertitle %}{% trans "New Fast Lane Meeting" %}{% endblock %}
+{% block headertitle %}{% trans "New Fast Lane" %}{% endblock %}
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data" class="form tabbed main">
@@ -18,10 +18,11 @@
 </form>
 {% endblock %}
 
-{% block menuSelection %}meetings{% endblock %}
+{% block menuSelection %}fastlane{% endblock %}
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', ecs.setupForms);
     </script>
 {% endblock %}
+
