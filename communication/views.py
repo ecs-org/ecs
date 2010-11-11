@@ -84,24 +84,14 @@ def read_thread(request, thread_pk=None):
     })
 
 def bump_message(request, message_pk=None):
-    if message_pk is not None:
-        reply_to = get_object_or_404(Message, pk=message_pk)
-        thread = reply_to.thread
-        form = ReplyToMessageForm(request.POST or None, initial={
-            'subject': 'Re: %s' % thread.subject,
-            'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
-            
-        }, instance = Message(thread=thread))
-        submission = thread.submission
-
     message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
     message.thread.add_message(request.user, message.text)
-    return HttpResponse('OK')
+    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
 
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
-    return HttpResponse('OK')
+    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
     
 def delegate_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)

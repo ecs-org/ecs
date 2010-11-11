@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block usertoolbar %} 
-  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
+  <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
         
 {% block usermenu %}
@@ -67,7 +67,7 @@
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.communication.views.send_message %}" class="open-in-popup">Neue Nachricht</a></li>
           <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
           <li><a href="{% url ecs.users.views.indisposed_userlist %}">{% trans 'Indisposed Users' %}</a></li>
           <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
@@ -198,22 +198,6 @@
       {% endfor %}
       
       // workflow popups
-      
-      ecs.showWorkflowPopup = function(options){
-          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&submission={{ submission_form.submission_id }}{% endif %}';
-          if(options && options.url){
-              url = options.url;
-          }
-          var dialog = new ecs.Dialog(url, {
-              title: 'Workflow',
-              size: {width: 700, height: 400}
-          });
-      };
-      
-      $('workflow_button').addEvent('click', function(){
-          ecs.showWorkflowPopup();
-          return false;
-      });
       
       $('help_button').addEvent('click', function(e){
           var link = $(e.target);

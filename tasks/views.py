@@ -1,3 +1,5 @@
+import random
+
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -17,7 +19,7 @@ def task_backlog(request):
         'tasks': tasks,
     })
 
-def my_tasks(request, template='tasks/mine.html'):
+def my_tasks(request, template='tasks/compact_list.html'):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
 
@@ -85,6 +87,7 @@ def my_tasks(request, template='tasks/mine.html'):
     data = {
         'submission': submission,
         'filterform': filterform,
+        'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
     }
 
     task_flavors = {
@@ -99,9 +102,6 @@ def my_tasks(request, template='tasks/mine.html'):
         data[context_key] = func(tasks) if filterform.cleaned_data[key] else tasks.none()
 
     return render(request, template, data)
-    
-def my_tasks_widget(request):
-    return my_tasks(request, template='tasks/widget.html')
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)

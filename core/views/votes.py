@@ -19,6 +19,7 @@ from ecs.utils.pdfutils import xhtml2pdf
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
 from ecs.utils.votedepot import VoteDepot
+from uuid import uuid4
 
 '''
 @startuml img/sequence_img001.png
@@ -133,8 +134,8 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_data = xhtml2pdf(html)
     pdf_len = len(pdf_data)
 
-    pdf_id = votesDepot.deposit(pdf_data, pdf_name)
-    return sign(request, pdf_id, pdf_len, pdf_name)
+    pdfas_id = votesDepot.deposit(pdf_data, uuid4(), pdf_name)
+    return sign(request, pdfas_id, pdf_len, pdf_name)
 
 
 @forceauth.exempt
@@ -144,11 +145,19 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
         pdf_id = request.REQUEST['pdf-id']
     else:
         return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-    pdf_file, display_name = votesDepot.pickup(pdf_id)
-    if pdf_file is None:
+
+    votedoc = votesDepot.get(pdf_id)
+
+    if votedoc is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
 
-    return HttpResponse(pdf_file, mimetype='application/pdf')
+    print "send: votedoc found"
+    t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
+    t_pdfas.write(votedoc["data"])
+    t_pdfas.seek(0)
+    print "send: votedoc tmp written"
+
+    return HttpResponse(t_pdfas, mimetype='application/pdf')
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
@@ -156,16 +165,17 @@ def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid
  
 @forceauth.exempt
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    print 'vote_sign_receive meeting "%s", vote "%s", jsessionid "%s"' % (meeting_pk, vote_pk, jsessionid)
+    print 'vote_sign_receive meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
         pdf_id = request.REQUEST['pdf-id']
         num_bytes = int(request.REQUEST['num-bytes'])
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-        pdf_file, display_name = votesDepot.pickup(pdf_id)
-        if pdf_file is None:
+        votedoc = votesDepot.pop(pdf_id)
+        if pdf_id is None:
             return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+        print "receive votedoc found!"
 
         # f_pdfas is not seekable, so we have to store it as local file first
         sock_pdfas = urllib2.urlopen(url)
@@ -173,24 +183,22 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         t_pdfas.write(sock_pdfas.read(num_bytes))
         t_pdfas.close()
         sock_pdfas.close()
-
-        print 'wrote "%s" as "%s"' % (display_name, t_pdfas.name)
-
+         
         d = datetime.datetime.now()
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
-        document = Document.objects.create(document_uuid=pdf_id, doctype=doctype, file=File(pdf_file), original_file_name=display_name, date=d)
-        pdf_file.close()
-        os.remove(pdf_file)
+        document = Document.objects.create(document_uuid=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
+        t_pdfas.close()
+        os.remove(t_pdfas)
         
-        print 'stored "%s" as "%s"' % (display_name, document.pk)
+        print 'stored "%s" as "%s"' % (votedoc["name"], votedoc["uuid"])
+        
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
+@csrf_exempt
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     if request.REQUEST.has_key('pdf-id'):
-        pdf_file, display_name = votesDepot.pickup(request.REQUEST['pdf-id'])
-        pdf_file.close();
-        os.remove(pdf_file)
+        votesDepot.pop(request.REQUEST['pdf-id'])
         
     if request.REQUEST.has_key('error'):
         error = urllib.unquote_plus(request.REQUEST['error'])
