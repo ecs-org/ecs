@@ -10,6 +10,12 @@ class FastLaneMeeting(models.Model):
     ended = models.DateTimeField(null=True)
     submissions = models.ManyToManyField('core.Submission', through='FastLaneTop', related_name='fast_lane_meetings')
 
+    def add_top(self, submission):
+        top = FastLaneTop.objects.create(meeting=self, submission=submission)
+        for category in submission.expedited_review_categories.all():
+            AssignedFastLaneCategory.objects.get_or_create(category=category, meeting=self)
+        return top
+
 
 class FastLaneTop(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='fast_lane_tops', unique=True)
@@ -18,8 +24,11 @@ class FastLaneTop(models.Model):
     recommendation_comment = models.TextField(blank=True)
 
 class AssignedFastLaneCategory(models.Model):
-    tops = models.ManyToManyField('fastlane.FastLaneTop')
+    meeting = models.ForeignKey('fastlane.FastLaneMeeting', related_name='categories', null=True)
     user = models.ForeignKey('auth.User', related_name='assigned_fastlane_categories', null=True, blank=True)
     category = models.ForeignKey('core.ExpeditedReviewCategory', related_name='assigned_fastlane_categories', unique=True)
+
+    class Meta:
+        unique_together = (('meeting', 'category'),)
 
 

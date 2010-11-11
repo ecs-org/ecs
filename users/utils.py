@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
 from django.utils.functional import wraps
 
 from ecs.users.middleware import current_user_store
@@ -34,4 +35,7 @@ class sudo(object):
             with self:
                 return func(*args, **kwargs)
         return decorated
-        
+
+
+def user_flag_required(flag):
+    return user_passes_test(lambda u: getattr(u.ecs_profile, flag, False))

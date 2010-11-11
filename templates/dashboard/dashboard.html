@@ -16,74 +16,23 @@
   {{ block.super }}
   <script type="text/javascript">
     (function(){
-    var widgets = [];
-    
-    function reloadAll(){
-        widgets.each(function(widget){
-            widget.load();
-        });
-    }
-    
-    var Widget = new Class({
-        initialize: function(url){
-            this.url = null;
-            this.element = new Element('div', {'class': 'dashboard_widget'});
-            this.element.inject($('dashboard'));
-            widgets.push(this);
-            this.load(url);
-        },
-        load: function(url, form){
-            var request = new Request.HTML({
-                url: url || (form && form.action) || this.url,
-                method: form ? form.method : 'get',
-                update: this.element,
-                data: form ? form.toQueryString() : ''
-            });
-            if(url){
-                this.url = url;
-            }
-            request.addEvent('success', this.onSuccess.bind(this));
-            request.send();
-        },
-        onSuccess: function(){
-            var self = this;
-            this.element.getElements('form').each((function(form){
-                var submit = (function(){
-                    this.load(null, form);
-                    return false;
-                }).bind(this);
-                form.addEvent('submit', submit);
-                // NOTE: we have to monkeypatch submit(), because the js method does not fire an onsubmit event.
-                form.submit = submit;
-            }).bind(this));
-            this.element.getElements('a.widget').each(function(link){
-                console.log(link.href);
-                link.addEvent('click', function(){
-                    if(link.hasClass('api')){
-                        var request = new Request({
-                            url: link.href,
-                            onSuccess: function(){
-                                reloadAll();
-                            }
-                        });
-                        request.send();
-                        return false;
-                    }
-                    else{
-                        self.load(link.href);
-                        return false;
-                    }
-                    return false;
-                });
-            });
-        }
-    });
     window.addEvent('domready', function(){
-        var el;
+        var widgets = [];
+        var reloadAll = function(){
+            widgets.each(function(widget){
+                widget.load();
+            });
+        };
+        var onPopupSpawned = function(popup){
+            popup.addEvent('dispose', reloadAll);
+        };
+        var el, widget;
         {% for url in widgets %}
             el = new Element('div', {'class': 'dashboard_widget'});
             $('dashboard').grab(el);
-            new ecs.widgets.Widget(el, {url: '{{ url }}'});
+            widget = new ecs.widgets.Widget(el, {url: '{{ url }}'});
+            widgets.push(widget);
+            widget.addEvent('popupSpawned', onPopupSpawned);
         {% endfor %}
     });
     })();

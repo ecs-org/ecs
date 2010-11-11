@@ -10,12 +10,15 @@ from django.utils.datastructures import SortedDict
 from django.db.models import Count
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.users.utils import user_flag_required
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
-from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
-from ecs.meetings.forms import MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, SubmissionSchedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm
+
 from ecs.meetings.task_queue import optimize_timetable_task
+from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
+from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
+    SubmissionSchedulingForm, SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm)
 
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
@@ -45,6 +48,23 @@ def schedule_submission(request, submission_pk=None):
         timetable_entry = meeting.add_entry(submission=submission, duration=datetime.timedelta(minutes=7.5), **kwargs)
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'submissions/schedule.html', {
+        'submission': submission,
+        'form': form,
+    })
+
+@user_flag_required('executive_board_member')
+def reschedule_submission(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    form = SubmissionReschedulingForm(request.POST or None, submission=submission)
+    if form.is_valid():
+        from_meeting = form.cleaned_data['from_meeting']
+        to_meeting = form.cleaned_data['to_meeting']
+        old_entries = from_meeting.timetable_entries.filter(submission=submission)
+        for entry in old_entries:
+            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title)
+        old_entries.delete()
+        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': to_meeting.pk}))
+    return render(request, 'meetings/reschedule.html', {
         'submission': submission,
         'form': form,
     })

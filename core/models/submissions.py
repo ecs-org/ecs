@@ -13,10 +13,10 @@ from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from ecs.utils.common_messages import send_submission_change,\
-    send_submission_creation, send_submission_invitation
+from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
+from ecs.core.parties import get_involved_parties
 
 MIN_EC_NUMBER = 1000
 
@@ -35,13 +35,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         ))
 
     def b2(self):
-        return self.filter(pk__in=Vote.objects.filter(result='2').values('submission_form__submission__pk').query)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
     def new(self):
         return self.filter(meetings__isnull=True)
         
     def thesis(self):
         return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
+
+    def next_meeting(self):
+        return self.filter(meetings__start__gt=datetime.datetime.now())
         
         
 class SubmissionManager(AuthorizationManager):
@@ -64,6 +67,9 @@ class SubmissionManager(AuthorizationManager):
 
     def thesis(self):
         return self.all().thesis()
+
+    def next_meeting(self):
+        return self.all().next_meeting()
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -471,6 +477,10 @@ class SubmissionForm(models.Model):
     @property
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
+        
+    def get_involved_parties(self, include_workflow=True):
+        return get_involved_parties(self, include_workflow=include_workflow)
+
 
 def attach_to_submissions(user):
     print "attach"

@@ -462,26 +462,23 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
+    queries = {
+        'new': Q(pk__in=Submission.objects.new().values('pk').query),
+        'next_meeting': Q(pk__in=Submission.objects.next_meeting().values('pk').query),
+        'b2': Q(pk__in=Submission.objects.b2().values('pk').query),
+    }
     submissions_stage1 = Submission.objects.none()
-    if filterform.cleaned_data['new']:
-        submissions_stage1 |= Submission.objects.new()
-    if filterform.cleaned_data['next_meeting']:
-        try:
-            next_meeting = Meeting.objects.all().order_by('-start')[0]
-        except IndexError:
-            pass
-        else:
-            submissions_stage1 |= next_meeting.submissions.all()
-    if filterform.cleaned_data['b2']:
-        submissions_stage1 |= Submission.objects.b2()
+    for key, query in queries.items():
+        if filterform.cleaned_data[key]:
+            submissions_stage1 |= Submission.objects.filter(query)
 
-    submissions_stage2 = submissions_stage1.none()
 
     queries = {
         'amg': Q(pk__in=Submission.objects.amg().values('pk').query),
         'mpg': Q(pk__in=Submission.objects.mpg().values('pk').query),
         'thesis': Q(pk__in=Submission.objects.thesis().values('pk').query),
     }
+    submissions_stage2 = submissions_stage1.none()
     queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
 
     for key, query in queries.items():

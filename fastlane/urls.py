@@ -2,5 +2,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('ecs.fastlane.views',
-    url(r'^create_meeting/$', 'create_fast_lane_meeting'),
+    url(r'^list/$', 'list'),
+    url(r'^new/$', 'new'),
+    url(r'^participation/(?P<meeting_pk>\d+)/$', 'participation'),
 )

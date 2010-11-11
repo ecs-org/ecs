@@ -1,0 +1,37 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headertitle %}{% trans "Fast Lanes" %}{% endblock %}
+
+{% block content %}
+<div id="fastlane_list">
+
+<h2>{% trans "Fast Lanes" %}</h2>
+
+<ul>
+{% for meeting in meetings %}
+    <li>
+        <strong>{{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title }}</strong>
+        <div class="actions">
+            <a href="{% url ecs.fastlane.views.participation meeting_pk=meeting.pk%}">{% trans "Participation" %}</a>
+            | <a href="">{% trans "Assistant" %}</a>
+        </div>
+        <div class="submissions">
+        {% for submission in meeting.submissions.all %}
+            <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">
+                {{ submission|ec_number }}
+            </a>
+            {% if not forloop.last %}, {% endif %}
+        {% endfor %}
+        </div>
+    </li>
+{% endfor %}
+</ul>
+
+</div>
+{% endblock %}
+
+{% block menuSelection %}fastlane{% endblock %}
+

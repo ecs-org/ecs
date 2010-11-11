@@ -21,10 +21,13 @@
             <a href="#">{% trans "Status" %}</a>
             <ul class="tab_headers">
                 <li>
-                    <a href="#status_tab">Status</a>
+                    <a href="#status_tab">{% trans 'Status' %}</a>
                 </li>
                 <li>
-                    <a href="#workflow_tab">Workflow</a>
+                    <a href="#workflow_tab">{% trans 'Workflow' %}</a>
+                </li>
+                <li>
+                    <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
                 </li>
             </ul>
         </li>
@@ -94,6 +97,9 @@
 {% block tabs %}
     <div id="status_tab">
         {% include 'submissions/tabs/status.html' %}
+    </div>
+    <div id="involved_parties_tab">
+        {% include 'submissions/tabs/involved_parties.html' %}
     </div>
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Pending Notifications" %}
