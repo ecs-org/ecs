@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 
 from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
@@ -106,7 +106,7 @@ class Submission(models.Model):
             return unicode(num)
         return u"%s%s%s" % (num, separator, year)
         
-    get_ec_number_display.short_description = 'EC-Number'
+    get_ec_number_display.short_description = _('EC-Number')
 
     def get_befangene(self):
         sf = self.current_submission_form
@@ -181,9 +181,9 @@ SUBMISSION_TYPE_MULTICENTRIC = 2
 SUBMISSION_TYPE_MULTICENTRIC_LOCAL = 6
 
 SUBMISSION_TYPE_CHOICES = (
-    (SUBMISSION_TYPE_MONOCENTRIC, _('monocentric')), 
-    (SUBMISSION_TYPE_MULTICENTRIC, _('multicentric, main ethics commission')),
-    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, _('multicentric, local ethics commission')),
+    (SUBMISSION_TYPE_MONOCENTRIC, ugettext_lazy('monocentric')), 
+    (SUBMISSION_TYPE_MULTICENTRIC, ugettext_lazy('multicentric, main ethics commission')),
+    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, ugettext_lazy('multicentric, local ethics commission')),
 )
 
 class SubmissionForm(models.Model):
@@ -354,7 +354,7 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
-    study_plan_blind = models.SmallIntegerField(choices=[(0, 'offen'), (1, 'blind'), (2, 'doppelblind')])
+    study_plan_blind = models.SmallIntegerField(choices=[(0, ugettext_lazy('open')), (1, ugettext_lazy('blind')), (2, ugettext_lazy('double-blind'))])
     study_plan_observer_blinded = models.BooleanField()
     study_plan_randomized = models.BooleanField()
     study_plan_parallelgroups = models.BooleanField()
@@ -591,7 +591,7 @@ post_save.connect(_post_investigator_save, sender=Investigator)
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
 
-    sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
+    sex = models.CharField(max_length=1, choices=[("m", ugettext_lazy("Mr")), ("f", ugettext_lazy("Ms")), ("?", "")])
     title = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
@@ -622,7 +622,7 @@ class InvestigatorEmployee(models.Model):
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
-    category = models.CharField(max_length=3, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
+    category = models.CharField(max_length=3, choices=[('6.1', ugettext_lazy("only study-related")), ('6.2', ugettext_lazy("for routine purposes"))])
     type = models.CharField(max_length=150)
     count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)

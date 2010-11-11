@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from django import forms
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 from django.forms.models import modelformset_factory
 from django.contrib.auth.models import User
 
@@ -11,7 +11,7 @@ from ecs.fastlane.models import FastLaneMeeting, AssignedFastLaneCategory, FastL
 from ecs.core.forms.fields import DateTimeField
 
 class FastLaneMeetingForm(forms.ModelForm):
-    start = DateTimeField(label=_(u'Datum und Uhrzeit'), initial=datetime.now)
+    start = DateTimeField(label=ugettext_lazy(u'date and time'), initial=datetime.now)
     class Meta:
         model = FastLaneMeeting
         fields = ('start', 'title')

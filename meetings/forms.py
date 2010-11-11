@@ -11,10 +11,10 @@ from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
 
 class MeetingForm(forms.ModelForm):
-    start = DateTimeField(label=_(u'Datum und Uhrzeit'), initial=datetime.now)
-    title = forms.CharField(label=_(u'Titel'), required=False)
-    deadline = DateTimeField(label=_(u'Deadline'), initial=datetime.now)
-    deadline_diplomathesis = DateTimeField(label=_(u'Deadline Diplomathesis'), initial=datetime.now)
+    start = DateTimeField(label=_(u'date and time'), initial=datetime.now)
+    title = forms.CharField(label=_(u'title'), required=False)
+    deadline = DateTimeField(label=_(u'deadline'), initial=datetime.now)
+    deadline_diplomathesis = DateTimeField(label=_(u'deadline thesis'), initial=datetime.now)
 
     class Meta:
         model = Meeting
@@ -30,10 +30,10 @@ class MeetingAssistantForm(forms.ModelForm):
         fields = ('comments',)
 
 class FreeTimetableEntryForm(forms.Form):
-    title = forms.CharField(required=True, label=u'Titel')
-    duration = TimedeltaField(initial=u'1h 30min', label=u"Dauer")
-    is_break = forms.BooleanField(label=u"Pause", required=False)
-    optimal_start = TimeField(required=False, label=u'Ideale Startzeit (Uhrzeit)')
+    title = forms.CharField(required=True, label=_(u'title'))
+    duration = TimedeltaField(initial=u'1h 30min', label=_(u"duration"))
+    is_break = forms.BooleanField(label=_(u"break"), required=False)
+    optimal_start = TimeField(required=False, label=_(u'ideal start time (time)'))
     
 
 class BaseConstraintFormSet(BaseModelFormSet):
@@ -42,9 +42,9 @@ class BaseConstraintFormSet(BaseModelFormSet):
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
         
 class ConstraintForm(forms.ModelForm):
-    start_time = TimeField(label=u'Von (Uhrzeit)', required=True)
-    end_time = TimeField(label=u'Bis (Uhrzeit)', required=True)
-    weight = forms.ChoiceField(label=u'Gewichtung', choices=((0.5, u'ungünstig'), (1.0, u'unmöglich')))
+    start_time = TimeField(label=_(u'from (time)'), required=True)
+    end_time = TimeField(label=_(u'to (time)'), required=True)
+    weight = forms.ChoiceField(label=_(u'weighting'), choices=((0.5, _(u'unfavorable')), (1.0, _(u'impossible'))))
 
     class Meta:
         model = Constraint
