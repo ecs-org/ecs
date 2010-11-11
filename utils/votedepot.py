@@ -27,16 +27,15 @@ class VoteDepot(object):
         pdf_barcodestamp(t_in, t_out, pdf_id)
         t_in.close();
         t_out.seek(0)
+	
 
-        cache.set(pdf_id, (t_out.name, document_uuid, display_name), self.__DEFAULT_TIMEOUT_SEC)
+        cache.set(pdf_id, {"data": t_out.read(), "uuid": document_uuid, "name": display_name}, self.__DEFAULT_TIMEOUT_SEC)
         return pdf_id
     
     def get(self, pdf_id):
-        t_file_name,  document_uuid, display_name = cache.get(pdf_id)
-        return open(t_file_name,'rwb'),  document_uuid, display_name
+        return cache.get(pdf_id)
 
     def pop(self, pdf_id):
-        t_file,  document_uuid, display_name = self.get(pdf_id)
+        resdict = cache.get(pdf_id)
         cache.delete(pdf_id);
-        os.remove(t_file)
-        return t_file.name,  document_uuid, display_name
+        return resdict
