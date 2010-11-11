@@ -19,6 +19,7 @@ from ecs.utils.pdfutils import xhtml2pdf
 from django.core.files.base import File
 from django.views.decorators.csrf import csrf_exempt
 from ecs.utils.votedepot import VoteDepot
+from uuid import uuid4
 
 '''
 @startuml img/sequence_img001.png
@@ -133,8 +134,8 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_data = xhtml2pdf(html)
     pdf_len = len(pdf_data)
 
-    pdf_id = votesDepot.deposit(pdf_data, pdf_name)
-    return sign(request, pdf_id, pdf_len, pdf_name)
+    pdfas_id = votesDepot.deposit(pdf_data, uuid4(), pdf_name)
+    return sign(request, pdfas_id, pdf_len, pdf_name)
 
 
 @forceauth.exempt
@@ -144,7 +145,7 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
         pdf_id = request.REQUEST['pdf-id']
     else:
         return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-    pdf_file, display_name = votesDepot.pickup(pdf_id)
+    pdf_file, document_uuid, display_name = votesDepot.get(pdf_id)
     if pdf_file is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
 
@@ -163,8 +164,8 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         num_bytes = int(request.REQUEST['num-bytes'])
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-        pdf_file, display_name = votesDepot.pickup(pdf_id)
-        if pdf_file is None:
+        pdf_file, document_uuid, display_name = votesDepot.pop(pdf_id)
+        if pdf_id is None:
             return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
 
         # f_pdfas is not seekable, so we have to store it as local file first
@@ -178,9 +179,9 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
 
         d = datetime.datetime.now()
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
-        document = Document.objects.create(document_uuid=pdf_id, doctype=doctype, file=File(pdf_file), original_file_name=display_name, date=d)
-        pdf_file.close()
-        os.remove(pdf_file)
+        document = Document.objects.create(document_uuid=document_uuid, doctype=doctype, file=File(t_pdfas), original_file_name=display_name, date=d)
+        t_pdfas.close()
+        os.remove(t_pdfas)
         
         print 'stored "%s" as "%s"' % (display_name, document.pk)
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
