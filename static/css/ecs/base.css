@@ -26,6 +26,7 @@ body {
   padding: 10px;
   display: block;
   border-bottom: 1px solid #999;
+  height: 80px;
 }
 #headertitle, #headertext {
   float: left;
@@ -44,10 +45,10 @@ body {
 }
 #content {
   position: absolute;
-  top: 0;
+  top: 100px;
   right: 220px;
-  bottom: 0;
-  left: 0;
+  bottom: 0px;
+  left: 0px;
   display: block;
   background: #fff;
   overflow-x: hidden;
