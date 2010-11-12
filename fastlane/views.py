@@ -45,13 +45,10 @@ def participation(request, meeting_pk):
             
         forms.append(form)
 
-    if request.method == 'POST' and not meeting.categories.filter(user__isnull=True).count():
-        # FIXME: redirect to the invitation view
-        return HttpResponseRedirect(reverse('ecs.fastlane.views.list'))
-
     return render(request, 'fastlane/participation.html', {
         'meeting': meeting,
         'forms': forms,
+        'send_invitations': not meeting.categories.filter(user__isnull=True).count(),
     })
 
 def invitations(request, meeting_pk, reallysure=False):
