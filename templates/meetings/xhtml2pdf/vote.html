@@ -97,6 +97,12 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 </span><br />
 {% endif %}
 
+{% if submission.current_submission_form.current_published_vote is not None %}
+    <pdf:spacer height="0.5cm" />
+    <span style="font-weight:bold;">Letzte:</span><br />
+    {{ submission.current_submission_form.current_published_vote.text|escape }}
+{% endif %}
+
 {% if submission.is_amg or submission.is_mpg %}
 <pdf:spacer height="1.0cm" />
 <span style="font-weight:bold;">
