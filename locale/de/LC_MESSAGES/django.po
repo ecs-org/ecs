@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-11 23:50+0100\n"
+"POT-Creation-Date: 2010-11-12 07:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,6 +21,103 @@ msgstr ""
 #: settings.py:58
 msgid "German"
 msgstr "Deutsch"
+
+#: billing/models.py:12
+msgid "All studies except multicentre drug studies"
+msgstr "Alle Studien außer multizentrische Arzneimittelstudien"
+
+#: billing/models.py:13
+msgid "Multicentre drug trials for controlling ethics committees"
+msgstr "Multizentrische Arzneimittelstudien für Leit-Ethikkommissionen"
+
+#: billing/models.py:14
+msgid "Multicentre drug trials for locally responsible ethics committees"
+msgstr ""
+"Multizentrische Arzneimittelstudien für lokal zuständige Ethikkommissionen"
+
+#: billing/models.py:15
+msgid "fee exemption"
+msgstr "Gebührenbefreiung"
+
+#: billing/models.py:16
+msgid "External Reviewer"
+msgstr "External Reviewer"
+
+#: billing/stats.py:9
+msgid "fees note - local EC"
+msgstr "Gebührennoten - lokale EK"
+
+#: billing/stats.py:14
+msgid "fees note - AMG"
+msgstr "Gebührennoten - AMG"
+
+#: billing/stats.py:19
+msgid "fees note - MPG"
+msgstr "Gebührennoten - MPG"
+
+#: billing/stats.py:24
+msgid "fees note - other"
+msgstr "Gebührennoten - sonstige"
+
+#: billing/stats.py:29
+msgid "fees note - controlling-EC monocentric"
+msgstr "Gebührennoten - Leit-EK monozentrisch"
+
+#: billing/stats.py:34
+msgid "fees note - controlling-EC multicentric"
+msgstr "Gebührennoten - Leit-EK multizentrisch"
+
+#: billing/stats.py:40
+msgid "late filed fees notes"
+msgstr "Gebührennotennachreichungen"
+
+#: billing/views.py:45
+msgid "statistical result"
+msgstr "Statistikergebnis"
+
+#: billing/views.py:80 billing/views.py:146
+msgid "amt."
+msgstr "Anz."
+
+#: billing/views.py:80 core/models/submissions.py:109
+msgid "EC-Number"
+msgstr "EK-Number"
+
+#: billing/views.py:80
+msgid "company"
+msgstr "Firma"
+
+#: billing/views.py:80
+msgid "Eudract-Nr."
+msgstr "Eudract-Nr."
+
+#: billing/views.py:80
+msgid "applicant"
+msgstr "Antragsteller"
+
+#: billing/views.py:80
+msgid "clinic"
+msgstr "Klinik"
+
+#: billing/views.py:80 billing/views.py:146
+msgid "sum"
+msgstr "Summe"
+
+#: billing/views.py:106
+msgid "Billing request"
+msgstr ""
+
+#: billing/views.py:146
+msgid "reviewer"
+msgstr "Gutachter"
+
+#: billing/views.py:146
+msgid "EC-Nr."
+msgstr "EK-Nr"
+
+#: billing/views.py:173
+msgid "Payment request"
+msgstr ""
 
 #: core/diff.py:98
 msgid "No Information"
@@ -158,10 +255,6 @@ msgstr ""
 msgid "other University"
 msgstr ""
 
-#: core/models/submissions.py:109
-msgid "EC-Number"
-msgstr ""
-
 #: core/models/submissions.py:184
 msgid "monocentric"
 msgstr "monozentrisch"
@@ -187,7 +280,6 @@ msgid "double-blind"
 msgstr "doppelblind"
 
 #: core/models/submissions.py:594
-#, fuzzy
 msgid "Mr"
 msgstr "Herr"
 
@@ -215,12 +307,26 @@ msgstr ""
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
 
+#: fastlane/views.py:69
+#, python-format
+msgid ""
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
+"%(meeting_title)s\n"
+"as a participant to the submissions: %(submissions)s"
+msgstr ""
+
+#: fastlane/views.py:74
+#, python-format
+msgid ""
+"Your Participation in the Fast Lane Meeting %(meeting_date)s "
+"%(meeting_title)s"
+msgstr ""
+
 #: meetings/forms.py:15 meetings/forms.py:33
 msgid "title"
 msgstr "Titel"
 
 #: meetings/forms.py:16
-#, fuzzy
 msgid "deadline"
 msgstr "Deadline"
 
@@ -229,7 +335,6 @@ msgid "deadline thesis"
 msgstr "Deadline Diplomathesis"
 
 #: meetings/forms.py:34
-#, fuzzy
 msgid "duration"
 msgstr "Dauer"
 
@@ -400,13 +505,14 @@ msgstr ""
 msgid "Delete"
 msgstr "Löschen"
 
-#: templates/fastlane/assistant.html:4 templates/fastlane/list.html:4
-#: templates/fastlane/new.html:4 templates/fastlane/participation.html:4
+#: templates/fastlane/assistant.html:4 templates/fastlane/invitations.html:4
+#: templates/fastlane/list.html:4 templates/fastlane/new.html:4
+#: templates/fastlane/participation.html:4
 #: templates/submissions/diff/diff.html:4
 msgid "ECS Elektronische Einreichung"
 msgstr ""
 
-#: templates/fastlane/assistant.html:6 templates/fastlane/assistant.html:11
+#: templates/fastlane/assistant.html:6 templates/fastlane/assistant.html:12
 msgid "Fast Lane Assistant"
 msgstr ""
 
@@ -450,11 +556,26 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/fastlane/assistant_recommendation.html:36
+#: templates/fastlane/assistant_recommendation.html:38
+#: templates/submissions/internal_list.html:23
+#: templates/submissions/widget.html:16
+msgid "Categories"
+msgstr "Kategorien"
+
+#: templates/fastlane/assistant_recommendation.html:48
 #: templates/fastlane/participation.html:19
 #: templates/users/profile_form.html:13
 msgid "Save"
 msgstr "Speichern"
+
+#: templates/fastlane/invitations.html:6
+#, fuzzy
+msgid "Fast Lane Invitations"
+msgstr "Beantwortete Meldungen"
+
+#: templates/fastlane/invitations.html:29 templates/fastlane/list.html:19
+msgid "Send Invitations"
+msgstr ""
 
 #: templates/fastlane/list.html:6 templates/fastlane/list.html.py:11
 msgid "Fast Lanes"
@@ -465,7 +586,7 @@ msgstr ""
 msgid "Participation"
 msgstr "Meldungen"
 
-#: templates/fastlane/list.html:19
+#: templates/fastlane/list.html:20
 msgid "Assistant"
 msgstr ""
 
@@ -526,11 +647,6 @@ msgstr "Sitzung vom"
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
-
-#: templates/submissions/internal_list.html:23
-#: templates/submissions/widget.html:16
-msgid "Categories"
-msgstr "Kategorien"
 
 #: templates/submissions/internal_list.html:28
 #: templates/submissions/widget.html:21

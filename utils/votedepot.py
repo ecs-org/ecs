@@ -7,7 +7,7 @@ from django.core.cache import cache
 import random
 
 class VoteDepot(object):
-    __DEFAULT_TIMEOUT_SEC=60
+    __DEFAULT_TIMEOUT_SEC=180
     depot = dict()
    
     def __gen_id(self):
