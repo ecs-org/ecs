@@ -2,6 +2,7 @@
 import os, random
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
 from django.contrib.auth.models import Group, User
 from django.contrib.sites.models import Site
@@ -211,8 +212,20 @@ def notification_types():
 
 @bootstrap.register()
 def expedited_review_categories():
-    for i in range(5):
-        ExpeditedReviewCategory.objects.get_or_create(abbrev="ExRC%s" % i, name="Expedited Review Category #%s" % i)
+    categories = (
+        (u'KlPh', u'Klinische Pharmakologie'),
+        (u'Stats', u'Statistik'),
+        (u'Labor', u'Labormedizin'),
+        (u'Recht', u'Juristen'),
+        (u'Radio', u'Radiologie'),
+        (u'Anästh', u'Anästhesie'),
+        (u'Psychol', u'Psychologie'),
+        (u'Patho', u'Pathologie'),
+        (u'Zahn', u'Zahnheilkunde'),
+        )
+    for abbrev, name in categories:
+        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+
 
 @bootstrap.register()
 def medical_categories():
@@ -305,7 +318,8 @@ def auth_user_developers():
         
         
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups','ecs.core.bootstrap.medical_categories'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
@@ -366,6 +380,11 @@ def auth_user_testusers():
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
+            try:
+                e= ExpeditedReviewCategory.objects.get(abbrev=medcategory)
+                e.users.add(user)
+            except ObjectDoesNotExist:
+                pass
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():

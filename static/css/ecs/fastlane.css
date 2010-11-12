@@ -13,3 +13,42 @@
   margin-bottom: 20px;
 }
 
+/* fast lane assistant */
+
+#fastlane_assistant .nav {
+  position: absolute;
+  left: 0px;
+  width: 200px;
+  padding: 10px;
+}
+#fastlane_assistant .nav .button a {
+  border: 1px solid #cccccc;
+  background-color: #666666;
+  color: #ffffff;
+  font-size: 10pt;
+  padding: 3px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+}
+#fastlane_assistant .nav .button a:hover {
+  background-color: #333333;
+}
+#fastlane_assistant .nav .top {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#fastlane_assistant .body {
+  border: 1px solid #cccccc;
+  -moz-border-radius: 5px;
+  float: left;
+  margin: 0px 0px 20px 220px;
+  padding: 5px;
+}
+#fastlane_assistant .body .submission {
+  padding: 10px;
+}
+#fastlane_assistant .paginator {
+  margin-bottom: 20px;
+}
+
