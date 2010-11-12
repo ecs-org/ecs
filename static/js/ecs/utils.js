@@ -166,7 +166,7 @@ ecs.setupFormFieldHelpers = function(context){
 ecs.setupInvestigatorFormSet = function(tabController, readonly){
     var ifs = $('investigator_formset');
     if(ifs){
-        var centerTabGroup = tabController.getTabGroupForElement('center_tabgroup');
+        var centerTabGroup = tabController.getTabGroupForElement('submission_headers');
         var investigatorFormset = new ecs.InlineFormSet(ifs, {
             prefix: 'investigator',
             formSelector: '.investigator_tab',
