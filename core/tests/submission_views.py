@@ -8,6 +8,7 @@ from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import MedicalCategory
 from ecs.core import bootstrap
 from ecs.core.models import SubmissionForm
+from ecs.core.models import EthicsCommission
 
 VALID_SUBMISSION_FORM_DATA = {
     u'investigator-0-ethics_commission': [u'1'], u'study_plan_abort_crit': [u'Peto'], u'submitter_contact_title': [u'Univ. Doz. Dr.'], 
@@ -33,15 +34,15 @@ VALID_SUBMISSION_FORM_DATA = {
     u'sponsor_phone': [u'+43 1 40170'], u'subject_maxage': [u'21'], u'investigator-1-ethics_commission': [u''], u'subject_noncompetents': [u'on'], 
     u'german_dataprotection_info': [u'bla bla bla'], u'german_risks_info': [u'bla bla bla'], 
     u'german_ethical_info': [u'bla bla bla'], u'foreignparticipatingcenter-0-id': [u''], u'investigatoremployee-TOTAL_FORMS': [u'1'], 
-    u'specialism': [u'P\xe4diatrische Onkologie / Immunologie'], u'investigator-1-subject_count': [u''], u'medtech_certified_for_other_indications': [u'3'], 
+    u'specialism': [u'P\xe4diatrische Onkologie / Immunologie'], u'investigator-1-subject_count': [u'1'], u'medtech_certified_for_other_indications': [u'3'], 
     u'german_payment_info': [u'bla bla bla'], u'investigator-0-contact_title': [u''], 
     u'study_plan_dataprotection_anonalgoritm': [u'Electronically generated unique patient number within SIOPEN-R-Net'], 
     u'additional_therapy_info': [u'long blabla'], u'german_inclusion_exclusion_crit': [u'bla bla bla'], 
     u'medtech_technical_safety_regulations': [u''], u'foreignparticipatingcenter-MAX_NUM_FORMS': [u''], u'german_aftercare_info': [u'bla bla bla'], 
-    u'investigator-1-fax': [u''], u'study_plan_null_hypothesis': [u''], u'investigator-1-mobile': [u''], u'invoice_address1': [u''], 
+    u'investigator-1-fax': [u''], u'study_plan_null_hypothesis': [u''], u'investigator-1-mobile': [u''], u'invoice_address': [u''], 
     u'substance_preexisting_clinical_tries': [u'2'], u'substance_p_c_t_phase': [u'III'], u'subject_males': [u'on'], u'investigator-0-phone': [u''], 
     u'substance_p_c_t_period': [u'Anti-GD2-Phase I: 1989-1992, Phase III 2002'], u'german_benefits_info': [u'bla bla bla'], 
-    u'german_abort_info': [u'bla bla bla'], u'insurance_address_1': [u'Schwarzenbergplatz 15'], u'german_additional_info': [u'bla bla bla'], 
+    u'german_abort_info': [u'bla bla bla'], u'insurance_address': [u'Schwarzenbergplatz 15'], u'german_additional_info': [u'bla bla bla'], 
     u'investigatoremployee-MAX_NUM_FORMS': [u''], u'investigatoremployee-0-organisation': [u''], u'study_plan_primary_objectives': [u''], 
     u'study_plan_number_of_groups': [u''], u'invoice_contact_last_name': [u''], u'document-replaces_document': [u''], u'investigator-TOTAL_FORMS': [u'2'], 
     u'study_plan_dataprotection_reason': [u''], u'medtech_certified_for_exact_indications': [u'3'], u'sponsor_city': [u'Wien'], u'medtech_manual_included': [u'3'], 
@@ -64,10 +65,10 @@ VALID_SUBMISSION_FORM_DATA = {
     u'document-file': [u''], u'study_plan_datamanagement': [u'Date entry and management through the SIOPEN-R-Net platform including the RDE system'], 
     u'german_primary_hypothesis': [u'bla bla bla'], u'subject_childbearing': [u'on'], u'substance_p_c_t_countries': [u'AT,DE,CH'], 
     u'insurance_name': [u'Z\xfcrich Veresicherungs-Aktiengesellschaft'], u'project_type_education_context': [u''], u'clinical_phase': [u'III'], 
-    u'invoice_address2': [u''], u'investigator-INITIAL_FORMS': [u'1'], u'subject_count': [u'175'], u'substance_p_c_t_gcp_rules': [u'2'], u'subject_minage': [u'0'], 
+    u'investigator-INITIAL_FORMS': [u'1'], u'subject_count': [u'175'], u'substance_p_c_t_gcp_rules': [u'2'], u'subject_minage': [u'0'], 
     u'investigatoremployee-0-firstname': [u''], u'german_consent_info': [u'bla bla bla'], u'document-version': [u''], u'substance_p_c_t_application_type': [u'IV in children'], 
     u'german_project_title': [u'kjkjkjk'], u'submitter_organisation': [u'St. Anna Kinderspital'], u'study_plan_multiple_test_correction_algorithm': [u'Keines'], 
-    u'sponsor_address1': [u'Kinderspitalg. 6'], u'invoice_name': [u''], u'sponsor_address2': [u''], u'german_statistical_info': [u'bla bla bla'],
+    u'sponsor_address': [u'Kinderspitalg. 6'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'],
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
@@ -75,6 +76,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         super(SubmissionViewsTestCase, self).setUp()
         bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
+        VALID_SUBMISSION_FORM_DATA[u'investigator-0-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
+        VALID_SUBMISSION_FORM_DATA[u'investigator-1-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
         
     def get_docstash_url(self):
         url = reverse('ecs.core.views.create_submission_form')

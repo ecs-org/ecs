@@ -32,6 +32,12 @@ PLATFORM = 'unix'
 if platform.platform().lower().startswith('win'):
     PLATFORM = 'win'
     
+def _popen_ooffice(filename):
+    """doc2ooxml -d document -f odt 342_2010.doc"""
+    #return Popen('/usr/bin/doc2ooxml -d document -f odt %s' % filename, stdout=PIPE, stderr=PIPE)
+    #return Popen(['doc2ooxml', '-d document', '-f odt', filename], stdout=PIPE, stderr=PIPE)
+    return Popen(['/usr/bin/doc2ooxml', '-d', 'document', '-f', 'odt', filename])
+
 def _popen_antiword(filename):
     return Popen(['antiword'] + getattr(settings, 'ANTIWORD_ARGS', []) + ['-x', 'db', filename], stdout=PIPE, stderr=PIPE)
 
@@ -79,6 +85,7 @@ class Command(BaseCommand):
         make_option('--participants', '-p', action='store', dest='participants', help='import participants from a file'),
         make_option('--date', '-b', action='store', dest='date', help='date for meeting start. e.g. 2010-05-18', default=str(date.today())),
         make_option('--analyze', '-a', action='store', dest='analyze_dir', help='analyze a bunch of doc files'),
+        make_option('--meeting_dates', '-m', action='store', dest='meeting_dates', help='import meeting dates from .py file'),
     )
 
     def _abort(self, message, dont_exit=False):
@@ -131,7 +138,6 @@ class Command(BaseCommand):
             raise Exception(standard_error.strip())
     
         s = BeautifulSoup.BeautifulStoneSoup(docbook)
-    
         # look for paragraphs where a number is inside (x.y[.z])
         y = s.findAll('para', text=re.compile(r'\d+(\.\d+)+\.?\s+'), role='bold')
 
@@ -165,20 +171,83 @@ class Command(BaseCommand):
                 data.append((nr, text,))
 
         fields = dict([(x.number, x.name,) for x in paper_forms.get_field_info_for_model(SubmissionForm) if x.number and x.name])
-    
+        
         submissionform_data = {}
         for entry in data:
             try:
                 key = fields[entry[0]]
                 if key and not re.match(u'UNKNOWN:', entry[1]):
                     submissionform_data[key] = entry[1]
+                    #pass
             except KeyError:
                 pass
 
         submission_data = {
             'ec_number': ec_number,
         }
+        
+        return (submission_data, submissionform_data, documents)
+        #to be finished lat0r...:
+ 
+        ##new better checkbox parsing:
+        import pprint
+        #pprint.pprint(fields)
+        #pprint.pprint(submissionform_data)
+        """
+        parse checkboxes:
+        convert .doc to odt
+        unzip odt
+        open content.xml
+        soup
+        findAll form:checkbox tags
+        for all tags
+            clean name
+            check if has form:state="checked"
+                set field in submissionform_data
+        """
+        tmp = _popen_ooffice(os.path.abspath(filename))
+        blabla, standard_error = tmp.communicate()
+        
+        if tmp.returncode:
+            print "doc2ooxml error..."
+            raise Exception(standard_error.strip())
 
+        try:
+            #odtf = os.path.splitext(os.path.basename(filename))[1] + ".odt"
+            odtf = os.path.splitext(filename)[0] + ".odt"
+            
+            import zipfile
+            try:
+                zip = zipfile.ZipFile(odtf, 'r')
+            except IOError, (errno, why):
+                print '   ERROR: Cannot open file', odtf, ':', why
+                self._abort("")
+            except zipfile.BadZipfile:
+                print '   ERROR: not an OpenOffice.org Open Document Format document:', odtf
+                self._abort("")
+            xml_contents = zip.read("content.xml")
+            soup = BeautifulSoup.BeautifulStoneSoup(xml_contents)
+            """
+            we r looking for this:
+            <form:checkbox form:name="A2x1x5" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control10" form:id="control10" form:state="checked" form:current-state="checked" form:image-position="center">
+            form:name tells us where this checkbox belongs
+            if it is checked it has these keys with value "checked"
+            form:state="checked"
+            form:current-state="checked"
+            """
+            cbs = soup.findAll("form:checkbox")
+            for cb in cbs:
+                sys.stdout.write("%d chckboxes" % len(cbs))
+                if cb.has_key("form:state") and cb["form:state"] == "checked":
+                    #TODO nicer cleanup of the fieldname
+                    fieldname = cb['name'].replace("x",".").replace("A","")
+                    sys.stdout.write("setting field: %s" % fieldname)
+                    submissionform_data[fieldname] = True
+            
+            os.remove(odtf)
+        except Exception, e:
+            print "kaboom:",Exception,e
+        
         return (submission_data, submissionform_data, documents)
 
     @transaction.commit_on_success
@@ -221,7 +290,9 @@ class Command(BaseCommand):
         
         warnings = ''
         for f in files:
+            #self._import_doc(f)
             try:
+                #pass
                 self._import_doc(f)
             except Exception, e:
                 warnings += '== %s ==\n%s\n\n' % (os.path.basename(f), e)
@@ -458,7 +529,7 @@ class Command(BaseCommand):
                         continue
                     
                     try:
-                        print "ec_number:",ec_number
+                        #print "ec_number:",ec_number
                         rofl = transaction.savepoint()
                         t_entry = meeting.timetable_entries.get(submission__ec_number__endswith=ec_number)
                         Participation.objects.create(entry=t_entry, user=user)
@@ -599,9 +670,136 @@ class Command(BaseCommand):
                 t_entry.save()
         sys.stdout.write('\033[32mdone\033[0m\n')
 
+    @transaction.commit_on_success
+    def _import_meeting_dates(self, filename):
+        print "import_meeting_dates"
+        from pprint import pprint
+        
+        parsed_dates = None
+        
+        try:
+            #from deployment.utils import import_from
+            #t = import_from(filename)
+            #from parsed_dates import parsed_dates
+            #cant import form src/deployment (import_from):
+            import imp
+            path, file = os.path.split(os.path.abspath(filename))
+            name, ext = os.path.splitext(file)
+            if not os.path.exists(filename):
+                raise ImportError, name
+            m = imp.load_source(name, filename)
+            if not m:
+                raise ImportError, name
+            parsed_dates = m.parsed_dates
+        except ImportError:
+            self._abort('Failed to import %s' % filename)
+            return None
+        
+        print "import module magic done, creating meetings"
+        failed_meetings = 0
+        imported_meetings = 0
+        skipped_meetings = 0
+        
+        failed_deadlines = 0
+        imported_deadlines = 0
+        skipped_deadlines = 0
+        
+        failed_deadlines_diploma = 0
+        imported_deadlines_diploma = 0
+        skipped_deadlines_diploma = 0
+        
+        sp = transaction.savepoint()
+        
+        try:
+            for mdates in parsed_dates:
+                pdsp = transaction.savepoint()
+                try:
+                    mdate = mdates['meeting']
+                    deadline_diplomathesis = mdates['deadline_diplomathesis']
+                    deadline = mdates['deadline']
+                    #deadline is "inclusive" .. i guess
+                    if deadline.hour == 0:
+                        deadline = deadline.replace(hour=23,minute=59)
+                    if deadline_diplomathesis.hour == 0:
+                        deadline_diplomathesis = deadline_diplomathesis.replace(hour=23,minute=59)
+                    tmpm = Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month)
+                    if len(tmpm) > 0:
+                        for m in tmpm:
+                            #check if deadline fields are set for the already existing meetings 
+                            if not m.deadline:
+                                dsp = transaction.savepoint()
+                                try:
+                                    m.deadline = str(deadline)
+                                    m.save()
+                                except Exception, e:
+                                    transaction.savepoint_rollback(dsp)
+                                    failed_deadlines += 1
+                                else:
+                                    transaction.savepoint_commit(dsp)
+                                    imported_deadlines += 1
+                            else:
+                                skipped_deadlines += 1
+                            
+                            if not m.deadline_diplomathesis:
+                                dtsp = transaction.savepoint()
+                                try:
+                                    m.deadline_diplomathesis = str(deadline_diplomathesis)
+                                    m.save()
+                                except Exception, e:
+                                    transaction.savepoint_rollback(dtsp)
+                                    failed_deadlines_diploma += 1
+                                else:
+                                    transaction.savepoint_commit(dtsp)
+                                    imported_deadlines_diploma += 1
+                                    
+                            else:
+                                skipped_deadlines_diploma += 1
+                        
+                        skipped_meetings += 1
+                        #temphack
+                        #Meeting.objects.filter(start__year=mdate.year,start__day=mdate.day,start__month=mdate.month).delete()
+                        
+                    else:
+                        #create meeting
+                        #try:
+                        title = "%s Meeting" % mdate.strftime("%b")
+                        deadline_diplomathesis = mdates['deadline_diplomathesis']
+                        deadline = mdates['deadline']
+                        if mdate.hour == 0:
+                            mdate = mdate.replace(hour=10)
+                        
+                        meeting = Meeting.objects.create(title=title, start=str(mdate), deadline=str(deadline), deadline_diplomathesis=str(deadline_diplomathesis))
+                        print "created meeting %s, %s" % (meeting.title, meeting.start)
+                        imported_meetings += 1
+                        imported_deadlines += 1
+                        imported_deadlines_diploma += 1
+                except Exception, e:
+                    transaction.savepoint_rollback(pdsp)
+                    failed_meetings += 1
+                else:
+                    transaction.savepoint_commit(pdsp)
+            
+        except Exception, e:
+            transaction.savepoint_rollback_sql(sp)
+        else:
+            transaction.savepoint_commit(sp)
+
+        if skipped_deadlines > 0:
+            print "skipped %d meeting deadlines" % skipped_deadlines
+        if skipped_deadlines_diploma > 0:
+            print "skipped %d meeting deadlines_diploma" % skipped_deadlines_diploma
+        print "imported %d meeting deadlines" % imported_deadlines_diploma
+        print "imported %d meeting deadlines_diploma" % imported_deadlines
+        
+        if failed_meetings > 0:
+            print "failed to import %d meeting dates" % failed_meetings
+        if skipped_meetings > 0:
+            print "skipped %d meeting dates" % skipped_meetings
+        print "imported %d meeting dates" % imported_meetings
+
 
     def handle(self, *args, **kwargs):
-        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir']] if x])
+        options_count = sum([1 for x in [kwargs['submission_dir'], kwargs['submission'], kwargs['timetable'], kwargs['categorize'], kwargs['participants'], kwargs['analyze_dir'], kwargs['meeting_dates']] if x])
         if options_count is not 1:
             self._abort('please specifiy one of -d/-s/-t/-c/-p/-a')
 
@@ -617,7 +815,8 @@ class Command(BaseCommand):
             self._import_categorize(kwargs['categorize'])
         elif kwargs['analyze_dir']:
             self._analyze_dir(kwargs['analyze_dir'])
-
+        elif kwargs['meeting_dates']:
+            self._import_meeting_dates(kwargs['meeting_dates'])
         sys.exit(0)
 
 

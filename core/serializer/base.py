@@ -270,12 +270,12 @@ class SubmissionSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
-        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 'pdf_document'),
+        exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor'),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
             'investigators': 'submission_form',
             'measures': 'submission_form',
-            'documents': 'parent_object',
+            'documents': '_submission_forms',
             'nontesteduseddrug_set': 'submission_form',
         },
     ),
@@ -285,7 +285,7 @@ _serializers = {
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    Document: ModelSerializer(Document, fields=('doctype', 'file', 'date', 'version', 'mimetype')),
+    Document: ModelSerializer(Document, fields=('doctype', 'file', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
 }

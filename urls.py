@@ -14,15 +14,15 @@ urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),
 
     url(r'^audit/', include('ecs.audit.urls')),
-    url(r'^core/', include('core.urls')),
-    url(r'^dashboard/', include('dashboard.urls')),
+    url(r'^core/', include('ecs.core.urls')),
+    url(r'^dashboard/', include('ecs.dashboard.urls')),
+    url(r'^fastlane/', include('ecs.fastlane.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^userswitcher/', include('ecs.userswitcher.urls')),
-    url(r'^pdfsigner/', include('ecs.pdfsigner.urls')),
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
     url(r'^mediaserver/', include('ecs.mediaserver.urls')),
     url(r'^tasks/', include('ecs.tasks.urls')),

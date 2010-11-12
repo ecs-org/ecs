@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission
 from ecs.documents.models import Document
@@ -41,7 +42,7 @@ def _get_organizations(submission_form):
     
 
 class SimpleXLS(object):
-    def __init__(self, sheet_name="Statistikergebnis"):
+    def __init__(self, sheet_name=_(u"statistical result")):
         self.xls = xlwt.Workbook(encoding="utf-8")
         self.sheet = self.xls.add_sheet(sheet_name)
         self.sheet.panes_frozen = True
@@ -76,7 +77,7 @@ def submission_billing(request):
                 selected_for_billing.append(submission)
                 
         xls = SimpleXLS()
-        xls.write_row(0, (u'Anz.', u'EK-Nummer', u'Firma', u'Eudract-Nr.', u'Antragsteller', u'Klinik', u'Summe'))
+        xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')))
         for i, submission in enumerate(selected_for_billing):
             r = i + 1
             submission_form = submission.current_submission_form
@@ -102,7 +103,7 @@ def submission_billing(request):
         htmlmail = unicode(render_html(request, 'billing/email/submissions.html', {}))
         plainmail = whitewash(htmlmail)
 
-        deliver(subject='Billing request', 
+        deliver(subject=_(u'Billing request'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('billing-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
@@ -142,7 +143,7 @@ def external_review_payment(request):
         reviewers = User.objects.filter(reviewed_submissions__in=selected_for_payment).distinct()
         
         xls = SimpleXLS()
-        xls.write_row(0, (u'Anz.', u'Gutachter', u'EK-Nr.', u'Summe'))
+        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum')))
         for i, reviewer in enumerate(reviewers):
             submissions = reviewer.reviewed_submissions.filter(pk__in=[s.pk for s in selected_for_payment])
             xls.write_row(i + 1, [
@@ -169,7 +170,7 @@ def external_review_payment(request):
         htmlmail = unicode(render_html(request, 'billing/email/external_review.html', {}))
         plainmail = whitewash(htmlmail)
         
-        deliver(subject='Payment request', 
+        deliver(subject=_(u'Payment request'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('externalreview-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],

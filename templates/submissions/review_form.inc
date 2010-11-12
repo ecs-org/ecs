@@ -5,12 +5,14 @@
 {% endif %}
 
 {% if not review_form.readonly %}
-    <form action="" method="post" enctype="multipart/form-data" >
-    {% with checklist_document_form as document_form %}
-        {% with checklist_documents as documents %}
-            {% include 'documents/upload_form.html' %}
+    <form action="" method="post" enctype="multipart/form-data" class="review">
+    {% if checklist_document_form %}
+        {% with checklist_document_form as document_form %}
+            {% with checklist_documents as documents %}
+                {% include 'documents/upload_form.html' %}
+            {% endwith %}
         {% endwith %}
-    {% endwith %}
+    {% endif %}
 {% endif %}
 <ol>
 {% for field_name in review_form.fields %}

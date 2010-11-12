@@ -10,19 +10,14 @@
         {% block tab_header_groups %}
         <li>
             <a href="#">{% trans "Submission" %}</a>
-            <ul class="tab_headers">
-            {% block submission_tab_headers %}
-                {% for tab, fieldsets in tabs %}
-                    {% ifnotequal tab "Zentrum" %}
-                    <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-                    {% endifnotequal %}
-                {% endfor %}
-            {% endblock %}
-            </ul>
-        </li>
-        <li>
-            <a href="#">{% trans "Centers" %}</a>
-            <ul class="tab_headers" id="center_tabgroup">
+            <ul class="tab_headers" id="submission_headers">
+                {% block submission_tab_headers %}
+                    {% for tab, fieldsets in tabs %}
+                        {% ifnotequal tab "Zentrum" %}
+                        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
+                        {% endifnotequal %}
+                    {% endfor %}
+                {% endblock %}
                 {% block center_tabs %}
                 {% endblock %}
             </ul>
@@ -64,7 +59,11 @@
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME #}
                         <div class="field">
-                            {% include "documents/upload_form.html" %}
+                            {% if not readonly %}
+                                {% include "documents/upload_form.html" %}
+                            {% else %}
+                                {% include "documents/compact_list.html" %}
+                            {% endif %}
                         </div>
                     {% endifequal %}
                     
@@ -202,7 +201,18 @@
                     message: '{% trans "This tab may only be used when 2.1.2 is selected." %}'
                 }
             });
-
+            
+            function updateHeaderHeight() {
+                var tabHeight = setup.tabController.getSelectedTabGroup().container.getHeight();
+                if(tabHeight){
+                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
+                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
+                }
+                $('content').setStyle('top', $('header').getHeight() + 'px');
+            }
+            setup.tabController.addEvent('tabGroupSelectionChange', updateHeaderHeight);
+            window.addEvent('resize', updateHeaderHeight);
+            updateHeaderHeight();
         });
     </script>
 {% endblock %}

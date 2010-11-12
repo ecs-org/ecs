@@ -2,6 +2,7 @@
 import os, random
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
 from django.contrib.auth.models import Group, User
 from django.contrib.sites.models import Site
@@ -55,6 +56,7 @@ def submission_workflow():
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Insurance Review').order_by('-pk')[:1][0]
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Legal and Patient Review').order_by('-pk')[:1][0]
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Board Member Review').order_by('-pk')[:1][0]
+    external_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='External Review').order_by('-pk')[:1][0]
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -84,7 +86,7 @@ def submission_workflow():
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review", group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ExternalReview, group=EXTERNAL_REVIEW_GROUP),
+            'external_review': Args(ChecklistReview, data=external_review_checklist_blueprint, name=u"External Review", group=EXTERNAL_REVIEW_GROUP),
             'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
@@ -210,8 +212,20 @@ def notification_types():
 
 @bootstrap.register()
 def expedited_review_categories():
-    for i in range(5):
-        ExpeditedReviewCategory.objects.get_or_create(abbrev="ExRC%s" % i, name="Expedited Review Category #%s" % i)
+    categories = (
+        (u'KlPh', u'Klinische Pharmakologie'),
+        (u'Stats', u'Statistik'),
+        (u'Labor', u'Labormedizin'),
+        (u'Recht', u'Juristen'),
+        (u'Radio', u'Radiologie'),
+        (u'Anästh', u'Anästhesie'),
+        (u'Psychol', u'Psychologie'),
+        (u'Patho', u'Pathologie'),
+        (u'Zahn', u'Zahnheilkunde'),
+        )
+    for abbrev, name in categories:
+        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+
 
 @bootstrap.register()
 def medical_categories():
@@ -304,7 +318,8 @@ def auth_user_developers():
         
         
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups','ecs.core.bootstrap.medical_categories'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
@@ -365,6 +380,11 @@ def auth_user_testusers():
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
+            try:
+                e= ExpeditedReviewCategory.objects.get(abbrev=medcategory)
+                e.users.add(user)
+            except ObjectDoesNotExist:
+                pass
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():
@@ -372,7 +392,14 @@ def auth_ec_staff_users():
     
     for blueprint in blueprints:
         #FIXME: we need a unique constraint on name for this to be idempotent
-        ChecklistBlueprint.objects.get_or_create(**blueprint)
+        b, _ = ChecklistBlueprint.objects.get_or_create(name=blueprint['name'])
+        changed = False
+        for name, value in blueprint.items():
+            if getattr(b, name) != value:
+                setattr(b, name, value)
+                changed = True
+        if changed:
+            b.save()
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
 def checklist_questions():
@@ -382,12 +409,13 @@ def checklist_questions():
             u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
             u'3. Ist die Studienpopulation ausreichend definiert?',
             u'4. Sind die Zielvariablen geeignet definiert?',
-            u'5. Ist die statistische Analyse beschrieben, und ist sie ad\u00e4quat?',
-            u'6. Ist die Gr\u00f6\u00dfe der Stichprobe ausreichend begr\u00fcndet?',
+            u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',
+            u'6. Ist die Größe der Stichprobe ausreichend begründet?',
         ),
         u'Legal and Patient Review': (u"42 ?",),
         u'Insurance Review': (u"42 ?",),
         u'Board Member Review': (u"42 ?",),
+        u'External Review': (u"42 ?",),
     }
 
     for bp_name in questions.keys():
@@ -494,7 +522,7 @@ def testsubmission():
         'substance_p_c_t_period': u'Anti-GD2-Phase I: 1989-1992, Phase III 2002',
         'german_benefits_info': u'bla bla bla',
         'german_abort_info': u'bla bla bla',
-        'insurance_address_1': u'Schwarzenbergplatz 15',
+        'insurance_address': u'Schwarzenbergplatz 15',
         'german_additional_info': u'bla bla bla',
         'study_plan_primary_objectives': None,
         'study_plan_dataprotection_reason': u'',
@@ -536,8 +564,7 @@ def testsubmission():
         'project_type_reg_drug_not_within_indication': False,
         'project_type_medical_method': False,
         'project_type_education_context': None,
-        'invoice_address1': u'',
-        'invoice_address2': u'',
+        'invoice_address': u'',
         'study_plan_equivalence_testing': False,
         'subject_count': 175,
         'substance_p_c_t_gcp_rules': True,
@@ -549,9 +576,8 @@ def testsubmission():
         'medtech_departure_from_regulations': u'',
         'german_project_title': u'Riskikoreiche Neuroblastom Studie 1 von SIOP-Europe (SIOPEN)',
         'submitter_organisation': u'St. Anna Kinderspital',
-        'sponsor_address1': u'Kinderspitalg. 6',
+        'sponsor_address': u'Kinderspitalg. 6',
         'invoice_name': u'',
-        'sponsor_address2': u'',
         'german_statistical_info': u'bla bla bla',
     }
     

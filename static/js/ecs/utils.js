@@ -103,6 +103,9 @@ ecs.setupFormFieldHelpers = function(context){
             }
         }}).send();
     });
+    context.getElements('.CharField > textarea').each(function(textarea){
+        new ecs.textarea.TextArea(textarea);
+    });
     context.getElements('li,th.label').each(function(field){
         var notes = [];
         var input = null;
@@ -163,7 +166,7 @@ ecs.setupFormFieldHelpers = function(context){
 ecs.setupInvestigatorFormSet = function(tabController, readonly){
     var ifs = $('investigator_formset');
     if(ifs){
-        var centerTabGroup = tabController.getTabGroupForElement('center_tabgroup');
+        var centerTabGroup = tabController.getTabGroupForElement('submission_headers');
         var investigatorFormset = new ecs.InlineFormSet(ifs, {
             prefix: 'investigator',
             formSelector: '.investigator_tab',
@@ -272,7 +275,12 @@ ecs.setupForms = function(){
     $$('.doclist a.delete_document').each(function(link){
         link.addEvent('click', function(){
             link.getParent('div').getElement('input').dispose();
-            form.submit('upload');
+            if(form){
+                form.submit('upload');
+            }
+            else{
+                link.getParent('form').submit();
+            }
             return false;
         });
     });

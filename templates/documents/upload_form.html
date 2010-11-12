@@ -1,38 +1,28 @@
+{% extends 'documents/compact_list.html' %}
 {# context: documents, document_formset #}
-<div class="doclist">
-{% if documents %}
-    {% for doc in documents %}
-        {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
-        <div>
-            <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
-                Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
-            </a>
-	    <a href="{% url pdf_show doc.pk 1 1 %}" target="_blank">Ansehen</a>
-            <a href="" class="delete_document">delete</a>
-            <input type="hidden" name="documents" value="{{ doc.pk }}" />
-        </div>
-    {% endfor %}
-{% else %}
-    <p>Noch keine Unterlagen</p>
-{% endif %}
-</div>
+{% load pdfviewer i18n %}
 
+{% block actions %}
+    {{ block.super }}
+    | <a href="" class="delete_document">{% trans "Delete" %}</a>
+    <input type="hidden" name="documents" value="{{ doc.pk }}" />
+{% endblock %}
 
-<div class="form">
-    {% with document_form as form %}
-    <ol>
-        {% for hidden in form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in form %}
-            {% if not field.is_hidden %}
-                {% include "forms/field.html" %}
-            {% endif %}
-        {% endfor %}
-    </ol>
-    {% endwith %}
-</div>
-
-<input type="submit" id="document_upload_button" name="upload" value="Upload" />
-
+{% block document_list %}
+    {{ block.super }}
+    <div class="form">
+        {% with document_form as form %}
+        <ol>
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            {% for field in form %}
+                {% if not field.is_hidden %}
+                    {% include "forms/field.html" %}
+                {% endif %}
+            {% endfor %}
+        </ol>
+        {% endwith %}
+    </div>
+    <input type="submit" id="document_upload_button" name="upload" value="Upload" />
+{% endblock %}

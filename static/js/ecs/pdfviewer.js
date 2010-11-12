@@ -67,6 +67,8 @@ ecs.pdfviewer.ImageSet = new Class({
 });
 
 ecs.pdfviewer.utils = {
+    PAGE_UP: 33,
+    PAGE_DOWN: 34,
     isAtBottom: function(){
         var win = $(window);
         // we have to use <= 0, because firefox somehow manages to scroll one pixel beyond the window.
@@ -74,6 +76,13 @@ ecs.pdfviewer.utils = {
     },
     isAtTop: function(){
         return $(window).getScroll().y == 0
+    },
+    scrollToTop: function(){
+        $(document.body).scrollTo(0, 0);
+    },
+    scrollToBottom: function(){
+        var win = $(window);
+        $(document.body).scrollTo(0, win.getScrollHeight() - win.getHeight());
     }
 };
 
@@ -82,13 +91,28 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.element = $(el);
         this.pageCount = options.pageCount;
         this.controllers = options.controllers;
-        this.wheelThreshold = options.wheelThreshold || 30.0;
+        this.wheelScrollThreshold = options.wheelScrollThreshold || 1.0;
+        this.wheelTimeThreshold = options.wheelTimeThreshold || 1;
         this.title = options.title;
         this.helpContents = options.helpContents;
         this.searchURL = options.searchURL;
         this.editAnnotationURL = options.editAnnotationURL;
         this.deleteAnnotationURL = options.deleteAnnotationURL;
         this.metaKey = options.metaKey || '';
+        this.minAnnotationWidth = options.minAnnotationWidth || 20;
+        this.minAnnotationHeight = options.minAnnotationHeight || 20;
+
+        this.keyboard = {
+            toggleHelp: function(meta, e){ return e.key == 'space';},
+            toggleAnnotationMode: function(meta, e){ return meta && e.key == 'a';},
+            quitAnnotationMode: function(meta, e){ return e.key == 'esc';},
+            pageUp: function(meta, e){ return meta && e.key == '1' || e.code == ecs.pdfviewer.utils.PAGE_UP;},
+            pageDown: function(meta, e){ return e.key == '9' || e.code == ecs.pdfviewer.utils.PAGE_DOWN;},
+            search: function(meta, e){ return meta && (e.key == 's' || e.key == 'f');},
+            gotoPage: function(meta, e){ return meta && e.key == 'g';},
+            cycleController: function(meta, e){ return e.key == 'enter';}
+        };
+
         this.keyboardNavigationEnabled = true;
 
         this.imageSets = {};
@@ -99,7 +123,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
 
         this._wheelCounter = 0;
         this._wheelTimeout = null;
-        this._wheelReset = (function(){this._wheelCounter = 0; this._wheelTimeout = null;}).bind(this);
+        this._wheelTimestamp = null;
+        this._wheelReset = (function(){this._wheelCounter = 0; this._wheelTimeout = null; this._wheelTimestamp = null;}).bind(this);
         $(window).addEvent('click', this.handleClick.bind(this));
         $(window).addEvent('mousewheel', this.handleMouseWheel.bind(this));
         $(window).addEvent('keydown', this.handleKeyPress.bind(this));
@@ -124,9 +149,23 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.annotations = $H({});
         this.annotationMode = false;
         this.annotationOverlay = new Element('div', {'class': 'annotationOverlay'})
+        this.annotationFrame = new ecs.dragdrop.Frame(this.annotationOverlay);
+        
+        this.annotationFrame.addEvent('complete', (function(f){
+            console.log(f);
+            if(f.w > this.minAnnotationWidth || f.h > this.minAnnotationHeight){
+                var rel = this.annotationOverlay.getCoordinates();
+                var annotation = new ecs.pdfviewer.Annotation(null, "", f.x / rel.width, f.y / rel.height, f.w / rel.width, f.h / rel.height);
+                this.addAnnotation(this.currentPageIndex, annotation);
+                var pageEl = this.currentScreen.getElement('.page');
+                var annotationElement = this.renderAnnotation(pageEl, annotation);
+                annotation.startAnnotationMode(annotationElement);
+            }
+        }).bind(this));
 
         this.annotationEditor = new ecs.pdfviewer.AnnotationEditor(this);
         this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
+        this.gotoPagePopup = new ecs.pdfviewer.GotoPagePopup(this);
         
         var disableKeyNav = (function(){this.keyboardNavigationEnabled = false;}).bind(this)
         var enableKeyNav = (function(){this.keyboardNavigationEnabled = true;}).bind(this)
@@ -136,6 +175,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         
         this.searchPopup.addEvent('show', disableKeyNav);
         this.searchPopup.addEvent('hide', enableKeyNav);
+        
+        this.gotoPagePopup.addEvent('show', disableKeyNav);
+        this.gotoPagePopup.addEvent('hide', enableKeyNav);
         
     },
     gotoAnchor: function(hash){
@@ -178,6 +220,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.setControllerIndex(index);
     },
     setPage: function(pageIndex, update){
+        if(pageIndex < 0 || pageIndex >= this.pageCount){
+            return;
+        }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
@@ -186,10 +231,11 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
     },
     nextPage: function(delta){
-        $(document.body).scrollTo(0, 0);
+        ecs.pdfviewer.utils.scrollToTop();
         this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1));
     },
     previousPage: function(delta){
+        ecs.pdfviewer.utils.scrollToBottom();
         this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0));
     },
     gotoPage: function(pageIndex){
@@ -318,29 +364,48 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var atTop = U.isAtTop();
         var atBottom = U.isAtBottom();
 
-        if(e.key == 'space'){
+        if(this.keyboard.toggleHelp(metaKey, e)){
             this.helpContents.toggleClass('hidden');
             return false;
         }
-        if(metaKey && e.key == 'a' && this.getController().options.showAnnotations){
+        if(this.keyboard.toggleAnnotationMode(metaKey, e) && this.getController().options.showAnnotations){
             this.toggleAnnotationMode();
             return false;
         }
-        
-        if(metaKey && (e.key == 's' || e.key == 'f')){
-            this.searchPopup.show();
-            return false;
-        }
-        
-        if(this.annotationMode && e.key == 'esc'){
+        if(this.annotationMode && this.keyboard.quitAnnotationMode(metaKey, e)){
             this.toggleAnnotationMode();
             return;
         }
         if(this.annotationMode){
             return;
         }
-
-        if(e.key == 'enter'){
+        if(this.keyboard.pageUp(metaKey, e)){
+            if(!atTop){
+                U.scrollToTop();
+            }
+            else{
+                this.previousPage();
+            }
+            return false;
+        }
+        if(this.keyboard.pageDown(metaKey, e)){
+            if(!atBottom){
+                U.scrollToBottom();
+            }
+            else{
+                this.nextPage();
+            }
+            return false;
+        }
+        if(this.keyboard.search(metaKey, e)){
+            this.searchPopup.show();
+            return false;
+        }
+        if(this.keyboard.gotoPage(metaKey, e)){
+            this.gotoPagePopup.show();
+            return false;
+        }
+        if(this.keyboard.cycleController(metaKey, e)){
             this.cycleController(+1);
             return false;
         }
@@ -398,11 +463,14 @@ ecs.pdfviewer.DocumentViewer = new Class({
                 clearTimeout(this._wheelTimeout)
             }
             else{
-                this._wheelTimeout = setTimeout(this._wheelReset, 100);
+                this._wheelTimestamp = (new Date()).getTime();
             }
+            this._wheelTimeout = setTimeout(this._wheelReset, 100);
             this._wheelCounter += Math.abs(e.wheel);
-            if(this._wheelCounter >= this.wheelThreshold){
+            var scrollTime = (new Date()).getTime() - this._wheelTimestamp;
+            if(this._wheelCounter >= this.wheelScrollThreshold && scrollTime >= this.wheelTimeThreshold){
                 this._wheelCounter = 0;
+                this._wheelTimestamp = 0;
                 if(e.wheel > 0){
                     this.previousPage();
                 }
@@ -416,15 +484,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var target = $(e.target);
         var pageEl = target.hasClass('page') ? target : target.getParent('.page');
         if(this.annotationMode){
-            if(pageEl && !target.getParent('.annotation')){
-                var rel = this.annotationOverlay.getCoordinates();
-                var x = (e.page.x - rel.left) / rel.width;
-                var y = (e.page.y - rel.top) / rel.height;
-                var annotation = new ecs.pdfviewer.Annotation(null, "", x - 0.01, y - 0.01, 0.02, 0.02);
-                this.addAnnotation(this.currentPageIndex, annotation);
-                var annotationElement = this.renderAnnotation(pageEl, annotation);
-                annotation.startAnnotationMode(annotationElement);
-            }
             return;
         }
         if(e.alt){
@@ -452,18 +511,20 @@ ecs.pdfviewer.Controller = new Class({
 });
 
 ecs.pdfviewer.Annotation = new Class({
-    initialize: function(pk, text, x, y, w, h){
+    initialize: function(pk, text, x, y, w, h, author){
         this.pk = pk;
         this.text = text;
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.author = author;
     },
     attachTo: function(el, onShow){
         var a = new Element('div', {'class': 'annotation'});
         var dim = el.getSize();
         a.setStyle('top', (this.y * dim.y) + 'px');
+        a.setClass('foreign', !!this.author);
         var overlay = new Element('div', {'class': 'overlay'});
     
         overlay.setStyles({
@@ -513,6 +574,8 @@ ecs.pdfviewer.Annotation = new Class({
         this.h = parseInt(bounds.height) / pageSize.y;
         annotationElement.setStyle('top', (parseInt(annotationElement.getStyle('top')) + parseInt(bounds.top)) + 'px');
         overlay.setStyle('top', '0px');
+        annotationElement.removeClass('foreign');
+        this.author = null;
     }
 });
 
@@ -562,6 +625,23 @@ ecs.pdfviewer.Popup = new Class({
     },
     onShow: function(){},
     initContent: function(content){}
+});
+
+ecs.pdfviewer.GotoPagePopup = new Class({
+    Extends: ecs.pdfviewer.Popup,
+    initContent: function(content){
+        this.input = new Element('input', {type: 'text'});
+        this.input.addEvent('change', (function(){
+            var p = parseInt(this.input.value);
+            this.viewer.gotoPage(p - 1);
+        }).bind(this));
+        content.grab(new Element('span', {'class': 'label', 'html': 'Goto Page:'}))
+        content.grab(this.input);
+
+    },
+    onShow: function(){
+        this.input.value = this.viewer.currentPageIndex + 1;
+    }
 });
 
 ecs.pdfviewer.SearchPopup = new Class({
@@ -614,9 +694,11 @@ ecs.pdfviewer.AnnotationEditor = new Class({
     Extends: ecs.pdfviewer.Popup,
     initContent: function(content){
         this.textarea = new Element('textarea', {html: this.text});
+        this.authorInfo = new Element('div', {'class': 'authorInfo'});
         var saveLink = new Element('a', {html: 'Save'});
         var cancelLink = new Element('a', {html: 'Cancel'});
         var deleteLink = new Element('a', {html: 'Delete'});
+        content.grab(this.authorInfo);
         content.grab(this.textarea);
         content.grab(saveLink);
         content.grab(cancelLink);
@@ -632,12 +714,18 @@ ecs.pdfviewer.AnnotationEditor = new Class({
         this.annotation = annotation;
         this.annotationElement = element;
         this.textarea.value = annotation.text;
+        this.element.setClass('foreign', !!annotation.author);
+        this.authorInfo.innerHTML = 'Anmerkung von ' + annotation.author + ':';
         this.textarea.focus();
     },
     onSave: function(){
-        this.annotation.text = this.textarea.value;
-        if(!this.viewer.annotationMode){
-            this.viewer.sendAnnotationUpdate(this.annotation);
+        if(this.annotation.text != this.textarea.value){
+            this.annotation.text = this.textarea.value;
+            this.annotation.author = null;
+            this.annotationElement.removeClass('foreign');
+            if(!this.viewer.annotationMode){
+                this.viewer.sendAnnotationUpdate(this.annotation);
+            }
         }
         this.dispose();
     },

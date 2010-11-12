@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from ecs.pdfviewer.models import DocumentAnnotation
 
 class DocumentAnnotationForm(forms.ModelForm):
@@ -8,7 +9,7 @@ class DocumentAnnotationForm(forms.ModelForm):
         
     class Meta:
         model = DocumentAnnotation
-        exclude = ('document', 'user')
+        exclude = ('document', 'user', 'author')
         
     def clean_page_number(self):
         page_num = self.cleaned_data['page_number']
@@ -16,3 +17,5 @@ class DocumentAnnotationForm(forms.ModelForm):
             raise forms.ValidationError("page_number must be between 1 and %s" % self.document.pages)
         return page_num
         
+class AnnotationSharingForm(forms.Form):
+    user = forms.ModelChoiceField(User.objects.all())

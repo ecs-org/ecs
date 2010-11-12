@@ -1,15 +1,8 @@
-{% extends "shell.html" %}
 {% load core i18n %}
 
-{% block htmlcss %}
-    {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}tasks/css/tasks.css" />
-{% endblock %}
-
-{% block htmlbody %}
 <div id="task_main">
-<form action="" method="post" id="task_form">
-    <div class="show_all"><a href="{% url ecs.tasks.views.my_tasks %}">{% trans 'Show all tasks' %}</a></div>
+<form action="{% url ecs.tasks.views.manage_task task_pk=task.pk %}" method="post" id="task_form" class="open-in-widget">
+    <div class="show_all"><a href="{% url ecs.tasks.views.my_tasks %}" class="open-in-widget">{% trans 'Show all tasks' %}</a></div>
     <h2>{{ task }}</h2>
     {% if task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
@@ -90,10 +83,7 @@
     </ul>
 </form>
 </div>
-{% endblock %}
 
-{% block jsbottom %}
-{{ block.super }}
 <script type="text/javascript">
     window.addEvent('domready', function(){
         var questionTypeInputs = $$('#id_question_type_callback', '#id_question_type_related', '#id_question_type_somebody');
@@ -104,4 +94,3 @@
         });
     });
 </script>
-{% endblock %}

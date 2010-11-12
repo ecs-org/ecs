@@ -8,15 +8,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
+from ecs.core.models import SubmissionForm
 
 from ecs.pdfviewer.models import DocumentAnnotation
-from ecs.pdfviewer.forms import DocumentAnnotationForm
+from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
 from ecs.pdfviewer.utils import createmediaurls
 
 
-def show(request, id='1', page=1, zoom='1'):
-    document = get_object_or_404(Document, pk=id)
-    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text'))
+def show(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
 
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
@@ -36,11 +37,11 @@ def edit_annotation(request, document_pk=None):
         annotation = form.save(commit=False)
         annotation.document = document
         annotation.user = request.user
+        annotation.author = request.user
         annotation.save()
         return HttpResponse('OK')
     else:
-        print form.errors
-        return HttpResponseBadRequest('OK')
+        return HttpResponseBadRequest('invalid data: %s' % form.errors)
 
 @csrf_exempt
 def delete_annotation(request, document_pk=None):
@@ -48,3 +49,40 @@ def delete_annotation(request, document_pk=None):
     annotation = get_object_or_404(DocumentAnnotation, user=request.user, pk=request.POST.get('pk'))
     annotation.delete()
     return HttpResponse('OK')
+
+def copy_annotations(request):
+    submission_form_pk = request.GET.get('submission_form_pk', None)
+    annotations = DocumentAnnotation.objects.filter(user=request.user).select_related('document').order_by('document', 'page_number', 'y')
+    if submission_form_pk:
+        sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+        annotations.filter(document__submission_forms=sf)
+    return render(request, 'pdfviewer/annotations/copy.html', {
+        'annotations': annotations,
+    })
+    
+def share_annotations(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    annotations = DocumentAnnotation.objects.filter(user=request.user).order_by('page_number', 'y')
+    form = AnnotationSharingForm(request.POST or None)
+    
+    if form.is_valid():
+        user = form.cleaned_data['user']
+        annotations = annotations.filter(pk__in=request.POST.getlist('annotation'))
+        for annotation in annotations:
+            annotation.pk = None
+            annotation.user = user
+            annotation.save()
+        return render(request, 'pdfviewer/annotations/sharing/success.html', {
+            'document': document,
+            'target_user': user,
+            'annotations': annotations,
+        })
+        
+    return render(request, 'pdfviewer/annotations/sharing/share.html', {
+        'document': document,
+        'form': form,
+        'annotations': annotations,
+    })
+    
+    
+    

@@ -10,16 +10,52 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
 from ecs.utils.viewutils import render, render_pdf, pdf_response
-from ecs.core.models import Submission, Vote
-from ecs.meetings.models import Meeting, TimetableEntry
-from ecs.documents.models import Document
-from ecs.meetings.forms import MeetingForm, SubmissionSchedulingForm
-from ecs.core.forms.voting import VoteForm, SaveVoteForm
-from ecs.pdfsigner.views import get_random_id, id_set, id_get, id_delete, sign
+from ecs.core.models import Vote
+from ecs.meetings.models import Meeting
+from ecs.documents.models import Document, DocumentType
 
 from ecs.utils import forceauth
-from ecs.utils.pdfutils import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
+from django.core.files.base import File
+from django.views.decorators.csrf import csrf_exempt
+from ecs.utils.votedepot import VoteDepot
+from uuid import uuid4
 
+'''
+@startuml img/sequence_img001.png
+Actor Alice #orange
+participant Ecs #lightgreen
+participant PDFas #pink
+participant Applet #yellow
+
+Alice -> Ecs: View available votes
+
+activate Ecs #orange
+    Alice -> Ecs: Request signing of a vote
+    Ecs -> PDFas: Bump start signing,\nimpart unsigned vote download url 
+    activate PDFas #lightgreen
+        activate Ecs #pink
+            Ecs -> Alice: Redirect to signing applet
+            PDFas -> Ecs : Download unsigned vote
+            Alice -> Applet: Provide security token 
+            activate Applet #orange
+                Applet -> PDFas: Autenticate,\ndeliver security token
+                activate PDFas #yellow
+                    PDFas -> Ecs : Bump signed vote ready,\nimpart signed vote download url
+                    PDFas -> Applet: Notify success
+                deactivate Applet #orange
+            deactivate PDFas #yellow
+            Ecs -> PDFas : Download signed vote
+        deactivate PDFas #lightgreen
+    deactivate Ecs #pink
+    Ecs -> Alice : Redirect to show vote view
+    Alice -> Ecs: View signed vote
+deactivate Ecs #orange
+
+@enduml
+'''
+
+votesDepot = VoteDepot();
 
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -94,71 +130,84 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_name = vote_filename(meeting, vote)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
-    html = render(request, template, context).content
-    pdf = xhtml2pdf(html)
-    pdf_len = len(pdf)
-    pdf_id = get_random_id()
-    t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-    t_name = t.name
-    t.write(pdf)
-    t.close()
-    id_set(pdf_id, 'vote sign:%s:%s' % (t_name, pdf_name))
-    return sign(request, pdf_id, pdf_len, pdf_name)
+    html_data = render(request, template, context).content
+    pdf_data = xhtml2pdf(html_data)
+    document_uuid = uuid4().get_hex();
+
+    t_in = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+    t_out = tempfile.NamedTemporaryFile(prefix='vote_sign_stamped_', suffix='.pdf', delete=False)
+    t_in.write(pdf_data)
+
+    t_in.seek(0)
+    pdf_barcodestamp(t_in, t_out, document_uuid)
+    t_in.close();
+
+    t_out.seek(0)
+    pdf_data_stamped = t_out.read()
+    t_out.close();
+
+    pdfas_id = votesDepot.deposit(pdf_data_stamped, html_data, document_uuid, pdf_name)
+    return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
 
 
 @forceauth.exempt
 def vote_sign_send(request, meeting_pk=None, vote_pk=None):
-    print 'vote_sign_send meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    if request.REQUEST.has_key('pdf-id'):
-        pdf_id = request.REQUEST['pdf-id']
-    else:
-        return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-    value = id_get(pdf_id)
-    if value is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-    a = value.split(':')
-    t_name = a[1]
-    pdf_data = file(t_name, 'rb')
-    return HttpResponse(pdf_data, mimetype='application/pdf')
+    votedoc = votesDepot.get(request.REQUEST['pdf-id'])
+    if votedoc is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
+    t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
+    t_pdfas.write(votedoc["pdf_data"])
+    t_pdfas.seek(0)
+    
+    return HttpResponse(t_pdfas.read(), mimetype='application/pdf')
 
 @forceauth.exempt
+@csrf_exempt
+def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    votedoc = votesDepot.get(request.REQUEST['pdf-id'])
+    if votedoc is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
+    
+    return HttpResponse(votedoc["html_data"])
+
+@csrf_exempt
+def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+    return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
+ 
+@forceauth.exempt
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    print 'vote_sign_receive meeting "%s", vote "%s", jsessionid "%s"' % (meeting_pk, vote_pk, jsessionid)
+    print 'vote_sign_receive meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
         pdf_id = request.REQUEST['pdf-id']
-        num_bytes = request.REQUEST['num-bytes']
+        num_bytes = int(request.REQUEST['num-bytes'])
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
-        value = id_get(pdf_id)
-        if value is None:
-            return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-        a = value.split(':')
-        t_name = a[1]
-        pdf_name = a[2]
-        os.remove(t_name)
-        id_delete(pdf_id)
-        # f is not seekable, so we have to store it as local file first
-        f = urllib2.urlopen(url)
-        t = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
-        t_name = t.name
-        t.write(f.read())
-        t.close()
-        f.close()
-        print 'wrote "%s" as "%s"' % (pdf_name, t_name)
-        t = open(t_name, 'rb')
+        votedoc = votesDepot.pop(pdf_id)
+        if votedoc is None:
+            return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
+
+        # f_pdfas is not seekable, so we have to store it as local file first
+        sock_pdfas = urllib2.urlopen(url)
+        t_pdfas = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
+        t_pdfas.write(sock_pdfas.read(num_bytes))
+        sock_pdfas.close()
+         
         d = datetime.datetime.now()
-        document = Document(file=t, original_file_name=pdf_name, date=d)
-        document.save()
-        print 'stored "%s" as "%s"' % (pdf_name, document.pk)
-        t.close()
-        os.remove(t_name)
-        return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'id': document.pk, 'page': 1, 'zoom': '1'}))
+        doctype = DocumentType.objects.create(name="Votum", identifier="votes")
+        document = Document.objects.create(uuid_document=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
+        t_pdfas.close()
+        os.remove(t_pdfas.name)
+        
+        return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'document_pk': document.pk}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
-
+@csrf_exempt
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
+    if request.REQUEST.has_key('pdf-id'):
+        votesDepot.pop(request.REQUEST['pdf-id'])
+        
     if request.REQUEST.has_key('error'):
         error = urllib.unquote_plus(request.REQUEST['error'])
     else:
@@ -169,3 +218,39 @@ def vote_sign_error(request, meeting_pk=None, vote_pk=None):
         cause = ''
     # no pdf id, no explicit cleaning possible
     return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
+
+# TODO BKUApplet - setting background from 
+# http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png
+# to something ECS branded
+
+def sign(request, pdf_id, pdf_data_size, pdf_name):
+    url_sign = '%sSign' % settings.PDFAS_SERVICE
+    url_send = request.build_absolute_uri('send')
+    url_error = request.build_absolute_uri('error')
+    url_receive = request.build_absolute_uri('receive')
+    url_preview = request.build_absolute_uri('preview')
+    print 'url_sign: "%s"' % url_sign
+    print 'url_send: "%s"' % url_send
+    print 'url_error: "%s"' % url_error
+    print 'url_receive: "%s"' % url_receive
+    values = {
+        'preview': 'false',
+        'connector': 'moc',  # undocumented feature! selects ONLINE CCE/BKU
+        'mode': 'binary',
+        'sig_type': 'SIGNATURBLOCK_DE',
+        'inline': 'false',
+        'filename': pdf_name,
+        'num-bytes': '%s' % pdf_data_size,
+        'pdf-url': url_send,
+        'pdf-id': pdf_id,
+        'invoke-app-url': url_receive, 
+        'invoke-app-error-url': url_error,
+        'invoke-preview-url': url_preview,
+        # session-id=9085B85B364BEC31E7D38047FE54577D
+        'locale': 'de',
+    }
+    data = urllib.urlencode(values)
+    redirect = '%s?%s' % (url_sign, data)
+    print 'sign: redirect to [%s]' % redirect
+    return HttpResponseRedirect(redirect)
+

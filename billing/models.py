@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.utils.translation import ugettext as _
 
 STUDY_PRICING_OTHER = 1
 STUDY_PRICING_MULTICENTRIC_AMG_MAIN = 2
@@ -8,11 +9,11 @@ STUDY_PRICING_REMISSION = 4
 EXTERNAL_REVIEW_PRICING = 5
 
 PRICE_CATEGORIES = (
-    (STUDY_PRICING_OTHER, u'Alle Studien außer multizentrische Arzneimittelstudien'),
-    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, u'Multizentrische Arzneimittelstudien für Leit-Ethikkommissionen'),
-    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, u'Multizentrische Arzneimittelstudien für lokal zuständige Ethikkommissionen'),
-    (STUDY_PRICING_REMISSION, u'Gebührenbefreiung'),
-    (EXTERNAL_REVIEW_PRICING, u'External Reviewer'),
+    (STUDY_PRICING_OTHER, _(u'All studies except multicentre drug studies')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, _(u'Multicentre drug trials for controlling ethics committees')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, _(u'Multicentre drug trials for locally responsible ethics committees')),
+    (STUDY_PRICING_REMISSION, _(u'fee exemption')),
+    (EXTERNAL_REVIEW_PRICING, _(u'External Reviewer')),
 )
 
 class PriceManager(models.Manager):

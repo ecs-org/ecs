@@ -10,13 +10,13 @@
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
             {% compress css %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooEditable/Assets/MooEditable/MooEditable.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}MooDialog/Source/css/MooDialog.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/ecs/base.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/datepicker.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}css/Roar.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooEditable/Assets/MooEditable/MooEditable.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/base.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/core.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/meetings.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/communication.css" />
@@ -24,8 +24,10 @@
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/search.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/billing.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/help.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/widgets.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/pdfviewer.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/tasks.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/fastlane.css" />
 
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}bugshot/bugshot.css" />
             {% endcompress %}
@@ -36,14 +38,32 @@
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
             {% compress js %}
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4-core.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/mootools-1.2.4.4-more.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/datepicker.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/Roar.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/GrowingInput.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL}}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/dbug.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.4-core.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.4.4-more.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/datepicker.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/Roar/Roar.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/GrowingInput.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/dbug.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooEditable/Source/MooEditable/MooEditable.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/Overlay.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Iframe.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Confirm.js"></script>
+
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/textarea.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/widgets.js"></script>
+                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer.js"></script>
+
+                 <script type="text/javascript" src="{{ MEDIA_URL }}bugshot/bugshot.js"></script>
+
              {% endcompress %}
         {% endblock %}
     </body>

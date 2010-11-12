@@ -175,7 +175,6 @@ INSTALLED_APPS = (
     'ecs.feedback',
     'ecs.docstash',
     'ecs.userswitcher',
-    'ecs.pdfsigner',
     'ecs.pdfviewer',
     'ecs.mediaserver',
     'ecs.workflow',
@@ -194,6 +193,7 @@ INSTALLED_APPS = (
     'ecs.notifications',
     'ecs.authorization',
     'ecs.integration',
+    'ecs.fastlane',
 )
 
 
@@ -213,8 +213,8 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# PDF Signing settings
-PDFAS_SERVICE = 'http://ecsdev.ep3.at:4780/pdf-as/'
+# PDF Signing settings, use port 4780 per default (as stated in source:/signing/readme.txt)
+PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
@@ -327,13 +327,13 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
+    'ecs.core.task_queue',
     'ecs.core.tests.task_queue',
     'ecs.meetings.task_queue',
-    'ecs.communication.task_queue'
+    'ecs.communication.task_queue',
     'ecs.ecsmail.task_queue',
     'ecs.documents.task_queue',
-    'ecs.workflow.task_queue'
-    #ecs.mediaserver.task_queue',
+    'ecs.workflow.task_queue',
 )
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True

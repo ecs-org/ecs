@@ -90,6 +90,20 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
     {{ vote.text|escape}}
 {% endif %}
 
+
+{% if submission.is_amg %}
+<pdf:spacer height="0.5cm" />
+<span style="font-weight:bold;">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
+</span><br />
+{% endif %}
+
+{% if submission.is_amg or submission.is_mpg %}
+<pdf:spacer height="1.0cm" />
+<span style="font-weight:bold;">
+    Die Ethik-Kommision geht - rechtlich verbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
+</span><br />
+{% endif %}
+
 <pdf:spacer height="1.0cm" />
     
 {% endblock %}

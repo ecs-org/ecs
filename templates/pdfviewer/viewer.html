@@ -17,6 +17,10 @@
     <div><span class="metaKey"></span> + &darr;: Zoom In</div>
     <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
     <div><span class="metaKey"></span> + A: Enter/Leave Annotation Mode</div>
+    <div><span class="metaKey"></span> + G: Goto Page</div>
+    <div><span class="metaKey"></span> + F: Search</div>
+    <div><span class="metaKey"></span> + 1: Page Up</div>
+    <div><span class="metaKey"></span> + 9: Page Down</div>
     <div>ESC: Leave Annotation Mode / Close Annotation Popup</div>
     
     <p>
@@ -32,13 +36,6 @@
 {% block jsbottom %}
 
 {{ block.super }}
-<script type="text/javascript" src="{{ MEDIA_URL}}js/flext.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/Overlay.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Iframe.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer.js"></script>
 
 <script type="text/javascript">
     $(window).addEvent('domready', function(){
@@ -55,7 +52,9 @@
             searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
             editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
             deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
-            helpContents: $('navigation')
+            helpContents: $('navigation'),
+            wheelScrollThreshold: 1,//30,
+            wheelTimeThreshold: 333
         });
         
         var IMAGE_TILING = [1, 3, 5];
@@ -75,8 +74,10 @@
         });
         $(document.body).addClass('pdfviewer');
         
+        var USER_ID = {{ request.user.pk }};
+        
         {{ annotations|safe }}.each(function(a){
-            viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height));
+            viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height, a.author__id != USER_ID ? a.author__username : null));
         });
 
         viewer.gotoAnchor();
@@ -91,14 +92,6 @@
             });
         });
         metaKeySelect.value = 'alt';
-        
-        // POS1: first page
-        // END: last page
-        // s: search
-        // ?: help
-        // RIGHT: next page
-        // LEFT: next page
-        // mousewheel: zoom
         
     });
 </script>

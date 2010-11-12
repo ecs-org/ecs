@@ -1,4 +1,4 @@
-{% load core i18n %}
+{% load core i18n userutils %}
 
 <ol class="submission_list">
 {% for submission in submissions %}
@@ -6,8 +6,11 @@
         <h3><span class="ecnr">{{ submission|ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
             <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
-             | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
-             | <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>
+            {% if user|has_flag:'executive_board_member' %} 
+                | <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">Reschedule</a>
+            {% endif %}
+                | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
+                | <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>
             {% with submission.current_submission_form as submission_form %}
                  {% if submission_form %}
                      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
@@ -26,7 +29,6 @@
                      {% endwith %}
                  {% endif %}
              {% endwith %}
-             | <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}">Export</a>
         </div>
         {% with submission.medical_categories.all as categories %}
             {% if categories %}

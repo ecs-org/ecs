@@ -24,7 +24,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm, SimpleDocumentForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -35,8 +35,10 @@ from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.audit.models import AuditTrail
 from ecs.core.models import Vote
+from ecs.core.diff import diff_submission_forms
+from ecs.utils import forceauth
+from ecs.users.utils import sudo
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -129,8 +131,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'befangene_review_form': befangene_review_form,
         'pending_notifications': submission_form.notifications.all(),
         'answered_notficiations': [], # FIXME (FMD1)
-        'pending_votes': submission_form.submission.votes.filter(published=False),
-        'published_votes': submission_form.submission.votes.filter(published=True),
+        'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
+        'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
     }
     if extra_context:
         context.update(extra_context)
@@ -162,34 +164,42 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
-def checklist_review(request, submission_form_pk=None, blueprint_pk=1):
+def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, defaults={'user': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+    if request.method == 'POST':
+        checklist.documents = Document.objects.filter(pk__in=request.POST.getlist('documents'))
     checklist_documents = checklist.documents.all()
 
     form = make_checklist_form(checklist)(request.POST or None)
-
+    
+    document_form_is_empty = True
     if blueprint.min_document_count is None:
         document_form = None
-    elif 'document-file' in request.FILES or len(checklist_documents) < blueprint.min_document_count:
-        document_form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    elif 'document-file' in request.FILES:
+        document_form = SimpleDocumentForm(request.POST or None, request.FILES or None, prefix='document')
         if document_form.is_valid():
             doc = document_form.save()
             checklist.documents.add(doc)
-            document_form = DocumentForm(prefix='document')
+            document_form = SimpleDocumentForm(prefix='document')
+        else:
+            document_form_is_empty = False
     else:
-        document_form = DocumentForm(prefix='document')
+        document_form = SimpleDocumentForm(prefix='document')
         
-    if request.method == 'POST' and form.is_valid() and (not document_form or document_form.is_valid()):
-        for i, question in enumerate(blueprint.questions.order_by('text')):
-            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-            answer.answer = form.cleaned_data['q%s' % i]
-            answer.comment = form.cleaned_data['c%s' % i]
-            answer.save()
+    if request.method == 'POST':
+        if form.is_valid() and (not document_form or document_form_is_empty or document_form.is_valid()):
+            for i, question in enumerate(blueprint.questions.order_by('text')):
+                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+                answer.answer = form.cleaned_data['q%s' % i]
+                answer.comment = form.cleaned_data['c%s' % i]
+                answer.save()
+
+        checklist.save() # touch the checklist instance to trigger the post_save signal
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={
         'checklist_document_form': document_form,
@@ -289,6 +299,10 @@ def create_submission_form(request):
                 submission_form.save()
                 form.save_m2m()
                 submission_form.documents = request.docstash['documents']
+                submission_form.save()
+                for doc in request.docstash['documents']:
+                    doc.parent_object = submission_form
+                    doc.save()
             
                 formsets = formsets.copy()
                 investigators = formsets.pop('investigator').save(commit=False)
@@ -398,27 +412,12 @@ def import_submission_form(request):
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
     new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
-    assert(old_submission_form.submission == new_submission_form.submission)
 
-    diffs = SubmissionFormDiff(old_submission_form, new_submission_form)
-    
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    old_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=old_submission_form.id, object_created=True).created_at
-    new_document_creation_date = AuditTrail.objects.get(content_type__pk=ctype.id, object_id=new_submission_form.id, object_created=True).created_at
+    diffs = diff_submission_forms(old_submission_form, new_submission_form)
 
-    ctype = ContentType.objects.get_for_model(Document)
-    new_document_pks = [x.object_id for x in AuditTrail.objects.filter(content_type__pk=ctype.id, created_at__gt=old_document_creation_date, created_at__lte=new_document_creation_date)]
-
-    ctype = ContentType.objects.get_for_model(old_submission_form)
-    submission_forms = [x.pk for x in new_submission_form.submission.forms.all()]
-    new_documents = Document.objects.filter(content_type__pk=ctype.id, object_id__in=submission_forms, pk__in=new_document_pks)
-
-    print new_documents
-
-    return render(request, 'submissions/diff.html', {
+    return render(request, 'submissions/diff/diff.html', {
         'submission': new_submission_form.submission,
         'diffs': diffs,
-        'new_documents': new_documents,
     })
 
 @with_docstash_transaction
@@ -463,26 +462,23 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     filterform = SubmissionListFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
+    queries = {
+        'new': Q(pk__in=Submission.objects.new().values('pk').query),
+        'next_meeting': Q(pk__in=Submission.objects.next_meeting().values('pk').query),
+        'b2': Q(pk__in=Submission.objects.b2().values('pk').query),
+    }
     submissions_stage1 = Submission.objects.none()
-    if filterform.cleaned_data['new']:
-        submissions_stage1 |= Submission.objects.new()
-    if filterform.cleaned_data['next_meeting']:
-        try:
-            next_meeting = Meeting.objects.all().order_by('-start')[0]
-        except IndexError:
-            pass
-        else:
-            submissions_stage1 |= next_meeting.submissions.all()
-    if filterform.cleaned_data['b2']:
-        submissions_stage1 |= Submission.objects.b2()
+    for key, query in queries.items():
+        if filterform.cleaned_data[key]:
+            submissions_stage1 |= Submission.objects.filter(query)
 
-    submissions_stage2 = submissions_stage1.none()
 
     queries = {
         'amg': Q(pk__in=Submission.objects.amg().values('pk').query),
         'mpg': Q(pk__in=Submission.objects.mpg().values('pk').query),
         'thesis': Q(pk__in=Submission.objects.thesis().values('pk').query),
     }
+    submissions_stage2 = submissions_stage1.none()
     queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
 
     for key, query in queries.items():
@@ -511,4 +507,13 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def submission_widget(request, template='submissions/widget.html'):
     return submission_list(request, template=template, limit=5)
+
+@forceauth.exempt
+def catalog(request):
+    with sudo():
+        votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+
+    return render(request, 'submissions/catalog.html', {
+        'votes': votes,
+    })
 

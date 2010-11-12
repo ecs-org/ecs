@@ -1,0 +1,65 @@
+{% extends "core.html" %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headertitle %}
+    EK-Nr. {{ submission|ec_number }}
+{% endblock %}
+
+{% block content %}
+    <div class="diff_toggles">
+        <a href="#" id="diff_show_old">{% trans "old" %}</a>
+        | <a href="#" id="diff_show_new">{% trans "new" %}</a>
+        | <a href="#" id="diff_show_all">{% trans "all" %}</a>
+    </div>
+    
+    <ul class="diff">
+    {% for field, diff in diffs %}
+        <li>
+            <div>{{ field|escape }}:</div>
+            <div class="indent">
+            {% for type, content in diff %}
+                {% if type == 0 %}
+                    <span>{{ content|safe }}</span>
+                {% endif %}
+                {% if type == -1 %}
+                    <span class="deleted">{{ content|safe }}</span>
+                {% endif %}
+                {% if type == 1 %}
+                    <span class="inserted">{{ content|safe }}</span>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/diff.css" />
+{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+  <script type="text/javascript">
+  window.addEvent('domready', function(){
+    $('diff_show_old').addEvent('click', function() {
+      $$('.diff .deleted').show();
+      $$('.diff .inserted').hide();
+    });
+    $('diff_show_new').addEvent('click', function() {
+      $$('.diff .deleted').hide();
+      $$('.diff .inserted').show();
+    });
+    $('diff_show_all').addEvent('click', function() {
+      $$('.diff .deleted').show();
+      $$('.diff .inserted').show();
+    });
+  });
+  </script>
+{% endblock %}
+

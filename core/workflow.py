@@ -1,8 +1,9 @@
-import datetime
+from datetime import datetime
+from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
-from ecs.core.models import Submission, ChecklistBlueprint, Vote
+from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 
 register(Submission, autostart_if=lambda s: bool(s.current_submission_form_id))
 register(Vote)
@@ -119,10 +120,22 @@ class ChecklistReview(Activity):
     def is_reentrant(self):
         return False
         
+    def is_locked(self):
+        blueprint = self.node.data
+        try:
+            checklist = self.workflow.data.checklists.get(blueprint=blueprint)
+        except Checklist.DoesNotExist:
+            return False
+        return not checklist.is_complete
+        
     def get_url(self):
         blueprint = self.node.data
         submission_form = self.workflow.data.current_submission_form
         return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
+
+def unlock_checklist_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ChecklistReview)
+post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
 class VoteRecommendation(Activity):
@@ -183,3 +196,9 @@ class VotePublication(Activity):
 
     def get_url(self):
         return None # FIXME
+
+    def pre_perform(self, choice):
+        vote = self.workflow.data
+        vote.published_at = datetime.now()
+        vote.save()
+

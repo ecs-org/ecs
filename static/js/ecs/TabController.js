@@ -170,6 +170,9 @@ ecs.TabController = new Class({
     getSelectedTab: function(){
         return this.selectedTab;
     },
+    getSelectedTabGroup: function(){
+        return this.selectedTabGroup;
+    },
     getTabs: function(){
         return this.tabs;
     },

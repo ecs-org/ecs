@@ -1,7 +1,7 @@
 <form id="userswitcher_form" method="post" action="{% url ecs.userswitcher.views.switch %}?url={{ url }}">
     {{ form.user }}
     <script type="text/javascript">
-        document.getElementById('id_user').onchange = function(){
+        document.getElementById('userswitcher_input').onchange = function(){
             this.form.submit();
         };
     </script>

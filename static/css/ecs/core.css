@@ -580,7 +580,7 @@ fieldset.disabled {
   margin: 0 5px 0 3px;
   font-size: 14px;
 }
-.form #id_start_1 {
+.form #id_start_1, .form #id_deadline_1, .form #id_deadline_diplomathesis_1 {
   margin-left: 30px;
 }
 .form textarea#id_project_title, .form textarea#id_german_summary {

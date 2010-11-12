@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block usertoolbar %} 
-  <a href="" id="workflow_button" class="workflow_trigger"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
+  <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
 {% endblock %}
         
 {% block usermenu %}
@@ -58,12 +58,20 @@
       </ul>
     </li>
     <li>
+      <span class="togglers">{% trans "Fast Lane" %}</span>
+      <ul class="elements">
+        <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Meetings" %}</a></li>
+        <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Meeting" %}</a></li>
+      </ul>
+    </li>
+    <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.communication.views.send_message %}">Neue Nachricht</a></li>
+          <li><a href="{% url ecs.communication.views.send_message %}" class="open-in-popup">Neue Nachricht</a></li>
           <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
           <li><a href="{% url ecs.users.views.indisposed_userlist %}">{% trans 'Indisposed Users' %}</a></li>
           <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
+          <li><a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Catalog of Approved Studies' %}</a></li>
       </ul>
     </li>
     <li>
@@ -75,6 +83,7 @@
               <li><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
           {% endfor %}
       </ul>
+    </li>
   </ul>
 {% endblock %}
 
@@ -90,22 +99,7 @@
 {% endblock %}
 
 {% block jsbottom %}
-    {{ block.super }}
-    {% compress js %}
-        <script type="text/javascript" src="{{ MEDIA_URL}}js/flext.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL}}MooEditable/Source/MooEditable/MooEditable.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/Overlay.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Iframe.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}MooDialog/Source/MooDialog.Confirm.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
-        <script type="text/javascript" src="{{ MEDIA_URL }}bugshot/bugshot.js"></script>
-    {% endcompress %}
-
+  {{ block.super }}
   <script type="text/javascript">
     function get_origin() {
       {% comment %}
@@ -134,7 +128,8 @@
       'submissions': 0,
       'notifications': 1,
       'meetings': 2,
-      'demo': 3
+      'fastlane': 3,
+      'demo': 4
     };
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {
@@ -203,22 +198,6 @@
       {% endfor %}
       
       // workflow popups
-      
-      ecs.showWorkflowPopup = function(options){
-          var url = '{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&submission={{ submission_form.submission_id }}{% endif %}';
-          if(options && options.url){
-              url = options.url;
-          }
-          var dialog = new ecs.Dialog(url, {
-              title: 'Workflow',
-              size: {width: 700, height: 400}
-          });
-      };
-      
-      $('workflow_button').addEvent('click', function(){
-          ecs.showWorkflowPopup();
-          return false;
-      });
       
       $('help_button').addEvent('click', function(e){
           var link = $(e.target);

@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block title %}ECS Elektronische Einreichung{% endblock %}
 
@@ -51,6 +51,10 @@
             <div>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
             </div>
+            {% else %}
+            <div>
+                Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
+            </div>
             {% endif %}
         </li>
     {% endfor %}
@@ -73,7 +77,7 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="{% url ecs.meetings.views.meetings.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
+                    <a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
                     </div>
                 </li>
             {% endfor %}

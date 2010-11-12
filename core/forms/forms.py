@@ -68,7 +68,7 @@ MPG_FIELDS = (
 )
 
 INSURANCE_FIELDS = (
-    'insurance_name', 'insurance_address_1', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
+    'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
 )
 
 def require_fields(form, fields):
@@ -109,11 +109,11 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'submitter_is_main_investigator', 'submitter_is_sponsor', 'submitter_is_authorized_by_sponsor', 'sponsor_agrees_to_publishing', 'sponsor_name', 
             
             'sponsor_contact_gender', 'sponsor_contact_title', 'sponsor_contact_first_name', 'sponsor_contact_last_name', 
-            'sponsor_address1', 'sponsor_address2', 'sponsor_zip_code', 
+            'sponsor_address', 'sponsor_zip_code', 
             'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email', 'invoice_differs_from_sponsor', 
             
             'invoice_name', 'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name', 
-            'invoice_address1', 'invoice_address2', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
+            'invoice_address', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email', 
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2', 
             
             'additional_therapy_info', 
@@ -154,17 +154,10 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         return cleaned_data
 
 ## documents ##
-        
-class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
+
+class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
 
-    def __init__(self, *args, **kwargs):
-        document_pks = kwargs.get('document_pks', [])
-        if 'document_pks' in kwargs.keys():
-            del kwargs['document_pks']
-        super(DocumentForm, self).__init__(*args, **kwargs)
-        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
-    
     def clean(self):
         file = self.cleaned_data.get('file')
         if not self.cleaned_data.get('original_file_name') and file:
@@ -172,7 +165,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         return self.cleaned_data
         
     def save(self, commit=True):
-        obj = super(DocumentForm, self).save(commit=False)
+        obj = super(SimpleDocumentForm, self).save(commit=False)
         obj.original_file_name = self.cleaned_data.get('original_file_name')
         if commit:
             obj.save()
@@ -180,7 +173,21 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     
     class Meta:
         model = Document
+        fields = ('file', 'date', 'version')
+
+
+class DocumentForm(SimpleDocumentForm):
+    def __init__(self, *args, **kwargs):
+        document_pks = kwargs.get('document_pks', [])
+        if 'document_pks' in kwargs.keys():
+            del kwargs['document_pks']
+        super(DocumentForm, self).__init__(*args, **kwargs)
+        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
+    
+    class Meta:
+        model = Document
         exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
+
 
 ## ##
 
@@ -204,6 +211,12 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Measure
         exclude = ('submission_form',)
+        widgets = {
+            'type': forms.Textarea(),
+            'count': forms.Textarea(),
+            'period': forms.Textarea(),
+            'total': forms.Textarea(),
+        }
         
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))

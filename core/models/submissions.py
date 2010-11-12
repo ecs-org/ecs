@@ -7,16 +7,16 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 
-from ecs.meetings.models import TimetableEntry
+from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from ecs.utils.common_messages import send_submission_change,\
-    send_submission_creation, send_submission_invitation
+from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
+from ecs.core.parties import get_involved_parties
 
 MIN_EC_NUMBER = 1000
 
@@ -35,13 +35,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         ))
 
     def b2(self):
-        return self.filter(pk__in=Vote.objects.filter(result='2').values('submission_form__submission__pk').query)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
     def new(self):
         return self.filter(meetings__isnull=True)
         
     def thesis(self):
         return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
+
+    def next_meeting(self):
+        return self.filter(meetings__start__gt=datetime.datetime.now())
         
         
 class SubmissionManager(AuthorizationManager):
@@ -64,6 +67,9 @@ class SubmissionManager(AuthorizationManager):
 
     def thesis(self):
         return self.all().thesis()
+
+    def next_meeting(self):
+        return self.all().next_meeting()
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -100,7 +106,7 @@ class Submission(models.Model):
             return unicode(num)
         return u"%s%s%s" % (num, separator, year)
         
-    get_ec_number_display.short_description = 'EC-Number'
+    get_ec_number_display.short_description = _('EC-Number')
 
     def get_befangene(self):
         sf = self.current_submission_form
@@ -175,17 +181,17 @@ SUBMISSION_TYPE_MULTICENTRIC = 2
 SUBMISSION_TYPE_MULTICENTRIC_LOCAL = 6
 
 SUBMISSION_TYPE_CHOICES = (
-    (SUBMISSION_TYPE_MONOCENTRIC, _('monocentric')), 
-    (SUBMISSION_TYPE_MULTICENTRIC, _('multicentric, main ethics commission')),
-    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, _('multicentric, local ethics commission')),
+    (SUBMISSION_TYPE_MONOCENTRIC, ugettext_lazy('monocentric')), 
+    (SUBMISSION_TYPE_MULTICENTRIC, ugettext_lazy('multicentric, main ethics commission')),
+    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, ugettext_lazy('multicentric, local ethics commission')),
 )
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
-    documents = GenericRelation(Document)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
-    pdf_document = models.ForeignKey(Document, related_name="submission_forms", null=True)
+    pdf_document = models.ForeignKey(Document, related_name="submission_form", null=True) # FIXME: make this a OneToOneField
+    documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -209,8 +215,7 @@ class SubmissionForm(models.Model):
     sponsor = models.ForeignKey(User, null=True, related_name="sponsored_submission_forms")
     sponsor_name = models.CharField(max_length=100, null=True)
     sponsor_contact = NameField()
-    sponsor_address1 = models.CharField(max_length=60, null=True)
-    sponsor_address2 = models.CharField(max_length=60, null=True, blank=True)
+    sponsor_address = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
     sponsor_phone = models.CharField(max_length=30, null=True)
@@ -220,8 +225,7 @@ class SubmissionForm(models.Model):
     
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
-    invoice_address1 = models.CharField(max_length=60, null=True, blank=True)
-    invoice_address2 = models.CharField(max_length=60, null=True, blank=True)
+    invoice_address = models.CharField(max_length=60, null=True, blank=True)
     invoice_zip_code = models.CharField(max_length=10, null=True, blank=True)
     invoice_city = models.CharField(max_length=80, null=True, blank=True)
     invoice_phone = models.CharField(max_length=50, null=True, blank=True)
@@ -315,7 +319,7 @@ class SubmissionForm(models.Model):
     
     # 5.x
     insurance_name = models.CharField(max_length=125, null=True, blank=True)
-    insurance_address_1 = models.CharField(max_length=80, null=True, blank=True)
+    insurance_address = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
     insurance_contract_number = models.CharField(max_length=60, null=True, blank=True)
     insurance_validity = models.CharField(max_length=60, null=True, blank=True)
@@ -350,7 +354,7 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
-    study_plan_blind = models.SmallIntegerField(choices=[(0, 'offen'), (1, 'blind'), (2, 'doppelblind')])
+    study_plan_blind = models.SmallIntegerField(choices=[(0, ugettext_lazy('open')), (1, ugettext_lazy('blind')), (2, ugettext_lazy('double-blind'))])
     study_plan_observer_blinded = models.BooleanField()
     study_plan_randomized = models.BooleanField()
     study_plan_parallelgroups = models.BooleanField()
@@ -473,6 +477,10 @@ class SubmissionForm(models.Model):
     @property
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
+        
+    def get_involved_parties(self, include_workflow=True):
+        return get_involved_parties(self, include_workflow=include_workflow)
+
 
 def attach_to_submissions(user):
     print "attach"
@@ -497,8 +505,12 @@ def attach_to_submissions(user):
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
-    old_sf = submission.current_submission_form
-    submission.current_submission_form = new_sf
+
+    if new_sf == submission.current_submission_form:
+        old_sf = None
+    else:
+        old_sf = submission.current_submission_form
+        submission.current_submission_form = new_sf
 
     # set defaults
     if submission.is_amg is None:
@@ -511,19 +523,20 @@ def _post_submission_form_save(**kwargs):
     
     if not old_sf:
         return
-    
-    recipients = list(User.objects.filter(username__in=settings.DIFF_REVIEW_LIST))
 
-    timetable_entries = TimetableEntry.objects.filter(submission=submission)
-    recipients += sum([list(x.users) for x in timetable_entries], [])
+    timetable_entries_q = submission.timetable_entries.all().values('pk').query
+    meetings_q = Meeting.objects.filter(timetable_entries__in=timetable_entries_q).values('pk').query
+    assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(meeting__in=meetings_q).values('pk').query
 
-    meetings = set([x.meeting for x in timetable_entries])
-    assigned_medical_categories = [x.category for x in sum([list(x.medical_categories.all()) for x in meetings], []) if x.category in submission.medical_categories.all()]
-    recipients += sum([list(x.board_members) for x in assigned_medical_categories], [])
-    recipients += list(User.objects.filter(email__in=[old_sf.sponsor_email, new_sf.sponsor_email]))
-    recipients = set(recipients)
+                                                                                        # filter for following users:
+    recipients_q = Q(username__in=settings.DIFF_REVIEW_LIST)                            # static reviewer list
+    recipients_q |= Q(meeting_participations__entry__in=timetable_entries_q)            # assigned to the top
+    recipients_q |= Q(assigned_medical_categories__in=assigned_medical_categories_q)    # assigned for medical category
+    recipients_q |= Q(email__in=(old_sf.sponsor_email, new_sf.sponsor_email,))          # sponsors
 
-    #send_submission_change(new_sf, recipients);
+    recipients = list(User.objects.filter(recipients_q).distinct())
+
+    send_submission_change(old_sf, new_sf, recipients);
 
 # FIXME: why do we have two signal handlers for SubmissionForm post_save ?
 def _post_submission_form_create(**kwargs):
@@ -578,7 +591,7 @@ post_save.connect(_post_investigator_save, sender=Investigator)
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
 
-    sex = models.CharField(max_length=1, choices=[("m", "Herr"), ("f", "Frau"), ("?", "")])
+    sex = models.CharField(max_length=1, choices=[("m", ugettext_lazy("Mr")), ("f", ugettext_lazy("Ms")), ("?", "")])
     title = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
@@ -609,7 +622,7 @@ class InvestigatorEmployee(models.Model):
 class Measure(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='measures')
     
-    category = models.CharField(max_length=3, choices=[('6.1', u"ausschließlich studienbezogen"), ('6.2', u"zu Routinezwecken")])
+    category = models.CharField(max_length=3, choices=[('6.1', ugettext_lazy("only study-related")), ('6.2', ugettext_lazy("for routine purposes"))])
     type = models.CharField(max_length=150)
     count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)
