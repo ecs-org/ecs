@@ -152,40 +152,27 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
 
 @forceauth.exempt
 def vote_sign_send(request, meeting_pk=None, vote_pk=None):
-    print 'vote_sign_send meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    if request.REQUEST.has_key('pdf-id'):
-        pdf_id = request.REQUEST['pdf-id']
-    else:
-        return HttpResponseForbidden('<h1>Error: Missing pdf-id</h1>')
-
-    votedoc = votesDepot.get(pdf_id)
-
+    votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
-    print "send: votedoc found"
     t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
     t_pdfas.write(votedoc["pdf_data"])
     t_pdfas.seek(0)
-    data = t_pdfas.read()
-    print "send: %s" % (len(data))
     
-    return HttpResponse(data, mimetype='application/pdf')
+    return HttpResponse(t_pdfas.read(), mimetype='application/pdf')
 
 @forceauth.exempt
 @csrf_exempt
 def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    print "preview"
-    pdf_id = request.REQUEST['pdf-id']
-    if pdf_id is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-    votedoc = votesDepot.get(pdf_id)
+    votedoc = votesDepot.get(request.REQUEST['pdf-id'])
+    if votedoc is None:
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
     return HttpResponse(votedoc["html_data"])
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    print "landing"
     return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
  
 @forceauth.exempt
@@ -198,9 +185,8 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         pdfas_session_id = request.REQUEST['pdfas-session-id']
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
         votedoc = votesDepot.pop(pdf_id)
-        if pdf_id is None:
-            return HttpResponseForbidden('<h1>Error: Invalid pdf-id</h1>')
-        print "receive votedoc found!"
+        if votedoc is None:
+            return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
         # f_pdfas is not seekable, so we have to store it as local file first
         sock_pdfas = urllib2.urlopen(url)
@@ -213,8 +199,6 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         document = Document.objects.create(uuid_document=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
         t_pdfas.close()
         os.remove(t_pdfas.name)
-        
-        print 'stored "%s" as "%s"' % (votedoc["name"], votedoc["uuid"])
         
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'document_pk': document.pk}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
