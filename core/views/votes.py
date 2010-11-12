@@ -172,6 +172,7 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     
     return HttpResponse(data, mimetype='application/pdf')
 
+@forceauth.exempt
 @csrf_exempt
 def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print "preview"
