@@ -2,6 +2,7 @@
 import os, random
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
 from django.contrib.auth.models import Group, User
 from django.contrib.sites.models import Site
@@ -379,9 +380,11 @@ def auth_user_testusers():
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
-            if ExpeditedReviewCategory.objects.exists(abbrev=medcategory):
+            try:
                 e= ExpeditedReviewCategory.objects.get(abbrev=medcategory)
                 e.users.add(user)
+            except ObjectDoesNotExist:
+                pass
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():
