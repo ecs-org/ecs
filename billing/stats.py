@@ -1,42 +1,43 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
 from django.utils.datastructures import SortedDict
+from django.utils.translation import ugettext as _
 from ecs.billing.models import Price, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, STUDY_PRICING_REMISSION
 
 SUBMISSION_STAT_TEMPLATE = SortedDict((
     ('local', {
-        'label': u'Gebührennoten - lokale EK',
+        'label': _(u'fees note - local EC'),
         'price': STUDY_PRICING_MULTICENTRIC_AMG_LOCAL,
         'count': 0,
     }),
     ('amg', {
-        'label': u'Gebührennoten - AMG',
+        'label': _(u'fees note - AMG'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('mpg', {
-        'label': u'Gebührennoten - MPG',
+        'label': _(u'fees note - MPG'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('other', {
-        'label': u'Gebührennoten - sonstige',
+        'label': _(u'fees note - other'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('main_monocentric', {
-        'label': u'Gebührennoten - Leit-EK monozentrisch',
+        'label': _(u'fees note - controlling-EC monocentric'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('main_multicentric', {
-        'label': u'Gebührennoten - Leit-EK multizentrisch',
+        'label': _(u'fees note - controlling-EC multicentric'),
         'price': STUDY_PRICING_MULTICENTRIC_AMG_MAIN,
         'count': 0,
     }),
     # FIXME: what does 
     ('later', {
-        'label': u'Gebührennotennachreichungen',
+        'label': _(u'late filed fees notes'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
