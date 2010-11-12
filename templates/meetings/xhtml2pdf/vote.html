@@ -97,10 +97,12 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 </span><br />
 {% endif %}
 
+{% if submission.is_amg or submission.is_mpg %}
 <pdf:spacer height="1.0cm" />
 <span style="font-weight:bold;">
     Die Ethik-Kommision geht - rechtlich verbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
- </span><br />
+</span><br />
+{% endif %}
 
 <pdf:spacer height="1.0cm" />
     
