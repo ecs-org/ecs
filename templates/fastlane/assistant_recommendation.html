@@ -12,6 +12,14 @@
         {{ top.submission.project_title }}
     </div>
 
+    <ul class="submissions">
+        {% for t in meeting.tops.all %}
+        <li class="{% if t == top %}current{% endif %} {{ t.recommendation|yesno:"recommendation_yes,recommendation_no,recommendation_unknown" }}">
+            {{ t.submission|ec_number }}
+        </li>
+        {% endfor %}
+    </ul>
+
     <div class="paginator">
         {% if page.has_previous %}
             <a href="{% url ecs.fastlane.views.assistant meeting_pk=meeting.pk page_num=1 %}"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="Anfang" title="Anfang" /></a>
@@ -23,6 +31,7 @@
             <a href="{% url ecs.fastlane.views.assistant meeting_pk=meeting.pk page_num=page.paginator.num_pages %}"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="Ende" title="Ende" /></a>
         {% endif %}
     </div>
+
     <div>
         {% blocktrans with meeting.started|date:'d.m.Y H:i' as started %}
             The meeting started at {{ started }}

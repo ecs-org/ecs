@@ -38,7 +38,7 @@ def participation(request, meeting_pk):
     meeting = get_object_or_404(FastLaneMeeting, pk=meeting_pk)
 
     forms = []
-    for category in meeting.categories.all():
+    for category in meeting.categories.all().order_by('pk'):
         form = AssignedFastLaneCategoryForm(request.POST or None, instance=category, prefix=category.pk)
         if request.method == 'POST' and form.is_valid():
             form.save()
@@ -58,7 +58,7 @@ def invitations(request, meeting_pk, reallysure=False):
         categories_q = recipient.assigned_fastlane_categories.all().values('pk').query
         return Submission.objects.filter(expedited_review_categories__pk__in=categories_q, fast_lane_meetings=meeting)
 
-    recipients = User.objects.filter(assigned_fastlane_categories__meeting=meeting)
+    recipients = User.objects.filter(assigned_fastlane_categories__meeting=meeting).distinct().order_by('pk')
     if reallysure:
         for recipient in recipients:
             submissions = get_submissions_for_recipient(recipient)
@@ -90,7 +90,7 @@ def assistant(request, meeting_pk, page_num=0):
     meeting = get_object_or_404(FastLaneMeeting, pk=meeting_pk)
     page_num = int(page_num)
 
-    paginator = Paginator(meeting.tops.all(), 1)
+    paginator = Paginator(meeting.tops.all().order_by('pk'), 1)
 
     if not meeting.started or meeting.ended:
         return render(request, 'fastlane/assistant_main.html', {

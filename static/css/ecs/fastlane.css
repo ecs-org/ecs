@@ -45,6 +45,15 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
+#fastlane_assistant .nav .submissions .current {
+  border: 1px solid #cccccc;
+}
+#fastlane_assistant .nav .submissions .recommendation_yes {
+  color: #00ff00;
+}
+#fastlane_assistant .nav .submissions .recommendation_no {
+  color: #ff0000;
+}
 #fastlane_assistant .body {
   border: 1px solid #cccccc;
   -moz-border-radius: 5px;
