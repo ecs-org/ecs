@@ -21,7 +21,9 @@
   width: 200px;
   padding: 10px;
 }
-#fastlane_assistant .nav .button a {
+#fastlane_assistant .nav .button a,
+#fastlane_participation .button a,
+#fastlane_invitations .button a {
   border: 1px solid #cccccc;
   background-color: #666666;
   color: #ffffff;
@@ -30,6 +32,11 @@
   text-align: center;
   text-decoration: none;
   display: block;
+}
+#fastlane_participation .button a,
+#fastlane_invitations .button a {
+  width: 100px;
+  background-color: #333333;
 }
 #fastlane_assistant .nav .button a:hover {
   background-color: #333333;

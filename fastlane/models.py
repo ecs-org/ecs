@@ -31,4 +31,7 @@ class AssignedFastLaneCategory(models.Model):
     class Meta:
         unique_together = (('meeting', 'category'),)
 
+    def get_submissions(self):
+        return self.meeting.submissions.filter(expedited_review_categories=self.category)
+
 

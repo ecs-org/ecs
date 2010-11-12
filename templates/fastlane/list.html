@@ -16,7 +16,6 @@
         <strong>{{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title }}</strong>
         <div class="actions">
             <a href="{% url ecs.fastlane.views.participation meeting_pk=meeting.pk %}">{% trans "Participation" %}</a>
-            | <a href="{% url ecs.fastlane.views.invitations meeting_pk=meeting.pk %}">{% trans "Send Invitations" %}</a>
             | <a href="{% url ecs.fastlane.views.assistant meeting_pk=meeting.pk %}">{% trans "Assistant" %}</a>
         </div>
         <div class="submissions">
