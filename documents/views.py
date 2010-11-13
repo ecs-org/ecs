@@ -1,14 +1,13 @@
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
-from django import forms
-from django.template.defaultfilters import slugify
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils import simplejson
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
-from ecs.documents.models import Page, Document
+from ecs.documents.models import Page, Document, C_BRANDING_CHOICES
+from ecs.utils.msutils import generate_media_url, generate_blob_url, generate_document_url 
 
 HIGHLIGHT_PREFIX_WORD_COUNT = 3
 
@@ -20,15 +19,23 @@ class DocumentHighlighter(Highlighter):
 
 def download_document(request, document_pk=None):
     doc = get_object_or_404(Document, pk=document_pk)
-    # FIXME: get object via redirect to mediaserver
-    response = HttpResponse(doc.file, content_type=doc.mimetype)
-    ext = 'pdf'
-    if 'excel' in doc.mimetype:
-        ext = 'xls'
-    response['Content-Disposition'] = 'attachment;filename=%s.%s' % (
-        slugify("%s-%s-%s" % (doc.doctype and doc.doctype.name or 'Unterlage', doc.version, doc.date.strftime('%Y.%m.%d'))),
-        ext,
-    )
+    filename = doc.get_filename()
+    
+    if (not doc.allow_download) or (doc.branding not in [c[0] for c in C_BRANDING_CHOICES]):
+        return HttpResponseForbidden()
+    
+    if doc.mimetype != "application/pdf"or doc.branding == "n":
+        response = HttpResponseRedirect(generate_blob_url(doc.uuid_document, filename, doc.mimetype))
+    elif doc.branding == "b":
+        response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, None))
+    elif doc.branding == "p":
+        personalization = doc.add_personalization()
+        branding = personalization.id
+        response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, branding))
+    else:
+        return HttpResponseForbidden()
+        
+    response['Content-Disposition'] = 'attachment;filename=%s' % (filename)
     return response
 
 

@@ -64,14 +64,12 @@ if user in ["shredder", "testecs"]:
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 if user == "testecs":    
-    MS_CLIENT = {"url": "http://test.ecsdev.ep3.at",
-        "key_id": "GHz36o6OJHOm8uKmYiD1",
-        "key_secret": "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6",
+    MS_CLIENT = {"server": "http://test.ecsdev.ep3.at", "bucket": "/mediaserver/",
+        "key_id": "GHz36o6OJHOm8uKmYiD1", "key_secret": "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6",
         }
 elif user == "shredder":
-    MS_CLIENT = {"url": "http://s.ecsdev.ep3.at",
-        "key_id": "Skj45A6R2z36gVKF17i2",
-        "key_secret": "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw",
+    MS_CLIENT = {"server": "http://s.ecsdev.ep3.at", "bucket": "/mediaserver/",
+        "key_id": "Skj45A6R2z36gVKF17i2", "key_secret": "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw",
         }
 
 # Mediaserver Server Access

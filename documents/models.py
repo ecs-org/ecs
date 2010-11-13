@@ -15,11 +15,22 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.auth.models import User
 
 from ecs.utils.pdfutils import pdf_pages, pdf_isvalid
 from ecs.authorization import AuthorizationManager
+
+
+class DocumentPersonalization(models.Model):
+    id = models.SlugField(max_length=36, primary_key=True, default = uuid4().get_hex())
+    document = models.ForeignKey('Document', db_index=True)
+    user = models.ForeignKey(User, db_index=True)
+    
+    def __unicode__(self):
+        return "%s - %s - %s - %s" % (self.id, str(self.document), self.document.get_filename(), self.user.get_full_name())
 
 
 class DocumentType(models.Model):
@@ -43,7 +54,6 @@ class DocumentFileStorage(FileSystemStorage):
         available for new content to be written to.
         Limit the length to some reasonable value.
         """
-
         dir_name, file_name = os.path.split(name)
         file_root, file_ext = os.path.splitext(file_name)
         # If the filename already exists, add _ with a 4 digit number till we get an empty slot.
@@ -72,6 +82,12 @@ class DocumentManager(AuthorizationManager):
         return doc
 
 
+C_BRANDING_CHOICES = (
+    ('b', 'brand id'),
+    ('p', 'personalize'),
+    ('n', 'never brand'),
+    )
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
@@ -80,6 +96,8 @@ class Document(models.Model):
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
+    branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
+    allow_download = models.BooleanField(default=True)
 
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
@@ -97,6 +115,22 @@ class Document(models.Model):
         if self.doctype_id:
             t = self.doctype.name
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
+
+    def get_filename(self):
+        parent = "parentobject"
+        ext = mimetypes.guess_extension(self.mimetype)
+        name = slugify("%s-%s-%s" % (self.doctype and self.doctype.name or 'Unterlage',
+            self.version, self.date.strftime('%Y.%m.%d')))
+        fullname = '%s-%s%s' % (parent, name, ext)
+        return fullname
+
+    def get_personalizations(self, user=None):
+        ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
+        return None
+        
+    def add_personalization(self, user):
+        ''' Add unique id connected to a user and document download ''' 
+        return "unique id"
 
     def save(self, **kwargs):
         from ecs.documents.tasks import encrypt_and_upload_to_storagevault
@@ -143,5 +177,4 @@ def _post_page_delete(sender, **kwargs):
     site.get_index(Page).remove_object(kwargs['instance'])
 
 post_delete.connect(_post_page_delete, sender=Page)
-
 

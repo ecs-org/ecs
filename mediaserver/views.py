@@ -16,7 +16,7 @@ from ecs.utils import forceauth
 def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest("Invalid expiring url");
+        return HttpResponseBadRequest("Invalid expiring url")
     
     docprovider = DocumentProvider()    
     f = docprovider.getDocshot(Docshot(MediaBlob(UUID(uuid)), tiles_x, tiles_y, width, pagenr))
@@ -28,16 +28,48 @@ def docshot(request, uuid, tiles_x, tiles_y, width, pagenr):
     return HttpResponse(f, mimetype='image/png')
         
 @forceauth.exempt
-def download_pdf(request, uuid, mimetype= "application/pdf"):
+def download_blob(request, uuid, filename, mime_part1="application", mime_part2= "pdf"):
+    mimetype="/".join((mime_part1, mime_part2))
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest("Invalid expiring url");
+        return HttpResponseBadRequest("Invalid expiring url")
     
     docprovider = DocumentProvider() 
     f = docprovider.getBlob(MediaBlob(UUID(uuid)))
 
     if f:
-        return HttpResponse(f.read(), mimetype=mimetype) 
+        response = HttpResponse(f.read(), mimetype=mimetype)
+        response['Content-Disposition'] = 'attachment;filename=%s' % (filename) 
     else:
         return HttpResponseNotFound()
+
+
+@forceauth.exempt
+def download_pdf(request, uuid, filename, branding=None):
+    mimetype = "application/pdf"
+    
+    s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    if not s3url.verifyUrlString(request.get_full_path()):
+        return HttpResponseBadRequest("Invalid expiring url");
+    
+    docprovider = DocumentProvider()
+    f = docprovider.getBlob(MediaBlob(UUID(uuid)))
+    #fixme: brand pdf with uuid barcode, and if branding != none with branding barcode also
+     
+    if f:
+        response = HttpResponse(f.read(), mimetype=mimetype)
+        response['Content-Disposition'] = 'attachment;filename=%s' % (filename)
+        return response  
+    else:
+        return HttpResponseNotFound()
+
+
+@forceauth.exempt
+def prepare_with_branding(request, uuid, mime_part1="application", mime_part2= "pdf", brandprepare=True):
+    return prepare(request, uuid, mime_part1, mime_part2, brandprepare)
+
+@forceauth.exempt
+def prepare(request, uuid, mime_part1="application", mime_part2= "pdf", brandprepare=False):
+    return HttpResponseBadRequest("sorry, unfinished")
+    
     

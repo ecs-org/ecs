@@ -37,7 +37,7 @@ class PdfViewerInterface(LoginTestCase):
             self.docprovider.addBlob(self.docblob, encrypted)
 
     def testExpiringDocshot(self):
-        dsdata = msutils.generate_mediaurls(self.docblob.cacheID(), self.pages)
+        dsdata = msutils.generate_docshot_urllist(self.docblob.cacheID(), self.pages)
         key_id = settings.MS_CLIENT ["key_id"]
         key_secret = settings.MS_CLIENT ["key_secret"]
         
