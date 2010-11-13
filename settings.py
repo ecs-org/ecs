@@ -12,7 +12,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 # standard django settings
 ##########################
 
-# admins is used to send django 500, 404 and celery errror messages per email, DEBUG needs to be false for this
+# admins is used to send django 500, 404 and celery error messages per email, DEBUG needs to be false for this
 MANAGERS = ADMINS = ()
 # eg. this could be MANAGERS = ADMINS = (('Felix Erkinger', 'felix@erkinger.at'),)
 SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
@@ -131,7 +131,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.csrf.CsrfMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'reversion.middleware.RevisionMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
     'ecs.utils.forceauth.ForceAuth',
     'ecs.utils.middleware.SignedCookiesMiddleware',
@@ -216,57 +215,60 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 # PDF Signing settings, use port 4780 per default (as stated in source:/signing/readme.txt)
 PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 
+
+# directory where to store logfiles, used by every daemon and apache
+LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
+
+
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
 
 
-# StorageVault settings
+# Storage Vault settings
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
-STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-# Storagevault connector settings
-S3_SECRET_KEYS = { "UnitTestKey": "imhappytobeatestkey", "LocalFileStorageVault": "imhappytobeasecretkey"}
-S3_DEFAULT_KEY = "LocalFileStorageVault"
-S3_DEFAULT_EXPIRATION_SEC = 5*60
+STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir':
+     os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
+STORAGE_ENCRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
+                   "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
+                   "owner": "mediaserver",
+                   }
+STORAGE_DECRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
+                   "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
+                   "owner": "mediaserver",
+                   }
+# Mediaserver Shared Settings
+MS_SHARED = {"url_expiration_sec": 5*60, "tiles": [1, 3, 5], "resolutions": [800, 768],
+             "aspect_ratio": 1.41428, "dpi": 96, "depth": 8}
+
+# Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
+MS_CLIENT = {"server": "http://localhost:8000", "bucket": "/mediaserver/",
+    # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
+    "key_id": "b2SpFfUvfD44LUzHDu7w", "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN" }
+               
+# Mediaserver Server Config (things needed for a mediaserver to serve)
+MS_SERVER = {
+    "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
+    "doc_diskcache_maxsize" : 2**34,
+    "render_diskcache":  os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache")),
+    "render_diskcache_maxsize": 2**33,
+    "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
+    "render_memcache_host": "127.0.0.1",    # host= localhost, 
+    "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
+    "render_memcache_maxsize": 2**29,
+    # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
+    }
 
 
-# Mediaserver settings
-MEDIASERVER_KEYOWNER="mediaserver"
-MEDIASERVER_URL="http://localhost:8000"
-MEDIASERVER_TILES = [ 1, 3, 5 ]
-MEDIASERVER_RESOLUTIONS = [ 800, 768 ]
-MEDIASERVER_DEFAULT_ASPECT_RATIO = 1.41428
-MEDIASERVER_DEFAULT_DPI = 96 # 72
-MEDIASERVER_DEFAULT_DEPTH = 8
-
-#TODO generate production keys (without password protection or the bootstrap will freeze!)
-DOCUMENTS_GPG_HOME = os.path.join(PROJECT_DIR, "documents", "gpg")
-MEDIASERVER_GPG_HOME = os.path.join(PROJECT_DIR, "mediaserver", "gpg")
-MEDIASERVER_PUB_KEY = os.path.join(PROJECT_DIR, "documents", "gpg", "keys", "mediaserverpub.gpg")
-MEDIASERVER_PRIV_KEY = os.path.join(PROJECT_DIR, "mediaserver", "gpg", "keys", "mediaserverpriv.asc")
-
-DOC_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache"))
-DOC_DISKCACHE_MAXSIZE = 2**34
-RENDER_DISKCACHE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache"))
-RENDER_DISKCACHE_MAXSIZE = 2**33
-
-# RENDER_MEMCACHE_LIB: if set to mockcache, HOST & PORT will be ignored
-# WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-RENDER_MEMCACHE_LIB  = 'mockcache'
-RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
-RENDER_MEMCACHE_PORT = 11211 # standardport of memcache, not used for mockcache
-RENDER_MEMCACHE_MAXSIZE = 2**29
-
-
-# mail lamson config, standard django values
+# mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-# EMAIL_BACKEND will get overwritten on production setup and on runserver (where it changes to backends.console)
+# EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
 ECSMAIL_DEFAULT = {
     'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
-    'log_dir':   os.path.join(PROJECT_DIR, "..", "..", "ecs-log"),
+    'log_dir':   LOGFILE_DIR,
     'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
@@ -288,7 +290,7 @@ DIFF_REVIEW_LIST = ('root',)
 ENABLE_AUDIT_TRAIL = True
 if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
-    ENABLE_AUDIT_TRAIL=False
+    ENABLE_AUDIT_TRAIL = False
 
 AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'django.contrib.sessions.models.Session',
@@ -328,13 +330,15 @@ BROKER_VHOST = 'ecshost'
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
     'ecs.core.task_queue',
-    'ecs.core.tests.task_queue',
-    'ecs.meetings.task_queue',
-    'ecs.communication.task_queue',
-    'ecs.ecsmail.task_queue',
-    'ecs.documents.task_queue',
-    'ecs.workflow.task_queue',
-)
+    'ecs.core.tests.tasks',
+    'ecs.meetings.tasks',
+    'ecs.documents.tasks',
+    'ecs.mediaserver.tasks', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp
+    'ecs.ecsmail.tasks',
+    'ecs.workflow.tasks',
+    'ecs.communication.tasks',
+    'ecs.integration.tasks',
+)                 
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
@@ -356,11 +360,12 @@ COMPRESS_JS_FILTERS = []
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
+
+
 # settings override 
 ###################
 
-#XXX: these are local fixes, they default to a sane value if unset
-#ECS_AUTO_PDF_BARCODE = True # default to true, skips pdftk stamping if set to false
+#these are local fixes, they default to a sane value if unset
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
 # needs to be overriden in local_settings for eg. windows
 #ECS_GNUPG = "absolute path to gpg executable" # defaults to which('gpg') if empty
@@ -378,8 +383,7 @@ try:
         import local_settings
         if hasattr(local_settings, 'DATABASE_ENGINE'):
             raise ImproperlyConfigured('deprecated setting (DATABASE_ENGINE) found in local_setings, please use DATABASES convention instead')
-        # local_db is the default database, because we can not
-        # access the DATABASES dictionary in the local_settings
+        # local_db is the default database, because we can not access the DATABASES dictionary in the local_settings
         if hasattr(local_settings, 'local_db'):
             DATABASES['default'] = local_db
     except ImportError:
@@ -398,8 +402,7 @@ except ImportError:
 # INSTALLED_APPS +=('debug_toolbar',) # anywhere
 DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
-
-
+   
 # hack some settings for test and runserver    
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True

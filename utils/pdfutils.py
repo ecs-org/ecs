@@ -1,12 +1,8 @@
-import os, sys
-import subprocess
-import tempfile
-import time
+# -*- coding: utf-8 -*-
 
-from django.template import Context, loader
-from django.core.files import File
+import os, subprocess, tempfile
+
 from django.conf import settings
-
 from pdfminer.pdfparser import PDFParser, PDFDocument
 
 import ecs.utils.killableprocess 
@@ -45,34 +41,6 @@ def pdf_pages(filelike):
     return pages
 
 
-def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
-    """
-    takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
-    raises IOError(descriptive text, returncode, stderr) in case of failure
-    outputnameing follows ghostscript conventions. The general form supported is:
-    "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
-    For more information, please refer to documentation on the C printf format specifications.
-    """
-
-    cmd = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
-        '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
-    cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
-    
-    if pixelwidth:
-        dpix = pixelwidth / (din_a4_x / cm_per_inch)
-        cmd += ['-r%.5f' % (dpix)]
-    if first_page:
-        cmd += ['-dFirstPage=%s' % first_page]
-    if last_page:
-        cmd += ['-dLastPage=%s' % last_page]
-    cmd += ['-sOutputFile='+ namingtemplate, sourcefile]
-
-    popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = popen.communicate()
-    if popen.returncode != 0:
-        raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
-    
-    
 def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, timeoutseconds=30):
     '''
     takes source pdf, stamps a barcode into it and output it to dest
@@ -109,9 +77,9 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ti
         os.remove(barcode_pdf_name)
     if popen.returncode != 0:
         raise IOError('stamping pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+
   
-  
-def pdftotext(pdffilename, pagenr=None, timeoutseconds= 30):
+def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
     """
     Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
     if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
@@ -126,7 +94,7 @@ def pdftotext(pdffilename, pagenr=None, timeoutseconds= 30):
         raise IOError('pdftotext pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
     return stdout
 
-    
+
 def xhtml2pdf(html, timeoutseconds=30):
     """ 
     Calls pisa `xhtml2pdf` from the commandline, takes xhtml with embedded css and returns pdf
@@ -143,3 +111,32 @@ def xhtml2pdf(html, timeoutseconds=30):
         if popen.returncode != 0:
             raise IOError('xhtml2pdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
     return stdout 
+
+
+
+"""
+def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
+    takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
+    raises IOError(descriptive text, returncode, stderr) in case of failure
+    outputnameing follows ghostscript conventions. The general form supported is:
+    "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
+    For more information, please refer to documentation on the C printf format specifications.
+
+    cmd = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+        '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
+    cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
+    
+    if pixelwidth:
+        dpix = pixelwidth / (din_a4_x / cm_per_inch)
+        cmd += ['-r%.5f' % (dpix)]
+    if first_page:
+        cmd += ['-dFirstPage=%s' % first_page]
+    if last_page:
+        cmd += ['-dLastPage=%s' % last_page]
+    cmd += ['-sOutputFile='+ namingtemplate, sourcefile]
+
+    popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    if popen.returncode != 0:
+        raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
+"""

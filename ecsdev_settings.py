@@ -24,11 +24,6 @@ if user in DBPWD_DICT:
     CARROT_BACKEND = ""
     # use queueing 
     CELERY_ALWAYS_EAGER = False
-    
-# on ecsdev we use memcache instead of mockcache
-RENDER_MEMCACHE_LIB  = 'memcache'
-RENDER_MEMCACHE_HOST = '127.0.0.1' # host= localhost, not used for mockcache
-RENDER_MEMCACHE_PORT = 11211
 
 # change urls of signing application depending username
 if user == "shredder":
@@ -66,6 +61,36 @@ if user in ["shredder", "testecs"]:
 
 
 
+
+# Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
+if user == "testecs":    
+    MS_CLIENT = {"server": "http://test.ecsdev.ep3.at", "bucket": "/mediaserver/",
+        "key_id": "GHz36o6OJHOm8uKmYiD1", "key_secret": "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6",
+        }
+elif user == "shredder":
+    MS_CLIENT = {"server": "http://s.ecsdev.ep3.at", "bucket": "/mediaserver/",
+        "key_id": "Skj45A6R2z36gVKF17i2", "key_secret": "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw",
+        }
+
+# Mediaserver Server Access
+# FIXME: we should only change settings but not carbon copy it from settings.py
+MS_SERVER = {
+    "doc_diskcache": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-doccache"),
+    "doc_diskcache_maxsize" : 2**34,
+    "render_diskcache":  os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-rendercache"),
+    "render_diskcache_maxsize": 2**33,
+    "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
+    "render_memcache_host": "127.0.0.1",    # host= localhost, 
+    "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
+    "render_memcache_maxsize": 2**29,
+    # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
+    }
+# on ecsdev we use memcache instead of mockcache
+MS_SERVER ["render_memcache_lib"] = 'memcache'
+MS_SERVER ["render_memcache_host"] = '127.0.0.1'
+MS_SERVER ["render_memcache_host"] = 11211
+
+
 if user == "testecs":
     # fulltext search engine override (testecs uses solr instead of whoosh)
     HAYSTACK_SEARCH_ENGINE = "solr"
@@ -76,8 +101,3 @@ if user == "testecs":
     TEMPLATE_DEBUG = False
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 
-if user == "testecs":    
-    MEDIASERVER_URL = "http://test.ecsdev.ep3.at"
-elif user == "shredder":
-    MEDIASERVER_URL = "http://s.ecsdev.ep3.at"
-    

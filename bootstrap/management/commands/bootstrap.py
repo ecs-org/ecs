@@ -17,7 +17,7 @@ def _create_root_user():
     root.last_name = 'Administrator'
     root.is_staff = True
     root.is_superuser = True
-    root.email = 'nobody@example.notexisting.loc'
+    root.email = 'root@example.org'
     root.set_unusable_password()
     root.save()
     settings.ENABLE_AUDIT_LOG = True

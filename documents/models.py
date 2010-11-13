@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import hashlib
 import os
-import posixpath
 import tempfile
 import datetime
 import mimetypes
@@ -15,11 +15,22 @@ from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.auth.models import User
 
-from ecs.utils.pdfutils import pdf_barcodestamp, pdf_pages, pdf_isvalid
+from ecs.utils.pdfutils import pdf_pages, pdf_isvalid
 from ecs.authorization import AuthorizationManager
+
+
+class DocumentPersonalization(models.Model):
+    id = models.SlugField(max_length=36, primary_key=True, default = uuid4().get_hex())
+    document = models.ForeignKey('Document', db_index=True)
+    user = models.ForeignKey(User, db_index=True)
+    
+    def __unicode__(self):
+        return "%s - %s - %s - %s" % (self.id, str(self.document), self.document.get_filename(), self.user.get_full_name())
 
 
 class DocumentType(models.Model):
@@ -29,7 +40,6 @@ class DocumentType(models.Model):
 
     def __unicode__(self):
         return self.name
-
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
@@ -44,7 +54,6 @@ class DocumentFileStorage(FileSystemStorage):
         available for new content to be written to.
         Limit the length to some reasonable value.
         """
-
         dir_name, file_name = os.path.split(name)
         file_root, file_ext = os.path.splitext(file_name)
         # If the filename already exists, add _ with a 4 digit number till we get an empty slot.
@@ -73,6 +82,12 @@ class DocumentManager(AuthorizationManager):
         return doc
 
 
+C_BRANDING_CHOICES = (
+    ('b', 'brand id'),
+    ('p', 'personalize'),
+    ('n', 'never brand'),
+    )
+
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
@@ -81,6 +96,8 @@ class Document(models.Model):
     doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
+    branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
+    allow_download = models.BooleanField(default=True)
 
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
@@ -99,7 +116,25 @@ class Document(models.Model):
             t = self.doctype.name
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
+    def get_filename(self):
+        parent = "parentobject"
+        ext = mimetypes.guess_extension(self.mimetype)
+        name = slugify("%s-%s-%s" % (self.doctype and self.doctype.name or 'Unterlage',
+            self.version, self.date.strftime('%Y.%m.%d')))
+        fullname = '%s-%s%s' % (parent, name, ext)
+        return fullname
+
+    def get_personalizations(self, user=None):
+        ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
+        return None
+        
+    def add_personalization(self, user):
+        ''' Add unique id connected to a user and document download ''' 
+        return "unique id"
+
     def save(self, **kwargs):
+        from ecs.documents.tasks import encrypt_and_upload_to_storagevault
+              
         if not self.file:
             raise ValueError('no file')
 
@@ -120,41 +155,26 @@ class Document(models.Model):
                 m.update(data)
             self.file.seek(0)
             self.hash = m.hexdigest()
-
+                       
         if self.mimetype == 'application/pdf':
             self.pages = pdf_pages(self.file) # calculate number of pages
-                    
-        return super(Document, self).save(**kwargs)
 
+        first_save = True if self.pk is None else False
+        super(Document, self).save(**kwargs)
+        
+        if first_save:
+            #print("doc file %s , path %s, original %s" % (str(self.file.name), str(self.file.path), str(self.original_file_name)))
+            # upload it via celery to the storage vault
+            encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
-    text = models.TextField()
-
-
-def _post_doc_save(sender, **kwargs):
-    from ecs.documents.task_queue import extract_and_index_pdf_text
-    from ecs.documents.task_queue import encrypt_and_upload_to_storagevault
-    
-    doc = kwargs['instance']
-    doc.page_set.all().delete()
-    
-    print("doc file %s , path %s, original %s" % (str(doc.file.name), str(doc.file.path), str(doc.original_file_name)))
-    
-    if doc.pages and doc.mimetype == 'application/pdf':
-        # FIXME:92we use a 3 seconds wait to prevent celery from picking up the tasks before the current transaction is committed.
-        extract_and_index_pdf_text.apply_async(args=[doc.pk], countdown=3)
-    
-    # upload it via celery to the storage vault
-    encrypt_and_upload_to_storagevault.apply_async(args=[doc.pk], countdown=3)
-        
+    text = models.TextField()        
         
 def _post_page_delete(sender, **kwargs):
     from haystack import site
     site.get_index(Page).remove_object(kwargs['instance'])
 
-post_save.connect(_post_doc_save, sender=Document)
 post_delete.connect(_post_page_delete, sender=Page)
-
 
