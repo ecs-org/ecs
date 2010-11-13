@@ -1,8 +1,5 @@
-'''
-Created on Aug 19, 2010
+# -*- coding: utf-8 -*-
 
-@author: amir
-'''
 import uuid
 import shutil
 import hashlib

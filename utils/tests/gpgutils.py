@@ -22,6 +22,7 @@ class Gpgutilstest(EcsTestCase):
             decrypt(encryptedfilename, decryptedfilename, settings.STORAGE_DECRYPT ['gpghome'], settings.STORAGE_DECRYPT ["owner"])
             
             self.assertEqual(self.testdata, open(inputfilename).read())
+            self.assertNotEqual(self.testdata, open(encryptedfilename).read())
             self.assertEqual(self.testdata, open(decryptedfilename).read())
         
         finally:
