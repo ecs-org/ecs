@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.contrib.auth.models import User
@@ -135,4 +135,7 @@ def stop_assistant(request, meeting_pk):
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.fastlane.views.assistant', kwargs={'meeting_pk': meeting.pk}))
 
+def copy_comment(request, top_pk=None):
+    top = get_object_or_404(FastLaneTop, pk=top_pk)
+    return HttpResponse(top.recommendation_comment, content_type="text/plain")
 

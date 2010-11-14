@@ -11,4 +11,5 @@ urlpatterns = patterns('ecs.fastlane.views',
     url(r'^assistant/(?P<meeting_pk>\d+)/(?P<page_num>\d+)/$', 'assistant'),
     url(r'^assistant/start/(?P<meeting_pk>\d+)/$', 'start_assistant'),
     url(r'^assistant/stop/(?P<meeting_pk>\d+)/$', 'stop_assistant'),
+    url(r'^copy_comment/(?P<top_pk>\d+)/$', 'copy_comment'),
 )

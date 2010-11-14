@@ -23,6 +23,10 @@ class FastLaneTop(models.Model):
     recommendation = models.NullBooleanField(blank=True, default=None)
     recommendation_comment = models.TextField(blank=True)
 
+    @property
+    def complete(self):
+        return self.recommendation is not None
+
 class AssignedFastLaneCategory(models.Model):
     meeting = models.ForeignKey('fastlane.FastLaneMeeting', related_name='categories', null=True)
     user = models.ForeignKey('auth.User', related_name='assigned_fastlane_categories', null=True, blank=True)
