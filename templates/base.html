@@ -71,19 +71,25 @@
     {{ block.super }}
   <script type="text/javascript">
     window.addEvent('domready', function() {
+        var sidebar = $$('#sidebar')[0];
+        var header = $$('#header')[0];
+        var content = $$('#content')[0];
         $('toggle_sidebar').addEvent('click', function() {
-            var sidebar = $$('#sidebar')[0];
-            var header = $$('#header')[0];
-            var content = $$('#content')[0];
-            if (sidebar.isVisible()) {
-                sidebar.hide();
-                header.setStyle('right', '0px');
-                content.setStyle('right', '0px');
+            var sidebar_morph = new Fx.Morph(sidebar, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+            var header_morph = new Fx.Morph(header, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+            var content_morph = new Fx.Morph(content, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+            if (sidebar.getStyle('width') == '0px') {
+                var sidebar_width = '220px';
+                var header_right = '220px';
+                var content_right = '220px';
             } else {
-                sidebar.show();
-                header.setStyle('right', '220px');
-                content.setStyle('right', '220px');
+                var sidebar_width = '0px';
+                var header_right = '0px';
+                var content_right = '0px';
             }
+            sidebar_morph.start({width: sidebar_width});
+            header_morph.start({right: header_right});
+            content_morph.start({right: content_right});
         });
     });
   </script>
