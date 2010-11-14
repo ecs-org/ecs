@@ -74,22 +74,19 @@
         var sidebar = $$('#sidebar')[0];
         var header = $$('#header')[0];
         var content = $$('#content')[0];
+        sidebar.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+        header.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
+        content.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
         $('toggle_sidebar').addEvent('click', function() {
-            var sidebar_morph = new Fx.Morph(sidebar, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-            var header_morph = new Fx.Morph(header, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-            var content_morph = new Fx.Morph(content, {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
             if (sidebar.getStyle('width') == '0px') {
-                var sidebar_width = '220px';
-                var header_right = '220px';
-                var content_right = '220px';
+                sidebar.morph({width: '220px'});
+                header.morph({right: '220px'});
+                content.morph({right: '220px'});
             } else {
-                var sidebar_width = '0px';
-                var header_right = '0px';
-                var content_right = '0px';
+                sidebar.morph({width: '0px'});
+                header.morph({right: '0px'});
+                content.morph({right: '0px'});
             }
-            sidebar_morph.start({width: sidebar_width});
-            header_morph.start({right: header_right});
-            content_morph.start({right: content_right});
         });
     });
   </script>
