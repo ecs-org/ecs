@@ -2,6 +2,8 @@
 
 from django.db import models
 
+from ecs.authorization import AuthorizationManager
+
 
 class FastLaneMeeting(models.Model):
     start = models.DateTimeField()
@@ -22,6 +24,8 @@ class FastLaneTop(models.Model):
     meeting = models.ForeignKey('fastlane.FastLaneMeeting', related_name='tops')
     recommendation = models.NullBooleanField(blank=True, default=None)
     recommendation_comment = models.TextField(blank=True)
+
+    objects = AuthorizationManager()
 
     @property
     def complete(self):

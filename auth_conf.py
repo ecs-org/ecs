@@ -4,6 +4,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, Investigat
 from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
+from ecs.fastlane.models import FastLaneTop
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -48,6 +49,7 @@ authorization.register(Measure, lookup='submission_form__submission')
 authorization.register(NonTestedUsedDrug, lookup='submission_form__submission')
 authorization.register(ForeignParticipatingCenter, lookup='submission_form__submission')
 authorization.register(Vote, lookup='submission_form__submission')
+authorization.register(FastLaneTop, lookup='submission')
 
 class DocumentQFactory(authorization.QFactory):
     def get_q(self, user):
