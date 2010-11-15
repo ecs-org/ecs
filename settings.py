@@ -237,7 +237,7 @@ STORAGE_DECRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decryp
                    "owner": "mediaserver",
                    }
 # Mediaserver Shared Settings
-MS_SHARED = {"url_expiration_sec": 5*60, "tiles": [1, 3, 5], "resolutions": [800, 768],
+MS_SHARED = {"url_expiration_sec": 6*60*60, "tiles": [1, 3, 5], "resolutions": [800, 768],
              "aspect_ratio": 1.41428, "dpi": 96, "depth": 8}
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
