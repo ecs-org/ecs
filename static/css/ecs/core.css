@@ -69,7 +69,7 @@
 
 .tab_headers li a.delete_row {
   border: none;
-  background: url(/static/images/core/remove.png) no-repeat;
+  background: url(/static/images/icons.png) 0 -128px no-repeat;
   width: 16px;
   height: 16px;
   padding: 0px;
@@ -302,7 +302,7 @@ input[type=submit] {
   height: 22px;
   font-size: 9pt;
   margin-left: 5px;
-  background: #ccc url(/static/images/core/magnifier.png) center center no-repeat;
+  background: #ccc url(/static/images/icons.png) -324px -198px no-repeat;
   border: 1px solid #999;
 }
 
@@ -434,9 +434,8 @@ tr.form td{
   vertical-align: top;
 }
 .form.main .investigator_tab .field a.delete_row,
-.inline_formset .form a.delete_row,
-.investigator_tab a.delete_row {
-  background: url(/static/images/core/remove.png) no-repeat;
+.inline_formset .form a.delete_row {
+  background: url(/static/images/icons.png) 0 -144px no-repeat;
   height: 16px;
   width: 20px;
   display: inline-block;
@@ -453,7 +452,7 @@ div.inline_formset .form a.delete_row {
   left: 0px;
 }
 .form.main a.add_row, #meeting_constraint_editor a.add_row {
-  background: url(/static/images/core/add.png) no-repeat;
+  background: url(/static/images/icons.png) 0 -128px no-repeat;
   width: 20px;
   height: 16px;
   display: inline-block;
@@ -461,22 +460,22 @@ div.inline_formset .form a.delete_row {
   cursor: pointer;
   text-indent: -9999px;
 }
-table.inline_formset td{
-    vertical-align: top;
+table.inline_formset td {
+  vertical-align: top;
 }
-.form.main table.inline_formset td ul.errorlist li{
-    margin-left: 0px;
+.form.main table.inline_formset td ul.errorlist li {
+  margin-left: 0px;
 }
-#content .form.main table.inline_formset td ul.errorlist{
-    margin-left: 0px;
-    width: 100%;
+#content .form.main table.inline_formset td ul.errorlist {
+  margin-left: 0px;
+  width: 100%;
 }
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
 }
 .form.main .investigator_tab a.add_row,
 .form.main .investigator_tab a.delete_row {
-  display: block;
+  display: inline-block;
   overflow: visible;
   width: auto;
   text-indent: 0px;
@@ -484,9 +483,13 @@ table.inline_formset td{
   margin-left: 0;
   padding-left: 20px;
   padding-right: 10px;
+  cursor: pointer;
 }
-#content a.delete_row:hover, #content a.add_row:hover {
-  border-bottom: 0 none !important;
+.form.main .investigator_tab a.add_row {
+  background: url(/static/images/core/add.png) no-repeat;
+}
+.form.main .investigator_tab a.delete_row {
+  background: url(/static/images/core/remove.png) no-repeat;
 }
 
 fieldset.disabled {
@@ -571,9 +574,9 @@ fieldset.disabled {
 .form.main ol li .datepicker_toggler {
   position: absolute;
   text-indent: -9999px; 
-  background: url(/static/images/core/calendar.png) no-repeat;
+  background: url(/static/images/icons.png) -80px 0 no-repeat;
   height: 16px;
-  width: 16px !important;
+  width: 16px;
   margin-left: 5px;
 }
 .form .star {

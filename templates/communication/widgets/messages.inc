@@ -11,12 +11,13 @@
 </div>
 <ol class="messages">
 {% for thread in page.object_list %}
-    <li class="message {% cycle 'even' 'odd' %}{% if thread.last_message.unread %} unread{% endif %}">
+    <li class="message {% cycle 'even' 'odd' %}">
         <span class="head">
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
             {% if incoming and thread.last_message.unread %} [NEU] {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
         </span>
+        <span class="{% if thread.last_message.unread %}unread{% endif %}"></span>
         <a class="title open-in-popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">{{ thread.subject|truncatewords:10 }}</a>
         <span class="user">{% block message_user %}{% endblock %}</span>
         <span class="actions">
