@@ -193,11 +193,11 @@ body {
   height: 30px;
   z-index: 200;
 }
-#toggle_sidebar_button img {
-  position: relative;
-  top: 3px;
-  right: 0;
-  padding: 2px 3px;
+.toggle_sidebar {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  text-indent: -9999px;
 }
 
 
