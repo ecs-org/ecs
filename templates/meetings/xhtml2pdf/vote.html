@@ -10,7 +10,7 @@
   </div>
 
 <span style="font-weight: bold;">EK Nr: {{ ec_number }}</span> <br/>
-<span style="font-weight: bold;">Antragsteller:</span> {{ form.submitter_name}} <br/>
+<span style="font-weight: bold;">Antragsteller:</span> {{ submitter.first_name }} {{ submitter.last_name }} <br/>
 <span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
 <span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
 <span style="font-weight: bold;">Projekttitel:</span> {{ form.project_title }} <br/>
@@ -53,9 +53,6 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 
 <pdf:spacer height="0.5cm" />
 
-
-<span style="background-color: yellow;">Vote Result: [{{ vote.result }}]</span>
-
 <table border="1px">
 <tr>
   <td width="3%">[{% if vote.result == '1' or vote.result == '1a' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
@@ -97,7 +94,7 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 </span><br />
 {% endif %}
 
-{% if submission.current_submission_form.current_published_vote is not None %}
+{% if submission.current_submission_form.current_published_vote %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Letzte:</span><br />
     {{ submission.current_submission_form.current_published_vote.text|escape }}
@@ -106,10 +103,23 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 {% if submission.is_amg or submission.is_mpg %}
 <pdf:spacer height="1.0cm" />
 <span style="font-weight:bold;">
-    Die Ethik-Kommision geht - rechtlich verbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
 </span><br />
 {% endif %}
 
+<pdf:spacer height="0.5cm" />
+<span>
+	Mitgliederliste der Ethik-Komission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben:  
+	{% for bef in submission.get_befangene %}	
+		{{ bef.first_name }} {{ bef.last_name }}<br/>
+	{% empty %}
+		keine	
+	{% endfor %}
+</span><br />
+<pdf:spacer height="0.5cm" />
+<span>
+	<b>ACHTUNG:</b> Unter Berücksichtigung der "ICH-Guideline for Good Clinical Practice" gilt dieser Beschluss <b><u>ein Jahr ab Datum der Ausstellung</b></u>. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit mittles Formular für "Meldungen" rechtzeitig vorzulegen. 
+</span><br />
 <pdf:spacer height="1.0cm" />
     
 {% endblock %}
