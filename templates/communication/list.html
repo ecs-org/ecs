@@ -1,7 +1,9 @@
 {% extends "core.html" %}
-{% load communication core %}
+{% load i18n communication core %}
 
-{% block menuSelection %}messages{% endblock %}
+{% block menuSelection %}communication{% endblock %}
+
+{% block headertitle %}{% trans "Communication" %}{% endblock %}
 
 {% block content %}
   <table class="messages">

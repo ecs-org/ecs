@@ -107,6 +107,9 @@ def my_tasks(request, template='tasks/compact_list.html'):
         data[context_key] = func(tasks) if filterform.cleaned_data[key] else tasks.none()
 
     return render(request, template, data)
+
+def list(request):
+    return my_tasks(request, template='tasks/list.html')
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)

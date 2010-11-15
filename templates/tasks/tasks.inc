@@ -1,0 +1,98 @@
+{% load i18n %}
+
+<div id="task_main">
+{% if submission %}
+    <h1>{{ submission }}</h1>
+{% endif %}
+<form id="{{ form_id }}" action="" method="post" class="open-in-widget">
+    <div class="task_list_choose">
+        <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
+    </div>
+    <div class="task_list_choose">
+        {{ filterform.mine }} <label for="id_mine" class="task_mine">{% trans "Mine" %}</label>
+        {{ filterform.assigned }} <label for="id_assigned" class="task_assigned">{% trans "Assigned" %}</label>
+        {{ filterform.open }} <label for="id_open" class="task_open">{% trans "Open" %}</label>
+        {{ filterform.proxy }} <label for="id_proxy" class="task_proxy">{% trans "Proxy" %}</label>
+    </div>
+    <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
+        {{ filterform.amg }} <label for="id_amg" class="task_amg">{% trans "AMG" %}</label>
+        {{ filterform.mpg }} <label for="id_mpg" class="task_mpg">{% trans "MPG" %}</label>
+        {{ filterform.thesis }} <label for="id_thesis" class="task_thesis">{% trans "thesis" %}</label>
+        {{ filterform.other }} <label for="id_other" class="task_other">{% trans "Other" %}</label>
+    </div>
+</form>
+
+{% if mine_tasks %}
+    <div class="task_list">
+        <h2>{% trans "My Tasks" %}</h2>
+        {% regroup mine_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
+                    <a href="{{ task.url|default:manage_url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if assigned_tasks %}
+    <div class="task_list">
+        <h2>{% trans "Tasks assigned to me" %}</h2>
+        {% regroup assigned_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+                    | <a class="open-in-widget" href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if open_tasks %}
+    <div class="task_list">
+        <h2>{% trans "Open Tasks" %}</h2>
+        {% regroup open_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if proxy_tasks %}
+    <div class="task_list">
+        <h2>{% trans "Proxy Tasks" %}</h2>
+        {% regroup proxy_tasks by task_type as task_type_list %}
+        {% for task_type in task_type_list %}
+            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <ul> {% for task in task_type.list %} <li>
+                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                </li> {% endfor %} </ul>
+                <div style="clear:both;"></div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if not mine_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
+    <em>{% trans "There are no tasks for you." %}</em>
+{% endif %}
+</div>
+

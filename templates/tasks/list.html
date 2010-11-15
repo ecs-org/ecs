@@ -1,14 +1,16 @@
 {% extends "core.html" %}
+{% load i18n core %}
+
+{% block menuSelection %}tasks{% endblock %}
+
+{% block headertitle %}{% trans "Tasks" %}{% endblock %}
 
 {% block content %}
-
-{% for task in tasks %}
-<div>
-    <h2>{{ task.task_type.name }}</h2>
-    <span>Assigned to: {{ task.assigned_to }}</span>
-    <span>Groups: {% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
-    
-</div>
-{% endfor %}
-
+    {% include "tasks/tasks.inc" %}
 {% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    {% include "tasks/tasks_js.inc" %}
+{% endblock %}
+

@@ -34,7 +34,7 @@
   <ul>
     <li><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
     <li><a href="{% url ecs.communication.views.threads %}">{% trans "Communication" %}</a></li>
-    <li><a href="{% url ecs.tasks.views.my_tasks %}">{% trans "Tasks" %}</a></li>
+    <li><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
@@ -133,6 +133,8 @@
     var accordionitem_name = '{% block menuSelection %}overview{% endblock %}';
     var accordion_items = {
       'overview': -1,
+      'communication': -1,
+      'tasks': -1,
       'submissions': 0,
       'notifications': 1,
       'meetings': 2,
