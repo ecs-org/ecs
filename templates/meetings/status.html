@@ -1,0 +1,47 @@
+{% extends 'meetings/detail.html' %}
+{% load core i18n %}
+
+{% block meeting_detail %}
+<h3>{% trans "Status" %}
+
+<table>
+    <tr><th>{% trans "Title" %}:</th><td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td></tr>
+    <tr><th>{% trans "Scheduled for" %}:</th><td>{{ meeting.start|date:'d.m.Y H:i' }}</td></tr>
+    <tr>
+        <th>{% trans "Status" %}:</th>
+        <td>
+            {% if meeting.started and meeting.ended %}
+                {% trans "Ended" %}
+            {% else %}{% if meeting.started %}
+                {% trans "Started" %}
+            {% else %}
+                {% trans "New" %}
+            {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    {% if meeting.started %}
+        <tr><th>{% trans "Started at" %}:</th><td>{{ meeting.started|date:'d.m.Y H:i' }}</td></tr>
+    {% endif %}
+    {% if meeting.ended %}
+        <tr><th>{% trans "Ended at" %}:</th><td>{{ meeting.ended|date:'d.m.Y H:i' }}</td></tr>
+    {% endif %}
+    <tr>
+        <th>{% trans "Agenda" %}:</th>
+        <td>
+            <a href="{% url ecs.meetings.views.agenda_pdf meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
+            | <a href="{% url ecs.meetings.views.agenda_htmlemail meeting_pk=meeting.pk %}">Send Agenda to Board</a>
+        </td>
+    </tr>
+    <tr>
+        <th>{% trans "Timetable" %}:</th>
+        <td><a href="{% url ecs.meetings.views.timetable_pdf meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>
+    </tr>
+    <tr>
+        <th>{% trans "Protocol" %}:</th>
+        <td><a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a></td>
+    </tr>
+</table>
+
+{% endblock %}
+

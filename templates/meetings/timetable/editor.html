@@ -1,13 +1,7 @@
-{% extends 'core.html' %}
+{% extends 'meetings/detail.html' %}
 {% load core i18n %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-    Neues Meeting
-{% endblock %}
-
-{% block content %}
+{% block meeting_detail %}
 {% if running_optimization %}
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}

@@ -1,0 +1,55 @@
+{% extends 'core.html' %}
+{% load core i18n %}
+
+{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+
+{% block headernav %}
+    <ul class="tab_header_groups">
+        <li>
+            <a href="#" class="active">{% trans "Meeting" %}</a>
+            <ul class="tab_headers">
+                <li><a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a></li>
+                <li><a href="{% url ecs.meetings.views.participation_editor meeting_pk=meeting.pk %}">{% trans "Projektzuordnung" %}</a></li>
+                <li><a href="{% url ecs.meetings.views.medical_categories meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
+                <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
+                <li><a href="{% url ecs.core.views.votes.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a></li>
+            </ul>
+        </li>
+    </ul>
+    {{ block.super }}
+{% endblock %}
+
+{% block headertitle %}
+    {{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title|default:"<em>Unbenannt</em>" }}
+{% endblock %}
+
+{% block content %}
+<div class="meeting_detail">
+
+{% block meeting_detail %}
+{% endblock %}
+
+</div>
+{% endblock %}
+
+{% block menuSelection %}meetings{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            function updateHeaderHeight() {
+                var tabHeight = $$('.tab_headers')[0].getHeight();
+                if(tabHeight){
+                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
+                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
+                }
+                $('content').setStyle('top', $('header').getHeight() + 'px');
+            }
+            window.addEvent('resize', updateHeaderHeight);
+            $('header').setStyle('height', 'auto');
+            updateHeaderHeight();
+        });
+    </script>
+{% endblock %}
+

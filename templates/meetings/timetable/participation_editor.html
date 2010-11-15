@@ -1,13 +1,7 @@
-{% extends 'core.html' %}
-{% load core %}
+{% extends 'meetings/detail.html' %}
+{% load core i18n %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-    Teilnehmer für {{ meeting.start|date:'d.m.Y H:i' }}
-{% endblock %}
-
-{% block content %}
+{% block meeting_detail %}
 <div id="meeting_participation_editor">
     <form action="" method="post">
     {% for entry in meeting %}

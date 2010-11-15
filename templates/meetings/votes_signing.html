@@ -1,15 +1,7 @@
-{% extends 'core.html' %}
+{% extends 'meetings/detail.html' %}
+{% load core i18n %}
 
-{% block htmltitle %}ECS Signatur der Voten{% endblock %}
-
-{% block headertitle %}
-Liste aller Voten des Meetings {{ meeting }}
-{% endblock %}
-
-{% block headernav %}
-{% endblock %}
-
-{% block content %}
+{% block meeting_detail %}
 
 <h2>Voten des Meetings {{ meeting }}</h2>
 <ul>

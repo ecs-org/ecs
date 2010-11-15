@@ -13,6 +13,7 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/$', 'medical_categories'),
     #url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/(?P<category_pk>\d+)/$', 'medical_categories'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'edit_user_constraints'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/status/$', 'status'),
 
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/editor/$', 'timetable_editor'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/$', 'optimize_timetable'),

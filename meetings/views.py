@@ -458,3 +458,9 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
+def status(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    return render(request, 'meetings/status.html', {
+        'meeting': meeting,
+    })
+

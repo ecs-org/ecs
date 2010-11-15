@@ -1,13 +1,7 @@
-{% extends 'core.html' %}
+{% extends 'meetings/detail.html' %}
 {% load core %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-    Spezialisten für {{ meeting.title }} am {{ meeting.start|date:'d.m.Y H:i' }}
-{% endblock %}
-
-{% block content %}
+{% block meeting_detail %}
 <form action="" method="post">
     <ul>
     {% for cat, form in forms.iteritems %}
