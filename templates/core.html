@@ -16,7 +16,7 @@
 
 {% block searchbox %}
   <div class="searchbox">
-    <form action="{% url ecs.core.views.submission_form_list %}" method="get" enctype="multipart/form-data">
+    <form action="{% url ecs.core.views.submission_forms %}" method="get" enctype="multipart/form-data">
       <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"/>
       <input type="submit" value="" title="suchen" />
     </form>
@@ -35,11 +35,11 @@
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.core.views.submission_form_list %}">{% trans "Eingereichte und Neue" %}</a></li>
+          <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "Eingereichte und Neue" %}</a></li>
           {% if user|has_flag:"external_review" or user|is_member_of:"EC-Office" %}
               <li><a href="">{% trans "Mir zugeordnete Studien" %}</a></li>
           {% endif %}
-          <li><a href="">{% trans "Meine Studien" %}</a></li>
+          <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
           {% if user|is_member_of:"EC-Office" %}
