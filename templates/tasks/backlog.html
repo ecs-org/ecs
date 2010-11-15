@@ -7,52 +7,5 @@
 {% endblock %}
 
 {% block content %}
-<div class="task_back_log">
-    <table cellspacing="0">
-        <tr>
-            <th>PK</th>
-            <th colspan="2">TaskType</th>
-            <th colspan="3">Token</th>
-            <th>Data</th>
-            <th>Accepted</th>
-            <th>Locked</th>
-            <th>CreatedAt</th>
-            <th>CreatedBy</th>
-            <th>ClosedAt</th>
-            <th>ClosedBy</th>
-            <th>AssigendAt</th>
-            <th>AssigendBy</th>
-        </tr>
-        <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Groups</th>
-            <th>Id</th>
-            <th>Node</th>
-            <th>Workflow</th>
-            <th></th><th></th><th></th>
-            <th></th><th></th><th></th>
-            <th></th><th></th><th></th>
-        </tr>
-    {% for task in tasks %}
-        <tr class="task{% if task.closed_at %} closed{% endif %}">
-            <td>{{ task.pk }}</td>
-            <td>{{ task.task_type }}</td>
-            <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-            <td>{{ task.workflow_token.pk }}</td>
-            <td>{{ task.workflow_token.node_id }}</td>
-            <td>{{ task.workflow_token.workflow_id }}</td>
-            <td>{{ task.data|ec_number }}</td>
-            <td>{{ task.accepted|yesno }}</td>
-            <td>{{ task.locked|yesno }}</td>
-            <td>{{ task.created_at|date:'d.m.Y H:i:s' }}</td>
-            <td>{{ task.created_by }}</td>
-            <td>{{ task.closed_at|date:'d.m.Y H:i:s' }}</td>
-            <td>{{ task.closed_by }}</td>
-            <td>{{ task.assigned_at|date:'d.m.Y H:i:s' }}</td>
-            <td>{{ task.assigned_to }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-</div>
+    {% include 'tasks/log.html' %}
 {% endblock %}
