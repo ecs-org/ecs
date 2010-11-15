@@ -352,8 +352,15 @@ def submission_pdf(request, submission_form_pk=None):
     pdf = submission_form.pdf_document.file.read()
     return pdf_response(pdf, filename=filename)
 
+def submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=None):
+    return render(request, 'submissions/list.html', {
+        'unscheduled_submissions': submissions.filter(meetings__isnull=True).distinct().order_by('ec_number'),
+        'meetings': meetings,
+        'stashed_submission_forms': stashed_submission_forms,
+        'keyword': keyword,
+    })
 
-def submission_form_list(request):
+def submission_forms(request):
     keyword = request.GET.get('keyword', None)
 
     if keyword:
@@ -375,13 +382,14 @@ def submission_form_list(request):
         stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form')
         meetings = [(meeting, meeting.submissions.order_by('ec_number').distinct()) for meeting in Meeting.objects.order_by('-start')]
 
-    return render(request, 'submissions/list.html', {
-        'unscheduled_submissions': submissions.filter(meetings__isnull=True).distinct().order_by('ec_number'),
-        'meetings': meetings,
-        'stashed_submission_forms': stashed_submission_forms,
-        'keyword': keyword,
-    })
+    return submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=keyword)
 
+def my_submission_forms(request):
+    submissions = Submission.objects.filter(Q(current_submission_form__submitter=request.user)|Q(current_submission_form__sponsor=request.user)|Q(current_submission_form__presenter=request.user))
+    stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+
+    return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
 # FIXME: for testing purposes only (FMD1)
 def start_workflow(request, submission_pk=None):
@@ -389,7 +397,7 @@ def start_workflow(request, submission_pk=None):
     from ecs.workflow.models import Graph
     wf = Graph.objects.get(model=Submission, auto_start=True).create_workflow(data=submission)
     wf.start()
-    return HttpResponseRedirect(reverse('ecs.core.views.submission_form_list'))
+    return HttpResponseRedirect(reverse('ecs.core.views.submission_forms'))
 
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
