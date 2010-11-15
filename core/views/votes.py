@@ -98,15 +98,15 @@ def vote_context(meeting, vote):
     if form:
         documents = form.documents.all()
     vote_date = meeting.start.strftime('%d.%m.%Y')
-    ec_number = str(vote.get_ec_number())
     context = {
         'meeting': meeting,
         'vote': vote,
         'submission': submission,
+        'submitter' : submission.current_submission_form.submitter,
         'form': form,
         'documents': documents,
         'vote_date': vote_date,
-        'ec_number': ec_number,
+        'ec_number': submission.get_ec_number_display(),
     }
     return context
 
