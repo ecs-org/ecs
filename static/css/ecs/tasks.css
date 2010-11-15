@@ -90,13 +90,12 @@
 #task_list_filter {
   margin-bottom: 10px;
 }
-#task_list_filter input[type=checkbox] {
+.task_list_choose input[type=checkbox] {
   margin-top: 5px;
 }
-#task_list_filter label {
+.task_list_choose label {
   display: inline-block;
   margin: 5px 5px 3px 1px;
-  width: 55px;
   cursor: pointer;
 }
 #task_main .task_list_choose {
@@ -157,31 +156,40 @@ a {
 a:hover {
   text-decoration: underline;
 }
-
+.task_list_choose li {
+  display: inline;
+  list-style: none;
+}
+#content ul.task_list_choose {
+  border-bottom: 1px solid #ccc;
+  margin: 0;
+}
 .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
+  width: 16px;
+  height: 16px;
   padding-left: 20px;
 }
 .task_mine {
-  background: url(/static/images/core/user_blue.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -16px no-repeat;
 }
 .task_assigned {
-  background: url(/static/images/core/clipboard--exclamation.png) no-repeat top left;
+  background: url(/static/images/icons.png) -80px -320px no-repeat;
 }
 .task_open {
-  background: url(/static/images/core/users.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 0 no-repeat;
 }
 .task_proxy {
-  background: url(/static/images/core/home.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -48px no-repeat;
 }
 .task_amg {
-  background: url(/static/images/core/pill.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -496px no-repeat;
 }
 .task_mpg {
-  background: url(/static/images/core/bandaid.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -512px no-repeat;
 }
 .task_thesis {
-  background: url(/static/images/core/book-brown.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -480px no-repeat;
 }
 .task_other {
-  background: url(/static/images/core/question-frame.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -64px no-repeat;
 }

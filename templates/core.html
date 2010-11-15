@@ -3,17 +3,14 @@
 {% load i18n userutils %}
 
 {% block account %} 
-  <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
+  <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
   <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
   <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   {% load userswitcher %}
   {% userswitcher %}
   <p>
-  {% comment %}
-  <a href=""><img src="{{ MEDIA_URL }}images/core/search.png" alt="search"/></a> 
-  {% endcomment %}
-  <a href="" id="help_button" class="help_trigger"><img src="{{ MEDIA_URL }}images/core/help.png" alt="help"/></a>
-  <a href="" id="feedback_button" class="feedback_trigger"><img src="{{ MEDIA_URL }}images/feedback.png" alt="feedback" title="Feedback" /></a>
+  <a href="" id="help_button" class="help_trigger icon_help">help</a>
+  <a href="" id="feedback_button" class="feedback_trigger icon_feedback">feedback</a>
   </p> 
 {% endblock %}
 
@@ -27,7 +24,7 @@
 {% endblock %}
 
 {% block usertoolbar %} 
-  <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup"><img src="{{ MEDIA_URL }}images/core/workflow.png" alt="workflow" title="Workflow" /></a>
+  <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
 {% endblock %}
         
 {% block usermenu %}

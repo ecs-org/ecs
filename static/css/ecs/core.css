@@ -275,6 +275,24 @@ input[type=submit] {
   float: right;
   margin: 5px 10px;
 }
+.icon_help, .icon_feedback, .icon_workflow, .user_icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  text-indent: -9999px;
+}
+.icon_help {
+  background: url(/static/images/icons.png) -320px -160px no-repeat;
+}
+.icon_feedback {
+  background: url(/static/images/icons.png) -320px -32px no-repeat;
+}
+.icon_workflow {
+  background: url(/static/images/icons.png) -320px -64px no-repeat;
+}
+.user_icon {
+  background: url(/static/images/icons.png) -320px 0 no-repeat;
+}
 .togglers {
   display: block;
   cursor: pointer;
@@ -289,6 +307,8 @@ input[type=submit] {
   background: #e3e3bf;
 }
 .searchbox {
+  display: block;
+  width: 200px;
   float: left;
   margin: 10px;
 }
@@ -305,6 +325,7 @@ input[type=submit] {
   background: #ccc url(/static/images/icons.png) -324px -198px no-repeat;
   border: 1px solid #999;
 }
+
 
 /* form layout */
 

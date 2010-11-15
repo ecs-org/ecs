@@ -6,17 +6,24 @@
 #submission_list_filter {
   margin-bottom: 10px;
 }
-#submission_list_filter input[type=checkbox] {
+.submission_list_choose input[type=checkbox] {
   margin-top: 5px;
 }
-#submission_list_filter label {
+.submission_list_choose label {
   display: inline-block;
   margin: 5px 5px 3px 1px;
-  width: 55px;
   cursor: pointer;
 }
 #submission_widget a, #submission_widget li, #submission_widget label, #submission_widget table {
   font-size: 10pt;
+}
+.submission_list_choose li {
+  display: inline;
+  list-style: none;
+}
+#content ul.submission_list_choose {
+  border-bottom: 1px solid #ccc;
+  margin: 0;
 }
 .submission_item:nth-child(odd) {
   background-color: #FFFFDF;
@@ -29,32 +36,28 @@
   border-bottom: 1px solid #ccc;
 }
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
+  width: 16px;
+  height: 16px;
   padding-left: 20px;
 }
 .submission_new {
-  background: url(/static/images/core/clipboard-list.png) no-repeat top left;
+  background: url(/static/images/icons.png) -80px -256px no-repeat;
 }
 .submission_next_meeting {
-  background: url(/static/images/core/alarm-clock--arrow.png) no-repeat top left;
-  width: 80px !important;
+  background: url(/static/images/icons.png) -80px -80px no-repeat;
 }
 .submission_b2 {
-  background: url(/static/images/core/arrow-step-over.png) no-repeat top left;
+  background: url(/static/images/icons.png) -240px -192px no-repeat;
 }
 .submission_amg {
-  background: url(/static/images/core/pill.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -496px no-repeat;
 }
 .submission_mpg {
-  background: url(/static/images/core/bandaid.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -512px no-repeat;
 }
 .submission_thesis {
-  background: url(/static/images/core/book-brown.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -480px no-repeat;
 }
 .submission_other {
-  background: url(/static/images/core/question-frame.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -64px no-repeat;
 }
-
-.submission_list_choose {
-  border-bottom: 1px solid #ccc;
-}
-
