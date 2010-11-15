@@ -617,6 +617,27 @@ fieldset.disabled {
   width: 15em;
 }
 
+/* paginator icons */
+
+.first_page, .prev_page, .next_page, .last_page {
+  display: inline-block;
+  text-indent: -9999px;
+  width: 16px;
+  height: 16px;
+}
+.first_page {
+  background: url(/static/images/icons.png) -240px -80px no-repeat;
+}
+.prev_page {
+  background: url(/static/images/icons.png) -240px -48px no-repeat;
+}
+.next_page {
+  background: url(/static/images/icons.png) -240px -32px no-repeat;
+}
+.last_page {
+  background: url(/static/images/icons.png) -240px -64px no-repeat;
+}
+
 /* documents */
 
 .doclist {

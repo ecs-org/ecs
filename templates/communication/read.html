@@ -16,12 +16,12 @@
       </li>
       <li class="actions">
           {% ifequal message.sender request.user %}
-              <a class="open-in-widget" href="{% url ecs.communication.views.bump_message message_pk=message.pk %}?next={{ request.path|urlencode }}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+              <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.bump_message message_pk=message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
           {% else %}
-              <a class="open-in-popup" href="{% url ecs.communication.views.send_message reply_to_pk=message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /> </a>
-              <a class="open-in-popup" href="{% url ecs.communication.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
+              <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=message.pk %}" title="Antworten">answer</a>
+              <a class="open-in-popup icon_delegate" href="{% url ecs.communication.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren">delegate</a>
           {% endifequal %}
-          <a class="close-popup" href="{% url ecs.communication.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
+          <a class="close-popup icon_done" href="{% url ecs.communication.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt">done</a>
       </li>
       <li style="border-top: 1px solid #999999">
           <pre>{{ message.text|safe }}</pre>

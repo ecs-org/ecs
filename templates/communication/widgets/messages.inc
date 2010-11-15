@@ -22,12 +22,12 @@
         <span class="user">{% block message_user %}{% endblock %}</span>
         <span class="actions">
             {% if not incoming %}
-                <a class="open-in-widget" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump"><img src="{{ MEDIA_URL }}/images/core/arrow-circle.png" alt="bump" /></a>
+                <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump">bump</a>
             {% else %}
-                <a class="open-in-popup" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="Antworten"><img src="{{ MEDIA_URL }}/images/core/mail-reply.png" alt="antworten" /></a>
-                <a class="open-in-popup" href="{% url ecs.communication.views.delegate_thread thread_pk=thread.pk %}" title="Delegieren"><img src="{{ MEDIA_URL }}/images/core/mail-forward.png" alt="delegieren" /></a>
+                <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="Antworten">answer</a>
+                <a class="open-in-popup icon_delegate" href="{% url ecs.communication.views.delegate_thread thread_pk=thread.pk %}" title="Delegieren">delegate</a>
             {% endif %}
-            <a class="open-in-widget" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt"><img src="{{ MEDIA_URL }}/images/core/tick.png" alt="erledigt" /></a>
+            <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
         </span>
     </li>
 {% endfor %}
@@ -37,15 +37,15 @@
     {% block more_link %}{% endblock %}
 
     {% if page.has_previous %}
-        <a class="open-in-widget" href="{{ request.path }}?p=1"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="Anfang" title="Anfang" /></a>
-        <a class="open-in-widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="zurück" title="zurück" /></a>
+        <a class="open-in-widget first_page" href="{{ request.path }}?p=1">first</a>
+        <a class="open-in-widget prev_page" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}">previous</a>
     {% endif %}
 
     {{ page.number }} von {{ page.paginator.num_pages }}
     
     {% if page.has_next %}
-        <a class="open-in-widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="weiter" title="weiter" /></a>
-        <a class="open-in-widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="Ende" title="Ende" /></a>
+        <a class="open-in-widget next_page" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}">next</a>
+        <a class="open-in-widget last_page" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}">last</a>
     {% endif %}
     
 </div>
