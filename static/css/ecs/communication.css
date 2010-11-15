@@ -57,9 +57,8 @@ ol {
   padding: 20px;
 }
 .message_display .actions a {
-  width: 30px;
   display: inline-block;
-  height: 20px;
+  margin-bottom: 5px;
 }
 .message_display img, .messages_overview img {
   vertical-align: middle;
@@ -81,10 +80,33 @@ table.messages .threadstart {
   border-right: 1px solid #ccc;
 }
 
-.message_display .item.odd{
-    background-color: #eeeeee;
+.message_display .item.odd {
+  background-color: #eeeeee;
 }
-.message_display .item.even{
-    background-color: #ececff;
+.message_display .item.even {
+  background-color: #ececff;
 }
 
+/* icons */
+
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done {
+  display: inline-block;
+  text-indent: -9999px;
+  width: 16px;
+  height: 16px;
+}
+.icon_read {
+  background: url(/static/images/icons.png) -160px -128px no-repeat;
+}
+.icon_bump {
+  background: url(/static/images/icons.png) -240px -128px no-repeat;
+}
+.icon_answer {
+  background: url(/static/images/icons.png) -160px -144px no-repeat;
+}
+.icon_delegate {
+  background: url(/static/images/icons.png) -128px -80px no-repeat;
+}
+.icon_done {
+  background: url(/static/images/icons.png) -0 -160px no-repeat;
+}
