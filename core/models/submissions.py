@@ -403,7 +403,7 @@ class SubmissionForm(models.Model):
     # 9.x
     submitter = models.ForeignKey(User, null=True, related_name='submitted_submission_forms')
     submitter_contact = NameField()
-    submitter_email = models.EmailField(blank=True, null=True)
+    submitter_email = models.EmailField(blank=False, null=True)
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
     submitter_is_coordinator = models.BooleanField()
