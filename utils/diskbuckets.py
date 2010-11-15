@@ -1,8 +1,4 @@
-'''
-Created on Aug 19, 2010
-
-@author: amir
-'''
+# -*- coding: utf-8 -*-
 
 import os
 
@@ -22,22 +18,28 @@ class DiskBuckets(object):
         self.root_dir = os.path.abspath(root_dir)
         self.maxdepth = maxdepth
         self.allow_mkrootdir = allow_mkrootdir
-        self._prepare_root_dir()
+        if self.allow_mkrootdir and not os.path.isdir(self.root_dir):
+            os.makedirs(self.root_dir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
     def add(self, identifier, filelike):
-        if not self.exists(identifier):
-            
+        if self.exists(identifier):
+            raise KeyError('Entry %s already exists at storage: %s' % (identifier, self._generate_path(identifier)))
+        else:
             path = self._generate_path(identifier)
-            bucketdir = os.path.dirname(path);
+            bucketdir = os.path.dirname(path)
             if not os.path.isdir(bucketdir):
-                os.makedirs(os.path.dirname(path), DiskBuckets.DEFAULT_MKDIR_MODE)
+                print ("bucketdir: %s, path: %s" % (bucketdir, path))
+                os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
             if hasattr(filelike, "read"):
                 open(path, "wb").write(filelike.read())
             else:
                 open(path, "wb").write(filelike)
-        else:
-            raise KeyError('Entry already exists: ' + identifier)  
+
+    def create_or_update(self, identifier, filelike):
+        if self.exists(identifier):
+            self.purge(identifier)
+        self.add(identifier, filelike)
 
     def get(self, identifier):
         if self.exists(identifier):
@@ -45,13 +47,12 @@ class DiskBuckets(object):
         else: 
             raise KeyError('Entry not found: ' + identifier)
 
-    def exists(self, identifier):
-        path = self._generate_path(identifier) 
-        return os.path.isfile(path) and not os.path.islink(path);
+    def purge(self, identifier):
+        if self.exists(identifier):
+            os.remove(self._generate_path(identifier))
             
-    def _prepare_root_dir(self):
-        if self.allow_mkrootdir and not os.path.isdir(self.root_dir):
-            os.makedirs(self.root_dir, DiskBuckets.DEFAULT_MKDIR_MODE)
+    def exists(self, identifier): 
+        return os.path.exists(self._generate_path(identifier))
 
     def _generate_path(self, identifier):
         path=''

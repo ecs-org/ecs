@@ -12,7 +12,7 @@ from ecs.core.models import SubmissionForm
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
-from ecs.pdfviewer.utils import createmediaurls
+from ecs.utils.msutils import generate_pages_urllist
 
 
 def show(request, document_pk=None):
@@ -22,7 +22,7 @@ def show(request, document_pk=None):
     return render(request, 'pdfviewer/viewer.html', {
         'document': document,
         'annotations': simplejson.dumps(annotations),
-        'images': simplejson.dumps(createmediaurls(document)),
+        'images': simplejson.dumps(generate_pages_urllist(document.uuid_document, document.pages)),
     })
 
 @csrf_exempt

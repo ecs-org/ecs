@@ -5,7 +5,7 @@ import os
 import sys
 import site
 
-# writing to stdout as wsgi is considered an error
+# writing to stdout as wsgi is considered an error, and borks wsgi setup
 sys.stdout = sys.stderr
 
 # Remember original sys.path.

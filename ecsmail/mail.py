@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
 
 from ecs.ecsmail.persil import whitewash
-from ecs.ecsmail.task_queue import queued_mail_send
+from ecs.ecsmail.tasks import queued_mail_send
    
 
 def create_mail(subject, message, from_email, recipient, message_html=None, attachments= None, msgid=None, **kwargs):
