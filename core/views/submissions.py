@@ -39,6 +39,7 @@ from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo
+from ecs.tasks.models import Task
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -385,8 +386,17 @@ def submission_forms(request):
     return submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=keyword)
 
 def my_submission_forms(request):
-    submissions = Submission.objects.filter(Q(current_submission_form__submitter=request.user)|Q(current_submission_form__sponsor=request.user)|Q(current_submission_form__presenter=request.user))
+    submissions = Submission.objects.mine(request.user)
     stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+
+    return submission_form_list(request, submissions, stashed_submission_forms, meetings)
+
+def assigned_submission_forms(request):
+    ct = ContentType.objects.get_for_model(Submission)
+    task_submissions = Task.objects.filter(content_type=ct, assigned_to=request.user).values('data_id').query
+    submissions = Submission.objects.filter(Q(external_reviewer_name=request.user)|Q(pk__in=task_submissions))
+    stashed_submission_forms = DocStash.objects.none()
     meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
