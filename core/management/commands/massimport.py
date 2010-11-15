@@ -264,6 +264,7 @@ class Command(BaseCommand):
             if hasattr(SubmissionForm, key):
                 del submissionform_data[key]
         
+        submissionform_data['presenter'] = User.objects.get(username='root')
         submissionform_data['submission'] = submission
         submission_form = SubmissionForm.objects.create(**submissionform_data)
         
