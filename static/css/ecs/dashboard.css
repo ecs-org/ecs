@@ -57,10 +57,12 @@
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ccc;
 }
-.dashboard_widget .messages > li.unread {
-  background-image: url(/static/images/core/mail_new.png);
-  background-repeat: no-repeat;
-  background-position: 2px 30px;
+.dashboard_widget .unread {
+  display: inline-block;
+  background: url(/static/images/icons.png) -160px -32px no-repeat;
+  width: 16px;
+  height: 16px;
+  margin-left: -20px;
 }
 .dashboard_widget .messages > li .head {
   display: block;

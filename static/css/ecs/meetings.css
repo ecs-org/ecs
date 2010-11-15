@@ -94,7 +94,7 @@
   height: 16px;
   text-indent: -200px;
   overflow: hidden;
-  background: url(/static/images/core/remove.png) no-repeat;
+  background: url(/static/images/icons.png) 0 -144px no-repeat;
 }
 #meeting_editor .entry .dragHandle {
   float:left;
@@ -131,7 +131,7 @@
   margin: 0px;
 }
 #meeting_participation_editor .entry a.remove {
-  background: url(/static/images/core/remove.png) no-repeat;
+  background: url(/static/images/icons.png) 0 -144px no-repeat;
   width: 16px;
   height: 16px;
   position: relative;
@@ -141,7 +141,7 @@
   display: inline-block;
 }
 #meeting_participation_editor .entry a.add {
-  background: url(/static/images/core/add.png) no-repeat;
+  background: url(/static/images/icons.png) 0 -128px no-repeat;
   width: 16px;
   height: 16px;
   text-indent: -200px;
