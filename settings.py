@@ -306,6 +306,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'ecs.docstash.models.*',
     'ecs.pdfviewer.models.*',
     'ecs.feedback.models.*',
+    'ecs.users.models.UserSettings',
 )
 
 
