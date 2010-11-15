@@ -428,9 +428,8 @@ def checklist_questions():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers', 'ecs.documents.bootstrap.document_types',))
 @sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
-    with sudo(): # XXX: this fixes a visibility problem, as presenters are currently not allowed to see their own submissions
-        if Submission.objects.filter(ec_number=20104321).exists():
-            return
+    if Submission.objects.filter(ec_number=20104321).exists():
+        return
     submission = Submission.objects.create(ec_number=20104321)
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Päd'))
     
@@ -579,6 +578,7 @@ def testsubmission():
         'sponsor_address': u'Kinderspitalg. 6',
         'invoice_name': u'',
         'german_statistical_info': u'bla bla bla',
+        'presenter': User.objects.get(username='Presenter 1'),
     }
     
     patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')

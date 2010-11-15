@@ -161,6 +161,7 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
+            presenter=User.objects.get_or_create(username='test_presenter')[0],
             )
         sform.save()
         sform.substance_registered_in_countries = []
@@ -318,6 +319,7 @@ def create_submission_form(ec_number=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
+        presenter=User.objects.get_or_create(username='test_presenter')[0],
         )
     sform.save()
     sform.substance_registered_in_countries = []

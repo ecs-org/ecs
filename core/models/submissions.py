@@ -168,7 +168,7 @@ class Submission(models.Model):
                 max_num = year * 10000 + max(num, MIN_EC_NUMBER)
             # XXX: this breaks if there are more than 9999 studies per year
             self.ec_number = max_num + 1
-        super(Submission, self).save(**kwargs)
+        return super(Submission, self).save(**kwargs)
         
     def __unicode__(self):
         return self.get_ec_number_display()
@@ -412,6 +412,14 @@ class SubmissionForm(models.Model):
     submitter_is_authorized_by_sponsor = models.BooleanField()
     
     date_of_receipt = models.DateField(null=True, blank=True)
+    
+    def save(self, **kwargs):
+        if not self.presenter_id:
+            from ecs.users.utils import get_current_user
+            user = get_current_user()
+            if user:
+                self.presenter = user
+        return super(SubmissionForm, self).save(**kwargs)
    
     def __unicode__(self):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
