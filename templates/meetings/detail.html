@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core i18n %}
+{% load core i18n userutils %}
 
 {% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
 
@@ -9,10 +9,14 @@
             <a href="#" class="active">{% trans "Meeting" %}</a>
             <ul class="tab_headers">
                 <li><a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a></li>
-                <li><a href="{% url ecs.meetings.views.participation_editor meeting_pk=meeting.pk %}">{% trans "Projektzuordnung" %}</a></li>
-                <li><a href="{% url ecs.meetings.views.medical_categories meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
-                <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
-                <li><a href="{% url ecs.core.views.votes.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a></li>
+                {% if user|is_member_of:"EC-Office" %}
+                    <li><a href="{% url ecs.meetings.views.participation_editor meeting_pk=meeting.pk %}">{% trans "Projektzuordnung" %}</a></li>
+                    <li><a href="{% url ecs.meetings.views.medical_categories meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
+                    <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
+                {% endif %}
+                {% if user|is_member_of:"EC-Signing Group" %}
+                    <li><a href="{% url ecs.core.views.votes.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a></li>
+                {% endif %}
             </ul>
         </li>
     </ul>
