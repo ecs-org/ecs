@@ -30,7 +30,6 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None)
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
         thread = reply_to.thread
         form = ReplyToMessageForm(request.POST or None, initial={
-            'subject': 'Re: %s' % thread.subject,
             'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
             
         }, instance = Message(thread=thread))

@@ -100,16 +100,16 @@ class CommunicationTest(CommunicationTestCase):
     def test_bump_message(self):
         self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.bump_message', kwargs={'message_pk': self.thread.last_message.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(response.status_code, 302)
 
     def test_close_thread(self):
         self.client.login(username='alice', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(response.status_code, 302)
         
         self.client.login(username='bob', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(response.status_code, 302)
 
     def test_incoming_message_widget(self):
         self.client.login(username='alice', password='password')

@@ -11,8 +11,6 @@ class SendMessageForm(forms.ModelForm):
         fields = ( 'text','receiver')
         
 class ReplyToMessageForm(forms.ModelForm):
-    subject = Thread._meta.get_field('subject').formfield()
-    
     class Meta:
         model = Message
         fields = ('text',)
