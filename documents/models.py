@@ -20,7 +20,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
-from ecs.utils.pdfutils import pdf_pages, pdf_isvalid
+from ecs.utils.pdfutils import pdf_page_count, pdf_isvalid
 from ecs.authorization import AuthorizationManager
 
 
@@ -157,7 +157,7 @@ class Document(models.Model):
             self.hash = m.hexdigest()
                        
         if self.mimetype == 'application/pdf':
-            self.pages = pdf_pages(self.file) # calculate number of pages
+            self.pages = pdf_page_count(self.file) # calculate number of pages
 
         first_save = True if self.pk is None else False
         super(Document, self).save(**kwargs)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, subprocess, tempfile
+import os, subprocess, tempfile, binascii
 
 from django.conf import settings
 from pdfminer.pdfparser import PDFParser, PDFDocument
@@ -8,15 +8,27 @@ from pdfminer.pdfparser import PDFParser, PDFDocument
 import ecs.utils.killableprocess 
 from ecs.utils.pathutils import which
 
+MONTAGE_PATH = which('montage').next()
+GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
+PDF_MAGIC = binascii.a2b_hex('25504446')
 
-def ghostscript():
+class Page(object):
     '''
-    returns ghostscript executable, checks ECS_GHOSTSCRIPT and uses it if exists
+    Properties of a image of an page of an pageable media (id, tiles_x, tiles_y, width, pagenr)
     '''
-    return settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
+    def __init__(self, id, tiles_x, tiles_y, width, pagenr):
+        self.id = id
+        self.tiles_x = tiles_x
+        self.tiles_y = tiles_y
+        self.width = width
+        self.pagenr = pagenr
+
+    def __repr__(self):
+        return str("%s_%s_%sx%s_%s" % (self.id, self.width, self.tiles_x, self.tiles_y , self.pagenr))
 
         
 def pdf_isvalid(filelike):
+    ''' returns True if valid pdf, else False '''
     filelike.seek(0)
     parser = PDFParser(filelike)
     doc = PDFDocument()
@@ -29,7 +41,8 @@ def pdf_isvalid(filelike):
     return True
     
     
-def pdf_pages(filelike):
+def pdf_page_count(filelike):
+    ''' returns number of pages of an pdf document '''
     filelike.seek(0)
     parser = PDFParser(filelike)
     doc = PDFDocument()
@@ -57,7 +70,7 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ti
     try:
         # render barcode postscript file to pdf
         barcode_pdf_oshandle, barcode_pdf_name = tempfile.mkstemp(suffix='.pdf') 
-        cmd = [ghostscript(), 
+        cmd = [GHOSTSCRIPT_PATH, 
             '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite', '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', 
             '-sOutputFile=%s' % barcode_pdf_name, '-c', '<</Orientation 0>> setpagedevice', '-']
         popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -80,10 +93,11 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ti
 
   
 def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
-    """
+    '''
+    Extract Text from an pdf, you can extract the whole text, or only text from one page of an document. 
     Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
     if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
-    """
+    '''
     cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-q"]
     if pagenr:
         cmd += ["-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
@@ -95,11 +109,43 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
     return stdout
 
 
+def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):
+    ''' renders a pdf to multiple png pictures placed in render_dirname
+    @return: iterator yielding tuples of Page(id, tiles_x, tiles_y, width, pagenr), filelike
+    @attention: you should close returned filelike objects if they have a .close() method after usage
+    '''
+    margin_x = 0
+    margin_y = 0   
+    height = width * aspect_ratio
+    tile_width = (width / tiles_x) - margin_x
+    tile_height = (height / tiles_y) - margin_y
+    tmp_dir_prefix = os.path.join(render_dirname, "%s_%sx%s" % (width, tiles_x, tiles_y))
+    os.mkdir(tmp_dir_prefix)
+    tmp_page_prefix = os.path.join(tmp_dir_prefix, '%s_%s_%sx%s_' % (id, width, tiles_x, tiles_y)) + "%04d"
+     
+    args = [MONTAGE_PATH, "-verbose", "-geometry", "%dx%d+%d+%d" % (tile_width, tile_height, margin_x, margin_y),
+        "-tile", "%dx%d" % (tiles_x, tiles_y), "-density", "%d" % dpi, "-depth", "%d" % depth,
+        source_filename, "PNG:%s" % tmp_page_prefix]
+    
+    popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+    stdout, stderr = popen.communicate() 
+    returncode = popen.returncode  
+    if returncode != 0:
+        raise IOError('montage returned error code:%d %s' % (returncode, stdout))
+
+    pagenr = 0
+    for ds in sorted(os.listdir(tmp_dir_prefix)):
+        dspath = os.path.join(tmp_dir_prefix, ds)
+        pagenr += 1
+        yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
+
+
 def xhtml2pdf(html, timeoutseconds=30):
-    """ 
+    '''
+    Takes custom (pisa style) xhtml and makes an pdf document out of it
     Calls pisa `xhtml2pdf` from the commandline, takes xhtml with embedded css and returns pdf
     Raises IOError (descriptive text, returncode, stderr) in case something went wrong
-    """
+    '''
     if isinstance(html, unicode):
         html = html.encode("utf-8")
     cmd = [which('xhtml2pdf').next(), '-q', '-', '-']
@@ -114,6 +160,8 @@ def xhtml2pdf(html, timeoutseconds=30):
 
 
 
+
+
 """
 def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
     takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
@@ -122,7 +170,7 @@ def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page
     "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
     For more information, please refer to documentation on the C printf format specifications.
 
-    cmd = [ ghostscript(), '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
+    cmd = [ GHOSTSCRIPT_PATH, '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
         '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
     cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
     

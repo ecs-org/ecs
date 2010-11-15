@@ -18,14 +18,15 @@ class DiskBuckets(object):
         self.root_dir = os.path.abspath(root_dir)
         self.maxdepth = maxdepth
         self.allow_mkrootdir = allow_mkrootdir
-        self._prepare_root_dir()
+        if self.allow_mkrootdir and not os.path.isdir(self.root_dir):
+            os.makedirs(self.root_dir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
     def add(self, identifier, filelike):
         if self.exists(identifier):
             raise KeyError('Entry %s already exists at storage: %s' % (identifier, self._generate_path(identifier)))
         else:
             path = self._generate_path(identifier)
-            bucketdir = os.path.dirname(path);
+            bucketdir = os.path.dirname(path)
             if not os.path.isdir(bucketdir):
                 print ("bucketdir: %s, path: %s" % (bucketdir, path))
                 os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
@@ -52,10 +53,6 @@ class DiskBuckets(object):
             
     def exists(self, identifier): 
         return os.path.exists(self._generate_path(identifier))
-            
-    def _prepare_root_dir(self):
-        if self.allow_mkrootdir and not os.path.isdir(self.root_dir):
-            os.makedirs(self.root_dir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
     def _generate_path(self, identifier):
         path=''

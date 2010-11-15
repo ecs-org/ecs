@@ -34,7 +34,7 @@ def generate_document_url(uuid, filename, branding=None):
         objectid = "download/%s/application/pdf/brand/%s/" % (uuid, filename)
     return s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, objectid, key_id, expires)      
 
-def generate_docshot_urllist(uuid, pages):
+def generate_pages_urllist(uuid, pages):
     tiles = settings.MS_SHARED ["tiles"]
     width = settings.MS_SHARED ["resolutions"]
     aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
