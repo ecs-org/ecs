@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load i18n %}
+{% load i18n userutils %}
 
 {% block account %} 
   <div class="user_icon"><a href="{% url ecs.users.views.profile %}"><img src="{{ MEDIA_URL }}images/core/user.png" alt="user"/></a></div> 
@@ -33,14 +33,22 @@
 {% block usermenu %}
   <ul>
     <li><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
+    <li><a href="{% url ecs.communication.views.threads %}">{% trans "Communication" %}</a></li>
+    <li><a href="{% url ecs.tasks.views.my_tasks %}">{% trans "Tasks" %}</a></li>
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.core.views.submission_form_list %}">Eingereichte und Neue</a></li>
+          <li><a href="{% url ecs.core.views.submission_form_list %}">{% trans "Eingereichte und Neue" %}</a></li>
+          {% if user|has_flag:"external_review" or user|is_member_of:"EC-Office" %}
+              <li><a href="">{% trans "Mir zugeordnete Studien" %}</a></li>
+          {% endif %}
+          <li><a href="">{% trans "Meine Studien" %}</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
-          <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
-          <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
+          {% if user|is_member_of:"EC-Office" %}
+              <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
+              <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
+          {% endif %}
       </ul>
     </li>
     <li>
@@ -55,25 +63,21 @@
       <ul class="elements">
         <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
         <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
-      </ul>
-    </li>
-    <li>
-      <span class="togglers">{% trans "Fast Lane" %}</span>
-      <ul class="elements">
-        <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Meetings" %}</a></li>
-        <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Meeting" %}</a></li>
+        {% if user|has_flag:"expedited_review" %}
+            <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Fast Lane Meetings" %}</a></li>
+            <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Fast Lane Meeting" %}</a></li>
+        {% endif %}
       </ul>
     </li>
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.communication.views.send_message %}" class="open-in-popup">Neue Nachricht</a></li>
           <li><a href="{% url ecs.users.views.pending_approval_userlist %}">Unbestätigte Benutzer</a></li>
           <li><a href="{% url ecs.users.views.indisposed_userlist %}">{% trans 'Indisposed Users' %}</a></li>
-          <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
           <li><a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Catalog of Approved Studies' %}</a></li>
       </ul>
     </li>
+    {% comment %}
     <li>
       <span class="togglers">{% trans "Recent Activities" %}</span>
       {% load tracking %}
@@ -84,6 +88,10 @@
           {% endfor %}
       </ul>
     </li>
+    {% endcomment %}
+    {% if user|has_flag:"executive_board_member" %}
+        <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
+    {% endif %}
   </ul>
 {% endblock %}
 
@@ -128,8 +136,8 @@
       'submissions': 0,
       'notifications': 1,
       'meetings': 2,
-      'fastlane': 3,
-      'demo': 4
+      'demo': 3,
+      'audit': -1
     };
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {
