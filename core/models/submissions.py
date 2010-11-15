@@ -45,6 +45,9 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def next_meeting(self):
         return self.filter(meetings__start__gt=datetime.datetime.now())
+
+    def mine(self, user):
+        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
         
         
 class SubmissionManager(AuthorizationManager):
@@ -70,6 +73,9 @@ class SubmissionManager(AuthorizationManager):
 
     def next_meeting(self):
         return self.all().next_meeting()
+
+    def mine(self, user):
+        return self.all().mine(user)
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
