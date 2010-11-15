@@ -137,7 +137,7 @@
         {% if pending_votes %}
             <ul>
                 {% for vote in pending_votes %}
-                    <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -149,7 +149,7 @@
         {% if published_votes %}
             <ul>
                 {% for vote in published_votes %}
-                    <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                 {% endfor %}
             </ul>
         {% else %}

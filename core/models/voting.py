@@ -33,6 +33,10 @@ class Vote(models.Model):
         app_label = 'core'
         
     objects = authorization.AuthorizationManager()
+    
+    @property
+    def result_text(self):
+        return dict(VOTE_RESULT_CHOICES)[self.result]
 
     def get_ec_number(self):
         if self.top:

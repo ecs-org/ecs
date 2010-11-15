@@ -17,7 +17,7 @@
     <tr><th>Voten:</th><td>
         <ul>
             {% for vote in submission_form.submission.votes.all %}
-                <li>{{ vote.result }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
             {% endfor %}
         </ul>
     </td></tr>
