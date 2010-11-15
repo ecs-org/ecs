@@ -128,24 +128,6 @@ def timetable_editor(request, meeting_pk=None):
         'running_optimization': bool(meeting.optimization_task_id),
     })
     
-def participation_editor(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    users = User.objects.all()
-    entries = meeting.timetable_entries.exclude(submission=None).select_related('submission')
-    if request.method == 'POST':
-        for entry in entries:
-            for cat in entry.medical_categories:
-                participations = Participation.objects.filter(entry=entry, medical_category=cat)
-                user_pks = set(map(int, request.POST.getlist('users_%s_%s' % (entry.pk, cat.pk))))
-                participations.exclude(user__pk__in=user_pks).delete()
-                for user in User.objects.filter(pk__in=user_pks).exclude(meeting_participations__in=participations.values('pk')):
-                    entry.add_user(user, cat)
-            
-    return render(request, 'meetings/timetable/participation_editor.html', {
-        'meeting': meeting,
-        'categories': MedicalCategory.objects.all(),
-    })
-
 def medical_categories(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
