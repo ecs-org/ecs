@@ -1,16 +1,31 @@
-'''
-Created on Sep 17, 2010
+# -*- coding: utf-8 -*-
 
-@author: elchaschab
-'''
-from django.test.testcases import TestCase
-from ecs.utils.gpgutils import encrypt, decrypt
+import os, tempfile
 from django.conf import settings
+from ecs.utils.testcases import EcsTestCase
+from ecs.utils.gpgutils import encrypt, decrypt
 
-class Gpgutilstest(TestCase):
+class Gpgutilstest(EcsTestCase):
     testdata="im very happy to be testdata"        
     
-    def testConsistency(self):        
-        encrypted = encrypt(self.testdata, settings.DOCUMENTS_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
-        decrypted = decrypt(encrypted, settings.MEDIASERVER_GPG_HOME, settings.MEDIASERVER_KEYOWNER)
-        self.assertEqual(self.testdata, decrypted.read());
+    def testConsistency(self):
+        inputfilename = encryptedfilename = decryptedfilename = None
+        try:
+            
+            with tempfile.NamedTemporaryFile(delete=False) as inputfile:
+                inputfilename = inputfile.name
+                inputfile.write(self.testdata)
+            osdescriptor, encryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
+            osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
+                
+            encrypt(inputfilename, encryptedfilename, settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"]) 
+            decrypt(encryptedfilename, decryptedfilename, settings.STORAGE_DECRYPT ['gpghome'], settings.STORAGE_DECRYPT ["owner"])
+            
+            self.assertEqual(self.testdata, open(inputfilename).read())
+            self.assertNotEqual(self.testdata, open(encryptedfilename).read())
+            self.assertEqual(self.testdata, open(decryptedfilename).read())
+        
+        finally:
+            for i in inputfilename, encryptedfilename, decryptedfilename:
+                if i is not None and os.path.exists(i):
+                    os.remove(i)
