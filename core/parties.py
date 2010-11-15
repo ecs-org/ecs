@@ -32,7 +32,7 @@ def get_involved_parties(sf, include_workflow=True):
     if sf.invoice_name:
         yield Party(organization=sf.invoice_name, name=sf.invoice_contact.full_name, email=sf.invoice_email, involvement=_("Invoice"))
     yield Party(organization=sf.submitter_organisation, name=sf.submitter_contact.full_name, user=sf.submitter, involvement=_("Submitter"))
-    # FIXME: yield Party(user=sf.presenter, involvement=_("Presenter")),
+    yield Party(user=sf.presenter, involvement=_("Presenter"))
 
     for i in sf.investigators.filter(main=True):
         yield Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email)

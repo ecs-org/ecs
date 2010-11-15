@@ -296,6 +296,7 @@ def create_submission_form(request):
                 submission_form = form.save(commit=False)
                 submission = request.docstash.get('submission') or Submission.objects.create()
                 submission_form.submission = submission
+                submission_form.presenter = request.user
                 submission_form.save()
                 form.save_m2m()
                 submission_form.documents = request.docstash['documents']

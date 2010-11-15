@@ -12,11 +12,12 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
     
     class Meta:
         model = Submission
-        fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
-            'external_reviewer', 'external_reviewer_name', 'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'remission', 'keywords',)
+        fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories', 'external_reviewer', 'external_reviewer_name', 
+            'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'remission', 'keywords', 'additional_reviewers')
         widgets = {
             'medical_categories': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})),
             'expedited_review_categories': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})),
+            'additional_reviewers': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'users'})),
         }
         
     def clean(self):

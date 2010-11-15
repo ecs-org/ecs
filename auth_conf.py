@@ -13,9 +13,9 @@ class SubmissionQFactory(authorization.QFactory):
         ### shortcircuit logic
         if not profile.approved_by_office:
             return self.make_deny_q()
-
-        ### default policy: deny access to all submissions.
-        q = self.make_deny_q()
+            
+        ### default policy: only avaiable for the presenter.
+        q = self.make_q(current_submission_form__presenter=user)
 
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(additional_reviewers=user)
