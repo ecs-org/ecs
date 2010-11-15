@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import datetime
+from ecs.utils.diff_match_patch import diff_match_patch
+
 from django.utils.translation import ugettext as _
 from django.db import models
 from django.http import HttpRequest
 from django.contrib.contenttypes.models import ContentType
-from ecs.utils.diff_match_patch import diff_match_patch
+from django.contrib.auth.models import User
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter, InvestigatorEmployee
@@ -207,6 +209,18 @@ class InvestigatorEmployeeRenderer(ModelRenderer):
             self.render_field(instance, 'organisation'),
         )
 
+class UserRenderer(ModelRenderer):
+    def __init__(self, **kwargs):
+        kwargs['model'] = User
+        kwargs['fields'] = ('username', 'email')
+        return super(UserRenderer, self).__init__(**kwargs)
+
+    def render(self, instance, plain=False):
+        if not plain:
+            raise NotImplementedError
+
+        return u'%s <%s>' % (instance.username, instance.email)
+
 
 _renderers = {
     SubmissionForm: ModelRenderer(SubmissionForm,
@@ -224,6 +238,7 @@ _renderers = {
     ForeignParticipatingCenter: ForeignParticipatingCenterRenderer(),
     Document: DocumentRenderer(),
     Country: CountryRenderer(),
+    User: UserRenderer(),
 }
 
 def render_model_instance(instance, plain=False):
