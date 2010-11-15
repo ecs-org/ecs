@@ -676,27 +676,34 @@ class Command(BaseCommand):
         print "import_meeting_dates"
         from pprint import pprint
         
-        parsed_dates = None
+        parsed_dates = []
         
-        try:
-            #from deployment.utils import import_from
-            #t = import_from(filename)
-            #from parsed_dates import parsed_dates
-            #cant import form src/deployment (import_from):
-            import imp
-            path, file = os.path.split(os.path.abspath(filename))
-            name, ext = os.path.splitext(file)
-            if not os.path.exists(filename):
-                raise ImportError, name
-            m = imp.load_source(name, filename)
-            if not m:
-                raise ImportError, name
-            parsed_dates = m.parsed_dates
-        except ImportError:
-            self._abort('Failed to import %s' % filename)
-            return None
+        f=open(filename,'r')
+        htmlsoup = f.read()
+        f.close()
+        s = BeautifulSoup.BeautifulSoup(htmlsoup)
+        datesoup = s.find(id='content-col1')
+        rows = datesoup.findAll('tr')
         
-        print "import module magic done, creating meetings"
+        #skip the first TR...
+        for row in rows[1:]:
+            datestrings = []
+            tds = row.findAll("td")
+            for td in tds:
+                m = re.match("[0-9]+\.[0-9]+\.[0-9]+", td.text)
+                datestrings.append(m.group())
+            
+            ints = [int(dp) for dp in datestrings[0].split('.')] 
+            meetingdate =  datetime(ints[2],ints[1],ints[0])
+            
+            ints = [int(dp) for dp in datestrings[1].split('.')] 
+            deadline =  datetime(ints[2],ints[1],ints[0])
+            
+            ints = [int(dp) for dp in datestrings[2].split('.')]
+            deadline_4_diplomastudies = datetime(ints[2],ints[1],ints[0])
+            
+            parsed_dates.append({'meeting':meetingdate, 'deadline':deadline, 'deadline_diplomathesis':deadline_4_diplomastudies})
+        
         failed_meetings = 0
         imported_meetings = 0
         skipped_meetings = 0
@@ -708,6 +715,7 @@ class Command(BaseCommand):
         failed_deadlines_diploma = 0
         imported_deadlines_diploma = 0
         skipped_deadlines_diploma = 0
+        
         
         sp = transaction.savepoint()
         
