@@ -8,6 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import views as auth_views
 from django.conf import settings
+from django.contrib.auth.decorators import user_passes_test
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -209,4 +210,7 @@ def approve(request, user_pk=None):
         'profile_user': user,
     })
 
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def administration(request):
+    pass
 

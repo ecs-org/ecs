@@ -42,10 +42,6 @@
           <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
-          {% if user|is_member_of:"EC-Office" %}
-              <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
-              <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
-          {% endif %}
       </ul>
     </li>
     <li>
@@ -74,6 +70,21 @@
           </ul>
         </li>
     {% endif %}
+    {% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+        <li>
+          <span class="togglers">{% trans "Administration" %}</span>
+          <ul class="elements">
+                {% if user|has_flag:"internal" %}
+                    <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
+                    <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
+                    <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
+                {% endif %}
+                {% if user|has_flag:"executive_board_member" %}
+                    <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
+                {% endif %}
+          </ul>
+        </li>
+    {% endif %}
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
@@ -94,9 +105,6 @@
       </ul>
     </li>
     {% endcomment %}
-    {% if user|has_flag:"executive_board_member" %}
-        <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
-    {% endif %}
   </ul>
 {% endblock %}
 
@@ -135,22 +143,29 @@
       return x;
     }
 
+    var accordion_choices = [
+        'submissions',
+        'notifications',
+{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+        'meetings',
+{% endif %}
+{% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+        'administration',
+{% endif %}
+        'demo'
+    ];
+
     var accordionitem_name = '{% block menuSelection %}overview{% endblock %}';
     var accordion_items = {
       'overview': -1,
       'communication': -1,
       'tasks': -1,
-      'submissions': 0,
-      'notifications': 1,
-{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
-      'meetings': 2,
-      'demo': 3,
-      'audit': -1
-{% else %}
-      'demo': 2,
-      'audit': -1
-{% endif %}
     };
+
+    for(var i=0; i < accordion_choices.length; i++) {
+        accordion_items[accordion_choices[i]] = i;
+    }
+
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {
       var accordionitem = accordion_items['overview'];
