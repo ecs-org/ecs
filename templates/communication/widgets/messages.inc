@@ -3,7 +3,7 @@
 <h3>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h3>
 
 <div class="messages_header">
-<img src="{{ MEDIA_URL }}/images/core/sort.png" alt="sortieren" />
+<span class="icon_sort">{% trans "sort" %}</span>
 <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a>
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> 
 | <a class="widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>

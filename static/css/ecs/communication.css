@@ -89,7 +89,7 @@ table.messages .threadstart {
 
 /* icons */
 
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done {
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort {
   display: inline-block;
   text-indent: -9999px;
   width: 16px;
@@ -105,8 +105,11 @@ table.messages .threadstart {
   background: url(/static/images/icons.png) -160px -144px no-repeat;
 }
 .icon_delegate {
-  background: url(/static/images/icons.png) -128px -80px no-repeat;
+  background: url(/static/images/icons.png) -240px -208px no-repeat;
 }
 .icon_done {
   background: url(/static/images/icons.png) -0 -160px no-repeat;
+}
+.icon_sort {
+  background: url(/static/images/icons.png) 0 -208px no-repeat;
 }

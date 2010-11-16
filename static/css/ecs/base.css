@@ -117,7 +117,7 @@ body {
 }
 #content h3 {
   display: block;
-  font-size: 1.0em !important;
+  font-size: 1.0em;
   font-weight: lighter;
   margin-bottom: 10px;
 }
