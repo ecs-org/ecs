@@ -1,6 +1,32 @@
 <h3>Status</h3>
 <table>
-    <tr><th>Eingereicht am:</th><td>?</td></tr>
+    <tr><th>Formulare:</th><td>
+        <table>
+            <tr>
+                <th>Version</th>
+                <th>Titel</th>
+                <th>Eingereicht von</th>
+                <th>Eingereicht am</th>
+                <th></th>
+            </tr>
+            {% for sf in submission_forms %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ sf }}</td>
+                    <td>{{ sf.presenter }}</td>
+                    <td></td>
+                    <td>
+                        {% if sf.previous_form %}
+                            <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
+                        {% endif %}
+                        {% if sf != submission_form %}
+                            <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </td></tr>
     <tr><th>Eingereicht von:</th><td>?</td></tr>
     <tr><th>Akzeptiert:</th><td>{{ submission_form.acknowledged|yesno }}</td></tr>
     <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
