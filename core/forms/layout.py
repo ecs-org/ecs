@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.utils.translation import ugettext as _
+
 from ecs.core.forms import NotificationForm, ProgressReportNotificationForm, CompletionReportNotificationForm
 
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
@@ -6,8 +8,8 @@ from ecs.core.forms import NotificationForm, ProgressReportNotificationForm, Com
 # )
 
 SUBMISSION_FORM_TABS = (
-    (u'Eckdaten', [
-        (u'Art des Projekts', [
+    (_(u'Key data'), [
+        (_(u'type of project'), [
             'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
@@ -15,14 +17,14 @@ SUBMISSION_FORM_TABS = (
             'specialism', 'clinical_phase', 'external_reviewer_suggestions', 'already_voted',
         ]),
     ]),
-    (u'Teilnehmer', [
-        (u'Prüfungsteilnehmer', [
+    (_(u'participant'), [
+        (_(u'test participant'), [
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
             'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
     ]),
-    (u'Kurzfassung', [
-        (u'Kurzfassung', [
+    (_(u'outline'), [
+        (_(u'outline'), [
             'project_title', 'german_project_title', 'protocol_number',
             'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
             'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
@@ -31,8 +33,8 @@ SUBMISSION_FORM_TABS = (
             'german_financing_info', 'german_additional_info',
         ]),
     ]),
-    (u'Sponsor', [
-        (u'Sponsor', [
+    (_(u'sponsor'), [
+        (_(u'sponsor'), [
             'sponsor_name', 
             'sponsor_contact_gender', 'sponsor_contact_title', 'sponsor_contact_first_name', 'sponsor_contact_last_name',
             'sponsor_address', 'sponsor_zip_code', 
@@ -40,7 +42,7 @@ SUBMISSION_FORM_TABS = (
             'invoice_differs_from_sponsor',
             'sponsor_agrees_to_publishing',
         ]),
-        (u'Rechnungsempfänger', [
+        (_(u'invoice recipient'), [
             'invoice_name', 
             'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name',
             'invoice_address', 'invoice_zip_code', 
@@ -48,34 +50,34 @@ SUBMISSION_FORM_TABS = (
             'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
         ]),
     ]),
-    (u'Antragsteller', [
-        (u'Antragsteller', [
+    (_(u'applicant'), [
+        (_(u'applicant'), [
             'submitter_contact_gender', 'submitter_contact_title', 'submitter_contact_first_name', 'submitter_contact_last_name', 'submitter_email',
             'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
             'submitter_is_authorized_by_sponsor', 
         ]),
     ]),
-    (u'AMG', [
-        (u'Arzneimittelstudie', ['eudract_number', 'pharma_checked_substance', 'pharma_reference_substance']),
-        (u'AMG', [
+    (_(u'AMG'), [
+        (_(u'drug trial'), ['eudract_number', 'pharma_checked_substance', 'pharma_reference_substance']),
+        (_(u'AMG'), [
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
             'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
             'submission_type',
         ]),
     ]),
-    (u'MPG', [
-        (u'Medizinproduktestudie', ['medtech_checked_product', 'medtech_reference_substance']),    
-        (u'MPG', [
+    (_(u'MPG'), [
+        (_(u'Medical Device Study'), ['medtech_checked_product', 'medtech_reference_substance']),    
+        (_(u'MPG'), [
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
     ]),
-    (u'Maßnahmen', [
-        (u'Maßnahmen', ['additional_therapy_info',]),
+    (_(u'measures'), [
+        (_(u'measures'), ['additional_therapy_info',]),
     ]),
-    (u'Biometrie', [
-        (u'Biometrie', [
+    (_(u'biometrics'), [
+        (_(u'biometrics'), [
             'study_plan_blind', 'study_plan_observer_blinded', 'study_plan_randomized', 'study_plan_parallelgroups', 'study_plan_controlled', 
             'study_plan_cross_over', 'study_plan_placebo', 'study_plan_factorized', 'study_plan_pilot_project', 'study_plan_equivalence_testing', 
             'study_plan_misc', 'study_plan_number_of_groups', 'study_plan_stratification', 'study_plan_sample_frequency', 'study_plan_primary_objectives',
@@ -86,16 +88,16 @@ SUBMISSION_FORM_TABS = (
             'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
         ]),
     ]),
-    (u'Versicherung', [
-        (u'Versicherung', [
+    (_(u'insurance'), [
+        (_(u'insurance'), [
             'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
         ]),
     ]),
-    (u'Unterlagen', []),
-    (u'Auslandszentren', [
-        (u'Zentren im Ausland', []),
+    (_(u'documents'), []),
+    (_(u'centres abroad'), [
+        (_(u'centers abroad'), []),
     ]),
-    (u'Zentrum', []),
+    (_(u'centre'), []),
 )
 
 def get_all_used_submission_form_fields():
@@ -109,45 +111,45 @@ def get_all_used_submission_form_fields():
 NOTIFICATION_FORM_TABS = {}
 
 NOTIFICATION_FORM_TABS[NotificationForm] = [
-    (u'Allgemeine Angaben', [
-        (u'Allgemeine Angaben', [
+    (_(u'General information'), [
+        (_(u'General information'), [
             'submission_forms', 'comments',
         ]),
     ]),
-    (u'Unterlagen', []),
+    (_(u'documents'), []),
 ]
 
 NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
-    (u'Studienstatus', [
-        (u'Status', [
+    (u'Study status', [
+        (u'status', [
             'reason_for_not_started', 'study_aborted', 'completion_date',
         ]),
-        (u'Teilnehmer', [
+        (u'participant', [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',
         ]),
         (u'SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
         ])
     ]),
-    (u'Unterlagen', []),
+    (u'documents', []),
 ]
 
 NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
-    (u'Studienstatus', [
-        (u'Status', [
+    (u'Study status', [
+        (u'status', [
             'reason_for_not_started', 'runs_till',
         ]),
-        (u'Teilnehmer', [
+        (u'participant', [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',
         ]),
         (u'SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
         ]),
     ]),
-    (u'Votum', [
-        (u'Verlängerung', [
+    (u'vote', [
+        (u'extension', [
             'extension_of_vote_requested',
         ]),
     ]),
-    (u'Unterlagen', []),
+    (u'documents', []),
 ]

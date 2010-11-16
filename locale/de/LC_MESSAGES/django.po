@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-16 18:38+0100\n"
+"POT-Creation-Date: 2010-11-16 21:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:80 core/models/submissions.py:115
+#: billing/views.py:80 core/models/submissions.py:126
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -91,7 +91,7 @@ msgstr "Firma"
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:80
+#: billing/views.py:80 core/forms/layout.py:53 core/forms/layout.py:54
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -119,34 +119,35 @@ msgstr "EK-Nr"
 msgid "Payment request"
 msgstr ""
 
-#: communication/models.py:208
+#: communication/models.py:209
 #, python-format
 msgid "New ECS-Mail: from %(sender)s to %(receiver)s."
 msgstr "Neue ECS-Mail: von %(sender)s an %(receiver)s."
 
-#: communication/models.py:209
+#: communication/models.py:210
 #, python-format
 msgid "Subject: %(subject)s%(linesep)s%(text)s"
 msgstr "Betreff: %(subject)s%(linesep)s%(text)s"
 
-#: communication/views.py:34
+#: communication/views.py:35
+#, python-format
 msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"
 
 #: communication/management/commands/unreadmessages.py:35
 #, python-format
 msgid "unread ECS messages for %(user)s"
-msgstr "ungelesende ECS Nachrichten für"
+msgstr "ungelesende ECS Nachrichten für %(user)s"
 
 #: core/diff.py:100
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:102
+#: core/diff.py:102 core/forms/fields.py:54
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:104
+#: core/diff.py:104 core/forms/fields.py:54
 msgid "No"
 msgstr "Nein"
 
@@ -201,11 +202,11 @@ msgstr ""
 msgid "Presenter"
 msgstr "Zentren"
 
-#: core/parties.py:56
+#: core/parties.py:57
 msgid "Board Member Review"
 msgstr ""
 
-#: core/parties.py:59
+#: core/parties.py:60
 #, fuzzy
 msgid "Additional Review"
 msgstr "Einstufungs-Review"
@@ -247,6 +248,94 @@ msgstr "Bestätigen"
 msgid "Reject"
 msgstr "Ablehnen"
 
+#: core/forms/checklist.py:14
+msgid "comment"
+msgstr "Kommentar"
+
+#: core/forms/fields.py:16
+msgid "Please enter a date in the format dd.mm.yyyy."
+msgstr "Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein."
+
+#: core/forms/forms.py:92
+msgid "The account beneficiary is not the sponsor"
+msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
+
+#: core/forms/layout.py:11
+msgid "Key data"
+msgstr "Eckdaten"
+
+#: core/forms/layout.py:12
+msgid "type of project"
+msgstr "Art des Projekts"
+
+#: core/forms/layout.py:20
+msgid "participant"
+msgstr "Teilnehmer"
+
+#: core/forms/layout.py:21
+msgid "test participant"
+msgstr "Prüfungsteilnehmer"
+
+#: core/forms/layout.py:26 core/forms/layout.py:27
+msgid "outline"
+msgstr "Kurzfassung"
+
+#: core/forms/layout.py:36 core/forms/layout.py:37
+msgid "sponsor"
+msgstr "Sponsor"
+
+#: core/forms/layout.py:45
+msgid "invoice recipient"
+msgstr "Rechnungsempfänger"
+
+#: core/forms/layout.py:60 core/forms/layout.py:62
+msgid "AMG"
+msgstr "AMG"
+
+#: core/forms/layout.py:61
+msgid "drug trial"
+msgstr "Arzneimittelstudie"
+
+#: core/forms/layout.py:69 core/forms/layout.py:71
+msgid "MPG"
+msgstr "MPG"
+
+#: core/forms/layout.py:70
+msgid "Medical Device Study"
+msgstr "Medizinproduktestudie"
+
+#: core/forms/layout.py:76 core/forms/layout.py:77
+msgid "measures"
+msgstr "Maßnahmen"
+
+#: core/forms/layout.py:79 core/forms/layout.py:80
+msgid "biometrics"
+msgstr "Biometrie"
+
+#: core/forms/layout.py:91 core/forms/layout.py:92
+msgid "insurance"
+msgstr "Versicherung"
+
+#: core/forms/layout.py:96 core/forms/layout.py:119
+msgid "documents"
+msgstr "Unterlagen"
+
+#: core/forms/layout.py:97
+msgid "centres abroad"
+msgstr "Auslandszentren"
+
+#: core/forms/layout.py:98
+msgid "centers abroad"
+msgstr "Zentren im Ausland"
+
+#: core/forms/layout.py:100
+msgid "centre"
+msgstr "Zentrum"
+
+#: core/forms/layout.py:114 core/forms/layout.py:115
+msgid "General information"
+msgstr "Allgemeine Angaben"
+
 #: core/forms/review.py:29
 msgid "Studies cannot be classified 'expedited' and 'thesis' at the same time."
 msgstr ""
@@ -279,43 +368,43 @@ msgstr ""
 msgid "other University"
 msgstr ""
 
-#: core/models/submissions.py:190
+#: core/models/submissions.py:201
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/models/submissions.py:191
+#: core/models/submissions.py:202
 msgid "multicentric, main ethics commission"
 msgstr ""
 
-#: core/models/submissions.py:192
+#: core/models/submissions.py:203
 msgid "multicentric, local ethics commission"
 msgstr ""
 
-#: core/models/submissions.py:364
+#: core/models/submissions.py:375
 msgid "open"
 msgstr "offen"
 
-#: core/models/submissions.py:364
+#: core/models/submissions.py:375
 msgid "blind"
 msgstr "blind"
 
-#: core/models/submissions.py:364
+#: core/models/submissions.py:375
 msgid "double-blind"
 msgstr "doppelblind"
 
-#: core/models/submissions.py:609
+#: core/models/submissions.py:626
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:609
+#: core/models/submissions.py:626
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/submissions.py:640
+#: core/models/submissions.py:657
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:640
+#: core/models/submissions.py:657
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -420,11 +509,11 @@ msgstr "Meine Tätigkeiten"
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:38
+#: templates/core.html:39
 msgid "Eingereichte und Neue"
 msgstr ""
 
-#: templates/core.html:40
+#: templates/core.html:41
 msgid "Mir zugeordnete Studien"
 msgstr ""
 
@@ -437,42 +526,42 @@ msgstr "Studien"
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:59
+#: templates/core.html:60
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:64
+#: templates/core.html:66
 #, fuzzy
 msgid "Fast Lane Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:65
+#: templates/core.html:68
 #, fuzzy
 msgid "New Fast Lane Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:70
+#: templates/core.html:74
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:73 templates/users/indisposed_list.html:7
+#: templates/core.html:77 templates/users/indisposed_list.html:7
 msgid "Indisposed Users"
 msgstr "Verhinderte Benutzer"
 
-#: templates/core.html:74 templates/submissions/catalog.html:7
+#: templates/core.html:78 templates/submissions/catalog.html:7
 #: templates/submissions/catalog.html:14
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
-#: templates/core.html:79
+#: templates/core.html:83
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:90
+#: templates/core.html:94
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:99
+#: templates/core.html:103
 #, python-format
 msgid ""
 "\n"
@@ -481,11 +570,11 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:187
+#: templates/core.html:196
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:187
+#: templates/core.html:196
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
@@ -1051,12 +1140,6 @@ msgstr ""
 
 #~ msgid "Proxy"
 #~ msgstr "Stellvertreter"
-
-#~ msgid "AMG"
-#~ msgstr "AMG"
-
-#~ msgid "MPG"
-#~ msgstr "MPG"
 
 #~ msgid "thesis"
 #~ msgstr "Diplomarbeit"
