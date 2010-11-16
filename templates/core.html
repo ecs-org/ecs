@@ -55,17 +55,21 @@
         <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
-    {% if user|has_flag:"internal" %}
+    {% if user|has_flag:"internal" or user|has_flag:"board_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
-                <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
-                {% if user|is_member_of:"EC-Office" %}
-                    <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
-                {% endif %}
-                <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Fast Lane Meetings" %}</a></li>
-                {% if user|is_member_of:"EC-Office" %}
-                    <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Fast Lane Meeting" %}</a></li>
+                <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
+                {% if user|has_flag:"internal" %}
+                    <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
+                    <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
+                    {% if user|is_member_of:"EC-Office" %}
+                        <li><a href="{% url ecs.meetings.views.create_meeting %}">{% trans "New Meeting" %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Fast Lane Meetings" %}</a></li>
+                    {% if user|is_member_of:"EC-Office" %}
+                        <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Fast Lane Meeting" %}</a></li>
+                    {% endif %}
                 {% endif %}
           </ul>
         </li>
@@ -138,7 +142,7 @@
       'tasks': -1,
       'submissions': 0,
       'notifications': 1,
-{% if user|has_flag:"internal" %}
+{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
       'meetings': 2,
       'demo': 3,
       'audit': -1
