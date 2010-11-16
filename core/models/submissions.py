@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
 from django.utils.translation import ugettext as _, ugettext_lazy
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
@@ -54,9 +55,10 @@ class SubmissionQuerySet(models.query.QuerySet):
         for a in user.assigned_medical_categories.all():
             q |= a.meeting.submissions.filter(medical_categories=a.category)
 
-        # FIXME: ask emulbreh why it throws error that submission.workflow doesnt exist (but works in involved parties)
-        #if include_workflow:
-        #    q |= self.filter(workflow__tokens__assigned_to=user)
+        if include_workflow:
+            from ecs.tasks.models import Task
+            submission_ct = ContentType.objects.get_for_model(Submission)
+            q |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
 
         return q.distinct()
         
