@@ -16,7 +16,7 @@ from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 
 @user_flag_required('internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
-    tasks = Task.objects.order_by('-closed_at', '-created_at')
+    tasks = Task.objects.order_by('created_at')
     if submission_pk:
         submission_ct = ContentType.objects.get_for_model(Submission)
         tasks = tasks.filter(content_type=submission_ct, data_id=submission_pk)

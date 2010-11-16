@@ -98,7 +98,7 @@ ecs.setupFormFieldHelpers = function(context){
                     }
                 }
             });
-            if(multiselect.disabled){
+            if(!active){
                 (new Element('span', {html: labels.join(', ')})).replaces(multiselect);
             }
         }}).send();
