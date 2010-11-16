@@ -95,7 +95,7 @@
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function(){
-            ecs.setupForms();
+            /* ecs.setupForms(); */ /* do we need this? */
             var meetingAssistantForm = $('meeting_assistant_form');
             {% if not top.submission %}
                 $('complete').addEvent('click', function(){

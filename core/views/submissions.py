@@ -365,18 +365,18 @@ def submission_forms(request):
     keyword = request.GET.get('keyword', None)
 
     if keyword:
-        q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
+        submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
             num = int(m.group(1))
             year = int(m.group(2))
-            q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+            submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
-            q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
+            submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
 
-        submissions = Submission.objects.filter(q)
-        stashed_submission_forms = []  # FIXME: how to search in the docstash? (FMD1)
+        submissions = Submission.objects.filter(submissions_q)
+        stashed_submission_forms = DocStash.objects.none()  # FIXME: how to search in the docstash? (FMD1)
         meetings = [(meeting, submissions.filter(meetings=meeting).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__pk__in=submissions.values('pk').query).order_by('-start').distinct()]
     else:
         submissions = Submission.objects.all()
