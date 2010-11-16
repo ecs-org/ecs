@@ -340,9 +340,9 @@ def auth_user_testusers():
         (u'Notification Rev', u'EC-Notification Review Group',
             {'internal': True, 'approved_by_office': True}),
         (u'Insurance Rev', u'EC-Insurance Reviewer',            
-            {'internal': True, 'approved_by_office': True}),
+            {'internal': False, 'approved_by_office': True}),
         (u'Thesis Rev', u'EC-Thesis Review Group',              
-            {'internal': True, 'thesis_review': True, 'approved_by_office': True}),
+            {'internal': False, 'thesis_review': True, 'approved_by_office': True}),
         (u'External Reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
     )
