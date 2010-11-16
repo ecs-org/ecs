@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-16 21:52+0100\n"
+"POT-Creation-Date: 2010-11-16 22:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -392,11 +392,11 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:30 core/models/submissions.py:628
+#: core/models/names.py:30 core/models/submissions.py:629
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:30 core/models/submissions.py:628
+#: core/models/names.py:30 core/models/submissions.py:629
 msgid "Mr"
 msgstr "Herr"
 
@@ -412,23 +412,23 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:377
+#: core/models/submissions.py:378
 msgid "open"
 msgstr "offen"
 
-#: core/models/submissions.py:377
+#: core/models/submissions.py:378
 msgid "blind"
 msgstr "blind"
 
-#: core/models/submissions.py:377
+#: core/models/submissions.py:378
 msgid "double-blind"
 msgstr "doppelblind"
 
-#: core/models/submissions.py:659
+#: core/models/submissions.py:660
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:659
+#: core/models/submissions.py:660
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -468,6 +468,14 @@ msgstr "5b Nicht behandelt"
 msgid "vote"
 msgstr "Votum"
 
+#: core/templatetags/corepdf.py:13
+msgid "yes"
+msgstr "Ja"
+
+#: core/templatetags/corepdf.py:13
+msgid "no"
+msgstr "Nein"
+
 #: core/views/submissions.py:302
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
@@ -475,6 +483,16 @@ msgid ""
 msgstr ""
 "Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
+
+#: core/views/votes.py:126 core/views/votes.py:139 core/views/votes.py:158
+msgid ""
+"Error: Invalid pdf-id. Probably your signing session expired. Please retry."
+msgstr "Fehler: Ungültige pdf-id. Wahrscheinlich ist ihre Signierungssitzung abgelaufen. Bitte versuchen sie es erneut."
+
+#: core/views/votes.py:189
+#, python-format
+msgid "vote_sign_error: error=[%(error)s], cause=[%(cause)s]"
+msgstr "vote_sign_error: Fehler=[%(error)s], Grund=[%(cause)s]"
 
 #: fastlane/forms.py:14 meetings/forms.py:14
 msgid "date and time"
@@ -582,66 +600,76 @@ msgstr ""
 msgid "Meine Studien"
 msgstr "Studien"
 
-#: templates/core.html:52
+#: templates/core.html:48
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:60
+#: templates/core.html:56
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:62
+#: templates/core.html:58
 #, fuzzy
 msgid "Next Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:64
+#: templates/core.html:60
 #, fuzzy
 msgid "Upcoming Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:65
+#: templates/core.html:61
 #, fuzzy
 msgid "Past Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:67
+#: templates/core.html:63
 #, fuzzy
 msgid "New Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:69
+#: templates/core.html:65
 #, fuzzy
 msgid "Fast Lane Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:71
+#: templates/core.html:67
 #, fuzzy
 msgid "New Fast Lane Meeting"
 msgstr "Sitzungen"
 
+#: templates/core.html:75
+#, fuzzy
+msgid "Administration"
+msgstr "Dauer"
+
 #: templates/core.html:78
+#, fuzzy
+msgid "User Administration"
+msgstr "Beantwortete Meldungen"
+
+#: templates/core.html:83
+msgid "Audit Trail"
+msgstr "Kontrollprotokoll"
+
+#: templates/core.html:89
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:81 templates/users/indisposed_list.html:7
+#: templates/core.html:92 templates/users/indisposed_list.html:7
 msgid "Indisposed Users"
 msgstr "Verhinderte Benutzer"
 
-#: templates/core.html:82 templates/submissions/catalog.html:7
+#: templates/core.html:93 templates/submissions/catalog.html:7
 #: templates/submissions/catalog.html:14
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
-#: templates/core.html:87
+#: templates/core.html:98
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:98
-msgid "Audit Trail"
-msgstr "Kontrollprotokoll"
-
-#: templates/core.html:107
+#: templates/core.html:115
 #, python-format
 msgid ""
 "\n"
@@ -650,11 +678,11 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:200
+#: templates/core.html:215
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:200
+#: templates/core.html:215
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 

@@ -1,6 +1,6 @@
 from django.template import Library, Node
 from django.utils.safestring import mark_safe
-
+from django.utils.translation import ugettext as _
 register = Library()
 
 @register.filter
@@ -10,7 +10,7 @@ checkbox.is_safe = True
 
 @register.filter
 def yesno_checkboxes(val):
-    return mark_safe(u'<span class="yesno">%s ja %s nein</span>' % (checkbox(val), checkbox(not val)))
+    return mark_safe(u'<span class="yesno">%s %s %s %s</span>' % (checkbox(val), _(u'yes'), checkbox(not val), _(u'no')))
 yesno_checkboxes.is_safe = True
 
 
