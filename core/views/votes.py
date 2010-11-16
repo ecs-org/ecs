@@ -115,9 +115,9 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_name = vote_filename(meeting, vote)
-    template = 'db/meetings/xhtml2pdf/vote.html'
+    pdf_template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(meeting, vote)
-    pdf = render_pdf(request, template, context)
+    pdf = render_pdf(request, pdf_template, context)
     # TODO get uuid
     # TODO stamp with barcode(uuid)
     return pdf_response(pdf, filename=pdf_name)
