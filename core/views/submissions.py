@@ -388,16 +388,14 @@ def submission_forms(request):
 def my_submission_forms(request):
     submissions = Submission.objects.mine(request.user)
     stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
-    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
 def assigned_submission_forms(request):
-    ct = ContentType.objects.get_for_model(Submission)
-    task_submissions = Task.objects.filter(content_type=ct, assigned_to=request.user).values('data_id').query
-    submissions = Submission.objects.filter(Q(external_reviewer_name=request.user)|Q(pk__in=task_submissions))
+    submissions = Submission.objects.reviewed_by_user(request.user)
     stashed_submission_forms = DocStash.objects.none()
-    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 

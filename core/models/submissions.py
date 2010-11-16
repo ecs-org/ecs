@@ -16,7 +16,7 @@ from ecs.core.models.names import NameField
 from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
-from ecs.core.parties import get_involved_parties
+from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 
 MIN_EC_NUMBER = 1000
 
@@ -48,7 +48,17 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
-        
+
+    def reviewed_by_user(self, user, include_workflow=True):
+        q = self.filter(additional_reviewers=user)
+        for a in user.assigned_medical_categories.all():
+            q |= a.meeting.submissions.filter(medical_categories=a.category)
+
+        # FIXME: ask emulbreh why it throws error that submission.workflow doesnt exist (but works in involved parties)
+        #if include_workflow:
+        #    q |= self.filter(workflow__tokens__assigned_to=user)
+
+        return q.distinct()
         
 class SubmissionManager(AuthorizationManager):
     def get_query_set(self):
@@ -77,16 +87,17 @@ class SubmissionManager(AuthorizationManager):
     def mine(self, user):
         return self.all().mine(user)
 
+    def reviewed_by_user(self, user, include_workflow=True):
+        return self.all().reviewed_by_user(user, include_workflow=include_workflow)
+
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
-    # FIXME: why do we have two field for expedited_review? (FMD1)
     expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    # FIXME: why do we have two fields for external_review? (FMD1)
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
     external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
@@ -495,6 +506,12 @@ class SubmissionForm(models.Model):
         
     def get_involved_parties(self, include_workflow=True):
         return get_involved_parties(self, include_workflow=include_workflow)
+
+    def get_presenting_parties(self, include_workflow=True):
+        return get_presenting_parties(self, include_workflow=include_workflow)
+
+    def get_reviewing_parties(self, include_workflow=True):
+        return get_reviewing_parties(self, include_workflow=include_workflow)
 
 
 def attach_to_submissions(user):
