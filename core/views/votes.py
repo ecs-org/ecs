@@ -98,11 +98,11 @@ def vote_context(meeting, vote):
     if form:
         documents = form.documents.all()
     vote_date = meeting.start.strftime('%d.%m.%Y')
+    
     context = {
         'meeting': meeting,
         'vote': vote,
         'submission': submission,
-        'submitter' : submission.current_submission_form.submitter,
         'form': form,
         'documents': documents,
         'vote_date': vote_date,
@@ -128,10 +128,12 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
     pdf_name = vote_filename(meeting, vote)
-    template = 'db/meetings/xhtml2pdf/vote.html'
+    pdf_template = 'db/meetings/xhtml2pdf/vote.html'
+    preview_template = 'db/meetings/xhtml2pdf/vote_preview.html'
+    
     context = vote_context(meeting, vote)
-    html_data = render(request, template, context).content
-    pdf_data = xhtml2pdf(html_data)
+    html_preview = render(request, preview_template, context).content
+    pdf_data = xhtml2pdf(render(request, pdf_template, context).content)
     document_uuid = uuid4().get_hex();
 
     t_in = tempfile.NamedTemporaryFile(prefix='vote_sign_', suffix='.pdf', delete=False)
@@ -146,7 +148,7 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     pdf_data_stamped = t_out.read()
     t_out.close();
 
-    pdfas_id = votesDepot.deposit(pdf_data_stamped, html_data, document_uuid, pdf_name)
+    pdfas_id = votesDepot.deposit(pdf_data_stamped, html_preview, document_uuid, pdf_name)
     return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
 
 
@@ -169,7 +171,7 @@ def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     if votedoc is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
-    return HttpResponse(votedoc["html_data"])
+    return HttpResponse(votedoc["html_preview"])
 
 @csrf_exempt
 def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):

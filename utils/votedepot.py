@@ -16,7 +16,7 @@ class VoteDepot(object):
     def deposit(self, pdf_data, html_data, document_uuid, display_name):
         pdf_id = self.__gen_id()
 
-        cache.set(pdf_id, {"pdf_data": pdf_data, "html_data": html_data, "uuid": document_uuid, "name": display_name}, self.__DEFAULT_TIMEOUT_SEC)
+        cache.set(pdf_id, {"pdf_data": pdf_data, "html_preview": html_data, "uuid": document_uuid, "name": display_name}, self.__DEFAULT_TIMEOUT_SEC)
         return pdf_id
     
     def get(self, pdf_id):
