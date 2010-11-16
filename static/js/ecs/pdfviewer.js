@@ -221,22 +221,26 @@ ecs.pdfviewer.DocumentViewer = new Class({
     },
     setPage: function(pageIndex, update){
         if(pageIndex < 0 || pageIndex >= this.pageCount){
-            return;
+            return false;
         }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
                 this.update();
             }
+            return true;
         }
+        return false;
     },
     nextPage: function(delta){
-        ecs.pdfviewer.utils.scrollToTop();
-        this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1));
+        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1))){
+            ecs.pdfviewer.utils.scrollToTop();
+        }
     },
     previousPage: function(delta){
-        ecs.pdfviewer.utils.scrollToBottom();
-        this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0));
+        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0))){
+            ecs.pdfviewer.utils.scrollToBottom();
+        }
     },
     gotoPage: function(pageIndex){
         this.setPage(pageIndex, false);
