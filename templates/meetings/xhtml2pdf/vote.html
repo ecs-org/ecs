@@ -86,6 +86,12 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 
 <pdf:spacer height="1.0cm" />
 
+{% if submission.current_submission_form.current_published_vote %}
+    <pdf:spacer height="0.5cm" />
+    <span style="font-weight:bold;">Letzte:</span><br />
+    {{ submission.current_submission_form.current_published_vote.text|escape }}
+{% endif %}
+
 {% if vote.text %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Kommentar:</span><br />
@@ -97,12 +103,6 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 <pdf:spacer height="0.5cm" />
 <span style="font-weight:bold;">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
 </span><br />
-{% endif %}
-
-{% if submission.current_submission_form.current_published_vote %}
-    <pdf:spacer height="0.5cm" />
-    <span style="font-weight:bold;">Letzte:</span><br />
-    {{ submission.current_submission_form.current_published_vote.text|escape }}
 {% endif %}
 
 {% if submission.is_amg or submission.is_mpg %}
