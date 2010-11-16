@@ -218,6 +218,7 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField(null=True, blank=True)
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
+    created_at = models.DateTimeField(default=datetime.datetime.now)
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
