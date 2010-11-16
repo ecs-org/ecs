@@ -1,11 +1,7 @@
-{% extends 'core.html' %}
+{% extends 'fastlane/detail.html' %}
 {% load core i18n %}
 
-{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
-
-{% block headertitle %}{% trans "Fast Lane Assistant" %}{% endblock %}
-
-{% block content %}
+{% block fastlane_detail %}
 <div id="fastlane_assistant">
 
 <div class="nav">
@@ -21,6 +17,4 @@
 
 </div>
 {% endblock %}
-
-{% block menuSelection %}meetings{% endblock %}
 

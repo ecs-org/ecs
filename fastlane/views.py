@@ -28,10 +28,17 @@ def new(request):
         for submission in Submission.objects.next_meeting().filter(expedited=True, fast_lane_top__isnull=True):
             meeting.add_top(submission)
 
-        return HttpResponseRedirect(reverse('ecs.fastlane.views.participation', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.fastlane.views.status', kwargs={'meeting_pk': meeting.pk}))
     
     return render(request, 'fastlane/new.html', {
         'form': form,
+    })
+
+def status(request, meeting_pk):
+    meeting = get_object_or_404(FastLaneMeeting, pk=meeting_pk)
+
+    return render(request, 'fastlane/status.html', {
+        'meeting': meeting,
     })
 
 def participation(request, meeting_pk):
