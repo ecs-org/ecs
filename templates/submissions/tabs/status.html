@@ -4,7 +4,6 @@
         <table>
             <tr>
                 <th>Version</th>
-                <th>Titel</th>
                 <th>Eingereicht von</th>
                 <th>Eingereicht am</th>
                 <th></th>
@@ -12,9 +11,8 @@
             {% for sf in submission_forms %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ sf }}</td>
                     <td>{{ sf.presenter }}</td>
-                    <td></td>
+                    <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                     <td>
                         {% if sf.previous_form %}
                             <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
