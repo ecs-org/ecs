@@ -118,12 +118,19 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist.blueprint, checklist_form))
     
+    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date
+    previous_form = None
+    for sf in submission_forms:
+        sf.previous_form = previous_form
+        previous_form = sf
+
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
         'readonly': True,
         'submission_form': submission_form,
+        'submission_forms': submission_forms,
         'vote': vote,
         'retrospective_thesis_review_form': retrospective_thesis_review_form,
         'categorization_review_form': categorization_review_form,

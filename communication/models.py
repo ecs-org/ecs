@@ -4,11 +4,13 @@ import datetime, uuid
 import traceback
 import hashlib
 import logging
+import os
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 from celery.task.sets import subtask
 from ecs.ecsmail.mail import deliver
@@ -204,8 +206,8 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
         if self.smtp_delivery_state=='new':
             try:
-                msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (self.sender, self.receiver), 
-                    message='Betreff: %s\r\n%s' % (self.thread.subject, self.text),
+                msg_list = deliver(subject=_('New ECS-Mail: from %(sender)s to %(receiver)s.' % {'sender': self.sender, 'receiver': self.receiver}), 
+                    message=_('Subject: %(subject)s%(linesep)s%(text)s' % {'subject': self.thread.subject, 'text': self.text,'linesep':os.linesep}),
                     from_email=self.return_address, recipient_list=self.receiver.email,)
                     # FIXME callback=subtask(update_smtp_delivery)) does not work, because it never finds a valid communication.message object, maybe we should try with post-save
                 self.smtp_delivery_state = "pending"              

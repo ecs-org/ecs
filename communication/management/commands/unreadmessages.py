@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import render_to_string
+from django.utils.translation import ugettext as _
 
 from ecs.communication.models import Message
 from ecs.ecsmail.mail import deliver
@@ -31,6 +32,6 @@ class Command(BaseCommand):
             })
             print message
             
-            deliver(subject='Ungelesene ECS Nachrichten fuer %s' % (user,), 
+            deliver(subject=_('unread ECS messages for %(user)s' % {'user':user,}), 
                 message=message, from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=[user.email])
             print 'MAIL SENT'
