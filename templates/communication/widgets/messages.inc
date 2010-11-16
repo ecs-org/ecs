@@ -1,4 +1,4 @@
-{% load humanize core communication %}
+{% load humanize i18n core communication %}
 
 <h3>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h3>
 
