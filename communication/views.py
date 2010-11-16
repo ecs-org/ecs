@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import traceback
 import datetime
+import os
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
@@ -8,6 +9,7 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
@@ -30,7 +32,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None)
         reply_to = get_object_or_404(Message, pk=reply_to_pk)
         thread = reply_to.thread
         form = ReplyToMessageForm(request.POST or None, initial={
-            'text': '%s schrieb:\n> %s' % (reply_to.sender, '\n> '.join(reply_to.text.split('\n')))
+            'text': _('%(sender)s schrieb:%(linesep)s> %(text)s' % {'linesep':os.linesep, 'sender': reply_to.sender, 'text': '\n> '.join(reply_to.text.split('\n'))})
             
         }, instance = Message(thread=thread))
         submission = thread.submission
