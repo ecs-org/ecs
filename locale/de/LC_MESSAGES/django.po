@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-16 21:17+0100\n"
+"POT-Creation-Date: 2010-11-16 21:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,7 +248,7 @@ msgstr "Bestätigen"
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/forms/checklist.py:14
+#: core/forms/checklist.py:14 core/models/voting.py:30
 msgid "comment"
 msgstr "Kommentar"
 
@@ -383,17 +383,34 @@ msgstr ""
 msgid "other University"
 msgstr ""
 
+#: core/models/checklist.py:12
+#, fuzzy
+msgid "optional documents"
+msgstr "Unterlagen"
+
+#: core/models/checklist.py:12
+msgid "one mandatory document"
+msgstr ""
+
+#: core/models/names.py:30 core/models/submissions.py:628
+msgid "Ms"
+msgstr "Frau"
+
+#: core/models/names.py:30 core/models/submissions.py:628
+msgid "Mr"
+msgstr "Herr"
+
 #: core/models/submissions.py:203
 msgid "monocentric"
 msgstr "monozentrisch"
 
 #: core/models/submissions.py:204
 msgid "multicentric, main ethics commission"
-msgstr ""
+msgstr "multizentrisch, Leit-Ethikkommission"
 
 #: core/models/submissions.py:205
 msgid "multicentric, local ethics commission"
-msgstr ""
+msgstr "multizentrisch, lokale Ethikkommision"
 
 #: core/models/submissions.py:377
 msgid "open"
@@ -407,14 +424,6 @@ msgstr "blind"
 msgid "double-blind"
 msgstr "doppelblind"
 
-#: core/models/submissions.py:628
-msgid "Mr"
-msgstr "Herr"
-
-#: core/models/submissions.py:628
-msgid "Ms"
-msgstr "Frau"
-
 #: core/models/submissions.py:659
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
@@ -422,6 +431,42 @@ msgstr "ausschließlich studienbezogen"
 #: core/models/submissions.py:659
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
+
+#: core/models/voting.py:9
+msgid "1 positive"
+msgstr "1 Positiv"
+
+#: core/models/voting.py:10
+msgid "1a positive - with corrections"
+msgstr "1a Positiv - mit Ausbesserungen"
+
+#: core/models/voting.py:11
+msgid "2 positive under reserve"
+msgstr "2 Vorbehaltich positiv"
+
+#: core/models/voting.py:12
+msgid "3 recessed (objections)"
+msgstr "3 Vertagt (Einwände)"
+
+#: core/models/voting.py:13
+msgid "4 negative"
+msgstr "4 Negativ"
+
+#: core/models/voting.py:14
+msgid "5 recessed (applicant)"
+msgstr "5 Vertagt (Antragsteller)"
+
+#: core/models/voting.py:15
+msgid "5a withdrawn (applicant)"
+msgstr "5a Zurückgezogen (Antragsteller)"
+
+#: core/models/voting.py:16
+msgid "5b not examined"
+msgstr "5b Nicht behandelt"
+
+#: core/models/voting.py:28
+msgid "vote"
+msgstr "Votum"
 
 #: core/views/submissions.py:302
 msgid ""
@@ -545,38 +590,58 @@ msgstr "Studien Meldungen"
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:66
+#: templates/core.html:62
+#, fuzzy
+msgid "Next Meeting"
+msgstr "Sitzungen"
+
+#: templates/core.html:64
+#, fuzzy
+msgid "Upcoming Meetings"
+msgstr "Sitzungen"
+
+#: templates/core.html:65
+#, fuzzy
+msgid "Past Meetings"
+msgstr "Beantwortete Meldungen"
+
+#: templates/core.html:67
+#, fuzzy
+msgid "New Meeting"
+msgstr "Sitzungen"
+
+#: templates/core.html:69
 #, fuzzy
 msgid "Fast Lane Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:68
+#: templates/core.html:71
 #, fuzzy
 msgid "New Fast Lane Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:74
+#: templates/core.html:78
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:77 templates/users/indisposed_list.html:7
+#: templates/core.html:81 templates/users/indisposed_list.html:7
 msgid "Indisposed Users"
 msgstr "Verhinderte Benutzer"
 
-#: templates/core.html:78 templates/submissions/catalog.html:7
+#: templates/core.html:82 templates/submissions/catalog.html:7
 #: templates/submissions/catalog.html:14
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
-#: templates/core.html:83
+#: templates/core.html:87
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:94
+#: templates/core.html:98
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:103
+#: templates/core.html:107
 #, python-format
 msgid ""
 "\n"
@@ -585,11 +650,11 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:196
+#: templates/core.html:200
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:196
+#: templates/core.html:200
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
@@ -732,12 +797,12 @@ msgstr "Beantwortete Meldungen"
 msgid "Status"
 msgstr "Status"
 
-#: templates/fastlane/detail.html:12
+#: templates/fastlane/detail.html:13
 #, fuzzy
 msgid "Participation"
 msgstr "Meldungen"
 
-#: templates/fastlane/detail.html:13
+#: templates/fastlane/detail.html:14
 msgid "Assistant"
 msgstr ""
 

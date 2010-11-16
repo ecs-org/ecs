@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils.translation import ugettext_lazy as _
 
 class Name(object):
     def __init__(self, **kwargs):
@@ -27,7 +27,7 @@ class NameField(object):
     def contribute_to_class(self, cls, name):
         self.name = name
         fields = {
-            'gender': models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')), blank=True, null=True),
+            'gender': models.CharField(max_length=1, choices=(('f', _('Ms')), ('m', _('Mr'))), blank=True, null=True),
             'title': models.CharField(max_length=30, blank=True),
             'first_name': models.CharField(max_length=50, blank=True),
             'last_name': models.CharField(max_length=50, blank=True),
