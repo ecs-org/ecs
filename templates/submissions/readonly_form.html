@@ -34,6 +34,9 @@
                 <li>
                     <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
                 </li>
+                <li>
+                    <a href="#developer_tab">{% trans 'Developer' %}</a>
+                </li>
             </ul>
         </li>
 
@@ -105,6 +108,9 @@
     </div>
     <div id="involved_parties_tab">
         {% include 'submissions/tabs/involved_parties.html' %}
+    </div>
+    <div id="developer_tab">
+        {% include 'submissions/tabs/developer.html' %}
     </div>
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Pending Notifications" %}

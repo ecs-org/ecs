@@ -6,19 +6,10 @@
         <h3><span class="ecnr">{{ submission|ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
             <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
-            {% if user|has_flag:'executive_board_member' %} 
-                | <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">Reschedule</a>
-            {% endif %}
-                | <a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a>
-                | <a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a>
             {% with submission.current_submission_form as submission_form %}
                  {% if submission_form %}
                      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
                      | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
-                     | <a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}">{% trans "Categorization Review" %}</a>
-                     | <a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">{% trans "Thesis Review" %}</a>
-                     | <a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a>
-                     | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
                      {% with submission.get_most_recent_vote as vote %}
                         {% if vote %}
                             | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">Vote Review</a>
