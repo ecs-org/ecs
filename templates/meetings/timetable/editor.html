@@ -23,10 +23,10 @@
         var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
     </div>
     <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
-    <ul id="timetable">
+    <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
-            <div class="dragHandle">#{{ entry }} {% if not running_optimization %}<span style="color:#ffffff">DRAG ME</span>{% endif %}</div>
+            <span class="dragHandle">#{{ entry }} {% if not running_optimization %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
@@ -42,17 +42,17 @@
                 </form>
             {% endif %}
             {% if not entry.is_break %}
-            <div>Teilnehmer: 
+            <span>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
-            </div>
+            </span>
             {% else %}
-            <div>
+            <span>
                 Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
-            </div>
+            </span>
             {% endif %}
         </li>
     {% endfor %}
-    </ul>
+    </ol>
     <div style="position:absolute;right:0px;top:0px; width:200px">
         <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
         <ul id="userlist">

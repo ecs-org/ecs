@@ -14,7 +14,7 @@
     </form>
 
     <a class="open-in-popup" href="{% url ecs.communication.views.send_message %}">{% trans "New Message" %}</a>
-    <img src="{{ MEDIA_URL }}/images/core/sort.png" alt="{% trans "sort" %}" />
+    <span class="icon_sort">{% trans "sort" %}</span>
     <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
     | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
   </div>
