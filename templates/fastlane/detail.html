@@ -9,8 +9,10 @@
             <a href="#" class="active">{% trans "Fast Lane Meeting" %}</a>
             <ul class="tab_headers">
                 <li><a href="{% url ecs.fastlane.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a></li>
-                <li><a href="{% url ecs.fastlane.views.participation meeting_pk=meeting.pk %}">{% trans "Participation" %}</a></li>
-                <li><a href="{% url ecs.fastlane.views.assistant meeting_pk=meeting.pk %}">{% trans "Assistant" %}</a></li>
+                {% if not meeting.ended %}
+                    <li><a href="{% url ecs.fastlane.views.participation meeting_pk=meeting.pk %}">{% trans "Participation" %}</a></li>
+                    <li><a href="{% url ecs.fastlane.views.assistant meeting_pk=meeting.pk %}">{% trans "Assistant" %}</a></li>
+                {% endif %}
             </ul>
         </li>
     </ul>
