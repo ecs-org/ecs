@@ -10,7 +10,12 @@
   </div>
 
 <span style="font-weight: bold;">EK Nr: {{ ec_number }}</span> <br/>
-<span style="font-weight: bold;">Antragsteller:</span> {{ submitter.first_name }} {{ submitter.last_name }} <br/>
+<span style="font-weight: bold;">Antragsteller:</span> 
+{% if form.submitter %}
+	{{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
+{% else %}
+	{{ form.submitter_contact }}
+{% endif %}
 <span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
 <span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
 <span style="font-weight: bold;">Projekttitel:</span> {{ form.project_title }} <br/>
@@ -113,7 +118,7 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 	{% for bef in submission.get_befangene %}	
 		{{ bef.first_name }} {{ bef.last_name }}<br/>
 	{% empty %}
-		keine	
+		<b>keine</b>	
 	{% endfor %}
 </span><br />
 <pdf:spacer height="0.5cm" />
