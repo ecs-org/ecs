@@ -20,17 +20,17 @@ class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
         kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
-        kwargs.setdefault('error_messages', {'invalid': u'Please enter a date in dd.mm.yyyy format and time in format HH:MM.'})
+        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a date in dd.mm.yyyy format and time in format HH:MM.')})
         super(DateTimeField, self).__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('error_messages', {'invalid': u'Please enter a time in the format HH: MM.'})
+        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a time in the format HH: MM.')})
         super(TimeField, self).__init__(*args, **kwargs)
         
 class TimedeltaField(forms.CharField):
     default_error_messages = {
-        'invalid': u'Please enter a valid time period. E.g. "10min" or "1h 30min"',
+        'invalid': _(u'Please enter a valid time period. E.g. "10min" or "1h 30min"'),
     }
     def to_python(self, value):
         try:
