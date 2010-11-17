@@ -10,8 +10,8 @@
     {{ d.top }}: 
     {% if d.vote %}
       {{ d.vote }}
-        (<a href="{% url ecs.core.views.vote_pdf meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
-        | <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Signieren</a>)
+        (<a href="{% url ecs.core.views.vote_pdf vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
+        | <a href="{% url ecs.core.views.vote_sign vote_pk=d.vote.pk %}" target="_blank">Signieren</a>)
     {% else %}
       ohne Votum
     {% endif %}

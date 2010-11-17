@@ -14,7 +14,7 @@
                     <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
                 {% endif %}
                 {% if user|is_member_of:"EC-Signing Group" %}
-                    <li><a href="{% url ecs.core.views.votes.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a></li>
+                    <li><a href="{% url ecs.core.views.votes.votes_signing %}">{% trans "Signatur der Voten" %}</a></li>
                 {% endif %}
                 {% if user|is_member_of:"EC-Office" and not meeting.ended %}
                     <li><a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">Assistent</a></li>

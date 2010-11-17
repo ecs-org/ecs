@@ -31,7 +31,7 @@ urlpatterns = patterns(
     url(r'^submission_widget/$', 'ecs.core.views.submission_widget'),
     url(r'^submission_list/$', 'ecs.core.views.submission_list'),
     
-    url(r'^meeting/(\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
     url(r'^meeting/(\d+)/vote_pdf/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_pdf'),
     url(r'^meeting/(\d+)/vote_sign/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_sign'),
     url(r'^meeting/(\d+)/vote_sign/(?P<vote_pk>\d+)/send$', 'ecs.core.views.vote_sign_send'),
