@@ -361,15 +361,6 @@ COMPRESS_JS_FILTERS = []
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
-import logging
-from sentry.client.handlers import SentryHandler
-logging.getLogger().addHandler(SentryHandler())
-
-# Add StreamHandler to sentry's default so you can catch missed exceptions
-logger = logging.getLogger('sentry.errors')
-logger.propagate = False
-logger.addHandler(logging.StreamHandler())
-
 
 
 # settings override 
