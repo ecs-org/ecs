@@ -8,6 +8,7 @@ from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required
@@ -220,7 +221,7 @@ def meeting_assistant(request, meeting_pk=None):
         if meeting.ended:
             return render(request, 'meetings/assistant/error.html', {
                 'meeting': meeting,
-                'message': 'Diese Sitzung wurde beendet.',
+                'message': _(u'This meeting has ended.'),
             })
         try:
             top_pk = request.session.get('meetings:%s:assistant:top_pk' % meeting.pk, None) or meeting[0].pk
@@ -228,12 +229,12 @@ def meeting_assistant(request, meeting_pk=None):
         except IndexError:
             return render(request, 'meetings/assistant/error.html', {
                 'meeting': meeting,
-                'message': 'Dieser Sitzung sind keine TOPs zugeordnet.',
+                'message': _(u'No TOPs are assigned to this meeting.'),
             })
     else:
         return render(request, 'meetings/assistant/error.html', {
             'meeting': meeting,
-            'message': 'Dieses Sitzung wurde noch nicht begonnen.',
+            'message': _('This meeting has not yet started.'),
         })
         
 def meeting_assistant_start(request, meeting_pk=None):
@@ -245,7 +246,7 @@ def meeting_assistant_start(request, meeting_pk=None):
 def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     if meeting.open_tops.count():
-        raise Http404("unfinished meetings cannot be stopped")
+        raise Http404(_("unfinished meetings cannot be stopped"))
     meeting.ended = datetime.datetime.now()
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
@@ -340,8 +341,8 @@ def meeting_assistant_clear(request, meeting_pk=None):
 
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-Agenda.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    filename = '%s-%s-%s.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
     
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
@@ -351,8 +352,8 @@ def agenda_pdf(request, meeting_pk=None):
 
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-Protokoll.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    filename = '%s-%s-%s.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('protocol')
     )
     
     timetable_entries = meeting.timetable_entries.all().order_by('timetable_index')
@@ -403,8 +404,8 @@ def timetable_pdf(request, meeting_pk=None):
     
         row['times'] = ', '.join(['%s - %s' % (x['start'].strftime('%H:%M'), x['end'].strftime('%H:%M')) for x in times])
     
-    filename = '%s-%s-Zeitfenster.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    filename = '%s-%s-%s.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('time slot')
     )
     
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/timetable.html', {
@@ -415,8 +416,8 @@ def timetable_pdf(request, meeting_pk=None):
 
 def agenda_htmlemail(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-Agenda.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y')
+    filename = '%s-%s-%s.pdf' % (
+        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
     pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
@@ -429,7 +430,7 @@ def agenda_htmlemail(request, meeting_pk=None):
         }))
         plainmail = whitewash(htmlmail)
 
-        deliver(subject='Invitation to meeting', 
+        deliver(subject=_('Invitation to meeting'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[(filename, pdf,'application/pdf'),],

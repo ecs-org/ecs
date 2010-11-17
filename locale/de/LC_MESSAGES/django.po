@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 15:31+0100\n"
+"POT-Creation-Date: 2010-11-17 16:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -646,6 +646,38 @@ msgstr "ungünstig"
 #: meetings/forms.py:47
 msgid "impossible"
 msgstr "unmöglich"
+
+#: meetings/views.py:224
+msgid "This meeting has ended."
+msgstr "Diese Sitzung wurde beendet."
+
+#: meetings/views.py:232
+msgid "No TOPs are assigned to this meeting."
+msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
+
+#: meetings/views.py:237
+msgid "This meeting has not yet started."
+msgstr "Dieses Sitzung wurde noch nicht begonnen."
+
+#: meetings/views.py:249
+msgid "unfinished meetings cannot be stopped"
+msgstr ""
+
+#: meetings/views.py:345 meetings/views.py:420
+msgid "agenda"
+msgstr "Agenda"
+
+#: meetings/views.py:356
+msgid "protocol"
+msgstr "Protokoll"
+
+#: meetings/views.py:408
+msgid "time slot"
+msgstr "Zeitfenster"
+
+#: meetings/views.py:433
+msgid "Invitation to meeting"
+msgstr "Einladung zur Sitzung"
 
 #: pdfviewer/models.py:22
 msgid "top"
