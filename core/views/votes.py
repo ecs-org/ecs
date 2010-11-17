@@ -93,7 +93,7 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
 def vote_publish(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_publish "%s"' % (vote_pk)
-    return render(request, 'meetings/vote_publishing.html', vote_context(vote))
+    return render(request, 'meetings/votes_publishing.html', vote_context(vote))
 
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
