@@ -131,7 +131,7 @@ def request_password_reset(request):
         htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
             'reset_url': reset_url,
         }))
-        deliver(subject=_(u'ECS - password reset'), message=None, message_html=htmlmail,
+        deliver(subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
             from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/password_reset/request_complete.html', {
             'email': form.cleaned_data['email'],
@@ -226,10 +226,8 @@ def details(request, user_pk=None):
     if request.method == 'POST':
         if user_form.is_valid():
             user_form.save()
-            user_form.save_m2m()
         if profile_form.is_valid():
             profile_form.save()
-            profile_form.save_m2m()
 
     return render(request, 'users/details.html', {
         'user_form': user_form,

@@ -51,9 +51,6 @@ class AdministrationFilterForm(forms.Form):
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
 
 class UserDetailsForm(forms.ModelForm):
-    
-    medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})))
-    expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})))
     class Meta:
         model = User
         fields = ('groups',)
@@ -63,14 +60,30 @@ class UserDetailsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         rval = super(UserDetailsForm, self).__init__(*args, **kwargs)
-        if self.instance:
-            self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
-            self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
+        if self.instance and self.instance.ecs_profile.board_member:
+            self.fields['medical_categories'] = forms.ModelMultipleChoiceField(
+                required=False,
+                queryset=MedicalCategory.objects.all(),
+                widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})),
+                initial=[x.pk for x in self.instance.medical_categories.all()],
+            )
+            self.fields['expedited_review_categories'] = forms.ModelMultipleChoiceField(
+                required=False,
+                queryset=ExpeditedReviewCategory.objects.all(),
+                widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})),
+                initial=[x.pk for x in self.instance.expedited_review_categories.all()],
+            )
         return rval
+
+    def save(self, *args, **kwargs):
+        instance = super(UserDetailsForm, self).save(*args, **kwargs)
+        instance.medical_categories = self.cleaned_data['medical_categories']
+        instance.expedited_review_categories = self.cleaned_data['expedited_review_categories']
+        instance.save()
+        return instance
 
 class ProfileDetailsForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('approved_by_office',)
-
+        fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal')
 
