@@ -33,7 +33,8 @@ class MediaDisplayDownload(LoginTestCase):
             self.pdfdata = input.read()
         osdescriptor, encryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
 
-        gpgutils.encrypt(self.pdfdocname, encryptedfilename, settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"])
+        gpgutils.encrypt_sign(self.pdfdocname, encryptedfilename, 
+            settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"])
         with open(encryptedfilename, "rb") as encrypted:
             self.mediaprovider._addBlob(self.identifier, encrypted)
         os.remove(encryptedfilename)

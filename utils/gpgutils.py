@@ -46,7 +46,10 @@ def import_key(keyfile, gpghome):
     if returncode != 0:
         raise IOError('gpg --import returned error code: %d , cmd line was: %s , output was: %s' % (returncode, str(args), stdout))
    
-def encrypt_sign(sourcefile, destfile,  gpghome, owner, recipient):
+def encrypt_sign(sourcefile, destfile,  gpghome, owner, recipient=None):
+    '''
+    @param recipient:target key for encryption
+    '''
     args = [GPG_EXECUTABLE, '--homedir', gpghome, '--batch', '--yes', '--always-trust', 
             '-r', owner, '--output', destfile , '--encrypt', sourcefile] 
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
@@ -55,7 +58,7 @@ def encrypt_sign(sourcefile, destfile,  gpghome, owner, recipient):
     if returncode != 0:
         raise IOError('gpg --encrypt returned error code: %d , cmd line was: %s , output was: %s' % (returncode, str(args), stdout))
     
-def decrypt_verify(sourcefile, destfile, owner, sender):
+def decrypt_verify(sourcefile, destfile, owner, sender=None):
     args = [GPG_EXECUTABLE, '--homedir', gpghome, '--batch', '--yes', '--always-trust', 
             '-r', owner, '--output', destfile, '--decrypt', sourcefile] 
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)

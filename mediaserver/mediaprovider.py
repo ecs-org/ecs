@@ -7,7 +7,7 @@ from django.conf import settings
 from ecs.utils.pathutils import tempfilecopy
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets  
-from ecs.utils.gpgutils import decrypt
+from ecs.utils.gpgutils import decrypt_verify
 from ecs.mediaserver.tasks import rerender_pages
  
  
@@ -46,7 +46,7 @@ class MediaProvider(object):
             
             try:
                 osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
-                decrypt(inputfilename, decryptedfilename, settings.STORAGE_DECRYPT["gpghome"],
+                decrypt_verify(inputfilename, decryptedfilename, settings.STORAGE_DECRYPT["gpghome"],
                     settings.STORAGE_DECRYPT ["owner"])
             except IOError as exceptobj:
                 raise # FIXME: if something fails here (decryption of blob) it should return some error
