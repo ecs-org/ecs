@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User, Group
 
 from ecs.users.models import UserProfile
+from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 
 class RegistrationForm(forms.Form):
     gender = forms.ChoiceField(choices=(('f', 'Frau'), ('m', 'Herr')))
@@ -45,4 +46,17 @@ class AdministrationFilterForm(forms.Form):
         ('no', 'Not Approved'),
     ))
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
+
+class UserDetailsForm(forms.ModelForm):
+    medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all())
+    expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all())
+    class Meta:
+        model = User
+        fields = ('groups',)
+
+class ProfileDetailsForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('approved_by_office',)
+
 

@@ -13,33 +13,37 @@
 <table class="user_list">
     <tr>
         <th>{% trans "User" %}</th>
-        <th>{% trans "Approval" %}</th>
-        <th>{% trans "Indisposed" %}</th>
-        <th>{% trans "Active" %}</th>
+        <th title="{% trans "Unapproved users may not be able to sumit studies" %}">{% trans "Approval" %}</th>
+        <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
+        <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
+        <th></th>
     </tr>
-    {% for user in users %}
+    {% for profile_user in users %}
         <tr>
-            <td>{{ user }}</td>
+            <td>{{ profile_user }}</td>
             <td>
                 {% if user.ecs_profile.approved_by_office %}
-                    <a href="{% url ecs.users.views.approve user_pk=user.pk %}">{% trans "Revoke Approval" %}</a>
+                    <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Revoke Approval" %}</a>
                 {% else %}
-                    <a href="{% url ecs.users.views.approve user_pk=user.pk %}">{% trans "Approve" %}</a>
+                    <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Approve" %}</a>
                 {% endif %}
             </td>
             <td>
                 {% if user.ecs_profile.indisposed %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=user.pk %}">{% trans "Unmark Indisposed" %}</a>
+                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Unmark Indisposed" %}</a>
                 {% else %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=user.pk %}">{% trans "Mark Indisposed" %}</a>
+                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Mark Indisposed" %}</a>
                 {% endif %}
             </td>
             <td>
                 {% if user.is_active %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=user.pk %}">{% trans "Deactivate" %}</a>
+                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Deactivate" %}</a>
                 {% else %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=user.pk %}">{% trans "Activate" %}</a>
+                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Activate" %}</a>
                 {% endif %}
+            </td>
+            <td>
+                <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">{% trans "Details" %}</a>
             </td>
         </tr>
     {% empty %}

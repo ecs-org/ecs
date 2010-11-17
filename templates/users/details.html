@@ -1,0 +1,20 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "ECS Administration" %}{% endblock %}
+
+{% block headertitle %}{% trans "Administration" %}{% endblock %}
+
+{% block content %}
+
+<h2>{{ user_form.instance }}</h2>
+
+<form action="" method="post">
+    <table>
+        {{ user_form.as_table }}
+        {{ profile_form.as_table }}
+    </table>
+    <input type="submit" value="{% trans "Save" %}" />
+</form>
+
+{% endblock %}

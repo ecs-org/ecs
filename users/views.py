@@ -17,7 +17,8 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm, \
+    UserDetailsForm, ProfileDetailsForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -215,6 +216,24 @@ def toggle_active(request, user_pk=None):
 
     user.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def details(request, user_pk=None):
+    user = get_object_or_404(User, pk=user_pk)
+    user_form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
+    profile_form = ProfileDetailsForm(request.POST or None, instance=user.ecs_profile, prefix='profile')
+    if request.method == 'POST':
+        if user_form.is_valid():
+            user_form.save()
+            user_form.save_m2m()
+        if profile_form.is_valid():
+            profile_form.save()
+            profile_form.save_m2m()
+
+    return render(request, 'users/details.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def administration(request):
