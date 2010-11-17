@@ -58,7 +58,7 @@ def encrypt_sign(sourcefile, destfile,  gpghome, owner, recipient=None):
     if returncode != 0:
         raise IOError('gpg --encrypt returned error code: %d , cmd line was: %s , output was: %s' % (returncode, str(args), stdout))
     
-def decrypt_verify(sourcefile, destfile, owner, sender=None):
+def decrypt_verify(sourcefile, destfile, gpghome, owner, sender=None):
     args = [GPG_EXECUTABLE, '--homedir', gpghome, '--batch', '--yes', '--always-trust', 
             '-r', owner, '--output', destfile, '--decrypt', sourcefile] 
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
