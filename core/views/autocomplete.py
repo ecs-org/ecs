@@ -1,6 +1,6 @@
 from django.http import Http404, HttpResponse
 from django.utils import simplejson
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from ecs.utils.countries.models import Country
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 
@@ -9,6 +9,7 @@ AUTOCOMPLETE_QUERYSETS = {
     'medical_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
     'expedited_review_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
     'users': lambda: [(str(u.pk), u.username, u.username) for u in User.objects.order_by('username')],
+    'groups': lambda: [(str(u.pk), u.name, u.name) for u in Group.objects.order_by('name')],
 }
 
 def autocomplete(request, queryset_name=None):
