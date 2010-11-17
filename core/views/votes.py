@@ -106,13 +106,16 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     t_out = tempfile.NamedTemporaryFile(prefix='vote_sign_stamped_', suffix='.pdf', delete=False)
     t_in.write(pdf_data)
 
-    t_in.seek(0)
-    pdf_barcodestamp(t_in, t_out, document_uuid)
-    t_in.close();
+    #t_in.seek(0)
+    #pdf_barcodestamp(t_in, t_out, document_uuid)
+    #t_in.close();
 
-    t_out.seek(0)
-    pdf_data_stamped = t_out.read()
-    t_out.close();
+    #t_out.seek(0)
+    #pdf_data_stamped = t_out.read()
+    #t_out.close();
+
+    t_in.seek(0);
+    pdf_data_stamped = t_in.read()
 
     pdfas_id = votesDepot.deposit(pdf_data_stamped, html_preview, document_uuid, pdf_name)
     return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
