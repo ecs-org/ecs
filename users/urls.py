@@ -14,5 +14,6 @@ urlpatterns = patterns('ecs.users.views',
     url(r'^users/(?P<user_pk>\d+)/approve/', 'approve'),
     url(r'^users/(?P<user_pk>\d+)/toggle_indisposed/$', 'toggle_indisposed'),
     url(r'^users/(?P<user_pk>\d+)/toggle_active/$', 'toggle_active'),
+    url(r'^users/(?P<user_pk>\d+)/details/', 'details'),
     url(r'^administration/$', 'administration'),
 )
