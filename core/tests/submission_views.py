@@ -58,7 +58,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'pharma_checked_substance': [u'1) R1 Randomisierung CEM - MAT/SCR'], u'investigator-0-subject_count': [u'1'], u'project_type_misc': [u''], 
     u'foreignparticipatingcenter-0-name': [u''], u'investigator-1-organisation': [u''], u'invoice_city': [u''], u'german_financing_info': [u'bla bla bla'], 
     u'submitter_contact_first_name': [u'Ruth'], u'foreignparticipatingcenter-0-investigator_name': [u''], u'german_dataaccess_info': [u'bla bla bla'], 
-    u'documents': [u'1', u'3', u'6'], u'sponsor_contact_title': [u''], u'invoice_contact_title': [u''], 
+    u'documents': [], u'sponsor_contact_title': [u''], u'invoice_contact_title': [u''], 
     u'investigator-0-contact_last_name': [u'Univ. Doz. Dr. Ruth Ladenstein'], u'medtech_departure_from_regulations': [u''], 
     u'routinemeasure-TOTAL_FORMS': [u'0'], u'invoice_zip_code': [u''], u'routinemeasure-INITIAL_FORMS': [u'0'], u'invoice_email': [u''], 
     u'csrfmiddlewaretoken': [u'9d8077845a05603196d32bea1cf25c28'], u'investigatoremployee-0-surname': [u''], u'study_plan_blind': [u'0'], 
@@ -68,7 +68,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'investigator-INITIAL_FORMS': [u'1'], u'subject_count': [u'175'], u'substance_p_c_t_gcp_rules': [u'2'], u'subject_minage': [u'0'], 
     u'investigatoremployee-0-firstname': [u''], u'german_consent_info': [u'bla bla bla'], u'document-version': [u''], u'substance_p_c_t_application_type': [u'IV in children'], 
     u'german_project_title': [u'kjkjkjk'], u'submitter_organisation': [u'St. Anna Kinderspital'], u'study_plan_multiple_test_correction_algorithm': [u'Keines'], 
-    u'sponsor_address': [u'Kinderspitalg. 6'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'],
+    u'sponsor_address': [u'Kinderspitalg. 6'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'], u'submitter_email': [u'test@example.org'],
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
@@ -111,6 +111,7 @@ class SubmissionViewsTestCase(LoginTestCase):
                 'document-doctype': '',
                 'document-version': '3.1415',
                 'document-date': '26.10.2010',
+                'document-branding': 'b',
             }))
         self.failUnlessEqual(response.status_code, 200)
         first_doc = response.context['documents'][0]
@@ -123,6 +124,7 @@ class SubmissionViewsTestCase(LoginTestCase):
                 'document-doctype': '',
                 'document-version': '3',
                 'document-date': '26.10.2010',
+                'document-branding': 'b',
                 'document-replaces_document': first_doc.pk,
             }))
         self.failUnlessEqual(response.status_code, 200)
@@ -131,12 +133,11 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(docs[0].version, '3')
         
         # posting valid data
-        response = self.client.post(url, self.get_post_data({'submit': 'submit'}))
+        response = self.client.post(url, self.get_post_data({'submit': 'submit', 'documents': [str(doc.pk) for doc in docs]}))
         self.failUnlessEqual(response.status_code, 302)
         sf = SubmissionForm.objects.get(project_title=u'FOOBAR POST Test')
         self.failUnlessEqual(sf.documents.count(), 1)
-        # FIXME: why does the following test not work?
-        # self.failUnlessEqual(sf.documents.all()[0].version, '3')
+        self.failUnlessEqual(sf.documents.all()[0].version, '3')
         
     def test_readonly_submission_form(self):
         submission_form = create_submission_form()
