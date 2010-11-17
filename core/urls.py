@@ -38,7 +38,7 @@ urlpatterns = patterns(
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/error$', 'ecs.core.views.vote_sign_error'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive$', 'ecs.core.views.vote_sign_receive'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/preview$', 'ecs.core.views.vote_sign_preview'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/publish$', 'ecs.core.views.vote_sign_publish'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/publish$', 'ecs.core.views.vote_publish'),
     url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive;jsessionid=null$', 'ecs.core.views.vote_sign_receive_landing'),
     
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
