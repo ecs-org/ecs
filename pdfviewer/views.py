@@ -5,6 +5,7 @@ from django.conf import settings
 from django.utils import simplejson
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
@@ -41,7 +42,7 @@ def edit_annotation(request, document_pk=None):
         annotation.save()
         return HttpResponse('OK')
     else:
-        return HttpResponseBadRequest('invalid data: %s' % form.errors)
+        return HttpResponseBadRequest(_('invalid data: %s' % form.errors))
 
 @csrf_exempt
 def delete_annotation(request, document_pk=None):
