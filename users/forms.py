@@ -24,9 +24,6 @@ class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField()
 
 
-class MarkUserIndisposedForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=User.objects.all())
-    
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
