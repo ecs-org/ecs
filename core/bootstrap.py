@@ -49,7 +49,7 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
-        ChecklistReview, ExternalReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
+        ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Statistik').order_by('-pk')[:1][0]
@@ -86,7 +86,7 @@ def submission_workflow():
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review", group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ChecklistReview, data=external_review_checklist_blueprint, name=u"External Review", group=EXTERNAL_REVIEW_GROUP),
+            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=u"External Review", group=EXTERNAL_REVIEW_GROUP),
             'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
@@ -340,9 +340,9 @@ def auth_user_testusers():
         (u'Notification Rev', u'EC-Notification Review Group',
             {'internal': True, 'approved_by_office': True}),
         (u'Insurance Rev', u'EC-Insurance Reviewer',            
-            {'internal': True, 'approved_by_office': True}),
+            {'internal': False, 'approved_by_office': True}),
         (u'Thesis Rev', u'EC-Thesis Review Group',              
-            {'internal': True, 'thesis_review': True, 'approved_by_office': True}),
+            {'internal': False, 'thesis_review': True, 'approved_by_office': True}),
         (u'External Reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
     )

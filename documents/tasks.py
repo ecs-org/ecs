@@ -3,6 +3,7 @@
 import os, tempfile
 
 from django.conf import settings
+from django.utils.encoding import smart_str
 from celery.decorators import task
 from haystack import site
 
@@ -30,15 +31,16 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
     
     try:
         try:
-            gpgutils.encrypt(doc.file.path, encrypted_name, settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"])
+            gpgutils.encrypt_sign(doc.file.path, encrypted_name,
+                settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"])
         except IOError as exceptobj:
-            logger.error("Error, can't encrypt document stored at %s with uuid %s as %s. Exception was %s"  % (str(doc.file.path), str(doc.uuid_document), encrypted_name, str(exceptobj)))
+            logger.error("Error, can't encrypt document stored at %s with uuid %s as %s. Exception was %r"  % (doc.file.path, doc.uuid_document, encrypted_name, exceptobj))
         else:
             try:
                 encrypted = open(encrypted_name, "rb")
                 vault.add(doc.uuid_document, encrypted)
             except KeyError as exceptobj:
-                logger.error("Error, can't upload uuid %s from %s to storage vault. Exception was %s " % (str(doc.uuid_document), encrypted_name, str(exceptobj)))
+                logger.error("Error, can't upload uuid %s from %s to storage vault. Exception was %r " % (doc.uuid_document, encrypted_name, exceptobj))
     finally:
         if hasattr(encrypted, "close"):
             encrypted.close()

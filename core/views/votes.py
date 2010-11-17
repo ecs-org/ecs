@@ -8,6 +8,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_pdf, pdf_response
 from ecs.core.models import Vote
@@ -125,7 +126,7 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
 def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
+        return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
 
     t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
     t_pdfas.write(votedoc["pdf_data"])
@@ -138,7 +139,7 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
 def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
-        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
+        return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
     
     return HttpResponse(votedoc["html_preview"])
 
@@ -157,7 +158,7 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
         votedoc = votesDepot.pop(pdf_id)
         if votedoc is None:
-            return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
+            return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
 
         # f_pdfas is not seekable, so we have to store it as local file first
         sock_pdfas = urllib2.urlopen(url)
@@ -188,7 +189,7 @@ def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     else:
         cause = ''
     # no pdf id, no explicit cleaning possible
-    return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
+    return HttpResponse('<h1>%s</h1>' % _('vote_sign_error: error=[%(error)s], cause=[%(cause)s]' % {'error':error, 'cause':cause}))
 
 # TODO BKUApplet - setting background from 
 # http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png

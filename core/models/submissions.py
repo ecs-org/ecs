@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.generic import GenericRelation
 from django.conf import settings
 from django.utils.translation import ugettext as _, ugettext_lazy
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
 from ecs.documents.models import Document
@@ -16,7 +17,7 @@ from ecs.core.models.names import NameField
 from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.meetings.models import Meeting
 from ecs.core.models.voting import Vote
-from ecs.core.parties import get_involved_parties
+from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 
 MIN_EC_NUMBER = 1000
 
@@ -48,7 +49,18 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
-        
+
+    def reviewed_by_user(self, user, include_workflow=True):
+        q = self.filter(additional_reviewers=user)
+        for a in user.assigned_medical_categories.all():
+            q |= a.meeting.submissions.filter(medical_categories=a.category)
+
+        if include_workflow:
+            from ecs.tasks.models import Task
+            submission_ct = ContentType.objects.get_for_model(Submission)
+            q |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+
+        return q.distinct()
         
 class SubmissionManager(AuthorizationManager):
     def get_query_set(self):
@@ -77,16 +89,17 @@ class SubmissionManager(AuthorizationManager):
     def mine(self, user):
         return self.all().mine(user)
 
+    def reviewed_by_user(self, user, include_workflow=True):
+        return self.all().reviewed_by_user(user, include_workflow=include_workflow)
+
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()
-    # FIXME: why do we have two field for expedited_review? (FMD1)
     expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    # FIXME: why do we have two fields for external_review? (FMD1)
     external_reviewer = models.NullBooleanField()
     external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
     external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
@@ -205,6 +218,7 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField(null=True, blank=True)
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
+    created_at = models.DateTimeField(default=datetime.datetime.now)
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
@@ -495,6 +509,12 @@ class SubmissionForm(models.Model):
         
     def get_involved_parties(self, include_workflow=True):
         return get_involved_parties(self, include_workflow=include_workflow)
+
+    def get_presenting_parties(self, include_workflow=True):
+        return get_presenting_parties(self, include_workflow=include_workflow)
+
+    def get_reviewing_parties(self, include_workflow=True):
+        return get_reviewing_parties(self, include_workflow=include_workflow)
 
 
 def attach_to_submissions(user):

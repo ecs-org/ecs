@@ -26,7 +26,6 @@ ecs.widgets.Widget = new Class({
     initialize: function(el, options){
         options = options || {};
         this.element = $(el);
-        console.log(this.element, el);
         this.element.addClass('ecs-Widget');
         this.element.store('ecs.widgets.Widget', this);
         this.url = options.url;

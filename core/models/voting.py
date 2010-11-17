@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from django.db.models.signals import post_save
+from django.utils.translation import ugettext_lazy as _
+
 from ecs import authorization
 
 VOTE_RESULT_CHOICES = (
-    ('1', u'1 Positiv'),
-    ('1a', u'1a Positiv - mit Ausbesserungen'),
-    ('2', u'2 Vorbehaltich positiv'),
-    ('3', u'3 Vertagt (Einwände)'),
-    ('4', u'4 Negativ'),
-    ('5', u'5 Vertagt (Antragsteller)'),
-    ('5a', u'5a Zurückgezogen (Antragsteller)'),
-    ('5b', u'5b Nicht behandelt'),
-    #('5c', u'5c Lokale EK'),
+    ('1', _(u'1 positive')),
+    ('1a', _(u'1a positive - with corrections')),
+    ('2', _(u'2 positive under reserve')),
+    ('3', _(u'3 recessed (objections)')),
+    ('4', _(u'4 negative')),
+    ('5', _(u'5 recessed (applicant)')),
+    ('5a', _(u'5a withdrawn (applicant)')),
+    ('5b', _(u'5b not examined')),
+    #('5c', _(u'5c Lokale EK')),
 )
 
 POSITIVE_VOTE_RESULTS = ('1', '1a', '2')
@@ -23,9 +25,9 @@ FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
 class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes')
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
-    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=u'Votum')
+    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_(u'vote'))
     executive_review_required = models.NullBooleanField(blank=True)
-    text = models.TextField(blank=True, verbose_name=u'Kommentar')
+    text = models.TextField(blank=True, verbose_name=_(u'comment'))
     is_final = models.BooleanField(default=False)
     published_at = models.DateTimeField(null=True)
 

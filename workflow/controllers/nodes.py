@@ -92,12 +92,15 @@ class NodeController(object):
         return locked
     
     def emit_token(self, deadline=False, trail=()):
+        tokens = []
         for edge in self.node.edges.filter(deadline=deadline).select_related('to_node'):
             if edge.bind_guard(self.workflow)():
                 try:
-                    edge.to_node.bind(self.workflow).receive_token(self.node, trail=trail)
+                    token = edge.to_node.bind(self.workflow).receive_token(self.node, trail=trail)
+                    tokens.append(token)
                 except TokenRejected:
                     pass
+        return tokens
     
     def progress(self, *tokens, **kwargs):
         assert tokens, "NodeController.progress() must be called with at least one Token instance"

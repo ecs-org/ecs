@@ -391,11 +391,12 @@ input[type=submit] {
 .form.main th.label {
   text-align: left;
 }
+.errorlist {
+  clear: both;
+}
 .form.main ul.errorlist li {
   margin-left: 220px;
   margin-bottom: 5px;
-  display: block;
-  float: left;
   color: #ff0000;
 }
 .form.main table td li {

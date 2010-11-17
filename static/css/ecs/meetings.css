@@ -27,38 +27,6 @@
 #meeting_editor #userlist .info .constraints li {
   padding: 0px;
 }
-#meeting_constraint_editor {
-  width: 800px;
-}
-#meeting_constraint_editor form ol li {
-  width: 100px;
-  float: left;
-  clear: none;
-  display: block;
-  height: 50px;
-}
-#meeting_constraint_editor form ol {
-  margin: 0px;
-  height: 50px;
-}
-#meeting_constraint_editor form ol li label {
-  width: auto;
-  float: none;
-  display: block;
-  text-align: left;
-}
-#meeting_constraint_editor form ol li input[type=text] {
-  width: 7em;
-}
-#meeting_constraint_editor form .inline_formset .form {
-  padding: 0px;
-  clear: both;
-}
-#meeting_constraint_editor form .inline_formset .form a.delete_row { 
-  width: 40px;
-  float: right;
-  display: block;
-}
 #meeting_editor .constraint_status {
   width: 10px;
   height: 10px;
@@ -71,12 +39,23 @@
   list-style: none;
   margin-left: 0px;
 }
+#meeting_editor #timetable {
+  list-style: none;
+  width: 550px;
+  font-size: 10pt;
+  margin: 0px;
+}
+#meeting_editor #timetable li {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
 #meeting_editor .entry {
-  border: 1px solid #eeeeee;
-  margin: 3px;
+  border: 1px solid #eee;
+  margin-bottom: 3px;
   display: block;
-  height:55px;
-  background-color:#ffffff;
+  height: 65px;
+  background-color: #fff;
   position: relative;
 }
 #meeting_editor .entry.free {
@@ -97,10 +76,18 @@
   background: url(/static/images/icons.png) 0 -144px no-repeat;
 }
 #meeting_editor .entry .dragHandle {
-  float:left;
-  width:50px;
-  background-color:#cccccc;
-  height:100%;
+  float: left;
+  padding: 5px;
+  margin-right: 5px;
+  width: 50px;
+  background-color: #B7D4E5;
+  height: 55px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
 }
 #meeting_editor .entry input.duration {
   width: 5em;
@@ -109,17 +96,23 @@
   width: 5em;
 }
 #meeting_editor .entry h3 {
-  padding: 0 !important;
-  border-bottom: none !important;
   margin-bottom: 2px;
-  font-size: 1em;
 }
-#meeting_editor #timetable {
-  list-style: none;
-  width:550px;
-  font-size:13px;
-  margin: 0px;
+
+.icon_drag {
+  display: block;
+  text-indent: -9999px;
 }
+.icon_drag {
+  background: url(/static/images/icons.png) -320px -224px no-repeat;
+  cursor: move;
+  width: 32px;
+  height: 32px;
+  margin: 5px 0 0 5px;
+}
+
+/* participation editor */
+
 #meeting_participation_editor form {
   float: none;
   display: inline;
@@ -159,6 +152,41 @@
   padding: 2px;
   border: 1px solid #ccccff;
   background-color: #eeeeff;
+}
+
+/* constraint editor */
+
+#meeting_constraint_editor {
+  width: 800px;
+}
+#meeting_constraint_editor form ol li {
+  width: 100px;
+  float: left;
+  clear: none;
+  display: block;
+  height: 50px;
+}
+#meeting_constraint_editor form ol {
+  margin: 0px;
+  height: 50px;
+}
+#meeting_constraint_editor form ol li label {
+  width: auto;
+  float: none;
+  display: block;
+  text-align: left;
+}
+#meeting_constraint_editor form ol li input[type=text] {
+  width: 7em;
+}
+#meeting_constraint_editor form .inline_formset .form {
+  padding: 0px;
+  clear: both;
+}
+#meeting_constraint_editor form .inline_formset .form a.delete_row { 
+  width: 40px;
+  float: right;
+  display: block;
 }
 
 /* constraint formset */

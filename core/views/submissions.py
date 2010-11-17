@@ -118,12 +118,19 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist.blueprint, checklist_form))
     
+    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date
+    previous_form = None
+    for sf in submission_forms:
+        sf.previous_form = previous_form
+        previous_form = sf
+
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
         'readonly': True,
         'submission_form': submission_form,
+        'submission_forms': submission_forms,
         'vote': vote,
         'retrospective_thesis_review_form': retrospective_thesis_review_form,
         'categorization_review_form': categorization_review_form,
@@ -365,18 +372,18 @@ def submission_forms(request):
     keyword = request.GET.get('keyword', None)
 
     if keyword:
-        q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
+        submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
             num = int(m.group(1))
             year = int(m.group(2))
-            q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+            submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
-            q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
+            submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
 
-        submissions = Submission.objects.filter(q)
-        stashed_submission_forms = []  # FIXME: how to search in the docstash? (FMD1)
+        submissions = Submission.objects.filter(submissions_q)
+        stashed_submission_forms = DocStash.objects.none()  # FIXME: how to search in the docstash? (FMD1)
         meetings = [(meeting, submissions.filter(meetings=meeting).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__pk__in=submissions.values('pk').query).order_by('-start').distinct()]
     else:
         submissions = Submission.objects.all()
@@ -388,16 +395,14 @@ def submission_forms(request):
 def my_submission_forms(request):
     submissions = Submission.objects.mine(request.user)
     stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
-    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
 def assigned_submission_forms(request):
-    ct = ContentType.objects.get_for_model(Submission)
-    task_submissions = Task.objects.filter(content_type=ct, assigned_to=request.user).values('data_id').query
-    submissions = Submission.objects.filter(Q(external_reviewer_name=request.user)|Q(pk__in=task_submissions))
+    submissions = Submission.objects.reviewed_by_user(request.user)
     stashed_submission_forms = DocStash.objects.none()
-    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).order_by('-start')]
+    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 

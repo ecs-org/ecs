@@ -7,8 +7,20 @@ from ecs.utils import forceauth
 from ecs import workflow
 import django
 
+# stuff that needs called at the beginning, but not in settings.py
+
 admin.autodiscover()
 workflow.autodiscover()
+
+import logging
+from sentry.client.handlers import SentryHandler
+logging.getLogger().addHandler(SentryHandler())
+
+# Add StreamHandler to sentry's default so you can catch missed exceptions
+logger = logging.getLogger('sentry.errors')
+logger.propagate = False
+logger.addHandler(logging.StreamHandler())
+
 
 urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),

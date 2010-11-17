@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*
 from django import forms
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 from ecs.core.models import Investigator
 from ecs.utils.timedelta import parse_timedelta
@@ -12,24 +13,24 @@ DATE_TIME_INPUT_FORMATS = tuple("%s %s" % (date_format, time_format) for time_fo
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_INPUT_FORMATS)
-        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein.'})
+        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a date in the format dd.mm.yyyy.')})
         super(DateField, self).__init__(*args, **kwargs)
 
 class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
         kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
-        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie ein Datum im Format TT.MM.JJJJ und eine Uhrzeit im Format HH:MM ein.'})
+        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a date in dd.mm.yyyy format and time in format HH:MM.')})
         super(DateTimeField, self).__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('error_messages', {'invalid': u'Bitte geben Sie eine Uhrzeit im Format HH:MM ein.'})
+        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a time in the format HH: MM.')})
         super(TimeField, self).__init__(*args, **kwargs)
         
 class TimedeltaField(forms.CharField):
     default_error_messages = {
-        'invalid': u'Bitte geben Sie eine gültige Zeitspanne an. Z.b. "10min" oder "1h 30min"',
+        'invalid': _(u'Please enter a valid time period. E.g. "10min" or "1h 30min"'),
     }
     def to_python(self, value):
         try:
@@ -50,7 +51,7 @@ class InvestigatorMultipleChoiceField(InvestigatorChoiceMixin, forms.ModelMultip
 
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):
-        choices = ((u'1', u'-'), (u'2', u'Ja'), (u'3', u'Nein'))
+        choices = ((u'1', u'-'), (u'2', _(u'Yes')), (u'3', _(u'No')))
         forms.widgets.Select.__init__(self, attrs, choices)
 
 class NullBooleanField(forms.NullBooleanField):

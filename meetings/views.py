@@ -33,12 +33,17 @@ def create_meeting(request):
         'form': form,
     })
     
-def meeting_list(request):
+def meeting_list(request, meetings):
     return render(request, 'meetings/list.html', {
-        #.filter(start__gte=datetime.datetime.now())
-        'meetings': Meeting.objects.order_by('start')
+        'meetings': meetings.order_by('start')
     })
     
+def upcoming_meetings(request):
+    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.datetime.now()))
+
+def past_meetings(request):
+    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.datetime.now()))
+
 def schedule_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = SubmissionSchedulingForm(request.POST or None)
@@ -431,7 +436,7 @@ def agenda_htmlemail(request, meeting_pk=None):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=settings.AGENDA_RECIPIENT_LIST)
 
-    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_list'))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.upcoming_meetings'))
 
 def timetable_htmlemailpart(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -439,6 +444,14 @@ def timetable_htmlemailpart(request, meeting_pk=None):
         'meeting': meeting,
     })
     return response
+
+def next(request):
+    try:
+        meeting = Meeting.objects.all().order_by('-start')[0]
+    except IndexError:
+        return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
+
+    return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
 
 def status(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

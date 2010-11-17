@@ -4,6 +4,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('ecs.fastlane.views',
     url(r'^list/$', 'list'),
     url(r'^new/$', 'new'),
+    url(r'^status/(?P<meeting_pk>\d+)/$', 'status'),
     url(r'^participation/(?P<meeting_pk>\d+)/$', 'participation'),
     url(r'^invitations/(?P<meeting_pk>\d+)/$', 'invitations'),
     url(r'^invitations/(?P<meeting_pk>\d+)/(?P<reallysure>reallysure)/$', 'invitations'),

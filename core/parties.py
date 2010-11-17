@@ -26,8 +26,8 @@ class Party(object):
         if self._email:
             return self._email
         return "anonymous"
-        
-def get_involved_parties(sf, include_workflow=True):
+
+def get_presenting_parties(sf, include_workflow=True):
     yield Party(organization=sf.sponsor_name, name=sf.sponsor_contact.full_name, user=sf.sponsor, email=sf.sponsor_email, involvement=_("Sponsor"))
     if sf.invoice_name:
         yield Party(organization=sf.invoice_name, 
@@ -47,6 +47,7 @@ def get_involved_parties(sf, include_workflow=True):
     for i in sf.investigators.filter(main=True):
         yield Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email)
 
+def get_reviewing_parties(sf, include_workflow=True):
     if include_workflow:
         from ecs.tasks.models import Task
         for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query).select_related('task_type'):
@@ -57,4 +58,12 @@ def get_involved_parties(sf, include_workflow=True):
 
     for user in sf.submission.additional_reviewers.all():
         yield Party(user=user, involvement=_("Additional Review"))
+
+
+def get_involved_parties(sf, include_workflow=True):
+    for party in get_presenting_parties(sf, include_workflow=include_workflow):
+        yield party
+
+    for party in get_reviewing_parties(sf, include_workflow=include_workflow):
+        yield party
 

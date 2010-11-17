@@ -2,13 +2,14 @@
 
 from django.db import models
 from django.contrib.contenttypes.generic import GenericForeignKey
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models.submissions import Submission
 
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
-    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, 'optional documents'), (1, 'one mandatory document')))
+    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, _('optional documents')), (1, _('one mandatory document'))))
 
     class Meta:
         app_label = 'core'

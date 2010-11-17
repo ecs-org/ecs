@@ -4,7 +4,9 @@
 {% if submission %}
     <h1>{{ submission }}</h1>
 {% endif %}
-<form id="{{ form_id }}" action="" method="post" class="open-in-widget">
+
+{# this form needs an explicit action, because it is used in widgets #}
+<form id="{{ form_id }}" action="{% url ecs.tasks.views.my_tasks %}" method="post" class="open-in-widget">
     <div class="task_list_choose">
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
     </div>

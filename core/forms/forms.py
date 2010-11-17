@@ -6,6 +6,7 @@ from django.forms.formsets import BaseFormSet, formset_factory
 from django.core.validators import EMPTY_VALUES
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
@@ -88,7 +89,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     medtech_manual_included = NullBooleanField(required=False)
     
     # non model fields (required for validation)
-    invoice_differs_from_sponsor = forms.BooleanField(required=False, label=u'Der Rechnungsempfänger ist nicht der Sponsor')
+    invoice_differs_from_sponsor = forms.BooleanField(required=False, label=_(u'The account beneficiary is not the sponsor'))
 
     class Meta:
         model = SubmissionForm

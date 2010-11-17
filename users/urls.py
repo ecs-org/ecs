@@ -16,4 +16,5 @@ urlpatterns = patterns('ecs.users.views',
     url(r'^users/indisposed/$', 'indisposed_userlist'),
     url(r'^users/indisposed/add/$', 'mark_indisposed'),
     url(r'^users/pending-approval/$', 'pending_approval_userlist'),
+    url(r'^administration/$', 'administration'),
 )

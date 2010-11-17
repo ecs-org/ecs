@@ -35,17 +35,13 @@
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "Eingereichte und Neue" %}</a></li>
-          {% if user|has_flag:"external_review" or user|is_member_of:"EC-Office" %}
-              <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Mir zugeordnete Studien" %}</a></li>
+          {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
+              <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "Eingereichte und Neue" %}</a></li>
           {% endif %}
+          <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Mir zugeordnete Studien" %}</a></li>
           <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
-          {% if user|is_member_of:"EC-Office" %}
-              <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
-              <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
-          {% endif %}
       </ul>
     </li>
     <li>
@@ -55,17 +51,40 @@
         <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">neue Meldung</a></li>
       </ul>
     </li>
-    <li>
-      <span class="togglers">{% trans "Meetings" %}</span>
-      <ul class="elements">
-        <li><a href="{% url ecs.meetings.views.meeting_list %}">Sitzungen</a></li>
-        <li><a href="{% url ecs.meetings.views.create_meeting %}">neue Sitzung</a></li>
-        {% if user|has_flag:"expedited_review" %}
-            <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Fast Lane Meetings" %}</a></li>
-            <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Fast Lane Meeting" %}</a></li>
-        {% endif %}
-      </ul>
-    </li>
+    {% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+        <li>
+          <span class="togglers">{% trans "Meetings" %}</span>
+          <ul class="elements">
+                <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
+                {% if user|has_flag:"internal" %}
+                    <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
+                    <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
+                    {% if user|is_member_of:"EC-Office" %}
+                        <li><a href="{% url ecs.meetings.views.create_meeting %}">{% trans "New Meeting" %}</a></li>
+                    {% endif %}
+                    <li><a href="{% url ecs.fastlane.views.list %}">{% trans "Fast Lane Meetings" %}</a></li>
+                    {% if user|is_member_of:"EC-Office" %}
+                        <li><a href="{% url ecs.fastlane.views.new %}">{% trans "New Fast Lane Meeting" %}</a></li>
+                    {% endif %}
+                {% endif %}
+          </ul>
+        </li>
+    {% endif %}
+    {% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+        <li>
+          <span class="togglers">{% trans "Administration" %}</span>
+          <ul class="elements">
+                {% if user|has_flag:"internal" %}
+                    <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
+                    <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
+                    <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
+                {% endif %}
+                {% if user|has_flag:"executive_board_member" %}
+                    <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
+                {% endif %}
+          </ul>
+        </li>
+    {% endif %}
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
@@ -86,9 +105,6 @@
       </ul>
     </li>
     {% endcomment %}
-    {% if user|has_flag:"executive_board_member" %}
-        <li><a href="{% url ecs.audit.views.log "html" %}">{% trans 'Audit Trail' %}</a></li>
-    {% endif %}
   </ul>
 {% endblock %}
 
@@ -127,17 +143,29 @@
       return x;
     }
 
+    var accordion_choices = [
+        'submissions',
+        'notifications',
+{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+        'meetings',
+{% endif %}
+{% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+        'administration',
+{% endif %}
+        'demo'
+    ];
+
     var accordionitem_name = '{% block menuSelection %}overview{% endblock %}';
     var accordion_items = {
       'overview': -1,
       'communication': -1,
       'tasks': -1,
-      'submissions': 0,
-      'notifications': 1,
-      'meetings': 2,
-      'demo': 3,
-      'audit': -1
     };
+
+    for(var i=0; i < accordion_choices.length; i++) {
+        accordion_items[accordion_choices[i]] = i;
+    }
+
     var accordionitem = accordion_items[accordionitem_name];
     if(typeof(accordionitem) === 'undefined') {
       var accordionitem = accordion_items['overview'];

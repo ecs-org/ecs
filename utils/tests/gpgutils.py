@@ -3,7 +3,7 @@
 import os, tempfile
 from django.conf import settings
 from ecs.utils.testcases import EcsTestCase
-from ecs.utils.gpgutils import encrypt, decrypt
+from ecs.utils.gpgutils import encrypt_sign, decrypt_verify
 
 class Gpgutilstest(EcsTestCase):
     testdata="im very happy to be testdata"        
@@ -18,8 +18,8 @@ class Gpgutilstest(EcsTestCase):
             osdescriptor, encryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
             osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
                 
-            encrypt(inputfilename, encryptedfilename, settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"]) 
-            decrypt(encryptedfilename, decryptedfilename, settings.STORAGE_DECRYPT ['gpghome'], settings.STORAGE_DECRYPT ["owner"])
+            encrypt_sign(inputfilename, encryptedfilename, settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"]) 
+            decrypt_verify(encryptedfilename, decryptedfilename, settings.STORAGE_DECRYPT ['gpghome'], settings.STORAGE_DECRYPT ["owner"])
             
             self.assertEqual(self.testdata, open(inputfilename).read())
             self.assertNotEqual(self.testdata, open(encryptedfilename).read())
