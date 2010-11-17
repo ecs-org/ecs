@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 16:38+0100\n"
+"POT-Creation-Date: 2010-11-17 17:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -698,6 +698,54 @@ msgstr ""
 #: pdfviewer/views.py:45
 #, python-format
 msgid "invalid data: %s"
+msgstr ""
+
+#: tasks/forms.py:10
+msgid "delegate"
+msgstr ""
+
+#: tasks/forms.py:10
+msgid "message"
+msgstr ""
+
+#: tasks/forms.py:11
+msgid "callback"
+msgstr ""
+
+#: tasks/forms.py:11
+msgid "somebody"
+msgstr ""
+
+#: tasks/forms.py:11
+msgid "related"
+msgstr ""
+
+#: tasks/forms.py:20
+msgid "<group>"
+msgstr "<Gruppe>"
+
+#: tasks/forms.py:34
+msgid "complete"
+msgstr ""
+
+#: tasks/forms.py:56 tasks/forms.py:61 tasks/forms.py:64 tasks/forms.py:67
+msgid "You must select a user."
+msgstr "Sie müssen einen Benutzer auswählen."
+
+#: tasks/forms.py:69
+msgid "You must select a recipient."
+msgstr "Sie müssen einen Adressaten auswählen."
+
+#: tasks/forms.py:85
+msgid "Deadline"
+msgstr ""
+
+#: tasks/forms.py:86
+msgid "Oldest"
+msgstr ""
+
+#: tasks/forms.py:87
+msgid "Newest"
 msgstr ""
 
 #: templates/core.html:32
@@ -1490,9 +1538,6 @@ msgstr ""
 
 #~ msgid "There are no tasks for you."
 #~ msgstr "Keine Tätigkeiten"
-
-#~ msgid "newest"
-#~ msgstr "neuerste"
 
 #~ msgid "creating new submission form"
 #~ msgstr "erstelle neue einreichung"
