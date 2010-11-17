@@ -71,8 +71,8 @@ ecs.pdfviewer.utils = {
     PAGE_DOWN: 34,
     isAtBottom: function(){
         var win = $(window);
-        // we have to use <= 0, because firefox somehow manages to scroll one pixel beyond the window.
-        return win.getScrollHeight() - win.getScroll().y - win.getHeight() <= 0;
+        // we have to use <= 1, because firefox somehow manages to scroll one pixel beyond the window or leaves a single pixel unreachable.
+        return win.getScrollHeight() - win.getScroll().y - win.getHeight() <= 1;
     },
     isAtTop: function(){
         return $(window).getScroll().y == 0
@@ -152,7 +152,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.annotationFrame = new ecs.dragdrop.Frame(this.annotationOverlay);
         
         this.annotationFrame.addEvent('complete', (function(f){
-            console.log(f);
             if(f.w > this.minAnnotationWidth || f.h > this.minAnnotationHeight){
                 var rel = this.annotationOverlay.getCoordinates();
                 var annotation = new ecs.pdfviewer.Annotation(null, "", f.x / rel.width, f.y / rel.height, f.w / rel.width, f.h / rel.height);
@@ -221,22 +220,26 @@ ecs.pdfviewer.DocumentViewer = new Class({
     },
     setPage: function(pageIndex, update){
         if(pageIndex < 0 || pageIndex >= this.pageCount){
-            return;
+            return false;
         }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
                 this.update();
             }
+            return true;
         }
+        return false;
     },
     nextPage: function(delta){
-        ecs.pdfviewer.utils.scrollToTop();
-        this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1));
+        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1))){
+            ecs.pdfviewer.utils.scrollToTop();
+        }
     },
     previousPage: function(delta){
-        ecs.pdfviewer.utils.scrollToBottom();
-        this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0));
+        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0))){
+            ecs.pdfviewer.utils.scrollToBottom();
+        }
     },
     gotoPage: function(pageIndex){
         this.setPage(pageIndex, false);
