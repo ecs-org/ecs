@@ -195,7 +195,7 @@ class VoteSigning(Activity):
         model = Vote
         
     def get_url(self):
-        return None # FIXME
+        return reverse('ecs.core.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})
 
 
 class VotePublication(Activity):
