@@ -1,4 +1,5 @@
 import logging
+from contextlib import contextmanager
 
 from django.test import TestCase
 from django.contrib.auth.models import User
@@ -41,6 +42,13 @@ class EcsTestCase(TestCase):
     def tearDown(self):
         settings.ENABLE_AUDIT_TRAIL = False
         User.objects.all().delete()
+        
+    @contextmanager
+    def login(self, username, password):
+        self.client.login(username=username, password=password)
+        yield
+        self.client.logout()
+
 
 
 class LoginTestCase(EcsTestCase):

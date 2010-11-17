@@ -22,7 +22,7 @@ class View(models.Model):
 class Request(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     ip = models.IPAddressField(db_index=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, related_name='requests')
     url = models.TextField()
     view = models.ForeignKey(View)
     anchor = models.CharField(max_length=100, db_index=True, blank=True)
