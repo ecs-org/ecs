@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 17:41+0100\n"
+"POT-Creation-Date: 2010-11-17 18:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1474,6 +1474,44 @@ msgstr "ECS - Passwort vergessen"
 #: userswitcher/forms.py:10
 msgid "user"
 msgstr "Benutzer"
+
+#: utils/common_messages.py:25 utils/common_messages.py:33
+#, python-format
+msgid "The study EC-Nr. %s was created.\n"
+msgstr "Die Studie EK-Nr. %s wurde angelegt.\n"
+
+#: utils/common_messages.py:27 utils/common_messages.py:43
+#, python-format
+msgid ""
+"Click <a href=\"#\" onclick=\"window.parent.location.href='%s';\">here</a> "
+"to view it."
+msgstr ""
+"Um sie anzusehen klicken sie <a href=\"#\" onclick=\"window.parent.location."
+"href='%s';\">hier</a>."
+
+#: utils/common_messages.py:28 utils/common_messages.py:36
+#, python-format
+msgid "New study EC-Nr. %s"
+msgstr "Neue Studie EK-Nr. %s"
+
+#: utils/common_messages.py:35
+#, python-format
+msgid ""
+"Please register <a href=\"#\" onclick=\"window.parent.location.href='%s';"
+"\">here</a> to view the study."
+msgstr ""
+"Bitte registrieren sie sich <a href=\"#\" onclick=\"window.parent.location."
+"href='%s';\">hier</a>, um die Studie einzusehen."
+
+#: utils/common_messages.py:41
+#, python-format
+msgid "Changes were made to study EC-Nr. %s.\n"
+msgstr "An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n"
+
+#: utils/common_messages.py:44
+#, python-format
+msgid "Changes to study EC-Nr. %s"
+msgstr "Änderungen an Studie EK-Nr. %s"
 
 #: utils/countries/models.py:22
 msgid "ISO alpha-2"
