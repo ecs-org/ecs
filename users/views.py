@@ -175,6 +175,11 @@ def edit_profile(request):
         'profile_form': profile_form,
     })
 
+
+###########################
+### User Administration ###
+###########################
+
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
