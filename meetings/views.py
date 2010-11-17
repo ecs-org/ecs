@@ -315,9 +315,9 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     checklist_review_states = SortedDict()
     if top.submission:
         for blueprint in ChecklistBlueprint.objects.order_by('name'):
-            checklist_review_states[blueprint] = None
+            checklist_review_states[blueprint] = []
         for checklist in top.submission.checklists.select_related('blueprint'):
-            checklist_review_states[checklist.blueprint] = checklist
+            checklist_review_states[checklist.blueprint].append(checklist)
 
     return render(request, 'meetings/assistant/top.html', {
         'meeting': meeting,

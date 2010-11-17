@@ -290,6 +290,9 @@ ecs.setupForms = function(){
 ecs.FormFieldController = new Class({
     initialize: function(fields, options){
         fields = fields.map($);
+        if(!fields[0].getParent('form')){
+            return;
+        }
         this.fields = fields;
         if(options.disable){
             this.setDisabled(true);

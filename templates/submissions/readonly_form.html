@@ -60,9 +60,9 @@
                         <a href="#vote_review_tab">Votum</a>
                     </li>
                 {% endif %}
-                {% for blueprint, checklist_review_form in checklist_reviews %}
+                {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#checklist_{{ blueprint.pk }}_review_form">{{ blueprint.name }}</a>
+                        <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
                     </li>
                 {% endfor %}
                 <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
@@ -194,8 +194,8 @@
             {% endblock %}
         </div>
     {% endif %}
-    {% for blueprint, checklist_review_form in checklist_reviews %}
-    <div id="checklist_{{ blueprint.pk }}_review_form" class="checklist_review_tab">
+    {% for checklist, checklist_review_form in checklist_reviews %}
+    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
         {% with checklist_review_form as review_form %}
             {% include 'submissions/review_form.inc' %}
         {% endwith %}
