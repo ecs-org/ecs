@@ -136,9 +136,9 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.export_submission', submission_pk=self.sf.submission.pk)
         self._check_view(False, 'ecs.core.views.diff', self.sf.pk, self.sf.pk)
-        self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)
-        self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
 
+        #self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
+        #self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view('ecs.core.views.retrospective_thesis_review', submission_form_pk=self.sf.pk)
         #self._check_view('ecs.core.views.copy_submission_form', submission_form_pk=self.sf.pk)
         #self._check_view('ecs.core.views.copy_latest_submission_form', submission_pk=self.sf.submission.pk)
