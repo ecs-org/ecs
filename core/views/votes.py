@@ -8,7 +8,6 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_pdf, pdf_response
 from ecs.core.models import Vote
@@ -44,8 +43,10 @@ def votes_signing(request, meeting_pk=None):
     return response
 
 
-def vote_filename(meeting, vote):
+def vote_filename(vote):
+    meeting = vote.top.meeting;
     vote_name = vote.get_ec_number()
+    
     if vote_name is None:
         vote_name = 'id_%s' % vote.pk
     top = str(vote.top)
@@ -53,7 +54,7 @@ def vote_filename(meeting, vote):
     return filename.replace(' ', '_')
 
 
-def vote_context(meeting, vote):
+def vote_context(vote):
     top = vote.top
     submission = None
     form = None
@@ -64,10 +65,9 @@ def vote_context(meeting, vote):
         form = submission.forms.all()[0]
     if form:
         documents = form.documents.all()
-    vote_date = meeting.start.strftime('%d.%m.%Y')
+    vote_date = top.meeting.start.strftime('%d.%m.%Y')
     
     context = {
-        'meeting': meeting,
         'vote': vote,
         'submission': submission,
         'form': form,
@@ -90,15 +90,19 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     return pdf_response(pdf, filename=pdf_name)
 
 
-def vote_sign(request, meeting_pk=None, vote_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+def vote_publish(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
-    print 'vote_sign meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
-    pdf_name = vote_filename(meeting, vote)
+    print 'vote_publish "%s"' % (vote_pk)
+    return render(request, 'meetings/vote_publishing.html', vote_context(vote))
+
+def vote_sign(request, vote_pk=None):
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    print 'vote_sign vote "%s"' % (vote_pk)
+    pdf_name = vote_filename(vote)
     pdf_template = 'db/meetings/xhtml2pdf/vote.html'
     preview_template = 'db/meetings/xhtml2pdf/vote_preview.html'
     
-    context = vote_context(meeting, vote)
+    context = vote_context(vote)
     html_preview = render(request, preview_template, context).content
     pdf_data = xhtml2pdf(render(request, pdf_template, context).content)
     document_uuid = uuid4().get_hex();
@@ -123,10 +127,10 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
 
 
 @forceauth.exempt
-def vote_sign_send(request, meeting_pk=None, vote_pk=None):
+def vote_sign_send(request, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
-        return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
     t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
     t_pdfas.write(votedoc["pdf_data"])
@@ -136,20 +140,20 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
 
 @forceauth.exempt
 @csrf_exempt
-def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
+def vote_sign_preview(request, vote_pk=None, jsessionid=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
-        return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
+        return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
     return HttpResponse(votedoc["html_preview"])
 
 @csrf_exempt
-def vote_sign_receive_landing(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
+def vote_sign_receive_landing(request,  vote_pk=None, jsessionid=None):
+    return vote_sign_receive(request, vote_pk, jsessionid);
  
 @forceauth.exempt
-def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
-    print 'vote_sign_receive meeting "%s", vote "%s"' % (meeting_pk, vote_pk)
+def vote_sign_receive(request, vote_pk=None, jsessionid=None):
+    print 'vote_sign_receive vote "%s"' % (vote_pk)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
         pdf_id = request.REQUEST['pdf-id']
@@ -158,7 +162,7 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
         url = '%s%s?pdf-id=%s&num-bytes=%s&pdfas-session-id=%s' % (settings.PDFAS_SERVICE, pdf_url, pdf_id, num_bytes, pdfas_session_id)
         votedoc = votesDepot.pop(pdf_id)
         if votedoc is None:
-            return HttpResponseForbidden('<h1>%s</h1>' % _('Error: Invalid pdf-id. Probably your signing session expired. Please retry.'))
+            return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
         # f_pdfas is not seekable, so we have to store it as local file first
         sock_pdfas = urllib2.urlopen(url)
@@ -176,7 +180,7 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 @csrf_exempt
-def vote_sign_error(request, meeting_pk=None, vote_pk=None):
+def vote_sign_error(request, vote_pk=None):
     if request.REQUEST.has_key('pdf-id'):
         votesDepot.pop(request.REQUEST['pdf-id'])
         
@@ -189,7 +193,7 @@ def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     else:
         cause = ''
     # no pdf id, no explicit cleaning possible
-    return HttpResponse('<h1>%s</h1>' % _('vote_sign_error: error=[%(error)s], cause=[%(cause)s]' % {'error':error, 'cause':cause}))
+    return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
 
 # TODO BKUApplet - setting background from 
 # http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png
