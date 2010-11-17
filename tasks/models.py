@@ -37,7 +37,7 @@ class TaskManager(models.Manager):
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')
-    workflow_token = models.OneToOneField(Token, null=True)
+    workflow_token = models.OneToOneField(Token, null=True, related_name='task')
     content_type = models.ForeignKey(ContentType, null=True)
     data_id = models.PositiveIntegerField(null=True)
     data = GenericForeignKey(ct_field='content_type', fk_field='data_id')

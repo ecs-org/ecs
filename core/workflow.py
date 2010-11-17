@@ -65,7 +65,7 @@ class InitialReview(Activity):
         model = Submission
     
     def get_url(self):
-        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.pk})
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
         
     def get_choices(self):
         return (
@@ -153,14 +153,22 @@ class VoteRecommendationReview(Activity):
     def get_url(self):
         return None # FIXME
 
-
-class ExternalReview(Activity):
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance.
+class ExternalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
+        vary_on = ChecklistBlueprint
 
-    def get_url(self):
-        return None # FIXME
-        
+    def receive_token(self, *args, **kwargs):
+        token = super(ExternalChecklistReview, self).receive_token(*args, **kwargs)
+        token.task.assign(self.workflow.data.external_reviewer_name)
+        return token
+
+def unlock_external_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExternalChecklistReview)
+post_save.connect(unlock_external_review, sender=Checklist)
+
+
 class ExternalReviewInvitation(Activity):
     class Meta:
         model = Submission

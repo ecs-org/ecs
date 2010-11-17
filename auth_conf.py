@@ -9,7 +9,7 @@ from ecs.fastlane.models import FastLaneTop
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-
+        return self.make_q()
         ### shortcircuit logic
         if not profile.approved_by_office:
             return self.make_deny_q()

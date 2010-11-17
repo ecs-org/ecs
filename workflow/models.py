@@ -107,7 +107,7 @@ class Graph(NodeType):
             if not isinstance(data, nodetype.data_type.model_class()):
                 raise TypeError("nodes of type %s require data of type %s, got: %s" % (nodetype, nodetype.data_type.model_class(), type(data)))
         elif data:
-            raise TypeError("nodes of type %s may not carry data" % nodetype)
+            raise TypeError("nodes of type %s may not carry data, got: %r" % (nodetype, data))
         return nodetype
         
     def create_node(self, nodetype=None, start=False, end=False, name='', data=None):
