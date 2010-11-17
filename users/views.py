@@ -11,6 +11,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
+from django.utils.translation import ugettext as _
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -76,7 +77,7 @@ def register(request):
             'activation_url': activation_url,
             'form': form,
         }))
-        deliver(subject='ECS - Anmeldung', message=None, message_html=htmlmail,
+        deliver(subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
             from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/registration/registration_complete.html', {})
         
@@ -129,7 +130,7 @@ def request_password_reset(request):
         htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
             'reset_url': reset_url,
         }))
-        deliver(subject='ECS - Passwort vergessen', message=None, message_html=htmlmail,
+        deliver(subject=_(u'ECS - password reset'), message=None, message_html=htmlmail,
             from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
         return render(request, 'users/password_reset/request_complete.html', {
             'email': form.cleaned_data['email'],
