@@ -1,7 +1,7 @@
 {% extends 'administration/detail.html' %}
 {% load i18n %}
 
-{% block user_list %}
+{% block administration_detail %}
 <h2>{% trans "List of Users" %} ({{ users|length }})</h2>
 
 <form id="{{ form_id }}" action="" method="post">
@@ -10,7 +10,7 @@
         <li><label for="id_group">{% trans "Group" %}:</label> {{ filterform.group }}</li>
 </form>
 
-<table>
+<table class="user_list">
     <tr>
         <th>{% trans "User" %}</th>
         <th>{% trans "Approval" %}</th>
