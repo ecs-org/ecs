@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.utils.translation import ugettext as _
 
 from ecs.utils import forceauth
 from ecs.utils.s3utils import S3url
@@ -13,7 +14,7 @@ from ecs.mediaserver.mediaprovider import MediaProvider
 def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest("Invalid expiring url")
+        return HttpResponseBadRequest(_("Invalid expiring url"))
     
     mediaprovider = MediaProvider()    
     f = mediaprovider.getPage(Page(uuid, tiles_x, tiles_y, width, pagenr))
@@ -29,7 +30,7 @@ def get_blob(request, uuid, filename, mime_part1="application", mime_part2= "pdf
     mimetype="/".join((mime_part1, mime_part2))
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest("Invalid expiring url")
+        return HttpResponseBadRequest(_("Invalid expiring url"))
     
     mediaprovider = MediaProvider() 
     f = mediaprovider.getBlob(uuid)
@@ -47,7 +48,7 @@ def get_pdf(request, uuid, filename, branding=None):
     
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest("Invalid expiring url")
+        return HttpResponseBadRequest(_("Invalid expiring url"))
     
     mediaprovider = MediaProvider()
     f = mediaprovider.getBlob(uuid)
@@ -67,6 +68,6 @@ def prepare_branded(request, uuid, mime_part1="application", mime_part2= "pdf", 
 
 @forceauth.exempt
 def prepare(request, uuid, mime_part1="application", mime_part2= "pdf", brandprepare=False):
-    return HttpResponseBadRequest("sorry, unfinished")
+    return HttpResponseBadRequest(_("sorry, unfinished"))
     
     

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 14:05+0100\n"
+"POT-Creation-Date: 2010-11-17 15:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -240,11 +240,11 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:72
+#: core/workflow.py:73
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:73
+#: core/workflow.py:74
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -500,7 +500,9 @@ msgstr "Patienteninformation"
 msgid ""
 "Patients / subjects / children / youths / parents / genetic information, "
 "information for non competent patients"
-msgstr "Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- Information, Information für nicht einwilligungsfähige Patienten"
+msgstr ""
+"Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- "
+"Information, Information für nicht einwilligungsfähige Patienten"
 
 #: documents/bootstrap.py:15
 msgid "insurancecertificate"
@@ -514,10 +516,6 @@ msgstr ""
 #: documents/bootstrap.py:16
 msgid "study protocol"
 msgstr "Studienprotokoll"
-
-#: documents/bootstrap.py:16
-msgid "study protocol  "
-msgstr ""
 
 #: documents/bootstrap.py:17
 msgid "Investigator's Brochure"
@@ -595,6 +593,14 @@ msgstr ""
 msgid ""
 "Your Participation in the Fast Lane Meeting %(meeting_date)s "
 "%(meeting_title)s"
+msgstr ""
+
+#: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
+msgid "Invalid expiring url"
+msgstr ""
+
+#: mediaserver/views.py:71
+msgid "sorry, unfinished"
 msgstr ""
 
 #: meetings/forms.py:15 meetings/forms.py:33
@@ -1274,46 +1280,64 @@ msgid "List of Users"
 msgstr "Verhinderte Benutzer"
 
 #: templates/users/administration.html:9
-msgid "User"
-msgstr ""
-
-#: templates/users/administration.html:10
+#: templates/users/administration.html:16
 msgid "Approval"
 msgstr ""
 
-#: templates/users/administration.html:11
+#: templates/users/administration.html:10
+msgid "Group"
+msgstr ""
+
+#: templates/users/administration.html:15
+msgid "User"
+msgstr ""
+
+#: templates/users/administration.html:17
 #, fuzzy
 msgid "Indisposed"
 msgstr "Verhindert markieren"
 
-#: templates/users/administration.html:12
+#: templates/users/administration.html:18
 msgid "Active"
 msgstr ""
 
-#: templates/users/administration.html:19
+#: templates/users/administration.html:25
 msgid "Revoke Approval"
 msgstr ""
 
-#: templates/users/administration.html:21
+#: templates/users/administration.html:27
 msgid "Approve"
 msgstr ""
 
-#: templates/users/administration.html:26
+#: templates/users/administration.html:32
 #, fuzzy
 msgid "Unmark Indisposed"
 msgstr "Verhindert markieren"
 
-#: templates/users/administration.html:28
+#: templates/users/administration.html:34
 msgid "Mark Indisposed"
 msgstr "Verhindert markieren"
 
-#: templates/users/administration.html:33
+#: templates/users/administration.html:39
 msgid "Deactivate"
 msgstr ""
 
-#: templates/users/administration.html:35
+#: templates/users/administration.html:41
 msgid "Activate"
 msgstr ""
+
+#: templates/users/administration.html:46
+#, fuzzy
+msgid "No Users."
+msgstr "Verhinderte Benutzer"
+
+#: templates/users/administration.html:70
+msgid "Collapse"
+msgstr "Weniger"
+
+#: templates/users/administration.html:74
+msgid "Expand"
+msgstr "Mehr"
 
 #: templates/users/approve.html:7
 msgid "Back to the List of Users"
@@ -1332,7 +1356,7 @@ msgstr "Passwort ändern"
 msgid "Profile of %(user)s"
 msgstr "Profil von %(user)s"
 
-#: users/forms.py:20
+#: users/forms.py:22
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -1425,12 +1449,6 @@ msgstr ""
 
 #~ msgid "There are no tasks for you."
 #~ msgstr "Keine Tätigkeiten"
-
-#~ msgid "Collapse"
-#~ msgstr "Weniger"
-
-#~ msgid "Expand"
-#~ msgstr "Mehr"
 
 #~ msgid "newest"
 #~ msgstr "neuerste"
