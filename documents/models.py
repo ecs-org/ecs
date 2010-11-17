@@ -25,7 +25,7 @@ from ecs.authorization import AuthorizationManager
 
 
 class DocumentPersonalization(models.Model):
-    id = models.SlugField(max_length=36, primary_key=True, default = uuid4().get_hex())
+    id = models.SlugField(max_length=36, primary_key=True, default=lambda: uuid4().get_hex())
     document = models.ForeignKey('Document', db_index=True)
     user = models.ForeignKey(User, db_index=True)
     
