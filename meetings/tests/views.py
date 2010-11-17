@@ -5,10 +5,16 @@ from ecs.utils.testcases import LoginTestCase
 from ecs.meetings.models import Meeting
 from ecs.core.tests.submissions import create_submission_form
 
+def _get_datetime_inputs(name, dt):
+    return {
+        '%s_0' % name: dt.strftime('%d.%m.%Y'),
+        '%s_1' % name: dt.strftime("%H:%M"),
+    }
+
 class ViewTestCase(LoginTestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
-        self.start = datetime.datetime(2020, 2, 20, 20, 0, 2)
+        self.start = datetime.datetime(2020, 2, 20, 20, 20)
         
     def refetch(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)
@@ -18,9 +24,12 @@ class ViewTestCase(LoginTestCase):
         response = self.client.get(create_meeting_url)
         self.failUnlessEqual(response.status_code, 200)
 
-        response = self.client.post(create_meeting_url, {'start_0': self.start.strftime('%d.%m.%Y'), 'start_1': self.start.strftime("%H:%M:%S")})
+        data = {}
+        data.update(_get_datetime_inputs('start', self.start))
+        data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + datetime.timedelta(days=30)))
+        data.update(_get_datetime_inputs('deadline', self.start + datetime.timedelta(days=14)))
+        response = self.client.post(create_meeting_url, data)
         self.failUnlessEqual(response.status_code, 302)
-        
         self.failUnlessEqual(Meeting.objects.filter(start=self.start).count(), 1)
         meeting = Meeting.objects.get(start=self.start)
         
