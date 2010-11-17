@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
@@ -68,7 +69,7 @@ def create_notification(request, notification_type_pk=None):
         request.docstash.name = "%s" % notification_type.name
         
         if autosave:
-            return HttpResponse('autosave successful')
+            return HttpResponse(_('autosave successful'))
         
         if document_form.is_valid():
             documents = set(request.docstash['documents'])
