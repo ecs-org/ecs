@@ -13,7 +13,7 @@
 {% if form.submitter %}
 	{{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
 {% else %}
-	{{ form.submitter_contact }}
+	{{ form.submitter_contact }} <br/>
 {% endif %}
 <span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
 <span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
