@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
-
+from django.utils.translation import ugettext_lazy as _
 from ecs.users.models import UserProfile
 
 class RegistrationForm(forms.Form):
-    gender = forms.ChoiceField(choices=(('f', 'Frau'), ('m', 'Herr')))
+    gender = forms.ChoiceField(choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
     first_name = forms.CharField()
     last_name = forms.CharField()
     email = forms.EmailField()
@@ -40,9 +40,9 @@ class UserForm(forms.ModelForm):
 
 class AdministrationFilterForm(forms.Form):
     approval = forms.ChoiceField(required=False, choices=(
-        ('both', 'Both'),
-        ('yes', 'Approved'),
-        ('no', 'Not Approved'),
+        ('both', _(u'Both')),
+        ('yes', _(u'Approved')),
+        ('no', _(u'Not Approved')),
     ))
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
 

@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django_extensions.db.fields.json import JSONField
+from django.utils.translation import ugettext_lazy as _
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
@@ -22,7 +23,7 @@ class UserProfile(models.Model):
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
     
-    gender = models.CharField(max_length=1, choices=(('f', 'Frau'), ('m', 'Herr')))
+    gender = models.CharField(max_length=1, choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
     title = models.CharField(max_length=30, blank=True)
     organisation = models.CharField(max_length=180, blank=True)
     jobtitle = models.CharField(max_length=130, blank=True)

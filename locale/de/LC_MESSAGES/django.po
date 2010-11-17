@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 17:16+0100\n"
+"POT-Creation-Date: 2010-11-17 17:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -392,11 +392,13 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:30 core/models/submissions.py:629
+#: core/models/names.py:30 core/models/submissions.py:629 users/forms.py:8
+#: users/models.py:26
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:30 core/models/submissions.py:629
+#: core/models/names.py:30 core/models/submissions.py:629 users/forms.py:8
+#: users/models.py:26
 msgid "Mr"
 msgstr "Herr"
 
@@ -1448,6 +1450,26 @@ msgstr "Profil von %(user)s"
 #: users/forms.py:22
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
+
+#: users/forms.py:43
+msgid "Both"
+msgstr ""
+
+#: users/forms.py:44
+msgid "Approved"
+msgstr ""
+
+#: users/forms.py:45
+msgid "Not Approved"
+msgstr ""
+
+#: users/views.py:80
+msgid "ECS - Registration"
+msgstr "ECS - Anmeldung"
+
+#: users/views.py:133
+msgid "ECS - password reset"
+msgstr "ECS - Passwort vergessen"
 
 #: utils/countries/models.py:22
 msgid "ISO alpha-2"
