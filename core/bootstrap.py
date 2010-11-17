@@ -48,7 +48,7 @@ def templates():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
     from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, 
+    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
         ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
@@ -57,6 +57,7 @@ def submission_workflow():
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Legal and Patient Review').order_by('-pk')[:1][0]
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Board Member Review').order_by('-pk')[:1][0]
     external_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='External Review').order_by('-pk')[:1][0]
+    additional_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Additional Review').order_by('-pk')[:1][0]
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -79,6 +80,8 @@ def submission_workflow():
             'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review", group=INTERNAL_REVIEW_GROUP),
             'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP),
+            'additional_review_split': Args(AdditionalReviewSplit),
+            'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=u"Additional Review"),
             'initial_thesis_review': Args(InitialReview, name="Initial Thesis Review", group=THESIS_REVIEW_GROUP),
             'thesis_categorization_review': Args(CategorizationReview, name="Thesis Categorization Review", group=THESIS_EXECUTIVE_GROUP),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP),
@@ -119,8 +122,11 @@ def submission_workflow():
             #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
             ('categorization_review', 'external_review_invitation'): Args(guard=needs_external_review),
+            ('categorization_review', 'additional_review_split'): None,
+            
             ('external_review_invitation', 'external_review'): None,
             ('external_review', 'external_review_invitation'): Args(deadline=True),
+            ('additional_review_split', 'additional_review'): None,
 
             ('generic_review', 'board_member_review'): None,
             ('generic_review', 'insurance_review'): None,
@@ -416,11 +422,11 @@ def checklist_questions():
         u'Insurance Review': (u"42 ?",),
         u'Board Member Review': (u"42 ?",),
         u'External Review': (u"42 ?",),
+        u'Additional Review': (u"42 ?",),
     }
 
     for bp_name in questions.keys():
         blueprint = ChecklistBlueprint.objects.filter(name=bp_name).order_by('-pk')[:1][0]
-        print blueprint
         #FIXME: there is no unique constraint, so this is not idempotent
         for q in questions[bp_name]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)

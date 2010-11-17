@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
+from ecs.workflow.patterns import Generic
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 
 register(Submission, autostart_if=lambda s: bool(s.current_submission_form_id))
@@ -138,21 +139,6 @@ def unlock_checklist_review(sender, **kwargs):
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
-class VoteRecommendation(Activity):
-    class Meta:
-        model = Submission
-
-    def get_url(self):
-        return None # FIXME
-
-
-class VoteRecommendationReview(Activity):
-    class Meta:
-        model = Submission
-        
-    def get_url(self):
-        return None # FIXME
-
 # XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance.
 class ExternalChecklistReview(ChecklistReview):
     class Meta:
@@ -172,6 +158,51 @@ post_save.connect(unlock_external_review, sender=Checklist)
 class ExternalReviewInvitation(Activity):
     class Meta:
         model = Submission
+        
+    def get_url(self):
+        return None # FIXME
+
+
+class AdditionalReviewSplit(Generic):
+    class Meta:
+        model = Submission
+
+    def emit_token(self, *args, **kwargs):
+        tokens = []
+        for user in self.workflow.data.additional_reviewers.all():
+            for token in super(AdditionalReviewSplit, self).emit_token(*args, **kwargs):
+                token.task.assign(user)
+                tokens.append(token)
+        return token
+
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance.
+class AdditionalChecklistReview(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+        
+    def is_reentrant(self):
+        return True
+
+def unlock_additional_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(AdditionalChecklistReview)
+post_save.connect(unlock_additional_review, sender=Checklist)
+
+
+class VoteRecommendation(Activity):
+    class Meta:
+        model = Submission
+
+    def get_url(self):
+        return None # FIXME
+
+
+class VoteRecommendationReview(Activity):
+    class Meta:
+        model = Submission
+        
+    def get_url(self):
+        return None # FIXME
 
 
 class VoteFinalization(Activity):
