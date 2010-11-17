@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
@@ -8,19 +9,19 @@ from ecs.utils import gpgutils
 @bootstrap.register()
 def document_types():
     names = (
-        (u"Covering Letter", u"coveringletter", u"Anschreiben / Begleitschreiben an die Ethikkommission"),
-        (u"Patienteninformation", u"patientinformation", 
-            u"Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- Information, Information für nicht einwilligungsfähige Patienten"),
-        (u"Versicherungsbestätigung", u"insurancecertificate", u""),
-        (u"Protokoll", u"protocol", u"Studienprotokoll"),
-        (u"Investigator's Brochure", u"investigatorsbrochure", u""),
-        (u"Amendment", u"amendment", u"Protokolländerungen"),
-        (u"Curriculum Vitae (CV)", u"cv", u"Lebenslauf"),
-        (u"Conflict of Interest", u"conflictofinterest", u"kann auch ein Financial Disclosure Form sein"),
-        (u"Case Report Form (CRF)", u"crf", ""),
-        (u"EudraCT Formular", u"eudract", u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial"),
-        (u"Nebenwirkungsmeldung", u"adversereaction", u"Med Watch-Bericht, CIOMS-Formular etc."),
-        (u"Sonstige", u"other", u"Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."),
+        (_(u"Covering Letter"), u"coveringletter", _(u"Cover letter / covering letter to the Ethics Commission")),
+        (_(u"patient information"), u"patientinformation", 
+            _(u"Patients / subjects / children / youths / parents / genetic information, information for non competent patients")),
+        (_(u"insurancecertificate"), u"insurancecertificate", _(u" ")),
+        (_(u"study protocol"), u"protocol", _(u"study protocol")),
+        (_(u"Investigator's Brochure"), u"investigatorsbrochure", _(u" ")),
+        (_(u"Amendment"), u"amendment", _(u"Protocol changes")),
+        (_(u"Curriculum Vitae (CV)"), u"cv", _(u"CV")),
+        (_(u"Conflict of Interest"), u"conflictofinterest", _(u"can also be a Financial Disclosure Form")),
+        (_(u"Case Report Form (CRF)"), u"crf", _(u" ")),
+        (_(u"EudraCT Form"), u"eudract", _(u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial")),
+        (_(u"adverse reaction report"), u"adversereaction", _(u"Med Watch report, CIOMS form etc.")),
+        (_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
     )
     for name, identifier, helptext in names:
         d, created = DocumentType.objects.get_or_create(name=name, identifier=identifier)
