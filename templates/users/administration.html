@@ -1,0 +1,42 @@
+{% extends 'administration/detail.html' %}
+{% load i18n %}
+
+{% block user_list %}
+<h2>{% trans "List of Users" %} ({{ users|length }})</h2>
+
+<table>
+    <tr>
+        <th>{% trans "User" %}</th>
+        <th>{% trans "Approval" %}</th>
+        <th>{% trans "Indisposed" %}</th>
+        <th>{% trans "Active" %}</th>
+    </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user }}</td>
+            <td>
+                {% if user.ecs_profile.approved_by_office %}
+                    <a href="{% url ecs.users.views.approve user_pk=user.pk %}">{% trans "Revoke Approval" %}</a>
+                {% else %}
+                    <a href="{% url ecs.users.views.approve user_pk=user.pk %}">{% trans "Approve" %}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if user.ecs_profile.indisposed %}
+                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=user.pk %}">{% trans "Unmark Indisposed" %}</a>
+                {% else %}
+                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=user.pk %}">{% trans "Mark Indisposed" %}</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if user.is_active %}
+                    <a href="{% url ecs.users.views.toggle_active user_pk=user.pk %}">{% trans "Deactivate" %}</a>
+                {% else %}
+                    <a href="{% url ecs.users.views.toggle_active user_pk=user.pk %}">{% trans "Activate" %}</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+

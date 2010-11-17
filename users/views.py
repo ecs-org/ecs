@@ -15,7 +15,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, MarkUserIndisposedForm, UserForm, ProfileForm
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -156,16 +156,6 @@ def do_password_reset(request, token=None):
         'form': form,
     })
     
-def pending_approval_userlist(request):
-    return render(request, 'users/pending_approval_list.html', {
-        'users': User.objects.filter(ecs_profile__approved_by_office=False),
-    })
-    
-def indisposed_userlist(request):
-    return render(request, 'users/indisposed_list.html', {
-        'users': User.objects.filter(ecs_profile__indisposed=True),
-    })
-
 def profile(request):
     return render(request, 'users/profile.html', {
         'profile_user': request.user,
@@ -185,20 +175,18 @@ def edit_profile(request):
         'profile_form': profile_form,
     })
 
-def mark_indisposed(request):
-    form = MarkUserIndisposedForm(request.POST or None)
-    if form.is_valid():
-        UserProfile.objects.filter(user=form.cleaned_data['user']).update(indisposed=True)
-        return HttpResponseRedirect(reverse('ecs.users.views.indisposed_userlist'))
-    return render(request, 'users/mark_indisposed.html', {
-        'form': form,
-    })
-    
-def reset_indisposed_mark(request):
-    if request.method == 'POST':
-        UserProfile.objects.filter(user=request.user).update(indisposed=False)
-    return HttpResponseRedirect(reverse('ecs.users.views.profile'))
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def toggle_indisposed(request, user_pk=None):
+    user = get_object_or_404(User, pk=user_pk)
+    if user.ecs_profile.indisposed:
+        user.ecs_profile.indisposed = False
+    else:
+        user.ecs_profile.indisposed = True
 
+    user.ecs_profile.save()
+    return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+
+@user_passes_test(lambda u: u.ecs_profile.internal)
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
@@ -211,6 +199,19 @@ def approve(request, user_pk=None):
     })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
+def toggle_active(request, user_pk=None):
+    user = get_object_or_404(User, pk=user_pk)
+    if user.is_active:
+        user.is_active = False
+    else:
+        user.is_active = True
+
+    user.save()
+    return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+
+@user_passes_test(lambda u: u.ecs_profile.internal)
 def administration(request):
-    pass
+    return render(request, 'users/administration.html', {
+        'users': User.objects.all().order_by('username'),
+    })
 

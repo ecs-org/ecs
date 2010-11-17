@@ -25,9 +25,7 @@
             {% trans "Indisposed" %}: 
             {{ profile.indisposed|yesno:'ja,nein' }}
             {% if user == profile_user and profile.indisposed %}
-            <form action="{% url ecs.users.views.reset_indisposed_mark %}" method="post">
-                <input type="submit" value="{% trans 'Reset' %}" />
-            </form>
+                <a href="{% url ecs.users.views.toggle_indisposed user=user.pk%}">{% trans 'Reset' %}</a>
             {% endif %}
         </div>
     </td></tr>

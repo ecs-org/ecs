@@ -1,9 +1,10 @@
 {% extends 'core.html' %}
+{% load i18n %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
 {% block content %}
-<a href="{% url ecs.users.views.pending_approval_userlist %}">Zurück zur Liste unbestätigter Benutzer</a>
+<a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a>
 {% with profile_user.get_profile as profile %}
     <h2>{{ profile_user }}</h2>
     {% include "users/base_profile.inc" %}

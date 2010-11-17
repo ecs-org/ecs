@@ -1,0 +1,49 @@
+{% extends 'core.html' %}
+{% load core i18n userutils %}
+
+{% block title %}{% trans "ECS Administration" %}{% endblock %}
+
+{% block headernav %}
+    <ul class="tab_header_groups">
+        <li>
+            <a href="#" class="active">{% trans "Administration" %}</a>
+            <ul class="tab_headers">
+                <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
+            </ul>
+        </li>
+    </ul>
+    {{ block.super }}
+{% endblock %}
+
+{% block headertitle %}{% trans "Administration" %}{% endblock %}
+
+{% block content %}
+<div class="user_list">
+
+{% block user_list %}
+{% endblock %}
+
+</div>
+{% endblock %}
+
+{% block menuSelection %}administration{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            function updateHeaderHeight() {
+                var tabHeight = $$('.tab_headers')[0].getHeight();
+                if(tabHeight){
+                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
+                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
+                }
+                $('content').setStyle('top', $('header').getHeight() + 'px');
+            }
+            window.addEvent('resize', updateHeaderHeight);
+            $('header').setStyle('height', 'auto');
+            updateHeaderHeight();
+        });
+    </script>
+{% endblock %}
+
