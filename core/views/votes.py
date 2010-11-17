@@ -68,6 +68,7 @@ def vote_context(vote):
     vote_date = top.meeting.start.strftime('%d.%m.%Y')
     
     context = {
+        'meeting': top.meeting,
         'vote': vote,
         'submission': submission,
         'form': form,
