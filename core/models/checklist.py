@@ -10,6 +10,7 @@ from ecs.core.models.submissions import Submission
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
     min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, _('optional documents')), (1, _('one mandatory document'))))
+    multiple = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
@@ -32,7 +33,6 @@ class ChecklistQuestion(models.Model):
 class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
-    #object = GenericForeignKey()  # Postponed
     user = models.ForeignKey('auth.user')
     documents = models.ManyToManyField('documents.Document')
 
@@ -40,6 +40,8 @@ class Checklist(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
+        if self.blueprint.multiple:
+            return "%s (%s)" % (self.blueprint, self.user)
         return u"%s" % self.blueprint
         
     @property

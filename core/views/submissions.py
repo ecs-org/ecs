@@ -111,12 +111,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote_review_form = VoteReviewForm(instance=vote, readonly=True)
     
     checklist_reviews = []
-    for checklist in submission.checklists.all():
-        if checklist_overwrite and checklist.blueprint in checklist_overwrite:
-            checklist_form = checklist_overwrite[checklist.blueprint]
+    for checklist in submission.checklists.select_related('blueprint'):
+        if checklist_overwrite and checklist in checklist_overwrite:
+            checklist_form = checklist_overwrite[checklist]
         else:
             checklist_form = make_checklist_form(checklist)(readonly=True)
-        checklist_reviews.append((checklist.blueprint, checklist_form))
+        checklist_reviews.append((checklist, checklist_form))
     
     submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date
     previous_form = None
@@ -175,7 +175,12 @@ def befangene_review(request, submission_form_pk=None):
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
-    checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, defaults={'user': request.user})
+    lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
+    if blueprint.multiple:
+        lookup_kwargs['user'] = request.user
+    else:
+        lookup_kwargs['defaults'] = {'user': request.user}
+    checklist, created = Checklist.objects.get_or_create(**lookup_kwargs)
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
@@ -209,7 +214,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
         checklist.save() # touch the checklist instance to trigger the post_save signal
 
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={blueprint: form}, extra_context={
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context={
         'checklist_document_form': document_form,
         'checklist_documents': checklist_documents,
     })

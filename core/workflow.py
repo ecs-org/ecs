@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
+from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 
 register(Submission, autostart_if=lambda s: bool(s.current_submission_form_id))
@@ -123,8 +124,11 @@ class ChecklistReview(Activity):
         
     def is_locked(self):
         blueprint = self.node.data
+        lookup_kwargs = {'blueprint': blueprint}
+        if blueprint.multiple:
+            lookup_kwargs['user'] = get_current_user()
         try:
-            checklist = self.workflow.data.checklists.get(blueprint=blueprint)
+            checklist = self.workflow.data.checklists.get(**lookup_kwargs)
         except Checklist.DoesNotExist:
             return False
         return not checklist.is_complete

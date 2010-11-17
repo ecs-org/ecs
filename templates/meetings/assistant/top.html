@@ -53,9 +53,10 @@
 {% block meeting_assistant_sidebar %}
         <div class="reviews">
           <ul>
-          {% for blueprint, checklist in checklist_review_states %}
+          {% for blueprint, checklists in checklist_review_states %}
+            {% for checklist in checklists %}
               <li class="{{ checklist.is_positive|yesno:'positive,negative' }} {{ checklist.is_complete|yesno:'complete,incomplete' }}">
-                  {{ blueprint.name }}
+                  {{ checklist }}
                   {% if checklist.has_positive_comments %}
                       <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">copy positive</a>
                   {% endif %}
@@ -63,6 +64,7 @@
                       <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">copy negative</a>
                   {% endif %}
               </li>
+             {% endfor %}
           {% endfor %}
           {% if top.submission.expedited and top.submission.fast_lane_top %}
               <li class="{{ top.submission.fast_lane_top.recommendation|yesno:"positive,negative" }} {{ top.submission.fast_lane_top.complete|yesno:"complete,incomplete"}}">
