@@ -53,6 +53,7 @@ authorization.register(FastLaneTop, lookup='submission')
 
 class DocumentQFactory(authorization.QFactory):
     def get_q(self, user):
+        return self.make_q() # FIXME: how should document authorization work?
         submission_q = self.make_q(content_type=ContentType.objects.get_for_model(SubmissionForm))
         q = ~submission_q | (submission_q & self.make_q(object_id__in=SubmissionForm.objects.values('pk').query))
         return q

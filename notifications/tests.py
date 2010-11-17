@@ -21,8 +21,6 @@ class NotificationFormTest(LoginTestCase):
     def _create_POST_data(self, **extra):
         data = {
             'comments': 'foo comment',
-            'document-TOTAL_FORMS': '1',
-            'document-INITIAL_FORMS': '0',
         }
         data.update(extra)
         return data
@@ -96,7 +94,9 @@ class NotificationFormTest(LoginTestCase):
             'document-file': f,
             'document-doctype': doctype.pk,
             'document-version': '3.1415',
+            'document-branding': 'b',
             'document-date': '17.03.2010',
+            'document-allow_download': 'on',
         })
         response = self.client.post(url, data)
         f.close()
@@ -108,6 +108,8 @@ class NotificationFormTest(LoginTestCase):
         self.failUnless(doc.file)
         
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
+        while response.status_code == 302:
+            response = self.client.get(response['Location'])
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(response.content[:4], '%PDF')
    
