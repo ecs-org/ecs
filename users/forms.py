@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+
 from ecs.users.models import UserProfile
 
 class RegistrationForm(forms.Form):
@@ -35,4 +37,12 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name')
+
+class AdministrationFilterForm(forms.Form):
+    approval = forms.ChoiceField(required=False, choices=(
+        ('both', 'Both'),
+        ('yes', 'Approved'),
+        ('no', 'Not Approved'),
+    ))
+    group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
 

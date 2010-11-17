@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import time
 import datetime
+import random
 
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -15,7 +17,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm
 from ecs.users.models import UserProfile
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -216,7 +218,33 @@ def toggle_active(request, user_pk=None):
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
 def administration(request):
+    usersettings = request.user.ecs_settings
+
+    filter_defaults = {
+        'group': '',
+        'approval': 'both',
+    }
+
+    filterdict = request.POST or usersettings.useradministration_filter or filter_defaults
+    filterform = AdministrationFilterForm(filterdict)
+    filterform.is_valid()  # force clean
+
+    approval_lookup = {
+        'both': User.objects.all(),
+        'yes': User.objects.filter(ecs_profile__approved_by_office=True),
+        'no': User.objects.filter(ecs_profile__approved_by_office=False),
+    }
+
+    users = approval_lookup[filterform.cleaned_data['approval']]
+
+    if filterform.cleaned_data['group']:
+        users = users.filter(groups=filterform.cleaned_data['group'])
+
+    print filterform.cleaned_data['group']
+
     return render(request, 'users/administration.html', {
-        'users': User.objects.all().order_by('username'),
+        'users': users.order_by('username'),
+        'filterform': filterform,
+        'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
     })
 
