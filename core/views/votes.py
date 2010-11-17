@@ -78,7 +78,7 @@ def vote_context(vote):
     return context
 
 
-def vote_pdf(request, vote_pk=None):
+def vote_pdf(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_name = vote_filename(vote)
     pdf_template = 'db/meetings/xhtml2pdf/vote.html'
@@ -89,12 +89,12 @@ def vote_pdf(request, vote_pk=None):
     return pdf_response(pdf, filename=pdf_name)
 
 
-def vote_publish(request, vote_pk=None):
+def vote_publish(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_publish "%s"' % (vote_pk)
     return render(request, 'meetings/votes_publishing.html', vote_context(vote))
 
-def vote_sign(request, vote_pk=None):
+def vote_sign(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign vote "%s"' % (vote_pk)
     pdf_name = vote_filename(vote)
@@ -126,7 +126,7 @@ def vote_sign(request, vote_pk=None):
 
 
 @forceauth.exempt
-def vote_sign_send(request, vote_pk=None):
+def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
@@ -139,7 +139,7 @@ def vote_sign_send(request, vote_pk=None):
 
 @forceauth.exempt
 @csrf_exempt
-def vote_sign_preview(request, vote_pk=None, jsessionid=None):
+def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
@@ -147,11 +147,11 @@ def vote_sign_preview(request, vote_pk=None, jsessionid=None):
     return HttpResponse(votedoc["html_preview"])
 
 @csrf_exempt
-def vote_sign_receive_landing(request,  vote_pk=None, jsessionid=None):
+def vote_sign_receive_landing(request,  meeting_pk=None, vote_pk=None, jsessionid=None):
     return vote_sign_receive(request, vote_pk, jsessionid);
  
 @forceauth.exempt
-def vote_sign_receive(request, vote_pk=None, jsessionid=None):
+def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print 'vote_sign_receive vote "%s"' % (vote_pk)
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
@@ -179,7 +179,7 @@ def vote_sign_receive(request, vote_pk=None, jsessionid=None):
     return HttpResponse('vote_sign__receive: got [%s]' % request)
 
 @csrf_exempt
-def vote_sign_error(request, vote_pk=None):
+def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     if request.REQUEST.has_key('pdf-id'):
         votesDepot.pop(request.REQUEST['pdf-id'])
         
