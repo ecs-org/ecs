@@ -11,17 +11,53 @@
 <span style="font-weight: bold;">EK Nr: {{ ec_number }}</span> <br/>
 <span style="font-weight: bold;">Antragsteller:</span> 
 {% if form.submitter %}
-	{{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
+    {{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
 {% else %}
-	{{ form.submitter_contact }} <br/>
+    {{ form.submitter_contact }} <br/>
 {% endif %}
 <span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
 <span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
 <span style="font-weight: bold;">Projekttitel:</span> {{ form.project_title }} <br/>
 
+
 <pdf:spacer height="0.5cm" />
 
-{% if vote.result == '1' or vote.result == '1a' %}
+
+Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:
+
+
+<pdf:spacer height="0.5cm" />
+
+
+<table border="1px">
+<tr>
+  <td><span style="font-weight: bold;">Dokument</span></td>
+  <td><span style="font-weight: bold;">Version/Nr</span></td>
+  <td><span style="font-weight: bold;">Datiert</span></td>
+</tr>
+{% for document in documents %}
+<tr>
+  <td>{{ document.doctype }}:</td> 
+  <td>{{ document.version }}</td>
+  <td>{{ document.date|date:"d.m.Y" }}</td>
+</tr>
+{% empty %}
+<tr>
+  <td colspan="3">(keine Unterlagen)</td>
+</tr>
+{% endfor %}
+</table>
+
+
+<pdf:spacer height="0.5cm" />
+
+
+<div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
+
+
+<pdf:spacer height="0.5cm" />
+
+% if vote.result == '1' or vote.result == '1a' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
 {% endif %}
 
@@ -43,15 +79,50 @@
     Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)
 {% endif %}
 
+
 <pdf:spacer height="1.0cm" />
+
+{% if submission.current_submission_form.current_published_vote %}
+    <pdf:spacer height="0.5cm" />
+    <span style="font-weight:bold;">Letzte:</span><br />
+    {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
+{% endif %}
 
 {% if vote.text %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Kommentar:</span><br />
-    {{ vote.text|escape}}
+    {{ vote.text|linebreaksbr}}
 {% endif %}
 
+
+{% if submission.is_amg %}
+<pdf:spacer height="0.5cm" />
+<span style="font-weight:bold;">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
+</span><br />
+{% endif %}
+
+{% if submission.is_amg or submission.is_mpg %}
+<pdf:spacer height="1.0cm" />
+<span style="font-weight:bold;">
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
+</span><br />
+{% endif %}
+
+<pdf:spacer height="0.5cm" />
+<span>
+    Mitgliederliste der Ethik-Komission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben:  
+    {% for bef in submission.get_befangene %}    
+        {{ bef.first_name }} {{ bef.last_name }}<br/>
+    {% empty %}
+        <b>keine</b>    
+    {% endfor %}
+</span><br />
+<pdf:spacer height="0.5cm" />
+<span>
+    <b>ACHTUNG:</b> Unter Berücksichtigung der "ICH-Guideline for Good Clinical Practice" gilt dieser Beschluss <b><u>ein Jahr ab Datum der Ausstellung</b></u>. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit mittles Formular für "Meldungen" rechtzeitig vorzulegen. 
+</span><br />
+<pdf:spacer height="1.0cm" />
+    
 {% endblock %}
 
 {% block footer %}EK Nr: {{ ec_number }}, {{vote_date }}{% endblock %}
-
