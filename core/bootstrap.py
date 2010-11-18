@@ -22,7 +22,7 @@ from ecs.integration.utils import setup_workflow_graph
 
 @bootstrap.register()
 def default_site():
-    ''' XXX: default_site is needed for dbtemplates '''
+    # default_site is needed for dbtemplates
     Site.objects.get_or_create(pk=1)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.default_site',))
@@ -52,12 +52,12 @@ def submission_workflow():
         ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
-    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Statistik').order_by('-pk')[:1][0]
-    insurance_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Insurance Review').order_by('-pk')[:1][0]
-    legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Legal and Patient Review').order_by('-pk')[:1][0]
-    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Board Member Review').order_by('-pk')[:1][0]
-    external_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='External Review').order_by('-pk')[:1][0]
-    additional_review_checklist_blueprint = ChecklistBlueprint.objects.filter(name='Additional Review').order_by('-pk')[:1][0]
+    statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
+    insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
+    legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
+    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
+    external_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='external_review')
+    additional_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='additional_review')
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -397,8 +397,7 @@ def auth_ec_staff_users():
     staff_users = ()
     
     for blueprint in blueprints:
-        #FIXME: we need a unique constraint on name for this to be idempotent
-        b, _ = ChecklistBlueprint.objects.get_or_create(name=blueprint['name'])
+        b, _ = ChecklistBlueprint.objects.get_or_create(name=blueprint['slug'])
         changed = False
         for name, value in blueprint.items():
             if getattr(b, name) != value:
@@ -410,7 +409,7 @@ def auth_ec_staff_users():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
 def checklist_questions():
     questions = {
-        u'Statistik': (
+        u'statistic_review': (
             u'1. Ist das Studienziel ausreichend definiert?',
             u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
             u'3. Ist die Studienpopulation ausreichend definiert?',
@@ -418,25 +417,23 @@ def checklist_questions():
             u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',
             u'6. Ist die Größe der Stichprobe ausreichend begründet?',
         ),
-        u'Legal and Patient Review': (u"42 ?",),
-        u'Insurance Review': (u"42 ?",),
-        u'Board Member Review': (u"42 ?",),
-        u'External Review': (u"42 ?",),
-        u'Additional Review': (u"42 ?",),
+        u'legal_review': (u"42 ?",),
+        u'insurance_review': (u"42 ?",),
+        u'boardmember_review': (u"42 ?",),
+        u'external_review': (u"42 ?",),
+        u'additional_review': (u"42 ?",),
     }
 
-    for bp_name in questions.keys():
-        blueprint = ChecklistBlueprint.objects.filter(name=bp_name).order_by('-pk')[:1][0]
-        #FIXME: there is no unique constraint, so this is not idempotent
-        for q in questions[bp_name]:
+    for slug in questions.keys():
+        blueprint = ChecklistBlueprint.objects.get(slug=slug)
+        for q in questions[slug]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=q, blueprint=blueprint)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers', 'ecs.documents.bootstrap.document_types',))
-@sudo(lambda: User.objects.get(username='Presenter 1'))
 def testsubmission():
-    if Submission.objects.filter(ec_number=20104321).exists():
+    if Submission.objects.filter(ec_number=20104321):
         return
-    submission = Submission.objects.create(ec_number=20104321)
+    submission = Submission.objects.get_or_create(ec_number=20104321)
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev='Päd'))
     
     submission_form_data = {
