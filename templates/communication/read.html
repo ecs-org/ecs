@@ -1,8 +1,8 @@
 {% load communication core %}
 
 <div class="message_display">
-  <h3>{{ thread.subject }}</h3>
-  {% for message in page.object_list %}
+  <h3>{{ thread.subject }} ({{ message_list|length }})</h3>
+  {% for message in message_list %}
   <div class="item {% cycle 'even' 'odd' %}">
     <ol>
       <li><strong>Von:</strong> {{ message|sender_name:request.user  }}</li>

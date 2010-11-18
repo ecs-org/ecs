@@ -10,9 +10,12 @@ class AuthorizationManager(models.Manager):
         return self._q_factory
 
     def get_query_set(self):
-        qs = super(AuthorizationManager, self).get_query_set()
+        qs = self.get_base_query_set()
         user = get_current_user()
         if not user:
             return qs
         q_factory = self.get_q_factory()
         return qs.filter(q_factory(user))
+    
+    def get_base_query_set(self):
+        return super(AuthorizationManager, self).get_query_set()
