@@ -3,6 +3,7 @@ import datetime
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.core.views.submissions import diff
@@ -350,8 +351,8 @@ class SubmissionFormDiffTest(EcsTestCase):
     def test_submission_form_diff(self):
         self.new_sf.project_title = 'roflcopter'
         diff = diff_submission_forms(self.old_sf, self.new_sf)
-        self.failUnless(dict(diff).get(u'1.1 Projekttitel (englisch)', None))
-        self.failIf(not (1, 'roflcopter') in dict(diff)[u'1.1 Projekttitel (englisch)'])
+        self.failUnless(dict(diff).get(u'1.1 %s' % _('project title (english)'), None))
+        self.failIf(not (1, 'roflcopter') in dict(diff)[u'1.1 %s' % _('project title (english)')])
 
 
 class SubmissionAttachUserTest(EcsTestCase):
