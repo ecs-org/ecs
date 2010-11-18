@@ -56,7 +56,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
         if len(related_tasks) == 1:
             return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
         elif related_tasks:
-            pass # XXX: how do we handle this case?
+            pass # XXX: how do we handle this case? (FMD2)
 
     try:
         submission_pk = int(request.GET['submission'])

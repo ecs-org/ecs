@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
+from ecs.utils.decorators import developer
 from ecs.core.models import Submission
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, render_html
@@ -58,7 +59,7 @@ class SimpleXLS(object):
     def save(self, f):
         self.xls.save(f)
 
-
+@developer
 def reset_submissions(request):
     Submission.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
@@ -123,6 +124,7 @@ def submission_billing(request):
     })
     
 
+@developer
 def reset_external_review_payment(request):
     Submission.objects.update(external_reviewer_billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
