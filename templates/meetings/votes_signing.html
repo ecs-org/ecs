@@ -11,7 +11,7 @@
     {% if d.vote %}
       {{ d.vote }}
         (
-        {% if d.vote.signed_at not None %}
+        {% if d.vote.signed_at %}
             <a href="{% url ecs.core.views.download_signed_vote meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
         {% else %}
             <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=d.vote.pk %}" target="_blank">Signieren</a>
