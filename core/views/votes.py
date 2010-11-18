@@ -86,8 +86,6 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     pdf_template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(vote)
     pdf = render_pdf(request, pdf_template, context)
-    # TODO get uuid
-    # TODO stamp with barcode(uuid)
     return pdf_response(pdf, filename=pdf_name)
 
 
@@ -206,10 +204,6 @@ def vote_sign_error(request, meeting_pk=None, vote_pk=None):
         cause = ''
     # no pdf id, no explicit cleaning possible
     return HttpResponse('<h1>vote_sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
-
-# TODO BKUApplet - setting background from 
-# http://ecsdev.ep3.at:4780/bkuonline/img/chip32.png
-# to something ECS branded
 
 def sign(request, pdf_id, pdf_data_size, pdf_name):
     url_sign = '%sSign' % settings.PDFAS_SERVICE
