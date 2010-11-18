@@ -125,12 +125,8 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
-
-    t_pdfas = tempfile.NamedTemporaryFile(prefix='bla', suffix='.pdf', delete=False)
-    t_pdfas.write(votedoc["pdf_data"])
-    t_pdfas.seek(0)
     
-    return HttpResponse(t_pdfas.read(), mimetype='application/pdf')
+    return HttpResponse(votedoc["pdf_data"], mimetype='application/pdf')
 
 @forceauth.exempt
 @csrf_exempt

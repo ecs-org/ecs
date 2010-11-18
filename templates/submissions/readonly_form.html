@@ -149,9 +149,9 @@
                 {% for vote in pending_votes %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                     {% if vote.signed_at %}
-                        <a href="{% url ecs.core.views.vote_show meeting_pk=meeting.pk vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a>
+                        <a href="{% url ecs.core.views.vote_show meeting_pk='1' vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a>
                     {% else %}
-                        <a href="{% url ecs.core.views.vote_sign meeting_pk=meeting.pk vote_pk=vote.pk %}" target="_blank">{% trans "Signieren" %}</a>
+                        <a href="{% url ecs.core.views.vote_sign meeting_pk='1' vote_pk=vote.pk %}" target="_blank">{% trans "Signieren" %}</a>
                     {% endif %}
                 {% endfor %}
             </ul>
