@@ -8,7 +8,25 @@
     <ul class="useradministration_choose">
         <li><label for="id_approval">{% trans "Approval" %}:</label> {{ filterform.approval }}</li>
         <li><label for="id_group">{% trans "Group" %}:</label> {{ filterform.group }}</li>
+    </ul>
+    {{ filterform.page }}
 </form>
+
+<div class="paginator">
+    {% if not users.number == 1 %}
+        <a href="#" class="first_page">first</a>
+    {% endif %}
+    {% if users.has_previous %}
+        <a href="#" class="prev_page">previous</a>
+    {% endif %}
+    {% trans "Page" %} {{ users.number }} {% trans "of" %} {{ users.paginator.num_pages }}
+    {% if users.has_next %}
+        <a href="#" class="next_page">next</a>
+    {% endif %}
+    {% if not users.number == users.paginator.num_pages %}
+        <a href="#" class="last_page">last</a>
+    {% endif %}
+</div>
 
 <table class="user_list">
     <tr>
@@ -17,7 +35,7 @@
         <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
         <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
     </tr>
-    {% for profile_user in users %}
+    {% for profile_user in users.object_list %}
         <tr>
             <td>
                 <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
@@ -56,56 +74,71 @@
         <tr><td colspan="4"><em>{% trans "No Users." %}</em></td></tr>
     {% endfor %}
 </table>
+
+<div class="paginator">
+    {% if not users.number == 1 %}
+        <a href="#" class="first_page">first</a>
+    {% endif %}
+    {% if users.has_previous %}
+        <a href="#" class="prev_page">previous</a>
+    {% endif %}
+    {% trans "Page" %} {{ users.number }} {% trans "of" %} {{ users.paginator.num_pages }}
+    {% if users.has_next %}
+        <a href="#" class="next_page">next</a>
+    {% endif %}
+    {% if not users.number == users.paginator.num_pages %}
+        <a href="#" class="last_page">last</a>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
+    {{ block.super }}
     <script type="text/javascript">
-      window.addEvent('domready', function(){
-          $$('#{{ form_id }} input').each(function(input){
-              input.addEvent('change', function(){
-                  $('{{ form_id }}').submit();
-              });
-          });
-          $$('#{{ form_id }} select').each(function(input){
-              input.addEvent('change', function(){
-                  $('{{ form_id }}').submit();
-              });
-          });
+        window.addEvent('domready', function(){
+            var form = $('{{ form_id }}');
+            var page_input = form.getElement('input[name="page"]');
 
-          var toggle_collapse = function(){
-              var item = this.getParent();
-              var lis = item.getElement('ul').getElements('li');
-              if(item.hasClass('collapsed')) {
-                  this.innerHTML = '{% trans "Collapse" %}';
-                  lis.show();
-                  lis.pop().hide();
-              } else {
-                  this.innerHTML = '{% trans "Expand" %}';
-                  lis.splice(0, 3);
-                  lis.hide();
-                  lis.pop().show();
-              }
-              item.toggleClass('collapsed');
-          };
-          $$('#task_main .task_item.toggle_collapse').each(function(item){
-              var toggler = new Element('a', {
-                  'text': 'roflcopter',
-                  'events': {
-                      'click': toggle_collapse
-                  },
-                  'styles': {
-                      'float': 'right'
-                  }
-              });
-              item.insertBefore(toggler, item.getFirst());
-              var elipsis = new Element('li', {
-                  'text': '...'
-              });
-              elipsis.inject(item.getElement('ul'));
-              toggle_collapse.apply(toggler);
-          });
-      });
+            form.getElements('input').each(function(input){
+                input.addEvent('change', function(){
+                    page_input.value = 1;
+                    $('{{ form_id }}').submit();
+                });
+            });
+            form.getElements('select').each(function(input){
+                input.addEvent('change', function(){
+                    page_input.value = 1;
+                    $('{{ form_id }}').submit();
+                });
+            });
+
+            $$('.paginator').each(function(paginator){
+{% if not users.number == 1 %}
+                paginator.getElement('a.first_page').addEvent('click', function(){
+                    page_input.value = 1;
+                    form.submit();
+                });
+{% endif %}
+{% if users.has_previous %}
+                paginator.getElement('a.prev_page').addEvent('click', function(){
+                    page_input.value = parseInt(page_input.value, 10) - 1;
+                    form.submit();
+                });
+{% endif %}
+{% if users.has_next %}
+                paginator.getElement('a.next_page').addEvent('click', function(){
+                    page_input.value = parseInt(page_input.value, 10) + 1;
+                    form.submit();
+                });
+{% endif %}
+{% if not users.number == users.paginator.num_pages %}
+                paginator.getElement('a.last_page').addEvent('click', function(){
+                    page_input.value = {{ users.paginator.num_pages }};
+                    form.submit();
+                });
+{% endif %}
+            });
+        });
     </script>
 {% endblock %}
 

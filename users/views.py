@@ -12,6 +12,7 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import ugettext as _
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -235,10 +236,11 @@ def details(request, user_pk=None):
     })
 
 @user_passes_test(lambda u: u.ecs_profile.internal)
-def administration(request):
+def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
     filter_defaults = {
+        'page': '1',
         'group': '',
         'approval': 'both',
     }
@@ -258,10 +260,23 @@ def administration(request):
     if filterform.cleaned_data['group']:
         users = users.filter(groups=filterform.cleaned_data['group'])
 
-    print filterform.cleaned_data['group']
+
+    paginator = Paginator(users.order_by('username'), limit, allow_empty_first_page=True)
+    try:
+        users = paginator.page(int(filterform.cleaned_data['page']))
+    except EmptyPage, InvalidPage:
+        users = paginator.page(1)
+        filterform.cleaned_data['page'] = 1
+        filterform = AdministrationFilterForm(filterform.cleaned_data)
+        filterform.is_valid()
+
+    userfilter = filterform.cleaned_data
+    userfilter['group'] = userfilter['group'].pk if userfilter['group'] else ''
+    usersettings.useradministration_filter = userfilter
+    usersettings.save()
 
     return render(request, 'users/administration.html', {
-        'users': users.order_by('username'),
+        'users': users,
         'filterform': filterform,
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
     })

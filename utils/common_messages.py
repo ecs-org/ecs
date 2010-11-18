@@ -31,7 +31,7 @@ def send_submission_creation(sf, registered_recipients, username='root'):
 def send_submission_invitation(sf, unregistered_recipients, username='root'):
     nr = sf.submission.get_ec_number_display()
     text = _(u'The study EC-Nr. %s was created.\n' % nr )
-    url = reverse('ecs.core.views.register')
+    url = reverse('ecs.users.views.register')
     text += _(u'Please register <a href="#" onclick="window.parent.location.href=\'%s\';">here</a> to view the study.' % url )
     subject = _(u'New study EC-Nr. %s' % nr )
     send_submission_message(sf.submission, subject, text, unregistered_recipients, username=username)

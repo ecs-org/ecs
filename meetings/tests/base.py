@@ -84,5 +84,51 @@ class MeetingModelTest(EcsTestCase):
         self.failUnlessEqual(metrics.waiting_time_max, timedelta(hours=6))
         self.failUnlessEqual(metrics.waiting_time_variance, timedelta(hours=math.sqrt(4.75)))
         
-        self.failUnlessEqual(len(connection.queries), query_count)        
+        self.failUnlessEqual(len(connection.queries), query_count)
+        
+    def test_automatic_meeting_assignment(self):
+        from ecs.core.tests.submissions import create_submission_form
+        from ecs.core.models import Submission
+        s = create_submission_form().submission
+
+        step = timedelta(days=1)
+        start = datetime.now() + step
+        meetings = [Meeting.objects.create(start=start + step * i, title="M%s" % i) for i in range(3)]
+
+        def schedule(i):
+            meetings[i].add_entry(submission=s, duration=timedelta(hours=1))
+            
+        def unschedule(i):
+            meetings[i].timetable_entries.all().delete()
+            
+        def check_next(i):
+            self.assertEqual(Submission.objects.get(pk=s.pk).next_meeting, None if i is None else meetings[i])
+
+        schedule(1)
+        check_next(1)
+
+        schedule(2)
+        check_next(1)
+
+        unschedule(1)
+        check_next(2)
+
+        unschedule(2)
+        check_next(None)
+        
+        schedule(2)
+        check_next(2)
+        
+        schedule(0)
+        check_next(0)
+        
+        schedule(1)
+        check_next(0)
+        
+        schedule(2)
+        check_next(0)
+
+        unschedule(0)
+        check_next(1)
+        
 

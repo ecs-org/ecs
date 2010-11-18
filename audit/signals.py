@@ -28,8 +28,7 @@ def post_save_handler(**kwargs):
     sender = kwargs['sender']
     instance = kwargs['instance']
     user = get_current_user()
-    if not user or user.__class__ == AnonymousUser:
-        # FIXME!
+    if not user or not user.is_authenticated():
         user = User.objects.get(username='root')
 
     sender_path = '.'.join([sender.__module__, sender.__name__])

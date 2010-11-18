@@ -11,7 +11,7 @@ from ecs.utils.pathutils import which
 
 MONTAGE_PATH = which('montage').next()
 GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
-PDF_MAGIC = binascii.a2b_hex('25504446')
+PDF_MAGIC = r"%PDF-"
 
 class Page(object):
     '''
@@ -30,7 +30,12 @@ class Page(object):
         
 def pdf_isvalid(filelike):
     ''' returns True if valid pdf, else False '''
+    
     filelike.seek(0)
+    if filelike.read(len(PDF_MAGIC)) != PDF_MAGIC:
+        return False
+    else:
+        filelike.seek(0)
     parser = PDFParser(filelike)
     doc = PDFDocument()
     parser.set_document(doc)
