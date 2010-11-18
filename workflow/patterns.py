@@ -24,12 +24,11 @@ class Synchronization(FlowController):
             if not expected_inputs:
                 self.progress(*synchronized_tokens)
 
-# TODO: we might need a cancelling discriminator (FMD1)
+
+### nice to have
 #class CancellingDiscriminator(FlowController):
 #    def handle_token(self, token):
 #        pass
-
-### nice to have
 #class ThreadSplit(FlowController):
 #    def handle_token(self, token):
 #        pass
