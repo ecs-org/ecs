@@ -133,6 +133,7 @@ class Submission(models.Model):
         return list(User.objects.filter(email__in=emails))
 
     def get_creation_notification_receivers(self):
+        return [], [] # FIXME: wah!
         sf = self.current_submission_form
         emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
         registered = User.objects.filter(email__in=emails)
@@ -185,7 +186,7 @@ class Submission(models.Model):
             else:
                 year, num = divmod(max_num, 10000)
                 max_num = year * 10000 + max(num, MIN_EC_NUMBER)
-            # XXX: this breaks if there are more than 9999 studies per year
+            # XXX: this breaks if there are more than 9999 studies per year (FMD2)
             self.ec_number = max_num + 1
         return super(Submission, self).save(**kwargs)
         
@@ -209,7 +210,7 @@ class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
-    pdf_document = models.ForeignKey(Document, related_name="submission_form", null=True) # FIXME: make this a OneToOneField
+    pdf_document = models.ForeignKey(Document, related_name="submission_form", null=True) # XXX: make this a OneToOneField (FMD2)
     documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
 
     project_title = models.TextField()
@@ -255,7 +256,6 @@ class SubmissionForm(models.Model):
     invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
     invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
     invoice_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
-    # TODO: invoice_uid_verified_level2 should also have a field who handled the level2 verification.
     
     # 2.1
     project_type_non_reg_drug = models.BooleanField()
@@ -278,7 +278,6 @@ class SubmissionForm(models.Model):
     project_type_psychological_study = models.BooleanField()
     
     # 2.2
-    # TODO: use fixed set of choices ?
     specialism = models.TextField(null=True)
 
     # 2.3
@@ -540,6 +539,7 @@ def attach_to_submissions(user):
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
+    initial = not submission.current_submission_form
 
     if new_sf == submission.current_submission_form:
         old_sf = None
@@ -556,40 +556,28 @@ def _post_submission_form_save(**kwargs):
         submission.insurance_review_required = bool(new_sf.insurance_name)
     submission.save(force_update=True)
     
-    if not old_sf:
-        return
+    if initial:
+        registered, unregistered = submission.get_creation_notification_receivers()
+        send_submission_creation(new_sf, registered)
+        send_submission_invitation(new_sf, unregistered)
 
-    timetable_entries_q = submission.timetable_entries.all().values('pk').query
-    meetings_q = Meeting.objects.filter(timetable_entries__in=timetable_entries_q).values('pk').query
-    assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(meeting__in=meetings_q).values('pk').query
+    if old_sf:
+        timetable_entries_q = submission.timetable_entries.all().values('pk').query
+        meetings_q = Meeting.objects.filter(timetable_entries__in=timetable_entries_q).values('pk').query
+        assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(meeting__in=meetings_q).values('pk').query
 
-                                                                                        # filter for following users:
-    recipients_q = Q(username__in=settings.DIFF_REVIEW_LIST)                            # static reviewer list
-    recipients_q |= Q(meeting_participations__entry__in=timetable_entries_q)            # assigned to the top
-    recipients_q |= Q(assigned_medical_categories__in=assigned_medical_categories_q)    # assigned for medical category
-    recipients_q |= Q(email__in=(old_sf.sponsor_email, new_sf.sponsor_email,))          # sponsors
+                                                                                            # filter for following users:
+        recipients_q = Q(username__in=settings.DIFF_REVIEW_LIST)                            # static reviewer list
+        recipients_q |= Q(meeting_participations__entry__in=timetable_entries_q)            # assigned to the top
+        recipients_q |= Q(assigned_medical_categories__in=assigned_medical_categories_q)    # assigned for medical category
+        recipients_q |= Q(email__in=(old_sf.sponsor_email, new_sf.sponsor_email,))          # sponsors
 
-    recipients = list(User.objects.filter(recipients_q).distinct())
+        recipients = list(User.objects.filter(recipients_q).distinct())
 
-    send_submission_change(old_sf, new_sf, recipients);
+        send_submission_change(old_sf, new_sf, recipients);
 
-# FIXME: why do we have two signal handlers for SubmissionForm post_save ?
-def _post_submission_form_create(**kwargs):
-    new_sf = kwargs['instance']
-       
-    # no previous form -> not an edit -> creation
-    if new_sf.submission.current_submission_form:
-        return
-    
-    new_sf.submission.current_submission_form = new_sf
-    new_sf.submission.save(force_update=True)
-
-    registered, unregistered = new_sf.get_creation_notification_receivers()
-    send_submission_creation(new_sf, registered)
-    send_submission_invitation(new_sf, unregistered)
-    
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
-post_save.connect(_post_submission_form_create, sender=SubmissionForm)
+
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
