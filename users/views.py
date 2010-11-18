@@ -270,7 +270,9 @@ def administration(request, limit=20):
         filterform = AdministrationFilterForm(filterform.cleaned_data)
         filterform.is_valid()
 
-    usersettings.useradministration_filter = filterform.cleaned_data
+    userfilter = filterform.cleaned_data
+    userfilter['group'] = userfilter['group'].pk if userfilter['group'] else ''
+    usersettings.useradministration_filter = userfilter
     usersettings.save()
 
     return render(request, 'users/administration.html', {
