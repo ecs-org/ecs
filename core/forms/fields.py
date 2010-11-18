@@ -38,16 +38,6 @@ class TimedeltaField(forms.CharField):
         except ValueError:
             raise ValidationError(self.error_messages['invalid'])
 
-class InvestigatorChoiceMixin(object):
-    def __init__(self, **kwargs):
-        kwargs.setdefault('queryset', Investigator.objects.order_by('contact_last_name', 'contact_first_name'))
-        super(InvestigatorChoiceMixin, self).__init__(**kwargs)
-
-    def label_from_instance(self, obj):
-        return u"%s (%s)" % (obj.contact_last_name, obj.ethics_commission.name) # FIXME: use the full contact name
-
-class InvestigatorChoiceField(InvestigatorChoiceMixin, forms.ModelChoiceField): pass
-class InvestigatorMultipleChoiceField(InvestigatorChoiceMixin, forms.ModelMultipleChoiceField): pass
 
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):
