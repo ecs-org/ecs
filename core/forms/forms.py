@@ -13,7 +13,7 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
-from ecs.core.forms.fields import DateField, NullBooleanField, InvestigatorChoiceField, InvestigatorMultipleChoiceField, MultiselectWidget
+from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 
 def _unpickle(f, args, kwargs):

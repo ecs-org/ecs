@@ -18,9 +18,9 @@ class DocumentHighlighter(Highlighter):
 
 
 def download_document(request, document_pk=None):
+    # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
     doc = get_object_or_404(Document, pk=document_pk)
     filename = doc.get_filename()
-    # fixme: authorization: is the user authorized to see dokument pk
     
     if (not doc.allow_download) or (doc.branding not in [c[0] for c in C_BRANDING_CHOICES]):
         return HttpResponseForbidden()

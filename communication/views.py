@@ -42,8 +42,9 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None)
         thread = None
         if task_pk is not None:
             task = get_object_or_404(Task, pk=task_pk)
-            # FIXME: filter by contenttype
-            submission = task.data
+            data = task.data
+            if isinstance(data, Submission):
+                submission = data
 
     if request.method == 'POST' and form.is_valid():
         if not thread:
@@ -72,21 +73,9 @@ def read_thread(request, thread_pk=None):
     if msg.unread and msg.receiver == request.user:
         msg.unread = False
         msg.save()
-    qs = thread.messages.order_by('-timestamp')
-    try:
-        page_num = int(request.GET.get('p', 1))
-    except ValueError:
-        page_num = 1
-    paginator = Paginator(qs, 1000) # FIXME: do we really need pagination?
-    try:
-        page = paginator.page(page_num)
-    except EmptyPage:
-        page_num = paginator.num_pages
-        page = paginator.page(page_num)
-
     return render(request, 'communication/read.html', {
         'thread': thread,
-        'page': page,
+        'message_list': thread.messages.order_by('-timestamp'),
     })
 
 def bump_message(request, message_pk=None):

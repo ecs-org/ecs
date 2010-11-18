@@ -34,7 +34,7 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
             gpgutils.encrypt_sign(doc.file.path, encrypted_name,
                 settings.STORAGE_ENCRYPT ['gpghome'], settings.STORAGE_ENCRYPT ["owner"])
         except IOError as exceptobj:
-            logger.error("Error, can't encrypt document stored at %s with uuid %s as %s. Exception was %r"  % (doc.file.path, doc.uuid_document, encrypted_name, exceptobj))
+            logger.error("Error, can't encrypt document stored at %s with uuid %s as %r. Exception was %r"  % (doc.file.path, doc.uuid_document, encrypted_name, exceptobj))
         else:
             try:
                 encrypted = open(encrypted_name, "rb")

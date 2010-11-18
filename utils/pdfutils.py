@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os, subprocess, tempfile, binascii
+import os, subprocess, tempfile, binascii, logging
 
 from django.conf import settings
 from django.template import Context, loader
 from pdfminer.pdfparser import PDFParser, PDFDocument
+from pdfminer.pdftypes import PDFException
 
 import ecs.utils.killableprocess 
 from ecs.utils.pathutils import which
@@ -12,6 +13,7 @@ from ecs.utils.pathutils import which
 MONTAGE_PATH = which('montage').next()
 GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
 PDF_MAGIC = r"%PDF-"
+
 
 class Page(object):
     '''
@@ -29,22 +31,31 @@ class Page(object):
 
         
 def pdf_isvalid(filelike):
-    ''' returns True if valid pdf, else False '''
+    ''' returns True if valid pdf, else False
+    @param filelike: filelike object, seekable
+    '''
+    logger = logging.getLogger()
+    isvalid = False    
+    filelike.seek(0)  
     
-    filelike.seek(0)
     if filelike.read(len(PDF_MAGIC)) != PDF_MAGIC:
         return False
     else:
         filelike.seek(0)
-    parser = PDFParser(filelike)
-    doc = PDFDocument()
-    parser.set_document(doc)
-    doc.set_parser(parser)
-    doc.initialize('')
-    if not doc.is_extractable:
-        return False
+    try:
+        parser = PDFParser(filelike)
+        doc = PDFDocument()
+        parser.set_document(doc)
+        doc.set_parser(parser)
+        doc.initialize('')
+        if doc.is_extractable:
+            isvalid = True
+    except PDFException as excobj:
+        logger.warning("pdf has valid header but, still not valid pdf, exception was %r" %(excobj))
+        isvalid = False
+            
     filelike.seek(0)
-    return True
+    return isvalid
     
     
 def pdf_page_count(filelike):
@@ -118,6 +129,7 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
 def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):
     ''' renders a pdf to multiple png pictures placed in render_dirname
     @return: iterator yielding tuples of Page(id, tiles_x, tiles_y, width, pagenr), filelike
+    @raise IOError: ghostscript/montage conversion error 
     @attention: you should close returned filelike objects if they have a .close() method after usage
     '''
     margin_x = 0

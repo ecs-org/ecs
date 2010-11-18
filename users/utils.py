@@ -10,8 +10,6 @@ def get_current_user():
         return current_user_store.user
     else:
         return None
-        # FIXME: what do we return during testing or management commands? Do we really query the user table every time?
-        #return User.objects.get(username='root')
         
 class sudo(object):
     def __init__(self, user=None):

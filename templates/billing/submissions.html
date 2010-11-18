@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.billing.views.reset_submissions %}">reset</a>
+    <a href="{% url ecs.billing.views.reset_submissions %}">reset</a> {# FIXME: remove in production #}
     <form action="" method="post">
     {% for submission in submissions %}
         <div>

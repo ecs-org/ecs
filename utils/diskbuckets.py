@@ -28,7 +28,6 @@ class DiskBuckets(object):
             path = self._generate_path(identifier)
             bucketdir = os.path.dirname(path)
             if not os.path.isdir(bucketdir):
-                print ("bucketdir: %s, path: %s" % (bucketdir, path))
                 os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
 
             if hasattr(filelike, "read"):

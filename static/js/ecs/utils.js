@@ -262,7 +262,7 @@ ecs.setupForms = function(){
         });
     }
 
-    /* FIXME: cleanup the following code */
+    /* XXX: cleanup the following code (FMD2) */
     $$('form.main').getElements('input[type=submit].hidden').each(function(button){
         button.setStyle('display', 'none');
     });

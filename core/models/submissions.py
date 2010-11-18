@@ -62,11 +62,10 @@ class SubmissionQuerySet(models.query.QuerySet):
 
         return q.distinct()
         
+        
 class SubmissionManager(AuthorizationManager):
-    def get_query_set(self):
-        qs = super(SubmissionManager, self).get_query_set()
-        qs.__class__ = SubmissionQuerySet
-        return qs
+    def get_base_query_set(self):
+        return SubmissionQuerySet(self.model).distinct()
         
     def amg(self):
         return self.all().amg()

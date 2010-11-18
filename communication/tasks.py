@@ -10,4 +10,4 @@ def update_smtp_delivery(msgid, state, **kwargs):
     try:
         Message.objects.get(rawmsg_msgid = msgid).update(smtp_delivery_state = state)        
     except Exception as exc:
-        logger.error("could not update status of message id %s, exception was %s" % (msgid, str(exc)))
+        logger.error("could not update status of message id %s, exception was %r" % (msgid, exc))

@@ -143,7 +143,7 @@ def unlock_checklist_review(sender, **kwargs):
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance.
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD2)
 class ExternalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
@@ -179,7 +179,7 @@ class AdditionalReviewSplit(Generic):
                 tokens.append(token)
         return token
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance.
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD2)
 class AdditionalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
