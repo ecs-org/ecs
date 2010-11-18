@@ -16,11 +16,20 @@
         <th title="{% trans "Unapproved users may not be able to sumit studies" %}">{% trans "Approval" %}</th>
         <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
         <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
-        <th></th>
     </tr>
     {% for profile_user in users %}
         <tr>
-            <td>{{ profile_user }}</td>
+            <td>
+                <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
+                    {% if not profile_user.first_name and not profile_user.last_name %}
+                        {{ profile_user }}
+                    {% else %}
+                        {% if profile_user.ecs_profile.gender == 'f' %}{% trans "Ms." %}{% endif %}
+                        {% if profile_user.ecs_profile.gender == 'm' %}{% trans "Mr." %}{% endif %}
+                        {{ profile_user.ecs_profile.title }} {{ profile_user.first_name }} {{ profile_user.last_name }}
+                    {% endif %}
+                </a>
+            </td>
             <td>
                 {% if user.ecs_profile.approved_by_office %}
                     <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Revoke Approval" %}</a>
@@ -41,9 +50,6 @@
                 {% else %}
                     <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Activate" %}</a>
                 {% endif %}
-            </td>
-            <td>
-                <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">{% trans "Details" %}</a>
             </td>
         </tr>
     {% empty %}

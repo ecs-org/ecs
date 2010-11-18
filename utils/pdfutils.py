@@ -3,6 +3,7 @@
 import os, subprocess, tempfile, binascii
 
 from django.conf import settings
+from django.template import Context, loader
 from pdfminer.pdfparser import PDFParser, PDFDocument
 
 import ecs.utils.killableprocess 
