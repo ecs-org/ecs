@@ -36,8 +36,6 @@ class ThreadWithExc(threading.Thread):
                 self._thread_id = tid
                 return tid
 
-        # TODO : in python 2.6, there's a simpler way to do : self.ident ...
-
         raise AssertionError("could not determine the thread's id")
 
     def raiseExc(self, exctype):
