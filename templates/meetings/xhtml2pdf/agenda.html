@@ -17,10 +17,14 @@
         <span style="font-weight:bold;">#{{ entry }}</span>
         {% if entry.submission %}
             <span style="font-weight:bold;">EK Nr.</span>
-                {{ entry.submission|ec_number }}<br />
+                {{ entry.submission.get_ec_number_display }}<br />
             <span style="font-weight:bold;">Antragsteller:</span>
-                {{ entry.submission.current_submission_form.submitter_name }}<br />
-            <span style="font-weight:bold;">Institut:</span>
+                {% if form.submitter %}
+                    {{ entry.submission.current_submission_form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
+                {% else %}
+                    {{ entry.submission.current_submission_form.submitter_contact }}
+                {% endif %}
+            <span style="font-weight:bold;">Einreichende Institution:</span>
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
             <span style="font-weight:bold;">Projekttitel:</span>
                 {{ entry.submission.project_title }}<br />
