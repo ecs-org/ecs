@@ -24,6 +24,10 @@ from uuid import uuid4
 
 votesDepot = VoteDepot();
 
+def vote_show(request, meeting_pk=None, vote_pk=None):
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    return render(request, 'db/meetings/xhtml2pdf/vote.html', vote_context(vote))
+
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.timetable_entries.all()
@@ -87,12 +91,6 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     context = vote_context(vote)
     pdf = render_pdf(request, pdf_template, context)
     return pdf_response(pdf, filename=pdf_name)
-
-
-def vote_publish(request, meeting_pk=None, vote_pk=None):
-    vote = get_object_or_404(Vote, pk=vote_pk)
-    print 'vote_publish "%s"' % (vote_pk)
-    return render(request, 'meetings/votes_publishing.html', vote_context(vote))
 
 def vote_sign(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
