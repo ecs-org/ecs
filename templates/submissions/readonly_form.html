@@ -34,7 +34,7 @@
                 <li>
                     <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
                 </li>
-                {% if settings.DEBUG %}
+                {% if debug %}
                     <li>
                         <a href="#developer_tab">{% trans 'Developer' %}</a>
                     </li>
@@ -111,7 +111,7 @@
     <div id="involved_parties_tab">
         {% include 'submissions/tabs/involved_parties.html' %}
     </div>
-    {% if settings.DEBUG %}
+    {% if debug %}
         <div id="developer_tab">
             {% include 'submissions/tabs/developer.html' %}
         </div>
