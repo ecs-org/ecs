@@ -22,10 +22,9 @@
             {% endif %}
         {% endwith %}
     </li>
-{% endfor %}
-{% if not submissions.object_list|length %}
+{% empty %}
     <li><em>{% trans "No Submissions." %}</em></li>
-{% endif %}
+{% endfor %}
 </ol>
 
 <div class="paginator">
