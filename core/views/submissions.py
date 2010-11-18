@@ -20,6 +20,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
+from ecs.utils.decorators import developer
 from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.meetings.models import Meeting
 
@@ -412,7 +413,7 @@ def assigned_submission_forms(request):
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
-# FIXME: for testing purposes only, remove this in the release (FMD2)
+@developer
 def start_workflow(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     from ecs.workflow.models import Graph

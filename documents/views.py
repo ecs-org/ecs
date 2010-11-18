@@ -30,7 +30,7 @@ def download_document(request, document_pk=None):
     elif doc.branding == "b":
         response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, None))
     elif doc.branding == "p":
-        personalization = doc.add_personalization()
+        personalization = doc.add_personalization(request.user)
         branding = personalization.id
         response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, branding))
     else:

@@ -11,6 +11,7 @@ from django.db.models import Count
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.utils.decorators import developer
 from ecs.users.utils import user_flag_required
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
@@ -45,7 +46,9 @@ def upcoming_meetings(request):
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__lt=datetime.datetime.now()))
 
+@developer
 def schedule_submission(request, submission_pk=None):
+    """ Developer: this will happen automatically """
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = SubmissionSchedulingForm(request.POST or None)
     if form.is_valid():
@@ -58,8 +61,10 @@ def schedule_submission(request, submission_pk=None):
         'form': form,
     })
 
+@developer
 @user_flag_required('executive_board_member')
 def reschedule_submission(request, submission_pk=None):
+    """ Developer: this will happen automatically """
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = SubmissionReschedulingForm(request.POST or None, submission=submission)
     if form.is_valid():

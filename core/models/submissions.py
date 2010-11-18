@@ -452,6 +452,9 @@ class SubmissionForm(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
     
+    def get_filename_slice(self):
+        return self.submission.get_ec_number_display(separator='_')
+
     @property
     def multicentric(self):
         return self.investigators.count() > 1
