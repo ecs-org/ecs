@@ -132,7 +132,7 @@ def fb_me2(pair, me2):
         s = others_de.get((2, me2, type), u'Tsk, tsk .. (%s, %s, %s)' % (count, me2, type))
         if me2 == 'me2':
             count += 1
-            # XXX: Add one to count, because user and other users voted for it, so add one for the initial user
+            # Add one to count, because user and other users voted for it, so add one for the initial user
         return s % count
 
 

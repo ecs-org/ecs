@@ -36,7 +36,6 @@
         {% for tab, fieldsets in tabs %}
             <div id="tabs-{{ forloop.counter }}" class="tab">
                 {% ifequal tab "Unterlagen" %}
-                    {# FIXME (FMD2) #}
                     <div class="field">
                         {% include "documents/upload_form.html" %}
                     </div>
