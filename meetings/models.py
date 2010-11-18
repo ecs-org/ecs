@@ -295,7 +295,7 @@ class TimetableEntry(models.Model):
     def _get_index(self):
         return self.timetable_index
         
-    # XXX: @transaction.???
+    # XXX: for bonuspoints, wrap this with a savepoint (FMD2)
     def _set_index(self, index):
         if index < 0 or index >= len(self.meeting):
             raise IndexError()
@@ -408,8 +408,16 @@ class TimetableEntry(models.Model):
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+    if entry.submission:
+        entry.submission.update_next_meeting()
+
+def _timetable_entry_post_save(sender, **kwargs):
+    entry = kwargs['instance']
+    if entry.submission:
+        entry.submission.update_next_meeting()
 
 post_delete.connect(_timetable_entry_post_delete, sender=TimetableEntry)
+post_save.connect(_timetable_entry_post_save, sender=TimetableEntry)
 
 class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')

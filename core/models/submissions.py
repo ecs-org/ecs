@@ -115,7 +115,7 @@ class Submission(models.Model):
     
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
-    next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions') # FIXME: this has to be updated dynamically to be useful (FMD1)
+    next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions')
     
     objects = SubmissionManager()
 
@@ -192,6 +192,16 @@ class Submission(models.Model):
         
     def __unicode__(self):
         return self.get_ec_number_display()
+        
+    def update_next_meeting(self):
+        next = self.meetings.filter(start__gt=datetime.datetime.now()).order_by('start')[:1]
+        if next:
+            if next[0].id != self.next_meeting_id:
+                self.next_meeting = next[0]
+                self.save()
+        elif self.next_meeting_id:
+            self.next_meeting = None
+            self.save()
         
     class Meta:
         app_label = 'core'
