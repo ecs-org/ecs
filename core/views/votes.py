@@ -5,7 +5,8 @@ import urllib
 import urllib2
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse,\
+    Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 
@@ -154,6 +155,8 @@ def vote_sign_receive_landing(request,  meeting_pk=None, vote_pk=None, jsessioni
 @forceauth.exempt
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print 'vote_sign_receive vote "%s"' % (vote_pk)
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    
     if request.REQUEST.has_key('pdf-url') and request.REQUEST.has_key('pdf-id') and request.REQUEST.has_key('num-bytes') and request.REQUEST.has_key('pdfas-session-id'):
         pdf_url = request.REQUEST['pdf-url']
         pdf_id = request.REQUEST['pdf-id']
@@ -172,12 +175,24 @@ def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
          
         d = datetime.datetime.now()
         doctype = DocumentType.objects.create(name="Votum", identifier="votes")
-        document = Document.objects.create(uuid_document=votedoc["uuid"], doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
+        document = Document.objects.create(uuid_document=votedoc["uuid"], parent_object=vote, doctype=doctype, file=File(t_pdfas), original_file_name=votedoc["name"], date=d)
         t_pdfas.close()
         os.remove(t_pdfas.name)
         
         return HttpResponseRedirect(reverse('ecs.pdfviewer.views.show', kwargs={'document_pk': document.pk}))
     return HttpResponse('vote_sign__receive: got [%s]' % request)
+
+def download_signed_vote(request, meeting_pk=None, vote_pk=None):
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    
+    if vote.signed_at is None:
+        raise Http404('Vote has not been signed yet: %s' % (vote_pk))
+        
+    signed_vote_doc = Document.objects.get(parent_object=vote)
+    if signed_vote_doc is None:
+        raise Http404('No signed document for vote %s available' % (vote_pk))
+    
+    return pdf_response(signed_vote_doc.file.read(), filename=signed_vote_doc.original_file_name)
 
 @csrf_exempt
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
