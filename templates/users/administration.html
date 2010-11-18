@@ -74,6 +74,22 @@
         <tr><td colspan="4"><em>{% trans "No Users." %}</em></td></tr>
     {% endfor %}
 </table>
+
+<div class="paginator">
+    {% if not users.number == 1 %}
+        <a href="#" class="first_page">first</a>
+    {% endif %}
+    {% if users.has_previous %}
+        <a href="#" class="prev_page">previous</a>
+    {% endif %}
+    {% trans "Page" %} {{ users.number }} {% trans "of" %} {{ users.paginator.num_pages }}
+    {% if users.has_next %}
+        <a href="#" class="next_page">next</a>
+    {% endif %}
+    {% if not users.number == users.paginator.num_pages %}
+        <a href="#" class="last_page">last</a>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block jsbottom %}
