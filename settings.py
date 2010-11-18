@@ -261,7 +261,6 @@ MS_SERVER = {
 
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@localhost' 
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
@@ -388,6 +387,8 @@ except ImportError:
 local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
 for override in local_overrides:
     locals()[override].update(locals()['%s_OVERRIDE' % override])
+
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain']) 
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
