@@ -29,8 +29,9 @@ class Vote(models.Model):
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=_(u'comment'))
     is_final = models.BooleanField(default=False)
+    signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
-
+        
     class Meta:
         app_label = 'core'
         
