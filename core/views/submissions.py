@@ -118,7 +118,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist, checklist_form))
     
-    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date
+    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date (FM2)
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
@@ -138,7 +138,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'checklist_reviews': checklist_reviews,
         'befangene_review_form': befangene_review_form,
         'pending_notifications': submission_form.notifications.all(),
-        'answered_notficiations': [], # FIXME (FMD1)
+        'answered_notficiations': [], # TODO: for this the notification answers have to be implemented (FMD2)
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
     }
@@ -388,7 +388,7 @@ def submission_forms(request):
             submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
 
         submissions = Submission.objects.filter(submissions_q)
-        stashed_submission_forms = DocStash.objects.none()  # FIXME: how to search in the docstash? (FMD1)
+        stashed_submission_forms = DocStash.objects.none()  # XXX: we can not search in the docstash (FMD2)
         meetings = [(meeting, submissions.filter(meetings=meeting).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__pk__in=submissions.values('pk').query).order_by('-start').distinct()]
     else:
         submissions = Submission.objects.all()
@@ -411,7 +411,7 @@ def assigned_submission_forms(request):
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
-# FIXME: for testing purposes only (FMD1)
+# FIXME: for testing purposes only, remove this in the release (FMD2)
 def start_workflow(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     from ecs.workflow.models import Graph
