@@ -46,7 +46,7 @@ elif user == "testecs":
         'trusted_sources': ['127.0.0.1', '78.46.72.188'],
     }
 
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL ['authoritative_domain']) 
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL_OVERRIDE['authoritative_domain']) 
 if user in ["shredder", "testecs"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
