@@ -117,11 +117,12 @@ class Document(models.Model):
         return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
-        parent = "parentobject"
         ext = mimetypes.guess_extension(self.mimetype)
-        name = slugify("%s-%s-%s" % (self.doctype and self.doctype.name or 'Unterlage',
-            self.version, self.date.strftime('%Y.%m.%d')))
-        fullname = '%s-%s%s' % (parent, name, ext)
+        name_slices = [self.doctype and self.doctype.name or 'Unterlage', self.version, self.date.strftime('%Y.%m.%d')]
+        if self.parent_object and hasattr(self.parent_object, 'get_filename_slice'):
+            name_slices.insert(0, self.parent_object.get_filename_slice())
+        name = slugify('-'.join(name_slices))
+        fullname = '%s%s' % (name, ext)
         return fullname
 
     def get_personalizations(self, user=None):
