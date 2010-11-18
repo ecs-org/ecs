@@ -15,6 +15,8 @@ class MediaProvider(object):
     '''
     a central document storage and retrieval facility.
     Implements caching layers, rules, storage logic
+    
+    @attention: getBlob, getPage may raise KeyError in case getting of data went wrong
     '''
 
     def __init__(self):
@@ -27,18 +29,25 @@ class MediaProvider(object):
 
 
     def _addBlob(self, identifier, filelike): 
-        ''' xxx: this is a test function and should not be used normal '''
+        ''' this is a test function and should not be used normal '''
         self.vault.add(identifier, filelike)
 
         
     def getBlob(self, identifier, try_diskcache=True, try_vault=True):
+        '''get a blob (unidentified media data)
+        @raise KeyError: if reading the data of the identifier went wrong 
+        '''
         filelike=None
         
         if try_diskcache:
             filelike = self.doc_diskcache.get(identifier)
         
         if not filelike and try_vault and identifier:
-            filelike = self.vault.get(identifier)
+            try:
+                filelike = self.vault.get(identifier)
+            except KeyError as exceptobj:
+                raise 
+            
             if hasattr(filelike, "name"):
                 inputfilename = filelike.name
             else:
@@ -49,10 +58,13 @@ class MediaProvider(object):
                 decrypt_verify(inputfilename, decryptedfilename, settings.STORAGE_DECRYPT["gpghome"],
                     settings.STORAGE_DECRYPT ["owner"])
             except IOError as exceptobj:
-                raise # FIXME: if something fails here (decryption of blob) it should return some error
+                raise KeyError, "could not decrypt blob with identifier %s, exception was %r" % (identifier, exceptobj)
     
-            with open(decryptedfilename, "rb") as decryptedfilelike:
-                self.doc_diskcache.create_or_update(identifier, decryptedfilelike)
+            try:
+                with open(decryptedfilename, "rb") as decryptedfilelike:
+                    self.doc_diskcache.create_or_update(identifier, decryptedfilelike)
+            except IOError as exceptobj:
+                raise KeyError, "could not put decrypted blob with identifier %s into diskcache, exception was %r" %(identifier, exceptobj)
 
             filelike = self.doc_diskcache.get(identifier)
         return filelike
@@ -72,6 +84,7 @@ class MediaProvider(object):
     def getPage(self, page, try_memcache=True, try_diskcache=True):
         ''' get a picture of an page of an document  
         @param page: ecs.utils.pdfutils.Page Object 
+        @raise KeyError: if page could not loaded 
         '''
         filelike = None
         identifier = str(page)
@@ -87,13 +100,15 @@ class MediaProvider(object):
                 if filelike:
                     self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
                 else: 
-                    if not rerender_pages(page.id): # still not here, so we need to recache from scratch
-                        return None
+                    # still not here, so we need to recache from scratch
+                    result = rerender_pages.apply_async(args=[page.id,])
+                    # we wait for an answer, meaning rendering is async, but view waits
+                    success, used_identifier, additional_msg = result.get()
+                    if not success: 
+                        raise KeyError, "could not load page for document %s, error was %s" % (identifier, additional_msg)
                     else:
                         filelike = self.render_diskcache.get(identifier)
-                        if not filelike:
-                            return None
-
+                        
                 self.render_memcache.set(identifier, filelike)
                 filelike.seek(0)
         return filelike
@@ -119,15 +134,14 @@ class VolatileCache(object):
 
     def set(self, identifier, filelike):
         ''' set (create_or_update) data value of identifier) '''
-        # FIXME: self.ns (identifier part which is the current running os user of the process) should be incooperated into memcache identifier to avoidentifier collissions
         if hasattr(filelike,"read"):
-            self.mc.set(identifier, filelike.read())
+            self.mc.set("".join((identifier, self.ns)), filelike.read())
         else:
-            self.mc.set(identifier, filelike)
+            self.mc.set("".join((identifier, self.ns)), filelike)
         
     def get(self, identifier):
         ''' get data value of identifier '''
-        return self.mc.get(identifier)
+        return self.mc.get("".join((identifier, self.ns)))
 
     def entries(self):
         ''' dump all values ''' 

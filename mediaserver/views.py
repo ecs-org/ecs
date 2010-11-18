@@ -16,10 +16,10 @@ def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
     if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
     
-    mediaprovider = MediaProvider()    
-    f = mediaprovider.getPage(Page(uuid, tiles_x, tiles_y, width, pagenr))
-
-    if not f:
+    mediaprovider = MediaProvider()
+    try:
+        f = mediaprovider.getPage(Page(uuid, tiles_x, tiles_y, width, pagenr))
+    except KeyError:
         return HttpResponseNotFound()
     
     data = f.read() if hasattr(f, 'read') else f
@@ -32,15 +32,15 @@ def get_blob(request, uuid, filename, mime_part1="application", mime_part2= "pdf
     if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
     
-    mediaprovider = MediaProvider() 
-    f = mediaprovider.getBlob(uuid)
-
-    if f:
-        response = HttpResponse(f.read(), mimetype=mimetype)
-        response['Content-Disposition'] = 'attachment;filename=%s' % (filename) 
-    else:
+    mediaprovider = MediaProvider()
+    try:
+        f = mediaprovider.getBlob(uuid)
+    except KeyError:
         return HttpResponseNotFound()
 
+    response = HttpResponse(f.read(), mimetype=mimetype)
+    response['Content-Disposition'] = 'attachment;filename=%s' % (filename) 
+    
 
 @forceauth.exempt
 def get_pdf(request, uuid, filename, branding=None):

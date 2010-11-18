@@ -20,7 +20,7 @@ def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs)
         connection = mail.get_connection()
         connection.send_messages([msg])
     except Exception as exc:
-        logger.error(str(exc))
+        logger.error(repr(exc))
         if callback:
             subtask(callback).delay(msgid, "failure")
         raise
