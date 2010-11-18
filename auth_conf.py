@@ -15,7 +15,7 @@ class SubmissionQFactory(authorization.QFactory):
             return self.make_deny_q()
             
         ### default policy: only avaiable for the presenter.
-        q = self.make_q(current_submission_form__presenter=user)
+        q = self.make_q(forms__presenter=user)
 
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(additional_reviewers=user)

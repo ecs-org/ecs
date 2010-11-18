@@ -9,6 +9,7 @@ from ecs.core.models.submissions import Submission
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
+    slug = models.CharField(max_length=50, db_index=True, unique=True)
     min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, _('optional documents')), (1, _('one mandatory document'))))
     multiple = models.BooleanField(default=False)
 
