@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
+import os, sys
 # use different settings if on host ecsdev.ep3.at depending username
 import getpass
 user = getpass.getuser()
@@ -33,32 +33,22 @@ elif user == "testecs":
     
     
 # ecsmail server settings
-# FIXME: we should only change settings but not carbon copy it from settings.py
-ECSMAIL = {
-    'queue_dir': os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-mail"),
-    'log_dir':   os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-log"),
-    'postmaster': 'root', # ecs user where emails from local machine to postmaster will get send, THIS MUST BE A VALID ecs user name !
-    'listen': '0.0.0.0', 
-    'port': 8823,
-    'handlers': ['ecs.communication.mailreceiver'],
-    'trusted_sources': ['127.0.0.1'],
-    'authoritative_domain': 'ecsdev.ep3.at',
+if user == "shredder":
+    ECSMAIL_OVERRIDE = {
+        'port': 8833,
+        'authoritative_domain': 's.ecsdev.ep3.at',
+        'trusted_sources': ['127.0.0.1', '78.46.72.188'],
+    }
+elif user == "testecs":
+    ECSMAIL_OVERRIDE = {
+        'port': 8843,
+        'authoritative_domain': 'test.ecsdev.ep3.at',
+        'trusted_sources': ['127.0.0.1', '78.46.72.188'],
     }
 
-if user == "shredder":
-    ECSMAIL ['port']= 8833
-    ECSMAIL ['authoritative_domain']= 's.ecsdev.ep3.at'
-    ECSMAIL ['trusted_sources'] = ['127.0.0.1', '78.46.72.188']
-elif user == "testecs":
-    ECSMAIL ['port']= 8843
-    ECSMAIL ['authoritative_domain']= 'test.ecsdev.ep3.at'
-    ECSMAIL ['trusted_sources'] = ['127.0.0.1', '78.46.72.189']
-
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL ['authoritative_domain']) 
-if user in ["shredder", "testecs"]:
-    # FIXME: this should only apply if sysargv not test or runserver
+if user in ["shredder", "testecs"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 
 
@@ -73,22 +63,11 @@ elif user == "shredder":
         }
 
 # Mediaserver Server Access
-# FIXME: we should only change settings but not carbon copy it from settings.py
-MS_SERVER = {
-    "doc_diskcache": os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-doccache"),
-    "doc_diskcache_maxsize" : 2**34,
-    "render_diskcache":  os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "ecs-rendercache"),
-    "render_diskcache_maxsize": 2**33,
-    "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
-    "render_memcache_host": "127.0.0.1",    # host= localhost, 
-    "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
-    "render_memcache_maxsize": 2**29,
-    # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-    }
-# on ecsdev we use memcache instead of mockcache
-MS_SERVER ["render_memcache_lib"] = 'memcache'
-MS_SERVER ["render_memcache_host"] = '127.0.0.1'
-MS_SERVER ["render_memcache_host"] = 11211
+MS_SERVER_OVERRIDE = {
+    "render_memcache_lib": 'memcache',
+    "render_memcache_host": '127.0.0.1',
+    "render_memcache_host": 11211,
+}
 
 
 if user == "testecs":

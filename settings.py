@@ -376,21 +376,18 @@ SENTRY_TESTING = True # log exceptions when DEBUG=True
 # use ecsdev settings if on node ecsdev.ep3.at
 if platform.node() == "ecsdev.ep3.at":
     from ecsdev_settings import *
-    
+
+
 # use different settings if local_settings.py exists
 try: 
     from local_settings import *
-    try:
-        import local_settings
-        if hasattr(local_settings, 'DATABASE_ENGINE'):
-            raise ImproperlyConfigured('deprecated setting (DATABASE_ENGINE) found in local_setings, please use DATABASES convention instead')
-        # local_db is the default database, because we can not access the DATABASES dictionary in the local_settings
-        if hasattr(local_settings, 'local_db'):
-            DATABASES['default'] = local_db
-    except ImportError:
-        pass
 except ImportError:
     pass
+
+# apply local overrides
+local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
+for override in local_overrides:
+    locals()[override].update(locals()['%s_OVERRIDE' % override])
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
