@@ -238,7 +238,7 @@ class VotePublication(Activity):
         model = Vote
 
     def get_url(self):
-        return reverse('ecs.core.views.vote_publish', kwargs={'meeting_pk': self.workflow.data.top.meeting.pk, 'vote_pk': self.workflow.data.pk})
+        return None #FIXME
 
     def pre_perform(self, choice):
         vote = self.workflow.data
