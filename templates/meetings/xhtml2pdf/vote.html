@@ -89,13 +89,13 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 {% if submission.current_submission_form.current_published_vote %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Letzte:</span><br />
-    {{ submission.current_submission_form.current_published_vote.text|escape }}
+    {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
 {% endif %}
 
 {% if vote.text %}
     <pdf:spacer height="0.5cm" />
     <span style="font-weight:bold;">Kommentar:</span><br />
-    {{ vote.text|escape}}
+    {{ vote.text|linebreaksbr}}
 {% endif %}
 
 
