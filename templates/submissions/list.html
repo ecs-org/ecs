@@ -1,4 +1,5 @@
 {% extends 'core.html' %}
+{% load i18n %}
 
 {% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
 
@@ -12,7 +13,7 @@ Liste aller Studien
 
 {% if stashed_submission_forms%}
 <div class="overview">
-    <h2>Offene Studien</h2>
+    <h2>{% trans "Unsubmitted Studies" %}</h2>
     <ol class="submission_list">
         {% for docstash in stashed_submission_forms %}
             {% if docstash.current_value %}
@@ -29,7 +30,7 @@ Liste aller Studien
 
 {% if unscheduled_submissions %}
     <div class="overview">
-        <h2>Eingereichte Studien ohne Sitzungszuordnung</h2>
+        <h2>{% trans "Submitted Studies (Unscheduled)" %}</h2>
         {% with unscheduled_submissions as submissions %}
             {% include 'submissions/list.inc' %}
         {% endwith %}
@@ -38,7 +39,9 @@ Liste aller Studien
 
 {% for meeting, submissions in meetings %}
     <div class="overview">
-        <h2>Studien für die Sitzung am {{ meeting.start|date:'d.m.Y' }}{% if meeting.title %} ({{ meeting.title }}){% endif %}</h2>
+        <h2>{% blocktrans with meeting.start|date:'d.m.Y' as start and meeting.title as title %}
+            Studies Scheduled for the Meeting at {{ start }} ({{ title }})
+        {% endblocktrans %}</h2>
         {% include 'submissions/list.inc' %}
     </div>
 {% endfor %}
