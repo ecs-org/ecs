@@ -112,7 +112,7 @@ class GeneticSorter(object):
             elif copies > 1:
                 next_population += [permutation] * int(copies)
 
-        # FIXME: fractional copies should be placed with a proportinal probability
+        # XXX: fractional copies should be placed with a proportinal probability (FMD2)
         next_population += random.sample(wheel, len(self.population) - len(next_population))
         next_population_size = len(next_population)
 
