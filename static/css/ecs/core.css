@@ -101,7 +101,7 @@
   position: absolute;
   right: 20px;
   top: 90px;
-  width: 98px;
+  min-width: 98px;
   background-color: #eeeeee;
   padding: 10px;
   border-radius: 5px;

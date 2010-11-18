@@ -340,6 +340,7 @@ def create_submission_form(request):
         'document_form': document_form,
         'documents': request.docstash.get('documents', []),
         'valid': valid,
+        'submission': request.docstash.get('submission', None)
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
