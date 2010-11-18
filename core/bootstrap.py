@@ -433,7 +433,7 @@ def checklist_questions():
 def testsubmission():
     if Submission.objects.filter(ec_number=20104321):
         return
-    submission = Submission.objects.get_or_create(ec_number=20104321)
+    submission, created = Submission.objects.get_or_create(ec_number=20104321)
     submission.medical_categories.add(MedicalCategory.objects.get(abbrev=u'Päd'))
     
     submission_form_data = {
