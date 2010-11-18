@@ -58,7 +58,7 @@ LANGUAGES = (
     ('de', gettext('German')),
 )
 
-#TODO: this should be default, but to be sure (charset related)
+#this should be default, but to be sure (charset related)
 DEFAULT_CHARSET = "utf-8"
 FILE_CHARSET = "utf-8"
 
@@ -85,7 +85,7 @@ ROOT_URLCONF = 'ecs.urls'
 # use our ecs.utils.ecs_runner as default test runner 
 TEST_RUNNER = 'ecs.utils.ecs_runner.EcsRunner'
 
-# FIXME: clarify which part of the program works with this setting
+# additional fixture search paths. implicitly used by every app the needs fixtures
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 
 # model that gets connected to contrib.auth model
@@ -102,7 +102,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of br
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
-# TODO: what does this setting do
+# dbtemplates adds the current site (settings.SITE_ID) to the database template when it is created by default. You can disable this feature by setting DBTEMPLATES_ADD_DEFAULT_SITE to False.
 #DBTEMPLATES_ADD_DEFAULT_SITE = False
 
 TEMPLATE_LOADERS = (
@@ -278,9 +278,9 @@ ECSMAIL_DEFAULT = {
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
-# FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST
+# FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST (FMD2)
 EMAIL_WHITELIST = {}
-# FIXME: Agenda, Billing is send to whitelist instead of invited people
+# FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
 DIFF_REVIEW_LIST = ('root',)
@@ -334,7 +334,7 @@ CELERY_IMPORTS = (
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',
-    'ecs.mediaserver.tasks', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp
+    'ecs.mediaserver.tasks', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp (FMD2)
     'ecs.ecsmail.tasks',
     'ecs.workflow.tasks',
     'ecs.communication.tasks',
