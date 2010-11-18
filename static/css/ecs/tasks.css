@@ -47,36 +47,53 @@
 }
 #task_form label, #task_form input[type=radio], #task_form textarea, #task_form select {
   float: left;
-  margin: 0 0 5px 10px;
+}
+#task_form input[type=radio], #task_form textarea, #task_form select {
+  margin-bottom: 10px;
+}
+#task_form input[type=radio] {
+  margin: 3px 5px 10px 5px;
 }
 #task_form input[type=submit] {
   position: relative;
   display: block;
 }
-#task_form .task_intend {
+#task_form .task_indent {
   clear: both;
   margin-left: 90px;
   float: left;
   display: block;
   min-height: 30px;
 }
+#task_form .task_indent label {
+  margin-right: 5px;
+}
+#task_form .task_delegate_assign label {
+  margin: 3px 5px 0 10px;
+}
+#task_form .task_delegate_assign select {
+  margin-bottom: 0;
+}
 .show_all {
   margin-bottom: 10px;
 }
 .task_complete, .task_reject, .task_delegate, .task_ask {
-  padding-left: 20px;
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  padding-left: 5px;
 }
 .task_complete {
-  background: url(/static/images/core/tick.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -160px no-repeat;
 }
 .task_reject {
-  background: url(/static/images/core/arrow-curve-180-left.png) no-repeat top left;
+  background: url(/static/images/icons.png) -240px -160px no-repeat;
 }
 .task_delegate {
-  background: url(/static/images/core/arrow-curve.png) no-repeat top left;
+  background: url(/static/images/icons.png) -240px -208px no-repeat;
 }
 .task_ask {
-  background: url(/static/images/core/balloon-white.png) no-repeat top left;
+  background: url(/static/images/icons.png) 0 -224px no-repeat;
 }
 
 /* TaskList */

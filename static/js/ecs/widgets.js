@@ -106,7 +106,7 @@ ecs.widgets.Popup = new Class({
             return false;
         }).bind(this));
         this.headElement.grab(closeButton);
-        this.titleElement = new Element('span', {'class': 'title', html: options.title || ''});
+        this.titleElement = new Element('h4', {'class': 'title', html: options.title || ''});
         this.headElement.grab(this.titleElement);
         this.hide();
         document.body.appendChild(this.popup);
@@ -149,7 +149,7 @@ ecs.widgets.enablePopupHandlers = function(context, widget){
         }
         link.addEvent('click', function(){
             try{
-                var popup = new ecs.widgets.Popup({url: link.href, width: 700, height: 300});
+                var popup = new ecs.widgets.Popup({url: link.href, width: 700, height: 500});
                 if(widget){
                     widget.onPopupSpawned(popup);
                 }
