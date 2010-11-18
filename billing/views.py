@@ -59,14 +59,12 @@ class SimpleXLS(object):
         self.xls.save(f)
 
 
-# FIXME: for testing purposes only (FMD1)
 def reset_submissions(request):
     Submission.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
 
 def submission_billing(request):
-    # FIXME: only bill accepted submissions (FMD1)
-    unbilled_submissions = list(Submission.objects.filter(billed_at=None))
+    unbilled_submissions = list(Submission.objects.filter(billed_at=None, current_submission_form__acknowledged=True))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 
@@ -125,7 +123,6 @@ def submission_billing(request):
     })
     
 
-# FIXME: for testing purposes only (FMD1)
 def reset_external_review_payment(request):
     Submission.objects.update(external_reviewer_billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))

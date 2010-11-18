@@ -19,7 +19,7 @@ def with_docstash_transaction(*args, **kwargs):
             else:
                 docstash = get_object_or_404(DocStash, group=view_name, owner=request.user, key=docstash_key)
                 request.docstash = docstash
-                # XXX: this is a simplification and only sufficient for our single-user application
+                # XXX: this is a simplification and only sufficient for our single-user application (FMD2)
                 version = docstash.current_version 
                 try:
                     docstash.start_transaction(version)
@@ -30,7 +30,7 @@ def with_docstash_transaction(*args, **kwargs):
                     try:
                         docstash.commit_transaction()
                     except ConcurrentModification:
-                        # FIXME: handle concurrent updates (FMD1)
+                        # XXX: concurrent updates are not possible (FMD2)
                         raise
                 except:
                     docstash.rollback_transaction()
