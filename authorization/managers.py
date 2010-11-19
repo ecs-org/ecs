@@ -15,7 +15,8 @@ class AuthorizationManager(models.Manager):
         if not user:
             return qs
         q_factory = self.get_q_factory()
-        return qs.filter(q_factory(user))
+        return qs.filter(q_factory(user)).distinct()
     
     def get_base_query_set(self):
         return super(AuthorizationManager, self).get_query_set()
+        
