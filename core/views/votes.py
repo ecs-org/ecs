@@ -110,17 +110,23 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
 
     t_in.seek(0)
     pdf_barcodestamp(t_in, t_out, document_uuid)
-    t_in.close();
-
+    t_in.close()
+    os.remove(t_in)
+    
     t_out.seek(0)
     pdf_data_stamped = t_out.read()
-    t_out.close();
+    t_out.close()
+    os.remove(t_out)
     
     pdfas_id = votesDepot.deposit(pdf_data_stamped, html_preview, document_uuid, pdf_name)
     return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
 
 
-@forceauth.exempt
+'''
+needs to be directly accessed by pdf-as so it can retrieve the vote pdf to sign, which would cause a CSRF token exception.
+circumventing it by excluding it from the middleware with @csrf_exempt
+'''
+@csrf_exempt
 def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
@@ -128,7 +134,11 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     
     return HttpResponse(votedoc["pdf_data"], mimetype='application/pdf')
 
-@forceauth.exempt
+
+'''
+needs to be directly accessed by pdf-as so it can show a preview of the vote on the applet page, which would cause a CSRF token exception.
+circumventing it by excluding it from the middleware with @csrf_exempt
+'''
 @csrf_exempt
 def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
@@ -137,11 +147,16 @@ def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     
     return HttpResponse(votedoc["html_preview"])
 
+
+'''
+needs to be directly accessed by pdf-as so it can bump ecs to download the signed vote, which would cause a CSRF token exception.
+circumventing it by excluding it from the middleware with @csrf_exempt
+'''
 @csrf_exempt
 def vote_sign_receive_landing(request,  meeting_pk=None, vote_pk=None, jsessionid=None):
     return vote_sign_receive(request, vote_pk, jsessionid);
- 
-@forceauth.exempt
+
+
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     print 'vote_sign_receive vote "%s"' % (vote_pk)
     vote = get_object_or_404(Vote, pk=vote_pk)
@@ -183,6 +198,10 @@ def download_signed_vote(request, meeting_pk=None, vote_pk=None):
     
     return pdf_response(signed_vote_doc.file.read(), filename=signed_vote_doc.original_file_name)
 
+'''
+needs to be directly accessed by pdf-as so it can report errors, which would cause a CSRF token exception.
+circumventing it by excluding it from the middleware with @csrf_exempt
+'''
 @csrf_exempt
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     if request.REQUEST.has_key('pdf-id'):
