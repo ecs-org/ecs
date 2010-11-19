@@ -14,7 +14,6 @@ from ecs.core.models.names import NameField
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
-from ecs.meetings.models import Meeting, AssignedMedicalCategory
 from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 
 MIN_EC_NUMBER = 1000
@@ -547,6 +546,8 @@ def attach_to_submissions(user):
         inv.save()
 
 def _post_submission_form_save(**kwargs):
+    from ecs.meetings.models import Meeting, AssignedMedicalCategory
+
     new_sf = kwargs['instance']
     submission = new_sf.submission
     initial = not submission.current_submission_form
