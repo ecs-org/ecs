@@ -16,6 +16,9 @@
     <form action="" method="post">
     {% for submission in submissions %}
         <div>
+            <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submissions.current_submission_form.pk %}">{{ submission|ec_number }} </a>
+            &nbsp;
+            <a href="{% url ecs.core.views.vote_show meeting_pk='1' vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a>
             <input type="checkbox" name="bill_{{ submission.pk }}" checked="checked" /> {{ submission.project_title }}
             <div><span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})</div>
         </div>
@@ -23,4 +26,3 @@
     <input type="submit">
     </form>
 {% endblock %}
-
