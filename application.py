@@ -183,8 +183,7 @@ django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/t
 django-indexer:inst:all:pypi:django-indexer
 django-paging:inst:all:pypi:django-paging
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
-#pygooglechart:inst:all:pypi:pygooglechart
-pygooglechart:inst:all:pygooglechart
+pygooglechart:inst:all:pypi:pygooglechart
 django-sentry:inst:all:pypi:django-sentry
 
 """
