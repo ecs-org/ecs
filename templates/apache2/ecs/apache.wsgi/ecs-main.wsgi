@@ -12,7 +12,7 @@ sys.stdout = sys.stderr
 prev_sys_path = list(sys.path)
 
 #  source and environment location. 
-appdir = '%(home)s/src/%(appname)s'
+appdir = '%(appdir)s'
 appbasedir = os.path.join(appdir, '..')
 basedir = os.path.join(appdir, '..', '..')
 

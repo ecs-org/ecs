@@ -6,7 +6,7 @@ import getpass
 
 from uuid import uuid4
 from fabric.api import local, env
-from deployment.utils import package_merge, install_upstart, apache_setup
+from deployment.utils import package_merge, install_upstart, apache_setup, write_template
 
 
 # packages needed for the application
@@ -326,6 +326,7 @@ class SetupApplication(object):
         self.dry = dry
         self.hostname = hostname
         self.ip = ip
+        self.appname = 'ecs'
         self.dirname = os.path.dirname(__file__)
         self.username = getpass.getuser()
         self.queuing_password = uuid4().get_hex()
@@ -383,7 +384,18 @@ TEMPLATE_DEBUG = False
         local_settings.close()
     
     def apache_config(self):
-        apache_setup('ecs', use_sudo=self.use_sudo, dry=self.dry, hostname=self.hostname, ip=self.ip)
+        apache_setup(self.appname, use_sudo=self.use_sudo, dry=self.dry, hostname=self.hostname, ip=self.ip)
+        
+    def wsgi_config(self):
+        write_template(os.path.join(self.dirname, "templates", self.appname, "apache.wsgi", "ecs-main.wsgi"),
+            os.path.join(self.dirname, "main.wsgi"), 
+            {'appdir': os.path.join(self.dirname, self.appname), 'appname': self.appname,}
+            )
+        write_template(os.path.join(self.dirname, "templates", self.appname, "apache.wsgi", "ecs-service.wsgi"),
+            os.path.join(self.dirname, "service.wsgi"), 
+            {'appdir': os.path.join(self.dirname, self.appname), 'appname': self.appname,}
+            )
+        
     
     def apache_restart(self):
         pass
@@ -392,7 +404,7 @@ TEMPLATE_DEBUG = False
         pass
     
     def upstart_install(self):
-        install_upstart('ecs', use_sudo=self.use_sudo, dry=self.dry)
+        install_upstart(self.appname, use_sudo=self.use_sudo, dry=self.dry)
     def upstart_stop(self):
         pass
     def upstart_start(self):
@@ -444,7 +456,10 @@ JETTY_PORT=8983
     def massimport(self):
         pass
 
-
+def wsgi_config(appname, use_sudo=True, dry=False, hostname=None, ip=None):
+    s = SetupApplication(use_sudo, dry, hostname, ip)
+    s.wsgi_config(
+                  )
 def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     s = SetupApplication(use_sudo, dry, hostname, ip)
     s.system_setup()
