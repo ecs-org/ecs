@@ -243,7 +243,7 @@ def b2_vote_review(request, submission_form_pk=None):
         v = b2_vote_review_form.save(commit=False)
         v.result = '1'
         v.text = b2_vote_review_form.cleaned_data['text']
-        v.submission = vote.submission
+        v.submission_form = submission_form
         v.save()
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}) + '#vote_review_tab')
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'b2_vote_review_form': b2_vote_review_form, 'b2_vote': vote})
