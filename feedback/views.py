@@ -36,7 +36,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         if user is None:
             return HttpResponse("Error: user is none!")
         
-        if hasattr(request, "original_user"): # TODO: is hack to get original user (and email address) in case of userswitcher 
+        if hasattr(request, "original_user"): # get the original user if the userswitcher is active
             user = request.original_user
             
     m = dict(Feedback.FEEDBACK_TYPES)
@@ -73,7 +73,6 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
                           'absoluteurl': origin,
                           'ecsfeedback_creator': user.email}
                 ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
-                # XXX ugly but works for now
                 feedback = Feedback.init_from_dict(ticket)
                 feedback.save()
                 
@@ -89,7 +88,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             raise ValueError("page is 1 based (why?)")
     except ValueError:
         return HttpResponse("Error: invalid parameter page = '%s'!" % page)
-    page_size = 3  # TODO emphasize parameter
+    page_size = 3  # TODO: use django.core.paginator.Paginator (FMD3)
     
     types = [ x[0] for x in Feedback.FEEDBACK_TYPES ]
     # create display list from database fb records
