@@ -389,11 +389,11 @@ TEMPLATE_DEBUG = False
     def wsgi_config(self):
         write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-main.wsgi"),
             os.path.join(self.dirname, "main.wsgi"), 
-            {'appdir': os.path.join(self.dirname, self.appname), 'appname': self.appname,}
+            {'appdir': os.path.join(self.dirname), 'appname': self.appname,}
             )
         write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-service.wsgi"),
             os.path.join(self.dirname, "service.wsgi"), 
-            {'appdir': os.path.join(self.dirname, self.appname), 'appname': self.appname,}
+            {'appdir': os.path.join(self.dirname), 'appname': self.appname,}
             )
         
     
