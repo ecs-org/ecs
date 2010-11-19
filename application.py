@@ -91,7 +91,8 @@ gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gp
 
 
 # search
-whoosh:inst:all:pypi:whoosh
+# XXX: haystack should be compatible to whoosh>0.4 but it seems not to be
+whoosh:inst:all:pypi:whoosh\<=0.4
 # pysolr uses httplib2 with fallback to httplib
 httplib2:inst:all:pypi:httplib2
 pysolr:inst:all:pypi:pysolr
