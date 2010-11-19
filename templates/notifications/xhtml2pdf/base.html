@@ -29,7 +29,7 @@
     <tr>
       <td>{{ investigator.ethics_commission.name }}</td>
       <td>{{ investigator.submission_form.submission|ec_number }}</td>
-      <td>{{ investigator.submission.date_of_protocol }}<!-- TODO: date_of_vote? (FMD2) -->
+      <td>{{ investigator.submission.current_submission_form.current_published_vote.published_at }}</td>
       <td>{{ investigator.name }}</td>
     </tr>
     {% endfor %}
