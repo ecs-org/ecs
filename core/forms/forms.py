@@ -7,14 +7,16 @@ from django.core.validators import EMPTY_VALUES
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
-from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget
+from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
+from ecs.utils.pdfutils import pdf_isvalid
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -136,6 +138,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         widgets = {
             'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
             'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
+            'sponsor_email': StrippedTextInput(),
+            'invoice_email': StrippedTextInput(),
+            'submitter_email': StrippedTextInput(),
         }
     
     def clean(self):
@@ -184,7 +189,19 @@ class DocumentForm(SimpleDocumentForm):
             del kwargs['document_pks']
         super(DocumentForm, self).__init__(*args, **kwargs)
         self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
-    
+
+    def clean_file(self):
+        file = self.cleaned_data['file']
+        if not file:
+            return
+
+        if not pdf_isvalid(file):
+            file.seek(0)
+            raise ValidationError(_(u'This Document is not a valid PDF document.'))
+
+        file.seek(0)
+        return file
+        
     class Meta:
         model = Document
         exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
@@ -235,6 +252,9 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 
             'contact_gender', 'contact_title', 'contact_first_name', 'contact_last_name',
             'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
+        widgets = {
+            'email': StrippedTextInput(),
+        }
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
