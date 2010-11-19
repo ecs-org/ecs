@@ -307,6 +307,7 @@ def auth_user_developers():
         ('froema', u'Markus', u'Froehlich', 'froema@ep3.at'),
         ('nadia', u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
         ('max', u' Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
+        ('peter.rehak@meduni-graz.at', u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
     )
     
     for dev in developers:
