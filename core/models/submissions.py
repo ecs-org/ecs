@@ -10,14 +10,12 @@ from django.conf import settings
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
 
-from ecs.meetings.models import TimetableEntry, AssignedMedicalCategory
-from ecs.documents.models import Document
-from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
-from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
-from ecs.meetings.models import Meeting
-from ecs.core.models.voting import Vote
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
+from ecs.authorization import AuthorizationManager
+from ecs.documents.models import Document
+from ecs.meetings.models import Meeting, AssignedMedicalCategory
+from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 
 MIN_EC_NUMBER = 1000
 
