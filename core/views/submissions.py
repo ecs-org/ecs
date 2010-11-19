@@ -119,7 +119,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist, checklist_form))
     
-    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date (FMD2)
+    submission_forms = list(submission_form.submission.forms.order_by('-created_at'))
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
@@ -243,7 +243,7 @@ def b2_vote_review(request, submission_form_pk=None):
         v = b2_vote_review_form.save(commit=False)
         v.result = '1'
         v.text = b2_vote_review_form.cleaned_data['text']
-        v.submission = vote.submission
+        v.submission_form = submission_form
         v.save()
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}) + '#vote_review_tab')
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'b2_vote_review_form': b2_vote_review_form, 'b2_vote': vote})

@@ -42,7 +42,8 @@ def is_final(wf):
     
 @guard(model=Vote)
 def is_b2upgrade(wf):
-    return False # FIXME
+    previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
+    return wf.data.activates and previous_vote and previous_vote[0].result == '2'
 
 @guard(model=Submission)
 def is_expedited(wf):
@@ -51,12 +52,12 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def has_recommendation(wf):
-    return False # FIXME
+    return False # FIXME: missing feature (FMD3)
 
 
 @guard(model=Submission)
 def has_accepted_recommendation(wf):
-    return False # FIXME
+    return False # FIXME: missing feature (FMD3)
 
 @guard(model=Submission)
 def needs_external_review(wf):
@@ -111,7 +112,7 @@ class PaperSubmissionReview(Activity):
         model = Submission
         
     def get_url(self):
-        return None # FIXME
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
 
 class ChecklistReview(Activity):
@@ -143,7 +144,7 @@ def unlock_checklist_review(sender, **kwargs):
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD2)
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class ExternalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
@@ -164,7 +165,7 @@ class ExternalReviewInvitation(Activity):
         model = Submission
         
     def get_url(self):
-        return None # FIXME
+        return None # FIXME: missing feature (FMD3)
 
 
 class AdditionalReviewSplit(Generic):
@@ -179,7 +180,7 @@ class AdditionalReviewSplit(Generic):
                 tokens.append(token)
         return token
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD2)
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class AdditionalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
@@ -198,7 +199,7 @@ class VoteRecommendation(Activity):
         model = Submission
 
     def get_url(self):
-        return None # FIXME
+        return None # FIXME: missing feature (FMD3)
 
 
 class VoteRecommendationReview(Activity):
@@ -206,7 +207,7 @@ class VoteRecommendationReview(Activity):
         model = Submission
         
     def get_url(self):
-        return None # FIXME
+        return None # FIXME: missing feature (FMD3)
 
 
 class VoteFinalization(Activity):
@@ -214,7 +215,7 @@ class VoteFinalization(Activity):
         model = Vote
     
     def get_url(self):
-        return None # FIXME
+        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
 
 class VoteReview(Activity):
@@ -236,9 +237,6 @@ class VoteSigning(Activity):
 class VotePublication(Activity):
     class Meta:
         model = Vote
-
-    def get_url(self):
-        return None #FIXME
 
     def pre_perform(self, choice):
         vote = self.workflow.data
