@@ -39,11 +39,19 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
     try:
         algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
         entries, users = meeting.timetable
+        batch_entries = []
+        regular_entries = []
+        for entry in entries:
+            if entry.is_batch_processed:
+                batch_entries.append(entry)
+            else:
+                regular_entries.append(entry)
         f = meeting.create_evaluation_func(_eval_timetable)
-        meeting._apply_permutation(algo(entries, f))
+        meeting._apply_permutation(algo(tuple(regular_entries), f) + tuple(batch_entries))
         retval = True
+    except Exception, e:
+        logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
     finally:
-        meeting.optimization_task_id = None
-        meeting.save()
+        print Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
 
     return retval

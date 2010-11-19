@@ -41,6 +41,7 @@
                     <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
                 </form>
             {% endif %}
+            {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
             {% if not entry.is_break %}
             <span>Teilnehmer: 
                 {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}

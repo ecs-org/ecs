@@ -122,6 +122,10 @@ class Meeting(models.Model):
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         
+    def save(self, **kwargs):
+        print "save meeting, otid=%s" % self.optimization_task_id
+        return super(Meeting, self).save(**kwargs)
+        
     @cached_property
     def duration(self):
         return timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
@@ -344,19 +348,25 @@ class TimetableEntry(models.Model):
 
     @cached_property
     def is_retrospective(self):
+        if not self.submission_id:
+            return False
         return self.submission.retrospective
     
     @cached_property
     def is_thesis(self):
+        if not self.submission_id:
+            return False
         return self.submission.thesis
         
     @cached_property
     def is_expedited(self):
+        if not self.submission_id:
+            return False
         return self.submission.expedited
     
     @property
     def is_batch_processed(self):
-        return self.is_thesis or self.is_expedited or self.is_retrospective
+        return bool(self.submission_id) and (self.is_thesis or self.is_expedited or self.is_retrospective)
         
     @property
     def next(self):

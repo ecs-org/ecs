@@ -168,9 +168,9 @@ def medical_categories(request, meeting_pk=None):
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     if not meeting.optimization_task_id:
-        retval = optimize_timetable_task.delay(meeting_id=meeting.id,algorithm=algorithm)
-        meeting.optimization_task_id = retval.task_id
+        meeting.optimization_task_id = "xxx:fake"
         meeting.save()
+        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm})
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
