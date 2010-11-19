@@ -398,7 +398,7 @@ def auth_ec_staff_users():
     staff_users = ()
     
     for blueprint in blueprints:
-        b, _ = ChecklistBlueprint.objects.get_or_create(name=blueprint['slug'])
+        b, _ = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
         changed = False
         for name, value in blueprint.items():
             if getattr(b, name) != value:
