@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-18 22:28+0100\n"
+"POT-Creation-Date: 2010-11-19 11:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:58
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:79 core/models/submissions.py:127
+#: billing/views.py:79 core/models/submissions.py:124
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -298,7 +298,8 @@ msgstr "Dosis"
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:95
+#: core/paper_forms.py:95 core/tests/submissions.py:354
+#: core/tests/submissions.py:355
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
@@ -326,7 +327,9 @@ msgstr "Vorschläge für Externe Gutachter"
 msgid ""
 "Not necessary for graduate work or retrospective or non-interventional "
 "studies"
-msgstr "Nicht notwendig für Diplomarbeiten oder retrospektive bzw. nicht interventionelle Studien"
+msgstr ""
+"Nicht notwendig für Diplomarbeiten oder retrospektive bzw. nicht "
+"interventionelle Studien"
 
 #: core/paper_forms.py:103 core/paper_forms.py:114
 msgid "sex of contact person"
@@ -420,7 +423,9 @@ msgstr "Leistungsbewertungsprüfung (In-vitro-Diagnostika)"
 #: core/paper_forms.py:138
 msgid ""
 "Non-therapeutic biomedical research involving human subjects (basic research)"
-msgstr "Nicht-therapeutische biomedizinische Forschung am Menschen (Grundlagenforschung)"
+msgstr ""
+"Nicht-therapeutische biomedizinische Forschung am Menschen "
+"(Grundlagenforschung)"
 
 #: core/paper_forms.py:139
 msgid "Genetic survey"
@@ -485,7 +490,8 @@ msgstr "Klinische Phase"
 #: core/paper_forms.py:154
 msgid ""
 "necessarily indicate, in case of medical devices the most appropriate phase"
-msgstr "unbedingt angeben, bei Medizinprodukten die am ehesten zutreffende Phase"
+msgstr ""
+"unbedingt angeben, bei Medizinprodukten die am ehesten zutreffende Phase"
 
 #: core/paper_forms.py:155
 msgid "There are already votes of other ethics commissions."
@@ -530,7 +536,8 @@ msgstr "Sind gebärfähige Frauen einschließbar?"
 #: core/paper_forms.py:164
 msgid ""
 "Duration of participation of the individual test participants in the study"
-msgstr "Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der Studie"
+msgstr ""
+"Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der Studie"
 
 #: core/paper_forms.py:165
 msgid "active phase"
@@ -550,7 +557,9 @@ msgstr "Registrierung in anderen Staaten?"
 
 #: core/paper_forms.py:170
 msgid "Are there already results of clinical trials for the tested drug?"
-msgstr "Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor?"
+msgstr ""
+"Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse "
+"von klinischen Prüfungen vor?"
 
 #: core/paper_forms.py:171
 msgid "3.2.1 Countries in which the tests were conducted"
@@ -562,7 +571,8 @@ msgstr "Phase"
 
 #: core/paper_forms.py:172
 msgid "If studies are cited in several phases, indicate the highest stage."
-msgstr "Wenn Studien in mehreren Phasen angeführt sind, die höchste Phase angeben"
+msgstr ""
+"Wenn Studien in mehreren Phasen angeführt sind, die höchste Phase angeben"
 
 #: core/paper_forms.py:174
 msgid "application type(s)"
@@ -570,7 +580,8 @@ msgstr "Anwendungsart(en)"
 
 #: core/paper_forms.py:175
 msgid "Were the clinical tests made according to GCP guidelines"
-msgstr "Wurde(n), die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt?"
+msgstr ""
+"Wurde(n), die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt?"
 
 #: core/paper_forms.py:176
 msgid "Does a final report exist?"
@@ -580,7 +591,9 @@ msgstr "Liegt ein Abschlußbericht vor?"
 msgid ""
 "If yes, upload the investigator's brochure, relevant data or a report of the "
 "Pharmaceutical Advisory Council using the upload tab"
-msgstr "Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein Gutachten des Arzneimittelbeirates über den Reiter Unterlagen hoch"
+msgstr ""
+"Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein "
+"Gutachten des Arzneimittelbeirates über den Reiter Unterlagen hoch"
 
 #: core/paper_forms.py:177
 msgid "Submit as"
@@ -614,7 +627,9 @@ msgstr "Die Produktbroschüre liegt bei."
 msgid ""
 "What rules or standards have been used for the construction and testing of "
 "the medical product (technical safety)"
-msgstr "Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des Medizinproduktes herangezogen worden (Technische Sicherheit)"
+msgstr ""
+"Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des "
+"Medizinproduktes herangezogen worden (Technische Sicherheit)"
 
 #: core/paper_forms.py:186
 msgid "Any deviations from the above provisions (standards)"
@@ -640,12 +655,15 @@ msgstr "Gültigkeitsdauer"
 msgid ""
 "Additional information on study-related activities and any necessary "
 "deviations from the routine treatment"
-msgstr "Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung"
+msgstr ""
+"Ergänzende Informationen zu studienbezogenen Maßnahmen und alle "
+"erforderlichen Abweichungen von der Routinebehandlung"
 
 #: core/paper_forms.py:197
 msgid ""
 "If original project title is not in German: German translation of the title"
-msgstr "Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels"
+msgstr ""
+"Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels"
 
 #: core/paper_forms.py:197
 msgid "project title (kraut-speak)"
@@ -663,7 +681,9 @@ msgstr "Rechtfertigung, Relevanz, Design, Maßnahmen und Vorgehensweise"
 msgid ""
 "Results of pre-clinical tests or justification for the waiving of pre-"
 "clinical tests"
-msgstr "Ergebnisse der prä-klinischen Tests oder Begründung für den Verzicht auf prä-klinischen Tests"
+msgstr ""
+"Ergebnisse der prä-klinischen Tests oder Begründung für den Verzicht auf prä-"
+"klinischen Tests"
 
 #: core/paper_forms.py:200
 msgid "Primary hypothesis of the study"
@@ -687,7 +707,12 @@ msgid ""
 "knowledge that is to be achieved through the study and its significance, and "
 "possible risks of harm or burdens to the test participants. Add your own "
 "assessment of the benefit / risk ratio."
-msgstr "Identifizieren und beschreiben Sie alle möglicherweise auftretenden Probleme. Beschreiben Sie den mög lichen Wissenszuwachs, der durch die Studie erzielt werden soll und seine Bedeutung, sowie mögliche Risi­ken für Schädigungen oderBelastungen der Prüfungsteilnehmer/innen. Legen Sie Ihre eigene Bewertung des Nutzen/Risiko-Verhältnisses dar"
+msgstr ""
+"Identifizieren und beschreiben Sie alle möglicherweise auftretenden "
+"Probleme. Beschreiben Sie den mög lichen Wissenszuwachs, der durch die "
+"Studie erzielt werden soll und seine Bedeutung, sowie mögliche Risi­ken für "
+"Schädigungen oderBelastungen der Prüfungsteilnehmer/innen. Legen Sie Ihre "
+"eigene Bewertung des Nutzen/Risiko-Verhältnisses dar"
 
 #: core/paper_forms.py:203
 msgid "Justification for the inclusion of persons from protected groups"
@@ -695,7 +720,9 @@ msgstr "Begründung für den Einschluss von Personen aus geschützten Gruppen"
 
 #: core/paper_forms.py:203
 msgid "e.g. Minor, temporary or permanent non-competent person, if applicable"
-msgstr "z.B. Minderjährige, temporär oder permanent nicht-einwilligungsfähige Personen; wenn zutreffend"
+msgstr ""
+"z.B. Minderjährige, temporär oder permanent nicht-einwilligungsfähige "
+"Personen; wenn zutreffend"
 
 #: core/paper_forms.py:204
 msgid "Description of the recruitment process"
@@ -705,33 +732,46 @@ msgstr "Beschreibung des Rekrutierungsverfahrens"
 msgid ""
 "All material to be used, for example Listings including layout must be "
 "enclosed"
-msgstr "alle zur Verwendung bestimmte Materialien, z.B. Inserate inkl. Layout müssen beigelegt werden"
+msgstr ""
+"alle zur Verwendung bestimmte Materialien, z.B. Inserate inkl. Layout müssen "
+"beigelegt werden"
 
 #: core/paper_forms.py:205
 msgid ""
 "Approach at test center(s), for informing and  obtaining an informed consent "
 "of candidates, or parents or legal representatives, if applicable"
-msgstr "Vorgehensweise an der/den Prüfstelle(n), zur Information und Erlangung der informierten Einwil ligung von Prüfungsteilnehmer/inne/n, bzw. Eltern oder gesetzlichen Vertreter/inne/n, wenn zu-treffend"
+msgstr ""
+"Vorgehensweise an der/den Prüfstelle(n), zur Information und Erlangung der "
+"informierten Einwil ligung von Prüfungsteilnehmer/inne/n, bzw. Eltern oder "
+"gesetzlichen Vertreter/inne/n, wenn zu-treffend"
 
 #: core/paper_forms.py:205
 msgid ""
 "who will inform and when, need for legal representation, witnesses, etc."
-msgstr "wer wird informieren und wann, Erfordernis für gesetzliche Vertretung, Zeugen, etc."
+msgstr ""
+"wer wird informieren und wann, Erfordernis für gesetzliche Vertretung, "
+"Zeugen, etc."
 
 #: core/paper_forms.py:206
 msgid ""
 "Risk assessment, foreseeable risks of treatment and procedures to be used"
-msgstr "Risikoabschätzung, vorhersehbare Risiken der Behandlung und sonstiger Verfahren, die verwendet werden sollen"
+msgstr ""
+"Risikoabschätzung, vorhersehbare Risiken der Behandlung und sonstiger "
+"Verfahren, die verwendet werden sollen"
 
 #: core/paper_forms.py:206
 msgid ""
 "including pain, discomfort, invasion of personal integrity and measures to "
 "prevent and / or supply of unexpected / undesirable events"
-msgstr "inkl. Schmerzen, Unannehmlichkeiten, Verletzung der persönlichen Integrität und Maßnah men zur Vermeidung und/oder Versorgung von unvorhergesehenen / unerwünschten Ereignissen"
+msgstr ""
+"inkl. Schmerzen, Unannehmlichkeiten, Verletzung der persönlichen Integrität "
+"und Maßnah men zur Vermeidung und/oder Versorgung von unvorhergesehenen / "
+"unerwünschten Ereignissen"
 
 #: core/paper_forms.py:207
 msgid "Expected benefits for the included test participants"
-msgstr "Voraussichtliche Vorteile für die eingeschlossenen Prüfungsteilnehmer/innen"
+msgstr ""
+"Voraussichtliche Vorteile für die eingeschlossenen Prüfungsteilnehmer/innen"
 
 #: core/paper_forms.py:208
 msgid "Relation between subject and investigator"
@@ -739,36 +779,50 @@ msgstr "Relation zwischen Prüfungsteilnehmer/in und Prüfer/in"
 
 #: core/paper_forms.py:208
 msgid "e.g. Patient - doctor, student - teacher, employee - employer, etc."
-msgstr "z.B. Patient/in - Ärztin/Arzt, Student/in - Lehrer/in, Dienstnehmer/in - Dienstgeber/in, etc."
+msgstr ""
+"z.B. Patient/in - Ärztin/Arzt, Student/in - Lehrer/in, Dienstnehmer/in - "
+"Dienstgeber/in, etc."
 
 #: core/paper_forms.py:209
 msgid ""
 "Procedures on the site, to determine whether a person at a time to be "
 "included in another study, participate or whether a required period of time "
 "has elapsed since a participation in another study"
-msgstr "Verfahren an der/den Prüfstelle(n), zur Feststellung, ob eine einzuschließende Person gleichzeitig an einer anderen Studie teilnimmt oder ob eine erforderliche Zeitspanne seit einer Teilnahme an einer anderen Studie verstrichen ist"
+msgstr ""
+"Verfahren an der/den Prüfstelle(n), zur Feststellung, ob eine "
+"einzuschließende Person gleichzeitig an einer anderen Studie teilnimmt oder "
+"ob eine erforderliche Zeitspanne seit einer Teilnahme an einer anderen "
+"Studie verstrichen ist"
 
 #: core/paper_forms.py:209
 msgid ""
 "Of particular importance when healthy volunteers are included in "
 "pharmacological studies."
-msgstr "von besonderer Bedeutung, wenn gesunde Proband/inn/en in pharmakologische Studien eingeschlossen werden"
+msgstr ""
+"von besonderer Bedeutung, wenn gesunde Proband/inn/en in pharmakologische "
+"Studien eingeschlossen werden"
 
 #: core/paper_forms.py:210
 msgid "Methods to identify, record, and report undesirable effects"
-msgstr "Methoden, um unerwünschte Effekte ausfindig zu machen, sie aufzuzeichnen und zu berichten"
+msgstr ""
+"Methoden, um unerwünschte Effekte ausfindig zu machen, sie aufzuzeichnen und "
+"zu berichten"
 
 #: core/paper_forms.py:210
 msgid ""
 "Describe when, by whom and how, for example \"free\" interviews and/or "
 "interviews using lists"
-msgstr "Beschreiben Sie wann, von wem und wie, z.B. freies Befragen und/oder an Hand von Listen"
+msgstr ""
+"Beschreiben Sie wann, von wem und wie, z.B. freies Befragen und/oder an Hand "
+"von Listen"
 
 #: core/paper_forms.py:211
 msgid ""
 "Statistical considerations and reasons for the number of people who should "
 "be included in the study"
-msgstr "Statistische Überlegungen und Gründe für die Anzahl der Personen, die in die Studie eingeschlossen werden sollen"
+msgstr ""
+"Statistische Überlegungen und Gründe für die Anzahl der Personen, die in die "
+"Studie eingeschlossen werden sollen"
 
 #: core/paper_forms.py:211 core/paper_forms.py:212
 msgid "additional information on section 8, if necessary"
@@ -778,13 +832,17 @@ msgstr "ergänzende Informationen zu Punkt 8, wenn erforderlich"
 msgid ""
 "Methods used to protect the confidentiality of the data collected, the "
 "source documents and the samples"
-msgstr "Verwendete Verfahren zum Schutz der Vertraulichkeit der erhobenen Daten, der Quell dokumente und von Proben"
+msgstr ""
+"Verwendete Verfahren zum Schutz der Vertraulichkeit der erhobenen Daten, der "
+"Quell dokumente und von Proben"
 
 #: core/paper_forms.py:213
 msgid ""
 "Plan for treatment or care after the person has completed their "
 "participation in the study"
-msgstr "Plan zur Behandlung oder Versorgung nachdem die Personen ihre Teilnahme an der Studie beendet haben"
+msgstr ""
+"Plan zur Behandlung oder Versorgung nachdem die Personen ihre Teilnahme an "
+"der Studie beendet haben"
 
 #: core/paper_forms.py:213
 msgid "who will be responsible and where"
@@ -793,24 +851,33 @@ msgstr "wer wird verantwortlich sein und wo"
 #: core/paper_forms.py:214
 msgid ""
 "Amount and method of compensation or remuneration to the test participants"
-msgstr "Betrag und Verfahren der Entschädigung oder Vergütung an die Prüfungsteilnehmer/innen"
+msgstr ""
+"Betrag und Verfahren der Entschädigung oder Vergütung an die "
+"Prüfungsteilnehmer/innen"
 
 #: core/paper_forms.py:214
 msgid ""
 "Description of the amount to be paid during the exam take and what, for "
 "example, Travel expenses, lost income, pain and discomfort, etc."
-msgstr "Beschreibung des Betrages, der während der Prüfungsteilnahme bezahlt wird und wofür, z.B. Fahrtspesen, Einkommensverlust, Schmerzen und Unannehmlichkeiten, etc."
+msgstr ""
+"Beschreibung des Betrages, der während der Prüfungsteilnahme bezahlt wird "
+"und wofür, z.B. Fahrtspesen, Einkommensverlust, Schmerzen und "
+"Unannehmlichkeiten, etc."
 
 #: core/paper_forms.py:215
 msgid ""
 "Rules for the suspension or premature termination of the study at the test "
 "center, at the Member State or the entire study"
-msgstr "Regeln für das Aussetzen oder vorzeitige Beenden der Studie an der/den Prüfstelle(n), in diesem Mitgliedstaat oder der gesamten Studie"
+msgstr ""
+"Regeln für das Aussetzen oder vorzeitige Beenden der Studie an der/den "
+"Prüfstelle(n), in diesem Mitgliedstaat oder der gesamten Studie"
 
 #: core/paper_forms.py:216
 msgid ""
 "Agreement on access of the examiner(s) to data, publication guidelines, etc"
-msgstr "Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten, Publikationsricht linien, etc."
+msgstr ""
+"Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten, "
+"Publikationsricht linien, etc."
 
 #: core/paper_forms.py:216 core/paper_forms.py:217
 msgid "if not included in the protocol"
@@ -820,7 +887,9 @@ msgstr "wenn nicht im Protokoll dargestellt"
 msgid ""
 "Financing of the study and information on financial or other interests of "
 "the examiner"
-msgstr "Finanzierung der Studie und Informationen über finanzielle oder andere Interessen der Prüferin/des Prüfers/der Prüfer"
+msgstr ""
+"Finanzierung der Studie und Informationen über finanzielle oder andere "
+"Interessen der Prüferin/des Prüfers/der Prüfer"
 
 #: core/paper_forms.py:218
 #, fuzzy
@@ -835,7 +904,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:222 core/models/submissions.py:386
+#: core/paper_forms.py:222 core/models/submissions.py:383
 msgid "open"
 msgstr "offen"
 
@@ -847,11 +916,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:225 core/models/submissions.py:213
+#: core/paper_forms.py:225 core/models/submissions.py:210
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:226 core/models/submissions.py:386
+#: core/paper_forms.py:226 core/models/submissions.py:383
 msgid "blind"
 msgstr "blind"
 
@@ -867,7 +936,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:230 core/models/submissions.py:386
+#: core/paper_forms.py:230 core/models/submissions.py:383
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -978,13 +1047,16 @@ msgstr "Angaben zum Datenmanagement"
 
 #: core/paper_forms.py:260
 msgid "Who did the biometric planning (if applicable, proof of qualification)?"
-msgstr "Wer führte die biometrische Planung durch (ggf. Nachweis der Qualifikation)?"
+msgstr ""
+"Wer führte die biometrische Planung durch (ggf. Nachweis der Qualifikation)?"
 
 #: core/paper_forms.py:261
 msgid ""
 "Who will conduct the statistical analysis (if applicable, proof of "
 "qualification)?"
-msgstr "Wer wird die statistische Auswertung durchführen (ggf. Nachweis der Qualifikation)?"
+msgstr ""
+"Wer wird die statistische Auswertung durchführen (ggf. Nachweis der "
+"Qualifikation)?"
 
 #: core/paper_forms.py:263
 msgid "Justification"
@@ -1317,29 +1389,29 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:30 core/models/submissions.py:629 users/forms.py:12
+#: core/models/names.py:30 core/models/submissions.py:628 users/forms.py:12
 #: users/models.py:26
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:30 core/models/submissions.py:629 users/forms.py:12
+#: core/models/names.py:30 core/models/submissions.py:628 users/forms.py:12
 #: users/models.py:26
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:214
+#: core/models/submissions.py:211
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:215
+#: core/models/submissions.py:212
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:660
+#: core/models/submissions.py:659
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:660
+#: core/models/submissions.py:659
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1489,16 +1561,16 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:73
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
-"%(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
+"(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:78
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s "
-"%(meeting_title)s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
+"s"
 msgstr ""
 
 #: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
