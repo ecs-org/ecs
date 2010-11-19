@@ -37,6 +37,9 @@ class Vote(models.Model):
         
     objects = authorization.AuthorizationManager()
     
+    def get_submission(self):
+        return self.submission_form.submission
+    
     @property
     def result_text(self):
         return dict(VOTE_RESULT_CHOICES)[self.result]
