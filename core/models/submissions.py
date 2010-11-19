@@ -444,6 +444,14 @@ class SubmissionForm(models.Model):
             user = get_current_user()
             if user:
                 self.presenter = user
+        for x in ('submitter', 'sponsor'):
+            if getattr(self, '%s_email' % x):
+                try:
+                    user = User.objects.filter(email=getattr(self, '%s_email' % x))[0]
+                except IndexError:
+                    pass
+                else:
+                    setattr(self, x, user)
         return super(SubmissionForm, self).save(**kwargs)
    
     def __unicode__(self):
