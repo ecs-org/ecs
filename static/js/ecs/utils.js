@@ -252,7 +252,21 @@ ecs.setupForms = function(){
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);
         setup.tabController = tabController;
+
+        function updateHeaderHeight() {
+            var tabHeight = setup.tabController.getSelectedTabGroup().container.getHeight();
+            if(tabHeight){
+                $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
+                $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
+            }
+            $('content').setStyle('top', $('header').getHeight() + 'px');
+        }
+        setup.tabController.addEvent('tabGroupSelectionChange', updateHeaderHeight);
+        window.addEvent('resize', updateHeaderHeight);
+        $('header').setStyle('height', 'auto');
+        updateHeaderHeight();
     }
+    
     ecs.setupFormFieldHelpers();
 
     var uploadButton = $('document_upload_button');
@@ -284,6 +298,7 @@ ecs.setupForms = function(){
             return false;
         });
     });
+    
     return setup;
 };
 

@@ -23,6 +23,7 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/b2vote/$', 'ecs.core.views.b2_vote_review'),
 
     url(r'^submission_form/new/(?:(?P<docstash_key>.+)/)?$', 'ecs.core.views.create_submission_form'),
+    url(r'^submission_form/delete/(?P<docstash_key>.+)/$', 'ecs.core.views.delete_docstash_entry'),
     url(r'^submission_form/import/$', 'ecs.core.views.import_submission_form'),
     url(r'^submission_forms/$', 'ecs.core.views.submission_forms'),
     url(r'^my_submission_forms/$', 'ecs.core.views.my_submission_forms'),

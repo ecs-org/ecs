@@ -19,7 +19,10 @@ Liste aller Studien
             {% if docstash.current_value %}
                 <li class="{% cycle 'even' 'odd' %}">
                     <h3><span class="ecnr"> </span>{{ docstash.current_name|default:"<i>Unbenannt</i>" }}</h3>
-                    <div class="actions"><a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">Bearbeiten</a></div>
+                    <div class="actions">
+                        <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
+                        | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
+                    </div>
                     <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
                 </li>
             {% endif %}

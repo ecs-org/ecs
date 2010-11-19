@@ -8,7 +8,7 @@ from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
 def with_docstash_transaction(*args, **kwargs):
     def decorator(view):
-        view_name = "%s.%s" % (view.__module__, view.__name__)
+        view_name = kwargs.get('group', "%s.%s" % (view.__module__, view.__name__))
 
         @wraps(view)
         def decorated(request, docstash_key=None, **kwargs):
