@@ -119,7 +119,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist, checklist_form))
     
-    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date (FM2)
+    submission_forms = list(submission_form.submission.forms.order_by('pk')) # FIXME: order by presentation date (FMD2)
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
@@ -301,7 +301,7 @@ def create_submission_form(request):
             request.docstash['documents'] = list(documents)
             document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
             
-        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and (not doc_post or document_form.is_valid())
+        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
         if submit and valid:
             if not request.user.get_profile().approved_by_office:
