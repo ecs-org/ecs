@@ -347,6 +347,10 @@ def create_submission_form(request):
         context['%s_formset' % prefix] = formset
     return render(request, 'submissions/form.html', context)
 
+@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+def delete_docstash_entry(request):
+    request.docstash.delete()
+    return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
