@@ -129,7 +129,7 @@ class Submission(models.Model):
         return list(User.objects.filter(email__in=emails))
 
     def get_creation_notification_receivers(self):
-        return [], [] # FIXME: wah!
+        return [], [] # FIXME: wah! (FMD3) why is this function short-cutted?
         sf = self.current_submission_form
         emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
         registered = User.objects.filter(email__in=emails)
@@ -216,7 +216,7 @@ class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
-    pdf_document = models.ForeignKey(Document, related_name="submission_form", null=True) # XXX: make this a OneToOneField (FMD2)
+    pdf_document = models.OneToOneField(Document, related_name="submission_form", null=True)
     documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
 
     project_title = models.TextField()
