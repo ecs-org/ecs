@@ -295,20 +295,26 @@ class TimetableEntry(models.Model):
     def _get_index(self):
         return self.timetable_index
         
-    # XXX: for bonuspoints, wrap this with a savepoint (FMD2)
     def _set_index(self, index):
-        if index < 0 or index >= len(self.meeting):
-            raise IndexError()
-        old_index = self.timetable_index
-        if index == old_index:
-            return
-        if old_index > index:
-            self.meeting.timetable_entries.filter(timetable_index__gte=index, timetable_index__lt=old_index).update(timetable_index=models.F('timetable_index') + 1)
-        elif old_index < index:
-            self.meeting.timetable_entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).update(timetable_index=models.F('timetable_index') - 1)
-        self.timetable_index = index
-        self.save(force_update=True)
-        self.meeting._clear_caches()
+        sid = transaction.savepoint()
+        try:
+            if index < 0 or index >= len(self.meeting):
+                raise IndexError()
+            old_index = self.timetable_index
+            if index == old_index:
+                return
+            if old_index > index:
+                self.meeting.timetable_entries.filter(timetable_index__gte=index, timetable_index__lt=old_index).update(timetable_index=models.F('timetable_index') + 1)
+            elif old_index < index:
+                self.meeting.timetable_entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).update(timetable_index=models.F('timetable_index') - 1)
+            self.timetable_index = index
+            self.save(force_update=True)
+            self.meeting._clear_caches()
+        except Exception, e:
+            transaction.savepoint_rollback(sid)
+            raise e
+        else:
+            transaction.savepoint_commit(sid)
     
     index = property(_get_index, _set_index)
     

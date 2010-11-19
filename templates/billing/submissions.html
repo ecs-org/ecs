@@ -11,7 +11,7 @@
 
 {% block content %}
     {% if debug %}
-        <a href="{% url ecs.billing.views.reset_submissions %}">reset</a> {# FIXME: remove in production #}
+        <a href="{% url ecs.billing.views.reset_submissions %}">reset</a>
     {% endif %}
     <form action="" method="post">
     {% for submission in submissions %}
