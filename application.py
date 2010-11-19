@@ -91,8 +91,7 @@ gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gp
 
 
 # search
-# TODO: django-haystack currently has an issue with whoosh 1.x, so we use 0.3.18 or therelike
-whoosh:inst:all:pypi:whoosh\<=0.4
+whoosh:inst:all:pypi:whoosh
 # pysolr uses httplib2 with fallback to httplib
 httplib2:inst:all:pypi:httplib2
 pysolr:inst:all:pypi:pysolr
@@ -130,9 +129,9 @@ pdftk:req:apt:apt-get:pdftk
 pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
 # Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
 pdftk:req:suse:zypper:pdftk
-#FIXME, port or at least homebrew package of pdftk
+# Mac OS X: get pdftk here: http://www.pdflabs.com/docs/install-pdftk/
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
-# XXX: no pdftk on openbsd
+# OpenBSD: build pdftk yourself: http://www.pdflabs.com/docs/build-pdftk/
 
 # mediaserver: python-memcached (and mockcache for testing) 
 python-memcached:inst:all:pypi:python-memcached
@@ -153,7 +152,6 @@ imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
 
-# TODO: are we using python-pil, or we need only imagemagick 
 python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
 # PIL requirements for opensuse
 libjpeg-devel:req:suse:zypper:libjpeg-devel
@@ -186,8 +184,7 @@ django-indexer:inst:all:pypi:django-indexer
 django-paging:inst:all:pypi:django-paging
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 #pygooglechart:inst:all:pypi:pygooglechart
-# XXX: we use the github mirror as long as slowchop.com is down
-pygooglechart:inst:all:http://github.com/gak/pygooglechart/tarball/master
+pygooglechart:inst:all:pygooglechart
 django-sentry:inst:all:pypi:django-sentry
 
 """
@@ -222,7 +219,6 @@ mutt:req:mac:macports:mutt
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 
-# FIXME: where do we need simplejson
 simplejson:inst:all:pypi:simplejson
 # deployment: massimport statistics and diff-match-patch
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
