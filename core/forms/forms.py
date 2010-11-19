@@ -14,7 +14,7 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
 from ecs.core.models import MedicalCategory
 
-from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget
+from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.utils.pdfutils import pdf_isvalid
 
@@ -138,6 +138,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         widgets = {
             'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
             'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
+            'sponsor_email': StrippedTextInput(),
+            'invoice_email': StrippedTextInput(),
+            'submitter_email': StrippedTextInput(),
         }
     
     def clean(self):
@@ -248,6 +251,9 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         fields = ('organisation', 'subject_count', 'ethics_commission', 'main', 
             'contact_gender', 'contact_title', 'contact_first_name', 'contact_last_name',
             'phone', 'mobile', 'fax', 'email', 'jus_practicandi', 'specialist', 'certified',)
+        widgets = {
+            'email': StrippedTextInput(),
+        }
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
