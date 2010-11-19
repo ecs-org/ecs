@@ -200,6 +200,7 @@ class DocumentForm(SimpleDocumentForm):
             raise ValidationError(_(u'This Document is not a valid PDF document.'))
 
         file.seek(0)
+        return file
         
     class Meta:
         model = Document
