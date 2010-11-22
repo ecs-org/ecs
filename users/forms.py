@@ -50,6 +50,7 @@ class AdministrationFilterForm(forms.Form):
     ))
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
+    keyword = forms.CharField(required=False)
 
 class UserDetailsForm(forms.ModelForm):
     class Meta:
