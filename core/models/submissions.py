@@ -114,6 +114,9 @@ class Submission(models.Model):
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions')
     
     objects = SubmissionManager()
+    
+    def get_submission(self):
+        return self
 
     def get_ec_number_display(self, short=False, separator=u'/'):
         year, num = divmod(self.ec_number, 10000)

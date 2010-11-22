@@ -386,7 +386,12 @@ except ImportError:
 # apply local overrides
 local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
 for override in local_overrides:
-    locals()[override].update(locals()['%s_OVERRIDE' % override])
+    val = locals()[override]
+    val_override = locals()['%s_OVERRIDE' % override]
+    if hasattr(val, 'update'):
+        val.update(val_override)
+    else:
+        val += val_override
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain']) 
 
@@ -410,3 +415,4 @@ elif 'runserver' in sys.argv:
 
 import djcelery
 djcelery.setup_loader()
+

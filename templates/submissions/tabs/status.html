@@ -1,3 +1,4 @@
+{% load i18n userutils %}
 <h3>Status</h3>
 <table>
     <tr><th>Formulare:</th><td>
@@ -37,6 +38,9 @@
                 <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
             {% endfor %}
         </ul>
+        {% if user|has_flag:'executive_board_member' %}
+            <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
+        {% endif %}
     </td></tr>
     <tr><th>Voten:</th><td>
         <ul>

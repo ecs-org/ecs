@@ -215,7 +215,7 @@ class VoteFinalization(Activity):
         model = Vote
     
     def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
 
 class VoteReview(Activity):
@@ -223,7 +223,7 @@ class VoteReview(Activity):
         model = Vote
         
     def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
 
 class VoteSigning(Activity):

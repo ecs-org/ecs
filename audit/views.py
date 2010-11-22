@@ -4,13 +4,13 @@ from datetime import datetime
 import time
 
 from django.http import Http404
-from django.contrib.auth.decorators import user_passes_test
 
 from ecs.utils.viewutils import render, render_html
 from ecs.audit.models import AuditTrail
+from ecs.users.utils import user_flag_required
 
 
-@user_passes_test(lambda u: u.ecs_profile.executive_board_member)
+@user_flag_required('executive_board_member')
 def log(request, format, limit=50, until=None, since=None):
     if format == 'html':
         template = 'audit/log.html'
