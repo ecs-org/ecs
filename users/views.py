@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import time
-import datetime
+from datetime import datetime
 import random
+from uuid import uuid4
 
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -13,6 +14,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django import forms
+from django.contrib import auth
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -21,8 +24,9 @@ from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, ProfileDetailsForm
-from ecs.users.models import UserProfile
+from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
+
 
 class TimestampedTokenFactory(object):
     def __init__(self, extra_key=None, ttl=3600):
@@ -61,7 +65,7 @@ def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
         form.save()
-        UserProfile.objects.filter(user=request.user).update(last_password_change=datetime.datetime.now())
+        UserProfile.objects.filter(user=request.user).update(last_password_change=datetime.now())
         return render(request, 'users/change_password_complete.html', {})
     return render(request, 'users/change_password_form.html', {
         'form': form,
@@ -153,7 +157,7 @@ def do_password_reset(request, token=None):
     form = SetPasswordForm(user, request.POST or None)
     if form.is_valid():
         form.save()
-        profile.last_password_change = datetime.datetime.now()
+        profile.last_password_change = datetime.now()
         profile.save()
         return render(request, 'users/password_reset/reset_complete.html', {})
     return render(request, 'users/password_reset/reset_form.html', {
@@ -279,5 +283,35 @@ def administration(request, limit=20):
         'users': users,
         'filterform': filterform,
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
+    })
+
+
+@forceauth.exempt
+def accept_invitation(request, invitation_uuid=None):
+    try:
+        invitation = Invitation.objects.new().get(uuid=invitation_uuid.lower())
+    except Invitation.DoesNotExist:
+        raise Http404
+
+    form = PasswordChangeForm(invitation.user, request.POST or None)
+    if form.is_valid():
+        user = form.save()
+        user.ecs_profile.last_password_change = datetime.now()
+        user.ecs_profile.phantom = False
+        user.ecs_profile.save()
+        invitation.accepted = True
+        invitation.save()
+        user = auth.authenticate(username=invitation.user.username, password=form.cleaned_data['new_password1'])
+        auth.login(request, user)
+        return HttpResponseRedirect(reverse('ecs.users.views.edit_profile'))
+
+    password = uuid4().get_hex()
+    invitation.user.set_password(password)
+    invitation.user.save()
+    form.fields['old_password'].widget = forms.HiddenInput()
+    form.fields['old_password'].initial = password
+
+    return render(request, 'users/set_password_form.html', {
+        'form': form,
     })
 

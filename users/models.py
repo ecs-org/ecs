@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
 import datetime
+from uuid import uuid4
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django_extensions.db.fields.json import JSONField
 from django.utils.translation import ugettext_lazy as _
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
@@ -64,4 +68,24 @@ def _post_user_save(sender, **kwargs):
         UserSettings.objects.create(user=kwargs['instance'])
     
 post_save.connect(_post_user_save, sender=User)
+
+
+class InvitationQuerySet(models.query.QuerySet):
+    def new(self):
+        return self.filter(accepted=False)
+
+class InvitationManager(models.Manager):
+    def get_query_set(self):
+        return InvitationQuerySet(self.model).distinct()
+    
+    def new(self):
+        return self.all().new()
+
+class Invitation(models.Model):
+    user = models.ForeignKey(User, related_name='ecs_invitations')
+    uuid = models.CharField(max_length=32, default=lambda: uuid4().get_hex(), unique=True)
+    accepted = models.BooleanField(default=False)
+
+    objects = InvitationManager()
+
 
