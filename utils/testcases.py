@@ -27,17 +27,20 @@ class EcsTestCase(TestCase):
         settings.ENABLE_AUDIT_TRAIL = True
         
         for name in "alice", "bob", "unittest":
-            user = User(username=name, is_superuser=True)
-            user.email = "".join((name, "@example.org"))
-            user.set_password('password')
-            user.save()
-            profile = user.get_profile()
-            profile.approved_by_office = True
-            profile.save()
+            self.create_user(name)
         
         user = User.objects.get(username = "unittest")
         user.is_superuser = True
         user.save()
+        
+    def create_user(self, name):
+        user = User(username=name, is_superuser=True)
+        user.email = "".join((name, "@example.org"))
+        user.set_password('password')
+        user.save()
+        profile = user.get_profile()
+        profile.approved_by_office = True
+        profile.save()
     
     def tearDown(self):
         settings.ENABLE_AUDIT_TRAIL = False

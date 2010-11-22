@@ -174,14 +174,12 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(len(response.context['unscheduled_submissions']), 1)
         
     def test_submission_form_copy(self):
-        submission_form = create_submission_form()
-        submission_form.presenter = self.user
-        submission_form.save()
+        submission_form = create_submission_form(presenter=self.user)
         response = self.client.get(reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
         self.failUnlessEqual(response.status_code, 302)
         url = reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk})
         self.failUnlessEqual(url, urlsplit(response['Location']).path)
-        
+    
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 302)
         target_url = response['Location']

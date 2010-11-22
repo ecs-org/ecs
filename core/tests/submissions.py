@@ -162,7 +162,7 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            presenter=User.objects.get_or_create(username='test_presenter')[0],
+            presenter=User.objects.get_or_create(username='test_presenter', password='password')[0],
             )
         sform.save()
         sform.substance_registered_in_countries = []
@@ -173,7 +173,7 @@ class SubmissionFormTest(EcsTestCase):
         ek1.save()
         Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Ruth Ladenstein", subject_count=1, ethics_commission=ek1)
 
-def create_submission_form(ec_number=None):
+def create_submission_form(ec_number=None, presenter=None):
     sub = Submission(ec_number=ec_number)
     sub.save()
     sform = SubmissionForm(
@@ -320,7 +320,7 @@ def create_submission_form(ec_number=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
-        presenter=User.objects.get_or_create(username='test_presenter')[0],
+        presenter=presenter or User.objects.get_or_create(username='test_presenter')[0],
         )
     sform.save()
     sform.substance_registered_in_countries = []
