@@ -45,6 +45,9 @@ class sudo(object):
 def user_flag_required(flag):
     return user_passes_test(lambda u: getattr(u.ecs_profile, flag, False))
 
+def user_group_required(group):
+    return user_passes_test(lambda u: bool(u.groups.filter(name=group).count()))
+
 def invite_user(request, email):
     comment = None
     try:
