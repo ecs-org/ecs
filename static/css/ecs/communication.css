@@ -102,7 +102,7 @@ table.messages .threadstart {
   background: url(/static/images/icons.png) -240px -128px no-repeat;
 }
 .icon_answer {
-  background: url(/static/images/icons.png) -160px -144px no-repeat;
+  background: url(/static/images/icons.png) -160px -64px no-repeat;
 }
 .icon_delegate {
   background: url(/static/images/icons.png) -240px -208px no-repeat;

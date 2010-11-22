@@ -70,32 +70,6 @@ body {
   background: #f6f6e9;
 }
 
-#logo, #account, #usertoolbar, #usermenu {
-  width: 200px;
-  padding: 10px;
-  border-bottom: 1px solid #999;
-}
-#logo {
-  height: 53px;
-  background: #fff;
-}
-#account {
-  background: #f5f5d2;
-  min-height: 80px;
-}
-#usertoolbar {
-  min-height: 10px;
-}
-#usermenu {
-  background: #f5f5d2;
-  min-height: 300px;
-}
-
-#usermenu .elements {
-  display: none;
-}
-
-
 /* content-specific */
 
 body {
@@ -142,6 +116,9 @@ body {
 #content a:hover {
   text-decoration: underline;
 }
+a {
+  outline: 0;
+}
 
 
 /* header */
@@ -162,6 +139,30 @@ body {
 }
 
 /* sidebar */
+
+#logo, #account, #usertoolbar, #usermenu {
+  width: 200px;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+#logo {
+  height: 53px;
+  background: #fff;
+}
+#account {
+  min-height: 80px;
+}
+#usertoolbar {
+  min-height: 10px;
+  background: #ededdc;
+}
+#usermenu {
+  min-height: 300px;
+  border-bottom: none;
+}
+#usermenu .elements {
+  display: none;
+}
 
 #sidebar ul {
   list-style-type: none;
@@ -187,7 +188,7 @@ body {
 }
 #toggle_sidebar_button {
   position: absolute;
-  top: 182px;
+  top: 225px;
   right: 23px;
   width: 30px;
   height: 30px;
