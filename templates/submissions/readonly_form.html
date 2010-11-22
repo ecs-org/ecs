@@ -111,11 +111,9 @@
     <div id="involved_parties_tab">
         {% include 'submissions/tabs/involved_parties.html' %}
     </div>
-    {% if debug %}
-        <div id="developer_tab">
-            {% include 'submissions/tabs/developer.html' %}
-        </div>
-    {% endif %}
+    <div id="developer_tab">
+        {% include 'submissions/tabs/developer.html' %}
+    </div>
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Pending Notifications" %}
         {% if pending_notifications %}
