@@ -16,6 +16,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django import forms
 from django.contrib import auth
+from django.db import transaction
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -23,7 +24,7 @@ from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm, \
-    UserDetailsForm, ProfileDetailsForm
+    UserDetailsForm, ProfileDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 
@@ -285,6 +286,46 @@ def administration(request, limit=20):
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
     })
 
+@user_passes_test(lambda u: u.ecs_profile.internal)
+def invite_user(request):
+    form = InvitationForm(request.POST or None)
+    comment = None
+    if form.is_valid():
+        email = form.cleaned_data['email']
+        try:
+            sid = transaction.savepoint()
+            user, created = User.objects.get_or_create(email=email, defaults={'username': email[:30]})
+            if not created:
+                raise ValueError(_(u'There is already a user with this email address.'))
+            user.ecs_profile.phantom = True
+            user.ecs_profile.save()
+
+            invitation = Invitation.objects.create(user=user)
+
+            subject = _(u'ECS account creation')
+            link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+            text = _(u'An user account on the ECS system has been created for you.\nTo accept the invitation visit %s') % link
+            html = _(u'<html><head></head><body>An user account on the ECS system has been created for you.\nTo accept the invitation visit <a href="%s">this link</a></body></html>') % link
+
+            transferlist = deliver(subject, text, settings.DEFAULT_FROM_EMAIL, email, html_message=html)
+            try:
+                msgid, rawmail = transferlist[0]
+            except IndexError:
+                raise ValueError(_(u'The email could not be delivered.'))
+        except ValueError, e:
+            transaction.savepoint_rollback(sid)
+            comment = unicode(e)
+        except Exception, e:
+            transaction.savepoint_rollback(sid)
+        else:
+            transaction.savepoint_commit(sid)
+            comment = _(u'The user has been invited.')
+
+    return render(request, 'users/invitation/invite_user.html', {
+        'form': form,
+        'comment': comment,
+    })
+
 
 @forceauth.exempt
 def accept_invitation(request, invitation_uuid=None):
@@ -311,7 +352,7 @@ def accept_invitation(request, invitation_uuid=None):
     form.fields['old_password'].widget = forms.HiddenInput()
     form.fields['old_password'].initial = password
 
-    return render(request, 'users/set_password_form.html', {
+    return render(request, 'users/invitation/set_password_form.html', {
         'form': form,
     })
 

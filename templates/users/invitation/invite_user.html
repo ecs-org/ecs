@@ -1,0 +1,16 @@
+{% extends 'administration/detail.html' %}
+{% load i18n %}
+
+{% block administration_detail %}
+<h2>{% trans "Invite User" %}</h2>
+
+{% if comment %}
+    <p>{{ comment }}</p>
+{% endif %}
+
+<form action="" method="post">
+    {{ form.as_p }}
+    <input type="submit" value="{% trans "Invite" %}" />
+</form>
+{% endblock %}
+

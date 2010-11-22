@@ -88,3 +88,6 @@ class ProfileDetailsForm(forms.ModelForm):
         model = UserProfile
         fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal')
 
+class InvitationForm(forms.Form):
+    email = forms.EmailField()
+
