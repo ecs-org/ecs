@@ -136,14 +136,14 @@
   font-size: 10pt;
 }
 .task_item:nth-child(odd) {
-  background-color: #FFFFDF;
+  background-color: #e8e8d8;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 .task_item:nth-child(even) {
-  background-color: #EFEFD1;
+  background-color: #efefdd;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 
 #task_main h1 {

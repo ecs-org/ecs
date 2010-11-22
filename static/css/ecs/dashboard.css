@@ -47,15 +47,15 @@
 }
 .dashboard_widget .messages > li.odd,
 .dashboard_widget .submission_widget_list > li.odd {
-  background-color: #EFEFD1;
+  background-color: #e8e8d8;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 .dashboard_widget .messages > li.even,
 .dashboard_widget .submission_widget_list > li.even {
-  background-color: #FFFFDF;
+  background-color: #efefdd;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 .dashboard_widget .unread {
   display: inline-block;

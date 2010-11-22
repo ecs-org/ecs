@@ -270,7 +270,7 @@ input[type=submit] {
 .user_options {
   display: block;
   width: 200px;
-  margin: 0 0 5px;
+  margin: -5px 0 5px;
   padding-bottom: 3px;
   border-bottom: 1px solid #ddd;
   text-align: right;
@@ -280,13 +280,14 @@ input[type=submit] {
   width: 32px;
   height: 32px;
   text-indent: -9999px;
-  margin-right: 5px;
+  margin-right: 3px;
 }
 .icon_help {
   background: url(/static/images/icons.png) -320px -160px no-repeat;
 }
 .icon_feedback {
   background: url(/static/images/icons.png) -320px -32px no-repeat;
+  margin-left: 3px;
 }
 .icon_workflow {
   background: url(/static/images/icons.png) -320px -64px no-repeat;
@@ -686,7 +687,9 @@ table.notif_meta th {
     text-align: left;
     border-bottom: 1px solid #cccccc;
 }
-
+.overview {
+  max-width: 95%;
+}
 #content ol.submission_list {
   list-style: none;
   font-size: 10pt;
@@ -710,14 +713,14 @@ content ol.submission_list h3 .ecnr {
   padding-left: 80px;
 }
 #content ol.submission_list li.odd {
-  background-color: #FFFFDF;
+  background-color: #e8e8d8;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;  
+  border-bottom: 1px solid #ddd;  
 }
 #content ol.submission_list li.even {
-  background-color: #EFEFD1;
+  background-color: #efefdd;
   border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;  
+  border-bottom: 1px solid #ddd;  
 }
 
 content ol.submission_list li .actions {
