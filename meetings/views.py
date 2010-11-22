@@ -61,10 +61,8 @@ def schedule_submission(request, submission_pk=None):
         'form': form,
     })
 
-@developer
 @user_flag_required('executive_board_member')
 def reschedule_submission(request, submission_pk=None):
-    """ Developer: this will happen automatically """
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = SubmissionReschedulingForm(request.POST or None, submission=submission)
     if form.is_valid():
