@@ -15,7 +15,6 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.decorators import user_passes_test
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
@@ -41,6 +40,7 @@ from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo
 from ecs.tasks.models import Task
+from ecs.users.utils import user_flag_required
 
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
@@ -483,7 +483,7 @@ def wizard(request):
         'form': screen_form,
     })
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def submission_list(request, template='submissions/internal_list.html', limit=20):
     usersettings = request.user.ecs_settings
 
@@ -539,7 +539,7 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
         'filterform': filterform,
     })
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def submission_widget(request, template='submissions/widget.html'):
     return submission_list(request, template=template, limit=5)
 

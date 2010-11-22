@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django import forms
 from django.contrib import auth
-from django.db import transaction
+from django.db.models import Q
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
@@ -27,6 +27,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
     UserDetailsForm, ProfileDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
+from ecs.users.utils import user_flag_required, invite_user
 
 
 class TimestampedTokenFactory(object):
@@ -190,7 +191,7 @@ def edit_profile(request):
 ### User Administration ###
 ###########################
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.ecs_profile.indisposed:
@@ -201,7 +202,7 @@ def toggle_indisposed(request, user_pk=None):
     user.ecs_profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
@@ -213,7 +214,7 @@ def approve(request, user_pk=None):
         'profile_user': user,
     })
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -224,7 +225,7 @@ def toggle_active(request, user_pk=None):
     user.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     user_form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
@@ -240,7 +241,7 @@ def details(request, user_pk=None):
         'profile_form': profile_form,
     })
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
+@user_flag_required('internal')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
@@ -248,6 +249,7 @@ def administration(request, limit=20):
         'page': '1',
         'group': '',
         'approval': 'both',
+        'keyword': '',
     }
 
     filterdict = request.POST or usersettings.useradministration_filter or filter_defaults
@@ -264,6 +266,15 @@ def administration(request, limit=20):
 
     if filterform.cleaned_data['group']:
         users = users.filter(groups=filterform.cleaned_data['group'])
+
+    keyword = filterform.cleaned_data['keyword']
+    if keyword:
+        keyword_q = Q(username__icontains=keyword) | Q(email__icontains=keyword)
+        if ' ' in keyword:
+            n1, n2 = keyword.split(' ', 1)
+            keyword_q |= Q(first_name__icontains=n1, last_name__icontains=n2)
+            keyword_q |= Q(first_name__icontains=n2, last_name__icontains=n1)
+        users = users.filter(keyword_q)
 
 
     paginator = Paginator(users.order_by('username'), limit, allow_empty_first_page=True)
@@ -286,40 +297,10 @@ def administration(request, limit=20):
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
     })
 
-@user_passes_test(lambda u: u.ecs_profile.internal)
-def invite_user(request):
+@user_flag_required('internal')
+def invite(request):
     form = InvitationForm(request.POST or None)
-    comment = None
-    if form.is_valid():
-        email = form.cleaned_data['email']
-        try:
-            sid = transaction.savepoint()
-            user, created = User.objects.get_or_create(email=email, defaults={'username': email[:30]})
-            if not created:
-                raise ValueError(_(u'There is already a user with this email address.'))
-            user.ecs_profile.phantom = True
-            user.ecs_profile.save()
-
-            invitation = Invitation.objects.create(user=user)
-
-            subject = _(u'ECS account creation')
-            link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-            text = _(u'An user account on the ECS system has been created for you.\nTo accept the invitation visit %s') % link
-            html = _(u'<html><head></head><body>An user account on the ECS system has been created for you.\nTo accept the invitation visit <a href="%s">this link</a></body></html>') % link
-
-            transferlist = deliver(subject, text, settings.DEFAULT_FROM_EMAIL, email, html_message=html)
-            try:
-                msgid, rawmail = transferlist[0]
-            except IndexError:
-                raise ValueError(_(u'The email could not be delivered.'))
-        except ValueError, e:
-            transaction.savepoint_rollback(sid)
-            comment = unicode(e)
-        except Exception, e:
-            transaction.savepoint_rollback(sid)
-        else:
-            transaction.savepoint_commit(sid)
-            comment = _(u'The user has been invited.')
+    comment = invite_user(request, form.cleaned_data['email']) if form.is_valid() else None
 
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,
