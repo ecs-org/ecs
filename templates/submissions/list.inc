@@ -5,10 +5,12 @@
     <li class="{% cycle 'even' 'odd' %}">
         <h3><span class="ecnr">{{ submission|ec_number }}</span> {{ submission.project_title|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
-            <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a>
             {% with submission.current_submission_form as submission_form %}
+                 {% if submission_form.presenter == request.user %}
+                    <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">Bearbeiten</a> |
+                 {% endif %}
                  {% if submission_form %}
-                     | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
+                     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">Ansehen</a>
                      | <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">Download PDF</a>
                      {% with submission.get_most_recent_vote as vote %}
                         {% if vote %}
