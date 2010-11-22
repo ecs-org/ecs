@@ -252,25 +252,35 @@ input[type=submit] {
 #account {
   font-size: 11pt;
 }
+.user_data {
+  display: block;
+  float: left;
+  margin-bottom: 10px;
+}
 .user_icon {
   float: left;
   width: 30px;
 }
 .user_name {
   float: left;
-  width: 160px;
+  width: 163px;
   height: 40px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ddd;
 }
 .user_options {
-  float: right;
-  margin: 5px 10px;
+  display: block;
+  width: 200px;
+  margin: 0 0 5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid #ddd;
+  text-align: right;
 }
 .icon_help, .icon_feedback, .icon_workflow, .user_icon {
   display: inline-block;
   width: 32px;
   height: 32px;
   text-indent: -9999px;
+  margin-right: 5px;
 }
 .icon_help {
   background: url(/static/images/icons.png) -320px -160px no-repeat;
@@ -284,11 +294,13 @@ input[type=submit] {
 .user_icon {
   background: url(/static/images/icons.png) -320px 0 no-repeat;
 }
-.togglers {
+.togglers, .main_item {
   display: block;
   cursor: pointer;
   border-bottom: 1px solid #e3e3bf;
-  padding: 1px 3px;
+}
+.togglers {
+   padding: 1px 3px;
 }
 #usermenu a {
   display: block;
@@ -301,7 +313,7 @@ input[type=submit] {
   display: block;
   width: 200px;
   float: left;
-  margin: 10px;
+  margin-bottom: 10px;
 }
 .searchbox input[type=text] {
   float: left;

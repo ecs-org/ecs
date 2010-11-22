@@ -2,36 +2,35 @@
 {% load compress %}
 {% load i18n userutils %}
 
-{% block account %} 
-  <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
-  <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
+{% block account %}
   <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
+  <div class="user_data">
+    <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
+    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
+  </div>
   {% load userswitcher %}
   {% userswitcher %}
-  <p>
-  <a href="" id="help_button" class="help_trigger icon_help">help</a>
-  <a href="" id="feedback_button" class="feedback_trigger icon_feedback">feedback</a>
-  </p> 
 {% endblock %}
 
-{% block searchbox %}
+{% block usertoolbar %}
   <div class="searchbox">
     <form action="{% url ecs.core.views.submission_forms %}" method="get" enctype="multipart/form-data">
       <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"/>
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
-{% endblock %}
-
-{% block usertoolbar %} 
+  <p>
   <a href="{% url ecs.tasks.views.my_tasks %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
+  <a href="" id="help_button" class="help_trigger icon_help">help</a>
+  <a href="" id="feedback_button" class="feedback_trigger icon_feedback">feedback</a>
+  </p> 
 {% endblock %}
         
 {% block usermenu %}
   <ul>
-    <li><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
-    <li><a href="{% url ecs.communication.views.threads %}">{% trans "Communication" %}</a></li>
-    <li><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
+    <li class="main_item"><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
+    <li class="main_item"><a href="{% url ecs.communication.views.threads %}">{% trans "Communication" %}</a></li>
+    <li class="main_item"><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
