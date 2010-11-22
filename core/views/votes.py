@@ -1,14 +1,17 @@
-import datetime
+# -*- coding: utf-8 -*-
 import os
+import datetime
 import tempfile
 import urllib
 import urllib2
+from uuid import uuid4
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse,\
-    Http404
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
+from django.core.files.base import File
+from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, render_pdf, pdf_response
 from ecs.core.models import Vote
@@ -17,10 +20,8 @@ from ecs.documents.models import Document, DocumentType
 
 from ecs.utils import forceauth
 from ecs.utils.pdfutils import xhtml2pdf, pdf_barcodestamp
-from django.core.files.base import File
-from django.views.decorators.csrf import csrf_exempt
 from ecs.utils.votedepot import VoteDepot
-from uuid import uuid4
+from ecs.users.utils import user_group_required
 
 votesDepot = VoteDepot();
 
@@ -92,6 +93,7 @@ def vote_pdf(request, meeting_pk=None, vote_pk=None):
     pdf = render_pdf(request, pdf_template, context)
     return pdf_response(pdf, filename=pdf_name)
 
+@user_group_required("EC-Signing Group")
 def vote_sign(request, meeting_pk=None, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign vote "%s"' % (vote_pk)
