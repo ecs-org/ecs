@@ -38,7 +38,7 @@ from ecs.docstash.models import DocStash
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
 from ecs.users.utils import user_flag_required
 
@@ -159,12 +159,14 @@ def retrospective_thesis_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'retrospective_thesis_review_form': form,})
 
 
+@user_flag_required('executive_board_member')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
+
 
 def befangene_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
