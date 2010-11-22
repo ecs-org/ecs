@@ -175,6 +175,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         
     def test_submission_form_copy(self):
         submission_form = create_submission_form()
+        submission_form.presenter = self.user
+        submission_form.save()
         response = self.client.get(reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
         self.failUnlessEqual(response.status_code, 302)
         url = reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk})
