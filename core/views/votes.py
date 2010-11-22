@@ -111,12 +111,12 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
     t_in.seek(0)
     pdf_barcodestamp(t_in, t_out, document_uuid)
     t_in.close()
-    os.remove(t_in)
+    os.remove(t_in.name)
     
     t_out.seek(0)
     pdf_data_stamped = t_out.read()
     t_out.close()
-    os.remove(t_out)
+    os.remove(t_out.name)
     
     pdfas_id = votesDepot.deposit(pdf_data_stamped, html_preview, document_uuid, pdf_name)
     return sign(request, pdfas_id, len(pdf_data_stamped), pdf_name)
@@ -124,9 +124,10 @@ def vote_sign(request, meeting_pk=None, vote_pk=None):
 
 '''
 needs to be directly accessed by pdf-as so it can retrieve the vote pdf to sign, which would cause a CSRF token exception.
-circumventing it by excluding it from the middleware with @csrf_exempt
+circumventing it by excluding it from the middleware with @csrf_exempt. additionally forcauth.exempt is need because pdf-as can't authenticate.
 '''
 @csrf_exempt
+@forceauth.exempt
 def vote_sign_send(request, meeting_pk=None, vote_pk=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
@@ -137,9 +138,10 @@ def vote_sign_send(request, meeting_pk=None, vote_pk=None):
 
 '''
 needs to be directly accessed by pdf-as so it can show a preview of the vote on the applet page, which would cause a CSRF token exception.
-circumventing it by excluding it from the middleware with @csrf_exempt
+circumventing it by excluding it from the middleware with @csrf_exempt. additionally forcauth.exempt is need because pdf-as can't authenticate.
 '''
 @csrf_exempt
+@forceauth.exempt
 def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
     votedoc = votesDepot.get(request.REQUEST['pdf-id'])
     if votedoc is None:
@@ -150,11 +152,12 @@ def vote_sign_preview(request, meeting_pk=None, vote_pk=None, jsessionid=None):
 
 '''
 needs to be directly accessed by pdf-as so it can bump ecs to download the signed vote, which would cause a CSRF token exception.
-circumventing it by excluding it from the middleware with @csrf_exempt
+circumventing it by excluding it from the middleware with @csrf_exempt. additionally forcauth.exempt is need because pdf-as can't authenticate.
 '''
 @csrf_exempt
+@forceauth.exempt
 def vote_sign_receive_landing(request,  meeting_pk=None, vote_pk=None, jsessionid=None):
-    return vote_sign_receive(request, vote_pk, jsessionid);
+    return vote_sign_receive(request, meeting_pk, vote_pk, jsessionid);
 
 
 def vote_sign_receive(request, meeting_pk=None, vote_pk=None, jsessionid=None):
@@ -200,9 +203,10 @@ def download_signed_vote(request, meeting_pk=None, vote_pk=None):
 
 '''
 needs to be directly accessed by pdf-as so it can report errors, which would cause a CSRF token exception.
-circumventing it by excluding it from the middleware with @csrf_exempt
+circumventing it by excluding it from the middleware with @csrf_exempt. additionally forcauth.exempt is need because pdf-as can't authenticate.
 '''
 @csrf_exempt
+@forceauth.exempt
 def vote_sign_error(request, meeting_pk=None, vote_pk=None):
     if request.REQUEST.has_key('pdf-id'):
         votesDepot.pop(request.REQUEST['pdf-id'])
