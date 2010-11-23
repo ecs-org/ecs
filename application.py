@@ -187,6 +187,9 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
 django-sentry:inst:all:pypi:django-sentry
 
+# diff_match_patch is used for the submission diff
+diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
+
 """
 
 

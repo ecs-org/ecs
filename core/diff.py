@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
-from ecs.utils.diff_match_patch import diff_match_patch
+from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
 from django.db import models
