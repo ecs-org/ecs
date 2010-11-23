@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('documents', '0001_initial'),
+    )
+
     def forwards(self, orm):
         
         # Adding model 'Submission'
@@ -26,7 +30,6 @@ class Migration(SchemaMigration):
             ('is_amg', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
             ('is_mpg', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
             ('current_submission_form', self.gf('django.db.models.fields.related.OneToOneField')(related_name='current_for_submission', unique=True, null=True, to=orm['core.SubmissionForm'])),
-            ('next_meeting', self.gf('django.db.models.fields.related.ForeignKey')(related_name='_current_for_submissions', null=True, to=orm['meetings.Meeting'])),
         ))
         db.send_create_signal('core', ['Submission'])
 
@@ -76,8 +79,6 @@ class Migration(SchemaMigration):
             ('presenter', self.gf('django.db.models.fields.related.ForeignKey')(related_name='presented_submission_forms', to=orm['auth.User'])),
             ('created_at', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
             ('primary_investigator', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.Investigator'], unique=True, null=True)),
-            ('current_published_vote', self.gf('django.db.models.fields.related.OneToOneField')(related_name='_currently_published_for', unique=True, null=True, to=orm['core.Vote'])),
-            ('current_pending_vote', self.gf('django.db.models.fields.related.OneToOneField')(related_name='_currently_pending_for', unique=True, null=True, to=orm['core.Vote'])),
             ('sponsor', self.gf('django.db.models.fields.related.ForeignKey')(related_name='sponsored_submission_forms', null=True, to=orm['auth.User'])),
             ('sponsor_name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True)),
             ('sponsor_address', self.gf('django.db.models.fields.CharField')(max_length=60, null=True)),
@@ -420,20 +421,6 @@ class Migration(SchemaMigration):
         ))
         db.create_unique('core_medicalcategory_users', ['medicalcategory_id', 'user_id'])
 
-        # Adding model 'Vote'
-        db.create_table('core_vote', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('submission_form', self.gf('django.db.models.fields.related.ForeignKey')(related_name='votes', to=orm['core.SubmissionForm'])),
-            ('top', self.gf('django.db.models.fields.related.OneToOneField')(related_name='vote', unique=True, null=True, to=orm['meetings.TimetableEntry'])),
-            ('result', self.gf('django.db.models.fields.CharField')(max_length=2, null=True)),
-            ('executive_review_required', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True)),
-            ('text', self.gf('django.db.models.fields.TextField')(blank=True)),
-            ('is_final', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('signed_at', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-            ('published_at', self.gf('django.db.models.fields.DateTimeField')(null=True)),
-        ))
-        db.send_create_signal('core', ['Vote'])
-
 
     def backwards(self, orm):
         
@@ -508,9 +495,6 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field users on 'MedicalCategory'
         db.delete_table('core_medicalcategory_users')
-
-        # Deleting model 'Vote'
-        db.delete_table('core_vote')
 
 
     models = {
@@ -686,7 +670,6 @@ class Migration(SchemaMigration):
             'is_mpg': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'keywords': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'medical_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submissions'", 'blank': 'True', 'to': "orm['core.MedicalCategory']"}),
-            'next_meeting': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'_current_for_submissions'", 'null': 'True', 'to': "orm['meetings.Meeting']"}),
             'remission': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'retrospective': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'sponsor_required_for_next_meeting': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -699,8 +682,6 @@ class Migration(SchemaMigration):
             'already_voted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'clinical_phase': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'current_pending_vote': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'_currently_pending_for'", 'unique': 'True', 'null': 'True', 'to': "orm['core.Vote']"}),
-            'current_published_vote': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'_currently_published_for'", 'unique': 'True', 'null': 'True', 'to': "orm['core.Vote']"}),
             'date_of_receipt': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'documents': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submission_forms'", 'null': 'True', 'to': "orm['documents.Document']"}),
             'ethics_commissions': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'submission_forms'", 'symmetrical': 'False', 'through': "orm['core.Investigator']", 'to': "orm['core.EthicsCommission']"}),
@@ -865,18 +846,6 @@ class Migration(SchemaMigration):
             'substance_preexisting_clinical_tries': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'db_column': "'existing_tries'", 'blank': 'True'}),
             'substance_registered_in_countries': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submission_forms'", 'blank': 'True', 'db_table': "'submission_registered_countries'", 'to': "orm['countries.Country']"})
         },
-        'core.vote': {
-            'Meta': {'object_name': 'Vote'},
-            'executive_review_required': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_final': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'published_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'result': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True'}),
-            'signed_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'submission_form': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'votes'", 'to': "orm['core.SubmissionForm']"}),
-            'text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'top': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'vote'", 'unique': 'True', 'null': 'True', 'to': "orm['meetings.TimetableEntry']"})
-        },
         'countries.country': {
             'Meta': {'ordering': "('name',)", 'object_name': 'Country', 'db_table': "'country'"},
             'iso': ('django.db.models.fields.CharField', [], {'max_length': '2', 'primary_key': 'True'}),
@@ -910,32 +879,6 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'identifier': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '30', 'db_index': 'True', 'blank': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'meetings.meeting': {
-            'Meta': {'object_name': 'Meeting'},
-            'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'deadline': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'deadline_diplomathesis': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'ended': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'optimization_task_id': ('django.db.models.fields.TextField', [], {'null': 'True'}),
-            'start': ('django.db.models.fields.DateTimeField', [], {}),
-            'started': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
-            'submissions': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'meetings'", 'symmetrical': 'False', 'through': "orm['meetings.TimetableEntry']", 'to': "orm['core.Submission']"}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'})
-        },
-        'meetings.timetableentry': {
-            'Meta': {'object_name': 'TimetableEntry'},
-            'duration_in_seconds': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_break': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_open': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'meeting': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'timetable_entries'", 'to': "orm['meetings.Meeting']"}),
-            'optimal_start': ('django.db.models.fields.TimeField', [], {'null': 'True'}),
-            'sponsor_invited': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'timetable_entries'", 'null': 'True', 'to': "orm['core.Submission']"}),
-            'timetable_index': ('django.db.models.fields.IntegerField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '200', 'blank': 'True'})
         }
     }
 
