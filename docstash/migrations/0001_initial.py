@@ -8,14 +8,40 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding field 'UserProfile.single_login_enforced'
-        db.add_column('users_userprofile', 'single_login_enforced', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
+        # Adding model 'DocStash'
+        db.create_table('docstash_docstash', (
+            ('key', self.gf('django.db.models.fields.CharField')(max_length=41, primary_key=True)),
+            ('group', self.gf('django.db.models.fields.CharField')(max_length=120, null=True, db_index=True)),
+            ('current_version', self.gf('django.db.models.fields.IntegerField')(default=-1)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+        ))
+        db.send_create_signal('docstash', ['DocStash'])
+
+        # Adding model 'DocStashData'
+        db.create_table('docstash_docstashdata', (
+            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('version', self.gf('django.db.models.fields.IntegerField')()),
+            ('stash', self.gf('django.db.models.fields.related.ForeignKey')(related_name='data', to=orm['docstash.DocStash'])),
+            ('value', self.gf('picklefield.fields.PickledObjectField')()),
+            ('modtime', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('name', self.gf('django.db.models.fields.TextField')(blank=True)),
+        ))
+        db.send_create_signal('docstash', ['DocStashData'])
+
+        # Adding unique constraint on 'DocStashData', fields ['version', 'stash']
+        db.create_unique('docstash_docstashdata', ['version', 'stash_id'])
 
 
     def backwards(self, orm):
         
-        # Deleting field 'UserProfile.single_login_enforced'
-        db.delete_column('users_userprofile', 'single_login_enforced')
+        # Removing unique constraint on 'DocStashData', fields ['version', 'stash']
+        db.delete_unique('docstash_docstashdata', ['version', 'stash_id'])
+
+        # Deleting model 'DocStash'
+        db.delete_table('docstash_docstash')
+
+        # Deleting model 'DocStashData'
+        db.delete_table('docstash_docstashdata')
 
 
     models = {
@@ -55,24 +81,22 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        'users.userprofile': {
-            'Meta': {'object_name': 'UserProfile'},
-            'approved_by_office': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'board_member': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'executive_board_member': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'expedited_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'external_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'gender': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
+        'docstash.docstash': {
+            'Meta': {'object_name': 'DocStash'},
+            'current_version': ('django.db.models.fields.IntegerField', [], {'default': '-1'}),
+            'group': ('django.db.models.fields.CharField', [], {'max_length': '120', 'null': 'True', 'db_index': 'True'}),
+            'key': ('django.db.models.fields.CharField', [], {'max_length': '41', 'primary_key': 'True'}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
+        },
+        'docstash.docstashdata': {
+            'Meta': {'unique_together': "(('version', 'stash'),)", 'object_name': 'DocStashData'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'indisposed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'insurance_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'internal': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_password_change': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'session_key': ('django.db.models.fields.CharField', [], {'max_length': '40', 'null': 'True'}),
-            'single_login_enforced': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'thesis_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'ecs_profile'", 'unique': 'True', 'to': "orm['auth.User']"})
+            'modtime': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'name': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'stash': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'data'", 'to': "orm['docstash.DocStash']"}),
+            'value': ('picklefield.fields.PickledObjectField', [], {}),
+            'version': ('django.db.models.fields.IntegerField', [], {})
         }
     }
 
-    complete_apps = ['users']
+    complete_apps = ['docstash']

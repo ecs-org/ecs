@@ -33,11 +33,11 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         
-        # Deleting model 'Page'
-        db.delete_table('help_page')
-
         # Removing unique constraint on 'Page', fields ['view', 'anchor']
         db.delete_unique('help_page', ['view_id', 'anchor'])
+
+        # Deleting model 'Page'
+        db.delete_table('help_page')
 
         # Deleting model 'Attachment'
         db.delete_table('help_attachment')

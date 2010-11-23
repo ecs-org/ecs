@@ -21,7 +21,7 @@ class Migration(SchemaMigration):
         # Adding model 'FastLaneTop'
         db.create_table('fastlane_fastlanetop', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('submission', self.gf('django.db.models.fields.related.ForeignKey')(related_name='fast_lane_tops', unique=True, to=orm['core.Submission'])),
+            ('submission', self.gf('django.db.models.fields.related.OneToOneField')(related_name='fast_lane_top', unique=True, to=orm['core.Submission'])),
             ('meeting', self.gf('django.db.models.fields.related.ForeignKey')(related_name='tops', to=orm['fastlane.FastLaneMeeting'])),
             ('recommendation', self.gf('django.db.models.fields.NullBooleanField')(default=None, null=True, blank=True)),
             ('recommendation_comment', self.gf('django.db.models.fields.TextField')(blank=True)),
@@ -31,22 +31,21 @@ class Migration(SchemaMigration):
         # Adding model 'AssignedFastLaneCategory'
         db.create_table('fastlane_assignedfastlanecategory', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('meeting', self.gf('django.db.models.fields.related.ForeignKey')(related_name='categories', null=True, to=orm['fastlane.FastLaneMeeting'])),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='assigned_fastlane_categories', null=True, to=orm['auth.User'])),
             ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='assigned_fastlane_categories', unique=True, to=orm['core.ExpeditedReviewCategory'])),
         ))
         db.send_create_signal('fastlane', ['AssignedFastLaneCategory'])
 
-        # Adding M2M table for field tops on 'AssignedFastLaneCategory'
-        db.create_table('fastlane_assignedfastlanecategory_tops', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('assignedfastlanecategory', models.ForeignKey(orm['fastlane.assignedfastlanecategory'], null=False)),
-            ('fastlanetop', models.ForeignKey(orm['fastlane.fastlanetop'], null=False))
-        ))
-        db.create_unique('fastlane_assignedfastlanecategory_tops', ['assignedfastlanecategory_id', 'fastlanetop_id'])
+        # Adding unique constraint on 'AssignedFastLaneCategory', fields ['meeting', 'category']
+        db.create_unique('fastlane_assignedfastlanecategory', ['meeting_id', 'category_id'])
 
 
     def backwards(self, orm):
         
+        # Removing unique constraint on 'AssignedFastLaneCategory', fields ['meeting', 'category']
+        db.delete_unique('fastlane_assignedfastlanecategory', ['meeting_id', 'category_id'])
+
         # Deleting model 'FastLaneMeeting'
         db.delete_table('fastlane_fastlanemeeting')
 
@@ -55,9 +54,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'AssignedFastLaneCategory'
         db.delete_table('fastlane_assignedfastlanecategory')
-
-        # Removing M2M table for field tops on 'AssignedFastLaneCategory'
-        db.delete_table('fastlane_assignedfastlanecategory_tops')
 
 
     models = {
@@ -117,7 +113,8 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ExpeditedReviewCategory'},
             'abbrev': ('django.db.models.fields.CharField', [], {'max_length': '12'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '60'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '60'}),
+            'users': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'expedited_review_categories'", 'symmetrical': 'False', 'to': "orm['auth.User']"})
         },
         'core.investigator': {
             'Meta': {'object_name': 'Investigator'},
@@ -177,6 +174,7 @@ class Migration(SchemaMigration):
             'additional_therapy_info': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'already_voted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'clinical_phase': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'current_pending_vote': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'_currently_pending_for'", 'unique': 'True', 'null': 'True', 'to': "orm['core.Vote']"}),
             'current_published_vote': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'_currently_published_for'", 'unique': 'True', 'null': 'True', 'to': "orm['core.Vote']"}),
             'date_of_receipt': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
@@ -236,9 +234,10 @@ class Migration(SchemaMigration):
             'medtech_product_name': ('django.db.models.fields.CharField', [], {'max_length': '210', 'null': 'True', 'blank': 'True'}),
             'medtech_reference_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'medtech_technical_safety_regulations': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'pdf_document': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'submission_form'", 'null': 'True', 'to': "orm['documents.Document']"}),
+            'pdf_document': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'submission_form'", 'unique': 'True', 'null': 'True', 'to': "orm['documents.Document']"}),
             'pharma_checked_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'pharma_reference_substance': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'presenter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'presented_submission_forms'", 'to': "orm['auth.User']"}),
             'primary_investigator': ('django.db.models.fields.related.OneToOneField', [], {'to': "orm['core.Investigator']", 'unique': 'True', 'null': 'True'}),
             'project_title': ('django.db.models.fields.TextField', [], {}),
             'project_type_basic_research': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -326,7 +325,7 @@ class Migration(SchemaMigration):
             'submitter_contact_gender': ('django.db.models.fields.CharField', [], {'max_length': '1', 'null': 'True', 'blank': 'True'}),
             'submitter_contact_last_name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'blank': 'True'}),
             'submitter_contact_title': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'submitter_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True', 'blank': 'True'}),
+            'submitter_email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'null': 'True'}),
             'submitter_is_authorized_by_sponsor': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'submitter_is_coordinator': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'submitter_is_main_investigator': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -349,6 +348,7 @@ class Migration(SchemaMigration):
             'is_final': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'published_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'result': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True'}),
+            'signed_at': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'submission_form': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'votes'", 'to': "orm['core.SubmissionForm']"}),
             'text': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'top': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'vote'", 'unique': 'True', 'null': 'True', 'to': "orm['meetings.TimetableEntry']"})
@@ -363,6 +363,8 @@ class Migration(SchemaMigration):
         },
         'documents.document': {
             'Meta': {'object_name': 'Document'},
+            'allow_download': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'branding': ('django.db.models.fields.CharField', [], {'default': "'b'", 'max_length': '1'}),
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']", 'null': 'True'}),
             'date': ('django.db.models.fields.DateTimeField', [], {}),
             'deleted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -386,10 +388,10 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         'fastlane.assignedfastlanecategory': {
-            'Meta': {'object_name': 'AssignedFastLaneCategory'},
+            'Meta': {'unique_together': "(('meeting', 'category'),)", 'object_name': 'AssignedFastLaneCategory'},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'assigned_fastlane_categories'", 'unique': 'True', 'to': "orm['core.ExpeditedReviewCategory']"}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'tops': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['fastlane.FastLaneTop']", 'symmetrical': 'False'}),
+            'meeting': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'categories'", 'null': 'True', 'to': "orm['fastlane.FastLaneMeeting']"}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'assigned_fastlane_categories'", 'null': 'True', 'to': "orm['auth.User']"})
         },
         'fastlane.fastlanemeeting': {
@@ -407,10 +409,11 @@ class Migration(SchemaMigration):
             'meeting': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tops'", 'to': "orm['fastlane.FastLaneMeeting']"}),
             'recommendation': ('django.db.models.fields.NullBooleanField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'recommendation_comment': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'submission': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'fast_lane_tops'", 'unique': 'True', 'to': "orm['core.Submission']"})
+            'submission': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'fast_lane_top'", 'unique': 'True', 'to': "orm['core.Submission']"})
         },
         'meetings.meeting': {
             'Meta': {'object_name': 'Meeting'},
+            'comments': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'deadline': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'deadline_diplomathesis': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'ended': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),

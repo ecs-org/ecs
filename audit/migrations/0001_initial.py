@@ -11,11 +11,14 @@ class Migration(SchemaMigration):
         # Adding model 'AuditTrail'
         db.create_table('audit_audittrail', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
+            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')()),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('data', self.gf('django.db.models.fields.TextField')()),
             ('hash', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('object_created', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))
         db.send_create_signal('audit', ['AuditTrail'])
 
@@ -29,11 +32,14 @@ class Migration(SchemaMigration):
     models = {
         'audit.audittrail': {
             'Meta': {'object_name': 'AuditTrail'},
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['contenttypes.ContentType']"}),
+            'created_at': ('django.db.models.fields.DateTimeField', [], {}),
             'data': ('django.db.models.fields.TextField', [], {}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'hash': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'object_created': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'object_id': ('django.db.models.fields.PositiveIntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})
         },
         'auth.group': {
