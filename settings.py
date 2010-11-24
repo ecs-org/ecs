@@ -361,7 +361,7 @@ COMPRESS_JS_FILTERS = []
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
-
+USE_TEXTBOXLIST = True
 
 # settings override 
 ###################
