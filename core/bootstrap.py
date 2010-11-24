@@ -585,6 +585,8 @@ def testsubmission():
         doc = Document.objects.create_from_buffer(patienteninformation.read(), version='1', doctype=doctype, date=datetime.now())
         doc.save()
 
+    test_submission_form['submission'] = submission
+    test_submission_form['presenter'] = User.objects.get(username='Presenter 1')
     submission_form = SubmissionForm.objects.create(**test_submission_form)
 
     doc.parent_object = submission_form

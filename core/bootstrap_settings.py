@@ -421,7 +421,6 @@ test_submission_form = {
     'german_dataprotection_info': u'bla bla bla',
     'german_concurrent_study_info': u'bla bla bla',
     'study_plan_planned_statalgorithm': u'log rank test',
-    'submission': submission,
     'medtech_reference_substance': u'',
     'study_plan_statalgorithm': u'Lachin and Foulkes',
     'subject_duration_active': u'12 months',
@@ -533,6 +532,5 @@ test_submission_form = {
     'sponsor_address': u'Kinderspitalg. 6',
     'invoice_name': u'',
     'german_statistical_info': u'bla bla bla',
-    'presenter': User.objects.get(username='Presenter 1'),
 }
 
