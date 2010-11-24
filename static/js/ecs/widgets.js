@@ -87,6 +87,7 @@ ecs.widgets.Popup = new Class({
     Extends: ecs.widgets.Widget,
     initialize: function(options){
         options = options || {};
+        this.context = options.context || null;
         this.parent(new Element('div'), options);
         this.popup = new Element('div', {'class': 'ecs-Popup'});
         this.popup.store('ecs.widgets.Popup', this);

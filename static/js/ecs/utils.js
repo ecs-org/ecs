@@ -3,7 +3,7 @@ ecs.setupRichTextEditor = function(textArea, readonly){
     textArea.hide();
     display.inject(textArea, 'after');
     if(readonly){
-        return
+        return;
     }
     display.addEvent('click', function(e){
         if(textArea.disabled){

@@ -1,0 +1,24 @@
+{% extends "core.html" %}
+
+{% load i18n %}
+
+{% block headertitle %}
+    {% trans 'Boilerplate' %}
+{% endblock %}
+
+{% block content %}
+    <a href="{% url ecs.boilerplate.views.edit_boilerplate %}">{% trans 'New' %}</a>
+    {% for text in texts %}
+    <div>
+        <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}"><b>{{ text.slug }}</b>: {{ text.text|truncatewords:20 }}</a>
+        <div>
+            Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr, 
+            Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr
+            von {{ text.author }}
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+
+

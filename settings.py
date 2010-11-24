@@ -194,6 +194,7 @@ INSTALLED_APPS = (
     'ecs.authorization',
     'ecs.integration',
     'ecs.fastlane',
+    'ecs.boilerplate',
 )
 
 

@@ -290,31 +290,12 @@
                 }
             });
             
-            var reviewToolbarItems = [function(textarea){
-                var button = new Element('a', {html: "{% trans 'Insert Annotations' %}"});
-                button.addEvent('click', function(){
-                    var popup = new ecs.widgets.Popup({url: '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}'});
-                    popup.addEvent('load', function(){
-                        var copyButton = new Element('input', {type: 'submit', value: "{% trans 'Copy' %}"});
-                        copyButton.addEvent('click', function(){
-                            var text = "";
-                            popup.element.getElements('input[type=checkbox]').each(function(checkbox){
-                                if(checkbox.checked){
-                                    var a = checkbox.getParent('.annotation');
-                                    text += a.getPrevious('.document').innerHTML + ", " + a.getElement('.text').innerHTML + "\n\n";
-                                }
-                            });
-                            textarea.insertAtCursor(text);
-                            textarea.fireEvent('change');
-                            popup.dispose();
-                            return false;
-                        });
-                        popup.element.grab(copyButton);
-                    });
-                    return false;
-                });
-                return button;
-            }];
+            var reviewToolbarItems = [
+                ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}')
+            ];
+            {% if user|has_flag:'internal' %}
+                reviewToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+            {% endif %}
             
             $$('form.review .CharField textarea').each(function(textarea){
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
