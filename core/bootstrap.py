@@ -297,18 +297,10 @@ def medical_categories():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     ''' Developer Account Creation '''
-    developers = (
-        ('wuxxin', u'Felix', u'Erkinger', u'felix@erkinger.at'),
-        ('mvw', 'Marc', 'van Woerkom', 'marc.vanwoerkom@googlemail.com'),
-        ('emulbreh', u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
-        ('natano', u'Martin', u'Natano', 'natano@natano.net'),
-        ('amir', u'amir', u'hassan', 'amir@viel-zu.org'),
-        ('scripty', u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com'),
-        ('froema', u'Markus', u'Froehlich', 'froema@ep3.at'),
-        ('nadia', u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
-        ('max', u' Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
-        ('peter.rehak@meduni-graz.at', u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
-    )
+    try:
+        from ecs.core.bootstrap_settings import developers
+    except ImportError:
+        developers = (('developer', u'John', u'Doe', u'developer@example.com', 'changeme'),)
     
     for dev in developers:
         user, created = User.objects.get_or_create(username=dev[0])
@@ -339,7 +331,7 @@ def auth_user_testusers():
         (u'Internal Rev', u'EC-Internal Review Group',
             {'internal': True, 'approved_by_office': True}),
         (u'Executive', u'EC-Executive Board Group',             
-            {'internal': True, 'executive_board_member': True, 'approved_by_office': True}),
+            {'internal': True, 'executive_board_member': True),
         (u'Signing', u'EC-Signing Group',                       
             {'internal': True, 'approved_by_office': True}),
         (u'Statistic Rev', u'EC-Statistic Group',
@@ -349,7 +341,7 @@ def auth_user_testusers():
         (u'Insurance Rev', u'EC-Insurance Reviewer',            
             {'internal': False, 'approved_by_office': True}),
         (u'Thesis Rev', u'EC-Thesis Review Group',              
-            {'internal': False, 'thesis_review': True, 'approved_by_office': True}),
+            {'internal': False, 'thesis_review': True),
         (u'External Reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
     )
@@ -395,29 +387,10 @@ def auth_user_testusers():
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():
-    staff_users = ()
-    
-    for blueprint in blueprints:
-        b, _ = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
-        changed = False
-        for name, value in blueprint.items():
-            if getattr(b, name) != value:
-                setattr(b, name, value)
-                changed = True
-        if changed:
-            b.save()
-
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
-def checklist_questions():
-    questions = {
-        u'statistic_review': (
-            u'1. Ist das Studienziel ausreichend definiert?',
-            u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',
-            u'3. Ist die Studienpopulation ausreichend definiert?',
-            u'4. Sind die Zielvariablen geeignet definiert?',
-            u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',
-            u'6. Ist die Größe der Stichprobe ausreichend begründet?',
-        ),
+    try:
+        from ecs.core.bootstrap_settings import staff_users
+    except ImportError:
+        staff_users = (),
         u'legal_review': (u"42 ?",),
         u'insurance_review': (u"42 ?",),
         u'boardmember_review': (u"42 ?",),
