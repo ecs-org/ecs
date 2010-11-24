@@ -577,7 +577,7 @@ def testsubmission():
             'substance_preexisting_clinical_tries': None
         }
     
-    patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'patienteninformation.pdf')
+    patienteninformation_filename = os.path.join(os.path.dirname(__file__), 'tests', 'data', 'menschenrechtserklaerung.pdf')
     with open(patienteninformation_filename, 'rb') as patienteninformation:
         doctype = DocumentType.objects.get(identifier='patientinformation')
         doc = Document.objects.create_from_buffer(patienteninformation.read(), version='1', doctype=doctype, date=datetime.now())

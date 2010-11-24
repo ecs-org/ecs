@@ -18,7 +18,7 @@ class RendererTest(EcsTestCase):
     def setUp(self):
         super(RendererTest, self).setUp()
         self.uuid = uuid4().get_hex();
-        self.pdfdoc = os.path.join(os.path.dirname(__file__), 'test-pdf-14-seitig.pdf')    
+        self.pdfdoc = os.path.join(os.path.dirname(__file__), 'menschenrechtserklaerung.pdf')    
         self.f_pdfdoc = open(self.pdfdoc, "rb")
         self.pages = pdf_page_count(self.f_pdfdoc)
         self.render_dirname = tempfile.mkdtemp()

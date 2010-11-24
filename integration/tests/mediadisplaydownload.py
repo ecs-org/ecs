@@ -18,7 +18,7 @@ from ecs.mediaserver.mediaprovider import MediaProvider
 
 
 class MediaDisplayDownload(LoginTestCase):
-    filename = 'test-pdf-14-seitig.pdf'
+    filename = 'menschenrechtserklaerung.pdf'
     pdfdocname = os.path.join(os.path.dirname(__file__), filename)
     png_magic = binascii.a2b_hex('89504E470D0A1A0A')
     mediaprovider = MediaProvider()
