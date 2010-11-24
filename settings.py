@@ -123,6 +123,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.media",
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
+    "ecs.core.context_processors.ecs_settings",
 )
 
 MIDDLEWARE_CLASSES = (

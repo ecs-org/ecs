@@ -2,6 +2,7 @@
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 from ecs.core.models import Investigator
 from ecs.utils.timedelta import parse_timedelta
@@ -52,7 +53,7 @@ class NullBooleanField(forms.NullBooleanField):
 class MultiselectWidget(forms.TextInput):
     def __init__(self, *args, **kwargs):
         self.url = kwargs.pop('url')
-        super(MultiselectWidget, self).__init__(*args, **kwargs)
+        return super(MultiselectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, choices=()):
         value_list = ",".join(map(str, value or ()))

@@ -8,6 +8,7 @@ from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
+from django.conf import settings
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
@@ -136,12 +137,21 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
         widgets = {
-            'substance_registered_in_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
-            'substance_p_c_t_countries': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})),
             'sponsor_email': StrippedTextInput(),
             'invoice_email': StrippedTextInput(),
             'submitter_email': StrippedTextInput(),
         }
+
+    def __init__(self, *args, **kwargs):
+        rval = super(SubmissionFormForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['substance_registered_in_countries'].widget = MultiselectWidget(
+                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})
+            )
+            self.fields['substance_p_c_t_countries'].widget = MultiselectWidget(
+                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})
+            )
+        return rval
     
     def clean(self):
         cleaned_data = super(SubmissionFormForm, self).clean()

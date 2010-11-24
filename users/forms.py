@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
@@ -56,25 +57,34 @@ class UserDetailsForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('groups',)
-        widgets = {
-            'groups': MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'})),
-        }
 
     def __init__(self, *args, **kwargs):
         rval = super(UserDetailsForm, self).__init__(*args, **kwargs)
+
         if self.instance and self.instance.ecs_profile.board_member:
             self.fields['medical_categories'] = forms.ModelMultipleChoiceField(
                 required=False,
                 queryset=MedicalCategory.objects.all(),
-                widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})),
                 initial=[x.pk for x in self.instance.medical_categories.all()],
             )
             self.fields['expedited_review_categories'] = forms.ModelMultipleChoiceField(
                 required=False,
                 queryset=ExpeditedReviewCategory.objects.all(),
-                widget=MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})),
                 initial=[x.pk for x in self.instance.expedited_review_categories.all()],
             )
+
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['groups'].widget = MultiselectWidget(
+                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'})
+            )
+            if self.instance and self.instance.ecs_profile.board_member:
+                self.fields['medical_categories'].widget = MultiselectWidget(
+                    url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
+                )
+                self.fields['expedited_review_categories'].widget = MultiselectWidget(
+                    url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
+                )
+
         return rval
 
     def save(self, *args, **kwargs):

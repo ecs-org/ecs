@@ -12,8 +12,10 @@
             {% compress css %}
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooEditable/Assets/MooEditable/MooEditable.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                 {% if use_textboxlist %}
+                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
+                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                {% endif %}
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/base.css" />
@@ -44,8 +46,10 @@
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/datepicker.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/Roar/Roar.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/GrowingInput.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
+                 {% if use_textboxlist %}
+                     <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.js"></script>
+                     <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
+                 {% endif %}
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/dbug.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooEditable/Source/MooEditable/MooEditable.js"></script>
                  <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/Overlay.js"></script>
