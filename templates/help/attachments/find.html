@@ -1,0 +1,6 @@
+{% for attachment in attachments %}
+<div>
+    <img src="{% url ecs.help.views.download_attachment attachment.pk %}" draggable="false"/>
+    <span class="slug">{{ attachment.slug }}</span>
+</div>
+{% endfor %}

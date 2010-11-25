@@ -236,20 +236,10 @@
               url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
           }
           if(window.location.hash){
-              url += window.location.hash.substring(1) + '/';
+              url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
           }
-          //window.location.href = url;
-          var windowSize = $(window).getSize();
-          var overlay = new Element('div', {id: 'help_overlay'});
-          var iframe = new Element('iframe', {id: 'help_iframe', src: url});
-          overlay.appendChild(iframe);
-          overlay.setStyles({width: windowSize.x, height: windowSize.y});
-          iframe.onload = function(){
-              iframe.contentWindow.close = function(){
-                  overlay.dispose();
-              };
-          };
-          document.body.appendChild(overlay);
+          var win = window.open(url, 'ecshelp');
+          win.focus();
           return false;
       });
       

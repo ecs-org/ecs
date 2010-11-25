@@ -1,0 +1,11 @@
+{% extends "help/base.html" %}
+
+{% block content %}
+    {{ form.errors }}
+    <form action="" method="post" enctype="multipart/form-data">
+        <table>
+        {{ form }}
+        </table>
+        <input type="submit" value="Upload" />
+    </form>
+{% endblock %}

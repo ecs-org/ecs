@@ -6,5 +6,8 @@ class HelpPageForm(forms.ModelForm):
         model = Page
         
 class AttachmentUploadForm(forms.ModelForm):
+    slug = forms.CharField(required=False)
+
     class Meta:
         model = Attachment
+        fields = ('file', 'slug',)

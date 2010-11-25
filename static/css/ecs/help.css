@@ -1,3 +1,7 @@
+#help{
+    padding: 10px;
+}
+
 #help_overlay{
     z-index: 100000;
     position: absolute;
@@ -24,7 +28,12 @@
     font-family: monospace;
     font-size: 12pt;
     width: 100%;
-    height: 30em;
+    height: 100%;
+}
+
+#help_content .location{
+    color: #666666;
+    font-size: 80%;
 }
 
 #help_content form{
@@ -32,9 +41,31 @@
 }
 
 #help_attachments {
-    width: 28%;
+    width: 240px;
     position: absolute;
     right: 0px;
+    top: 80px;
+}
+
+#help_attachments > .list > div{
+    position: relative;
+    width: 200px;
+    height: 100px;
+    margin: 5px;
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    -moz-user-select: none;
+}
+#help_attachments > .list > div img{
+    width: 100px;
+    float: left;
+    -moz-user-select: none;
+}
+
+#help_attachments .slug{
+    font-size: 70%;
+    display: block;
+    -moz-user-select: none;
 }
 
 #help_attachments iframe{
@@ -48,4 +79,9 @@
     position: absolute;
     z-index: 100;
     background-color: #ffffff;
+}
+
+.restructuredtext img,
+#help_preview img{
+    max-width: 300px;
 }

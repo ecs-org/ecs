@@ -1,16 +1,20 @@
 {% extends "shell.html" %}
 
+{% block htmltitle %}Online Hilfe | {{ block.super }}{% endblock %}
+
 {% block htmlbody %}
+<div id="help">
     <h1>ECS Onlinehilfe</h1>
 
     {% block actions %}
-        <a href="javascript:window.close()">Schließen</a>
-        | <a href="{% url ecs.help.views.index %}">Übersicht</a>
+        <a href="{% url ecs.help.views.index %}">Übersicht</a>
         | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
+        | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
     {% endblock %}
     <div id="help_content">
         {% block content %}
 
         {% endblock %}
     </div>
+</div>
 {% endblock %}

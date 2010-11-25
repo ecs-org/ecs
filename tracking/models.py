@@ -17,7 +17,11 @@ class View(models.Model):
     objects = ViewManager()
     
     def __unicode__(self):
-        return self.path
+        try:
+            module, func = self.path.rsplit('.', 1)
+            return "%s @ %s" % (func, module)
+        except ValueError, TypeError:
+            return self.path
 
 class Request(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now)

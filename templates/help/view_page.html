@@ -1,16 +1,14 @@
 {% extends "help/base.html" %}
 {% load markup %}
 
-{% block actions %}
-    {{ block.super }}
-    | <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">Seite Bearbeiten</a>
-{% endblock %}
+{% block upload_params %}{% if page.view_id %}&amp;view={{ page.view_id }}{% endif %}&amp;page={{ page.id }}{% endblock %}
 
 {% block content %}
     <h2>{{ page.title }}</h2>
-    ({{ page.view.path }})
+    <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+    <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
     <div class="restructuredtext">
-        {{ page.text|restructuredtext }}
+        {{ page.publish_parts.fragment|safe }}
     </div>
     {% if related_pages %}
     <h3>Siehe auch:</h3>
