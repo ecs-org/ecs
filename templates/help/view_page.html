@@ -1,11 +1,13 @@
 {% extends "help/base.html" %}
-{% load markup %}
+{% load userutils %}
 
 {% block upload_params %}{% if page.view_id %}&amp;view={{ page.view_id }}{% endif %}&amp;page={{ page.id }}{% endblock %}
 
 {% block content %}
     <h2>{{ page.title }}</h2>
-    <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+    {% if user|has_flag:'help_writer' %}
+        <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+    {% endif %}
     <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
     <div class="restructuredtext">
         {{ page.publish_parts.fragment|safe }}

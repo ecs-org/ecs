@@ -24,14 +24,7 @@
     </form>
     <div id="help_attachments">
         <input type="text" id="help_attachments_filter_input"/>
-        <div class="list">
-            {% for attachment in attachments %}
-            <div>
-                <img src="{% url ecs.help.views.download_attachment attachment.pk %}" draggable="false"/>
-                <span class="slug">{{ attachment.slug }}</span>
-            </div>
-            {% endfor %}
-        </div>
+        <div class="list"></div>
     </div>
 {% endblock %}
 
@@ -73,16 +66,30 @@
             input: $('help_attachments_filter_input'),
             interval: null,
             query: '',
-            refresh: function(){
-                if(this.input.value == this.query){
+            refresh: function(force){
+                if(!force && this.input.value == this.query){
                     return;
                 }
                 this.query = this.input.value;
+                var self = this;
                 var request = new Request.HTML({
                     update: $$('#help_attachments > .list')[0],
                     url: '{% url ecs.help.views.find_attachments %}?q=' + encodeURIComponent(this.query),
                     onSuccess: function(){
                         $$('#help_attachments > .list > div').each(function(d){
+                            var deleteLink = new Element('a', {html: 'delete'});
+                            deleteLink.addEvent('click', function(){
+                                var request = new Request({
+                                    url: '{% url ecs.help.views.delete_attachment %}',
+                                    data: 'pk=' + d.id.split('_')[1],
+                                    onSuccess: function(){
+                                        self.refresh(true)
+                                    }
+                                });
+                                request.send();
+                                return false;
+                            });
+                            d.grab(deleteLink);
                             new Drag.Move(d, {
                                 droppables: '#id_text',
                                 onStart: function(element){
@@ -114,6 +121,7 @@
                         self.refresh();
                     }
                 });
+                this.refresh(true);
             }
         };
         

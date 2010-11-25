@@ -1,5 +1,5 @@
 {% for attachment in attachments %}
-<div>
+<div id="attachment_{{ attachment.pk }}">
     <img src="{% url ecs.help.views.download_attachment attachment.pk %}" draggable="false"/>
     <span class="slug">{{ attachment.slug }}</span>
 </div>

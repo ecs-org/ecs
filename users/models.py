@@ -23,6 +23,7 @@ class UserProfile(models.Model):
     insurance_review = models.BooleanField(default=False)
     expedited_review = models.BooleanField(default=False)
     internal = models.BooleanField(default=False)
+    help_writer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)

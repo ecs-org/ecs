@@ -5,6 +5,7 @@ from django.db.models import Q
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.tracking.models import View
+from ecs.users.utils import user_flag_required
 from ecs.help.models import Page, Attachment
 from ecs.help.forms import HelpPageForm, AttachmentUploadForm
 from ecs.help.utils import publish_parts
@@ -21,12 +22,6 @@ def view_help_page(request, page_pk=None):
         'page': page,
         'related_pages': related_pages,
     })
-
-
-def delete_help_page(request, page_pk=None):
-    page = get_object_or_404(Page, pk=page_pk)
-    page.delete()
-    return HttpResponseRedirect(reverse('ecs.help.views.index'))
 
 
 def find_help(request, view_pk=None, anchor=''):
@@ -47,6 +42,25 @@ def find_help(request, view_pk=None, anchor=''):
             })
     return HttpResponseRedirect(reverse('ecs.help.views.index'))
 
+
+def index(request):
+    return render(request, 'help/index.html', {
+        'pages': Page.objects.order_by('title'),
+    })
+
+def attachments(request):
+    attachments = Attachment.objects.order_by('name')
+    return render(request, 'help/attachments.html', {
+        'attachments': attachments,
+    })
+
+
+def download_attachment(request, attachment_pk=None):
+    attachment = get_object_or_404(Attachment, pk=attachment_pk)
+    return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)
+
+
+@user_flag_required('help_writer')
 def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if page_pk:
         page = get_object_or_404(Page, pk=page_pk)
@@ -78,26 +92,23 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
         'view': view,
         'form': form,
         'related_pages': related_pages,
-        'attachments': Attachment.objects.filter(Q(view=view) | Q(page=page))
-    })
-    
-def index(request):
-    return render(request, 'help/index.html', {
-        'pages': Page.objects.order_by('title'),
-    })
-    
-def attachments(request):
-    attachments = Attachment.objects.order_by('name')
-    return render(request, 'help/attachments.html', {
-        'attachments': attachments,
     })
 
 
+@user_flag_required('help_writer')
+def delete_help_page(request, page_pk=None):
+    page = get_object_or_404(Page, pk=page_pk)
+    page.delete()
+    return HttpResponseRedirect(reverse('ecs.help.views.index'))
+
+
+@user_flag_required('help_writer')
 def preview_help_page_text(request):
     text = request.POST.get('text', '')
     return HttpResponse(publish_parts(text)['fragment'])
     
 
+@user_flag_required('help_writer')
 def upload(request):
     page, view = None, None
     if 'page' in request.GET:
@@ -115,16 +126,16 @@ def upload(request):
         'form': form,
     })
 
-def download_attachment(request, attachment_pk=None):
-    attachment = get_object_or_404(Attachment, pk=attachment_pk)
-    return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)
-    
-def delete_attachment(request, attachment_pk=None):
-    attachment = get_object_or_404(Attachment, pk=attachment_pk)
+
+@user_flag_required('help_writer')
+def delete_attachment(request):
+    attachment = get_object_or_404(Attachment, pk=request.POST.get('pk', None))
     attachment.delete()
-    return redirect_to_next_url(request, reverse('ecs.help.views.index'))
-    
+    return HttpResponse('OK')
+
+
+@user_flag_required('help_writer')
 def find_attachments(request):
     return render(request, 'help/attachments/find.html', {
-        'attachments': Attachment.objects.filter(slug__icontains=request.GET.get('q', '')).order_by('slug')[:6]
+        'attachments': Attachment.objects.filter(slug__icontains=request.GET.get('q', '')).order_by('slug')[:5]
     })

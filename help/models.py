@@ -36,12 +36,19 @@ class AttachmentFileStorage(FileSystemStorage):
         # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
         return smart_str(os.path.normpath(name))
 
+
+def upload_to(instance=None, filename=None):
+    instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
+    _, file_ext = os.path.splitext(filename)
+    target_name = os.path.normpath(os.path.join(settings.ECSHELP_ROOT, 'images', instance.slug))
+    return target_name
+
     
 class Attachment(models.Model):
-    file = models.FileField(upload_to=os.path.join(settings.ECSHELP_ROOT, 'images'), storage=AttachmentFileStorage())
+    file = models.FileField(upload_to=upload_to, storage=AttachmentFileStorage())
     mimetype = models.CharField(max_length=100)
     screenshot = models.BooleanField(default=False)
-    slug = models.CharField(max_length=100, blank=True)
+    slug = models.CharField(max_length=100, unique=True, blank=True)
     view = models.ForeignKey(View, null=True, blank=True)
     page = models.ForeignKey(Page, null=True, blank=True)
     
@@ -51,7 +58,12 @@ class Attachment(models.Model):
             self.mimetype = mimetype
         if not self.slug:
             name, ext = os.path.splitext(self.file.name)
-            self.slug = slugify(name) + ext
+            base_slug = slugify(name)
+            self.slug = base_slug + ext
+            i = 1
+            while type(self).objects.filter(slug=self.slug).exists():
+                self.slug = '%s_%02d%s' % (base_slug, i, ext)
+                i += 1
         return super(Attachment, self).save(**kwargs)
         
     

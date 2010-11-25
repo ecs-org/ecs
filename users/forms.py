@@ -89,15 +89,15 @@ class UserDetailsForm(forms.ModelForm):
 
     def save(self, *args, **kwargs):
         instance = super(UserDetailsForm, self).save(*args, **kwargs)
-        instance.medical_categories = self.cleaned_data['medical_categories']
-        instance.expedited_review_categories = self.cleaned_data['expedited_review_categories']
+        instance.medical_categories = self.cleaned_data.get('medical_categories', ())
+        instance.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', ())
         instance.save()
         return instance
 
 class ProfileDetailsForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal')
+        fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal', 'help_writer')
 
 class InvitationForm(forms.Form):
     email = forms.EmailField()
