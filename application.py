@@ -78,6 +78,7 @@ nose:inst:all:pypi:nose
 # so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:all:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson
+beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 
 
