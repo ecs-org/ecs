@@ -23,6 +23,6 @@ class Command(BaseCommand):
         for page in Page.objects.all():
             name = (slugify(page.slug) or ("page_%03d" % page.pk)) + '.rst'
             with open(os.path.join(src_dir, name), 'w') as f:
-                f.write(linker.link(page.text))
+                f.write(linker.link(page.text).encode('utf-8'))
         
 

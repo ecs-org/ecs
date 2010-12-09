@@ -11,8 +11,8 @@ DEFAULT_DOCUTILS_SETTINGS = {
     'initial_header_level': 2,
 }
 
-DOC_REF_RE = re.compile(r':doc:`([^`<]+)(?:<(\w+)>)?`')
-IMAGE_RE = re.compile(r'\.\. image:: ([a-zA-Z0-9._-]+)')
+DOC_REF_RE = re.compile(r':doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
+IMAGE_RE = re.compile(r'\.\. image:: ([a-zA-Z0-9._-]+)', re.UNICODE)
 
 class Linker(object):
     def __init__(self, image_url=None, page_url=None, doc_roles=True):
