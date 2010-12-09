@@ -85,3 +85,7 @@
 #help_preview img{
     max-width: 300px;
 }
+
+.restructuredtext ul, .restructuredtext ol{
+    margin-left: 2em;
+}
