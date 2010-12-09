@@ -16,6 +16,7 @@ ecs.textarea = {
                         this.sourceTextarea.value = this.textarea.value;
                         this.sourceTextarea.fireEvent('change');
                         this.screen.setStyle('display', 'none');
+                        this.sourceTextarea.focus();
                         return false;
                     }
                 }).bind(this));
