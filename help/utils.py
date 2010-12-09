@@ -64,5 +64,4 @@ class Linker(object):
 def publish_parts(source):
     linker = Linker()
     source = linker.link(source)
-    print source
     return docutils_publish_parts(source=source, writer_name="html4css1", settings_overrides=DEFAULT_DOCUTILS_SETTINGS)
