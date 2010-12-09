@@ -351,7 +351,7 @@ class SetupApplication(object):
         os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
         
     def sslcert_config(self):
-        local('sudo openssl req -config /root/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
+        local('sudo openssl req -config /ecs/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
         (self.hostname, self.hostname))
     
     def local_settings_config(self):
