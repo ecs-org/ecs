@@ -364,7 +364,8 @@ class SetupApplication(object):
         local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
         local_settings.write("""
 # database settings
-local_db = {
+DATABASES_OVERRIDE = {}
+DATABASES_OVERRIDE['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': '%(username)s',
     'USER': '%(username)s',
