@@ -154,12 +154,18 @@ imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
 
-python-pil:req:apt:apt-get:libjpeg62-dev,zlib1g-dev,libfreetype6-dev,liblcms1-dev
+# PIL requirements for ubuntu
+libjpeg62-dev:req:apt:apt-get:libjpeg62-dev
+zlib1g-dev:req:apt:apt-get:zlib1g-dev
+libfreetype6-dev:req:apt:apt-get:libfreetype6-dev
+liblcms1-dev-devel:req:apt:apt-get:liblcms1-dev
+
 # PIL requirements for opensuse
 libjpeg-devel:req:suse:zypper:libjpeg-devel
 zlib-devel:req:suse:zypper:zlib
 freetype2-devel:req:suse:zypper:freetype2-devel
 liblcms1:req:suse:zypper:liblcms1
+
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
