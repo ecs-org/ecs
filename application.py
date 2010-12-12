@@ -349,8 +349,8 @@ class SetupApplication(object):
         self.env_baseline()
         self.local_settings_config()
         self.db_clear()
+        self.queuing_config()
         self.db_update()
-        self.queuing_config()                       
         self.search_config()
  
     def homedir_config(self):   
