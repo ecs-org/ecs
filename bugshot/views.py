@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import xmlrpclib, re
 from base64 import b64decode
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 
 def shoot(request):
-    trac = xmlrpclib.ServerProxy('https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc')
+    trac = xmlrpclib.ServerProxy(settings.BUGSHOT_CONFIG['bugshoturl'])
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
-        "milestone":"Milestone 9", 
-        # XXX deleted because only persons assigned to a sprint can be owner of this type of ticket "sprint":"Sprint 7", 
+        "milestone": settings.BUGSHOT_CONFIG['milestone'], 
         "absoluteurl": request.POST.get('absoluteurl', ''),
     }, True)
 
