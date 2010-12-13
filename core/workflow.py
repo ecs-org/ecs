@@ -178,7 +178,7 @@ class AdditionalReviewSplit(Generic):
             for token in super(AdditionalReviewSplit, self).emit_token(*args, **kwargs):
                 token.task.assign(user)
                 tokens.append(token)
-        return token
+        return tokens
 
 # XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class AdditionalChecklistReview(ChecklistReview):
