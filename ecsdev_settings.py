@@ -30,8 +30,9 @@ if user == "shredder":
     PDFAS_SERVICE = 'http://s.ecsdev.ep3.at:4780/pdf-as/'
 elif user == "testecs":
     PDFAS_SERVICE = 'http://test.ecsdev.ep3.at:4780/pdf-as/'
-    
-    
+elif user == "chipper":
+    PDFAS_SERVICE = 'http://doc.ecsdev.ep3.at:4780/pdf-as/'
+
 # ecsmail server settings
 if user == "shredder":
     ECSMAIL_OVERRIDE = {
@@ -43,16 +44,22 @@ elif user == "testecs":
     ECSMAIL_OVERRIDE = {
         'port': 8843,
         'authoritative_domain': 'test.ecsdev.ep3.at',
-        'trusted_sources': ['127.0.0.1', '78.46.72.188'],
+        'trusted_sources': ['127.0.0.1', '78.46.72.189'],
+    }
+elif user == "chipper":
+    ECSMAIL_OVERRIDE = {
+        'port': 8853,
+        'authoritative_domain': 'doc.ecsdev.ep3.at',
+        'trusted_sources': ['127.0.0.1', '78.46.72.166'],
     }
 
-if user in ["shredder", "testecs"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
+if user in ["shredder", "testecs", "chipper"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-if user == "testecs":    
+if user == "testecs":
     MS_CLIENT = {"server": "http://test.ecsdev.ep3.at", "bucket": "/mediaserver/",
         "key_id": "GHz36o6OJHOm8uKmYiD1", "key_secret": "dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6",
         }
@@ -60,13 +67,17 @@ elif user == "shredder":
     MS_CLIENT = {"server": "http://s.ecsdev.ep3.at", "bucket": "/mediaserver/",
         "key_id": "Skj45A6R2z36gVKF17i2", "key_secret": "SfMS0teNT7E2yD6GVVK6JH0xwfkeykw",
         }
+elif user == "chipper":
+    MS_CLIENT = {"server": "http://doc.ecsdev.ep3.at", "bucket": "/mediaserver/",
+        "key_id": "Edoij38So9js7SEiu982", "key_secret": "ESDOFK934JSDFihsnu3w4SDOJFuihwi",
+        }
 
 # Mediaserver Server Access
 MS_SERVER_OVERRIDE = {
     "render_memcache_lib": 'memcache',
     "render_memcache_host": '127.0.0.1',
     "render_memcache_host": 11211,
-}
+    }
 
 
 if user == "testecs":
@@ -75,6 +86,10 @@ if user == "testecs":
     HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
     
     # testecs does not show django debug messages
+    DEBUG = False
+    TEMPLATE_DEBUG = False
+    CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
+elif user == "chipper":
     DEBUG = False
     TEMPLATE_DEBUG = False
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
