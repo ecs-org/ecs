@@ -1,7 +1,7 @@
 # Django settings for ecs project.
 
 import os.path, platform, sys
-from django.core.exceptions import ImproperlyConfigured
+#from django.core.exceptions import ImproperlyConfigured
 from copy import deepcopy
 
 # root dir of project
