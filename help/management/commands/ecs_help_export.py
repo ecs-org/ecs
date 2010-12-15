@@ -8,13 +8,13 @@ from ecs.help.utils import Linker
 
 
 class Command(BaseCommand):
-    def handle(self, **options):
+    def handle(self, targetdir=None, **options):
         linker = Linker(
             image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
             doc_roles=False,
         )
-        
-        src_dir = os.path.join(settings.ECSHELP_ROOT, 'src')
+        targetdir = settings.ECSHELP_ROOT if targetdir is None else targetdir
+        src_dir = os.path.join(targetdir, 'src')
         try:
             os.makedirs(src_dir)
         except:
