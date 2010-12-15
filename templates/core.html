@@ -3,10 +3,12 @@
 {% load i18n userutils %}
 
 {% block account %}
-  <div class="user_options">{% comment %} <a href="">Profil</a> | {% endcomment %} <a href="/accounts/logout">Logout</a></div>
   <div class="user_data">
     <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
-    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a></div>
+    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user.get_full_name|default:user.username }}</a>
+      <span class="user_logout"><a href="/accounts/logout">Logout</a></span>
+    </div>
+    
   </div>
   {% load userswitcher %}
   {% userswitcher %}

@@ -1,4 +1,49 @@
 /* margin and padding to zero, because of ecaxt aligning tags */
+
+/* =Reset default browser CSS. Based on work by Eric Meyer: http://meyerweb.com/eric/tools/css/reset/index.html
+-------------------------------------------------------------- 
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+input, textarea, select {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+}
+h1, h2, h3, h4, h5, h6 {
+  clear: both;
+  font-weight: normal;
+}
+blockquote {
+  quotes: none;
+}
+blockquote:before, blockquote:after {
+  content: '';
+  content: none;
+}
+del {
+  text-decoration: line-through;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a img {
+  border: none;
+}
+*/
+
 * {
   margin: 0;
   padding: 0;
@@ -28,7 +73,7 @@ body {
   border-bottom: 1px solid #999;
   height: 80px;
 }
-#headertitle, #headertext {
+#headertitle {
   float: left;
   width: 90%;
   display: block;
@@ -95,6 +140,16 @@ body {
   font-weight: lighter;
   margin-bottom: 10px;
 }
+#content h4 {
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+#content h5 {
+  display: block;
+  font-size: 0.8em;
+  margin-bottom: 10px;
+}
 .main.form h3 {
   padding: 10px;
   border-bottom: 1px solid #eee;
@@ -130,12 +185,9 @@ a {
 #headertitle h1 {
   font-size: 12pt;
   margin-bottom: 5px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-}
-#headertext p {
-  font-size: 10pt;
-  line-height: 14pt;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bolder;
+  letter-spacing: 1px;
 }
 
 /* sidebar */
@@ -182,13 +234,13 @@ a {
 #sidebar p {
   margin: 10px 0;
 }
-#sidebar a {
+#sidebar a, #sidebar .togglers  {
   text-decoration: none;
   color: #2b558e;
 }
 #toggle_sidebar_button {
   position: absolute;
-  top: 233px;
+  top: 216px;
   right: 22px;
   width: 30px;
   height: 30px;
@@ -230,7 +282,7 @@ a {
   background-color: #cccccc;
   z-index: 100000;
 }
-.ecs-FullscreenEditor textarea{
+.ecs-FullscreenEditor textarea {
   width: 90%;
   height: 90%;
   margin: 20px;

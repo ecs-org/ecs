@@ -13,7 +13,7 @@
   left: 0;
   line-height: 30px;
   background: #B7D4E5;
-  width: 98%;
+  width: 86%;
   padding: 2px 5px;
   border-radius: 0 5px 5px 5px;
   -moz-border-radius: 0 5px 5px 5px;
@@ -57,7 +57,6 @@
   color: #fff;
   background: #ff8000;
 }
-
 .tab_headers li a.delete_row {
   border: none;
   background: url(/static/images/icons.png) 0 -128px no-repeat;
@@ -76,42 +75,36 @@
   border: 1px solid #ff0000;
 }
 .tab_headers .disabled a {
-    background-color: #ccccdd;
-    color: #999999;
+  background-color: #ccccdd;
+  color: #999999;
 }
 .header_actions {
   position: absolute;
   right: 0;
   top: 0;
-  padding: 10px 10px 0 0;
+  padding: 5px 10px 5px 5px;
   display: block;
-  width: 105px;
+  width: 90px;
   text-align: center;
-}
-.floating_box {
-  position: absolute;
-  right: 20px;
-  top: 90px;
-  min-width: 98px;
-  background-color: #eeeeee;
-  padding: 10px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-.floating_box a {
-  padding: 3px 6px;
+.header_actions a {
+  padding: 4px 5px;
   margin-bottom: 5px;
   display: block;
-  height: 20px;
-  line-height: 20px;
   cursor: pointer;
   z-index: 100;
   color: #333;
+  font-size: 11pt;
   text-decoration: none;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+}
+.header_actions a:hover {
+  text-decoration: none;
 }
 .button_save {
   background: #ccc;
@@ -141,7 +134,6 @@
   background: #84cefb;
   border: 1px solid #61b6e9;
 }
-
 
 /* readonly */
 
@@ -180,6 +172,99 @@
   color: #333;
 }
 */
+
+/* sidebar */
+
+#logo small {
+  position: absolute;
+  top: 57px;
+  right: 40px;
+  z-index: 1000;
+}
+#account {
+  font-size: 11pt;
+}
+.user_data {
+  display: block;
+  float: left;
+  margin-bottom: 10px;
+}
+.user_icon {
+  float: left;
+  width: 30px;
+}
+.user_name {
+  position: relative;
+  float: left;
+  width: 163px;
+  height: 43px;
+  line-height: 13pt;
+  border-bottom: 1px solid #ddd;
+}
+.user_logout {
+  position: absolute;
+  top: 22px;
+  right: 0;
+}
+#sidebar .user_logout a {
+  font-size: 10pt;
+  font-weight: bolder;
+  color: #800000;
+}
+.icon_help, .icon_feedback, .icon_workflow, .user_icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  text-indent: -9999px;
+  margin-right: 3px;
+}
+.icon_help {
+  background: url(/static/images/icons.png) -320px -160px no-repeat;
+}
+.icon_feedback {
+  background: url(/static/images/icons.png) -320px -32px no-repeat;
+  margin-left: 3px;
+}
+.icon_workflow {
+  background: url(/static/images/icons.png) -320px -64px no-repeat;
+}
+.user_icon {
+  background: url(/static/images/icons.png) -320px 0 no-repeat;
+}
+.togglers, .main_item {
+  display: block;
+  cursor: pointer;
+  border-bottom: 1px solid #e3e3bf;
+}
+.togglers {
+   padding: 1px 3px;
+}
+#usermenu a {
+  display: block;
+  padding: 1px 3px;
+}
+#usermenu a:hover, .togglers:hover {
+  background: #e3e3bf;
+}
+.searchbox {
+  display: block;
+  width: 200px;
+  float: left;
+  margin-bottom: 10px;
+}
+.searchbox input[type=text] {
+  float: left;
+  width: 150px;
+}
+.searchbox input[type=submit] {
+  float: left;
+  width: 26px;
+  height: 22px;
+  font-size: 9pt;
+  margin-left: 5px;
+  background: #ccc url(/static/images/icons.png) -324px -198px no-repeat;
+  border: 1px solid #999;
+}
 
 /* content */
 
@@ -241,96 +326,6 @@ input[type=submit] {
   cursor: pointer;
 }
 
-/* sidebar */
-
-#logo small {
-  position: absolute;
-  top: 57px;
-  right: 40px;
-  z-index: 1000;
-}
-#account {
-  font-size: 11pt;
-}
-.user_data {
-  display: block;
-  float: left;
-  margin-bottom: 10px;
-}
-.user_icon {
-  float: left;
-  width: 30px;
-}
-.user_name {
-  float: left;
-  width: 163px;
-  height: 40px;
-  border-bottom: 1px solid #ddd;
-}
-.user_options {
-  display: block;
-  width: 200px;
-  margin: -5px 0 5px;
-  padding-bottom: 3px;
-  border-bottom: 1px solid #ddd;
-  text-align: right;
-}
-.icon_help, .icon_feedback, .icon_workflow, .user_icon {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  text-indent: -9999px;
-  margin-right: 3px;
-}
-.icon_help {
-  background: url(/static/images/icons.png) -320px -160px no-repeat;
-}
-.icon_feedback {
-  background: url(/static/images/icons.png) -320px -32px no-repeat;
-  margin-left: 3px;
-}
-.icon_workflow {
-  background: url(/static/images/icons.png) -320px -64px no-repeat;
-}
-.user_icon {
-  background: url(/static/images/icons.png) -320px 0 no-repeat;
-}
-.togglers, .main_item {
-  display: block;
-  cursor: pointer;
-  border-bottom: 1px solid #e3e3bf;
-}
-.togglers {
-   padding: 1px 3px;
-}
-#usermenu a {
-  display: block;
-  padding: 1px 3px;
-}
-#usermenu a:hover, .togglers:hover {
-  background: #e3e3bf;
-}
-.searchbox {
-  display: block;
-  width: 200px;
-  float: left;
-  margin-bottom: 10px;
-}
-.searchbox input[type=text] {
-  float: left;
-  width: 150px;
-}
-.searchbox input[type=submit] {
-  float: left;
-  width: 26px;
-  height: 22px;
-  font-size: 9pt;
-  margin-left: 5px;
-  background: #ccc url(/static/images/icons.png) -324px -198px no-repeat;
-  border: 1px solid #999;
-}
-
-
 /* form layout */
 
 .form {
@@ -339,6 +334,7 @@ input[type=submit] {
 .form.main .field, .form.main .tab {
   background: #f9feff;
   min-width: 700px;
+  width: 100%;
   display: block;
 }
 .form.main #tabs {
@@ -351,31 +347,31 @@ input[type=submit] {
 .form.main table, .form.main ol, .form.main select, .form.main option, .form.main input, .form.main textarea {
   font-size: 9pt;
 }
-.form.main ol {
+.form ol {
   padding: 10px;
-  display: block;
+  list-style-type: none;
 }
-/*
-.form.main ol:last-child {
-  padding: 10px 0;
-  border-bottom: none;
+.form.main ol {
+  display: inline-block;
 }
-*/
 .form.main ol li {
   display: block;
   clear: both;
-  list-style-type: none;
   margin-bottom: 10px;
-}
-.form.main ol li input[type=text], .form.main ol li textarea {
 }
 .form.main ol li input[type=submit] {
   float: right;
 }
 .form.main ol li textarea {
-  height: 4em;
-  display: block;
   width: 30em;
+  height: 4em;
+}
+.form.main ol li label, .form.main ol li input[type=text], .form.main ol li textarea, .form.main ol li select {
+  float: left;
+  display: block;
+}
+.form.main ol li textarea, .form.main ol li select {
+  margin-bottom: 4px;
 }
 .form.main ol li.focus {
   background-color: #eeeeff;
@@ -383,20 +379,14 @@ input[type=submit] {
 .form.main ol li label {
   width: 220px;
   padding: 0 10px;
-  margin-bottom: 10px;
   text-align: right;
-  float: left;
 }
-/*
-.form.main ol li label:after {
-  content: ":";
-}
-*/
 .form.main th.label {
   text-align: left;
 }
 .errorlist {
   clear: both;
+  list-style-type: none;
 }
 .form.main ul.errorlist li {
   margin-left: 220px;
@@ -411,6 +401,8 @@ input[type=submit] {
   padding-left: 240px;
 }
 .form.main ol li.BooleanField label {
+  width: 400px;
+  display: inline-block;
   float: none;
   padding-left: 1em;
   text-align: left;
@@ -419,13 +411,12 @@ input[type=submit] {
   content: none;
 }
 .form.main ol li.BooleanField input {
+  display: inline-block;
   float: left;
 }
-
 .form.main .field input.subchoice{
-    margin-left: 30px;
+  margin-left: 30px;
 }
-
 .form.main ol li div.input{
   float: left;
 }
@@ -434,7 +425,7 @@ input[type=submit] {
   color: #666666;
   padding-left: 10px;
 }
-.form.main th.label .notes{
+.form.main th.label .notes {
   display: block;
 }
 .form.main ol li .help_text {

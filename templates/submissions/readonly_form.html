@@ -1,7 +1,7 @@
 {% extends "submissions/base_form.html" %}
 {% load core i18n userutils %} 
 
-{% block headertext %}
+{% block headertitle %}
   {{ submission_form.submission|ec_number }} {{ submission_form.project_title }}
 {% endblock %}
 
