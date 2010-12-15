@@ -50,7 +50,7 @@ elif user == "chipper":
     ECSMAIL_OVERRIDE = {
         'port': 8853,
         'authoritative_domain': 'doc.ecsdev.ep3.at',
-        'trusted_sources': ['127.0.0.1', '78.46.72.166'],
+        'trusted_sources': ['127.0.0.1', '78.46.72.187'],
     }
 
 if user in ["shredder", "testecs", "chipper"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
