@@ -13,6 +13,7 @@ developers = (
     ('nadia', u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
     ('max', u' Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
     ('peter.rehak@meduni-graz.at', u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
+    ('tombo', u'Thomas', u'Neumann', 'tom@newtone.cc'),
 )
 
 staff_users = ()

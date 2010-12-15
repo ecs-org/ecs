@@ -313,6 +313,7 @@ def auth_user_developers():
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
+        profile.help_writer = True
         profile.save()
         
         
@@ -364,6 +365,10 @@ def auth_user_testusers():
             profile = user.get_profile()
             for flagname, flagvalue in flags.items():
                 setattr(profile, flagname, flagvalue)
+            if number == 3:
+                # XXX set every third userswitcher user to be included in help_writer group
+                profile.help_writer = True
+                
             profile.save()
     
     for testuser, medcategories in boardtestusers:
