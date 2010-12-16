@@ -29,7 +29,7 @@
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
 }
-.tab_headers li a {
+.tab_headers li a, #headernav li.readonly_review a {
   text-decoration: none;
   padding: 3px 5px;
   border: 1px solid #b7d4e5;
@@ -142,36 +142,54 @@
   background: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
 }
-.readonly input[type=submit] {
-  color: #fff;
-  background: #333;
-  cursor: pointer;
+.readonly .tab_headers {
+  position: absolute;
+  left: 0;
+  line-height: 30px;
+  background: #ccc;
+  width: 86%;
+  padding: 2px 5px;
+  border-radius: 0 5px 5px 5px;
+  -moz-border-radius: 0 5px 5px 5px;
+  -webkit-border-radius: 0 5px 5px 5px;
+}
+.readonly .tab_header_groups li a {
+  text-decoration: none;
+  padding: 4px 7px;
+  background: #efefef;
+  color: #333;
+  margin-right: 3px;
+  border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
 }
 .readonly .tab_headers li a {
+  text-decoration: none;
+  padding: 3px 5px;
   border: 1px solid #bbb;
-  background: #e4e4e4;
+  background: #ddd;
+  color: #333;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+.readonly .tab_header_groups li a.active {
+  background: #ccc;
+  color: #333;
+}
+.readonly .tab_headers .active a {
+  background: #2b558e;
+  border-bottom: #2b558e;
   color: #333;
 }
 .readonly .tab_headers li.active a {
   border: 1px solid #bbb;
-  background: #ccc;
+  background: #efefef;
   color: #333;
 }
-/*
-.readonly li.readonly_review a {
-  border: 1px solid #b7d4e5;
-  background: #e2eaf0;
-  color: #2b558e;
-}
-.readonly li.readonly_review.active a {
-  background: #2b558e;
-  color: #e2eaf0;
-}
-#executive_review_tab select, #thesis_review_tab select, #checklist_review_tab select {
-  background: #fff !important;
-  color: #333;
-}
-*/
+.checklist_review_tab textarea {
+  margin-left: 240px;
+} 
 
 /* sidebar */
 
@@ -248,28 +266,35 @@
 }
 .searchbox {
   display: block;
-  width: 200px;
+  width: 190px;
   float: left;
   margin-bottom: 10px;
 }
 .searchbox input[type=text] {
-  float: left;
+  display: inline-block;
   width: 150px;
 }
 .searchbox input[type=submit] {
-  float: left;
+  float: right;
+  display: inline-block;
   width: 26px;
   height: 22px;
-  font-size: 9pt;
-  margin-left: 5px;
+  margin: 0;
   background: #ccc url(/static/images/icons.png) -324px -198px no-repeat;
   border: 1px solid #999;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+}
+#userswitcher_form select {
+  width: 190px;
+  font-size: 10pt;
 }
 
 /* content */
 
 #content ul {
-  margin: 0 0 20px 20px;
+  margin: 0 0 20px 30px;
 }
 input, textarea, #content select {
   border: 1px solid #999;
@@ -280,10 +305,28 @@ select {
   border: 1px solid #999;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 11pt;
-} 
-#userswitcher_form select {
-  width: 190px;
-  font-size: 10pt;
+}
+#content table {
+  margin: 10px;
+}
+#content table, #content th, #content td {
+  text-align: left;
+}
+#content th, #content td {
+  padding: 2px 3px;
+}
+input[type=submit] {
+  clear: both;
+  display: block;
+  float: right;
+  color: #fff;
+  background: #333;
+  cursor: pointer;
+  margin: 10px 10px 10px 0;
+  padding: 3px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 li.ModelChoiceField select {
   width: 20em;
@@ -298,17 +341,11 @@ li.NullBooleanField select {
   width: 8em;
 }
 li.TypedChoiceField ul{
-    float: left;
+  float: left;
 }
 li.TypedChoiceField ul > li label{
-    float: none;
-    margin-left: none;
-}
-input[type=submit] {
-  float: right;
-  color: #fff;
-  background: #333;
-  cursor: pointer;
+  float: none;
+  margin-left: none;
 }
 .paginator {
   margin: 5px 0 0 10px;
@@ -329,7 +366,7 @@ input[type=submit] {
 /* form layout */
 
 .form {
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
 }
 .form.main .field, .form.main .tab {
   background: #f9feff;
@@ -348,19 +385,17 @@ input[type=submit] {
   font-size: 9pt;
 }
 .form ol {
-  padding: 10px;
+  margin: 10px;
   list-style-type: none;
 }
 .form.main ol {
   display: inline-block;
+  width: 100%;
 }
 .form.main ol li {
   display: block;
   clear: both;
   margin-bottom: 10px;
-}
-.form.main ol li input[type=submit] {
-  float: right;
 }
 .form.main ol li textarea {
   width: 30em;
@@ -584,10 +619,9 @@ fieldset.disabled {
 /* specific formset styles */
 
 #measure_formset textarea,
-#routinemeasure_formset textarea{
+#routinemeasure_formset textarea {
     height: 1.4em;
 }
-
 .form.main ol li .datepicker_toggler {
   position: absolute;
   text-indent: -9999px; 
@@ -664,19 +698,19 @@ table.notification th {
     padding-right: 1em;
 }
 table.notif_meta {
-    border: 1px solid #cccccc;
-    border-left: none;
-    border-collapse: collapse;
-    margin-bottom: 1em;
-    width: 100%;
+  border: 1px solid #cccccc;
+  border-left: none;
+  border-collapse: collapse;
+  margin-bottom: 1em;
+  width: 100%;
 }
 table.notif_meta td, table.notif_meta th {
-    border-left: 1px solid #cccccc;
-    padding: 0.2em;
+  border-left: 1px solid #cccccc;
+  padding: 0.2em;
 }
 table.notif_meta th {
-    text-align: left;
-    border-bottom: 1px solid #cccccc;
+  text-align: left;
+  border-bottom: 1px solid #cccccc;
 }
 .overview {
   max-width: 95%;

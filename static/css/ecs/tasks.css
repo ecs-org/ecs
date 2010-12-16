@@ -1,23 +1,15 @@
 .task_back_log table {
-  border: 1px solid #cccccc;
+  border: 1px solid #ddd;
   border-left: none;
 }
-.task_back_log td,
-.task_back_log th {
-  text-align: left;
-  font-size: 13px;
-  padding: 3px;
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-  border-left: 1px solid #cccccc;
+.task_back_log td, .task_back_log th {
+  border-left: 1px solid #ddd;
 }
-
 .task_back_log th {
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #ddd;
 }
-
 .task_back_log tr.closed td {
-  color: #999999;
+  color: #999;
 }
 
 /* TaskForm */
@@ -74,6 +66,9 @@
 #task_form .task_delegate_assign select {
   margin-bottom: 0;
 }
+#task_form .task_indent textarea {
+  height: 10em;
+}
 .show_all {
   margin-bottom: 10px;
 }
@@ -99,7 +94,7 @@
 /* TaskList */
 
 #task_main {
-  padding: 5px;
+  margin: 10px;
 }
 .task_list {
   margin-bottom: 10px;
