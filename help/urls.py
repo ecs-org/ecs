@@ -20,5 +20,7 @@ urlpatterns = patterns('ecs.help.views',
     url(r'^attachments/find/$', 'find_attachments'),
     url(r'^attachments/delete/$', 'delete_attachment'),
     url(r'^attachment/(?P<attachment_pk>\d+)/download/$', 'download_attachment'),
+    
+    url(r'^screenshot/$', 'screenshot'),
 )
 

@@ -1,21 +1,51 @@
-window.BugShot = new Class({
+var camera = {
+    appletURL: '/static/camera/camera.jar',
+    format: 'png',
+
+    install: function(){
+        this.applet = new Element('applet', {code: 'Camera.class', archive: this.appletURL, width: 0, height: 0});
+        // we have to set <param name="initial_focus" value="false"/> to prevent firefox on windows from stealing the keyboard focus (see bug #470):
+        this.applet.appendChild(new Element('param', {name: 'initial_focus', value: 'false'}));
+        document.body.appendChild(this.applet);
+    },
+    shoot: function(callback){
+        var b64data = this.applet.getBase64Screenshot(this.format);
+        var image = new Image();
+        image.onload = function(){
+            callback(image);
+        };
+        image.src = "data:image/" + this.format + ";base64," + b64data;
+        return image;
+    }
+};
+
+camera.Camera = new Class({
     Implements: Options,
     options: {
         format: 'png',
         url: '/bugshot/',
-        appletURL: '/static/bugshot/camera.jar',
         backgroundColor: '#222222',
+        title: '',
+        form: '',
         canvasSize: {
             width: 800,
             height: 400
-        }
+        },
+        keyTrigger: function(e){
+            return false;
+        },
+        onShow: $empty
     },
     initialize: function(options){
         this.setOptions(options);
         this.disabled = false;
         $(window).addEvent('keypress', (function(e){
-            if((e.meta || e.control) && e.key == ':'){
-                this.shoot();
+            if(this.disabled){
+                return;
+            }
+            if(this.options.keyTrigger(e)){
+                this.disabled = true;
+                camera.shoot(this.onImageLoaded.bind(this));
             }
         }).bind(this));
         this.install();
@@ -26,19 +56,16 @@ window.BugShot = new Class({
         this.zoomStack = [];
         var self = this;
 
-        this.applet = new Element('applet', {code: 'Camera.class', archive: this.options.appletURL, width: 0, height: 0});
-        // we have to set <param name="initial_focus" value="false"/> to prevent firefox on windows from stealing the keyboard focus (see bug #470):
-        this.applet.appendChild(new Element('param', {name: 'initial_focus', value: 'false'}));
         this.overlay = new Element('div', {
             'class': 'bugshot'
         });
         this.overlay.grab(new Element('div', {
-            html: '<h1>BugShot</h1><span class="hint">zoom in with drag&amp;drop - zoom out with ctrl+up - check for duplicates - proofread</span>', 
+            html: '<h1>' + this.options.title + '</h1><span class="hint">zoom in with drag&amp;drop - zoom out with ctrl+up</span>', 
             'class': 'head'
         }));
 
         this.form = new Element('form', {
-            html: '<div><input type="text" name="summary" value="" /></div><div><textarea name="description"></textarea></div>'
+            html: this.options.form,
         });
         this.overlay.grab(this.form);
         
@@ -85,7 +112,6 @@ window.BugShot = new Class({
         });
         this.overlay.grab(this.canvas);
         
-        document.body.appendChild(this.applet);
         document.body.appendChild(this.overlay);
     },
     pushZoom: function(z){
@@ -107,19 +133,8 @@ window.BugShot = new Class({
         this.zoomStack.pop();
         this.repaintCanvas();
     },
-    shoot: function(){
-        if(this.disabled){
-            return;
-        }
-        this.disabled = true;
-        var b64data = this.applet.getBase64Screenshot(this.options.format);
-        this.image = new Image();
-        this.image.onload = this.onImageLoaded.bind(this);
-        this.image.src = "data:image/" + this.options.format + ";base64," + b64data;
-    },
     show: function(){
-        this.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + this.options.format + ", 400px)]]\n";
-        this.overlay.getElement('input[type=text]').value = "[bugshot] ";
+        this.options.onShow(this);
         this.overlay.show();
         window.addEvent('keypress', (function(e){
             if((e.control || e.meta) && e.key == 'up'){
@@ -135,7 +150,7 @@ window.BugShot = new Class({
         this.zoomStack = [];
     },
     submit: function(){
-        var data = this.form.toQueryString() + '&image=' + encodeURIComponent(this.getDataURL()) + '&absoluteurl=' + encodeURIComponent(window.location.href);
+        var data = this.form.toQueryString() + '&image=' + encodeURIComponent(this.getDataURL()) + '&url=' + encodeURIComponent(window.location.href);
         var request = new Request({
             url: this.options.url,
             data: data,
@@ -145,7 +160,8 @@ window.BugShot = new Class({
         });
         request.send();
     },
-    onImageLoaded: function(){
+    onImageLoaded: function(image){
+        this.image = image;
         this.show();
         this.pushZoom({x: 0, y: 0, w: this.image.width, h: this.image.height});
         this.repaintCanvas();

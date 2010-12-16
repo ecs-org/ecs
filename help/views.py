@@ -1,7 +1,15 @@
+import re
+import tempfile
+import datetime
+from base64 import b64decode
+
 from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
+from django.core.files import File
 from django.db.models import Q
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.tracking.models import View
@@ -139,3 +147,31 @@ def find_attachments(request):
     return render(request, 'help/attachments/find.html', {
         'attachments': Attachment.objects.filter(slug__icontains=request.GET.get('q', '')).order_by('slug')[:5]
     })
+
+#@user_flag_required('help_writer')
+@csrf_exempt
+def screenshot(request):
+    dataurl = request.POST.get('image', None)
+    if dataurl:
+        head, data = dataurl.split(',', 1)
+        match = re.match('data:(image/png|jpg);base64', head)
+        if not match:
+            return HttpResponseBadRequest("invalid data url: only base64 encoded image/png and image/jpg data will be accepted")
+        mimetype = match.group(1)
+        try:
+            data = b64decode(data)
+        except TypeError:
+            return HttpResponseBadRequest("invalid base64 data")
+        
+        slug = request.POST.get('slug', '')
+        if not slug:
+            slug = 'screenshot_%s.%s' % (datetime.datetime.now().strftime('%y%m%d%H%I%S'), mimetype[-3:])
+        
+        tmp = tempfile.NamedTemporaryFile() 
+        tmp.write(data) 
+        tmp.flush() 
+        tmp.seek(0)
+        Attachment.objects.create(file=File(tmp), mimetype=mimetype, screenshot=True, slug=slug)
+        tmp.close() 
+
+    return HttpResponse('OK')

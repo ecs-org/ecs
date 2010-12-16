@@ -70,6 +70,7 @@
                 if(!force && this.input.value == this.query){
                     return;
                 }
+                console.log(this.query, this.input.value, force);
                 this.query = this.input.value;
                 var self = this;
                 var request = new Request.HTML({
@@ -111,7 +112,9 @@
             setup: function(){
                 var self = this;
                 this.input.addEvent('focus', function(){
-                    this.interval = setInterval(self.refresh.bind(self), 500);
+                    this.interval = setInterval(function(){
+                        self.refresh();
+                    }, 500);
                 });
                 this.input.addEvent('blur', function(){
                     clearInterval(self.interval);

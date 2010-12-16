@@ -9,7 +9,7 @@ def shoot(request):
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
         "milestone": settings.BUGSHOT_CONFIG['milestone'], 
-        "absoluteurl": request.POST.get('absoluteurl', ''),
+        "absoluteurl": request.POST.get('url', ''),
     }, True)
 
     dataurl = request.POST.get('image', None)
@@ -23,7 +23,7 @@ def shoot(request):
             data = b64decode(data)
         except TypeError:
             return HttpResponseBadRequest("invalid base64 data")
-        print len(data), request.POST.get('absoluteurl')
+        print len(data), request.POST.get('url')
         trac.ticket.putAttachment(ticket, 'screenshot.%s' % format, 'bugshot', xmlrpclib.Binary(data))
 
     return HttpResponse('OK')

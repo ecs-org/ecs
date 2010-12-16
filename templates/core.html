@@ -246,8 +246,30 @@
           return false;
       });
       
+      camera.install();
+      new camera.Camera({
+          'class': 'bugshot',
+          'url': '/bugshot/',
+          'title': 'BugShot',
+          'form': '<div><input type="text" name="summary" value="" /></div><div><textarea name="description"></textarea></div>',
+          onShow: function(self){
+              self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
+              self.overlay.getElement('input[type=text]').value = "[bugshot] ";
+          },
+          keyTrigger: function(e){
+              return (e.meta || e.control) && e.key == ':';
+          }
+      });
       
-      new BugShot();
+      new camera.Camera({
+          'class': 'bugshot',
+          'url': '/help/screenshot/',
+          'title': 'Help Screenshot',
+          'form': '<div><input type="text" name="slug" /></div>',
+          keyTrigger: function(e){
+              return (e.alt && e.shift && e.key == '—') || ((e.meta || e.control) && e.key == ';');
+          }
+      });
     });
   </script>
 {% endblock %}
