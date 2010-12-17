@@ -75,9 +75,13 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     return formsets
 
 
-def copy_submission_form(request, submission_form_pk=None):
+def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None):
+    from ecs.notifications.models import NotificationType
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, presenter=request.user)
-    
+    if notification_type_pk:
+        notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
+    else:
+        notification_type = None
     docstash = DocStash.objects.create(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
     with docstash.transaction():
         docstash.update({
@@ -85,10 +89,11 @@ def copy_submission_form(request, submission_form_pk=None):
             'formsets': get_submission_formsets(instance=submission_form),
             'submission': submission_form.submission,
             'documents': list(submission_form.documents.all().order_by('pk')),
+            'notification_type': notification_type,
         })
         docstash.name = "%s" % submission_form.project_title
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
-    
+
 
 def copy_latest_submission_form(request, submission_pk=None):
     submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
@@ -124,7 +129,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     for sf in submission_forms:
         sf.previous_form = previous_form
         previous_form = sf
-
+    
+    from ecs.notifications.models import NotificationType
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
@@ -142,6 +148,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'answered_notficiations': [], # TODO: for this the notification answers have to be implemented (FMD2)
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
+        'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
     }
     if extra_context:
         context.update(extra_context)
@@ -277,6 +284,7 @@ def create_submission_form(request):
         document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
+    notification_type = request.docstash.get('notification_type', None)
     valid = False
 
     if request.method == 'POST':
@@ -313,6 +321,8 @@ def create_submission_form(request):
                 submission = request.docstash.get('submission') or Submission.objects.create()
                 submission_form.submission = submission
                 submission_form.presenter = request.user
+                submission_form.is_notification_update = bool(notification_type)
+                submission_form.transient = bool(notification_type)
                 submission_form.save()
                 form.save_m2m()
                 submission_form.documents = request.docstash['documents']
@@ -335,6 +345,12 @@ def create_submission_form(request):
                         instance.submission_form = submission_form
                         instance.save()
                 request.docstash.delete()
+
+                if notification_type:
+                    return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
+                        'submission_form_pk': submission_form.pk,
+                        'notification_type_pk': notification_type.pk,
+                    }))
                 return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
@@ -343,7 +359,8 @@ def create_submission_form(request):
         'document_form': document_form,
         'documents': request.docstash.get('documents', []),
         'valid': valid,
-        'submission': request.docstash.get('submission', None)
+        'submission': request.docstash.get('submission', None),
+        'notification_type': notification_type,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset

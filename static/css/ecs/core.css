@@ -702,6 +702,7 @@ table.notif_meta {
   border-collapse: collapse;
   margin-bottom: 1em;
   width: 100%;
+  clear: both;
 }
 table.notif_meta td, table.notif_meta th {
   border-left: 1px solid #cccccc;

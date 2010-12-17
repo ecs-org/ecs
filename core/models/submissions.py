@@ -138,6 +138,9 @@ class Submission(models.Model):
         registered = User.objects.filter(email__in=emails)
         unregistered = emails.difference(registered)
         return registered, unregistered
+        
+    def get_notifications(self):
+        return Notification.objects.filter(submission_forms__submission=self)
    
     @property
     def votes(self):
@@ -221,6 +224,8 @@ class SubmissionForm(models.Model):
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.OneToOneField(Document, related_name="submission_form", null=True)
     documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
+    is_notification_update = models.BooleanField(default=False)
+    transient = models.BooleanField(default=False)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -562,6 +567,9 @@ def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
     submission = new_sf.submission
     initial = not submission.current_submission_form
+    
+    if new_sf.transient:
+        return
 
     if new_sf == submission.current_submission_form:
         old_sf = None

@@ -41,6 +41,12 @@
                     </div>
                 {% endifequal %}
                 
+                {% ifequal tab "Changes" %}
+                    <div class="field">
+                        {{ request.docstash.extra.diff }}
+                    </div>
+                {% endifequal %}
+                
                 {% for legend, fields in fieldsets %}
                     <div class="fieldset_{{ forloop.counter }}">
                         {% if legend %}
@@ -83,28 +89,38 @@
                 return false;
             });
 
-            ecs.setupRichTextEditor($('id_comments'));
-
             var submissionFormsSelect = $('id_submission_forms');
+            var submissionFormSelect = $('id_submission_form');
             var submissionDataDisplay = new Element('div', {'class': 'submission_data'});
-            submissionFormsSelect.getParent('li').grab(submissionDataDisplay);
+            if(submissionFormSelect || submissionFormsSelect){
+                (submissionFormSelect || submissionFormsSelect).getParent('li').grab(submissionDataDisplay);
+            }
 
-            function loadSubmissionFormData(){
+            function loadSubmissionFormData(pks){
                 var querystring = [];
-                submissionFormsSelect.getSelected().each(function(option){
-                    querystring.push('submission_form=' + option.value);
-                });
                 var request = new Request.HTML({
                     url: '/submission_data_for_notification/',
-                    data: querystring.join('&'),
+                    data: 'submission_form=' + pks.join('&submission_form='),
                     method: 'get',
                     evalScripts: false,
                     update: submissionDataDisplay
                 });
                 request.send();
             }
-            submissionFormsSelect.addEvent('change', loadSubmissionFormData);
-            loadSubmissionFormData();
+            if(submissionFormsSelect){
+                submissionFormsSelect.addEvent('change', function(){
+                    loadSubmissionFormData(submissionFormsSelect.getSelected().map(function(option){
+                        return option.value;
+                    }));
+                });
+                submissionFormsSelect.fireEvent('change');
+            }
+            if(submissionFormSelect){
+                submissionFormSelect.addEvent('change', function(){
+                    loadSubmissionFormData([submissionFormSelect.value])
+                });
+                submissionFormSelect.fireEvent('change');
+            }
 
         });
     </script>

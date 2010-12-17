@@ -11,7 +11,6 @@ from django.core.files import File
 
 from ecs import bootstrap
 from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
-from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
 from ecs.utils import Args
 from ecs.users.utils import sudo
@@ -203,18 +202,6 @@ def auth_groups():
     for group in groups:
         Group.objects.get_or_create(name=group)
 
-
-@bootstrap.register()
-def notification_types():
-    types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.NotificationForm"),
-        (u"Protokolländerung", "ecs.core.forms.NotificationForm"),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
-    )
-    
-    for name, form in types:
-        NotificationType.objects.get_or_create(name=name, form=form)
 
 @bootstrap.register()
 def expedited_review_categories():

@@ -18,7 +18,7 @@ Liste aller Meldungen
     <ol>
         {% for notification in notifications %}
             <li>
-                <a href="{% url ecs.core.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
+                <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                 für {% for submission_form in notification.submission_forms.all %}
                     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
@@ -35,7 +35,7 @@ Liste aller Meldungen
         {% for docstash in stashed_notifications %}
             {% if docstash.current_value %}
                 <li>
-                    <a href="{% url ecs.core.views.create_notification notification_type_pk=docstash.current_value.type_id,docstash_key=docstash.key %}">
+                    <a href="{% url ecs.notifications.views.create_notification notification_type_pk=docstash.current_value.type_id,docstash_key=docstash.key %}">
                         {{ docstash.current_name|default:"<em>Unbenannt</em>" }}
                     </a>
                     ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})

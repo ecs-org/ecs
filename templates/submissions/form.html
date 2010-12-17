@@ -2,7 +2,9 @@
 {% load core i18n %} 
 
 {% block headertitle %}
-  <div id="info" style="display: none;"></div>
+    {% if notification_type %}
+      {{ notification_type.name }} für {{ submission }}
+    {% endif %}
 {% endblock %}
 
 {% block header_actions %}
