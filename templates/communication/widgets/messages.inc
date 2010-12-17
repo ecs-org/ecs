@@ -16,10 +16,10 @@
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
             {% if incoming and thread.last_message.unread %} [NEU] {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
+            {% if incoming %}{% trans "von" %}{% else %}{% trans "an" %}{% endif %}: <span class="user">{% block message_user %}{% endblock %}</span>
         </span>
         <span class="{% if thread.last_message.unread %}unread{% endif %}"></span>
         <a class="title open-in-popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">{{ thread.subject|truncatewords:10 }}</a>
-        <span class="user">{% block message_user %}{% endblock %}</span>
         <span class="actions">
             {% if not incoming %}
                 <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}" title="Bump">bump</a>

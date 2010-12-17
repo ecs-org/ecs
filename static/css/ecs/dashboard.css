@@ -38,7 +38,7 @@
   position: relative;
 }
 .dashboard_widget .messages > li {
-  height: 70px;
+  height: 45px;
   padding: 5px 30px;
   overflow: hidden;
 }
@@ -72,13 +72,7 @@
 .dashboard_widget .messages > li .title {
   font-weight: bold;
 }
-.dashboard_widget .user {
-  display: block;
-  margin-top: 5px;
-  font-size: 10pt;
-}
 .dashboard_widget .actions {
-  width: 30px;
   display: block;
   position: absolute;
   right: 0px;
@@ -86,6 +80,7 @@
 }
 .dashboard_widget .actions a {
   display: inline-block;
+  margin: 0px 5px;
 }
 .dashboard_widget img {
   vertical-align: middle;
