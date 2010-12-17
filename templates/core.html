@@ -191,7 +191,7 @@
       var content = $$('.elements');      
 
       $$('#usermenu .elements').show();
-      var AccordionObject = new Accordion(toggles, content, { show: accordionitem });
+      var AccordionObject = new Accordion(toggles, content, { show: accordionitem , duration: 200});
 
       // feedback system
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
