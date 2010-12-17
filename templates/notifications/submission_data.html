@@ -1,27 +1,13 @@
 {% if submission_forms %}
 <table class="notif_meta">
-    <tr><th>Studie</th><th>Protokoll Nr.</th></tr>
+    <tr><th>Studie</th><th>Protokoll Nr.</th><th>Ethik-Komission</th><th>Prüfer</th></tr>
     {% for submission_form in submission_forms %}
-    <tr>
-       <td>
-           <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>
-       </td>
-       <td>
-           {{ submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}
-       </td>
-    </tr>
+        <tr>
+           <td><a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a></td>
+           <td>{{ submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
+           <td>{{ submission_form.submission.main_ethics_commission.name }}</td>
+           <td>{{ investigator.name }}</td>
+        </tr>
     {% endfor %}
 </table>
 {% endif %}
-
-{% if investigators %}
-<table class="notif_meta">
-    <tr><th>Ethik-Komission</th><th>Prüfer</th></tr>
-    {% for investigator in investigators %}
-    <tr>
-        <td>{{ investigator.ethics_commission.name }}</td>
-        <td>{{ investigator.name }}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %} 

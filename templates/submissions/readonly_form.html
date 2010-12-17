@@ -8,9 +8,14 @@
 {% block header_actions %}
     {{ block.super }}
     {% if submission_form.presenter == request.user %}
-    <div class="floating_box">
-        <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
-    </div>
+        {% if submission_form.submission.current_submission_form == submission_form %}
+            <div class="floating_box">
+                <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
+                {% for notification_type in diff_notification_types %}
+                    <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}
 

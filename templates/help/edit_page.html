@@ -5,14 +5,14 @@
 {% block content %}
     {{ form.errors }}
     <form action="" method="post" id="helpform">
-        <div>
+        <div class="dir">
             View: {{ form.view }}
             Anchor: {{ form.anchor }}
             Slug: {{ form.slug }}
         </div>
         <div class="title">{{ form.title }}</div>
         <div class="text">
-            <div>
+            <div class="options">
             <a href="" id="ReST_italic"><i>kursiv</i></a> 
             | <a href="" id="ReST_bold"><b>fett</b></a>
             | <a href="" id="ReST_heading">Überschrift</a>

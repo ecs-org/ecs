@@ -1,7 +1,13 @@
 /* user administration */
 
+#content .administration_detail ul {
+	margin: 0 0 20px;
+	padding: 5px;
+	background: #f6f6e9;
+}
 .administration_detail .useradministration_choose li {
   list-style: none;
+	margin-bottom: 5px;
 }
 .administration_detail .user_list {
   margin: 30px 0px;
@@ -16,4 +22,7 @@
 .administration_detail .user_list tr td {
   padding: 0px 10px;
 }
-
+.useradministration_choose label {
+	display: inline-block;
+	width: 100px;
+}

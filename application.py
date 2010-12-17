@@ -455,7 +455,7 @@ VERBOSE=yes
 JETTY_PORT=8983
         """)
         jetty_cnf.close()
-        local('sudo cp ~%s /etc/default/jetty' % self.username)
+        local('sudo cp ~{0}/jetty.cnf /etc/default/jetty'.format(self.username))
         local('sudo /etc/init.d/jetty start')
 
     def search_update(self):

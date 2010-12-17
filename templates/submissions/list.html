@@ -18,7 +18,13 @@ Liste aller Studien
         {% for docstash in stashed_submission_forms %}
             {% if docstash.current_value %}
                 <li class="{% cycle 'even' 'odd' %}">
-                    <h3><span class="ecnr"> </span>{{ docstash.current_name|default:"<i>Unbenannt</i>" }}</h3>
+                    <h3>
+                        <span class="ecnr"> </span>
+                        {% if docstash.current_value.notification_type %}
+                            <b>{{ docstash.current_value.notification_type }}</b> für
+                        {% endif %}
+                        {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
+                    </h3>
                     <div class="actions">
                         <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
                         | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>

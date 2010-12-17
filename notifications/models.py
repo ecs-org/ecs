@@ -10,6 +10,7 @@ from ecs.documents.models import Document
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
+    diff = models.BooleanField(default=False)
     
     @property
     def form_cls(self):
@@ -21,9 +22,24 @@ class NotificationType(models.Model):
     def __unicode__(self):
         return self.name
 
+
+class DiffNotification(models.Model):
+    old_submission_form = models.ForeignKey('core.SubmissionForm', related_name="old_for_notification")
+    new_submission_form = models.ForeignKey('core.SubmissionForm', related_name="new_for_notification")
+    diff = models.TextField()
+    
+    class Meta:
+        abstract = True
+        
+    def save(self, **kwargs):
+        super(DiffNotification, self).save()
+        self.submission_forms = [self.old_submission_form]
+        self.new_submission_form.transient = False
+        self.new_submission_form.save()
+
+
 class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
-    investigators = models.ManyToManyField('core.Investigator', related_name='notifications')
     submission_forms = models.ManyToManyField('core.SubmissionForm', related_name='notifications')
     documents = GenericRelation(Document)
     #documents = models.ManyToManyField(Document)
@@ -33,6 +49,7 @@ class Notification(models.Model):
     
     def __unicode__(self):
         return u"%s" % (self.type,)
+
 
 class ReportNotification(Notification):
     reason_for_not_started = models.TextField(null=True, blank=True)
@@ -44,10 +61,12 @@ class ReportNotification(Notification):
     
     class Meta:
         abstract = True
+    
 
 class CompletionReportNotification(ReportNotification):
     study_aborted = models.BooleanField()
     completion_date = models.DateField()
+
 
 
 class ProgressReportNotification(ReportNotification):
@@ -55,3 +74,5 @@ class ProgressReportNotification(ReportNotification):
     extension_of_vote_requested = models.BooleanField(default=False, blank=True)
     
 
+class AmendmentNotification(DiffNotification, Notification):
+    pass

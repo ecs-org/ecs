@@ -6,7 +6,7 @@
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-
+<div class="administration_detail">
 <h2>{{ user_form.instance }}</h2>
 
 <a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a>
@@ -23,6 +23,7 @@
     </div>
     <span class="button"><input type="submit" value="Speichern" /></span>
 </form>
+</div>
 {% endblock %}
 
 {% block jsbottom %}

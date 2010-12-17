@@ -3,6 +3,7 @@
 * {
   margin: 0;
   padding: 0;
+	vertical-align: baseline;
 }
 
 
@@ -11,6 +12,9 @@
 body {
   background: white;
   overflow: auto;
+}
+td, th{
+    vertical-align: top;
 }
 #container {
   position: absolute;
@@ -109,11 +113,6 @@ body {
   padding: 10px;
   border-bottom: 1px solid #eee;
 }
-#content h4 {
-  display: block;
-  font-size: 1em;
-  margin-bottom: 10px;
-}
 #content p {
   margin-bottom: 20px;
   font-size: 10pt;
@@ -128,6 +127,7 @@ body {
 }
 a {
   outline: 0;
+	cursor: pointer;
 }
 
 
