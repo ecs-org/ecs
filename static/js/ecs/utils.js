@@ -126,7 +126,7 @@ ecs.setupFormFieldHelpers = function(context){
                 star.inject(span, 'before');
             }
             else{
-                star.inject(field);
+                star.inject(field.getElement('label'));
             }
             //notes.push('required');
         }
