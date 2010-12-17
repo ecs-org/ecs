@@ -217,7 +217,6 @@
   width: 163px;
   height: 43px;
   line-height: 13pt;
-  border-bottom: 1px solid #ddd;
 }
 .user_logout {
   position: absolute;
@@ -307,7 +306,7 @@ select {
   font-size: 11pt;
 }
 #content table {
-  margin: 10px;
+  margin: 10px 0;
 }
 #content table, #content th, #content td {
   text-align: left;

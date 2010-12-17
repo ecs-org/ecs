@@ -3,7 +3,7 @@
 
 {% block menuSelection %}communication{% endblock %}
 
-{% block headertitle %}{% trans "Communication" %}{% endblock %}
+{% block headertitle %}{% trans "Communication" %} ({{ page.paginator.count }}){% endblock %}
 
 {% block content %}
   <table class="messages">

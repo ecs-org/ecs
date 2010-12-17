@@ -4,8 +4,6 @@
 {% block content %}
 <div class="messages_overview">
   <div class="messages_header">
-    <h2>{% trans "Messages" %} ({{ page.paginator.count }})</h2>
-
     <form id="thread_list_filter" action="" method="post">
         <div class="thread_list_choose">
             {{ filterform.incoming }} <label class="thread_incoming">{% trans "Incoming" %}</label>

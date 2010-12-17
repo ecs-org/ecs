@@ -3,6 +3,7 @@
 * {
   margin: 0;
   padding: 0;
+	vertical-align: baseline;
 }
 
 
@@ -108,11 +109,6 @@ body {
 .main.form h3 {
   padding: 10px;
   border-bottom: 1px solid #eee;
-}
-#content h4 {
-  display: block;
-  font-size: 1em;
-  margin-bottom: 10px;
 }
 #content p {
   margin-bottom: 20px;
