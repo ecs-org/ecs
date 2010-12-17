@@ -1,7 +1,9 @@
 /* dashboard */
 
-#dashboard {
-
+#dashboard .left_column, #dashboard .right_column {
+  display: block;
+	float: left;
+	width: 50%;
 }
 .dashboard_widget {
   display: block;
@@ -13,9 +15,8 @@
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   margin: 0 10px 10px 0;
-  width: 45%;
+  width: 92%;
   min-width: 340px;
-  min-height: 200px;
 }
 .dashboard_widget h3 {
   margin-bottom: 10px;
