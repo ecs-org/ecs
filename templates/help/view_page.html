@@ -6,9 +6,9 @@
 {% block content %}
     <h2>{{ page.title }}</h2>
     {% if user|has_flag:'help_writer' %}
-        <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+        <span class="help_edit"><a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a></span>
     {% endif %}
-    <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
+        <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
     <div class="restructuredtext">
         {{ page.publish_parts.fragment|safe }}
     </div>

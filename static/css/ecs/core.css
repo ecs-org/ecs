@@ -521,6 +521,9 @@ table.inline_formset td {
   margin-left: 0px;
   width: 100%;
 }
+.required textarea, .required input[type=text], #content .required select {
+	border: 1px solid red;
+}
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
 }
