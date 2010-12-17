@@ -24,6 +24,7 @@
   padding: 4px 7px;
   background: #f4f4f4;
   color: #2b558e;
+	font-weight: bolder;
   margin-right: 3px;
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
@@ -35,6 +36,7 @@
   border: 1px solid #b7d4e5;
   background: #e2eaf0;
   color: #2b558e;
+	font-weight: normal;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -142,53 +144,51 @@
   background: #e4e4e4;
   font-family: Arial, Helvetica, sans-serif;
 }
+.readonly .tab_header_groups li a {
+  text-decoration: none;
+  padding: 4px 7px;
+  color: #cfcfcf;
+  background: #666;
+  margin-right: 3px;
+  border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+}
+.readonly .tab_header_groups li a.active {
+  background: #C7C5BB;
+  color: #333;
+}
 .readonly .tab_headers {
   position: absolute;
   left: 0;
   line-height: 30px;
-  background: #ccc;
+  background: #C7C5BB;
   width: 86%;
   padding: 2px 5px;
   border-radius: 0 5px 5px 5px;
   -moz-border-radius: 0 5px 5px 5px;
   -webkit-border-radius: 0 5px 5px 5px;
 }
-.readonly .tab_header_groups li a {
-  text-decoration: none;
-  padding: 4px 7px;
-  background: #efefef;
-  color: #333;
-  margin-right: 3px;
-  border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-}
 .readonly .tab_headers li a {
   text-decoration: none;
   padding: 3px 5px;
   border: 1px solid #bbb;
-  background: #ddd;
+  background: #dddac8;
   color: #333;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
 }
-.readonly .tab_header_groups li a.active {
-  background: #ccc;
-  color: #333;
-}
-.readonly .tab_headers .active a {
-  background: #2b558e;
-  border-bottom: #2b558e;
-  color: #333;
-}
 .readonly .tab_headers li.active a {
   border: 1px solid #bbb;
-  background: #efefef;
+  background: #f2f0e5;
   color: #333;
 }
 .checklist_review_tab textarea {
   margin-left: 240px;
+} 
+.readonly .checklist_review_tab textarea {
+  margin-left: 0;
 } 
 
 /* sidebar */
@@ -300,6 +300,7 @@ input, textarea, #content select {
   padding: 2px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 select {
   border: 1px solid #999;
   font-family: Arial, Helvetica, sans-serif;
@@ -394,7 +395,6 @@ li.TypedChoiceField ul > li label{
 .form.main ol li {
   display: block;
   clear: both;
-  margin-bottom: 10px;
 }
 .form.main ol li textarea {
   width: 30em;
@@ -403,9 +403,7 @@ li.TypedChoiceField ul > li label{
 .form.main ol li label, .form.main ol li input[type=text], .form.main ol li textarea, .form.main ol li select {
   float: left;
   display: block;
-}
-.form.main ol li textarea, .form.main ol li select {
-  margin-bottom: 4px;
+	margin-bottom: 10px;
 }
 .form.main ol li.focus {
   background-color: #eeeeff;
@@ -480,6 +478,9 @@ li.TypedChoiceField ul > li label{
 .inline_formset .form {
   position: relative;
   padding-top: 20px;
+}
+#content .inline_formset td {
+	padding: 0;
 }
 tr.form td{
   vertical-align: top;
@@ -607,9 +608,12 @@ fieldset.disabled {
 .form .narrow {
   width: 10em;
 }
-.form.main .textboxlist-bit{
+.form.main .textboxlist-bit {
   list-style-type: none;
   clear: none;
+}
+.form.main .textboxlist {
+  width: 90%;
 }
 .form.main .textboxlist-autocomplete {
   margin: -20px  0 0 240px;
@@ -705,7 +709,6 @@ table.notif_meta {
   border-collapse: collapse;
   margin-bottom: 1em;
   width: 100%;
-  clear: both;
 }
 table.notif_meta td, table.notif_meta th {
   border-left: 1px solid #cccccc;
