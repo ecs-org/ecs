@@ -9,7 +9,10 @@
 {% endblock %}
 
 {% block content %}
-    <div id="dashboard"></div>
+    <div id="dashboard">
+        <div class="left_column"></div>
+        <div class="right_column"></div>
+    </div>
 {% endblock %}
 
 {% block jsbottom %}
@@ -27,12 +30,14 @@
             popup.addEvent('dispose', reloadAll);
         };
         var el, widget;
+        var current_column = 'left';
         {% for url in widgets %}
             el = new Element('div', {'class': 'dashboard_widget'});
-            $('dashboard').grab(el);
+            $('dashboard').getChildren('.'+current_column+'_column')[0].grab(el);
             widget = new ecs.widgets.Widget(el, {url: '{{ url }}'});
             widgets.push(widget);
             widget.addEvent('popupSpawned', onPopupSpawned);
+            current_column = (current_column === 'left') ? 'right' : 'left';
         {% endfor %}
     });
     })();
