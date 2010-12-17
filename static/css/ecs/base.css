@@ -13,6 +13,9 @@ body {
   background: white;
   overflow: auto;
 }
+td, th{
+    vertical-align: top;
+}
 #container {
   position: absolute;
   width: 100%;

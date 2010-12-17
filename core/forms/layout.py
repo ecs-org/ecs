@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext as _
 
-from ecs.core.forms import NotificationForm, ProgressReportNotificationForm, CompletionReportNotificationForm
+from ecs.core.forms.forms import NotificationForm, ProgressReportNotificationForm, CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm
 
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
 #  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
@@ -119,6 +119,26 @@ NOTIFICATION_FORM_TABS[NotificationForm] = [
     (_(u'documents'), []),
 ]
 
+NOTIFICATION_FORM_TABS[SingleStudyNotificationForm] = [
+    (_(u'General information'), [
+        (_(u'General information'), [
+            'submission_form', 'comments',
+        ]),
+    ]),
+    (_(u'documents'), []),
+]
+
+NOTIFICATION_FORM_TABS[AmendmentNotificationForm] = [
+    (_(u'General information'), [
+        (_(u'General information'), [
+            'comments',
+        ]),
+    ]),
+    (_(u'documents'), []),
+    (_(u'Changes'), [])
+]
+
+
 NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
     (u'Study status', [
         (u'status', [
@@ -153,3 +173,11 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[
     ]),
     (u'documents', []),
 ]
+
+def get_notification_form_tabs(form_cls):
+    for cls in form_cls.__mro__:
+        try:
+            return NOTIFICATION_FORM_TABS[cls]
+        except KeyError:
+            pass
+    return []

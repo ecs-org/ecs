@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import types
 from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
@@ -102,6 +103,8 @@ class ModelRenderer(object):
             return AtomicTextNode(_('Yes'))
         elif val is False:
             return AtomicTextNode(_('No'))
+        elif isinstance(val, types.IntType):
+            return AtomicTextNode(str(val))
         elif isinstance(val, datetime.date):
             return AtomicTextNode(val.strftime(DATE_FORMAT))
         elif isinstance(val, datetime.date):

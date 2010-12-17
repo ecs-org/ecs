@@ -11,7 +11,6 @@ from django.core.files import File
 
 from ecs import bootstrap
 from ecs.core.models import ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion, Investigator, SubmissionForm, Checklist, ChecklistAnswer
-from ecs.notifications.models import NotificationType
 from ecs.utils.countries.models import Country
 from ecs.utils import Args
 from ecs.users.utils import sudo
@@ -205,18 +204,6 @@ def auth_groups():
 
 
 @bootstrap.register()
-def notification_types():
-    types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.NotificationForm"),
-        (u"Protokolländerung", "ecs.core.forms.NotificationForm"),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm"),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm"),
-    )
-    
-    for name, form in types:
-        NotificationType.objects.get_or_create(name=name, form=form)
-
-@bootstrap.register()
 def expedited_review_categories():
     categories = (
         (u'KlPh', u'Klinische Pharmakologie'),
@@ -340,7 +327,7 @@ def auth_user_testusers():
         (u'Notification Rev', u'EC-Notification Review Group',
             {'internal': True, 'approved_by_office': True}),
         (u'Insurance Rev', u'EC-Insurance Reviewer',            
-            {'internal': False, 'approved_by_office': True}),
+            {'internal': False, 'approved_by_office': True),
         (u'Thesis Rev', u'EC-Thesis Review Group',              
             {'internal': False, 'thesis_review': True),
         (u'External Reviewer', u'External Reviewer',            

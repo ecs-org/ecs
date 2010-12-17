@@ -1,0 +1,11 @@
+{% extends 'db/notifications/xhtml2pdf/base.html' %}
+
+{% block documents %}
+
+{{ block.super }}
+
+{% with notification.amendmentnotification as notification %}
+    {{ notification.diff|safe }}
+{% endwith %}
+
+{% endblock %}

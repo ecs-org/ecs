@@ -84,3 +84,4 @@ def smart_truncate(s, n):
 def class_for_field(field):
     return 'wide' if field.field.max_length > 50 else 'narrow'
 
+    

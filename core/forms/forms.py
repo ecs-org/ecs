@@ -9,10 +9,11 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.conf import settings
+from django.db.models import F
 
 from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
@@ -36,7 +37,36 @@ class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+
+
+class MultiNotificationForm(NotificationForm):
+    def __init__(self, *args, **kwargs):
+        super(MultiNotificationForm, self).__init__(*args, **kwargs)
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'))
+
+
+class SingleStudyNotificationForm(NotificationForm):
+    submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all())
+
+    class Meta:
+        model = Notification
+        exclude = NotificationForm._meta.exclude + ('submission_forms',)
         
+    def get_submission_form(self):
+        return self.cleaned_data['submission_form']
+    
+    def save(self, commit=True):
+        obj = super(SingleStudyNotificationForm, self).save(commit=commit)
+        if commit:
+            obj.submission_forms = [self.get_submission_form()]
+        else:
+            old_save_m2m = self.save_m2m
+            def _save_m2m():
+                old_save_m2m()
+                obj.submission_forms = [self.get_submission_form()]
+            self.save_m2m = _save_m2m
+        return obj
+
 
 class ProgressReportNotificationForm(NotificationForm):
     runs_till = DateField(required=True)
@@ -51,6 +81,13 @@ class CompletionReportNotificationForm(NotificationForm):
     class Meta:
         model = CompletionReportNotification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+        
+
+
+class AmendmentNotificationForm(NotificationForm):
+    class Meta:
+        model = AmendmentNotification
+        exclude = NotificationForm._meta.exclude + ('submission_forms', 'old_submission_form', 'new_submission_form', 'diff')
 
 ## submissions ##
 
