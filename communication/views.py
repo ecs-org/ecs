@@ -205,7 +205,7 @@ def threads(request):
         queryset=queryset.order_by('-last_message__timestamp'),
         session_prefix='messages:unified',
         user_sort='receiver__username',
-        page_size=3,
+        page_size=10,
         extra_context={'filterform': filterform},
     )
 
