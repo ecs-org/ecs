@@ -19,7 +19,12 @@
                             <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
                         {% endif %}
                         {% if sf != submission_form %}
-                            <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
+                            | <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
+                        {% endif %}
+                        {% if sf.is_notification_update %}
+                            {% with sf.new_for_notification.all.0 as notif %}
+                                | <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                            {% endwith %}
                         {% endif %}
                     </td>
                 </tr>
