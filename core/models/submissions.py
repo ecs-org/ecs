@@ -181,15 +181,17 @@ class Submission(models.Model):
         
     def save(self, **kwargs):
         if not self.ec_number:
-            year = datetime.datetime.now().year
-            max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
-            if max_num is None:
-                max_num = 10000 * year + MIN_EC_NUMBER
-            else:
-                year, num = divmod(max_num, 10000)
-                max_num = year * 10000 + max(num, MIN_EC_NUMBER)
-            # XXX: this breaks if there are more than 9999 studies per year (FMD2)
-            self.ec_number = max_num + 1
+            from ecs.users.utils import sudo
+            with sudo():
+                year = datetime.datetime.now().year
+                max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
+                if max_num is None:
+                    max_num = 10000 * year + MIN_EC_NUMBER
+                else:
+                    year, num = divmod(max_num, 10000)
+                    max_num = year * 10000 + max(num, MIN_EC_NUMBER)
+                # XXX: this breaks if there are more than 9999 studies per year (FMD2)
+                self.ec_number = max_num + 1
         return super(Submission, self).save(**kwargs)
         
     def __unicode__(self):

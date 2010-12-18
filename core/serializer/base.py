@@ -9,6 +9,7 @@ from django.contrib.contenttypes import generic
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
+from ecs.utils.countries.models import Country
 
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'
@@ -262,10 +263,14 @@ class SubmissionSerializer(ModelSerializer):
         super(SubmissionSerializer, self).__init__(Submission, **kwargs)
         
     def load(self, data, zf, commit=False):
-        try:
-            return Submission.objects.get(ec_number=data.get('ec_number'))
-        except Submission.DoesNotExist:
-            return super(SubmissionSerializer, self).load(data, zf, commit=commit)
+        return Submission.objects.create()
+        
+class CountrySerializer(object):
+    def dump(self, obj, zf):
+        return obj.iso
+        
+    def load(self, data, zf, commit=False):
+        return Country.objects.get(iso=data)
 
 _serializers = {
     SubmissionForm: ModelSerializer(SubmissionForm,
@@ -277,6 +282,8 @@ _serializers = {
             'measures': 'submission_form',
             'documents': '_submission_forms',
             'nontesteduseddrug_set': 'submission_form',
+            'substance_registered_in_countries': 'submission_forms',
+            'substance_p_c_t_countries': 'submissionform_set',
         },
     ),
     Submission: SubmissionSerializer(fields=('ec_number')),
@@ -288,6 +295,7 @@ _serializers = {
     Document: ModelSerializer(Document, fields=('doctype', 'file', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
+    Country: CountrySerializer(),
 }
 
 def load_model_instance(model, data, zf, commit=True):
