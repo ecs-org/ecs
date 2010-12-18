@@ -75,7 +75,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     return formsets
 
 
-def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None):
+def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
     from ecs.notifications.models import NotificationType
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, presenter=request.user)
     if notification_type_pk:
@@ -87,11 +87,13 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         docstash.update({
             'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
             'formsets': get_submission_formsets(instance=submission_form),
-            'submission': submission_form.submission,
+            'submission': submission_form.submission if not delete else None,
             'documents': list(submission_form.documents.all().order_by('pk')),
             'notification_type': notification_type,
         })
         docstash.name = "%s" % submission_form.project_title
+    if delete:
+        submission_form.submission.delete()
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
@@ -458,10 +460,8 @@ def import_submission_form(request):
     if 'file' in request.FILES:
         serializer = Serializer()
         submission_form = serializer.read(request.FILES['file'])
-        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
-    return render(request, 'submissions/import.html', {
-    
-    })
+        return copy_submission_form(request, submission_form_pk=submission_form.pk, delete=True)
+    return render(request, 'submissions/import.html', {})
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)

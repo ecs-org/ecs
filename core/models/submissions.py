@@ -105,6 +105,8 @@ class Submission(models.Model):
     insurance_review_required = models.NullBooleanField()
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
+    transient = models.BooleanField(default=False)
+    valid_until = models.DateField(null=True, blank=True)
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz

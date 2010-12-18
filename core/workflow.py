@@ -7,7 +7,7 @@ from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 
-register(Submission, autostart_if=lambda s: bool(s.current_submission_form_id))
+register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
 
 @guard(model=Submission)

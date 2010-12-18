@@ -14,7 +14,7 @@ _autostart_disabled = False
 def register(model, autostart_if=None):
     if model in _registered_models:
         return
-    _registered_models[model] = autostart_if or (lambda obj: True)
+    _registered_models[model] = autostart_if or (lambda obj, created: created)
     from ecs.workflow.descriptors import WorkflowDescriptor
     model.workflow = WorkflowDescriptor()
     
@@ -34,10 +34,11 @@ def autodiscover():
 def _post_save(sender, **kwargs):
     if _autostart_disabled or sender not in _registered_models:
         return
-    # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
     autostart_if = _registered_models[sender]
     obj = kwargs['instance']
-    if kwargs['created'] and not kwargs.get('raw') and autostart_if(obj):
+    print obj, kwargs['created'], kwargs['raw'], autostart_if(obj, kwargs['created'])
+    # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
+    if not kwargs.get('raw') and autostart_if(obj, kwargs['created']):
         from ecs.workflow.models import Workflow, Graph
         ct = ContentType.objects.get_for_model(sender)
         

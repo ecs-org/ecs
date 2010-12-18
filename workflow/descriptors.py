@@ -9,7 +9,11 @@ class ObjectWorkflow(object):
         self.workflows = Workflow.objects.filter(
             content_type=ContentType.objects.get_for_model(type(obj)), 
             data_id=obj.pk,
+            is_finished=False,
         )
+        
+    def __nonzero__(self):
+        return self.workflows.exists()
     
     @property
     def tokens(self):

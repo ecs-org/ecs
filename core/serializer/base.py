@@ -263,7 +263,7 @@ class SubmissionSerializer(ModelSerializer):
         super(SubmissionSerializer, self).__init__(Submission, **kwargs)
         
     def load(self, data, zf, commit=False):
-        return Submission.objects.create()
+        return Submission.objects.create(transient=True)
         
 class CountrySerializer(object):
     def dump(self, obj, zf):
@@ -271,9 +271,18 @@ class CountrySerializer(object):
         
     def load(self, data, zf, commit=False):
         return Country.objects.get(iso=data)
+        
+
+class SubmissionFormSerializer(ModelSerializer):
+    def load(self, data, zf, commit=True):
+        obj = super(SubmissionFormSerializer, self).load(data, zf, commit=False)
+        obj.transient = True
+        if commit:
+            obj.save()
+        return obj
 
 _serializers = {
-    SubmissionForm: ModelSerializer(SubmissionForm,
+    SubmissionForm: SubmissionFormSerializer(SubmissionForm,
         groups = ('study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject'),
         exclude = ('pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 'presenter'),
         follow = {
