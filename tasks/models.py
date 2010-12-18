@@ -10,6 +10,7 @@ from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
 from ecs.core.models import Submission
+from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
@@ -23,7 +24,7 @@ class TaskType(models.Model):
             return u'TaskType for %s' % self.workflow_node
         return u'TaskType <Anonymous>'
     
-class TaskManager(models.Manager):
+class TaskManager(AuthorizationManager):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
         return self.filter(content_type=ct, data_id=data.pk)

@@ -5,6 +5,7 @@ from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
 from ecs.fastlane.models import FastLaneTop
+from ecs.tasks.models import Task
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -22,7 +23,7 @@ class SubmissionQFactory(authorization.QFactory):
         if profile.thesis_review:
             until_vote_q |= self.make_q(thesis=True)
         if profile.board_member:
-            until_vote_q |= self.make_q(timetable_entries__participations__user=user, timetable_entries__meeting=self.make_f('next_meeting'))
+            until_vote_q |= self.make_q(timetable_entries__participations__user=user)
         if profile.expedited_review:
             until_vote_q |= self.make_q(expedited=True)
         if profile.external_review:
@@ -35,7 +36,7 @@ class SubmissionQFactory(authorization.QFactory):
         )
 
         ### rules that apply until the end of the submission lifecycle
-        until_eol_q = self.make_q(pk__gt=0) # active=True
+        until_eol_q = self.make_q(pk__gt=0)
         if not (user.is_staff or profile.internal):
             until_eol_q &= self.make_q(current_submission_form__submitter=user) | self.make_q(current_submission_form__primary_investigator__user=user) | self.make_q(current_submission_form__sponsor=user)
         q |= until_eol_q
@@ -65,3 +66,11 @@ class DocstashQFactory(authorization.QFactory):
         return self.make_q(owner=user)
 
 authorization.register(DocStash, factory=DocstashQFactory)
+
+class TaskQFactory(authorization.QFactory):
+    def get_q(self, user):
+        submission_q = self.make_q(content_type=ContentType.objects.get_for_model(Submission))
+        q = ~submission_q | (submission_q & self.make_q(data_id__in=Submission.objects.values('pk').query))
+        return q
+
+authorization.register(Task, factory=TaskQFactory)
