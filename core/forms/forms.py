@@ -42,11 +42,16 @@ class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
 class MultiNotificationForm(NotificationForm):
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'))
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id')).order_by('submission__ec_number')
+        
 
 
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all())
+    
+    def __init__(self, *args, **kwargs):
+        super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
+        self.fields['submission_form'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id')).order_by('submission__ec_number')
 
     class Meta:
         model = Notification
@@ -68,19 +73,19 @@ class SingleStudyNotificationForm(NotificationForm):
         return obj
 
 
-class ProgressReportNotificationForm(NotificationForm):
+class ProgressReportNotificationForm(SingleStudyNotificationForm):
     runs_till = DateField(required=True)
 
     class Meta:
         model = ProgressReportNotification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+        exclude = SingleStudyNotificationForm._meta.exclude
 
-class CompletionReportNotificationForm(NotificationForm):
+class CompletionReportNotificationForm(SingleStudyNotificationForm):
     completion_date = DateField(required=True)
 
     class Meta:
         model = CompletionReportNotification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+        exclude = SingleStudyNotificationForm._meta.exclude
         
 
 

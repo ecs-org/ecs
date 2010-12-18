@@ -7,37 +7,57 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.documents.models import Document
-from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms import DocumentForm
+from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
-
 from ecs.core.models import SubmissionForm, Investigator, Submission
-from ecs.notifications.models import Notification, NotificationType
+from ecs.documents.models import Document
+from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
+from ecs.notifications.forms import NotificationAnswerForm
 
-# notifications
+
+def _get_notification_template(notification, pattern):
+    template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
+    return loader.select_template(template_names)
+
+def _get_notification_download_name(notification, suffix=''):
+    ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
+    return slugify("%s-%s%s" % (ec_num, notification.type.name, suffix))
+
+def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context=None):
+    tpl = _get_notification_template(notification, tpl_pattern)
+    html = tpl.render(Context(context or {}))
+    pdf = xhtml2pdf(html)
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=%s' % _get_notification_download_name(notification, suffix)
+    return response
+
+
 def notification_list(request):
     return render(request, 'notifications/list.html', {
         'notifications': Notification.objects.all(),
         'stashed_notifications': DocStash.objects.filter(group='ecs.notifications.views.create_notification'),
     })
 
+
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    template_names = ['notifications/view/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
-    return render(request, template_names, {
+    tpl = _get_notification_template(notification, 'notifications/view/%s.html')
+    return render(request, tpl, {
         'documents': notification.documents.filter(deleted=False).order_by('doctype__name', '-date'),
         'notification': notification,
     })
-    
+
+
 def submission_data_for_notification(request):
     submission_forms = list(SubmissionForm.objects.filter(pk__in=request.GET.getlist('submission_form')))
     return render(request, 'notifications/submission_data.html', {
         'submission_forms': submission_forms,
     })
+
 
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
@@ -143,17 +163,30 @@ def create_notification(request, notification_type_pk=None):
         'documents': request.docstash.get('documents', []),
     })
 
+
+def edit_notification_answer(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    form = NotificationAnswerForm(request.POST or None, instance=notification.answer)
+    if form.is_valid():
+        answer = form.save(commit=False)
+        answer.notification = notification
+        answer.save()
+    return render(request, 'notifications/answers/form.html', {
+        'form': form,
+    })
+
+
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    template_names = ['db/notifications/xhtml2pdf/%s.html' % name for name in (notification.type.form_cls.__name__, 'base')]
-    tpl = loader.select_template(template_names)
-    html = tpl.render(Context({
+    return _notification_pdf_response(notification, 'db/notifications/xhtml2pdf/%s.html', suffix='.pdf', context={
         'notification': notification,
         'url': request.build_absolute_uri(),
-    }))
-    pdf = xhtml2pdf(html)
-    ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=%s.pdf' % slugify("%s-%s" % (ec_num, notification.type.name))
-    return response
+    })
 
+
+def notification_answer_pdf(request, notification_answer_pk=None):
+    answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
+    return _notification_pdf_response(answer.notification, 'db/notifications/answers/xhtml2pdf/%s.html', suffix='-answer.pdf', context={
+        'notification': answer.notification,
+        'answer': answer,
+    })

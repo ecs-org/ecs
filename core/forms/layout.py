@@ -139,7 +139,7 @@ NOTIFICATION_FORM_TABS[AmendmentNotificationForm] = [
 ]
 
 
-NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
+NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[SingleStudyNotificationForm][:1] + [
     (u'Study status', [
         (u'status', [
             'reason_for_not_started', 'study_aborted', 'completion_date',
@@ -154,7 +154,7 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
     (u'documents', []),
 ]
 
-NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[NotificationForm][:1] + [
+NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[SingleStudyNotificationForm][:1] + [
     (u'Study status', [
         (u'status', [
             'reason_for_not_started', 'runs_till',

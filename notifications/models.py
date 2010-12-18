@@ -76,3 +76,9 @@ class ProgressReportNotification(ReportNotification):
 
 class AmendmentNotification(DiffNotification, Notification):
     pass
+
+
+class NotificationAnswer(models.Model):
+    notification = models.OneToOneField(Notification, related_name="answer")
+    text = models.TextField()
+    
