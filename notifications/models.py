@@ -5,7 +5,7 @@ from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
 
 from ecs.documents.models import Document
-
+from ecs.authorization.managers import AuthorizationManager
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
@@ -46,6 +46,8 @@ class Notification(models.Model):
 
     comments = models.TextField(default="", blank=True)
     date_of_receipt = models.DateField(null=True, blank=True)
+    
+    objects = AuthorizationManager()
     
     def __unicode__(self):
         return u"%s" % (self.type,)

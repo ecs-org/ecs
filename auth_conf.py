@@ -6,6 +6,7 @@ from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
 from ecs.fastlane.models import FastLaneTop
 from ecs.tasks.models import Task
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -74,3 +75,10 @@ class TaskQFactory(authorization.QFactory):
         return q
 
 authorization.register(Task, factory=TaskQFactory)
+
+class NotificationQFactory(authorization.QFactory):
+    def get_q(self, user):
+        return self.make_q(submission_forms__pk__in=Submission.objects.values('pk').query)
+
+for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+    authorization.register(cls, factory=NotificationQFactory)
