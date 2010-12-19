@@ -23,7 +23,9 @@
                         {% endif %}
                         {% if sf.is_notification_update %}
                             {% with sf.new_for_notification.all.0 as notif %}
+                                {% if notif %}
                                 | <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                                {% endif %}
                             {% endwith %}
                         {% endif %}
                     </td>

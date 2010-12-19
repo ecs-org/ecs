@@ -5,6 +5,7 @@ from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
+from django.db import models
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.pdfutils import xhtml2pdf
@@ -36,11 +37,35 @@ def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context
     return response
 
 
-def notification_list(request):
-    return render(request, 'notifications/list.html', {
-        'notifications': Notification.objects.all(),
-        'stashed_notifications': DocStash.objects.filter(group='ecs.notifications.views.create_notification'),
-    })
+def _get_notifications(**lookups):
+    return Notification.objects.filter(**lookups).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+    
+def _notification_list(request, answered=None, stashed=False):
+    if answered:
+        title = _('Answered Notifications')
+        notifications = _get_notifications(answer__isnull=False)
+    elif answered is None:
+        title = _('All Notifications')
+        notifications = _get_notifications()
+    else:
+        title = _('Open Notifications')
+        notifications = _get_notifications(answer__isnull=True)
+    context = {
+        'title': title, 
+        'notifs': notifications,
+    }
+    if stashed:
+        context['stashed_notifications'] = DocStash.objects.filter(group='ecs.notifications.views.create_notification')
+    return render(request, 'notifications/list.html', context)
+
+def open_notifications(request):
+    return _notification_list(request, answered=False, stashed=True)
+
+def answered_notifications(request):
+    return _notification_list(request, answered=True)
+
+def all_notifications(request):
+    return _notification_list(request, answered=None, stashed=True,)
 
 
 def view_notification(request, notification_pk=None):

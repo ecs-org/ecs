@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
 
@@ -12,25 +12,9 @@ Liste aller Meldungen
 
 {% block content %}
 
-{% if notifications %}
-<div class="notification_list">
-  <h2>Eingereichte Meldungen</h2>
-    <ol>
-        {% for notification in notifications %}
-            <li>
-                <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
-                für {% for submission_form in notification.submission_forms.all %}
-                    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </li>
-        {% endfor %}
-    </ol>
-</div>
-{% endif %}
-
 {% if stashed_notifications %}
 <div class="notification_list">
-  <h2>Offene Meldungen</h2>
+  <h2>Nicht eingereichte Meldungen</h2>
     <ol>
         {% for docstash in stashed_notifications %}
             {% if docstash.current_value %}
@@ -50,6 +34,26 @@ Liste aller Meldungen
     </ol>
 </div>
 {% endif %}
+
+
+<div class="notification_list">
+    <h2>{{ title }}</h2>
+    {% if notifs %}
+        <ol>
+        {% for notification in notifs %}
+            <li>
+                <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a> für 
+                {% for submission_form in notification.submission_forms.all %}
+                    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </li>
+        {% endfor %}
+        </ol>
+    {% else %}
+        <i>{% trans 'There are no notifications yet.' %}</i>
+    {% endif %}
+</div>
+
 
 {% endblock %}
 
