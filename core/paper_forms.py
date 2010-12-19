@@ -293,7 +293,7 @@ FormInfo(Investigator, fields=(
     FieldInfo('10.4', 'mobile', _(u'mobile')),
     FieldInfo('10.5', 'fax', _(u'FAX')),
     FieldInfo('10.6', 'email', _(u'e-mail')),
-    FieldInfo('10.7', 'jus_practicandi', _(u' ')),
+    FieldInfo('10.7', 'jus_practicandi', _(u'Jus practicandi')),
     FieldInfo('10.8', 'specialist', _(u'specialist for')),
     FieldInfo('10.9', 'certified', _(u'certified')),
     #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9
