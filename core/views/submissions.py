@@ -104,6 +104,11 @@ def copy_latest_submission_form(request, submission_pk=None):
     }))
 
 
+def view_submission(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+
+
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -146,8 +151,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'vote_review_form': vote_review_form,
         'checklist_reviews': checklist_reviews,
         'befangene_review_form': befangene_review_form,
-        'pending_notifications': submission_form.notifications.all(),
-        'answered_notficiations': [], # TODO: for this the notification answers have to be implemented (FMD2)
+        'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
+        'answered_notficiations': submission_form.submission.notifications.filter(answer__isnull=False),
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),

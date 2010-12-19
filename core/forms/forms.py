@@ -36,7 +36,7 @@ class ModelFormSetPickleMixin(object):
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt')
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp')
 
 
 class MultiNotificationForm(NotificationForm):

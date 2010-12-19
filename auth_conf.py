@@ -78,7 +78,7 @@ authorization.register(Task, factory=TaskQFactory)
 
 class NotificationQFactory(authorization.QFactory):
     def get_q(self, user):
-        return self.make_q(submission_forms__pk__in=Submission.objects.values('pk').query)
+        return self.make_q(submission_forms__submission__in=Submission.objects.values('pk').query)
 
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
     authorization.register(cls, factory=NotificationQFactory)

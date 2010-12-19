@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.importlib import import_module
@@ -46,6 +47,8 @@ class Notification(models.Model):
 
     comments = models.TextField(default="", blank=True)
     date_of_receipt = models.DateField(null=True, blank=True)
+    timestamp = models.DateTimeField(default=datetime.datetime.now)
+    user = models.ForeignKey('auth.User', null=True)
     
     objects = AuthorizationManager()
     

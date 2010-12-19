@@ -69,6 +69,7 @@ def all_notifications(request):
 
 
 def view_notification(request, notification_pk=None):
+    print str(Notification.objects.filter(pk=notification_pk).query)
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
     return render(request, tpl, {
@@ -169,6 +170,7 @@ def create_notification(request, notification_type_pk=None):
         if submit and form.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
+            notification.user = request.user
             for key, value in request.docstash.get('extra', {}).items():
                 setattr(notification, key, value)
             notification.save()
@@ -177,8 +179,6 @@ def create_notification(request, notification_type_pk=None):
 
             request.docstash.delete()
             return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
-        else:
-            print form.errors
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,

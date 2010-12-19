@@ -116,34 +116,44 @@
     <div id="involved_parties_tab">
         {% include 'submissions/tabs/involved_parties.html' %}
     </div>
-        <div id="developer_tab">
-            {% include 'submissions/tabs/developer.html' %}
-        </div>
+    <div id="developer_tab">
+        {% include 'submissions/tabs/developer.html' %}
+    </div>
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Open Notifications" %}
-        {% if pending_notifications %}
+        {% if open_notifications %}
             <ul>
-                {% for notification in pending_notifications %}
-                    <li><a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                {% for notification in open_notifications %}
+                    <li>
+                        <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
+                        von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>{% trans "There are no pending notifications." %}</p>
+            <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
-        <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        {% if submission_form.presenter == request.user %}
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}
         {% if answered_notifications %}
             <ul>
                 {% for notification in answered_notifications %}
-                    <li><a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a></li>
+                    <li>
+                        <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
+                        von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
-        <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        {% if submission_form.presenter == request.user %}
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+        {% endif %}
     </div>
     <div id="pending_votes_tab" class="tab">
         <h3>{% trans "Pending Votes" %}</h3>

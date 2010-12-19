@@ -140,8 +140,10 @@ class Submission(models.Model):
         registered = User.objects.filter(email__in=emails)
         unregistered = emails.difference(registered)
         return registered, unregistered
-        
-    def get_notifications(self):
+    
+    @property
+    def notifications(self):
+        from ecs.notifications.models import Notification
         return Notification.objects.filter(submission_forms__submission=self)
    
     @property
@@ -180,6 +182,13 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.main_ethics_commission
+        
+    @property
+    def primary_investigator(self):
+        if not self.current_submission_form:
+            return None
+        return self.current_submission_form.primary_investigator
+
         
     def save(self, **kwargs):
         if not self.ec_number:
@@ -530,7 +539,7 @@ class SubmissionForm(models.Model):
             return self.primary_investigator.ethics_commission
         except Investigator.DoesNotExist:
             return None
-            
+
     @property
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote

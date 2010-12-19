@@ -10,5 +10,6 @@ urlpatterns = patterns('ecs.notifications.views',
     url(r'^notifications/open/$', 'open_notifications'),
     url(r'^notifications/answered/$', 'answered_notifications'),
     url(r'^notifications/$', 'all_notifications'),
+    url(r'^notifications/delete/(?P<docstash_key>.+)/$', 'delete_docstash_entry'),
     url(r'^submission_data_for_notification/$', 'submission_data_for_notification'),
 )
