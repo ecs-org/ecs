@@ -9,7 +9,7 @@ from ecs.core.tests.submissions import create_submission_form
 class NotificationFormTest(LoginTestCase):
     
     def test_notification_list(self):
-        response = self.client.get(reverse('ecs.notifications.views.notification_list'))
+        response = self.client.get(reverse('ecs.notifications.views.all_notifications'))
         self.failUnlessEqual(response.status_code, 200)
 
     def test_creation_type_selection(self):
