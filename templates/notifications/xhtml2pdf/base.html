@@ -1,5 +1,5 @@
 {% extends 'db/xhtml2pdf/skeleton.html' %}
-{% load core %}
+{% load core corepdf %}
 
 {% block title %}Meldung{% endblock %}
 
@@ -19,30 +19,35 @@
         <td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
       </tr>
     </table>
-
     <center>
     <table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
     <col width="215"><col width="84"><col width="84"><col width="195">
-    <tr><th width="215" height="24">Ethik-Kommission</th><th width="84">EK-Nummer</th>
-    <th width="84">Datum des Votums</th><th width="195">Prüfer</th></tr>
-    {% for investigator in notification.investigators.all %}
     <tr>
-      <td>{{ investigator.ethics_commission.name }}</td>
-      <td>{{ investigator.submission_form.submission|ec_number }}</td>
-      <td>{{ investigator.submission.current_submission_form.current_published_vote.published_at }}</td>
-      <td>{{ investigator.name }}</td>
+        <th width="215" height="24">Ethik-Kommission</th>
+        <th width="84">EK-Nummer</th>
+        <th width="84">Protokollnummer</th>
+        <th width="84">Datum des Votums</th>
+        <th width="195">Prüfer</th>
+    </tr>
+    {% for submission_form in notification.submission_forms.all %}
+    <tr>
+        <td>{{ submission_form.submission.main_ethics_commission }}</td>
+        <td>{{ submission_form.submission }}</a></td>
+        <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
+        <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
+        <td>{{ submission_form.submission.primary_investigator.contact }}</td>
     </tr>
     {% endfor %}
     </table>
     </center>
 
     {% block headitem %}
-    <p><b>1. {{ notification.type.name }}</b></p>
+    <p><b>{{ notification.type.name }}</b> vom {{ notification.timestamp|date:'d.m.Y' }}</p>
     {% endblock %}
     
     <div class="type-options">
         <h2>
-            <span class="checkbox">[{% if notification.type.name == 'Protokolländerung' %}&times;{% else %} {% endif %}]</span>
+            {% block amendment_checkbox %}{{ undefined|checkbox }}{% endblock %}
             1.1 MELDUNG einer PROTOKOLLÄNDERUNG (AMENDMENT)
         </h2>
         <p>
@@ -51,7 +56,7 @@
         </p>
     
         <h2>
-            <span class="checkbox">[{% if notification.type.name == 'SAE Bericht' %}&times;{% else %} {% endif %}]</span>
+            {% block sae_susar_checkbox %}{{ undefined|checkbox }}{% endblock %}
             1.2 MELDUNG eines schwerwiegenden unerwünschten Ereignisses (SAE)
         </h2>
         <p>
@@ -87,9 +92,10 @@
     <b>4. Anlagen</b></p>
 
     <ol>
-      {% for doc in notification.documents.all %}
-      <li>{{ doc.file }}</li>
-      {% endfor %}
+        <li>Liste der Änderungen</li>
+        {% for doc in notification.documents.all %}
+            <li>{{ doc.file }}</li>
+        {% endfor %}
     </ol>
     {% endif %}
     {% endblock %}

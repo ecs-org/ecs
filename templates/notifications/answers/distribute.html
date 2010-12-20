@@ -1,0 +1,12 @@
+{% extends 'notifications/answers/base.html' %}
+{% load core i18n %}
+
+{% block notification_answer_body %}
+<div>
+    {{ answer.text }}
+</div>
+<form action="" method="post">
+    <input type="submit" value="{% trans 'Distribute' %}" />
+</form>
+{% endblock %}
+
