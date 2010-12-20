@@ -12,6 +12,7 @@ class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
     diff = models.BooleanField(default=False)
+    executive_answer_required_for_amg = models.BooleanField(default=False)
     
     @property
     def form_cls(self):

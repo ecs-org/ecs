@@ -2,6 +2,7 @@ import imp
 from django.conf import settings
 from django.utils.importlib import import_module
 from django.db.models.signals import post_save, class_prepared
+from django.db.models import Model
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.workflow.controllers import Activity, FlowController, guard
@@ -36,13 +37,11 @@ def _post_save(sender, **kwargs):
         return
     autostart_if = _registered_models[sender]
     obj = kwargs['instance']
-    print obj, kwargs['created'], kwargs['raw'], autostart_if(obj, kwargs['created'])
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
     if not kwargs.get('raw') and autostart_if(obj, kwargs['created']):
         from ecs.workflow.models import Workflow, Graph
-        ct = ContentType.objects.get_for_model(sender)
-        
-        graphs = Graph.objects.filter(content_type=ct, auto_start=True)
+        cts = [ContentType.objects.get_for_model(cls) for cls in sender.__mro__ if issubclass(cls, Model) and cls != Model and not cls._meta.abstract]
+        graphs = Graph.objects.filter(content_type__in=cts, auto_start=True)
         for graph in graphs:
             wf = Workflow.objects.create(graph=graph, data=obj)
             wf.start()

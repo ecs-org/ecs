@@ -6,8 +6,9 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
+from django.conf import settings
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import render, redirect_to_next_url, render_html
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -15,7 +16,10 @@ from ecs.core.forms import DocumentForm
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
+from ecs.core.parties import get_involved_parties
 from ecs.documents.models import Document
+from ecs.ecsmail.mail import deliver
+from ecs.ecsmail.persil import whitewash
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm
 
@@ -26,7 +30,7 @@ def _get_notification_template(notification, pattern):
 
 def _get_notification_download_name(notification, suffix=''):
     ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
-    return slugify("%s-%s%s" % (ec_num, notification.type.name, suffix))
+    return slugify("%s-%s" % (ec_num, notification.type.name)) + suffix
 
 def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context=None):
     tpl = _get_notification_template(notification, tpl_pattern)
@@ -176,6 +180,7 @@ def create_notification(request, notification_type_pk=None):
             notification.save()
             form.save_m2m()
             notification.documents = request.docstash['documents']
+            notification.save() # send another post_save signal (required to properly start the workflow)
 
             request.docstash.delete()
             return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
@@ -191,13 +196,52 @@ def create_notification(request, notification_type_pk=None):
 
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    form = NotificationAnswerForm(request.POST or None, instance=notification.answer)
+    try:
+        answer = notification.answer
+    except NotificationAnswer.DoesNotExist:
+        answer = None
+    form = NotificationAnswerForm(request.POST or None, instance=answer)
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification
         answer.save()
+        return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
     return render(request, 'notifications/answers/form.html', {
+        'notification': notification,
         'form': form,
+    })
+
+
+def view_notification_answer(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
+    return render(request, 'notifications/answers/view.html', {
+        'notification': notification,
+        'answer': notification.answer,
+    })
+    
+
+def distribute_notification_answer(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
+    if request.method == 'POST':
+        for submission in Submission.objects.filter(forms__in=notification.submission_forms.values('pk').query):
+            for party in get_involved_parties(submission.current_submission_form, include_workflow=False):
+                if party.email:
+                    htmlmail = unicode(render_html(request, 'notifications/answers/email.html', {
+                        'notification': notification,
+                        'answer': notification.answer,
+                        'recipient': party,
+                    }))
+                    plainmail = whitewash(htmlmail)
+
+                    deliver(subject=_('New Notification Answer'), 
+                        message=plainmail,
+                        message_html=htmlmail,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[party.email])
+
+    return render(request, 'notifications/answers/distribute.html', {
+        'notification': notification,
+        'answer': notification.answer,
     })
 
 

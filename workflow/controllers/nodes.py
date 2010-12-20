@@ -144,6 +144,9 @@ class NodeController(object):
             
     def get_url(self):
         return None
+        
+    def get_final_urls(self):
+        return [self.get_url()]
 
 
 class Activity(NodeController):

@@ -14,9 +14,13 @@
       <a href="" id="validate-button" class="button_validate">{% trans "Validate" %}</a>
       <a href="" id="submit-button" class="button_submit">
         {% if submission and submission.current_submission_form %}
-          {% trans "Resubmit" %}
+            {% if notification_type %}
+                {% trans "Submit Amendment" %}
+            {% else %}
+                {% trans "Resubmit" %}
+            {% endif %}
         {% else %}
-          {% trans "Submit" %}
+            {% trans "Submit" %}
         {% endif %}
       </a>
     </div>

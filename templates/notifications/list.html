@@ -47,6 +47,7 @@ Liste aller Meldungen
                 {% for submission_form in notification.submission_forms.all %}
                     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}
+                vom {{ notification.timestamp|date:'d.m.Y' }}
             </li>
         {% endfor %}
         </ol>
