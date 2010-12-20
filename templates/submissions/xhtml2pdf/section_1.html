@@ -13,25 +13,11 @@
         </tr>
         <tr>
             <td>1.3. Datum des Protokolls:</td>
-            <td class="value">{{ submission_form.protocol.date }}</td>
-            <td>1.3.1 ISRCTN-Nr.:</td>
-            <td></td>
+            <td class="value">{{ submission_form.protocol.date|date:'d.m.Y' }}</td>
         </tr>
     </tbody>
 </table>
 
-{% tcwrap plain %}
-        1.4. Daten der beiliegenden Amendments:
-    </td><td>
-        <table>
-            <tr>
-                <td width="2cm">1.4.1. Nr.</td>
-                <td class="value"></td>
-                <td>1.4.2. Datum:</td>
-                <td class="value"></td>
-            </tr>
-        </table>
-{% endtcwrap %}
 
 <h4>1.5 Sponsor / Rechnungsempfänger (Kontaktperson in der Buchhaltung):</h4>
 
