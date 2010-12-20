@@ -45,7 +45,7 @@
   background: #b7d4e5;
   color: #2b558e;
 }
-.tab_headers .active a {
+.tab_headers .active a, #headernav li.readonly_review.active a {
   background: #2b558e;
   border-bottom: #2b558e;
   color: #e2eaf0;
