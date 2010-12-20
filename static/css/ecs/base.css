@@ -99,7 +99,8 @@ body {
 #content h4 {
   display: block;
   font-size: 0.9em;
-  margin-bottom: 10px;
+	font-weight: lighter;
+  margin-bottom: 5px;
 }
 #content h5 {
   display: block;
@@ -126,8 +127,42 @@ a {
   outline: 0;
 	cursor: pointer;
 }
-#content td, #content th {
-  vertical-align: top;
+#content ul {
+  margin: 0 0 20px 30px;
+	font-size: 10pt;
+}
+input, textarea, #content select {
+  border: 1px solid #999;
+  padding: 2px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+select {
+  border: 1px solid #999;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+}
+#content table {
+  margin: 10px 0;
+}
+#content table, #content th, #content td {
+  text-align: left;
+}
+#content th, #content td {
+  padding: 2px 3px;
+	vertical-align: top;
+}
+input[type=submit] {
+  clear: both;
+  display: block;
+  float: right;
+  color: #fff;
+  background: #333;
+  cursor: pointer;
+  margin: 10px 10px 10px 0;
+  padding: 3px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 
 /* header */

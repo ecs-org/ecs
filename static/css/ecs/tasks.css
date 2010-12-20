@@ -94,7 +94,14 @@
 /* TaskList */
 
 #task_main {
-  margin: 10px;
+  padding: 10px;
+}
+.task_full {
+  background: #f9feff;
+  min-width: 700px;
+  width: 100%;
+  display: block;
+	border: 1px solid #ddd;
 }
 .task_list {
   margin-bottom: 10px;
@@ -150,7 +157,7 @@
 #task_main h2, .TaskList h2 {
   display: block;
   font-size: 1.2em;
-  margin-bottom: 5px;
+  margin: 5px 0;
   font-weight: lighter;
   letter-spacing: 1px;
 }
@@ -158,7 +165,7 @@
   display: block;
   font-size: 1.0em;
   font-weight: lighter;
-  margin: 0 0 5px 0;
+  margin: 5px 0;
   letter-spacing: 1px;
 }
 a {
