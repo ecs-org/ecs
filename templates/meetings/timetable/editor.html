@@ -8,11 +8,13 @@
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
     {% if not running_optimization %}
-        <a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a>
-        | <a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">RandomAdd</a>
-        | <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a>
+        <ol class="options">
+				  <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
+          <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">RandomAdd</a></li>
+          <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a></li>
         {% comment %}| <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
-        | <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a>
+          <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+				</ol>
     {% endif %}
     <div class="waiting_time">
     Wartezeit: 
@@ -22,7 +24,7 @@
         min={{ meeting.metrics.waiting_time_min|simple_timedelta_format|default:'-' }},
         var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
     </div>
-    <div>Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
+    <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
@@ -54,15 +56,15 @@
         </li>
     {% endfor %}
     </ol>
-    <div style="position:absolute;right:0px;top:0px; width:200px">
+    <div id="userlist">
         <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
-        <ul id="userlist">
+        <ul>
             {% for user in meeting.users_with_constraints %}
                 <li><span class="user">{{ user }}</span>
                     <div class="info">
                     {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
-                            <div class="waiting_time">Wartezeit: {{ waiting_time|simple_timedelta_format }}</div>
+                            <span class="waiting_time">Wartezeit: {{ waiting_time|simple_timedelta_format }}</span>
                         {% endif %}
                     {% endwith %}
                     {% if user.constraints %}
@@ -72,7 +74,7 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a>
+                    <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
                     </div>
                 </li>
             {% endfor %}

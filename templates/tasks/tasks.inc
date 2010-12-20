@@ -26,11 +26,11 @@
 
 {% if mine_tasks %}
     <div class="task_list">
-        <h2>{% trans "My Tasks" %}</h2>
+        <h3>{% trans "My Tasks" %}</h3>
         {% regroup mine_tasks by task_type as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
-                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
                     <a href="{{ task.url|default:manage_url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
@@ -43,11 +43,11 @@
 
 {% if assigned_tasks %}
     <div class="task_list">
-        <h2>{% trans "Tasks assigned to me" %}</h2>
+        <h3>{% trans "Tasks assigned to me" %}</h3>
         {% regroup assigned_tasks by task_type as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
-                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
@@ -61,11 +61,11 @@
 
 {% if open_tasks %}
     <div class="task_list">
-        <h2>{% trans "Open Tasks" %}</h2>
+        <h3>{% trans "Open Tasks" %}</h3>
         {% regroup open_tasks by task_type as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
-                <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
+                <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}

@@ -2,7 +2,8 @@
 {% load core i18n %}
 
 {% block meeting_detail %}
-<h3>{% trans "Status" %}
+
+<h2>{% trans "Status" %}</h2>
 
 <table>
     <tr><th>{% trans "Title" %}:</th><td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td></tr>

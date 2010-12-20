@@ -1,3 +1,11 @@
+#meeting_main {
+  background: #f9feff;
+  min-width: 700px;
+  display: block;
+	padding: 10px;
+  border: 1px solid #ddd;
+}
+
 /* meeting list */
 
 #meeting_list ol {
@@ -9,13 +17,33 @@
 
 /* meeting_editor */
 
+#meeting_editor {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+}
 #meeting_editor #userlist {
-  list-style: none;
-  background-color: #eeeeee;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 210px;
+  background-color: #eee;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+#meeting_editor #userlist ul {
+	list-style: none;
+	margin: 0;
+	padding: 2px;
 }
 #meeting_editor #userlist li {
   border-top: 1px solid #ffffff;
   padding: 5px;
+}
+#meeting_editor #userlist h5 {
+	padding: 5px;
+	margin-bottom: 5px;
 }
 #meeting_editor #userlist .info {
   background-color: #ffffff;
@@ -40,26 +68,27 @@
   margin-left: 0px;
 }
 #meeting_editor #timetable {
+	float: left;
   list-style: none;
-  width: 550px;
-  font-size: 10pt;
+  width: 535px;
   margin: 0px;
 }
 #meeting_editor #timetable li {
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+	font-size: 10pt;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #meeting_editor .entry {
   border: 1px solid #eee;
   margin-bottom: 3px;
   display: block;
-  height: 65px;
+  height: 80px;
   background-color: #fff;
   position: relative;
 }
 #meeting_editor .entry.free {
-  background-color: #ccffff;
+  background-color: #eff1f5;
 }
 #meeting_editor .entry.break {
   background-color: #ffffcc;
@@ -81,13 +110,10 @@
   margin-right: 5px;
   width: 50px;
   background-color: #B7D4E5;
-  height: 55px;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  -moz-border-radius-topleft: 5px;
-  -moz-border-radius-bottomleft: 5px;
-  -webkit-border-top-left-radius: 5px;
-  -webkit-border-bottom-left-radius: 5px;
+  height: 70px;
+  border-radius: 3px 0 0 3px;
+  -moz-border-radius: 3px 0 0 3px;
+  -webkit-border-radius: 3px 0 0 3px;
 }
 #meeting_editor .entry input.duration {
   width: 5em;
@@ -97,8 +123,22 @@
 }
 #meeting_editor .entry h3 {
   margin-bottom: 2px;
+	font-weight: bolder;
 }
-
+#meeting_editor .options li {
+	display: inline;
+	list-style: none;
+}
+#meeting_editor .options li:after {
+  content: " |";
+}
+#meeting_editor .options li:last-child:after {
+  content: "";
+}
+#meeting_editor .constraints_hurt, #meeting_editor .waiting_time {
+	font-size: 10pt;
+	margin: 5px 0;
+}
 .icon_drag {
   display: block;
   text-indent: -9999px;
@@ -223,7 +263,7 @@
   margin-bottom: 5px;
 }
 #meeting_assistant {
-  position: relative;
+	display: inline-block;
   width: 100%;
 }
 #meeting_assistant .navigation,
@@ -237,9 +277,8 @@
   margin: 5px 0;
 }
 #meeting_assistant .meeting_assistant_nav {
-  left: 0px;
   width: 180px;
-  position: absolute;
+	float: left;
   padding: 10px;
 }
 #meeting_assistant .meta {
@@ -256,8 +295,7 @@
 #meeting_assistant #meeting_assistant_body {
   float: left;
   padding: 5px;
-  margin: 0 0 20px 200px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -317,22 +355,20 @@
 #meeting_assistant .button a, #meeting_assistant .navigation a {
   display: block;
   padding: 3px;
+  margin-bottom: 5px;
   background: #666;
-  border: 1px solid #ccc;
   text-align: center;
   font-size: 10pt;
   clear: both;  
   color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #meeting_assistant .navigation a {
   display: block;
-  margin-bottom: 2px;
-  padding: 3px;
   background: #ccc;
-  border: 1px solid #ccc;
-  text-align: center;
-  font-size: 10pt;
-  clear: both;  
   color: #333;
 }
 #meeting_assistant .navigation a {
@@ -361,15 +397,18 @@
   border-bottom: 1px solid #ccc;
   margin-top: 10px;
   padding: 10px 0;
+	width: 100%;
 }
 #meeting_assistant .search input[type=text] {
-  float: left;
-  width: 60%;
+	display: inline-block;
+  width: 110px;
+	margin-top: 2px;
 }
 #meeting_assistant .search input[type=submit] {
-  float: right;
-  width: 35%;
+	display: inline-block;
+  width: 60px;
   font-size: 10pt;
+	margin: 0;
 }
 #meeting_assistant ul li {
   list-style: none
