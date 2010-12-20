@@ -1,35 +1,38 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-{% trans "Catalog of Approved Studies" %}
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
 {% endblock %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
 {% block content %}
+<div id="header_public">
+  <a href="/"><h1>Ethikkommission Wien</h1></a> 
+</div>
 
-<div class="submission_list">
-
-<h2>{% trans "Catalog of Approved Studies" %}</h2>
-
-{% regroup votes by top.meeting as meetings %}
-
-{% for meeting in meetings %}
-    {% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}
-    <ul>
-    {% for vote in meeting.list %}
-        {% with vote.submission_form  as submission_form %}
-        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.project_title|default:'<i>No title</i>' }}</li>
-        {% endwith %}
-    {% endfor %}
-    </ul>
-
-{% endfor %}
-
+<div id="wrapper">
+	<div class="submission_list">
+	
+	<h2>{% trans "Catalog of Approved Studies" %}</h2>
+	
+	{% regroup votes by top.meeting as meetings %}
+	
+	{% for meeting in meetings %}
+	    {% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}
+	    <ul>
+	    {% for vote in meeting.list %}
+	        {% with vote.submission_form  as submission_form %}
+	        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.project_title|default:'<em>No title</em>' }}</li>
+	        {% endwith %}
+	    {% endfor %}
+	    </ul>
+	
+	{% endfor %}
+	
+	</div>
 </div>
 {% endblock %}
-
-{% block menuSelection %}submissions{% endblock %}
-
 

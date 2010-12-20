@@ -1,11 +1,24 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
-{% block content %} <!-- usertoolbar -->
+{% block content %}
+<div id="header_public">
+  <a href="/"><h1>Ethikkommission Wien</h1></a> 
+</div>
 
-<h2>Ihr Account wurde erfolgreich aktiviert.</h2>
+<div id="wrapper">
+	
+	<h2>Ihr Account wurde erfolgreich aktiviert.</h2>
+	
+	<p>Sie können sich nun <a href="{% url ecs.users.views.login %}">einloggen</a>.</p>
 
-Sie können sich nun <a href="{% url ecs.users.views.login %}">einloggen</a>.
+</div>
 
 {% endblock %}

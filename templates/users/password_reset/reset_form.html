@@ -1,13 +1,27 @@
 {% extends 'base.html' %}
+{% load i18n %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
 
 {% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
 
 {% block content %}
-<h2>Passwort Ändern</h2>
-<form action="" method="post">
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="Passwort Ändern" />
-</form>
+<div id="header_public">
+  <a href="/"><h1>Ethikkommission Wien</h1></a> 
+</div>
+
+<div id="wrapper">
+	
+	<h2>Passwort Ändern</h2>
+	<form action="" method="post">
+	    <table>
+	        {{ form.as_table }}
+	    </table>
+	    <input type="submit" value="Passwort Ändern" />
+	</form>
+</div>
+
 {% endblock %}
