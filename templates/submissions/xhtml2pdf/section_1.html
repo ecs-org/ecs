@@ -36,20 +36,18 @@
         <tr>
             <td>1.5.2 Adresse:</td>
             <td class="value">
-                {{ submission_form.sponsor_address1 }}<br/>
-                {{ submission_form.sponsor_address2 }}<br/>
+                {{ submission_form.sponsor_address }}<br/>
                 {{ submission_form.sponsor_zip_code }} {{ submission_form.sponsor_city }}
             </td>
             <td class="value">
-                {{ submission_form.invoice_address1 }}<br/>
-                {{ submission_form.invoice_address2 }}<br/>
+                {{ submission_form.invoice_address }}<br/>
                 {{ submission_form.invoice_zip_code }} {{ submission_form.invoice_city }}
             </td>
         </tr>
         <tr>
             <td>1.5.3 Kontaktperson:</td>
-            <td class="value">{{ submission_form.sponsor_contactname|default_if_none:"" }}</td>
-            <td class="value">{{ submission_form.invoice_contact_name|default_if_none:"" }}</td>
+            <td class="value">{{ submission_form.sponsor_contact }}</td>
+            <td class="value">{{ submission_form.invoice_contact }}</td>
         </tr>
         <tr>
             <td>1.5.4 Telefon:</td>

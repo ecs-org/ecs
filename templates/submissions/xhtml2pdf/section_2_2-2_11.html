@@ -43,12 +43,13 @@
 
 <p>
     2.7 Liste der Zentren: <br/>
-    {% for ec in submission_form.ethics_commissions.all %}
-        <div class="value">{{ ec.name }}; {{ ec.zip_code }} {{ ec.city }} </div>
+    {% for investigator in submission_form.investigators.all %}
+        <div class="value">{{ investigator.organisation }}; {{ investigator.ethics_commission.zip_code }} {{ investigator.ethics_commission.city }} </div>
     {% endfor %}
 
+    Liste der Auslandszentren: <br/>
     {% for pc in submission_form.foreignparticipatingcenter_set.all %}
-        <div class="value">{{ pc.name }}; {{ pc.zip_code }} {{ pc.city }} </div>
+        <div class="value">{{ pc.name }}, {{ pc.investigator_name }}</div>
     {% endfor %}
 </p>
 

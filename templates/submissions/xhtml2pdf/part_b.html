@@ -4,12 +4,16 @@
     Studienkurzbezeichnung: <span class="value">{{ submission_form.project_title }}</span>
 </p>
 
+<p>
+    Zuständige Ethikkommission: <span class="value">{{ submission_form.main_ethics_commission }}</span>
+</p>
+
 {% tcwrap section %}
     <h3>10. Angaben zur Prüferin/zum Prüfer</h3>
 {% endtcwrap %}
 
 <p>
-    10.1 Name: <span class="value">{{ inv.name }}</span>
+    10.1 Name: <span class="value">{{ inv.contact }}</span>
 </p>
 
 <p style="page-break-after: avoid"> 10.2

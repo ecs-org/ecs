@@ -8,6 +8,8 @@ class Name(object):
 
     @property
     def salutation(self):
+        if not self.gender:
+            return ''
         return self.gender == 'f' and 'Frau' or 'Herr'
 
     @property
