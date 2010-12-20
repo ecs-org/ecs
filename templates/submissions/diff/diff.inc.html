@@ -8,10 +8,10 @@
                 <span>{{ content|safe }}</span>
             {% endif %}
             {% if type == -1 %}
-                <span class="deleted">{{ content|safe }}</span>
+                <span class="deleted"><span class="marker">-</span>{{ content|safe }}</span>
             {% endif %}
             {% if type == 1 %}
-                <span class="inserted">{{ content|safe }}</span>
+                <span class="inserted"><span class="marker">+</span>{{ content|safe }}</span>
             {% endif %}
         {% endfor %}
         </div>

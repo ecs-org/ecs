@@ -52,7 +52,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
     all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by(*order_by)
     related_url = request.GET.get('url', None)
     if related_url:
-        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if t.url == related_url]
+        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if related_url in t.get_final_urls()]
         if len(related_tasks) == 1:
             return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
         elif related_tasks:

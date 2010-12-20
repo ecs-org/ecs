@@ -26,7 +26,7 @@ cellspacing="1">
 <h4>Name und Unterschrift der Antragstellerin/des Antragstellers</h4>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
- 9.1 Name: <b> {{ submission_form.submitter_name }} </b> </p>
+ 9.1 Name: <b> {{ submission_form.submitter_contact }} </b> </p>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
  9.2 Institution/ Firma: <b> {{ submission_form.submitter_organisation }} </b> </p>
@@ -69,12 +69,14 @@ bin, dass die Durchführung der Studie in Übereinstimmung mit dem
 Protokoll, nationalen Regelun­gen und mit den Prinzipien der Guten
 Klinischen Praxis möglich sein wird. </p>
 
-<p style="{% if not submission_form.submitter_agrees_to_publishing %}text-decoration:line-through{% endif %}">
+<p style="{% if not submission_form.sponsor_agrees_to_publishing %}text-decoration:line-through{% endif %}">
     Weiters stimme ich mit meiner Unterschrift zu, dass folgende Daten aus meinem Antrag ggf. durch die
     Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt transparent zu machen:<br/>
     EK-Nummer, Einreich-Datum, Projekttitel, Hauptprüfer, Sponsor/CRO, weitere Zentren.<br/> 
     <i>(Im Falle der Nicht-Zustimmung bitte diesen Absatz durchzustreichen)</i>
 </p>
+
+<pdf:spacer height="2.0cm" />
 
 <table width="624" border="0" cellpadding="5" cellspacing="0">
 <col width="28">

@@ -1,11 +1,21 @@
 {% extends 'db/notifications/xhtml2pdf/base.html' %}
 
-{% block documents %}
+{% load core corepdf %}
 
-{{ block.super }}
+{% block amendment_checkbox %}{{ undefined|not|checkbox }}{% endblock %}
 
-{% with notification.amendmentnotification as notification %}
-    {{ notification.diff|safe }}
-{% endwith %}
+{% block content %}
+
+    {{ block.super }}
+    
+    <pdf:nextpage />
+    
+    <h2>Liste der Änderungen</h2>
+    
+    {% with notification.amendmentnotification as notification %}
+        {{ notification.diff|safe }}
+    {% endwith %}
+
 
 {% endblock %}
+

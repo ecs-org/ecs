@@ -1,5 +1,5 @@
 {# context: documents #}
-{% load pdfviewer i18n %}
+{% load core pdfviewer i18n %}
 {% block document_list %}
 <div class="doclist">
 {% if documents %}
@@ -8,8 +8,8 @@
         <div>
             {% get_annotations for doc as annotations %}
             <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
-                Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
+                Version {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
             </a>
             {% block actions %}
                 <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>

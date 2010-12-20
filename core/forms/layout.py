@@ -39,8 +39,8 @@ SUBMISSION_FORM_TABS = (
             'sponsor_contact_gender', 'sponsor_contact_title', 'sponsor_contact_first_name', 'sponsor_contact_last_name',
             'sponsor_address', 'sponsor_zip_code', 
             'sponsor_city', 'sponsor_phone', 'sponsor_fax', 'sponsor_email',
-            'invoice_differs_from_sponsor',
             'sponsor_agrees_to_publishing',
+            'invoice_differs_from_sponsor',
         ]),
         (_(u'invoice recipient'), [
             'invoice_name', 
