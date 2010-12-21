@@ -6,7 +6,7 @@ import re
 from django.core.serializers import serialize
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 
 from ecs.audit.models import AuditTrail
 from ecs.users.utils import get_current_user

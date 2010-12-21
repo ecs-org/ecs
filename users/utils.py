@@ -70,7 +70,7 @@ def invite_user(request, email):
     comment = None
     try:
         sid = transaction.savepoint()
-        user, created = User.objects.get_or_create(email=email, defaults={'username': email[:30]})
+        user, created = get_or_create_user(email)
         if not created:
             raise ValueError(_(u'There is already a user with this email address.'))
         user.ecs_profile.phantom = True

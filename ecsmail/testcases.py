@@ -84,7 +84,7 @@ class MailTestCase(EcsTestCase):
         else:
             return self._entry_transform(django.core.mail.outbox [key])
     
-    def deliver(self, subject="test subject", message="test body", from_email="alice@example.org", recipient_list="bob@example.org", message_html=None, attachments=None, callback=None):
+    def deliver(self, subject="test subject", message="test body", from_email="alice@example.com", recipient_list="bob@example.com", message_html=None, attachments=None, callback=None):
         ''' just call our standard email deliver, prefilled values: subject, message, from_email, recipient_list '''
         return ecsmail_deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
         

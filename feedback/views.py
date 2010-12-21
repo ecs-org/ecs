@@ -4,7 +4,6 @@ import datetime
 import random
 import types
 
-from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 

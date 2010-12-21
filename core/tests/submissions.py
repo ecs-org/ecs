@@ -2,8 +2,6 @@
 import datetime
 
 from django.db.models import Q
-from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
@@ -14,7 +12,7 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.diff import diff_submission_forms
-from ecs.users.utils import get_user, create_user
+from ecs.users.utils import get_user, create_user, get_or_create_user
 
 def create_submission_form(ec_number=None, presenter=None):
     sub = Submission(ec_number=ec_number)
@@ -162,7 +160,7 @@ def create_submission_form(ec_number=None, presenter=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
-        presenter=presenter or User.objects.get_or_create(username='test_presenter', password='password')[0],
+        presenter=presenter or get_or_create_user('test_presenter@example.com')[0],
         )
     sform.save()
     sform.substance_registered_in_countries = []
@@ -323,7 +321,7 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            presenter=User.objects.get_or_create(username='test_presenter', password='password')[0],
+            presenter=get_or_create_user('test_presenter@example.com')[0],
             )
         sform.save()
         sform.substance_registered_in_countries = []

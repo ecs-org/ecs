@@ -8,7 +8,6 @@ import hashlib
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.db.models import Q
 
@@ -35,7 +34,7 @@ class AuditTrail(models.Model):
     instance = generic.GenericForeignKey()
     created_at = models.DateTimeField()
     description = models.CharField(max_length=100, null=False, blank=False)
-    user = models.ForeignKey(User, null=False, blank=False)
+    user = models.ForeignKey('auth.User', null=False, blank=False)
     data = models.TextField(null=False, blank=False)
     hash = models.CharField(max_length=64, null=False, blank=False)
     object_created = models.BooleanField(default=False)

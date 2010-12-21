@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
 

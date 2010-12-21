@@ -1,13 +1,12 @@
 import os, datetime, uuid
 from StringIO import StringIO
 from django.core.files.base import File
-from django.contrib.auth.models import User
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.serializer import Serializer
 from ecs.core.models import Submission, SubmissionForm, Measure, EthicsCommission, Investigator, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, get_or_create_user
 
 SUBMISSION_FORM_DATA = {
     'project_title': 'title',
@@ -70,7 +69,7 @@ class SerializerTest(EcsTestCase):
         self.failUnlessEqual(get_ntud_set(a), get_ntud_set(b))
     
     def test_import_export(self):
-        with sudo(User.objects.get_or_create(username='test_presenter')[0]):
+        with sudo(get_or_create_user('test_presenter@example.com')[0]):
             sf = self.create_submission_form()
             buf = StringIO()
             serializer = Serializer()

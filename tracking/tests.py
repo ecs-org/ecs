@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
 
-from django.contrib.auth.models import User
-
 from ecs.utils.testcases import EcsTestCase
 from ecs.tracking import tasks
 from ecs.tracking.models import Request

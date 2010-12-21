@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.conf import settings
 from django.utils import simplejson

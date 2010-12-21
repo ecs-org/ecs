@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, redirect_to_next_url
