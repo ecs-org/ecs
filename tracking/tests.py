@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 import time
-from ecs.utils.testcases import EcsTestCase
+
 from django.contrib.auth.models import User
+
+from ecs.utils.testcases import EcsTestCase
 from ecs.tracking import tasks
 from ecs.tracking.models import Request
+from ecs.users.utils import get_user
 
 
 class CleanupTest(EcsTestCase):
@@ -16,19 +20,19 @@ class CleanupTest(EcsTestCase):
         tasks.MAX_REQUESTS_PER_USER = self._original_max_requests
     
     def test_cleanup(self):
-        usernames = ('alice', 'bob')
+        users = ('alice@example.com', 'bob@example.com',)
         N = tasks.MAX_REQUESTS_PER_USER + 2
-        for username in usernames:
-            with self.login(username, 'password'):
+        for user in users:
+            with self.login(user, 'password'):
                 for i in xrange(N):
                     response = self.client.get('/dashboard/')
                     time.sleep(2) # make shure we get different timestamps
-        self.assertEqual(Request.objects.count(), N * len(usernames))
+        self.assertEqual(Request.objects.count(), N * len(users))
         
         tasks.cleanup_requests()
         
-        for username in usernames:
-            self.assertEqual(User.objects.get(username=username).requests.count(), tasks.MAX_REQUESTS_PER_USER)
+        for user in users:
+            self.assertEqual(get_user(user).requests.count(), tasks.MAX_REQUESTS_PER_USER)
 
         
         

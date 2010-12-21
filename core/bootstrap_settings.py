@@ -3,17 +3,16 @@
 # Caution: this file contains CONFIDENTIAL DATA
 
 developers = (
-    ('wuxxin', u'Felix', u'Erkinger', u'felix@erkinger.at'),
-    ('mvw', 'Marc', 'van Woerkom', 'marc.vanwoerkom@googlemail.com'),
-    ('emulbreh', u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
-    ('natano', u'Martin', u'Natano', 'natano@natano.net'),
-    ('amir', u'amir', u'hassan', 'amir@viel-zu.org'),
-    ('scripty', u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com'),
-    ('froema', u'Markus', u'Froehlich', 'froema@ep3.at'),
-    ('nadia', u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
-    ('max', u' Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
-    ('peter.rehak@meduni-graz.at', u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
-    ('tombo', u'Thomas', u'Neumann', 'tom@newtone.cc'),
+    (u'Felix', u'Erkinger', u'felix@erkinger.at'),
+    (u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
+    (u'Martin', u'Natano', 'natano@natano.net'),
+    (u'Amir', u'Hassan', 'amir@viel-zu.org' ),
+    (u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com' ),
+    (u'Markus', u'Froehlich', 'froema@ep3.at'),
+    (u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
+    (u'Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
+    (u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
+    (u'Thomas', u'Neumann', 'tom@newtone.cc'),
 )
 
 staff_users = ()

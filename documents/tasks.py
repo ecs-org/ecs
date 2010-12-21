@@ -16,7 +16,6 @@ from ecs.documents.models import Document, Page
 @task()
 def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
     logger = encrypt_and_upload_to_storagevault.get_logger(**kwargs)
-    logger.debug("called with pk %s" % document_pk)
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:
@@ -56,7 +55,6 @@ def encrypt_and_upload_to_storagevault(document_pk=None, **kwargs):
 @task()
 def extract_and_index_pdf_text(document_pk=None, **kwargs):
     logger = extract_and_index_pdf_text.get_logger(**kwargs)
-    logger.debug("indexing doc with pk %s" % document_pk)
     try:
         doc = Document.objects.get(pk=document_pk)
     except Document.DoesNotExist:

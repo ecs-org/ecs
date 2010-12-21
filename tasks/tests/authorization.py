@@ -2,14 +2,16 @@ from django.contrib.auth.models import User, Group
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.tasks.models import TaskType, Task
+from ecs.users.utils import create_user
+
 
 class AuthorizationTest(EcsTestCase):
     def setUp(self):
         group_a = Group.objects.create(name='group-a')
         group_b = Group.objects.create(name='group-b')
-        self.user_a = User.objects.create(username='user-a')
-        self.user_b = User.objects.create(username='user-b')
-        self.user_c = User.objects.create(username='user-c')
+        self.user_a = create_user('a@example.com')
+        self.user_b = create_user('b@example.com')
+        self.user_c = create_user('c@example.com')
         self.user_a.groups.add(group_a)
         self.user_b.groups.add(group_a, group_b)
         self.task_type_a = TaskType.objects.create(name='task-type-a')

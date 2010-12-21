@@ -1,11 +1,11 @@
 import re
 
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 from django.test.client import Client
 
 from ecs.ecsmail.testcases import MailTestCase
 from ecs.utils.testcases import EcsTestCase
+from ecs.users.utils import get_user, create_user
 
 
 class RegistrationTest(MailTestCase):
@@ -27,12 +27,11 @@ class RegistrationTest(MailTestCase):
         response = self.client.get(activation_url)
         self.failUnlessEqual(response.status_code, 200)
         response = self.client.post(activation_url, {
-            'username': 'new.user@example.org',
             'password': 'password',
             'password_again': 'password',
         })
         self.failUnlessEqual(response.status_code, 200)
-        user = User.objects.get(username='new.user@example.org')
+        user = get_user('new.user@example.org')
         self.failUnlessEqual(user.first_name, 'New')
         self.failUnlessEqual(user.get_profile().gender, 'm')
         self.failUnless(user.check_password('password'))
@@ -40,7 +39,7 @@ class RegistrationTest(MailTestCase):
 
 class PasswordChangeTest(MailTestCase):
     def test_password_reset(self):
-        user = User(username='new.user@example.org', email='new.user@example.org')
+        user = create_user('new.user@example.org')
         user.set_password('password')
         user.save()
         response = self.client.post(reverse('ecs.users.views.request_password_reset'), {
@@ -62,7 +61,7 @@ class PasswordChangeTest(MailTestCase):
             'new_password2': '1234',
         })
         self.failUnlessEqual(response.status_code, 200)
-        user = User.objects.get(username='new.user@example.org')
+        user = get_user('new.user@example.org')
         self.failUnless(user.check_password('1234'))
         
         response = self.client.get(password_reset_url)
@@ -70,10 +69,10 @@ class PasswordChangeTest(MailTestCase):
         self.failIf('form' in response.context)
         
     def test_password_change(self):
-        user = User(username='foobar')
+        user = create_user('foobar@example.com')
         user.set_password('test')
         user.save()
-        self.client.login(username='foobar', password='test')
+        self.client.login(email='foobar@example.com', password='test')
 
         url = reverse('ecs.users.views.change_password')
         response = self.client.get(url)
@@ -87,12 +86,12 @@ class PasswordChangeTest(MailTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.client.logout()
         
-        user = User.objects.get(username='foobar')
+        user = get_user('foobar@example.com')
         self.failUnless(user.check_password('1234'))
         
 class MiddlewareTest(EcsTestCase):
     def setUp(self, *args, **kwargs):
-        testuser = User.objects.create(username='testuser')
+        testuser = create_user('testuser@example.com')
         testuser.set_password('4223')
         testuser.save()
 
@@ -102,11 +101,11 @@ class MiddlewareTest(EcsTestCase):
         c1 = Client()
         c2 = Client()
 
-        c1.login(username='testuser', password='4223')
+        c1.login(email='testuser@example.com', password='4223')
         response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
         self.failUnlessEqual(response.status_code, 200)
 
-        c2.login(username='testuser', password='4223')  # now, c1 has to be logged out, because of the single login middleware
+        c2.login(email='testuser@example.com', password='4223')  # now, c1 has to be logged out, because of the single login middleware
         response = c2.get(reverse('ecs.dashboard.views.view_dashboard'))
         self.failUnlessEqual(response.status_code, 200)
 

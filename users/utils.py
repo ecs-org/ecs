@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import hashlib
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
@@ -11,6 +13,22 @@ from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
 from ecs.ecsmail.mail import deliver
 from ecs.utils.viewutils import render_html
+
+
+def hash_email(email):
+    return hashlib.md5(email.lower()).hexdigest()[:30]
+
+def get_or_create_user(email, defaults=None):
+    if defaults is None:
+        defaults = {}
+
+    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults)
+
+def create_user(email, **kwargs):
+    return User.objects.create(username=hash_email(email), email=email, **kwargs)
+
+def get_user(email, **kwargs):
+    return User.objects.get(username=hash_email(email), **kwargs)
 
 def get_current_user():
     if hasattr(current_user_store, 'user'):

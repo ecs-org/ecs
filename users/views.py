@@ -28,6 +28,8 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required, invite_user
+from ecs.users.forms import EmailLoginForm
+from ecs.users.utils import get_user, create_user
 
 
 class TimestampedTokenFactory(object):
@@ -57,6 +59,7 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
 @ratelimit_post(minutes=5, requests=5, key_field='username')
 def login(request, *args, **kwargs):
     kwargs.setdefault('template_name', 'users/login.html')
+    kwargs['authentication_form'] = EmailLoginForm
     return auth_views.login(request, *args, **kwargs)
 
 def logout(request, *args, **kwargs):
@@ -98,7 +101,7 @@ def register(request):
 def activate(request, token=None):
     data, timestamp = _registration_token_factory.parse_token_or_404(token)
     try:
-        existing_user = User.objects.get(email__iexact=data['email'])
+        existing_user = get_user(data['email'])
         return render(request, 'users/registration/already_activated.html', {
             'existing_user': existing_user,
         })
@@ -107,17 +110,13 @@ def activate(request, token=None):
 
     form = ActivationForm(request.POST or None)
     if form.is_valid():
-        user = User(
-            username=form.cleaned_data['username'], 
-            first_name=data['first_name'], 
-            last_name=data['last_name'],
-            email=data['email']
-        )
+        user = create_user(data['email'], first_name=data['first_name'], last_name=data['last_name'])
         user.set_password(form.cleaned_data['password'])
         user.save()
         user.groups = Group.objects.filter(name__in=settings.DEFAULT_USER_GROUPS)
         # the userprofile is auto-created, we only have to update some fields.
-        UserProfile.objects.filter(user=user).update(gender=data['gender'])
+        user.ecs_profile.gender = data['gender']
+        user.ecs_profile.save()
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,
         })
@@ -274,10 +273,13 @@ def administration(request, limit=20):
             n1, n2 = keyword.split(' ', 1)
             keyword_q |= Q(first_name__icontains=n1, last_name__icontains=n2)
             keyword_q |= Q(first_name__icontains=n2, last_name__icontains=n1)
+        else:
+            keyword_q |= Q(first_name__icontains=keyword)
+            keyword_q |= Q(last_name__icontains=keyword)
         users = users.filter(keyword_q)
 
 
-    paginator = Paginator(users.order_by('username'), limit, allow_empty_first_page=True)
+    paginator = Paginator(users.order_by('email'), limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
     except EmptyPage, InvalidPage:
@@ -323,7 +325,7 @@ def accept_invitation(request, invitation_uuid=None):
         user.ecs_profile.save()
         invitation.accepted = True
         invitation.save()
-        user = auth.authenticate(username=invitation.user.username, password=form.cleaned_data['new_password1'])
+        user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)
         return HttpResponseRedirect(reverse('ecs.users.views.edit_profile'))
 

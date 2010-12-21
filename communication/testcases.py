@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from ecs.ecsmail.testcases import MailTestCase
 from ecs.communication.models import Message, Thread
 
+from ecs.users.utils import get_user
 
 class CommunicationTestCase(MailTestCase):
     '''
@@ -13,8 +14,8 @@ class CommunicationTestCase(MailTestCase):
     '''
     def setUp(self):
         super(CommunicationTestCase, self).setUp()
-        self.alice = User.objects.get(username='alice')
-        self.bob = User.objects.get(username='bob')
+        self.alice = get_user('alice@example.com')
+        self.bob = get_user('bob@example.com')
         self.thread = self.create_thread('test subject', 'test message', self.alice, self.bob)
         self.last_message = self.thread.last_message
         
