@@ -88,6 +88,12 @@ class Resubmission(Activity):
         
     def get_url(self):
         return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data.pk})
+        
+    def get_final_urls(self):
+        return super(Resubmission, self).get_final_urls() + [
+            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf['pk']})
+            for sf in self.workflow.data.forms.values('pk')
+        ]
 
 class B2VoteReview(Activity):
     class Meta:
