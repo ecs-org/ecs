@@ -14,7 +14,7 @@ class VoteRemindersTest(CommunicationTestCase):
         rval = super(VoteRemindersTest, self).setUp(*args, **kwargs)
 
         # alice is the submitter and bob is the postmaster
-        settings.ECSMAIL['postmaster'] = 'bob'
+        settings.ECSMAIL['postmaster'] = 'bob@example.com'
 
         # there has to be a test submission
         self.submission_form = create_submission_form()

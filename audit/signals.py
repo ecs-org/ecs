@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 
 from ecs.audit.models import AuditTrail
-from ecs.users.utils import get_current_user
+from ecs.users.utils import get_current_user, get_user
 
 
 __ignored_models = ['ecs.audit.models.AuditTrail',]
@@ -29,7 +29,7 @@ def post_save_handler(**kwargs):
     instance = kwargs['instance']
     user = get_current_user()
     if not user or not user.is_authenticated():
-        user = User.objects.get(username='root')
+        user = get_user('root@system')
 
     sender_path = '.'.join([sender.__module__, sender.__name__])
     if _ignored_models_rex.match(sender_path):

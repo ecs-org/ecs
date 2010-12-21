@@ -14,7 +14,7 @@ from ecs.meetings.models import Meeting
 from ecs.utils.common_messages import send_submission_message
 
 def send_vote_expired(vote):
-    recipients_q = Q(username=settings.ECSMAIL['postmaster'])
+    recipients_q = Q(email=settings.ECSMAIL['postmaster'])
     if vote.submission_form.submitter:
         recipients_q |= Q(pk=vote.submission_form.submitter.pk)
     if vote.submission_form.submitter_email:
@@ -30,7 +30,7 @@ def send_vote_expired(vote):
     }
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
+    send_submission_message(vote.submission_form.submission, subject, text, recipients)
 
 def send_vote_reminder_submitter(vote):
     recipients = User.objects.none()
@@ -47,10 +47,10 @@ def send_vote_reminder_submitter(vote):
     }
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
+    send_submission_message(vote.submission_form.submission, subject, text, recipients)
     
 def send_vote_reminder_office(vote):
-    recipients = User.objects.filter(username=settings.ECSMAIL['postmaster'])
+    recipients = User.objects.filter(email=settings.ECSMAIL['postmaster'])
 
     url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s läuft in einer Woche ab.\n') % {
@@ -60,7 +60,7 @@ def send_vote_reminder_office(vote):
     }
 
     subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients, username='root')
+    send_submission_message(vote.submission_form.submission, subject, text, recipients)
 
 
 @periodic_task(run_every=timedelta(days=1))

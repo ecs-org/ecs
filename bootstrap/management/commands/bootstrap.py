@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import imp, sys
 from optparse import make_option
 
@@ -9,15 +10,15 @@ from django.utils.importlib import import_module
 from django.contrib.auth.models import User
 
 from ecs.audit.models import AuditTrail
+from ecs.users.utils import get_or_create_user
 
 def _create_root_user():
     settings.ENABLE_AUDIT_LOG = False
-    root, _ = User.objects.get_or_create(username='root')
+    root, _ = get_or_create_user('root@system')
     root.first_name = 'System'
     root.last_name = 'Administrator'
     root.is_staff = True
     root.is_superuser = True
-    root.email = 'root@example.org'
     root.set_unusable_password()
     root.save()
     settings.ENABLE_AUDIT_LOG = True

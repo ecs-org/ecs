@@ -14,6 +14,7 @@ from ecs.fastlane.forms import FastLaneMeetingForm, AssignedFastLaneCategoryForm
 from ecs.fastlane.models import FastLaneTop, FastLaneMeeting, AssignedFastLaneCategory
 from ecs.core.models import Submission
 from ecs.communication.models import Thread
+from ecs.users.utils import get_user
 
 def list(request):
     meetings = FastLaneMeeting.objects.all().order_by('start')
@@ -81,10 +82,10 @@ def invitations(request, meeting_pk, reallysure=False):
             }
             thread, created = Thread.objects.get_or_create(
                 subject=subject,
-                sender=User.objects.get(username='root'),
+                sender=get_user('root@system'),
                 receiver=recipient,
             )
-            thread.add_message(User.objects.get(username='root'), text=text)
+            thread.add_message(get_user('root@system'), text=text)
 
         return HttpResponseRedirect(reverse('ecs.fastlane.views.list'))
 
