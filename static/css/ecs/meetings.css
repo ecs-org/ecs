@@ -295,6 +295,7 @@
 #meeting_assistant #meeting_assistant_body {
   float: left;
   padding: 5px;
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 5px;
   -moz-border-radius: 5px;

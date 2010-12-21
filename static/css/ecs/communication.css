@@ -2,6 +2,14 @@
   margin: 0;
   padding: 0;
 }
+.messages_overview {
+  display: block;
+  min-width: 700px;
+  border: 1px solid #ddd;
+  background: #f9feff;
+  padding: 10px;
+  margin-bottom: 10px;
+}
 .messages_overview, .messages {
   font-size: 10pt;
 }
@@ -84,6 +92,7 @@ table.messages .threadstart {
   font-size: 11pt;
 }
 .messages td {
+  background: #fff;
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
 }

@@ -196,8 +196,9 @@
 #logo small {
   position: absolute;
   top: 57px;
-  right: 40px;
+  right: 5px;
   z-index: 1000;
+  width: 215px;
 }
 #account {
   font-size: 11pt;
@@ -332,7 +333,7 @@ li.TypedChoiceField ul > li label{
 .form {
   border: 1px solid #ddd;
 }
-.form.main .field, .form.main .tab {
+.form.main .field, .form.main .tab, .form.child {
   background: #f9feff;
   min-width: 700px;
   width: 100%;
@@ -410,10 +411,10 @@ li.TypedChoiceField ul > li label{
   display: inline-block;
   float: left;
 }
-.form.main .field input.subchoice{
+.form.main .field input.subchoice {
   margin-left: 30px;
 }
-.form.main ol li div.input{
+.form.main ol li div.input {
   float: left;
 }
 .form.main ol li .notes {
@@ -578,6 +579,7 @@ fieldset.disabled {
 }
 .form.main .textboxlist {
   width: 90%;
+  background: #fff;
 }
 .form.main .textboxlist-autocomplete {
   margin: -20px  0 0 240px;
@@ -682,9 +684,15 @@ table.notif_meta th {
   text-align: left;
   border-bottom: 1px solid #cccccc;
 }
-.overview {
-  max-width: 95%;
+.notification_list, .overview {
+  display: block;
+  min-width: 700px;
+  border: 1px solid #ddd;
+  background: #f9feff;
+  padding: 10px;
+  margin-bottom: 10px;
 }
+
 #content ol.submission_list {
   list-style: none;
   font-size: 10pt;
@@ -707,12 +715,12 @@ content ol.submission_list h3 .ecnr {
   padding: 0.5em;
   padding-left: 80px;
 }
-#content ol.submission_list li.odd {
-  background-color: #e8e8d8;
+#content ol.submission_list li:nth-child(odd) {
+  background-color: #f1f1e6;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ddd;  
 }
-#content ol.submission_list li.even {
+#content ol.submission_list li:nth-child(even) {
   background-color: #efefdd;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ddd;  

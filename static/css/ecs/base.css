@@ -151,18 +151,22 @@ select {
   padding: 2px 3px;
 	vertical-align: top;
 }
-input[type=submit] {
-  clear: both;
-  display: block;
+input[type=submit], .cancel a {
   float: right;
   color: #fff;
   background: #333;
   cursor: pointer;
   margin: 10px 10px 10px 0;
-  padding: 3px;
+  padding: 3px 5px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+}
+#content .cancel a {
+  color: #fff;
+  font-size: 9pt;
+  vertical-align: middle;
+  line-height: 18px;
 }
 
 /* header */

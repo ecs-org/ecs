@@ -16,8 +16,8 @@
     <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
     | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
   </div>
-</div>
 {{ block.super }}
+</div>
 {% endblock %}
 
 
@@ -26,7 +26,8 @@
     {% if thread.last_message.sender == request.user %}
         <a class="icon_bump" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
     {% else %}
-        <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}">answer</a>
+        <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="{% trans 
+        "answer" %}">answer</a>
     {% endif %}
 {% endblock %}
 

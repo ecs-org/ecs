@@ -23,10 +23,10 @@
 
 {% block header_actions %}
     {{ block.super }}
-    <div class="floating_box">
-      <a href="" id="save-button" class="button_save">Speichern</a>
-      <a href="" id="validate-button" class="button_validate">Validieren</a>
-      <a href="" id="submit-button" class="button_submit">Einreichen</a>
+    <div class="header_actions">
+      <a href="" id="save-button" class="button_save">{% trans "Save" %}</a>
+      <a href="" id="validate-button" class="button_validate">{% trans "Validate" %}</a>
+      <a href="" id="submit-button" class="button_submit">{% trans "Submit" %}</a>
     </div>
 {% endblock %}
 

@@ -17,7 +17,7 @@ Liste aller Studien
     <ol class="submission_list">
         {% for docstash in stashed_submission_forms %}
             {% if docstash.current_value %}
-                <li class="{% cycle 'even' 'odd' %}">
+                <li>
                     <h3>
                         <span class="ecnr"> </span>
                         {% if docstash.current_value.notification_type %}

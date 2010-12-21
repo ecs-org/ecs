@@ -35,7 +35,7 @@
           {% endblock %}
           <td>
               {% block message_actions %}
-                  <a class="open-in-popup icon_read" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">read</a>
+                  <a class="open-in-popup icon_read" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}" title="{% trans "read" %}">read</a>
                   {% if not message.thread.closed %}
                   <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
                   {% endif %}
