@@ -152,7 +152,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'checklist_reviews': checklist_reviews,
         'befangene_review_form': befangene_review_form,
         'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
-        'answered_notficiations': submission_form.submission.notifications.filter(answer__isnull=False),
+        'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False),
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
