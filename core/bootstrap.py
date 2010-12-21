@@ -140,6 +140,11 @@ def vote_workflow():
     from ecs.core.models import Vote
     from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication
     from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2upgrade
+    
+    EXECUTIVE_GROUP = 'EC-Executive Board Group'
+    OFFICE_GROUP = 'EC-Office'
+    INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
+    SIGNING_GROUP = 'EC-Signing Group'
 
     setup_workflow_graph(Vote, 
         auto_start=True, 
@@ -147,14 +152,14 @@ def vote_workflow():
             'start': Args(Generic, start=True, name="Start"),
             'review': Args(Generic, name="Review Split"),
             'b2upgrade': Args(Generic, name="B2 Upgrade", end=True),
-            'executive_vote_finalization': Args(VoteReview, name="Executive Vote Finalization"),
-            'executive_vote_review': Args(VoteReview, name="Executive Vote Review"),
-            'internal_vote_review': Args(VoteReview, name="Internal Vote Review"),
-            'office_vote_finalization': Args(VoteReview, name="Office Vote Finalization"),
-            'office_vote_review': Args(VoteReview, name="Office Vote Review"),
-            'final_office_vote_review': Args(VoteReview, name="Office Vote Review"),
-            'vote_signing': Args(VoteSigning),
-            'vote_publication': Args(VotePublication, end=True),
+            'executive_vote_finalization': Args(VoteReview, name="Executive Vote Finalization", group=EXECUTIVE_GROUP),
+            'executive_vote_review': Args(VoteReview, name="Executive Vote Review", group=EXECUTIVE_GROUP),
+            'internal_vote_review': Args(VoteReview, name="Internal Vote Review", group=INTERNAL_REVIEW_GROUP),
+            'office_vote_finalization': Args(VoteReview, name="Office Vote Finalization", group=OFFICE_GROUP),
+            'office_vote_review': Args(VoteReview, name="Office Vote Review", group=OFFICE_GROUP),
+            'final_office_vote_review': Args(VoteReview, name="Office Vote Review", group=OFFICE_GROUP),
+            'vote_signing': Args(VoteSigning, group=SIGNING_GROUP),
+            'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP),
         }, 
         edges={
             ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
