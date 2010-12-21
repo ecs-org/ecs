@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block jshead %} {# enqueue javasript #}
   {{ block.super }}
@@ -30,6 +31,11 @@
         <b>Achtung:</b> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser; 
         Zur korrekten Darstellung brauchen sie <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>; 
         Klicken Sie <a href="http://www.mozilla-europe.org/de/firefox/">hier</a> um eine aktuelle Version zu installieren
+    </div>
+    <div id="public_area">
+      <ul class="links">
+        <li><a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a></li>
+      </ul>
     </div>
     <div class="login_screen">
       <form method="post" action="">
