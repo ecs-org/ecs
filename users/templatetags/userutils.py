@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+
 from django.template import Library
+
+from ecs.users.utils import get_full_name
+
 
 register = Library()
 
@@ -9,4 +14,8 @@ def has_flag(user, flag):
 @register.filter
 def is_member_of(user, groupname):
     return bool(user.groups.filter(name=groupname).count())
+
+@register.filter
+def full_name(user):
+    return get_full_name(user)
 

@@ -8,6 +8,7 @@ from django.utils.functional import wraps
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.db import transaction
+from django.utils.encoding import force_unicode
 
 from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
@@ -35,6 +36,20 @@ def get_current_user():
         return current_user_store.user
     else:
         return None
+
+def get_full_name(user):
+    if user.first_name or user.last_name:
+        nameparts = [user.first_name, user.last_name]
+        if user.ecs_profile.title:
+            nameparts.insert(0, user.ecs_profile.title)
+        if user.ecs_profile.gender:
+            if user.ecs_profile.gender == 'f':
+                nameparts.insert(0, force_unicode(_('Ms.')))
+            if user.ecs_profile.gender == 'm':
+                nameparts.insert(0, force_unicode(_('Mr.')))
+        return u' '.join(nameparts)
+    else:
+        return unicode(user.email)
         
 class sudo(object):
     def __init__(self, user=None):

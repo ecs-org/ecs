@@ -133,6 +133,9 @@ def outgoing_message_widget(request):
         user_sort='last_message__receiver__username',
         session_prefix='dashboard:outgoing_messages',
         page_size=4,
+        extra_context={
+            'incoming': False
+        }
     )
 
 @tracking_hint(exclude=True)

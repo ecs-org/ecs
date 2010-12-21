@@ -1,6 +1,11 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.contrib.auth.models import User
 from ecs.pdfviewer.models import DocumentAnnotation
+
+from ecs.users.forms import UserChoiceField
+
 
 class DocumentAnnotationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -18,4 +23,5 @@ class DocumentAnnotationForm(forms.ModelForm):
         return page_num
         
 class AnnotationSharingForm(forms.Form):
-    user = forms.ModelChoiceField(User.objects.all())
+    user = UserChoiceField(User.objects.all())
+

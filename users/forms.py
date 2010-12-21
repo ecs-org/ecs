@@ -9,9 +9,14 @@ from django.conf import settings
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget
+from ecs.users.utils import get_full_name
 
 
 email_length = User._meta.get_field('email').max_length
+
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, user):
+        return get_full_name(user)
 
 class EmailLoginForm(forms.Form):
     # Note: This has to be called "username", so we can use the django login view

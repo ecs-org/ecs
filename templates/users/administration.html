@@ -40,13 +40,7 @@
         <tr>
             <td>
                 <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
-                    {% if not profile_user.first_name and not profile_user.last_name %}
-                        {{ profile_user }}
-                    {% else %}
-                        {% if profile_user.ecs_profile.gender == 'f' %}{% trans "Ms." %}{% endif %}
-                        {% if profile_user.ecs_profile.gender == 'm' %}{% trans "Mr." %}{% endif %}
-                        {{ profile_user.ecs_profile.title }} {{ profile_user.first_name }} {{ profile_user.last_name }}
-                    {% endif %}
+                    {{ profile_user|full_name }}
                     {% if profile_user.ecs_profile.phantom %}
                         ({% trans "phantom" %})
                     {% endif %}
