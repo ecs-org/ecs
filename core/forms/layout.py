@@ -154,7 +154,12 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
     (u'documents', []),
 ]
 
-NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[SingleStudyNotificationForm][:1] + [
+NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
+    (_(u'General information'), [
+        (_(u'General information'), [
+            'submission_form', 'extension_of_vote_requested', 'comments',
+        ]),
+    ]),
     (u'Study status', [
         (u'status', [
             'reason_for_not_started', 'runs_till',
@@ -164,11 +169,6 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = NOTIFICATION_FORM_TABS[
         ]),
         (u'SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
-        ]),
-    ]),
-    (u'vote', [
-        (u'extension', [
-            'extension_of_vote_requested',
         ]),
     ]),
     (u'documents', []),
