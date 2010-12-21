@@ -73,7 +73,6 @@ def all_notifications(request):
 
 
 def view_notification(request, notification_pk=None):
-    print str(Notification.objects.filter(pk=notification_pk).query)
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
     return render(request, tpl, {
