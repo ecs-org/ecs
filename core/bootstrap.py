@@ -17,6 +17,7 @@ from ecs.users.utils import sudo
 from ecs.documents.models import Document, DocumentType
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
+from ecs.users.utils import get_or_create_user
 
 
 @bootstrap.register()
@@ -292,14 +293,13 @@ def auth_user_developers():
     try:
         from ecs.core.bootstrap_settings import developers
     except ImportError:
-        developers = (('developer', u'John', u'Doe', u'developer@example.com', 'changeme'),)
+        developers = ((u'John', u'Doe', u'developer@example.com', 'changeme'),)
     
-    for dev in developers:
-        user, created = User.objects.get_or_create(username=dev[0])
-        user.first_name = dev[1]
-        user.last_name = dev[2]
-        user.email = dev[3]
-        user.set_password(dev[4])
+    for first, last, email, password in developers:
+        user, created = get_or_create_user(email)
+        user.first_name = first
+        user.last_name = last
+        user.set_password(password)
         user.is_staff = True
         user.groups.add(Group.objects.get(name="Presenter"))
         user.save()
@@ -307,50 +307,48 @@ def auth_user_developers():
         profile.approved_by_office = True
         profile.help_writer = True
         profile.save()
-        
-        
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        (u'Presenter', u'Presenter',{'approved_by_office': True}),
-        (u'Sponsor', u'Sponsor', {'approved_by_office': True}),
-        (u'Investigtor', u'Investigator', {'approved_by_office': True}),
-        (u'Office', u'EC-Office', {'internal': True, 'approved_by_office': True}),
-        (u'Meeting Secretary', u'EC-Meeting Secretary',
+        ('presenter', u'Presenter',{'approved_by_office': True}),
+        ('sponsor', u'Sponsor', {'approved_by_office': True}),
+        ('investigator', u'Investigator', {'approved_by_office': True}),
+        ('office', u'EC-Office', {'internal': True, 'approved_by_office': True}),
+        ('meeting.secretary', u'EC-Meeting Secretary',
             {'internal': True, 'approved_by_office': True}),
-        (u'Internal Rev', u'EC-Internal Review Group',
+        ('internal.rev', u'EC-Internal Review Group',
             {'internal': True, 'approved_by_office': True}),
-        (u'Executive', u'EC-Executive Board Group',             
+        ('executive', u'EC-Executive Board Group',             
             {'internal': True, 'executive_board_member': True),
-        (u'Signing', u'EC-Signing Group',                       
+        ('signing', u'EC-Signing Group',                       
             {'internal': True, 'approved_by_office': True}),
-        (u'Statistic Rev', u'EC-Statistic Group',
+        ('statistic.rev', u'EC-Statistic Group',
             {'internal': True, 'approved_by_office': True}),
-        (u'Notification Rev', u'EC-Notification Review Group',
+        ('notification.rev', u'EC-Notification Review Group',
             {'internal': True, 'approved_by_office': True}),
-        (u'Insurance Rev', u'EC-Insurance Reviewer',            
+        ('insurance.rev', u'EC-Insurance Reviewer',            
             {'internal': False, 'approved_by_office': True),
-        (u'Thesis Rev', u'EC-Thesis Review Group',              
+        ('thesis.rev', u'EC-Thesis Review Group',              
             {'internal': False, 'thesis_review': True),
-        (u'External Reviewer', u'External Reviewer',            
+        ('external.reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
     )
         
     boardtestusers = (
-         (u'B.Member 1 (KlPh)', ('KlPh',)),
-         (u'B.Member 2 (KlPh, Onko)', ('KlPh','Onko')),
-         (u'B.Member 3 (Onko)', ('Onko',)),
-         (u'B.Member 4 (Infektio)', ('Infektio',)),
-         (u'B.Member 5 (Kardio)', ('Kardio',)),
-         (u'B.Member 6 (Päd)', ('Päd',)), 
+         ('b.member1.klph', ('KlPh',)),
+         ('b.member2.klph.onko', ('KlPh','Onko')),
+         ('b.member3.onko', ('Onko',)),
+         ('b.member4.infektio', ('Infektio',)),
+         ('b.member5.kardio', ('Kardio',)),
+         ('b.member6.paed', ('Päd',)), 
     )
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
-            user, created = User.objects.get_or_create(username=" ".join((testuser,str(number))))
+            user, created = get_or_create_user('{0}{1}@example.com'.format(testuser, number))
             user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(Group.objects.get(name="userswitcher_target"))
 
@@ -364,7 +362,7 @@ def auth_user_testusers():
             profile.save()
     
     for testuser, medcategories in boardtestusers:
-        user, created = User.objects.get_or_create(username=testuser)
+        user, created = get_or_create_user('{0}@example.com'.format(testuser))
         user.groups.add(Group.objects.get(name='EC-Board Member'))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
 
@@ -581,7 +579,7 @@ def testsubmission():
         doc.save()
 
     test_submission_form['submission'] = submission
-    test_submission_form['presenter'] = User.objects.get(username='Presenter 1')
+    test_submission_form['presenter'] = User.objects.get(email='presenter1@example.com')
     submission_form = SubmissionForm.objects.create(**test_submission_form)
 
     doc.parent_object = submission_form

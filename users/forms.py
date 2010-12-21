@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -8,6 +9,47 @@ from django.conf import settings
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget
+
+
+email_length = User._meta.get_field('email').max_length
+
+class EmailLoginForm(forms.Form):
+    # Note: This has to be called "username", so we can use the django login view
+    username = forms.EmailField(label=_('Email'), max_length=email_length)
+    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
+
+    def __init__(self, request=None, *args, **kwargs):
+        self.request = request
+        self.user_cache = None
+        return super(EmailLoginForm, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        email = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+
+        if email and password:
+            self.user_cache = authenticate(email=email, password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError(_('Please enter a correct email and password. Note that the password is case-sensitive.'))
+            elif not self.user_cache.is_active:
+                raise forms.ValidationError(_('This account is inactive.'))
+        self.check_for_test_cookie()
+        return self.cleaned_data
+
+    def check_for_test_cookie(self):
+        if self.request and not self.request.session.test_cookie_worked():
+            raise forms.ValidationError(
+                _("Your Web browser doesn't appear to have cookies enabled. "
+                "Cookies are required for logging in."))
+
+    def get_user_id(self):
+        if self.user_cache:
+            return self.user_cache.id
+        return None
+
+    def get_user(self):
+        return self.user_cache
+
 
 class RegistrationForm(forms.Form):
     gender = forms.ChoiceField(choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
@@ -17,7 +59,6 @@ class RegistrationForm(forms.Form):
 
 
 class ActivationForm(forms.Form):
-    username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
     password_again = forms.CharField(widget=forms.PasswordInput)
     

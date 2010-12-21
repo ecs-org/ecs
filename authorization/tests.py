@@ -1,22 +1,22 @@
 import datetime
 from contextlib import contextmanager
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import Submission
 from ecs.meetings.models import Meeting
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, create_user
 
 class SubmissionAuthTestCase(EcsTestCase):
     BASE_EC_NUMBER = 9742
     EC_NUMBER = 20100000 + BASE_EC_NUMBER
 
     def _create_test_user(self, name, **profile_attrs):
-        user = User(username=name)
-        user.set_password(name)
+        email = '{0}@example.com'.format(name)
+        user = create_user(email)
+        user.set_password(email)
         user.save()
         profile = user.get_profile()
         for name, value in profile_attrs.items():
@@ -102,7 +102,7 @@ class SubmissionAuthTestCase(EcsTestCase):
     
     @contextmanager
     def _login(self, user):
-        self.client.login(username=user.username, password=user.username)
+        self.client.login(email=user.email, password=user.email)
         yield
         self.client.logout()
         

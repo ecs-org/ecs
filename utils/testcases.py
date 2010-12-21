@@ -8,6 +8,8 @@ from django.conf import settings
 from ecs.core import bootstrap as core_bootstrap
 from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
+from ecs.users.utils import create_user, get_user
+
 
 class EcsTestCase(TestCase):
     @classmethod
@@ -29,13 +31,12 @@ class EcsTestCase(TestCase):
         for name in "alice", "bob", "unittest":
             self.create_user(name)
         
-        user = User.objects.get(username = "unittest")
+        user = get_user('unittest@example.com')
         user.is_superuser = True
         user.save()
         
     def create_user(self, name):
-        user = User(username=name, is_superuser=True)
-        user.email = "".join((name, "@example.org"))
+        user = create_user('{0}@example.com'.format(name), is_superuser=True)
         user.set_password('password')
         user.save()
         profile = user.get_profile()
@@ -47,8 +48,8 @@ class EcsTestCase(TestCase):
         User.objects.all().delete()
         
     @contextmanager
-    def login(self, username, password):
-        self.client.login(username=username, password=password)
+    def login(self, email, password):
+        self.client.login(email=email, password=password)
         yield
         self.client.logout()
 
@@ -57,8 +58,8 @@ class EcsTestCase(TestCase):
 class LoginTestCase(EcsTestCase):
     def setUp(self):
         super(LoginTestCase, self).setUp()
-        self.user = User.objects.get(username="unittest")
-        self.client.login(username='unittest', password='password')
+        self.user = get_user('unittest@example.com')
+        self.client.login(email='unittest@example.com', password='password')
     
     def tearDown(self):
         super(LoginTestCase, self).tearDown()
