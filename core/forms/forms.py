@@ -263,17 +263,19 @@ class DocumentForm(SimpleDocumentForm):
 
 class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
+        if 'initial' not in kwargs:
+            kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
         super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
 
-ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=1, exclude=('submission_form',))
+ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=0, exclude=('submission_form',))
 
 class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
+        if 'initial' not in kwargs:
+            kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
         super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
         
-NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=1, exclude=('submission_form',))
+NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=0, exclude=('submission_form',))
 
 class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
