@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from ecs import bootstrap
 from ecs.notifications.models import NotificationType, Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.workflow.patterns import Generic
@@ -7,16 +8,22 @@ from ecs.utils import Args
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, False),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, True),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, True),
-        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, True),
+        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, False, u"Die Komission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
+        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, True, u""),
+        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, True, u""),
+        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, True, u"Die Komission stimmt der vorgeschlagenen Protokolländerung zu."),
     )
     
-    for name, form, diff, earfa in types:
+    for name, form, diff, earfa, default_response in types:
         t, created = NotificationType.objects.get_or_create(name=name, form=form, diff=diff)
+        changed = False
         if t.executive_answer_required_for_amg != earfa:
             t.executive_answer_required_for_amg = earfa
+            changed = True
+        if t.default_response != default_response:
+            t.default_response = default_response
+            changed = True
+        if changed:
             t.save()
 
 

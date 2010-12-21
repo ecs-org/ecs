@@ -1,13 +1,8 @@
-{% extends 'db/notifications/xhtml2pdf/base.html' %}
+{% extends 'db/notifications/answers/xhtml2pdf/base.html' %}
 
 {% load core corepdf %}
 
 {% block amendment_checkbox %}{{ undefined|not|checkbox }}{% endblock %}
-
-{% block doclist %}
-    <li>Liste der Änderungen</li>
-    {{ block.super }}
-{% endblock %}
 
 {% block content %}
 

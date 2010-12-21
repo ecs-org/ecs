@@ -1,0 +1,5 @@
+{% extends 'db/notifications/answers/xhtml2pdf/base.html' %}
+
+{% load core corepdf %}
+
+{% block sae_susar_checkbox %}{{ undefined|not|checkbox }}{% endblock %}

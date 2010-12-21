@@ -196,11 +196,14 @@ def create_notification(request, notification_type_pk=None):
 
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
+    kwargs = {}
     try:
         answer = notification.answer
     except NotificationAnswer.DoesNotExist:
         answer = None
-    form = NotificationAnswerForm(request.POST or None, instance=answer)
+        kwargs['initial'] = {'text': notification.type.default_response}
+        
+    form = NotificationAnswerForm(request.POST or None, instance=answer, **kwargs)
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification
@@ -249,13 +252,15 @@ def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return _notification_pdf_response(notification, 'db/notifications/xhtml2pdf/%s.html', suffix='.pdf', context={
         'notification': notification,
+        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         'url': request.build_absolute_uri(),
     })
 
 
-def notification_answer_pdf(request, notification_answer_pk=None):
-    answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
+def notification_answer_pdf(request, notification_pk=None):
+    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
     return _notification_pdf_response(answer.notification, 'db/notifications/answers/xhtml2pdf/%s.html', suffix='-answer.pdf', context={
         'notification': answer.notification,
+        'documents': answer.notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         'answer': answer,
     })

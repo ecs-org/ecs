@@ -1,0 +1,10 @@
+{% extends 'db/notifications/answers/xhtml2pdf/ReportNotificationForm.html' %}
+
+{% block table_rows %}
+    {{ block.super }}
+{% with notification.progressreportnotification as notification %}
+<p>Votumsverlängerungsantrag <b>{{ notification.extension_of_vote_requested|yesno:"Ja,Nein" }}</b></p>
+<p>Die Studie läuft noch bis voraussichtlich <b>{{ notification.runs_till|date:'d.m.Y' }}</b></p>
+{% endwith %}
+
+{% endblock %}
