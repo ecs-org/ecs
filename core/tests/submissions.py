@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -13,6 +14,7 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.diff import diff_submission_forms
+from ecs.users.utils import get_user, create_user
 
 def create_submission_form(ec_number=None, presenter=None):
     sub = Submission(ec_number=ec_number)
@@ -355,10 +357,10 @@ class SubmissionFormDiffTest(EcsTestCase):
 
 class SubmissionAttachUserTest(EcsTestCase):
     def setUp(self):
-        self.email = 'foobar@test.test'
+        self.email = 'foobar@example.com'
 
-        self.user = User(username="foobar", email=self.email) 
-        self.sender = User(username="root", email="root@root.root")
+        self.user = create_user(self.email)
+        self.sender = create_user('root@example.com')
         self.sf = create_submission_form()
 
         self.sf.sponsor_email = self.email

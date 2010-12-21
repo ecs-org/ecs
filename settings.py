@@ -197,6 +197,8 @@ INSTALLED_APPS = (
     'ecs.boilerplate',
 )
 
+# authenticate with email
+AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 
 
 # ecs settings
