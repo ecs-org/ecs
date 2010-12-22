@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-21 21:56+0100\n"
+"POT-Creation-Date: 2010-12-22 03:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:58
@@ -1578,16 +1578,16 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
-"%(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
+"(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s "
-"%(meeting_title)s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
+"s"
 msgstr ""
 
 #: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
