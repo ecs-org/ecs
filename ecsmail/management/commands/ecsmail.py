@@ -5,16 +5,19 @@ from django.core.management.base import BaseCommand, CommandError
 
 class Command(BaseCommand):
     help = 'Starts ecsmail frontend server or a dummy logging backend server'
-    args = '<server|logging [port]>'
+    args = '<server [logfile] | logging [port]>'
 
     def handle(self, *args, **options):
-        import ecs.ecsmail.logconf
-        os.chdir(os.path.join(os.path.dirname(ecs.__file__), 'ecsmail'))
+        from ecs.ecsmail.logconf import setLogging
         
         if len(args) < 1:
             print("Usage: ecsmail ", self.args)
             return 
+
         elif args[0] == 'server':
+            logfile = args[1] if len(args) >= 2 else None
+            setLogging(logfile)
+
             from ecs.ecsmail import mailconf as lamson_settings
             import asyncore
             print("starting ecsmail server, Listen: %s:%s, Relay: %s" % 
@@ -22,6 +25,8 @@ class Command(BaseCommand):
             asyncore.loop(timeout=0.1, use_poll=True)
             
         elif args[0] == 'logging':
+            setLogging()
+
             from lamson import utils
             port = int(args[1]) if len(args) >= 2 else 8825
             listen = '0.0.0.0'
