@@ -147,7 +147,7 @@ def external_review_payment(request):
             submissions = reviewer.reviewed_submissions.filter(pk__in=[s.pk for s in selected_for_payment])
             xls.write_row(i + 1, [
                 len(submissions),
-                reviewer.get_full_name(),
+                unicode(reviewer),
                 ", ".join(s.get_ec_number_display() for s in submissions),
                 len(submissions) * price.price,
             ])

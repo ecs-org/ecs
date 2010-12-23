@@ -5,11 +5,11 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 
 from ecs.communication.models import Message, Thread
-from ecs.users.forms import UserChoiceField
+
 
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield()
-    receiver = UserChoiceField(User.objects.all())
+    receiver = forms.ModelChoiceField(User.objects.all())
     
     class Meta:
         model = Message
@@ -21,7 +21,7 @@ class ReplyToMessageForm(forms.ModelForm):
         fields = ('text',)
         
 class ThreadDelegationForm(forms.Form):
-    to = UserChoiceField(User.objects.all())
+    to = forms.ModelChoiceField(User.objects.all())
     text = Message._meta.get_field('text').formfield()
 
 class ThreadListFilterForm(forms.Form):

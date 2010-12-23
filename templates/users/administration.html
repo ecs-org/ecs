@@ -1,5 +1,5 @@
 {% extends 'administration/detail.html' %}
-{% load i18n userutils %}
+{% load i18n %}
 
 {% block administration_detail %}
 <h2>{% trans "List of Users" %} ({{ users.paginator.count }})</h2>
@@ -40,7 +40,7 @@
         <tr>
             <td>
                 <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
-                    {{ profile_user|full_name }}
+                    {{ profile_user }}
                     {% if profile_user.ecs_profile.phantom %}
                         ({% trans "phantom" %})
                     {% endif %}

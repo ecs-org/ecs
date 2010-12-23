@@ -5,7 +5,7 @@
 {% block account %}
   <div class="user_data">
     <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
-    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user|full_name }}</a>
+    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user }}</a>
       <span class="user_logout"><a href="/accounts/logout">Logout</a></span>
     </div>
     
@@ -201,7 +201,7 @@
         var url = '/feedback/input/i/1/' + get_origin() + '/';
         // TODO: fix for feedback and userswitcher target (should display original_user)
         new ecs.Dialog(url, {
-          title: 'Feedback von {% if request.original_user %}{{ request.original_user|full_name }}{% else %}{{ user|full_name }}{% endif %}',
+          title: 'Feedback von {% if request.original_user %}{{ request.original_user }}{% else %}{{ user }}{% endif %}',
           size: {
           width: 700,
           height: 400 }
@@ -218,7 +218,7 @@
       {% load communication tasks %}
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
-      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender|full_name|escapejs }}', 'subject': '{{ message.subject|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender|escapejs }}', 'subject': '{{ message.subject|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
       var newTasks = [{% for task in new_tasks %}{'__unicode__': '{{ task|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
       newMessages.each(function(msg){
           ecs.messages.alert('Neue Nachricht', '<b>{subject}</b> von {sender}'.substitute(msg));
