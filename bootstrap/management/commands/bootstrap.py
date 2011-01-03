@@ -14,7 +14,7 @@ from ecs.users.utils import get_or_create_user
 
 def _create_root_user():
     settings.ENABLE_AUDIT_LOG = False
-    root, _ = get_or_create_user('root@system')
+    root, _ = get_or_create_user('root@example.org')
     root.first_name = 'System'
     root.last_name = 'Administrator'
     root.is_staff = True
