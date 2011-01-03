@@ -82,10 +82,10 @@ def invitations(request, meeting_pk, reallysure=False):
             }
             thread, created = Thread.objects.get_or_create(
                 subject=subject,
-                sender=get_user('root@system'),
+                sender=get_user('root@example.org'),
                 receiver=recipient,
             )
-            thread.add_message(get_user('root@system'), text=text)
+            thread.add_message(get_user('root@example.org'), text=text)
 
         return HttpResponseRedirect(reverse('ecs.fastlane.views.list'))
 
