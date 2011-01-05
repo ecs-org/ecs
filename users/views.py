@@ -248,6 +248,7 @@ def administration(request, limit=20):
         'page': '1',
         'group': '',
         'approval': 'both',
+        'activity': 'both',
         'keyword': '',
     }
 
@@ -262,6 +263,11 @@ def administration(request, limit=20):
     }
 
     users = approval_lookup[filterform.cleaned_data['approval']]
+
+    if filterform.cleaned_data['activity'] == 'active':
+        users = users.filter(is_active=True)
+    elif filterform.cleaned_data['activity'] == 'inactive':
+        users = users.filter(is_active=False)
 
     if filterform.cleaned_data['group']:
         users = users.filter(groups=filterform.cleaned_data['group'])

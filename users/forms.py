@@ -90,6 +90,11 @@ class AdministrationFilterForm(forms.Form):
         ('yes', _(u'Approved')),
         ('no', _(u'Not Approved')),
     ))
+    activity = forms.ChoiceField(required=False, choices=(
+        ('both', _(u'Both')),
+        ('active', _(u'active')),
+        ('inactive', _(u'inactive')),
+    ))
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
     keyword = forms.CharField(required=False)
