@@ -16,10 +16,11 @@ class FetchMessagesNode(Node):
         user = context['request'].user
         cache_key = "ecs.communication:last_pull:%s" % user.pk
         last_pull = cache.get(cache_key)
+
+        messages = Message.objects.filter(receiver=user, unread=True)
         if last_pull:
-            messages = Message.objects.filter(receiver=user, timestamp__gt=last_pull)
-        else:
-            messages = Message.objects.filter(receiver=user, unread=True)
+            messages = messages.filter(timestamp__gt=last_pull)
+
         cache.set(cache_key, datetime.datetime.now(), 7*24*3600)
         context[self.varname] = messages
         return u''
