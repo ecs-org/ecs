@@ -320,45 +320,42 @@ def create_submission_form(request):
             
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        if submit and valid:
-            if not request.user.get_profile().approved_by_office:
-                messages.add_message(request, messages.INFO, _('You cannot submit studies yet. Please wait until the office has approved your account.'))
-            else:
-                submission_form = form.save(commit=False)
-                submission = request.docstash.get('submission') or Submission.objects.create()
-                submission_form.submission = submission
-                submission_form.presenter = request.user
-                submission_form.is_notification_update = bool(notification_type)
-                submission_form.transient = bool(notification_type)
-                submission_form.save()
-                form.save_m2m()
-                submission_form.documents = request.docstash['documents']
-                submission_form.save()
-                for doc in request.docstash['documents']:
-                    doc.parent_object = submission_form
-                    doc.save()
-            
-                formsets = formsets.copy()
-                investigators = formsets.pop('investigator').save(commit=False)
-                for investigator in investigators:
-                    investigator.submission_form = submission_form
-                    investigator.save()
-                for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
-                    employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
-                    employee.save()
+        if submit and valid and request.user.get_profile().approved_by_office:
+            submission_form = form.save(commit=False)
+            submission = request.docstash.get('submission') or Submission.objects.create()
+            submission_form.submission = submission
+            submission_form.presenter = request.user
+            submission_form.is_notification_update = bool(notification_type)
+            submission_form.transient = bool(notification_type)
+            submission_form.save()
+            form.save_m2m()
+            submission_form.documents = request.docstash['documents']
+            submission_form.save()
+            for doc in request.docstash['documents']:
+                doc.parent_object = submission_form
+                doc.save()
+        
+            formsets = formsets.copy()
+            investigators = formsets.pop('investigator').save(commit=False)
+            for investigator in investigators:
+                investigator.submission_form = submission_form
+                investigator.save()
+            for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
+                employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
+                employee.save()
 
-                for formset in formsets.itervalues():
-                    for instance in formset.save(commit=False):
-                        instance.submission_form = submission_form
-                        instance.save()
-                request.docstash.delete()
+            for formset in formsets.itervalues():
+                for instance in formset.save(commit=False):
+                    instance.submission_form = submission_form
+                    instance.save()
+            request.docstash.delete()
 
-                if notification_type:
-                    return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
-                        'submission_form_pk': submission_form.pk,
-                        'notification_type_pk': notification_type.pk,
-                    }))
-                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            if notification_type:
+                return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
+                    'submission_form_pk': submission_form.pk,
+                    'notification_type_pk': notification_type.pk,
+                }))
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
         'form': form,

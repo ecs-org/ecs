@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core i18n %} 
+{% load core i18n userutils %} 
 
 {% block headertitle %}
     {% if notification_type %}
@@ -63,10 +63,13 @@
                 return false;
             });
             
-            {% if valid %}
+            {% if valid and user|has_flag:'approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
                 });
+            {% endif %}
+            {% if valid and not user|has_flag:'approved_by_office' %}
+                new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
         });
     </script>
