@@ -2,9 +2,12 @@
 {% load core pdfviewer i18n %}
 {% block document_list %}
 <div class="doclist">
-{% if documents %}
-    {% for doc in documents %}
-        {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
+
+{% regroup documents by doctype as doctype_list %}
+
+{% for doctype in doctype_list %}
+    <h3>{{ doctype.grouper }}</h3>
+    {% for doc in doctype.list %}
         <div>
             {% get_annotations for doc as annotations %}
             <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
@@ -30,8 +33,10 @@
             {% endif %}
         </div>
     {% endfor %}
-{% else %}
+{% empty %}
     <p>Noch keine Unterlagen</p>
-{% endif %}
+{% endfor %}
+
 </div>
 {% endblock %}
+
