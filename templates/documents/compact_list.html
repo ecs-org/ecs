@@ -3,7 +3,7 @@
 {% block document_list %}
 <div class="doclist">
 
-{% regroup documents by doctype as doctype_list %}
+{% regroup documents|dictsort:"doctype.name" by doctype as doctype_list %}
 
 {% for doctype in doctype_list %}
     <h3>{{ doctype.grouper }}</h3>
