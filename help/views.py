@@ -11,6 +11,8 @@ from django.db.models import Q
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
+from reversion import revision
+
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.tracking.models import View
 from ecs.users.utils import user_flag_required
@@ -24,11 +26,15 @@ def redirect_to_page(page):
 
 
 def view_help_page(request, page_pk=None):
+    from reversion.models import Version
     page = get_object_or_404(Page, pk=page_pk)
     related_pages = Page.objects.filter(view=page.view).exclude(pk=page.pk).order_by('title')
+    available_versions = Version.objects.get_for_object(page)
     return render(request, 'help/view_page.html', {
         'page': page,
         'related_pages': related_pages,
+        'versions': len(available_versions),
+        'current': available_versions[len(available_versions)-1]
     })
 
 
@@ -56,6 +62,7 @@ def index(request):
         'pages': Page.objects.order_by('title'),
     })
 
+
 def attachments(request):
     attachments = Attachment.objects.order_by('name')
     return render(request, 'help/attachments.html', {
@@ -69,6 +76,7 @@ def download_attachment(request, attachment_pk=None):
 
 
 @user_flag_required('help_writer')
+@revision.create_on_success
 def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if page_pk:
         page = get_object_or_404(Page, pk=page_pk)
@@ -89,6 +97,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
 
     if form.is_valid():
         page = form.save()
+        revision.user = request.original_user if hasattr(request, "original_user") else request.user
         return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
         
     related_pages = Page.objects.filter(view=view).order_by('title')
@@ -104,9 +113,11 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
 
 
 @user_flag_required('help_writer')
+@revision.create_on_success
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
+    revision.user = request.original_user if request.original_user else request.user
     return HttpResponseRedirect(reverse('ecs.help.views.index'))
 
 
@@ -115,6 +126,28 @@ def preview_help_page_text(request):
     text = request.POST.get('text', '')
     return HttpResponse(publish_parts(text)['fragment'])
     
+
+@user_flag_required('help_writer')
+def difference_help_pages(request, page_pk=None, old_version="-2", new_version="-1"):
+    from reversion.helpers import generate_patch_html
+    from reversion.models import Version
+
+    page = get_object_or_404(Page, pk=page_pk)
+    available_versions = Version.objects.get_for_object(page)
+    if len(available_versions) < 2:
+        return HttpResponse("<html><body>no revisions</body></html>")
+
+    old_version = int(old_version)
+    new_version = int(new_version)
+    if new_version < 0:
+        new_version = len(available_versions)+ new_version
+    if old_version < 0:
+        old_version = len(available_versions)+ old_version
+
+    new_content = available_versions[new_version]
+    old_content = available_versions[old_version]
+    return HttpResponse(generate_patch_html(old_content, new_content, "text"))
+
 
 @user_flag_required('help_writer')
 def upload(request):
@@ -147,6 +180,7 @@ def find_attachments(request):
     return render(request, 'help/attachments/find.html', {
         'attachments': Attachment.objects.filter(slug__icontains=request.GET.get('q', '')).order_by('slug')[:5]
     })
+
 
 #@user_flag_required('help_writer')
 @csrf_exempt

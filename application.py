@@ -194,7 +194,10 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
 django-sentry:inst:all:pypi:django-sentry
 
-# diff_match_patch is used for the submission diff
+# ecs.help needs reversion from now on
+django-reversion:inst:all:pypi:django-reversion
+
+# diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
 """

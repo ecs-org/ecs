@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     'indexer',
     'sentry',
     'sentry.client',
+    'reversion',
 
     'ecs.core',
     'ecs.utils',
@@ -305,6 +306,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'south.models.*',
     'djcelery.models.*',
     'ghettoq.models.*',
+    'reversion.models.*',
     
     'ecs.utils.countries.models.*',
     'ecs.tracking.models.*',
@@ -313,6 +315,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'ecs.pdfviewer.models.*',
     'ecs.feedback.models.*',
     'ecs.users.models.UserSettings',
+    'ecs.help.models.*',
 )
 
 

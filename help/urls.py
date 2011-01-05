@@ -13,7 +13,10 @@ urlpatterns = patterns('ecs.help.views',
     url(r'^view/(?P<view_pk>\d+)/(?P<anchor>[\w-]+)/$', 'find_help'),
     url(r'^edit/view/(?P<view_pk>\d+)/$', 'edit_help_page'),
     url(r'^edit/view/(?P<view_pk>\d+)/(?P<anchor>[\w-]+)/$', 'edit_help_page'),
-    
+
+    url(r'^difference/(?P<page_pk>\d+)/$', 'difference_help_pages'),
+    url(r'^difference/(?P<page_pk>\d+)/(?P<old_version>-?\d+)/(?P<new_version>-?\d+)/$', 'difference_help_pages'),
+
     url(r'^preview/$', 'preview_help_page_text'),
     url(r'^attachments/$', 'attachments'),
     url(r'^attachments/upload/$', 'upload'),

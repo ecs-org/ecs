@@ -1,5 +1,5 @@
 {% extends "help/base.html" %}
-{% load userutils %}
+{% load i18n userutils %}
 
 {% block upload_params %}{% if page.view_id %}&amp;view={{ page.view_id }}{% endif %}&amp;page={{ page.id }}{% endblock %}
 
@@ -9,6 +9,9 @@
         <span class="help_edit"><a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a></span>
     {% endif %}
         <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
+    {% if user|has_flag:'help_writer' %}
+        <span class="help_diff">Version: {{ versions }} ({% trans "last edited" %} {{ current.revision.date_created|timesince }} {% trans "ago by" %} {{ current.revision.user }}) <a href="{% url ecs.help.views.difference_help_pages page_pk=page.pk %}">diff</a></span>
+    {% endif %}
     <div class="restructuredtext">
         {{ page.publish_parts.fragment|safe }}
     </div>

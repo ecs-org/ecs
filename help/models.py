@@ -66,4 +66,6 @@ class Attachment(models.Model):
                 i += 1
         return super(Attachment, self).save(**kwargs)
         
-    
+
+import reversion
+reversion.register(Page)
