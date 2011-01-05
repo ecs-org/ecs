@@ -160,13 +160,15 @@ class Document(models.Model):
         if self.mimetype == 'application/pdf':
             self.pages = pdf_page_count(self.file) # calculate number of pages
 
-        first_save = True if self.pk is None else False
-        super(Document, self).save(**kwargs)
+        first_save = self.pk is None
+        rval = super(Document, self).save(**kwargs)
         
         if first_save:
             #print("doc file %s , path %s, original %s" % (str(self.file.name), str(self.file.path), str(self.original_file_name)))
             # upload it via celery to the storage vault
             encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
+
+        return rval
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)
