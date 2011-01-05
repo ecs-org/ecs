@@ -117,7 +117,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
-    revision.user = request.original_user if request.original_user else request.user
+    revision.user = request.original_user if hasattr(request, "original_user") else request.user
     return HttpResponseRedirect(reverse('ecs.help.views.index'))
 
 
