@@ -14,7 +14,6 @@
     <li class="message {% cycle 'even' 'odd' %}">
         <span class="head">
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
-            {% if incoming and thread.last_message.unread %} [NEU] {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
             {% if incoming %}{% trans "von" %}{% else %}{% trans "an" %}{% endif %}: <span class="user">{% block message_user %}{% endblock %}</span>
         </span>
