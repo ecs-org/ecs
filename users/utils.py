@@ -50,6 +50,12 @@ def get_full_name(user):
         return u' '.join(nameparts)
     else:
         return unicode(user.email)
+
+def get_formal_name(user):
+    if user.first_name and user.last_name:
+        return u'{0}, {1}'.format(user.last_name, user.first_name)
+    else:
+        return unicode(user.email)
         
 class sudo(object):
     def __init__(self, user=None):

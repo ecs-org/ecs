@@ -279,7 +279,7 @@ def administration(request, limit=20):
         users = users.filter(keyword_q)
 
 
-    paginator = Paginator(users.order_by('email'), limit, allow_empty_first_page=True)
+    paginator = Paginator(users.order_by('last_name', 'first_name', 'email'), limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
     except EmptyPage, InvalidPage:
