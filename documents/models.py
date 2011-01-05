@@ -62,7 +62,6 @@ class DocumentFileStorage(FileSystemStorage):
             # file_ext includes the dot.
             counter += 1
             name = os.path.join(dir_name, "%s_%04d%s" % (file_root, counter, file_ext))
-        print name
         return name
 
     def path(self, name):
@@ -164,7 +163,6 @@ class Document(models.Model):
         rval = super(Document, self).save(**kwargs)
         
         if first_save:
-            #print("doc file %s , path %s, original %s" % (str(self.file.name), str(self.file.path), str(self.original_file_name)))
             # upload it via celery to the storage vault
             encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
 
