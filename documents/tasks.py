@@ -73,6 +73,6 @@ def extract_and_index_pdf_text(document_pk=None, **kwargs):
     index = site.get_index(Page)
     index.backend.update(index, doc.page_set.all())
 
-    DocumentFileStorage().delete(doc.file.name)
+    #DocumentFileStorage().delete(doc.file.name)
 
     return True
