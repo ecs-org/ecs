@@ -306,6 +306,7 @@ def auth_user_developers():
         profile = user.get_profile()
         profile.approved_by_office = True
         profile.help_writer = True
+        profile.forward_messages_after_minutes = 360
         profile.save()
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 

@@ -56,8 +56,7 @@ def create_mail(subject, message, from_email, recipient, message_html=None, atta
     
 def deliver(subject, message, from_email, recipient_list, message_html=None, attachments= None, callback=None, **kwargs):
     """
-    send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), 
-    puts messages to send into celery queue
+    send email to recipient list, puts messages to send into celery queue
     returns a list of (msgid, rawmessage) for each messages to be sent
     if callback is set to a celery task:
        it will be called on every single recipient delivery with callback(msgid, status)
@@ -68,13 +67,6 @@ def deliver(subject, message, from_email, recipient_list, message_html=None, att
  
     # filter out recipients which are not in the whitelist
     mylist = set(recipient_list)
-    bad = None
-    if hasattr(settings, "EMAIL_WHITELIST") and settings.EMAIL_WHITELIST:
-        bad = set([x for x in recipient_list if x not in settings.EMAIL_WHITELIST])
-    if bad:
-        logger = logging.getLogger()
-        logger.warning('BAD EMAILS: %s are bad out of %s' % (str(bad), str(mylist)))
-        recipient_list = list(mylist - bad)
 
     sentids = []
     for recipient in recipient_list:

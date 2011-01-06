@@ -283,8 +283,6 @@ ECSMAIL_DEFAULT = {
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
-# FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST (FMD2)
-EMAIL_WHITELIST = {}
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST

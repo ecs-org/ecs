@@ -61,26 +61,7 @@ class Command(BaseCommand):
             if cycle:
                 raise CommandError("Cyclic dependencies: %s" % ", ".join(sorted(set(bootstrap_funcs.keys())-set(order))))
         
-        def log_save(sender, **kwargs):
-            if sender == AuditTrail:  # dont log creation of audit trail entries
-                return
-            obj = kwargs['instance']
-            model = obj.__class__
-            action = kwargs.get('created', False) and "Create" or "Update"
-            print "    %s %s.%s pk=%s" % (action, model._meta.app_label, model.__name__, obj.pk)
-
-        def log_delete(sender, **kwargs):
-            obj = kwargs['instance']
-            model = obj.__class__
-            print "    Delete %s.%s pk=%s" % (model._meta.app_label, model.__name__, obj.pk)
-
-
-        post_save.connect(log_save)
-        post_delete.connect(log_delete)
-
         def cleanup(rollback=False):
-            post_save.disconnect(log_save)
-            post_delete.disconnect(log_delete)
             if rollback:
                 transaction.rollback()
             else:
@@ -89,7 +70,7 @@ class Command(BaseCommand):
         try:
             _create_root_user()
             for name in order:
-                print "Bootstrapping %s." % name
+                print ' > {0}'.format(name)
                 func = bootstrap_funcs[name]
                 func()
         except:

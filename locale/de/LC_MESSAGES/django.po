@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-22 03:32+0100\n"
+"POT-Creation-Date: 2011-01-06 15:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:58
@@ -1273,7 +1273,7 @@ msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
 
 #: core/forms/forms.py:252
 msgid "This Document is not a valid PDF document."
-msgstr ""
+msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
 #: core/forms/layout.py:11
 msgid "Key data"
@@ -1401,12 +1401,12 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:60
+#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:60
+#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1471,14 +1471,6 @@ msgstr "Ja"
 msgid "no"
 msgstr "Nein"
 
-#: core/views/submissions.py:325
-msgid ""
-"You cannot submit studies yet. Please wait until the office has approved "
-"your account."
-msgstr ""
-"Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
-"bestaetigt wurde "
-
 #: documents/bootstrap.py:12
 msgid "Covering Letter"
 msgstr "Covering Letter"
@@ -1534,7 +1526,7 @@ msgstr "Lebenslauf"
 
 #: documents/bootstrap.py:20
 msgid "Conflict of Interest"
-msgstr ""
+msgstr "Interessenkonflikt"
 
 #: documents/bootstrap.py:20
 msgid "can also be a Financial Disclosure Form"
@@ -1578,16 +1570,16 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
-"(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
+"%(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
-"s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s "
+"%(meeting_title)s"
 msgstr ""
 
 #: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
@@ -1689,7 +1681,7 @@ msgstr "Meldungen"
 
 #: notifications/views.py:161
 msgid "autosave successful"
-msgstr ""
+msgstr "automatisch gespeichert"
 
 #: notifications/views.py:238
 #, fuzzy
@@ -1713,51 +1705,51 @@ msgstr ""
 msgid "invalid data: %s"
 msgstr ""
 
-#: tasks/forms.py:14
+#: tasks/forms.py:12
 msgid "delegate"
 msgstr ""
 
-#: tasks/forms.py:14
+#: tasks/forms.py:12
 msgid "message"
 msgstr ""
 
-#: tasks/forms.py:15
+#: tasks/forms.py:13
 msgid "callback"
 msgstr ""
 
-#: tasks/forms.py:15
+#: tasks/forms.py:13
 msgid "somebody"
 msgstr ""
 
-#: tasks/forms.py:15
+#: tasks/forms.py:13
 msgid "related"
 msgstr ""
 
-#: tasks/forms.py:24
+#: tasks/forms.py:22
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#: tasks/forms.py:38
+#: tasks/forms.py:36
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:60 tasks/forms.py:65 tasks/forms.py:68 tasks/forms.py:71
+#: tasks/forms.py:58 tasks/forms.py:63 tasks/forms.py:66 tasks/forms.py:69
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:73
+#: tasks/forms.py:71
 msgid "You must select a recipient."
 msgstr "Sie müssen einen Adressaten auswählen."
 
-#: tasks/forms.py:89
+#: tasks/forms.py:87
 msgid "Deadline"
 msgstr ""
 
-#: tasks/forms.py:90
+#: tasks/forms.py:88
 msgid "Oldest"
 msgstr ""
 
-#: tasks/forms.py:91
+#: tasks/forms.py:89
 msgid "Newest"
 msgstr ""
 
@@ -1876,6 +1868,11 @@ msgstr "Einzelanmeldung erzwungen"
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
+#: templates/core.html:230
+#, fuzzy
+msgid "New Messages"
+msgstr "Neue Nachricht"
+
 #: templates/administration/detail.html:4 templates/users/details.html:4
 msgid "ECS Administration"
 msgstr "ECS Verwaltung"
@@ -1955,11 +1952,11 @@ msgstr "an"
 msgid "von"
 msgstr "von"
 
-#: templates/documents/compact_list.html:15
+#: templates/documents/compact_list.html:18
 msgid "View"
 msgstr ""
 
-#: templates/documents/compact_list.html:17
+#: templates/documents/compact_list.html:20
 msgid "Share Annotations"
 msgstr ""
 
@@ -1993,8 +1990,8 @@ msgstr "Sitzung Beenden"
 
 #: templates/fastlane/assistant_recommendation.html:28
 #: templates/submissions/internal_list.html:38
-#: templates/submissions/widget.html:38 templates/users/administration.html:23
-#: templates/users/administration.html:83
+#: templates/submissions/widget.html:38 templates/users/administration.html:24
+#: templates/users/administration.html:84
 msgid "of"
 msgstr "von"
 
@@ -2091,6 +2088,15 @@ msgstr ""
 #: templates/fastlane/status.html:30
 msgid "Submissions"
 msgstr "Einreichungen"
+
+#: templates/help/view_page.html:13
+#, fuzzy
+msgid "last edited"
+msgstr "Nachname"
+
+#: templates/help/view_page.html:13
+msgid "ago by"
+msgstr ""
 
 #: templates/meetings/detail.html:9
 msgid "Meeting"
@@ -2234,6 +2240,14 @@ msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
+#: templates/submissions/form.html:72
+msgid ""
+"You cannot submit studies yet. Please wait until the office has approved "
+"your account."
+msgstr ""
+"Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
+"bestaetigt wurde "
+
 #: templates/submissions/internal_list.html:28
 #: templates/submissions/widget.html:21
 msgid "ExpeditedReviewCategories"
@@ -2245,8 +2259,8 @@ msgid "No Submissions."
 msgstr "Keine Einreichung."
 
 #: templates/submissions/internal_list.html:38
-#: templates/submissions/widget.html:38 templates/users/administration.html:23
-#: templates/users/administration.html:83
+#: templates/submissions/widget.html:38 templates/users/administration.html:24
+#: templates/users/administration.html:84
 msgid "Page"
 msgstr "Seite"
 
@@ -2411,7 +2425,7 @@ msgstr "Diplomarbeit Review"
 
 #: templates/submissions/tabs/involved_parties.html:5
 msgid "Involvement"
-msgstr ""
+msgstr "Beteiligung"
 
 #: templates/submissions/tabs/involved_parties.html:6
 msgid "Name"
@@ -2464,72 +2478,77 @@ msgid "List of Users"
 msgstr "Liste der Benutzer"
 
 #: templates/users/administration.html:9
-#: templates/users/administration.html:35
+#: templates/users/administration.html:36
 msgid "Approval"
 msgstr "Bestätigung"
 
 #: templates/users/administration.html:10
+#, fuzzy
+msgid "Activity"
+msgstr "Aktivieren"
+
+#: templates/users/administration.html:11
 msgid "Group"
 msgstr "Gruppe"
 
-#: templates/users/administration.html:11
+#: templates/users/administration.html:12
 msgid "Search"
 msgstr "Suche"
 
-#: templates/users/administration.html:34
+#: templates/users/administration.html:35
 msgid "User"
 msgstr "Benutzer"
 
-#: templates/users/administration.html:35
+#: templates/users/administration.html:36
 msgid "Unapproved users may not be able to sumit studies"
 msgstr "Unbestätigte Benutzer können nicht einreichen"
 
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "If you mark an user indisposed, somone else has to do the users work"
 msgstr ""
 
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "Indisposed"
 msgstr "Verhindert"
 
-#: templates/users/administration.html:37
+#: templates/users/administration.html:38
 msgid "Inactive users are not able to log into the system"
 msgstr "Inaktive Benutzer können das System nicht verwenden"
 
-#: templates/users/administration.html:37
+#: templates/users/administration.html:38
 msgid "Active"
 msgstr "Aktiv"
 
-#: templates/users/administration.html:45
+#: templates/users/administration.html:46
 msgid "phantom"
 msgstr "phantom"
 
-#: templates/users/administration.html:51
+#: templates/users/administration.html:52
 msgid "Revoke Approval"
 msgstr "Bestätigung zurückziehen"
 
-#: templates/users/administration.html:53
+#: templates/users/administration.html:54
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/users/administration.html:58
+#: templates/users/administration.html:59
 #, fuzzy
 msgid "Unmark Indisposed"
 msgstr "Verhindert markieren"
 
-#: templates/users/administration.html:60
+#: templates/users/administration.html:61
 msgid "Mark Indisposed"
 msgstr "Verhindert markieren"
 
-#: templates/users/administration.html:65
+#: templates/users/administration.html:66
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
-#: templates/users/administration.html:67
+#: templates/users/administration.html:68
 msgid "Activate"
 msgstr "Aktivieren"
 
-#: templates/users/administration.html:72
+#: templates/users/administration.html:73
 msgid "No Users."
 msgstr "Keine Benutzer."
 
@@ -2572,46 +2591,75 @@ msgstr "Einladen"
 msgid "Set Password"
 msgstr "Passwort ändern"
 
-#: users/forms.py:23
+#: users/forms.py:18
 msgid "Email"
 msgstr "E-mail"
 
-#: users/forms.py:24
+#: users/forms.py:19
 #, fuzzy
 msgid "Password"
 msgstr "Passwort ändern"
 
-#: users/forms.py:38
+#: users/forms.py:33
 msgid ""
 "Please enter a correct email and password. Note that the password is case-"
 "sensitive."
 msgstr ""
 
-#: users/forms.py:40
+#: users/forms.py:35
 msgid "This account is inactive."
 msgstr ""
 
-#: users/forms.py:47
+#: users/forms.py:42
 msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:73
+#: users/forms.py:68
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: users/forms.py:94
+#: users/forms.py:84
+msgid "Never forward unread messages"
+msgstr ""
+
+#: users/forms.py:85
+#, fuzzy
+msgid "Forward unread messages after 5 minutes"
+msgstr "ungelesende ECS Nachrichten für %(user)s"
+
+#: users/forms.py:86
+#, fuzzy
+msgid "Forward unread messages after 10 minutes"
+msgstr "ungelesende ECS Nachrichten für %(user)s"
+
+#: users/forms.py:87
+#, fuzzy
+msgid "Forward unread messages after 6 hours"
+msgstr "ungelesende ECS Nachrichten für %(user)s"
+
+#: users/forms.py:115 users/forms.py:120
 msgid "Both"
 msgstr "Beide"
 
-#: users/forms.py:95
+#: users/forms.py:116
 msgid "Approved"
 msgstr "Bestätigt"
 
-#: users/forms.py:96
+#: users/forms.py:117
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
+
+#: users/forms.py:121
+#, fuzzy
+msgid "active"
+msgstr "Aktiv"
+
+#: users/forms.py:122
+#, fuzzy
+msgid "inactive"
+msgstr "Aktiv"
 
 #: users/utils.py:47
 msgid "Ms."
@@ -2621,21 +2669,21 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:90
+#: users/utils.py:96
 #, fuzzy
 msgid "There is already a user with this email address."
 msgstr "Es liegen bereits Voten anderer Ethikkommissionen vor."
 
-#: users/utils.py:96
+#: users/utils.py:102
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
 
-#: users/utils.py:106
+#: users/utils.py:112
 msgid "The email could not be delivered."
 msgstr "Die E-mail konnte nicht gesendet werden."
 
-#: users/utils.py:115
+#: users/utils.py:121
 msgid "The user has been invited."
 msgstr "Der Benutzer wurde eingeladen."
 
@@ -2643,11 +2691,11 @@ msgstr "Der Benutzer wurde eingeladen."
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:140
+#: users/views.py:141
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort Zurücksetzen"
 
-#: userswitcher/forms.py:14
+#: userswitcher/forms.py:12
 msgid "user"
 msgstr "Benutzer"
 

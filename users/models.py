@@ -43,6 +43,9 @@ class UserProfile(models.Model):
     fax = models.CharField(max_length=45, blank=True)
     
     social_security_number = models.CharField(max_length=10, blank=True)
+
+    # 0 = never send messages
+    forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
     
     def __unicode__(self):
         return unicode(self.user.username)

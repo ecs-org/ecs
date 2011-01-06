@@ -116,6 +116,7 @@ def activate(request, token=None):
         user.groups = Group.objects.filter(name__in=settings.DEFAULT_USER_GROUPS)
         # the userprofile is auto-created, we only have to update some fields.
         user.ecs_profile.gender = data['gender']
+        user.ecs_profile.forward_messages_after_minutes = 5
         user.ecs_profile.save()
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,

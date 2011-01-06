@@ -123,7 +123,6 @@ class Meeting(models.Model):
         return "%s: %s" % (self.start, self.title)
         
     def save(self, **kwargs):
-        print "save meeting, otid=%s" % self.optimization_task_id
         return super(Meeting, self).save(**kwargs)
         
     @cached_property
