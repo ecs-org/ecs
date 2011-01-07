@@ -1,9 +1,8 @@
 {% load core %}
 <div class="task_back_log">
-    <table cellspacing="0">
+    <table>
         <tr>
-            <th></th>
-            <th>PK</th>
+             <th>PK</th>
             <th colspan="2">TaskType</th>
             <th colspan="3">Token</th>
             <th>Data</th>
@@ -18,7 +17,6 @@
         </tr>
         <tr>
             <th></th>
-            <th></th>
             <th>Name</th>
             <th>Groups</th>
             <th>Id</th>
@@ -30,7 +28,6 @@
         </tr>
     {% for task in tasks %}
         <tr class="task{% if task.closed_at %} closed{% endif %}">
-            <td></td>
             <td>{{ task.pk }}</td>
             <td>{{ task.task_type }}</td>
             <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>

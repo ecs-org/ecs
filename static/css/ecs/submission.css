@@ -62,7 +62,3 @@
   background: url(/static/images/icons.png) 0 -64px no-repeat;
 }
 
-#status_tab td, #status_tab th, #involved_parties_tab th, #involved_parties_tab td {
-  border: 1px solid #ddd;
-}
-

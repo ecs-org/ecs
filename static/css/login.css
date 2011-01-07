@@ -31,11 +31,11 @@
   width: 300px;
   text-align: left;
 }
-.wrapper h1 {
+.wrapper h1, #content h1 {
   background: url(../images/logo.png) no-repeat;
   width: 200px;
   height: 48px;
-  margin-left: 10px;
+  margin: 0 0 10px 10px;
   text-indent: -9999px;
 }
 #content form {
@@ -67,7 +67,7 @@
 }
 .login_screen input[type=submit] {
   width: 70px;
-  margin-top: 5px;
+  margin: 5px 0 0 0;
   padding: 4px 7px;
   float: right;
   border-radius: 5px;
@@ -75,7 +75,7 @@
   -webkit-border-radius: 5px;
 }
 .pw_reg {
-  margin: 10px 0 0 20px;
+  margin: 5px 0 0 10px;
   font-size: 10pt;
 }
 
@@ -84,4 +84,8 @@
   background-color: #ffcccc;
   padding: 20px;
   margin-bottom: 10px;
+}
+#public_area {
+	display: block;
+	margin: 0 0 5px 10px;
 }

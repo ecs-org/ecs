@@ -28,14 +28,12 @@
 <div class="wrapper">
   <h1>Ethikkommission Wien</h1>
     <div id="browser_warning" style="display:none">
-        <b>Achtung:</b> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser; 
+        <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser; 
         Zur korrekten Darstellung brauchen sie <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>; 
         Klicken Sie <a href="http://www.mozilla-europe.org/de/firefox/">hier</a> um eine aktuelle Version zu installieren
     </div>
     <div id="public_area">
-      <ul class="links">
-        <li><a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a></li>
-      </ul>
+      <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
     </div>
     <div class="login_screen">
       <form method="post" action="">

@@ -1,17 +1,3 @@
-.task_back_log table {
-  border: 1px solid #ddd;
-  border-left: none;
-}
-.task_back_log td, .task_back_log th {
-  border-left: 1px solid #ddd;
-}
-.task_back_log th {
-  border-bottom: 1px solid #ddd;
-}
-.task_back_log tr.closed td {
-  color: #999;
-}
-
 /* TaskForm */
 
 #task_form {
@@ -99,7 +85,6 @@
 .task_full {
   background: #f9feff;
   min-width: 700px;
-  width: 100%;
   display: block;
 	border: 1px solid #ddd;
 }
