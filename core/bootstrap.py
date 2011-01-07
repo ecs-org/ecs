@@ -280,7 +280,12 @@ def medical_categories():
         (u'techSec', u'technischer Sicherheitsbeauftragter'),
 
         (u'LaborDia', u'medizinische und chemische Labordiagnostik'),
-        (u'Psychol', u'Psychologie'), 
+        (u'Psychol', u'Psychologie'),
+        
+        (u'Virologie', u'Virologie'),
+        (u'Tropen', u'Tropen'),
+        (u'Ernährung', u'Ernährung'),
+        (u'Apotheke', u'Apotheke'),
     )
     for shortname, longname in categories:
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
