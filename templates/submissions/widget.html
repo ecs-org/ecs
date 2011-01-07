@@ -10,7 +10,7 @@
         {% with submission.current_submission_form as submission_form %}
             <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission.get_ec_number_display }}</a>
         {% endwith %}
-        {{ submission.project_title|default:'<em>{% trans "No title." %}</em>' }}
+        {{ submission.project_title_display|default:'<em>{% trans "No title." %}</em>' }}
         {% with submission.medical_categories.all as categories %}
             {% if categories %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<em>{{ cat }}</em>{% if not forloop.last %}, {% endif %}{% endfor %}</div>

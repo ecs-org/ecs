@@ -25,7 +25,7 @@
 	    <ul>
 	    {% for vote in meeting.list %}
 	        {% with vote.submission_form  as submission_form %}
-	        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.project_title|default:'<em>No title</em>' }}</li>
+	        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.project_title_display|default:'<em>No title</em>' }}</li>
 	        {% endwith %}
 	    {% endfor %}
 	    </ul>
