@@ -233,19 +233,24 @@ input[type=submit], .cancel a {
 }
 #toggle_sidebar_button {
   position: absolute;
-  top: 216px;
-  right: 22px;
-  width: 30px;
-  height: 30px;
+  top: 223px;
+  right: 20px;
   z-index: 200;
 }
-.toggle_sidebar {
-  width: 32px;
-  height: 32px;
-  display: inline-block;
+#toggle_sidebar_button a.toggle_sidebar {
+  width: 24px;
+  height: 22px;
+  display: block;
   text-indent: -9999px;
+	background: url(/static/images/icons.png) -324px -135px no-repeat;
+	border: 1px solid #666;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	box-shadow: 1px 2px 6px #666;
+	-moz-box-shadow: 1px 0 6px #999;
+	-webkit-box-shadow: 2px 2px 6px #666;
 }
-
 
 
 /* general links */

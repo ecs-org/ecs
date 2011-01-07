@@ -1,0 +1,10 @@
+Aestetica Icons:
+----------------
+
+add.png, help.png, remove.png, search.png, user.png
+
+Fugue Icons
+-----------
+
+http://p.yusukekamiyamane.com/icons/attribution/
+Some Icons are Copyright © Yusuke Kamiyamane. All rights reserved. Licensed under a Creative Commons Attribution 3.0 license.
