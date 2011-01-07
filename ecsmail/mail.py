@@ -54,7 +54,7 @@ def create_mail(subject, message, from_email, recipient, message_html=None, atta
     return msg
 
     
-def deliver(subject, message, from_email, recipient_list, message_html=None, attachments= None, callback=None, **kwargs):
+def deliver(recipient_list, *args, **kwargs):
     """
     send email to recipient list, puts messages to send into celery queue
     returns a list of (msgid, rawmessage) for each messages to be sent
@@ -65,17 +65,18 @@ def deliver(subject, message, from_email, recipient_list, message_html=None, att
     if isinstance(recipient_list, basestring):
         recipient_list = [recipient_list]
  
-    # filter out recipients which are not in the whitelist
-    mylist = set(recipient_list)
-
     sentids = []
     for recipient in recipient_list:
-        msgid = make_msgid()
-        msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
-        
-        queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
-        #queued_mail_send(msgid, msg, from_email, recipient, callback)
-        sentids += [[msgid, msg.message()]]
+        sentids.append(deliver_to_recipient(recipient, *args, **kwargs))
+
     return sentids
 
+def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, **kwargs):
+    if msgid is None:
+        msgid = make_msgid()
+
+    msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
+    
+    queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
+    return (msgid, msg.message(),)
 

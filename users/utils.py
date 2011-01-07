@@ -104,7 +104,7 @@ def invite_user(request, email):
         htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
             'link': link,
         }))
-        transferlist = deliver(subject, None, settings.DEFAULT_FROM_EMAIL, email, message_html=htmlmail)
+        transferlist = deliver(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
         try:
             msgid, rawmail = transferlist[0]
             print rawmail

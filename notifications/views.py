@@ -235,11 +235,12 @@ def distribute_notification_answer(request, notification_pk=None):
                     }))
                     plainmail = whitewash(htmlmail)
 
-                    deliver(subject=_('New Notification Answer'), 
+                    deliver(party.email,
+                        subject=_('New Notification Answer'), 
                         message=plainmail,
                         message_html=htmlmail,
                         from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[party.email])
+                    )
 
     return render(request, 'notifications/answers/distribute.html', {
         'notification': notification,

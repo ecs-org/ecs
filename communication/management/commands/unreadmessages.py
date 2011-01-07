@@ -32,6 +32,8 @@ class Command(BaseCommand):
             })
             print message
             
-            deliver(subject=_('unread ECS messages for %(user)s' % {'user':user,}), 
-                message=message, from_email=settings.DEFAULT_FROM_EMAIL, recipient_list=[user.email])
+            deliver(user.email,
+                subject=_('unread ECS messages for %(user)s' % {'user':user,}), 
+                message=message, from_email=settings.DEFAULT_FROM_EMAIL, 
+            )
             print 'MAIL SENT'

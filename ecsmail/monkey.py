@@ -10,4 +10,4 @@ def deliver(self, message, To=None, From=None):
     
     recipient = To or message['To']
     sender = From or message['From']
-    ecsmail_deliver("[postmaster]", message, sender, recipient)
+    ecsmail_deliver(recipient, "[postmaster]", message, sender)

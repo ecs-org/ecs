@@ -88,8 +88,8 @@ def register(request):
             'activation_url': activation_url,
             'form': form,
         }))
-        deliver(subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
+        deliver(form.cleaned_data['email'], subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/registration/registration_complete.html', {})
         
     return render(request, 'users/registration/registration_form.html', {
@@ -138,8 +138,8 @@ def request_password_reset(request):
         htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
             'reset_url': reset_url,
         }))
-        deliver(subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
+        deliver(form.cleaned_data['email'], subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/password_reset/request_complete.html', {
             'email': form.cleaned_data['email'],
         })

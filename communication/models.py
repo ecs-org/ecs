@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import datetime, uuid
-import traceback
-import hashlib
 import logging
 import os
 
@@ -10,11 +8,6 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
-
-from celery.task.sets import subtask
-from ecs.ecsmail.mail import deliver
-from ecs.communication.tasks import update_smtp_delivery
 
 
 MESSAGE_ORIGIN_ALICE = 1
@@ -202,40 +195,5 @@ class Message(models.Model):
     @property
     def return_address(self):
         return '%s@%s' % (self.return_username, settings.ECSMAIL ['authoritative_domain'])
-    
-    def save(self, *args, **kwargs):
-        if self.smtp_delivery_state=='new':
-            try:
-                msg_list = deliver(subject=_('New ECS-Mail: from %(sender)s to %(receiver)s.' % {'sender': self.sender, 'receiver': self.receiver}), 
-                    message=_('Subject: %(subject)s%(linesep)s%(text)s' % {'subject': self.thread.subject, 'text': self.text,'linesep':os.linesep}),
-                    from_email=self.return_address, recipient_list=self.receiver.email,)
-                    # FIXME callback=subtask(update_smtp_delivery)) does not work, because it never finds a valid communication.message object, maybe we should try with post-save
-                self.smtp_delivery_state = "pending"              
-                self.rawmsg_msgid, self.rawmsg = msg_list[0]
-                self.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
-            except:
-                traceback.print_exc()
-                self.smtp_delivery_state = 'failure'
-        super(Message, self).save(*args, **kwargs)
 
-"""
 
-def _post_message_save(sender, **kwargs):
-    m = kwargs['instance']
-    if m.smtp_delivery_state=='new':
-        try:
-            msg_list = deliver(subject='Neue ECS-Mail: von %s an %s.' % (m.sender, m.receiver), 
-                message='Betreff: %s\r\n%s' % (m.thread.subject, m.text),
-                from_email=m.return_address, recipient_list=m.receiver.email,
-                callback=subtask(update_smtp_delivery))
-            m.smtp_delivery_state = "pending"              
-            m.rawmsg_msgid, self.rawmsg = msg_list[0]
-            m.rawmsg_digest_hex=hashlib.md5(unicode(self.rawmsg)).hexdigest()
-        except:
-            traceback.print_exc()
-            self.smtp_delivery_state = 'failure'
-    
-
-post_save.connect(_post_message_save, sender=Message)
-
-"""

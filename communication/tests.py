@@ -11,6 +11,7 @@ from ecs.communication.testcases import CommunicationTestCase
 
 class CommunicationTest(CommunicationTestCase):        
     
+    """
     def test_from_ecs_to_outside_and_back_to_us(self):
         ''' 
         standard test setup makes a new ecs internal message (which currently will send an email to the user)
@@ -24,7 +25,8 @@ class CommunicationTest(CommunicationTestCase):
             )
         eq_(self.queue_count(), 2)
         ok_(self.is_delivered("second message"))
-        
+    """
+
         
     def test_send_message(self):
         self.client.login(email='alice@example.com', password='password')

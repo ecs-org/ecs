@@ -86,7 +86,7 @@ class MailTestCase(EcsTestCase):
     
     def deliver(self, subject="test subject", message="test body", from_email="alice@example.com", recipient_list="bob@example.com", message_html=None, attachments=None, callback=None):
         ''' just call our standard email deliver, prefilled values: subject, message, from_email, recipient_list '''
-        return ecsmail_deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
+        return ecsmail_deliver(recipient_list, subject, message, from_email, message_html, attachments, callback)
         
     def receive(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, connecting_host="localhost"):
         ''' Fakes an incoming message trough ecsmail server '''

@@ -433,12 +433,13 @@ def agenda_htmlemail(request, meeting_pk=None):
         }))
         plainmail = whitewash(htmlmail)
 
-        deliver(subject=_('Invitation to meeting'), 
+        deliver(settings.AGENDA_RECIPIENT_LIST,
+            subject=_('Invitation to meeting'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[(filename, pdf,'application/pdf'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=settings.AGENDA_RECIPIENT_LIST)
+        )
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.upcoming_meetings'))
 
