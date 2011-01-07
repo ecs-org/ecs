@@ -162,6 +162,14 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.german_project_title
+
+    def project_title_display(self):
+        if self.german_project_title:
+            return self.german_project_title
+        elif self.project_title:
+            return self.project_title
+        else:
+            return None
         
     @property
     def multicentric(self):

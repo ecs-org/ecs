@@ -31,7 +31,7 @@
                 <span style="font-weight:bold;">Sponsor/CRO:</span> {{ top.submission.current_submission_form.sponsor_name }}
             {% endif %}<br />
             <span style="font-weight:bold;">Einreichende Institut:</span> {{ top.submission.current_submission_form.submitter_organisation }}<br />
-            <span style="font-weight:bold;">Projekttitel:</span> {{ top.submission.project_title }}<br />
+            <span style="font-weight:bold;">Projekttitel:</span> {{ top.submission.project_title_display }}<br />
         {% else %}
             <br />
         {% endif %}
@@ -118,7 +118,7 @@ Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen
     <span style="font-weight:bold;">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
 
     {% for b1 in b1ized.all %}
-        <span style="font-weight:bold;">EK-Nr.: {{ b1.submission|ec_number }} {{ b1.submission.project_title }} ({{ b1.submission.current_submission_form.submitter_name }})
+        <span style="font-weight:bold;">EK-Nr.: {{ b1.submission|ec_number }} {{ b1.submission.project_title_display }} ({{ b1.submission.current_submission_form.submitter_name }})
     {% endfor %}
 {% endif %}
 

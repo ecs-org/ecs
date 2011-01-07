@@ -3,7 +3,7 @@
     <tr><th>Studie</th><th>Protokoll Nr.</th><th>EudraCT-Nr.</th><th>Ethik-Komission</th><th>Prüfer</th></tr>
     {% for submission_form in submission_forms %}
         <tr>
-           <td><a href="{% url ecs.core.views.view_submission submission_pk=submission_form.submission.pk %}">{{ submission_form.submission }} {{ submission_form.project_title }}</a></td>
+           <td><a href="{% url ecs.core.views.view_submission submission_pk=submission_form.submission.pk %}">{{ submission_form.submission }} {{ submission_form.project_title_display }}</a></td>
            <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
            <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
            <td>{{ submission_form.submission.main_ethics_commission }}</td>
