@@ -79,11 +79,3 @@ def deliver(subject, message, from_email, recipient_list, message_html=None, att
     return sentids
 
 
-def send_mail(subject, message, from_email, recipient_list, message_html=None, attachments=None, callback=None, **kwargs):
-    raise(DeprecationWarning('deprecated, use deliver for sending emails'))
-    return deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
-
-
-def send_html_email(subject, message_html, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, attachments=None, callback=None, **kwargs):
-    raise(DeprecationWarning('deprecated, use deliver with message=None, message_html= htmltext for sending emails'))
-    return deliver(subject, None, from_email, recipient_list, message_html, attachments, callback)

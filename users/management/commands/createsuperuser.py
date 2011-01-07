@@ -17,7 +17,7 @@ class Command(OrigCommand):
         interactive = options.get('interactive')
 
         if username:
-            raise DeprecationWarning('ther is no such thing as a username')
+            raise DeprecationWarning('there is no such thing as a username')
 
         if not interactive:
             if not email:
