@@ -249,7 +249,7 @@ def administration(request, limit=20):
         'page': '1',
         'group': '',
         'approval': 'both',
-        'activity': 'both',
+        'activity': 'active',
         'keyword': '',
     }
 
