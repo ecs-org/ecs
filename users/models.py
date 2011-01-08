@@ -48,7 +48,7 @@ class UserProfile(models.Model):
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
     
     def __unicode__(self):
-        return unicode(self.user.username)
+        return unicode(self.user)
 
     def get_single_login_enforced(self):
         if self.single_login_enforced:

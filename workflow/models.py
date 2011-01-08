@@ -75,12 +75,8 @@ class GraphManager(models.Manager):
     def get(self, **kwargs):
         return super(GraphManager, self).get(**self._prep_get_kwargs(kwargs))
         
-    def create(self, **kwargs):
-        return super(GraphManager, self).create(**self._prep_get_kwargs(kwargs))
-
     def get_or_create(self, **kwargs):
         return super(GraphManager, self).get_or_create(**self._prep_get_kwargs(kwargs))
-
 
 class Graph(NodeType):
     auto_start = models.BooleanField()

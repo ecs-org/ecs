@@ -30,6 +30,7 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required, invite_user
 from ecs.users.forms import EmailLoginForm
 from ecs.users.utils import get_user, create_user
+from ecs.workflow.models import Graph
 
 
 class TimestampedTokenFactory(object):
@@ -118,6 +119,10 @@ def activate(request, token=None):
         user.ecs_profile.gender = data['gender']
         user.ecs_profile.forward_messages_after_minutes = 5
         user.ecs_profile.save()
+
+        wf = Graph.objects.get(model=UserProfile, auto_start=True).create_workflow(data=user.ecs_profile)
+        wf.start()
+
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,
         })
