@@ -99,7 +99,7 @@
   cursor: pointer;
   z-index: 100;
   color: #333;
-  font-size: 11pt;
+  font-size: 14px;
   text-decoration: none;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -201,7 +201,7 @@
   width: 215px;
 }
 #account {
-  font-size: 11pt;
+  font-size: 14px;
 }
 .user_data {
   display: block;
@@ -217,17 +217,15 @@
   float: left;
   width: 163px;
   height: 43px;
-  line-height: 13pt;
 }
 .user_logout {
   position: absolute;
-  top: 22px;
-  right: 0;
+  top: 30px;
+  right: 10px;
 }
 #sidebar .user_logout a {
-  font-size: 10pt;
-  font-weight: bolder;
   color: #800000;
+	font-size: 13px;
 }
 .icon_help, .icon_feedback, .icon_workflow, .user_icon {
   display: inline-block;
@@ -334,7 +332,6 @@ li.TypedChoiceField ul > li label{
 }
 .paginator {
   margin: 5px 0 0 10px;
-  font-size: 10pt;
   display: block;
 }
 .paginator img {
@@ -367,7 +364,6 @@ li.TypedChoiceField ul > li label{
   line-break: normal;
 }
 .form.main table, .form.main ol, .form.main select, .form.main option, .form.main input, .form.main textarea {
-  font-size: 9pt;
 }
 .form ol {
   margin: 10px;
@@ -559,7 +555,7 @@ fieldset.disabled {
 .form.main ol li .rte_display p {
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 14pt;
+  line-height: 18px;
   display: block;
 }
 .form.main ol li .rte_display * {
@@ -699,8 +695,7 @@ fieldset.disabled {
 
 #content ol.submission_list {
   list-style: none;
-  font-size: 10pt;
-  margin-bottom: 2em;
+  margin-bottom: 20px;
 }
 #content ol.submission_list h3 {
   margin-bottom: 5px;
@@ -716,7 +711,7 @@ content ol.submission_list h3 .ecnr {
   margin-left: -80px;
 }
 #content ol.submission_list li {
-  padding: 0.5em;
+  padding: 10px;
   padding-left: 80px;
 }
 #content ol.submission_list li:nth-child(odd) {

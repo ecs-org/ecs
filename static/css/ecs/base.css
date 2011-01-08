@@ -12,6 +12,7 @@
 body {
   background: white;
   overflow: auto;
+	font-size: 12px;
 }
 #container {
   position: absolute;
@@ -27,7 +28,7 @@ body {
   background: #d8e6ef;
   padding: 10px;
   display: block;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #B5CFDF;
 }
 #headertitle {
   float: left;
@@ -42,7 +43,7 @@ body {
   float: left;
   width: 100%;
   background: #d8e6ef;
-  font-size: 11pt;
+  font-size: 14px;
 }
 #content {
   position: absolute;
@@ -78,33 +79,33 @@ body {
 }
 #content h1 {
   display: block;
-  font-size: 1.4em;
+  font-size: 24px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h2 {
   display: block;
-  font-size: 1.2em;
+  font-size: 20px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
 #content h3 {
   display: block;
-  font-size: 1.0em;
+  font-size: 16px;
   font-weight: lighter;
   margin-bottom: 10px;
 }
 #content h4 {
   display: block;
-  font-size: 0.9em;
+  font-size: 14px;
 	font-weight: lighter;
   margin-bottom: 5px;
 }
 #content h5 {
   display: block;
-  font-size: 0.8em;
+  font-size: 12px;
   margin-bottom: 10px;
 }
 .main.form h3 {
@@ -113,12 +114,10 @@ body {
 }
 #content p {
   margin-bottom: 20px;
-  font-size: 10pt;
 }
 #content a {
   text-decoration: none;
   color: #2b558e;
-  font-size: 10pt;
 }
 #content a:hover {
   text-decoration: underline;
@@ -129,7 +128,6 @@ a {
 }
 #content ul {
   margin: 0 0 20px 30px;
-	font-size: 10pt;
 }
 input, textarea, #content select {
   border: 1px solid #999;
@@ -139,7 +137,6 @@ input, textarea, #content select {
 select {
   border: 1px solid #999;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11pt;
 }
 #content table {
   margin: 10px 0;
@@ -164,7 +161,7 @@ input[type=submit], .cancel a {
 }
 #content .cancel a {
   color: #fff;
-  font-size: 9pt;
+  font-size: 11px;
   vertical-align: middle;
   line-height: 18px;
 }
@@ -208,13 +205,12 @@ input[type=submit], .cancel a {
 #usermenu .elements {
   display: none;
 }
-
 #sidebar ul {
   list-style-type: none;
 }
 #sidebar li {
-  font-size: 11pt;
-  line-height: 16pt;
+	font-size: 14px;
+  line-height: 22px;
 }
 #sidebar li li {
   margin-left: 10px;

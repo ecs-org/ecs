@@ -15,7 +15,7 @@
   cursor: pointer;
 }
 #submission_widget a, #submission_widget li, #submission_widget label, #submission_widget table {
-  font-size: 10pt;
+  font-size: 12px;
 }
 .submission_list_choose li {
   display: inline;

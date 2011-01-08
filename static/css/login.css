@@ -57,12 +57,12 @@
   display: block;
 }
 .login_screen label {
-  font-size: 11pt;
+  font-size: 14px;
 	font-weight: bolder;
 }
 .login_screen input {
   padding: 5px;
-  font-size: 11pt;
+  font-size: 14px;
   width: 245px;
 }
 .login_screen input[type=submit] {
@@ -76,7 +76,7 @@
 }
 .pw_reg {
   margin: 5px 0 0 10px;
-  font-size: 10pt;
+  font-size: 12px;
 }
 
 #browser_warning{

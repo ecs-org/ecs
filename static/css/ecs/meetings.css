@@ -74,7 +74,7 @@
   margin: 0px;
 }
 #meeting_editor #timetable li {
-	font-size: 10pt;
+	font-size: 12px;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -119,7 +119,7 @@
   width: 5em;
 }
 #meeting_editor .entry input.optimal_start {
-  width: 5em;
+  width: 50px;
 }
 #meeting_editor .entry h3 {
   margin-bottom: 2px;
@@ -136,7 +136,7 @@
   content: "";
 }
 #meeting_editor .constraints_hurt, #meeting_editor .waiting_time {
-	font-size: 10pt;
+	font-size: 12px;
 	margin: 5px 0;
 }
 .icon_drag {
@@ -290,7 +290,7 @@
   padding: 5px;
 }
 #meeting_assistant .navigation h4 {
-  font-size: 10pt;
+  font-size: 12px;
 }
 #meeting_assistant #meeting_assistant_body {
   float: left;
@@ -327,7 +327,7 @@
   display: block;
   float: left;
   clear: both;
-  font-size: 10pt;
+  font-size: 12px;
   padding: 0;
 }
 #meeting_assistant .buttons a {
@@ -351,7 +351,7 @@
 }
 #meeting_assistant .buttons a .details {
   display: block;
-  font-size: 8pt;
+  font-size: 10px;
 }
 #meeting_assistant .button a, #meeting_assistant .navigation a {
   display: block;
@@ -359,7 +359,7 @@
   margin-bottom: 5px;
   background: #666;
   text-align: center;
-  font-size: 10pt;
+  font-size: 12px;
   clear: both;  
   color: #fff;
   border: 1px solid #ccc;
@@ -373,7 +373,7 @@
   color: #333;
 }
 #meeting_assistant .navigation a {
-  font-size: 8pt;
+  font-size: 10px;
 }
 #meeting_assistant .button a:hover, #meeting_assistant .navigation a:hover {
   text-decoration: none;
@@ -387,7 +387,7 @@
 .reviews a.textblock {
   display: block;
   clear: both;
-  font-size: 10pt;
+  font-size: 12px;
 }
 #meeting_assistant textarea {
   width: 98%;
@@ -408,7 +408,7 @@
 #meeting_assistant .search input[type=submit] {
 	display: inline-block;
   width: 60px;
-  font-size: 10pt;
+  font-size: 12pxt;
 	margin: 0;
 }
 #meeting_assistant ul li {

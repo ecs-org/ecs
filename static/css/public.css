@@ -1,8 +1,8 @@
 /* public */
 
-* html body { /*IE6 hack*/
-  padding: 0 !important; /*Set value to (0 WidthOfFrameDiv 0 0)*/
-  text-align: center;
+* html body {
+	margin: 0;
+	padding: 0;
 }
 #header, #toggle_sidebar_button {
   display: none;
@@ -64,11 +64,11 @@
   display: block;
 }
 .form_public label {
-  font-size: 11pt;
+  font-size: 14px;
 }
 .form_public input {
   padding: 5px;
-  font-size: 11pt;
+  font-size: 14px;
   width: 245px;
 }
 .form_public input[type=submit] {
