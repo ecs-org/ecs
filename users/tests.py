@@ -4,12 +4,20 @@ from django.core.urlresolvers import reverse
 from django.test.client import Client
 
 from ecs.ecsmail.testcases import MailTestCase
+from ecs.workflow.tests import WorkflowTestCase
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_user, create_user
 
 
-class RegistrationTest(MailTestCase):
+class RegistrationTest(MailTestCase, WorkflowTestCase):
     def test_registration(self):
+        from ecs.core.bootstrap import auth_groups
+        from ecs.users.bootstrap import user_workflow
+
+        # create user workflow
+        auth_groups()
+        user_workflow()
+
         response = self.client.post(reverse('ecs.users.views.register'), {
             'gender': 'm',
             'first_name': 'New',
