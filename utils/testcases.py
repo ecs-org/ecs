@@ -25,7 +25,7 @@ class EcsTestCase(TestCase):
     def setUp(self):
         self.logger = logging.getLogger() 
         
-        user = get_or_create_user('root@example.org', is_superuser=True)
+        user, created = get_or_create_user('root@example.org', is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
         
         for name in "alice", "bob", "unittest":
@@ -36,7 +36,7 @@ class EcsTestCase(TestCase):
         user.save()
         
     def create_user(self, name):
-        user = get_or_create_user('{0}@example.com'.format(name), is_superuser=True)
+        user, created = get_or_create_user('{0}@example.com'.format(name), is_superuser=True)
         user.set_password('password')
         user.save()
         profile = user.get_profile()
