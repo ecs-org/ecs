@@ -19,11 +19,11 @@ from ecs.utils.viewutils import render_html
 def hash_email(email):
     return hashlib.md5(email.lower()).hexdigest()[:30]
 
-def get_or_create_user(email, defaults=None):
+def get_or_create_user(email, defaults=None, **kwargs):
     if defaults is None:
         defaults = {}
 
-    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults)
+    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
 
 def create_user(email, **kwargs):
     return User.objects.create(username=hash_email(email), email=email, **kwargs)
