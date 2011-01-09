@@ -49,6 +49,7 @@ python-memcached:inst:all:pypi:python-memcached
 # testing
 nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
+windmill:inst:all:pypi:windmill
 
 
 # queuing: celery 
@@ -222,18 +223,18 @@ developer_packages=  """
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
-# mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
-mutt:req:apt:apt-get:mutt
-mutt:req:suse:zypper:mutt
-mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
-mutt:req:mac:macports:mutt
+## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
+#mutt:req:apt:apt-get:mutt
+#mutt:req:suse:zypper:mutt
+#mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
+#mutt:req:mac:macports:mutt
 
 # interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 
 simplejson:inst:all:pypi:simplejson
-# deployment: massimport statistics and diff-match-patch
+# deployment: massimport statistics 
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 # required for django_extensions unittests:

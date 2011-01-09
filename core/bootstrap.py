@@ -299,7 +299,7 @@ def auth_user_developers():
         from ecs.core.bootstrap_settings import developers
     except ImportError:
         developers = ((u'John', u'Doe', u'developer@example.org', 'changeme'),)
-    
+        
     for first, last, email, password in developers:
         user, created = get_or_create_user(email)
         user.first_name = first

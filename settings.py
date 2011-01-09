@@ -170,6 +170,7 @@ INSTALLED_APPS = (
     'sentry',
     'sentry.client',
     'reversion',
+    'windmill',
 
     'ecs.core',
     'ecs.utils',
@@ -291,7 +292,7 @@ DIFF_REVIEW_LIST = ('root',)
 
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
-if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv:
+if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv or 'test_windmill' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
     ENABLE_AUDIT_TRAIL = False
 
@@ -421,7 +422,7 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
    
 # hack some settings for test and runserver    
-if 'test' in sys.argv:
+if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
 elif 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
