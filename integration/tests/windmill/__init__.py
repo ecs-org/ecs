@@ -17,7 +17,7 @@ def monkey_patched_mozrunner_run_command(cmd, env=None):
     else:
         return killableprocess.Popen(cmd, **kwargs) 
     
-windmill.depp._mozrunner.run_command = monkey_patched_mozrunner_run_command
+windmill.dep._mozrunner.run_command = monkey_patched_mozrunner_run_command
 
 
 class WindmillTest(WindmillDjangoUnitTest): 
