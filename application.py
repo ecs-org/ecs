@@ -223,6 +223,9 @@ developer_packages=  """
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
+# a vncserver is needed if hudson makes windmill tests
+vncserver:req:apt:apt-get:tightvncserver
+
 ## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 #mutt:req:apt:apt-get:mutt
 #mutt:req:suse:zypper:mutt
