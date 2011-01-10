@@ -1,13 +1,6 @@
 import os
 
-from windmill.authoring import WindmillTestClient
-from windmill.authoring.djangotest import WindmillDjangoUnitTest
-
 from windmill.dep import _mozrunner
-
-from ecs.integration.windmilltests.anonymous import *
-from ecs.integration.windmilltests.logged_in import *
-
 def monkey_patched_mozrunner_run_command(cmd, env=None):
     """Run the given command in killable process."""
     if hasattr(sys.stdout, 'fileno'):
@@ -21,6 +14,13 @@ def monkey_patched_mozrunner_run_command(cmd, env=None):
         return killableprocess.Popen(cmd, **kwargs) 
 
 _mozrunner.run_command = monkey_patched_mozrunner_run_command
+
+
+from windmill.authoring import WindmillTestClient
+from windmill.authoring.djangotest import WindmillDjangoUnitTest
+
+from ecs.integration.windmilltests.anonymous import *
+from ecs.integration.windmilltests.logged_in import *
 
 
 class WindmillTest(WindmillDjangoUnitTest): 
