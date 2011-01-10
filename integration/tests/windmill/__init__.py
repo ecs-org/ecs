@@ -3,6 +3,23 @@ import os
 from windmill.authoring import WindmillTestClient
 from windmill.authoring.djangotest import WindmillDjangoUnitTest
 
+import windmill.dep._mozrunner  
+
+def monkey_patched_mozrunner_run_command(cmd, env=None):
+    """Run the given command in killable process."""
+    if hasattr(sys.stdout, 'fileno'):
+       kwargs = {'stdout':sys.stdout, 'stderr':sys.stderr, 'stdin':sys.stdin}
+    else:
+       kwargs = {'stdout':sys.__stdout__ ,'stderr':sys.__stderr__, 'stdin':sys.stdin}
+
+    if sys.platform != "win32":
+        return killableprocess.Popen(cmd, preexec_fn=lambda: os.setpgid(0, 0), env=env, **kwargs)
+    else:
+        return killableprocess.Popen(cmd, **kwargs) 
+    
+windmill.depp._mozrunner.run_command = monkey_patched_mozrunner_run_command
+
+
 class WindmillTest(WindmillDjangoUnitTest): 
         
     test_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),"main", "anonymous")
