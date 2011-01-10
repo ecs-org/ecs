@@ -6,12 +6,14 @@
 {% block content %}
 
 {% with profile_user.get_profile as profile %}
+<div class="profile">
     <h2>{{ profile_user }}</h2>
     <a href="{% url ecs.users.views.edit_profile %}">{% trans "Edit Profile" %}</a>
     {% if profile.approved_by_office %}
      | <a href="{% url ecs.users.views.change_password %}">{% trans "Change Password" %}</a>
     {% endif %}
     {% include "users/base_profile.inc" %}
+</div>
 {% endwith %}
 
 {% endblock %}

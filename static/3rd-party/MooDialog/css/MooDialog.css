@@ -54,8 +54,13 @@
 	background: none;
 }
 
+.MooDialog .buttons input[type=button] {
+  margin-left: 10px;
+}
+
 .MooDialog .MooDialogAlert, .MooDialog .MooDialogConfirm, .MooDialog .MooDialogPromt, .MooDialog .MooDialogError {
 	background: url(dialog-warning.png) no-repeat;
+  margin-top: 20px;
 	padding-left: 40px;
 	min-height: 40px;
 }

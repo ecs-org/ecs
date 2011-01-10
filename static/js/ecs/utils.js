@@ -238,7 +238,7 @@ ecs.setupForms = function(){
     var setup = {};
     if(tabHeaders.length){
         var tabController = new ecs.TabController($$('.tab_header_groups > li'));
-        var mainForm = document.getElement('form.tabbed.main');
+        var mainForm = document.getElement('innerwrap');
         if(mainForm){
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                 tabController: tabController,
@@ -247,7 +247,7 @@ ecs.setupForms = function(){
             setup.mainForm = form;
         }
         var readonly = true;
-        if(document.getElement('.form.main').tagName == 'FORM'){
+        if(document.getElement('.innerwrap').tagName == 'FORM'){
             readonly = false;
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);

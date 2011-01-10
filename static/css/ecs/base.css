@@ -57,9 +57,13 @@ body {
   overflow-y: auto;
 }
 .innerwrap {
+  display: block;
   margin: 10px;
+  padding: 10px;
+  border: 1px solid #d8e6ef;
+  background: #f9feff;
+  min-width: 700px;
 }
-
 #sidebar {
   position: absolute;
   top: 0;
@@ -79,19 +83,19 @@ body {
 }
 #content h1 {
   display: block;
-  font-size: 24px;
-  letter-spacing: 1px;  
-  margin-bottom: 20px;
-  font-weight: lighter;
-}
-#content h2 {
-  display: block;
   font-size: 20px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
-#content h3 {
+#content h2, #task_main h2 {
+  display: block;
+  font-size: 18px;
+  letter-spacing: 1px;  
+  margin-bottom: 20px;
+  font-weight: lighter;
+}
+#content h3, #task_main h3 {
   display: block;
   font-size: 16px;
   font-weight: lighter;
@@ -108,8 +112,9 @@ body {
   font-size: 12px;
   margin-bottom: 10px;
 }
-.main.form h3 {
+.form_main h3 {
   padding: 10px;
+  margin: -10px -10px 0;
   border-bottom: 1px solid #eee;
 }
 #content p {
@@ -243,9 +248,6 @@ input[type=submit], .cancel a {
 	border-radius: 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	box-shadow: 1px 2px 6px #666;
-	-moz-box-shadow: 1px 0 6px #999;
-	-webkit-box-shadow: 2px 2px 6px #666;
 }
 
 

@@ -223,7 +223,7 @@
 
       var message_popup_body = '';
       newMessages.each(function(msg) {
-        message_popup_body += '<b>{subject}</b> - {sender}<br />\n'.substitute(msg);
+        message_popup_body += '<strong>{subject}</strong> - {sender}<br />\n'.substitute(msg);
       });
 
       {% if new_messages|length %}
@@ -231,7 +231,7 @@
       {% endif %}
 
       newTasks.each(function(task){
-          ecs.messages.alert('Neuer Task', '<b>{__unicode__}</b>'.substitute(task));
+          ecs.messages.alert('Neuer Task', '<strong>{__unicode__}</strong>'.substitute(task));
       });
       
       {% for message in messages %}
