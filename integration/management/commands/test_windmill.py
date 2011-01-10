@@ -8,6 +8,7 @@ def start_test_server(self, *args, **kwargs):
     print 'Starting Test server on port {0}'.format(port)
     return start_orig(self, port=port, *args, **kwargs)
 
+start_test_server.__test__ = False # keep nose from finding it
 
 djangotest.start_test_server = start_test_server
 
