@@ -48,7 +48,7 @@ class Command(BaseCommand):
                 func = getattr(module, name)
                 if callable(func) and getattr(func, 'bootstrap', False):
                     bootstrap_funcs["%s.%s" % (func.__module__, func.__name__)] = func
-    
+
         # XXX: inefficient (FMD3)
         cycle = True
         order = []

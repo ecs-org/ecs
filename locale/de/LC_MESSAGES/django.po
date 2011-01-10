@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-06 15:51+0100\n"
+"POT-Creation-Date: 2011-01-10 20:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,7 +103,7 @@ msgstr "Klinik"
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:105
+#: billing/views.py:106
 msgid "Billing request"
 msgstr ""
 
@@ -115,18 +115,18 @@ msgstr "Gutachter"
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:172
+#: billing/views.py:173
 msgid "Payment request"
 msgstr ""
 
-#: communication/models.py:209
-#, python-format
-msgid "New ECS-Mail: from %(sender)s to %(receiver)s."
+#: communication/tasks.py:50
+#, fuzzy
+msgid "New ECS-Mail: from {sender} to {receiver}."
 msgstr "Neue ECS-Mail: von %(sender)s an %(receiver)s."
 
-#: communication/models.py:210
-#, python-format
-msgid "Subject: %(subject)s%(linesep)s%(text)s"
+#: communication/tasks.py:51
+#, fuzzy
+msgid "Subject: {subject}{linesep}{text}"
 msgstr "Betreff: %(subject)s%(linesep)s%(text)s"
 
 #: communication/views.py:35
@@ -134,7 +134,7 @@ msgstr "Betreff: %(subject)s%(linesep)s%(text)s"
 msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"
 
-#: communication/management/commands/unreadmessages.py:35
+#: communication/management/commands/unreadmessages.py:36
 #, python-format
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
@@ -904,7 +904,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:222 core/models/submissions.py:404
+#: core/paper_forms.py:222 core/models/submissions.py:412
 msgid "open"
 msgstr "offen"
 
@@ -916,11 +916,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:225 core/models/submissions.py:229
+#: core/paper_forms.py:225 core/models/submissions.py:237
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:226 core/models/submissions.py:404
+#: core/paper_forms.py:226 core/models/submissions.py:412
 msgid "blind"
 msgstr "blind"
 
@@ -936,7 +936,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:230 core/models/submissions.py:404
+#: core/paper_forms.py:230 core/models/submissions.py:412
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1401,29 +1401,29 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:55
+#: core/models/names.py:32 core/models/submissions.py:668 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:32 core/models/submissions.py:660 users/forms.py:55
+#: core/models/names.py:32 core/models/submissions.py:668 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:230
+#: core/models/submissions.py:238
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:231
+#: core/models/submissions.py:239
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:691
+#: core/models/submissions.py:699
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:691
+#: core/models/submissions.py:699
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1658,7 +1658,7 @@ msgstr "Protokoll"
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:436
+#: meetings/views.py:437
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
@@ -1683,7 +1683,7 @@ msgstr "Meldungen"
 msgid "autosave successful"
 msgstr "automatisch gespeichert"
 
-#: notifications/views.py:238
+#: notifications/views.py:239
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -2556,7 +2556,7 @@ msgstr "Keine Benutzer."
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
-#: templates/users/login.html:37
+#: templates/users/login.html:36
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
@@ -2687,11 +2687,11 @@ msgstr "Die E-mail konnte nicht gesendet werden."
 msgid "The user has been invited."
 msgstr "Der Benutzer wurde eingeladen."
 
-#: users/views.py:91
+#: users/views.py:92
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:141
+#: users/views.py:146
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort Zurücksetzen"
 
