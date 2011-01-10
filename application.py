@@ -50,6 +50,8 @@ python-memcached:inst:all:pypi:python-memcached
 nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
 windmill:inst:all:pypi:windmill
+# for random text generation in windmill tests
+cicero:inst:all:pypi:cicero
 
 
 # queuing: celery 
