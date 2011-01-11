@@ -53,6 +53,7 @@ class MyTestServerThread(djangotest.TestServerThread):
                 # that we're using *args and **kwargs together.
                 call_command('loaddata', *self.fixtures, **{'verbosity': 1})
 
+        call_command('migrate')
         call_command('bootstrap')
 
         # reset translation cache
