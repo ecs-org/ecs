@@ -1,4 +1,5 @@
 
-from A00Test import *
+from .submission import *
+from .communication import *
 
 

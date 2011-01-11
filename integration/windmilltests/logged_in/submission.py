@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cicero
 import random
 
@@ -5,39 +6,7 @@ from ecs.integration.windmilldecorators import with_login
 
 
 @with_login()
-def test_new_message(client, times=1):
-    client.click(id=u'userswitcher_input')
-    client.waits.forPageLoad(timeout=u'20000')
-    client.select(option=u'office1@example.org', id=u'userswitcher_input')
-    client.click(link=u'Nachrichten')
-    client.waits.forPageLoad(timeout=u'20000')
-    client.waits.forElement(link=u'Neue Nachricht', timeout=u'8000')
-
-
-    for i in xrange(times):
-        client.click(link=u'Neue Nachricht')
-        client.click(id=u'id_subject')
-        subject = cicero.sentences(n=1, min=3, max=3)[0]
-        client.type(text=subject, id=u'id_subject')
-        client.click(id=u'id_receiver')
-        client.select(option=u'presenter1@example.org', id=u'id_receiver')
-        client.click(id=u'id_text')
-        message = '\n'.join(cicero.sentences(n=5))
-        client.type(text=message, id=u'id_text')
-        client.click(value=u'Abschicken')
-
-    client.click(value=u'33')
-    client.waits.forPageLoad(timeout=u'20000')
-    client.select(option=u'---------', id=u'userswitcher_input')
-    client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
-
-
-def test_10_new_messages():
-    test_new_message(times=10)
-
-
-@with_login()
-def test_submit(client):
+def test_submit(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
@@ -45,6 +14,10 @@ def test_submit(client):
     client.click(link=u'Neuer Antrag')
     client.waits.forPageLoad(timeout=u'2000')
     client.waits.sleep(miliseconds=u'2000')
+    if amg:
+        client.check(id=u'id_project_type_reg_drug_within_indication')
+    if mpg:
+        client.check(id=u'id_project_type_medical_device_without_ce')
     client.check(id=u'id_project_type_basic_research')
     client.check(id=u'id_project_type_biobank')
     client.click(id=u'id_project_type_misc')
@@ -118,6 +91,52 @@ def test_submit(client):
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_submitter_contact_last_name')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_submitter_organisation')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_submitter_jobtitle')
+    if amg:
+        client.click(link=u'AMG')
+        client.click(id=u'id_eudract_number')
+        client.type(text=random.randint(10000,99999), id=u'id_eudract_number')
+        client.click(id=u'id_pharma_checked_substance')
+        client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_pharma_checked_substance')
+        client.click(id=u'id_substance_preexisting_clinical_tries')
+        client.select(option=u'Nein', id=u'id_substance_preexisting_clinical_tries')
+        client.click(value=u'3')
+        client.click(id=u'id_substance_p_c_t_phase')
+        client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_substance_p_c_t_phase')
+        client.click(id=u'id_substance_p_c_t_period')
+        client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_substance_p_c_t_period')
+        client.click(id=u'id_substance_p_c_t_application_type')
+        client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_substance_p_c_t_application_type')
+        client.click(id=u'id_substance_p_c_t_gcp_rules')
+        client.select(option=u'Ja', id=u'id_substance_p_c_t_gcp_rules')
+        client.click(xpath=u"//select[@id='id_substance_p_c_t_gcp_rules']/option[2]")
+        client.click(id=u'id_substance_p_c_t_final_report')
+        client.select(option=u'Nein', id=u'id_substance_p_c_t_final_report')
+    if mpg:
+        client.click(link=u'MPG')
+        client.click(id=u'id_medtech_checked_product')
+        client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_medtech_checked_product')
+        client.click(id=u'id_medtech_reference_substance')
+        client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_medtech_reference_substance')
+        client.click(id=u'id_medtech_product_name')
+        client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_medtech_product_name')
+        client.click(id=u'id_medtech_manufacturer')
+        client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_medtech_manufacturer')
+        client.click(id=u'id_medtech_certified_for_exact_indications')
+        client.select(option=u'Ja', id=u'id_medtech_certified_for_exact_indications')
+        client.click(xpath=u"//select[@id='id_medtech_certified_for_exact_indications']/option[2]")
+        client.click(id=u'id_medtech_certified_for_other_indications')
+        client.select(option=u'Ja', id=u'id_medtech_certified_for_other_indications')
+        client.click(xpath=u"//select[@id='id_medtech_certified_for_other_indications']/option[2]")
+        client.click(id=u'id_medtech_ce_symbol')
+        client.select(option=u'Nein', id=u'id_medtech_ce_symbol')
+        client.click(xpath=u"//select[@id='id_medtech_ce_symbol']/option[3]")
+        client.click(id=u'id_medtech_manual_included')
+        client.select(option=u'Nein', id=u'id_medtech_manual_included')
+        client.click(xpath=u"//select[@id='id_medtech_manual_included']/option[3]")
+        client.click(id=u'id_medtech_technical_safety_regulations')
+        client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_medtech_technical_safety_regulations')
+        client.click(id=u'id_medtech_departure_from_regulations')
+        client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_medtech_departure_from_regulations')
     client.click(link=u'Ma\xdfnahmen')
     client.click(xpath=u"//div[@id='tabs-8']/div[1]/a")
     client.click(id=u'id_measure-0-type')
@@ -261,4 +280,19 @@ def test_submit(client):
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'---------', id=u'userswitcher_input')
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
+
+
+def test_submit_amg():
+    return
+
+    test_submit(amg=True)
+
+def test_submit_mpg():
+    test_submit(mpg=True)
+
+def test_submit_thesis():
+    return
+
+    test_submit(thesis=True)
+
 
