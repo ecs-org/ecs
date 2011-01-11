@@ -238,7 +238,7 @@ ecs.setupForms = function(){
     var setup = {};
     if(tabHeaders.length){
         var tabController = new ecs.TabController($$('.tab_header_groups > li'));
-        var mainForm = document.getElement('innerwrap');
+        var mainForm = document.getElement('.innerwrap');
         if(mainForm){
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                 tabController: tabController,
