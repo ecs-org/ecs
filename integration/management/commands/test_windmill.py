@@ -28,8 +28,7 @@ from windmill.authoring import djangotest
 
 class MyTestServerThread(djangotest.TestServerThread):
 
-    def run(self):
-        """Sets up test server and database and loops over handling http requests."""
+    def setUp(self):
 
         # Must do database stuff in this new thread if database in memory.
         from django.conf import settings
@@ -58,13 +57,21 @@ class MyTestServerThread(djangotest.TestServerThread):
 
         # reset translation cache
         from django.utils.translation import trans_real
+        from django.utils.thread_support import currentThread
         from django.conf import settings
         import gettext
 
         gettext._translations = {}
         trans_real._translations = {}
         trans_real._default = None
+        prev = trans_real._active.pop(currentThread(), None)
         trans_real.activate(settings.LANGUAGE_CODE)
+
+
+
+
+    def run(self):
+        """Sets up test server and database and loops over handling http requests."""
 
 
         try:
@@ -102,6 +109,7 @@ class ServerContainer(object):
         print 'Starting Test server on port {0}'.format(port)
 
         self.server_thread = MyTestServerThread(address, port, fixtures=fixtures)
+        self.server_thread.setUp()
         self.server_thread.start()
         self.server_thread.started.wait()
         if self.server_thread.error:
