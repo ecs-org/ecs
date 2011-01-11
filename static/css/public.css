@@ -17,6 +17,8 @@
 }
 .innerwrap {
 	margin: 0;
+  background: none;
+  border: none;
 }
 #sidebar {
   position: relative;

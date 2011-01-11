@@ -353,9 +353,6 @@ li.TypedChoiceField ul > li label{
 
 /* form layout */
 
-.form_main {
-
-}
 .form_main #tabs {
   clear: both;
 }
@@ -364,10 +361,6 @@ li.TypedChoiceField ul > li label{
   line-break: normal;
 }
 .form_main table, .form_main ol, .form_main select, .form_main option, .form_main input, .form_main textarea {
-}
-.form ol {
-  margin: 10px;
-  list-style-type: none;
 }
 .form_main ol {
   display: inline-block;
@@ -378,7 +371,6 @@ li.TypedChoiceField ul > li label{
   clear: both;
 }
 .form_main ol li textarea {
-  width: 30em;
   height: 4em;
 }
 .form_main ol li label, .form_main ol li input[type=text], .form_main ol li textarea, .form_main ol li select {
@@ -458,12 +450,19 @@ li.TypedChoiceField ul > li label{
 }
 .inline_formset .form {
   position: relative;
-  padding-top: 20px;
+  margin-top: 20px;
 }
 #content .inline_formset td {
 	padding: 0;
 }
-tr.form td{
+.form ol {
+  margin: 10px;
+  list-style-type: none;
+}
+.form .notes {
+  margin: 0 5px;
+}
+tr.form td {
   vertical-align: top;
 }
 .form_main .investigator_tab .field a.delete_row,
@@ -612,6 +611,7 @@ fieldset.disabled {
 #measure_formset textarea,
 #routinemeasure_formset textarea {
   height: 20px;
+  width: 90%;
 }
 .form_main ol li .datepicker_toggler {
   position: absolute;
