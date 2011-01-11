@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 import cicero
 
-from ecs.integration.windmilldecorators import with_login
+from ecs.integration.windmilldecorators import logged_in
 
 
-@with_login()
+@logged_in()
 def test_new_message(client, times=1):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')

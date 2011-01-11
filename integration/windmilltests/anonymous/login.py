@@ -1,8 +1,9 @@
-from windmill.authoring import WindmillTestClient
+# -*- coding: utf-8 -*-
 
-def test_login():
-    client = WindmillTestClient(__name__)
-    
+from ecs.integration.windmilldecorators import anonymous
+
+@anonymous()
+def test_login(client):
     client.click(id=u'id_username')
     client.type(text=u'windmill@example.org', id=u'id_username')
     client.click(id=u'id_password')

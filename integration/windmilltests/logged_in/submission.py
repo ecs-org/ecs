@@ -2,10 +2,10 @@
 import cicero
 import random
 
-from ecs.integration.windmilldecorators import with_login
+from ecs.integration.windmilldecorators import logged_in
 
 
-@with_login()
+@logged_in()
 def test_submit(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')

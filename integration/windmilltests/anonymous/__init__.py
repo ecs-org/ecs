@@ -1,3 +1,4 @@
 
-from A00Test import *
+from .login import *
+from .public_views import *
 

@@ -4,7 +4,7 @@ from django.utils.functional import wraps
 from windmill.authoring import WindmillTestClient
 
 
-def with_login(username='windmill@example.org', password='shfnajwg9e'):
+def logged_in(username='windmill@example.org', password='shfnajwg9e'):
     def decorator(fn):
         @wraps(fn)
         def decorated(*args, **kwargs):
@@ -27,6 +27,16 @@ def with_login(username='windmill@example.org', password='shfnajwg9e'):
 
         return decorated
 
+    return decorator
+    
+
+def anonymous():
+    def decorator(fn):
+        @wraps(fn)
+        def decorated(*args, **kwargs):
+            client = WindmillTestClient(fn.__name__)
+            return fn(client, *args, **kwargs)
+        return decorated
     return decorator
     
 

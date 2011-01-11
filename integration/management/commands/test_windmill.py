@@ -29,7 +29,6 @@ from windmill.authoring import djangotest
 class MyTestServerThread(djangotest.TestServerThread):
 
     def setUp(self):
-
         # Must do database stuff in this new thread if database in memory.
         from django.conf import settings
         create_db = False
@@ -53,6 +52,7 @@ class MyTestServerThread(djangotest.TestServerThread):
                 # that we're using *args and **kwargs together.
                 call_command('loaddata', *self.fixtures, **{'verbosity': 1})
 
+        # run migrations and bootstrap
         call_command('migrate')
         call_command('bootstrap')
 
@@ -68,13 +68,8 @@ class MyTestServerThread(djangotest.TestServerThread):
         prev = trans_real._active.pop(currentThread(), None)
         trans_real.activate(settings.LANGUAGE_CODE)
 
-
-
-
     def run(self):
-        """Sets up test server and database and loops over handling http requests."""
-
-
+        """Sets up test server and loops over handling http requests."""
         try:
             handler = basehttp.AdminMediaHandler(WSGIHandler())
             httpd = None
