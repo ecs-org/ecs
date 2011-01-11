@@ -20,6 +20,10 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
         client.check(id=u'id_project_type_medical_device_without_ce')
     client.check(id=u'id_project_type_basic_research')
     client.check(id=u'id_project_type_biobank')
+    if thesis:
+        client.click(id=u'id_project_type_education_context')
+        client.select(option=u'Dissertation', id=u'id_project_type_education_context')
+        client.click(value=u'1')
     client.click(id=u'id_project_type_misc')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_project_type_misc')
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_specialism')
@@ -291,8 +295,6 @@ def test_submit_mpg():
     test_submit(mpg=True)
 
 def test_submit_thesis():
-    return
-
     test_submit(thesis=True)
 
 
