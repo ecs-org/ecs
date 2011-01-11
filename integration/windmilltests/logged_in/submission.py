@@ -115,6 +115,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
         client.click(xpath=u"//select[@id='id_substance_p_c_t_gcp_rules']/option[2]")
         client.click(id=u'id_substance_p_c_t_final_report')
         client.select(option=u'Nein', id=u'id_substance_p_c_t_final_report')
+        client.click(value=u'DE')
+        client.click(xpath=u"//select[@id='id_substance_p_c_t_countries']/option[81]")
     if mpg:
         client.click(link=u'MPG')
         client.click(id=u'id_medtech_checked_product')
@@ -287,8 +289,6 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
 
 
 def test_submit_amg():
-    return
-
     test_submit(amg=True)
 
 def test_submit_mpg():

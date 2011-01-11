@@ -419,6 +419,7 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domai
 
 if 'test_windmill' in sys.argv:
     DATABASES['default'] = DATABASES['windmill']
+    USE_TEXTBOXLIST = False
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
