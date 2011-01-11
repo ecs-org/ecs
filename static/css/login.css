@@ -7,6 +7,10 @@
 #header, #toggle_sidebar_button {
   display: none;
 }
+.innerwrap {
+  background: none;
+  border: none;
+}
 #content {
   position: absolute;
   right: 0 !important;
