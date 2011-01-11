@@ -32,10 +32,6 @@ class MyTestServerThread(djangotest.TestServerThread):
         # Must do database stuff in this new thread if database in memory.
         from django.conf import settings
 
-        dbfile = settings.DATABASES['default']['NAME']
-        if os.path.exists(dbfile):
-            os.remove(dbfile)
-
         # run migrations and bootstrap
         call_command('syncdb', interactive=False)
         call_command('migrate', interactive=False)
