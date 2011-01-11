@@ -31,28 +31,12 @@ class MyTestServerThread(djangotest.TestServerThread):
     def setUp(self):
         # Must do database stuff in this new thread if database in memory.
         from django.conf import settings
-        create_db = False
-        if hasattr(settings, 'DATABASES') and settings.DATABASES:
-            # Django > 1.2
-            if settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3' or \
-                settings.DATABASES['default']['TEST_NAME']:
-                create_db = True
-        elif settings.DATABASE_ENGINE:
-            # Django < 1.2
-            if settings.DATABASE_ENGINE == 'sqlite3' and \
-                (not settings.TEST_DATABASE_NAME or settings.TEST_DATABASE_NAME == ':memory:'):
-                create_db = True
-            
-        if create_db:
-            from django.db import connection
-            db_name = connection.creation.create_test_db(0)
-            # Import the fixture data into the test database.
-            if hasattr(self, 'fixtures'):
-                # We have to use this slightly awkward syntax due to the fact
-                # that we're using *args and **kwargs together.
-                call_command('loaddata', *self.fixtures, **{'verbosity': 1})
+
+        if os.path.exists(settings.DATABASES['default']['NAME']):
+            os.remove(settings.DATABASES['default']['NAME'])
 
         # run migrations and bootstrap
+        call_command('syncdb', interactive=False)
         call_command('migrate')
         call_command('bootstrap')
 

@@ -32,6 +32,14 @@ DATABASES['default'] = {
     'HOST': '',
     'PORT': '',
 }
+DATABASES['windmill'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(PROJECT_DIR, 'test_windmill.db'),
+    'USER': '',
+    'PASSWORD': '',
+    'HOST': '',
+    'PORT': '',
+}
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
 # although not all choices may be available on all operating systems.
@@ -408,6 +416,9 @@ for override in local_overrides:
         val += val_override
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain']) 
+
+if 'test_windmill' in sys.argv:
+    DATABASES['default'] = DATABASES['windmill']
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
