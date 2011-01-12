@@ -11,11 +11,12 @@
         <div>
             {% get_annotations for doc as annotations %}
             <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
-                Version {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+                {{ doc.name|smart_truncate:40 }}-{{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:40 }}){% endif %}
             </a>
             {% block actions %}
-                <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
+                <a href="{% url ecs.documents.views.download_document doc.pk %}">{% trans "Download" %}</a>
+                | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
                 {% if annotations %}
                     | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
                 {% endif %}

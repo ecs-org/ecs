@@ -71,6 +71,26 @@
             {% if valid and not user|has_flag:'approved_by_office' %}
                 new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
+
+
+            {# document upload magic #}
+
+            var file_field = $('id_document-file');
+            var name_field = $('id_document-name');
+            file_field.addEvent('change', function() {
+                var dot_offset = file_field.value.lastIndexOf('.');
+                var name = file_field.value;
+                if (dot_offset >= 0) {
+                    name = file_field.value.substring(0, dot_offset);
+                }
+                name_field.value = name;
+
+                var errorlist = file_field.getNext('.errorlist');
+                if (errorlist) {
+                    errorlist.hide();
+                }
+            });
+
         });
     </script>
 {% endblock %}

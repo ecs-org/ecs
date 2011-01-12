@@ -12,7 +12,7 @@ from ecs.utils.viewutils import render, redirect_to_next_url, render_html
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.core.forms import DocumentForm
+from ecs.documents.forms import DocumentForm
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
@@ -141,7 +141,6 @@ def create_notification(request, notification_type_pk=None):
 
     doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
     
@@ -168,7 +167,7 @@ def create_notification(request, notification_type_pk=None):
                 if doc in documents:
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+            document_form = DocumentForm(prefix='document')
 
         if submit and form.is_valid():
             notification = form.save(commit=False)

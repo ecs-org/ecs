@@ -24,11 +24,12 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm, SimpleDocumentForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionListFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
+from ecs.documents.forms import DocumentForm, SimpleDocumentForm
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -288,7 +289,6 @@ def create_submission_form(request):
     
     doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
     notification_type = request.docstash.get('notification_type', None)
@@ -316,7 +316,7 @@ def create_submission_form(request):
                 if doc in documents:
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+            document_form = DocumentForm(prefix='document')
             
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 

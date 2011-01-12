@@ -90,22 +90,25 @@ C_BRANDING_CHOICES = (
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
-    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
-    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False, blank=True)
 
+    # user supplied data
+    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
+    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
+    name = models.CharField(max_length=250)
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
-    deleted = models.BooleanField(default=False, blank=True)
+    replaces_document = models.ForeignKey('Document', null=True, blank=True)
     
+    # relation to a object
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
-    replaces_document = models.ForeignKey('Document', null=True, blank=True)
     
     objects = DocumentManager()
     
@@ -113,16 +116,15 @@ class Document(models.Model):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
-        return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
+        return "{0} {1}-{2} vom {3}".format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
         ext = mimetypes.guess_extension(self.mimetype)
-        name_slices = [self.doctype and self.doctype.name or 'Unterlage', self.version, self.date.strftime('%Y.%m.%d')]
+        name_slices = [self.doctype.name if self.doctype else 'Unterlage', self.name, self.version, self.date.strftime('%Y.%m.%d')]
         if self.parent_object and hasattr(self.parent_object, 'get_filename_slice'):
             name_slices.insert(0, self.parent_object.get_filename_slice())
         name = slugify('-'.join(name_slices))
-        fullname = '%s%s' % (name, ext)
-        return fullname
+        return ''.join([name, ext])
 
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
