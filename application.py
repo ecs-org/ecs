@@ -225,9 +225,6 @@ developer_packages=  """
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
-# a vncserver is needed if you want to make headless firefox windmill tests
-#vncserver:req:apt:apt-get:vnc4server
-
 ## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 #mutt:req:apt:apt-get:mutt
 #mutt:req:suse:zypper:mutt
@@ -238,6 +235,7 @@ sfood:inst:all:pypi:snakefood
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 
+# FIXME: who needs simplejson, and why is it in developer packages
 simplejson:inst:all:pypi:simplejson
 # deployment: massimport statistics 
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
@@ -246,7 +244,6 @@ levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshte
 #pycrypto:inst:all:pypi:pycrypto>=2.0
 #pyasn1:inst:all:pypi:pyasn1
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
-
 # maybe interesting: fudge:inst:all:pypi:fudge
 
 
@@ -278,6 +275,10 @@ memcached:req:apt:apt-get:memcached
 #memcached:req:suse:zypper:memcached
 #memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
+
+# Firefox and a vncserver is needed for gui testing
+firefox:req:apt:apt-get:firefox
+vncserver:req:apt:apt-get:vnc4server
 """
 
 """
@@ -311,6 +312,7 @@ package_bundles = {
     'default': default_bundle,
     'testing': testing_bundle,
     'future': future_bundle,
+
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
@@ -329,6 +331,7 @@ upstart_targets = {
 
 test_flavors = {
     'default': './manage.py test',
+    'windmill': './manage.py test_windmill integration',
     'mainapp': './manage.py test',
     'mediaserver': 'false',  # include in the mainapp tests
     'mailserver': 'false', # included in the mainapp tests
