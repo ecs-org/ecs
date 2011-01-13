@@ -17,10 +17,7 @@ def is_acknowledged(wf):
 
 @guard(model=Submission)
 def is_thesis(wf):
-    if wf.data.thesis is None:
-        return wf.data.current_submission_form.project_type_education_context is not None
-    return wf.data.thesis
-    
+    return wf.data.thesis or wf.data.current_submission_form.project_type_education_context
 
 @guard(model=Submission)
 def has_b2vote(wf):

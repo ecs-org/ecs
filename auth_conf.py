@@ -39,7 +39,15 @@ class SubmissionQFactory(authorization.QFactory):
         ### rules that apply until the end of the submission lifecycle
         until_eol_q = self.make_q(pk__gt=0)
         if not (user.is_staff or profile.internal):
-            until_eol_q &= self.make_q(current_submission_form__submitter=user) | self.make_q(current_submission_form__primary_investigator__user=user) | self.make_q(current_submission_form__sponsor=user)
+            until_eol_q &= self.make_q(
+                current_submission_form__submitter=user
+            ) | self.make_q(
+                current_submission_form__primary_investigator__user=user
+            ) | self.make_q(
+                current_submission_form__sponsor=user
+            ) | self.make_q(
+                pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
+            )
         q |= until_eol_q
         return q
 
@@ -70,8 +78,7 @@ authorization.register(DocStash, factory=DocstashQFactory)
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        submission_q = self.make_q(content_type=ContentType.objects.get_for_model(Submission))
-        q = ~submission_q | (submission_q & self.make_q(data_id__in=Submission.objects.values('pk').query))
+        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query) | self.make_q(created_by=user) | self.make_q(assigned_to=user)
         return q
 
 authorization.register(Task, factory=TaskQFactory)
