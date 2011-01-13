@@ -200,6 +200,7 @@ ecs.setupInvestigatorFormSet = function(tabController, readonly){
                 f.getElement('.delete_row').show();
             });
         }
+
         
         var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
             prefix: 'investigatoremployee',
@@ -247,7 +248,7 @@ ecs.setupForms = function(){
             setup.mainForm = form;
         }
         var readonly = true;
-        if(document.getElement('.innerwrap').tagName == 'FORM'){
+        if(document.getElement('.form_main').tagName == 'FORM'){
             readonly = false;
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);
