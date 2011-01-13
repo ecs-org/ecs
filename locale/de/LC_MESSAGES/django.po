@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-10 20:30+0100\n"
+"POT-Creation-Date: 2011-01-13 22:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: settings.py:58
+#: settings.py:66
 msgid "German"
 msgstr "Deutsch"
 
@@ -1236,11 +1236,11 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:75
+#: core/workflow.py:72
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:76
+#: core/workflow.py:73
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1267,13 +1267,9 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/forms.py:137
+#: core/forms/forms.py:134
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
-
-#: core/forms/forms.py:252
-msgid "This Document is not a valid PDF document."
-msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
 #: core/forms/layout.py:11
 msgid "Key data"
@@ -1563,6 +1559,10 @@ msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
+#: documents/forms.py:42
+msgid "This Document is not a valid PDF document."
+msgstr "Die Datei ist kein gültiges PDF-Dokument."
+
 #: fastlane/forms.py:14 meetings/forms.py:14
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -1570,16 +1570,16 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
-"%(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
+"(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s "
-"%(meeting_title)s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
+"s"
 msgstr ""
 
 #: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
@@ -1630,35 +1630,35 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:227
+#: meetings/views.py:228
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:235
+#: meetings/views.py:236
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:240
+#: meetings/views.py:241
 msgid "This meeting has not yet started."
 msgstr "Dieses Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:252
+#: meetings/views.py:253
 msgid "unfinished meetings cannot be stopped"
 msgstr ""
 
-#: meetings/views.py:348 meetings/views.py:423
+#: meetings/views.py:349 meetings/views.py:424
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:359
+#: meetings/views.py:360
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:411
+#: meetings/views.py:412
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:437
+#: meetings/views.py:438
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
@@ -1679,11 +1679,11 @@ msgstr "Meldungen"
 msgid "Open Notifications"
 msgstr "Meldungen"
 
-#: notifications/views.py:161
+#: notifications/views.py:160
 msgid "autosave successful"
 msgstr "automatisch gespeichert"
 
-#: notifications/views.py:239
+#: notifications/views.py:238
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -1898,7 +1898,7 @@ msgstr "Ältere Einträge"
 #: templates/fastlane/assistant_recommendation.html:57
 #: templates/fastlane/participation.html:21
 #: templates/notifications/form.html:27 templates/submissions/form.html:13
-#: templates/users/profile_form.html:12
+#: templates/users/profile_form.html:13
 msgid "Save"
 msgstr "Speichern"
 
@@ -1953,10 +1953,15 @@ msgid "von"
 msgstr "von"
 
 #: templates/documents/compact_list.html:18
+#: templates/submissions/readonly_form.html:183
+msgid "Download"
+msgstr ""
+
+#: templates/documents/compact_list.html:19
 msgid "View"
 msgstr ""
 
-#: templates/documents/compact_list.html:20
+#: templates/documents/compact_list.html:21
 msgid "Share Annotations"
 msgstr ""
 
@@ -2371,10 +2376,6 @@ msgstr ""
 msgid "There are no pending votes."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:183
-msgid "Download"
-msgstr ""
-
 #: templates/submissions/readonly_form.html:187
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
@@ -2552,7 +2553,7 @@ msgstr "Aktivieren"
 msgid "No Users."
 msgstr "Keine Benutzer."
 
-#: templates/users/approve.html:7 templates/users/details.html:12
+#: templates/users/approve.html:8 templates/users/details.html:12
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
@@ -2560,15 +2561,15 @@ msgstr "Zurück zur Benutzer-Liste"
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
-#: templates/users/profile.html:10
+#: templates/users/profile.html:11
 msgid "Edit Profile"
 msgstr "Profile bearbeiten"
 
-#: templates/users/profile.html:12
+#: templates/users/profile.html:13
 msgid "Change Password"
 msgstr "Passwort ändern"
 
-#: templates/users/profile_form.html:5
+#: templates/users/profile_form.html:6
 #, python-format
 msgid "Profile of %(user)s"
 msgstr "Profil von %(user)s"
