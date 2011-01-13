@@ -453,7 +453,9 @@ def timetable_htmlemailpart(request, meeting_pk=None):
 
 def next(request):
     try:
-        meeting = Meeting.objects.filter(start__gt=datetime.now()).order_by('start')[0]
+        now = datetime.now()
+        dday = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=1)
+        meeting = Meeting.objects.filter(start__gt=dday).order_by('start')[0]
     except IndexError:
         return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
 
