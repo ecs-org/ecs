@@ -16,9 +16,9 @@ from django.core.management.base import BaseCommand
 
 class Command(BaseCommand):
 
-    help = "Run windmill tests. Specify a browser, if one is not passed Firefox will be used"
+    help = "Run windmill tests. Specify a browser (eg. firefox, chrome)"
 
-    args = '<label label ...>'
+    args = 'browser <label label ...>'
     label = 'label'
 
     def handle(self, *args, **kwargs):
