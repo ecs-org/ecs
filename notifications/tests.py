@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 import os
+
 from django.core.urlresolvers import reverse
+
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
 from ecs.notifications.models import NotificationType, Notification
@@ -93,10 +96,9 @@ class NotificationFormTest(LoginTestCase):
         data.update({
             'document-file': f,
             'document-doctype': doctype.pk,
+            'document-name': u'menschenrechtserklärung',
             'document-version': '3.1415',
-            'document-branding': 'b',
             'document-date': '17.03.2010',
-            'document-allow_download': 'on',
         })
         response = self.client.post(url, data)
         f.close()

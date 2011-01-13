@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import os
 from urlparse import urlsplit
+
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
 
@@ -109,9 +111,9 @@ class SubmissionViewsTestCase(LoginTestCase):
             response = self.client.post(url, self.get_post_data({
                 'document-file': f,
                 'document-doctype': '',
+                'document-name': u'Menschenrechtserklärung',
                 'document-version': '3.1415',
                 'document-date': '26.10.2010',
-                'document-branding': 'b',
             }))
         self.failUnlessEqual(response.status_code, 200)
         first_doc = response.context['documents'][0]
@@ -122,9 +124,9 @@ class SubmissionViewsTestCase(LoginTestCase):
             response = self.client.post(url, self.get_post_data({
                 'document-file': f,
                 'document-doctype': '',
+                'document-name': u'Menschenrechtserklärung',
                 'document-version': '3',
                 'document-date': '26.10.2010',
-                'document-branding': 'b',
                 'document-replaces_document': first_doc.pk,
             }))
         self.failUnlessEqual(response.status_code, 200)
