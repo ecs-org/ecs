@@ -12,6 +12,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
     client.click(xpath=u"//div[@id='usermenu']/ul/li[4]/span")
     client.click(link=u'Neuer Antrag')
+
+    # Eckdaten
     client.waits.forPageLoad(timeout=u'2000')
     client.waits.sleep(miliseconds=u'2000')
     if amg:
@@ -29,6 +31,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_specialism')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_clinical_phase')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_external_reviewer_suggestions')
+
+    # Teilnehmer
     client.click(link=u'Teilnehmer')
     client.click(id=u'id_subject_count')
     client.type(text=random.randint(0,999), id=u'id_subject_count')
@@ -43,12 +47,22 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_subject_duration_active')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_subject_duration_controls')
     client.type(text=cicero.sentences(n=1, min=8, max=8)[0], id=u'id_subject_planned_total_duration')
+
+    # Kurzfassung
     client.click(link=u'Kurzfassung')
     client.click(id=u'id_project_title')
-    client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_project_title')
-    client.type(text=cicero.sentences(n=1)[0], id=u'id_german_project_title')
-    client.type(text=cicero.sentences(n=1, min=8, max=8)[0], id=u'id_project_title')
-    client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_german_project_title')
+
+    project_title = cicero.sentences(n=1, min=8, max=8)[0]
+    if amg:
+        project_title += ' (AMG)'
+    if mpg:
+        project_title += ' (MPG)'
+    if thesis:
+        project_title += ' (thesis)'
+
+    client.type(text=project_title, id=u'id_project_title')
+    client.type(text=project_title, id=u'id_german_project_title')
+
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_protocol_number')
     client.type(text='\n'.join(cicero.sentences(n=5)), id=u'id_german_summary')
     client.type(text='\n'.join(cicero.sentences(n=3)), id=u'id_german_preclinical_results')
@@ -71,6 +85,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_german_dataaccess_info')
     client.type(text=cicero.sentences(n=1, min=15, max=15)[0], id=u'id_german_financing_info')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_german_additional_info')
+
+    # Sponsor
     client.click(link=u'Sponsor')
     client.click(id=u'id_sponsor_name')
     client.type(text=cicero.sentences(n=1, min=6, max=6)[0], id=u'id_sponsor_name')
@@ -84,6 +100,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=random.randint(100000000,999999999), id=u'id_sponsor_phone')
     client.type(text=random.randint(100000000,999999999), id=u'id_sponsor_fax')
     client.type(text='{0}@example.org'.format(cicero.words(n=1)[0]), id=u'id_sponsor_email')
+
+    # Antragsteller
     client.click(link=u'Antragsteller')
     client.check(id=u'id_submitter_is_main_investigator')
     client.click(id=u'id_submitter_contact_gender')
@@ -95,6 +113,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_submitter_contact_last_name')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_submitter_organisation')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_submitter_jobtitle')
+
+    # AMG
     if amg:
         client.click(link=u'AMG')
         client.click(id=u'id_eudract_number')
@@ -117,6 +137,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
         client.select(option=u'Nein', id=u'id_substance_p_c_t_final_report')
         client.click(value=u'DE')
         client.click(xpath=u"//select[@id='id_substance_p_c_t_countries']/option[81]")
+
+    # MPG
     if mpg:
         client.click(link=u'MPG')
         client.click(id=u'id_medtech_checked_product')
@@ -143,6 +165,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
         client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_medtech_technical_safety_regulations')
         client.click(id=u'id_medtech_departure_from_regulations')
         client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_medtech_departure_from_regulations')
+
+    # Maßnahmen
     client.click(link=u'Ma\xdfnahmen')
     client.click(xpath=u"//div[@id='tabs-8']/div[1]/a")
     client.click(id=u'id_measure-0-type')
@@ -197,6 +221,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_nontesteduseddrug-2-dosage')
     client.click(id=u'id_additional_therapy_info')
     client.type(text=cicero.sentences(n=1, min=8, max=8)[0], id=u'id_additional_therapy_info')
+
+    # Biometrie
     client.click(link=u'Biometrie')
     client.click(id=u'id_study_plan_blind')
     client.select(option=u'doppelblind', id=u'id_study_plan_blind')
@@ -228,6 +254,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_study_plan_dataprotection_reason')
     client.type(text=cicero.sentences(n=1, min=4, max=4)[0], id=u'id_study_plan_dataprotection_dvr')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_study_plan_dataprotection_anonalgoritm')
+
+    # Versicherung
     client.click(link=u'Versicherung')
     client.click(id=u'id_insurance_name')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_insurance_name')
@@ -235,6 +263,10 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=random.randint(100000000,999999999), id=u'id_insurance_phone')
     client.type(text=cicero.sentences(n=1, min=8, max=8)[0], id=u'id_insurance_contract_number')
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_insurance_validity')
+
+    # Missing: Unterlagen
+
+    # Auslandszentren
     client.click(link=u'Auslandszentren')
     client.click(xpath=u"//div[@id='tabs-12']/div/a")
     client.click(id=u'id_foreignparticipatingcenter-0-name')
@@ -248,6 +280,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'id_foreignparticipatingcenter-2-name')
     client.type(text=cicero.sentences(n=1, min=4, max=4)[0], id=u'id_foreignparticipatingcenter-2-name')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-2-investigator_name')
+
+    # Zentrum 1
     client.click(link=u'Zentrum 1')
     client.click(id=u'id_investigator-0-organisation')
     client.type(text=cicero.sentences(n=1, min=6, max=6)[0], id=u'id_investigator-0-organisation')
@@ -281,6 +315,8 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigatoremployee-0-surname')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigatoremployee-0-firstname')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_investigatoremployee-0-organisation')
+
+    # and now submit!
     client.click(id=u'submit-button')
     client.click(name=u'submit')
     client.waits.forPageLoad(timeout=u'20000')
