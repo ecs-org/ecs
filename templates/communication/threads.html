@@ -24,7 +24,7 @@
 {% block message_actions %}
     {{ block.super }}
     {% if thread.last_message.sender == request.user %}
-        <a class="icon_bump" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
+        <a class="icon_bump open-in-popup" href="{% url ecs.communication.views.send_message bump_message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
     {% else %}
         <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="{% trans 
         "answer" %}">answer</a>
