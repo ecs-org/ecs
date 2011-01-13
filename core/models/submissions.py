@@ -345,7 +345,7 @@ class SubmissionForm(models.Model):
     # 2.11
     subject_duration = models.CharField(max_length=200)
     subject_duration_active = models.CharField(max_length=200)
-    subject_duration_controls = models.CharField(max_length=200)
+    subject_duration_controls = models.CharField(max_length=200, null=True, blank=True)
 
     # 2.12
     subject_planned_total_duration = models.CharField(max_length=250)
@@ -391,7 +391,7 @@ class SubmissionForm(models.Model):
     german_primary_hypothesis = models.TextField(null=True)
     german_inclusion_exclusion_crit = models.TextField(null=True)
     german_ethical_info = models.TextField(null=True)
-    german_protected_subjects_info = models.TextField(null=True)
+    german_protected_subjects_info = models.TextField(null=True, blank=True)
     german_recruitment_info = models.TextField(null=True)
     german_consent_info = models.TextField(null=True)
     german_risks_info = models.TextField(null=True)
