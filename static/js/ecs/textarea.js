@@ -32,14 +32,14 @@ ecs.textarea = {
             this.textarea.focus();
         }
     },
-    measureHeight: function(textarea, width){
+    measureHeight: function(textarea){
         if(!this.helper){
             this.helper = new Element('div');
             this.helper.setStyles({position: 'absolute', left: '-9999px', top: '0px', 'white-space': 'pre-wrap'});
             //this.helper.setStyles({left: '800px', 'z-index': 100000, 'background-color': '#ffffff'});
             document.body.appendChild(this.helper);
         }
-        this.helper.setStyle('width', width + 'px');
+        this.helper.setStyle('width', textarea.cols + 'em');
         this.helper.setStyles(textarea.getStyles('font-family', 'letter-spacing', 'font-size', 'font-weight', 'font-variant', 'line-height', 'padding-left', 'padding-top', 'border'));
         this.helper.innerHTML = textarea.value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g, '<br/>') + '.';
         return this.helper.getSize().y;
@@ -65,7 +65,7 @@ ecs.textarea.TextArea = new Class({
         this.textarea.store('ecs.textarea.TextArea', this);
     },
     updateHeight: function(){
-        var h = Math.max(this.minHeight, ecs.textarea.measureHeight(this.textarea, this.textarea.getSize().x));
+        var h = Math.max(this.minHeight, ecs.textarea.measureHeight(this.textarea));
         this.textarea.setStyle('height', h + 'px');
     },
     onKeyDown: function(e){
