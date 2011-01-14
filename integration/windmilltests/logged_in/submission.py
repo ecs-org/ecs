@@ -6,7 +6,7 @@ from ecs.integration.windmilldecorators import logged_in
 
 
 @logged_in()
-def test_submit(client, amg=False, mpg=False, thesis=False):
+def create_submission(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
@@ -323,14 +323,28 @@ def test_submit(client, amg=False, mpg=False, thesis=False):
     client.select(option=u'---------', id=u'userswitcher_input')
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
+def test_submit_simple():
+    create_submission()
 
 def test_submit_amg():
-    test_submit(amg=True)
+    create_submission(amg=True)
 
 def test_submit_mpg():
-    test_submit(mpg=True)
+    create_submission(mpg=True)
 
 def test_submit_thesis():
-    test_submit(thesis=True)
+    create_submission(thesis=True)
+
+def test_submit_amg_mpg():
+    create_submission(amg=True, mpg=True)
+
+def test_submit_amg_thesis():
+    create_submission(amg=True, thesis=True)
+
+def test_submit_mpg_thesis():
+    create_submission(mpg=True, thesis=True)
+
+def test_submit_amg_mpg_thesis():
+    create_submission(amg=True, mpg=True, thesis=True)
 
 
