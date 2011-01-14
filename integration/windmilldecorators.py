@@ -17,11 +17,12 @@ def logged_in(username='windmill@example.org', password='shfnajwg9e'):
             client.click(value=u'login')
             client.waits.forPageLoad(timeout=u'20000')
 
-            rval = fn(client, *args, **kwargs)
-
-            client.waits.forElement(link=u'Logout', timeout=u'8000')
-            client.click(link=u'Logout')
-            client.waits.forPageLoad(timeout=u'20000')
+            try:
+                rval = fn(client, *args, **kwargs)
+            finally:
+                client.waits.forElement(link=u'Logout', timeout=u'8000')
+                client.click(link=u'Logout')
+                client.waits.forPageLoad(timeout=u'20000')
 
             return rval
 

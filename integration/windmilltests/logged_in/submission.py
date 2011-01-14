@@ -5,7 +5,6 @@ import random
 from ecs.integration.windmilldecorators import logged_in
 
 
-@logged_in()
 def create_submission(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
@@ -53,12 +52,15 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
     client.click(id=u'id_project_title')
 
     project_title = cicero.sentences(n=1, min=8, max=8)[0]
-    if amg:
-        project_title += ' (AMG)'
-    if mpg:
-        project_title += ' (MPG)'
-    if thesis:
-        project_title += ' (thesis)'
+    if not amg and not mpg and not thesis:
+        project_title += ' (simple)'
+    else:
+        if amg:
+            project_title += ' (AMG)'
+        if mpg:
+            project_title += ' (MPG)'
+        if thesis:
+            project_title += ' (thesis)'
 
     client.type(text=project_title, id=u'id_project_title')
     client.type(text=project_title, id=u'id_german_project_title')
@@ -121,7 +123,12 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
         client.type(text=random.randint(10000,99999), id=u'id_eudract_number')
         client.click(id=u'id_pharma_checked_substance')
         client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_pharma_checked_substance')
+        client.click(id=u'id_pharma_reference_substance')
+        client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_pharma_reference_substance')
+
+        client.select(val=u'DE', id=u'id_substance_registered_in_countries')
         client.click(id=u'id_substance_preexisting_clinical_tries')
+        client.select(val=u'DE', id=u'id_substance_p_c_t_countries')
         client.select(option=u'Nein', id=u'id_substance_preexisting_clinical_tries')
         client.click(value=u'3')
         client.click(id=u'id_substance_p_c_t_phase')
@@ -135,8 +142,6 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
         client.click(xpath=u"//select[@id='id_substance_p_c_t_gcp_rules']/option[2]")
         client.click(id=u'id_substance_p_c_t_final_report')
         client.select(option=u'Nein', id=u'id_substance_p_c_t_final_report')
-        client.click(value=u'DE')
-        client.click(xpath=u"//select[@id='id_substance_p_c_t_countries']/option[81]")
 
     # MPG
     if mpg:
@@ -323,28 +328,36 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
     client.select(option=u'---------', id=u'userswitcher_input')
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
-def test_submit_simple():
-    create_submission()
+@logged_in()
+def test_submit_simple(client):
+    create_submission(client)
 
-def test_submit_amg():
-    create_submission(amg=True)
+@logged_in()
+def test_submit_amg(client):
+    create_submission(client, amg=True)
 
-def test_submit_mpg():
-    create_submission(mpg=True)
+@logged_in()
+def test_submit_mpg(client):
+    create_submission(client, mpg=True)
 
-def test_submit_thesis():
-    create_submission(thesis=True)
+@logged_in()
+def test_submit_thesis(client):
+    create_submission(client, thesis=True)
 
-def test_submit_amg_mpg():
-    create_submission(amg=True, mpg=True)
+@logged_in()
+def test_submit_amg_mpg(client):
+    create_submission(client, amg=True, mpg=True)
 
-def test_submit_amg_thesis():
-    create_submission(amg=True, thesis=True)
+@logged_in()
+def test_submit_amg_thesis(client):
+    create_submission(client, amg=True, thesis=True)
 
-def test_submit_mpg_thesis():
-    create_submission(mpg=True, thesis=True)
+@logged_in()
+def test_submit_mpg_thesis(client):
+    create_submission(client, mpg=True, thesis=True)
 
-def test_submit_amg_mpg_thesis():
-    create_submission(amg=True, mpg=True, thesis=True)
+@logged_in()
+def test_submit_amg_mpg_thesis(client):
+    create_submission(client, amg=True, mpg=True, thesis=True)
 
 

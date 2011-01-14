@@ -4,8 +4,7 @@ import cicero
 from ecs.integration.windmilldecorators import logged_in
 
 
-@logged_in()
-def test_new_message(client, times=1):
+def create_message(client, times=1):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'office1@example.org', id=u'userswitcher_input')
@@ -29,8 +28,12 @@ def test_new_message(client, times=1):
     client.select(option=u'---------', id=u'userswitcher_input')
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
+@logged_in()
+def test_new_message(client):
+    create_message(client)
 
-def test_10_new_messages():
-    test_new_message(times=10)
+@logged_in()
+def test_10_new_messages(client):
+    create_message(client, times=10)
 
 
