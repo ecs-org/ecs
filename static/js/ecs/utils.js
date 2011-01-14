@@ -386,3 +386,18 @@ ecs.FormFieldController = new Class({
         }, this);
     }
 });
+
+
+/* windmill helper stuff*/
+ecs.windmill_upload = function(filename) {
+    var element = document.createElement('UploadAssistantDataElement');
+    element.setAttribute('target_id', 'id_document-file');
+    element.setAttribute('target_value', filename);
+    document.documentElement.appendChild(element);
+
+    var evt = document.createEvent('Events');
+    evt.initEvent('UploadAssistantSetValue', true, false);
+    element.dispatchEvent(evt);
+}
+
+

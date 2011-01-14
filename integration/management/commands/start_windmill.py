@@ -12,7 +12,11 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+import sys, os
+from pkg_resources import load_entry_point
+
 from django.core.management.base import BaseCommand
+from django.conf import settings
 
 class Command(BaseCommand):
 
@@ -23,8 +27,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
 
-        import sys
-        from pkg_resources import load_entry_point
+        from windmill.dep._mozrunner import get_moz
+
+        def get_moz_new(*args, **kwargs):
+            import windmill
+            windmill.settings['MOZILLA_PLUGINS'] += [os.path.join(settings.PROJECT_DIR, 'uploadassistant.xpi')]
+            return get_moz(*args, **kwargs)
+
+        from windmill.dep import _mozrunner
+        _mozrunner.get_moz = get_moz_new
 
         sys.argv = ['windmill', 'shell',] + list(args)
 
