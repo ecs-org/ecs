@@ -11,27 +11,25 @@ Liste aller Studien
 
 {% block content %}
 
-{% if stashed_submission_forms%}
+{% if stashed_submission_forms %}
 <div class="overview">
     <h2>{% trans "Unsubmitted Studies" %}</h2>
     <ol class="submission_list">
         {% for docstash in stashed_submission_forms %}
-            {% if docstash.current_value %}
-                <li>
-                    <h3>
-                        <span class="ecnr"> </span>
-                        {% if docstash.current_value.notification_type %}
-                            <b>{{ docstash.current_value.notification_type }}</b> für
-                        {% endif %}
-                        {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
-                    </h3>
-                    <div class="actions">
-                        <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
-                        | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
-                    </div>
-                    <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
-                </li>
-            {% endif %}
+            <li>
+                <h3>
+                    <span class="ecnr"> </span>
+                    {% if docstash.current_value.notification_type %}
+                        <b>{{ docstash.current_value.notification_type }}</b> für
+                    {% endif %}
+                    {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
+                </h3>
+                <div class="actions">
+                    <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
+                    | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
+                </div>
+                <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
+            </li>
         {% endfor %}
     </ol>
 </div>

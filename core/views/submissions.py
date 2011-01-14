@@ -398,7 +398,7 @@ def submission_form_list(request, submissions, stashed_submission_forms, meeting
     return render(request, 'submissions/list.html', {
         'unscheduled_submissions': submissions.filter(meetings__isnull=True).distinct().order_by('ec_number'),
         'meetings': meetings,
-        'stashed_submission_forms': stashed_submission_forms,
+        'stashed_submission_forms': [x for x in stashed_submission_forms if x.current_value],
         'keyword': keyword,
     })
 

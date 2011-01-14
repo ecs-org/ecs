@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load i18n userutils %}
+{% load i18n userutils core %}
 
 {% block account %}
   <div class="user_data">
@@ -37,8 +37,12 @@
           {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
               <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "Eingereichte und Neue" %}</a></li>
           {% endif %}
-          <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Mir zugeordnete Studien" %}</a></li>
-          <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
+          {% if user|assigned_submissions_count %}
+              <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Mir zugeordnete Studien" %}</a></li>
+          {% endif %}
+          {% if user|my_submissions_count %}
+              <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
+          {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
           <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
       </ul>
