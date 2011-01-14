@@ -300,7 +300,7 @@ DIFF_REVIEW_LIST = ('root',)
 
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
-if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv or 'test_windmill' in sys.argv:
+if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv or 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
     ENABLE_AUDIT_TRAIL = False
 
@@ -419,6 +419,8 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domai
 
 if 'test_windmill' in sys.argv:
     DATABASES['default'] = DATABASES['windmill']
+
+if 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
     USE_TEXTBOXLIST = False
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
