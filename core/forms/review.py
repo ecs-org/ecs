@@ -58,6 +58,14 @@ class RetrospectiveThesisReviewForm(ReadonlyFormMixin, forms.ModelForm):
 
 
 class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        rval = super(BefangeneReviewForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['befangene'].widget = MultiselectWidget(
+                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'users'})
+            )
+        return rval
+
     class Meta:
         model = Submission
         fields = ('befangene',)

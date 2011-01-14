@@ -8,8 +8,8 @@ AUTOCOMPLETE_QUERYSETS = {
     'countries': lambda: [(c.pk, "%s (%s)" % (c.printable_name, c.iso), c.printable_name) for c in Country.objects.order_by('name')],
     'medical_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
     'expedited_review_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
-    'users': lambda: [(str(u.pk), u.username, u.username) for u in User.objects.order_by('username')],
-    'groups': lambda: [(str(u.pk), u.name, u.name) for u in Group.objects.order_by('name')],
+    'users': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.order_by('first_name', 'last_name', 'email')],
+    'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
 }
 
 def autocomplete(request, queryset_name=None):
