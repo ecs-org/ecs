@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ecs.integration.windmilldecorators import anonymous
+from ecs.integration.windmillsupport import anonymous
 
 @anonymous()
 def test_login(client):

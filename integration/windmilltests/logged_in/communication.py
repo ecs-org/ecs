@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import cicero
 
-from ecs.integration.windmilldecorators import logged_in
+from ecs.integration.windmillsupport import logged_in
 
 
 def create_message(client, times=1):

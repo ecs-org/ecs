@@ -25,6 +25,8 @@ from django.core.servers import basehttp
 
 from windmill.authoring import djangotest
 
+from ecs.integration.windmillsupport import inject_firefox_plugins
+
 
 class MyTestServerThread(djangotest.TestServerThread):
 
@@ -166,6 +168,8 @@ class Command(BaseCommand):
                 else:
                     wmtests.append(os.path.abspath(mod.__file__))
 
+        inject_firefox_plugins()
+
         if len(wmtests) is 0:
             print 'Sorry, no windmill tests found.'
         else:
@@ -183,3 +187,5 @@ class Command(BaseCommand):
             if testtotals['fail'] is not 0:
                 sleep(.5)
                 sys.exit(1)
+
+

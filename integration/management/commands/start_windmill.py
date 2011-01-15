@@ -12,35 +12,26 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import sys, os
-from pkg_resources import load_entry_point
+import sys
 
 from django.core.management.base import BaseCommand
-from django.conf import settings
+
+from ecs.integration.windmillsupport import inject_firefox_plugins
+
 
 class Command(BaseCommand):
 
-    help = "Run windmill tests. Specify a browser (eg. firefox, chrome)"
+    help = "Run windmill tests."
 
     args = 'browser <label label ...>'
     label = 'label'
 
     def handle(self, *args, **kwargs):
+        inject_firefox_plugins()
 
-        from windmill.dep._mozrunner import get_moz
+        sys.argv = ['windmill', 'shell', 'firefox',] + list(args)
 
-        def get_moz_new(*args, **kwargs):
-            import windmill
-            windmill.settings['MOZILLA_PLUGINS'] += [os.path.join(settings.PROJECT_DIR, 'uploadassistant.xpi')]
-            return get_moz(*args, **kwargs)
-
-        from windmill.dep import _mozrunner
-        _mozrunner.get_moz = get_moz_new
-
-        sys.argv = ['windmill', 'shell',] + list(args)
-
-        sys.exit(
-            load_entry_point('windmill==1.4', 'console_scripts', 'windmill')()
-        )
+        from windmill.bin.admin_lib import command_line_startup
+        command_line_startup()
 
 
