@@ -19,7 +19,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
 
     # Eckdaten
     client.waits.forPageLoad(timeout=u'2000')
-    client.waits.sleep(miliseconds=u'2000')
+    client.waits.sleep(milliseconds=u'2000')
     if amg:
         client.check(id=u'id_project_type_reg_drug_within_indication')
     if mpg:
@@ -288,6 +288,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
     client.type(xpath=u"//div[@id='tabs-11']/div/div[2]/ol/li[5]/input[2]", text=u'10.12.1948')
     client.click(id=u'document_upload_button')
     client.waits.forPageLoad(timeout=u'20000')
+    client.waits.sleep(milliseconds=u'5000')
 
     # Auslandszentren
     client.click(link=u'Auslandszentren')
