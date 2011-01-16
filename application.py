@@ -31,7 +31,8 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 
 # timezone handling
 pytz:inst:all:pypi:pytz
-
+# python docutils, needed by django, ecs, and others
+docutils:inst:all:pypi:docutils\>=0.7
 
 # django main
 django:inst:all:pypi:django==1.2.3
@@ -41,7 +42,6 @@ django-extensions:inst:all:http://github.com/django-extensions/django-extensions
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
-docutils:inst:all:pypi:docutils
 django-dbtemplates:inst:all:pypi:django-dbtemplates
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
