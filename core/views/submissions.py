@@ -452,9 +452,10 @@ def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
     serializer = Serializer()
-    buf = StringIO()
-    serializer.write(submission_form, buf)
-    response = HttpResponse(buf.getvalue(), mimetype='application/ecx')
+    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
+        serializer.write(submission_form, tmpfile)
+        tmpfile.seek(0)
+        response = HttpResponse(tmpfile.read(), mimetype='application/ecx')
     response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')
     return response
 
