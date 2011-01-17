@@ -24,6 +24,7 @@
   <a href="{% url ecs.tasks.views.popup %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
   <a href="" id="help_button" class="help_trigger icon_help">help</a>
   <a href="" id="feedback_button" class="feedback_trigger icon_feedback">feedback</a>
+  <div><strong>{{ request.tracking_data.view }}</strong></div>
 {% endblock %}
         
 {% block usermenu %}
