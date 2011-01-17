@@ -298,14 +298,16 @@ def auth_user_developers():
     try:
         from ecs.core.bootstrap_settings import developers
     except ImportError:
-        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme'),)
+        # first, Last, email, password, is_supeuser
+        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', False),)
         
-    for first, last, email, password in developers:
+    for first, last, email, password, is_superuser in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
         user.last_name = last
         user.set_password(password)
         user.is_staff = True
+        user.is_superuser = is_superuser
         user.groups.add(Group.objects.get(name="Presenter"))
         user.save()
         profile = user.get_profile()
