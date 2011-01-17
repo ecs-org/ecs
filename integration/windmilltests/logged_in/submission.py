@@ -349,6 +349,10 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
 @logged_in()
+def test_submit_simplest(client):
+    create_submission(client)
+
+@logged_in()
 def test_submit_simple(client):
     create_submission(client, upload=True)
 
