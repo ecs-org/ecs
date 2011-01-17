@@ -23,9 +23,13 @@ def logged_in(username='windmill@example.org', password='shfnajwg9e'):
             try:
                 rval = fn(client, *args, **kwargs)
             finally:
-                client.waits.forElement(link=u'Logout', timeout=u'8000')
-                client.click(link=u'Logout')
-                client.waits.forPageLoad(timeout=u'20000')
+                try:
+                    client.waits.forElement(link=u'Logout', timeout=u'8000')
+                    client.click(link=u'Logout')
+                    client.waits.forPageLoad(timeout=u'20000')
+                finally:
+                    client.execJS(js='var element=document.createElement("CookieCleaner"); document.documentElement.appendChild(element); var evt=document.createEvent("Events"); evt.initEvent("UploadAssistantDeleteCookies", true, false); element.dispatchEvent(evt);')
+                    client.execJS(js='window.location.href = "/";')
 
             return rval
 
