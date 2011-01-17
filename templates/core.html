@@ -85,6 +85,7 @@
                     <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
+                <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplate' %}</a></li>
                 {% if user|has_flag:"executive_board_member" %}
                     <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
                 {% endif %}
@@ -94,7 +95,6 @@
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplate' %}</a></li>
       </ul>
     </li>
     {% comment %}
@@ -264,7 +264,8 @@
           'class': 'bugshot',
           'url': '/bugshot/',
           'title': 'BugShot',
-          'form': '<div><input type="text" name="summary" value="" /></div><div><textarea name="description"></textarea></div>',
+          'form': '<div><input type="text" name="summary" value="" /></div>'+
+          '<div><textarea name="description"></textarea></div>',
           onShow: function(self){
               self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
               self.overlay.getElement('input[type=text]').value = "[bugshot] ";

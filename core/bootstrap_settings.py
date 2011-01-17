@@ -13,6 +13,7 @@ developers = (
     (u'Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
     (u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
     (u'Thomas', u'Neumann', 'tom@newtone.cc'),
+    (u'Esther', u'Neumann', 'es_data@yahoo.de'),
     (u'Hudson', u'Windmill', 'windmill@example.org'),
 )
 
