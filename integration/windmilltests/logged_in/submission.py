@@ -10,7 +10,7 @@ from ecs.integration.windmillsupport import logged_in
 
 MENSCHENRECHTSERKLAERUNG = os.path.join(settings.PROJECT_DIR, 'integration', 'tests', 'menschenrechtserklaerung.pdf')
 
-def create_submission(client, amg=False, mpg=False, thesis=False):
+def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
@@ -275,20 +275,21 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_insurance_validity')
 
     # Unterlagen
-    client.click(link=u'Unterlagen')
-    client.execJS(js=u'ecs.windmill_upload("{0}");'.format(MENSCHENRECHTSERKLAERUNG))
-    client.click(id=u'id_document-doctype')
-    client.select(option=u'patient information', id=u'id_document-doctype')
-    client.click(xpath=u"//select[@id='id_document-doctype']/option[3]")
-    client.click(id=u'id_document-name')
-    client.type(text=u'Menschenrechtserkl\xe4rung', id=u'id_document-name')
-    client.click(id=u'id_document-version')
-    client.type(text=u'1', id=u'id_document-version')
-    client.click(xpath=u"//div[@id='tabs-11']/div/div[2]/ol/li[5]/input[2]")
-    client.type(xpath=u"//div[@id='tabs-11']/div/div[2]/ol/li[5]/input[2]", text=u'10.12.1948')
-    client.click(id=u'document_upload_button')
-    client.waits.forPageLoad(timeout=u'20000')
-    client.waits.sleep(milliseconds=u'5000')
+    if upload:
+        client.click(link=u'Unterlagen')
+        client.execJS(js=u'ecs.windmill_upload("{0}");'.format(MENSCHENRECHTSERKLAERUNG))
+        client.click(id=u'id_document-doctype')
+        client.select(option=u'patient information', id=u'id_document-doctype')
+        client.click(xpath=u"//select[@id='id_document-doctype']/option[3]")
+        client.click(id=u'id_document-name')
+        client.type(text=u'Menschenrechtserkl\xe4rung', id=u'id_document-name')
+        client.click(id=u'id_document-version')
+        client.type(text=u'1', id=u'id_document-version')
+        client.click(xpath=u"//div[@id='tabs-11']/div/div[2]/ol/li[5]/input[2]")
+        client.type(xpath=u"//div[@id='tabs-11']/div/div[2]/ol/li[5]/input[2]", text=u'10.12.1948')
+        client.click(id=u'document_upload_button')
+        client.waits.forPageLoad(timeout=u'20000')
+        client.waits.sleep(milliseconds=u'5000')
 
     # Auslandszentren
     client.click(link=u'Auslandszentren')
@@ -349,34 +350,34 @@ def create_submission(client, amg=False, mpg=False, thesis=False):
 
 @logged_in()
 def test_submit_simple(client):
-    create_submission(client)
+    create_submission(client, upload=True)
 
 @logged_in()
 def test_submit_amg(client):
-    create_submission(client, amg=True)
+    create_submission(client, amg=True, upload=True)
 
 @logged_in()
 def test_submit_mpg(client):
-    create_submission(client, mpg=True)
+    create_submission(client, mpg=True, upload=True)
 
 @logged_in()
 def test_submit_thesis(client):
-    create_submission(client, thesis=True)
+    create_submission(client, thesis=True, upload=True)
 
 @logged_in()
 def test_submit_amg_mpg(client):
-    create_submission(client, amg=True, mpg=True)
+    create_submission(client, amg=True, mpg=True, upload=True)
 
 @logged_in()
 def test_submit_amg_thesis(client):
-    create_submission(client, amg=True, thesis=True)
+    create_submission(client, amg=True, thesis=True, upload=True)
 
 @logged_in()
 def test_submit_mpg_thesis(client):
-    create_submission(client, mpg=True, thesis=True)
+    create_submission(client, mpg=True, thesis=True, upload=True)
 
 @logged_in()
 def test_submit_amg_mpg_thesis(client):
-    create_submission(client, amg=True, mpg=True, thesis=True)
+    create_submission(client, amg=True, mpg=True, thesis=True, upload=True)
 
 
