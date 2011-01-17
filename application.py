@@ -32,6 +32,7 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 # timezone handling
 pytz:inst:all:pypi:pytz
 # python docutils, needed by django, ecs, and others
+roman:inst:all:pypi:roman
 docutils:inst:all:pypi:docutils\>=0.7
 
 # django main
