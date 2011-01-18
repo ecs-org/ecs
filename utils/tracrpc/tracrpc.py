@@ -500,6 +500,17 @@ class TracRpc():
             
         print ""
         print "fetched %s tickets" % len(tickets)
+    
+    def batch_edit(self, query=None, verbose=False):
+        ''' '''
+        if not query:
+            print "please supply a query"
+            return
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
         
-
+        for id in ticket_ids:
+            self.edit_ticket(id, comment=None)
+            print "press any key to continue or CTRL-C to quit"
+            tmpuser = raw_input()
+            
     
