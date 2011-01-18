@@ -68,6 +68,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
             if not (feedback_error):
                 ticket = {'type': Feedback.ftdict[type].lower(), 
                           'summary': summary, 
+                          'component': 'feedback',
                           'description': description,
                           'absoluteurl': origin,
                           'ecsfeedback_creator': user.email}
