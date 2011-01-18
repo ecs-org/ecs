@@ -311,6 +311,7 @@ class SubmissionForm(models.Model):
     project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
     project_type_misc = models.TextField(null=True, blank=True)
     project_type_psychological_study = models.BooleanField()
+    project_type_nursing_study = models.BooleanField()
     
     # 2.2
     specialism = models.TextField(null=True)
