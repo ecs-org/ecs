@@ -55,7 +55,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     ]
     formsets = {}
     for name, formset_cls, initial in formset_classes:
-        kwargs = {'prefix': name, 'readonly': readonly, 'initial': []}
+        kwargs = {'prefix': name, 'readonly': readonly}
         if readonly:
             kwargs['extra'] = 0
         if instance:
