@@ -337,7 +337,7 @@ li.TypedChoiceField ul > li label{
   margin-left: none;
 }
 .paginator {
-  margin: 5px 0 0 10px;
+  margin: 5px 0 10px 10px;
   display: block;
 }
 .paginator img {
