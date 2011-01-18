@@ -210,13 +210,16 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
 ## ##
 
-class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        if 'initial' not in kwargs:
-            kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
-        super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
+class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = ForeignParticipatingCenter
+        exclude = ('submission_form',)
 
-ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=0, exclude=('submission_form',))
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+
+ForeignParticipatingCenterFormSet = formset_factory(ForeignParticipatingCenterForm, formset=BaseForeignParticipatingCenterFormSet, extra=0)
 
 class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
