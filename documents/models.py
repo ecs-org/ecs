@@ -137,7 +137,7 @@ class Document(models.Model):
             response = generate_document_url(self.uuid_document, self.get_filename(), None)
         elif self.branding == "p":
             personalization = self.add_personalization(request.user)
-            response = generate_document_url(self.uuid_document, filename, personalization.id))
+            response = generate_document_url(self.uuid_document, self.get_filename(), personalization.id)
         else:
             return None
         
