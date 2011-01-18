@@ -139,7 +139,8 @@ class Document(models.Model):
             personalization = self.add_personalization(request.user)
             response = generate_document_url(self.uuid_document, self.get_filename(), personalization.id)
         else:
-            return None
+            response = None
+        return response
         
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
