@@ -218,13 +218,16 @@ class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPi
 
 ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=0, exclude=('submission_form',))
 
-class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        if 'initial' not in kwargs:
-            kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
-        super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
+class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = NonTestedUsedDrug
+        exclude = ('submission_form',)
+
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
-NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=0, exclude=('submission_form',))
+NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm, formset=BaseNonTestedUsedDrugFormSet, extra=0)
 
 class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
