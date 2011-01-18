@@ -7,7 +7,7 @@ from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
 from ecs.documents.models import Page, Document, C_BRANDING_CHOICES
-from ecs.utils.msutils import generate_media_url, generate_blob_url, generate_document_url 
+
 
 HIGHLIGHT_PREFIX_WORD_COUNT = 3
 
@@ -20,24 +20,12 @@ class DocumentHighlighter(Highlighter):
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
     doc = get_object_or_404(Document, pk=document_pk)
-    filename = doc.get_filename()
-    
-    if (not doc.allow_download) or (doc.branding not in [c[0] for c in C_BRANDING_CHOICES]):
-        return HttpResponseForbidden()
-    
-    if doc.mimetype != "application/pdf"or doc.branding == "n":
-        response = HttpResponseRedirect(generate_blob_url(doc.uuid_document, filename, doc.mimetype))
-    elif doc.branding == "b":
-        response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, None))
-    elif doc.branding == "p":
-        personalization = doc.add_personalization(request.user)
-        branding = personalization.id
-        response = HttpResponseRedirect(generate_document_url(doc.uuid_document, filename, branding))
+    url = doc.get_downloadurl()
+    if url:
+        return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()
     
-    return response
-
 
 class DocumentSearchView(SearchView):
     session_key = 'docsearch:q'
