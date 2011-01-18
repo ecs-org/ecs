@@ -111,5 +111,3 @@ class ViewTestCase(LoginTestCase):
         self.failUnless(response.status_code, 302)
         self.failUnlessEqual(urlsplit(response['Location']).path, reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))
 
-
-        
