@@ -303,7 +303,13 @@ def create_submission_form(request):
             'formsets': formsets,
             'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
         })
-        request.docstash.name = "%s" % request.POST.get('project_title', '')
+        
+        # set docstash name
+        project_title_german = request.POST.get('german_project_title', '')
+        if project_title_german:
+            request.docstash.name = project_title_german
+        else:
+            request.docstash.name = request.POST.get('project_title', '')
 
         if autosave:
             return HttpResponse('autosave successfull')
