@@ -144,6 +144,8 @@ class TracRpc():
             ticket['location'] = self._get_field(rawticket, 'location')
             ticket['absoluteurl'] = self._get_field(rawticket, 'absoluteurl')
             ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
+            ticket['milestone'] = self._get_field(rawticket, 'milestone')
+            ticket['priority'] = self._get_field(rawticket, 'priority')
             return ticket
         
     
@@ -460,6 +462,44 @@ class TracRpc():
                                         ticket['summary'][0:termwidth-10],
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
+    
+    def simple_query(self, query=None, verbose=False, only_numbers=False):
+        ''' '''
+        
+        if not query:
+            print "please supply a query"
+            return
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        
+        if only_numbers:
+            print " ID "
+            for tid in ticket_ids:
+                print tid
+            print ""
+            print "fetched %s tickets" % len(ticket_ids)
+            return
+        
+        tickets = []
+        mc = self.multicall()
+        for tid in ticket_ids:
+            mc.ticket.get(tid)
+        results = self._safe_rpc(mc)
+        
+        for result in results.results['result']:
+            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        
+        #print " ID  summary                            milestone      priority"
+        print "%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
+        for t in tickets:
+            if len(t['summary']) < 30:
+                pass
+            if len(t['milestone']) < 10:
+                pass
+            print "%4s %30s %16s %10s" % (t['id'],t['summary'][:30],t['milestone'],t['priority'])
+            #print t['id'],t['summary'][:30],t['milestone'],t['priority']
+            
+        print ""
+        print "fetched %s tickets" % len(tickets)
         
 
     
