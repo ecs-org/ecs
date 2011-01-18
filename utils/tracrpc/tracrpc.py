@@ -3,8 +3,9 @@
 a class for interfacing with Trac via jsonrpc 
 """
 
-import os, sys, tempfile, datetime, subprocess
-    
+import os, sys, tempfile, datetime, subprocess, re
+from pprint import pprint
+
 import json_hack
 import jsonrpclib
 
@@ -89,6 +90,44 @@ class TracRpc():
         ticket['remaining_time'] = None
         ticket['type'] = None
         return ticket
+    
+    @staticmethod
+    def _smartertext2ticket(text):
+        ''' '''
+        
+        nl = '\n'
+        ticket={}
+        lines = text.splitlines()
+        #ticket['summary'] = lines[0] if len(lines) > 0 else None
+        #ticket['milestone'] = lines[1].replace('Milestone=', '')
+        #ticket['priority'] = lines[2].replace('Priority=', '')
+        #ticket['description'] = nl.join(lines[4:len(lines)])
+        
+        ticket['summary'] = lines[0] if len(lines) > 0 else None
+        i=0
+        for line in lines:
+            if re.search('^Milestone=', line) != None:
+                ticket['milestone'] = re.sub('^Milestone=', '', line)
+            if re.search('^Priority=', line) != None:
+                ticket['priority'] = re.sub('^Priority=', '', line)
+            if line == '---description---':
+                ticket['description'] = nl.join(lines[i+1:len(lines)])
+            i+= 1
+            
+        #ticket['remaining_time'] = None #??
+        #ticket['type'] = None #??
+        return ticket
+        
+    
+    @staticmethod
+    def _smarterticket2text(ticket):
+        '''
+        return ticket dict as string with newlines
+        '''
+        descr = ticket['description'].replace(u'\r\n', u'\n')
+        summary = ticket['summary']
+        nl = u'\n'
+        return "%s%sMilestone=%s%sPriority=%s%s---description---%s%s%s" % (summary, nl, ticket['milestone'], nl, ticket['priority'], nl, nl, descr, nl)
     
     @staticmethod
     def _minimize_ticket(ticket):
@@ -277,19 +316,34 @@ class TracRpc():
             return
 
         tempfd, tempname = tempfile.mkstemp()
-        os.write(tempfd, self._ticket2text(ticket))
+        #os.write(tempfd, self._ticket2text(ticket))
+        
+        print "old ticket:"
+       
+        ticket['description'] = ticket['description'].replace('\r\n', '\n')
+        pprint(ticket)
+        
+        os.write(tempfd, self._smarterticket2text(ticket))
         os.close(tempfd)
 
         editproc = subprocess.Popen(" ".join((editor, tempname)), shell=True)
         editproc.wait()
         
-        newticket = self._minimize_ticket(self._text2ticket(open(tempname).read()))
-        os.remove(tempname)
+        try:
+            newticket = self._minimize_ticket(self._smartertext2ticket(open(tempname).read()))
+            pprint(newticket)
+        except Exception, e:
+            print Exception, e
+            os.remove(tempname)
+            raise Exception
+            #abort("exception")
         
         #can't just compare dicts here
         #ticket will have type & remaining_time set in most cases
-        if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']:
+        if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']\
+            or ticket['priority'] != newticket['priority'] or ticket['milestone'] != newticket['milestone']:
             success, additional = self._update_ticket(tid, newticket, comment=comment)
+            
             # fixme: check if successfull
         else:
             print "ticket didn't change - not updated - you saved bandwidth"
