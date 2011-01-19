@@ -371,7 +371,7 @@ li.TypedChoiceField ul > li label{
   clear: both;
 }
 .form_main ol li textarea {
-  height: 4em;
+  height: 40px;
 }
 .form_main ol li label, .form_main ol li input[type=text], .form_main ol li textarea, .form_main ol li select {
   float: left;
@@ -467,7 +467,7 @@ tr.form td {
 }
 .form_main .investigator_tab .field a.delete_row,
 .inline_formset .form a.delete_row {
-  background: url(/static/images/icons.png) 0 -144px no-repeat;
+  background: url(/static/images/icons.png) -240px -336px no-repeat;
   height: 16px;
   width: 20px;
   display: inline-block;
@@ -484,7 +484,7 @@ div.inline_formset .form a.delete_row {
   left: 0px;
 }
 .form_main a.add_row, #meeting_constraint_editor a.add_row {
-  background: url(/static/images/icons.png) 0 -128px no-repeat;
+  background: url(/static/images/icons.png) -240px -320px no-repeat;
   width: 20px;
   height: 16px;
   display: inline-block;
@@ -521,10 +521,10 @@ table.inline_formset td {
   cursor: pointer;
 }
 .form_main .investigator_tab a.add_row {
-  background: url(/static/images/icons.png) 0 -128px no-repeat;
+  background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
 .form_main .investigator_tab a.delete_row {
-  background: url(/static/images/icons.png) 0 -144px no-repeat;
+  background: url(/static/images/icons.png) -240px -336px no-repeat;
 }
 
 fieldset.disabled {
@@ -594,6 +594,8 @@ fieldset.disabled {
 }
 .form_main .textboxlist {
   width: 90%;
+}
+.form_main .textboxlist ul {
   background: #fff;
 }
 .form_main .textboxlist-autocomplete {

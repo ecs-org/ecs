@@ -8,14 +8,21 @@
 #task_form ul {
   float: left;
   display: block;
-  max-width: 100%;
+  width: 100%;
 }
 #task_form li {
-  height: 30px;
-  vertical-align: text-top;
   list-style-type: none;
   display: block;
+  float: left;
+  width: 100%;
   clear: both;
+  padding-top: 3px;
+}
+#task_form li:nth-child(odd) {
+  background: #ddd;
+}
+#task_form li:nth-child(even) {
+  background: #eee;
 }
 #task_form .errors {
   color: #ff0000;

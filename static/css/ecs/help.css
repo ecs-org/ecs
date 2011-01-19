@@ -1,5 +1,7 @@
 #help_body {
   padding: 10px;
+  font-size: 14px;
+  line-height: 20px;
 }
 #help h1 {
   display: block;
@@ -43,8 +45,14 @@
 #help_preview p,
 .help_edit,
 #help_content .location {
-	display: inline-block;
+	display: block;
 	margin-bottom: 20px;
+}
+#help_content .upperalpha {
+  list-style-type: upper-alpha;
+}
+#help_content hr {
+  margin: 10px 0;
 }
 #help_content img {
 	max-width: 600px;
@@ -146,4 +154,10 @@
 
 .restructuredtext ul, .restructuredtext ol {
   margin-left: 2em;
+}
+
+#help_content ul.errorlist {
+  margin: 10px 0;
+  color: red;
+  font-weight: bolder;
 }
