@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-18 13:16+0100\n"
+"POT-Creation-Date: 2011-01-19 12:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -522,20 +522,20 @@ msgid "maximum age"
 msgstr "Höchstalter"
 
 #: core/paper_forms.py:161
-msgid "Are also non competent includable?"
-msgstr "Sind auch nicht persönlich Einwilligungsfähige einschließbar?"
+msgid "Study includes non competent participants"
+msgstr "Studie beinhaltet auch nicht persönlich Einwilligungsfähige"
 
 #: core/paper_forms.py:162
-msgid "male"
-msgstr "männliche"
+msgid "Study includes male participants"
+msgstr "Studie beinhaltet männliche Teilnehmer"
 
 #: core/paper_forms.py:163
-msgid "female"
-msgstr "weibliche"
+msgid "Study includes female participants"
+msgstr "Studie beinhaltet weibliche Teilnehmer"
 
 #: core/paper_forms.py:164
-msgid "Are women of childbearing age includable?"
-msgstr "Sind gebärfähige Frauen einschließbar?"
+msgid "Study includes women of childbearing age"
+msgstr "Studie beinhaltet gebährfähige Frauen"
 
 #: core/paper_forms.py:165
 msgid ""
@@ -1236,11 +1236,11 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:74
+#: core/workflow.py:78
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:75
+#: core/workflow.py:79
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1662,28 +1662,29 @@ msgstr "Zeitfenster"
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: notifications/views.py:49 templates/core.html:56
+#: notifications/views.py:49 templates/core.html:55
 #: templates/submissions/readonly_form.html:91
 #: templates/submissions/readonly_form.html:141
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: notifications/views.py:52 templates/core.html:54
+#: notifications/views.py:52 templates/core.html:53
 #, fuzzy
 msgid "All Notifications"
 msgstr "Meldungen"
 
-#: notifications/views.py:55 templates/core.html:55
+#: notifications/views.py:55 templates/core.html:54
 #: templates/submissions/readonly_form.html:123
 #, fuzzy
 msgid "Open Notifications"
 msgstr "Meldungen"
 
-#: notifications/views.py:160
-msgid "autosave successful"
+#: notifications/views.py:161
+#, fuzzy
+msgid "save successful"
 msgstr "automatisch gespeichert"
 
-#: notifications/views.py:238
+#: notifications/views.py:239
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -1753,105 +1754,105 @@ msgstr ""
 msgid "Newest"
 msgstr ""
 
-#: templates/core.html:32
+#: templates/core.html:31
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: templates/core.html:33 templates/communication/list.html:6
+#: templates/core.html:32 templates/communication/list.html:6
 #: templates/submissions/readonly_form.html:95
 msgid "Communication"
 msgstr "Nachrichten"
 
-#: templates/core.html:34 templates/tasks/list.html:6
+#: templates/core.html:33 templates/tasks/list.html:6
 #, fuzzy
 msgid "Tasks"
 msgstr "Meine Tätigkeiten"
 
-#: templates/core.html:36
+#: templates/core.html:35
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:39
+#: templates/core.html:38
 msgid "Eingereichte und Neue"
 msgstr ""
 
-#: templates/core.html:42
+#: templates/core.html:41
 msgid "Mir zugeordnete Studien"
 msgstr ""
 
-#: templates/core.html:45
+#: templates/core.html:44
 #, fuzzy
 msgid "Meine Studien"
 msgstr "Studien"
 
-#: templates/core.html:52
+#: templates/core.html:51
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:57 templates/notifications/form.html:9
+#: templates/core.html:56 templates/notifications/form.html:9
 msgid "New Notification"
 msgstr "Neue Meldungen"
 
-#: templates/core.html:62
+#: templates/core.html:61
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:64
+#: templates/core.html:63
 #, fuzzy
 msgid "Next Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:66
+#: templates/core.html:65
 #, fuzzy
 msgid "Upcoming Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:67
+#: templates/core.html:66
 #, fuzzy
 msgid "Past Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:69
+#: templates/core.html:68
 #, fuzzy
 msgid "New Meeting"
 msgstr "Sitzungen"
 
-#: templates/core.html:71
+#: templates/core.html:70
 #, fuzzy
 msgid "Fast Lane Meetings"
 msgstr "Beantwortete Meldungen"
 
-#: templates/core.html:73
+#: templates/core.html:72
 msgid "New Fast Lane Meeting"
 msgstr "Neue Fast Lane Sitzung"
 
-#: templates/core.html:81 templates/administration/detail.html:9
+#: templates/core.html:80 templates/administration/detail.html:9
 #: templates/administration/detail.html:19 templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/core.html:84 templates/administration/detail.html:11
+#: templates/core.html:83 templates/administration/detail.html:11
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
-#: templates/core.html:88 templates/boilerplate/form.html:6
+#: templates/core.html:87 templates/boilerplate/form.html:6
 #: templates/boilerplate/list.html:6
 msgid "Boilerplate"
 msgstr "Vorlage"
 
-#: templates/core.html:90
+#: templates/core.html:89
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:96
+#: templates/core.html:95
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:102
+#: templates/core.html:101
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:119
+#: templates/core.html:118
 #, python-format
 msgid ""
 "\n"
@@ -1860,15 +1861,15 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:219
+#: templates/core.html:218
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:219
+#: templates/core.html:218
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:235
+#: templates/core.html:234
 #, fuzzy
 msgid "New Messages"
 msgstr "Neue Nachricht"
@@ -1994,7 +1995,8 @@ msgid "Stop Meeting"
 msgstr "Sitzung Beenden"
 
 #: templates/fastlane/assistant_recommendation.html:28
-#: templates/submissions/internal_list.html:38
+#: templates/submissions/internal_list.html:15
+#: templates/submissions/internal_list.html:54
 #: templates/submissions/widget.html:38 templates/users/administration.html:24
 #: templates/users/administration.html:84
 msgid "of"
@@ -2009,7 +2011,7 @@ msgid ""
 msgstr ""
 
 #: templates/fastlane/assistant_recommendation.html:47
-#: templates/submissions/internal_list.html:23
+#: templates/submissions/internal_list.html:39
 #: templates/submissions/widget.html:16
 msgid "Categories"
 msgstr "Kategorien"
@@ -2253,21 +2255,22 @@ msgstr ""
 "Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
 
-#: templates/submissions/internal_list.html:28
-#: templates/submissions/widget.html:21
-msgid "ExpeditedReviewCategories"
-msgstr ""
-
-#: templates/submissions/internal_list.html:34
-#: templates/submissions/widget.html:26
-msgid "No Submissions."
-msgstr "Keine Einreichung."
-
-#: templates/submissions/internal_list.html:38
+#: templates/submissions/internal_list.html:15
+#: templates/submissions/internal_list.html:54
 #: templates/submissions/widget.html:38 templates/users/administration.html:24
 #: templates/users/administration.html:84
 msgid "Page"
 msgstr "Seite"
+
+#: templates/submissions/internal_list.html:44
+#: templates/submissions/widget.html:21
+msgid "ExpeditedReviewCategories"
+msgstr ""
+
+#: templates/submissions/internal_list.html:50
+#: templates/submissions/widget.html:26
+msgid "No Submissions."
+msgstr "Keine Einreichung."
 
 #: templates/submissions/list.html:16
 msgid "Unsubmitted Studies"
@@ -2781,6 +2784,15 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Are also non competent includable?"
+#~ msgstr "Sind auch nicht persönlich Einwilligungsfähige einschließbar?"
+
+#~ msgid "male"
+#~ msgstr "männliche"
+
+#~ msgid "female"
+#~ msgstr "weibliche"
 
 #~ msgid "Messages"
 #~ msgstr "Nachrichten"
