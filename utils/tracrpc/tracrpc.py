@@ -3,8 +3,9 @@
 a class for interfacing with Trac via jsonrpc 
 """
 
-import os, sys, tempfile, datetime, subprocess
-    
+import os, sys, tempfile, datetime, subprocess, re
+from pprint import pprint
+
 import json_hack
 import jsonrpclib
 
@@ -91,6 +92,44 @@ class TracRpc():
         return ticket
     
     @staticmethod
+    def _smartertext2ticket(text):
+        ''' '''
+        
+        nl = '\n'
+        ticket={}
+        lines = text.splitlines()
+        #ticket['summary'] = lines[0] if len(lines) > 0 else None
+        #ticket['milestone'] = lines[1].replace('Milestone=', '')
+        #ticket['priority'] = lines[2].replace('Priority=', '')
+        #ticket['description'] = nl.join(lines[4:len(lines)])
+        
+        ticket['summary'] = lines[0] if len(lines) > 0 else None
+        i=0
+        for line in lines:
+            if re.search('^Milestone=', line) != None:
+                ticket['milestone'] = re.sub('^Milestone=', '', line)
+            if re.search('^Priority=', line) != None:
+                ticket['priority'] = re.sub('^Priority=', '', line)
+            if line == '---description---':
+                ticket['description'] = nl.join(lines[i+1:len(lines)])
+            i+= 1
+            
+        #ticket['remaining_time'] = None #??
+        #ticket['type'] = None #??
+        return ticket
+        
+    
+    @staticmethod
+    def _smarterticket2text(ticket):
+        '''
+        return ticket dict as string with newlines
+        '''
+        descr = ticket['description'].replace(u'\r\n', u'\n')
+        summary = ticket['summary']
+        nl = u'\n'
+        return "%s%sMilestone=%s%sPriority=%s%s---description---%s%s%s" % (summary, nl, ticket['milestone'], nl, ticket['priority'], nl, nl, descr, nl)
+    
+    @staticmethod
     def _minimize_ticket(ticket):
         '''
         remove fields with value None from dict
@@ -144,6 +183,8 @@ class TracRpc():
             ticket['location'] = self._get_field(rawticket, 'location')
             ticket['absoluteurl'] = self._get_field(rawticket, 'absoluteurl')
             ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
+            ticket['milestone'] = self._get_field(rawticket, 'milestone')
+            ticket['priority'] = self._get_field(rawticket, 'priority')
             return ticket
         
     
@@ -275,19 +316,30 @@ class TracRpc():
             return
 
         tempfd, tempname = tempfile.mkstemp()
-        os.write(tempfd, self._ticket2text(ticket))
+        #os.write(tempfd, self._ticket2text(ticket))
+        
+        ticket['description'] = ticket['description'].replace('\r\n', '\n')
+        
+        os.write(tempfd, self._smarterticket2text(ticket))
         os.close(tempfd)
 
         editproc = subprocess.Popen(" ".join((editor, tempname)), shell=True)
         editproc.wait()
         
-        newticket = self._minimize_ticket(self._text2ticket(open(tempname).read()))
-        os.remove(tempname)
+        try:
+            newticket = self._minimize_ticket(self._smartertext2ticket(open(tempname).read()))
+        except Exception, e:
+            print Exception, e
+            os.remove(tempname)
+            raise Exception
+            #abort("exception")
         
         #can't just compare dicts here
         #ticket will have type & remaining_time set in most cases
-        if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']:
+        if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']\
+            or ticket['priority'] != newticket['priority'] or ticket['milestone'] != newticket['milestone']:
             success, additional = self._update_ticket(tid, newticket, comment=comment)
+            #print "EDITTING TICKET"
             # fixme: check if successfull
         else:
             print "ticket didn't change - not updated - you saved bandwidth"
@@ -460,6 +512,56 @@ class TracRpc():
                                         ticket['summary'][0:termwidth-10],
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
+    
+    def simple_query(self, query=None, verbose=False, only_numbers=False):
+        ''' '''
         
-
+        if not query:
+            print "please supply a query"
+            return
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        
+        if only_numbers:
+            print "ticket IDs:"
+            idlist = " ".join(unicode(id) for id in ticket_ids)
+            print idlist
+            print ""
+            print "fetched %s tickets" % len(ticket_ids)
+            return
+        
+        tickets = []
+        mc = self.multicall()
+        for tid in ticket_ids:
+            mc.ticket.get(tid)
+        results = self._safe_rpc(mc)
+        
+        for result in results.results['result']:
+            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        
+        #print " ID  summary                            milestone      priority"
+        print "%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
+        for t in tickets:
+            if len(t['summary']) < 30:
+                pass
+            if len(t['milestone']) < 10:
+                pass
+            print "%4s %30s %16s %10s" % (t['id'],t['summary'][:30],t['milestone'],t['priority'])
+            #print t['id'],t['summary'][:30],t['milestone'],t['priority']
+            
+        print ""
+        print "fetched %s tickets" % len(tickets)
+    
+    def batch_edit(self, query=None, verbose=False):
+        ''' '''
+        if not query:
+            print "please supply a query"
+            return
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        
+        for id in ticket_ids:
+            print "editing ticket %s" % id
+            self.edit_ticket(id, comment=None)
+            print "press any key to continue or CTRL-C to quit"
+            tmpuser = raw_input()
+            
     
