@@ -519,7 +519,7 @@ class TracRpc():
         if not query:
             print "please supply a query"
             return
-        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query) # XXX trac has max=100 many queries
         
         if only_numbers:
             print "ticket IDs:"
