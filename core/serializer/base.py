@@ -1,5 +1,8 @@
-import zipfile, os, uuid, datetime
+# -*- coding: utf-8 -*-
+import zipfile, os, datetime
 from StringIO import StringIO
+from uuid import uuid4
+from urllib2 import urlopen
 
 from django.utils import simplejson
 from django.db import models
@@ -55,7 +58,7 @@ class FieldDocs(object):
         elif isinstance(self.field, models.DateField):
             c.append("ISO 8601 with timezone UTC+1 (e.g. 2010-07-14)")
         elif isinstance(self.field, models.CharField):
-            c.append("max. %s characters" % self.field.max_length)
+            c.append("max. {0} characters".format(self.field.max_length))
         elif isinstance(self.field, models.FileField):
             c.append("valid internal zip file path")
         if self.field.null:
@@ -132,14 +135,14 @@ class ModelSerializer(object):
                 break
         return prefix, key
         
-    def dump_field(self, fieldname, val, zf):
+    def dump_field(self, fieldname, val, zf, obj):
         if val is None or isinstance(val, (bool, basestring, int, long, datetime.datetime, datetime.date)):
             return val
         if hasattr(val, 'all') and hasattr(val, 'count'):
             try:
                 return [dump_model_instance(x, zf) for x in val.all()]
             except ValueError, e:
-                raise ValueError("cannot dump %s.%s: %s" % (self.model.__name__, fieldname, e))
+                raise ValueError("cannot dump {0}.{1}: {2}".format(self.model.__name__, fieldname, e))
         
         field = self.model._meta.get_field(fieldname)
 
@@ -147,11 +150,11 @@ class ModelSerializer(object):
             return dump_model_instance(val, zf)
         elif isinstance(field, models.FileField):
             name, ext = os.path.splitext(val.name)
-            zip_name = 'attachments/%s%s' % (uuid.uuid4(), ext)
+            zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
             zf.write(val.path, zip_name)
             return zip_name
         else:
-            raise ValueError("cannot serialize objects of type %s" % type(val))
+            raise ValueError("cannot serialize objects of type {0}".format(type(val)))
         
         return val
 
@@ -159,7 +162,7 @@ class ModelSerializer(object):
         d = {}
         for name in self.get_field_names():
             prefix, key = self.split_prefix(name)
-            data = self.dump_field(name, getattr(obj, name), zf)
+            data = self.dump_field(name, getattr(obj, name), zf, obj)
             if prefix:
                 d.setdefault(prefix, {})
                 d[prefix][key] = data
@@ -282,23 +285,38 @@ class DocumentTypeSerializer(object):
         try:
             return DocumentType.objects.get(name=data)
         except DocumentType.DoesNotExist:
-            raise ValueError("no such doctype: %s" % data)
+            raise ValueError("no such doctype: {1}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"%s"' % doctype.name, doctype.name) for doctype in DocumentType.objects.all()])
+        return FieldDocs(choices=[('"{0}"'.format(doctype.name), doctype.name) for doctype in DocumentType.objects.all()])
         
     def dump(self, obj, zf):
         return obj.name
+
+class DocumentSerializer(ModelSerializer):
+    def dump_field(self, fieldname, val, zf, obj):
+        field = self.model._meta.get_field(fieldname)
+
+        if isinstance(field, models.FileField):
+            name, ext = os.path.splitext(val.name)
+            zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
+            f = urlopen(obj.get_downloadurl())
+            zf.writestr(zip_name, f.read())
+            f.close()
+            return zip_name
+
+        return super(DocumentSerializer, self).dump_field(fieldname, val, zf, obj)
+
 
 class EthicsCommissionSerializer(object):
     def load(self, data, zf, version, commit=False):
         try:
             return EthicsCommission.objects.get(uuid=data)
         except EthicsCommission.DoesNotExist:
-            raise ValueError("no such ethicscommission: %s" % data)
+            raise ValueError("no such ethicscommission: {0}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"%s"' % ec.uuid, ec.name) for ec in EthicsCommission.objects.all()])
+        return FieldDocs(choices=[('"{0}"'.format(ec.uuid), ec.name) for ec in EthicsCommission.objects.all()])
         
     def dump(self, obj, zf):
         return obj.uuid
@@ -351,7 +369,7 @@ _serializers = {
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    Document: ModelSerializer(Document, fields=('doctype', 'file', 'original_file_name', 'date', 'version', 'mimetype')),
+    Document: DocumentSerializer(Document, fields=('doctype', 'file', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
     Country: CountrySerializer(),
@@ -359,12 +377,12 @@ _serializers = {
 
 def load_model_instance(model, data, zf, version, commit=True):
     if model not in _serializers:
-        raise ValueError("cannot load objects of type %s" % model)
+        raise ValueError("cannot load objects of type {0}".format(model))
     return _serializers[model].load(data, zf, version, commit=commit)
 
 def dump_model_instance(obj, zf):
     if obj.__class__ not in _serializers:
-        raise ValueError("cannot serialize objecs of type %s" % obj.__class__)
+        raise ValueError("cannot serialize objecs of type {0}".format(obj.__class__))
     return _serializers[obj.__class__].dump(obj, zf)
     
 class _JsonEncoder(simplejson.JSONEncoder):
