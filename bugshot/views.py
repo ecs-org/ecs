@@ -7,10 +7,11 @@ from django.http import HttpResponse, HttpResponseBadRequest
 def shoot(request):
     trac = xmlrpclib.ServerProxy(settings.BUGSHOT_CONFIG['bugshoturl'])
     
-    priority = "3"
+    priority = "normal"
     if request.POST.get('priority', ''):
         try:
-            priority = trac.ticket.priority.get(request.POST.get('priority', ''))
+            prioritynr = trac.ticket.priority.get(request.POST.get('priority', ''))
+            priority = request.POST.get('priority', '')
         except xmlrpclib.Fault:
             pass
     

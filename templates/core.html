@@ -264,6 +264,8 @@
           'url': '/bugshot/',
           'title': 'BugShot',
           'form': '<div><input type="text" name="summary" value="" /></div>'+
+          '<div>Owner: <input type="text" name="owner" value="" /></div>'+
+          '<div>Priority: <input type="text" name="priority" value="" /></div>'+
           '<div><textarea name="description"></textarea></div>',
           onShow: function(self){
               self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
