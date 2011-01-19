@@ -318,10 +318,7 @@ class TracRpc():
         tempfd, tempname = tempfile.mkstemp()
         #os.write(tempfd, self._ticket2text(ticket))
         
-        print "old ticket:"
-       
         ticket['description'] = ticket['description'].replace('\r\n', '\n')
-        pprint(ticket)
         
         os.write(tempfd, self._smarterticket2text(ticket))
         os.close(tempfd)
@@ -331,7 +328,6 @@ class TracRpc():
         
         try:
             newticket = self._minimize_ticket(self._smartertext2ticket(open(tempname).read()))
-            pprint(newticket)
         except Exception, e:
             print Exception, e
             os.remove(tempname)
@@ -343,7 +339,7 @@ class TracRpc():
         if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']\
             or ticket['priority'] != newticket['priority'] or ticket['milestone'] != newticket['milestone']:
             success, additional = self._update_ticket(tid, newticket, comment=comment)
-            
+            #print "EDITTING TICKET"
             # fixme: check if successfull
         else:
             print "ticket didn't change - not updated - you saved bandwidth"
@@ -526,9 +522,9 @@ class TracRpc():
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
         
         if only_numbers:
-            print " ID "
-            for tid in ticket_ids:
-                print tid
+            print "ticket IDs:"
+            idlist = " ".join(unicode(id) for id in ticket_ids)
+            print idlist
             print ""
             print "fetched %s tickets" % len(ticket_ids)
             return
@@ -563,6 +559,7 @@ class TracRpc():
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
         
         for id in ticket_ids:
+            print "editing ticket %s" % id
             self.edit_ticket(id, comment=None)
             print "press any key to continue or CTRL-C to quit"
             tmpuser = raw_input()
