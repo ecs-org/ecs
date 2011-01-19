@@ -166,9 +166,14 @@ input[type=submit], .cancel a {
 }
 #content .cancel a {
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   vertical-align: middle;
   line-height: 18px;
+  margin-top: 20px;
+  border: 1px solid #999;
+}
+#content .cancel a:hover {
+  text-decoration: none;
 }
 
 /* header */

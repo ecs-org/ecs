@@ -16,7 +16,7 @@ Liste aller Sitzungen
   <ol>
       {% for meeting in meetings %}
           <li>
-              <strong>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</strong><br />
+              <h3>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</h3>
                   <a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
           </li>
       {% endfor %}

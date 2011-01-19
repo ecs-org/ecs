@@ -48,11 +48,19 @@
 	display: block;
 	margin-bottom: 20px;
 }
+#help_content blockquote p {
+  margin-bottom: 5px;
+}
+#help_content .first {
+  font-weight: bolder;
+  margin: 10px 0;
+}
 #help_content .upperalpha {
   list-style-type: upper-alpha;
 }
 #help_content hr {
   margin: 10px 0;
+  background: #ddd;
 }
 #help_content img {
 	max-width: 600px;

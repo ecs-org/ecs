@@ -293,7 +293,7 @@
 
 /* table border definitions */
 
-#status_tab th, #involved_parties_tab th, .messages th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
+#status_tab th, #involved_parties_tab th, .messages th, .meeting_detail th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
   background: #eee;
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
@@ -301,7 +301,7 @@
   border-right: 1px solid #ccc;
   border-collapse: collapse;
 }
-#status_tab td, #involved_parties_tab td, .messages td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
+#status_tab td, #involved_parties_tab td, .messages td, .meeting_detail td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
   border-top: 1px solid #eee;
   border-left: 1px solid #eee;
   border-bottom: 1px solid #ccc;
@@ -712,7 +712,6 @@ content ol.submission_list h3 .ecnr {
 }
 #content ol.submission_list li {
   padding: 10px;
-  padding-left: 80px;
 }
 #content ol.submission_list li:nth-child(odd) {
   background-color: #f1f1e6;
