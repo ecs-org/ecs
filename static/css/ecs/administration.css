@@ -8,6 +8,9 @@
   list-style: none;
 	margin-bottom: 5px;
 }
+.useradministration_choose label {
+  font-weight: bolder;
+}
 .administration_detail .user_list {
   margin: 30px 0px;
 }
