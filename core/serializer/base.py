@@ -333,7 +333,7 @@ _serializers = {
         ),
         exclude = (
             'pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 
-            'presenter', 'transient', 'is_notification_update',
+            'presenter', 'transient', 'is_notification_update', 'invoice',
         ),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
