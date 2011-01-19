@@ -296,6 +296,7 @@ def create_submission_form(request):
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
+        save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
 
         request.docstash.update({
@@ -311,8 +312,8 @@ def create_submission_form(request):
         else:
             request.docstash.name = request.POST.get('project_title', '')
 
-        if autosave:
-            return HttpResponse('autosave successfull')
+        if save or autosave:
+            return HttpResponse('save successfull')
         
         if document_form.is_valid():
             documents = set(request.docstash['documents'])

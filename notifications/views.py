@@ -146,6 +146,7 @@ def create_notification(request, notification_type_pk=None):
     
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
+        save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
         
         request.docstash.update({
@@ -156,8 +157,8 @@ def create_notification(request, notification_type_pk=None):
         })
         request.docstash.name = "%s" % notification_type.name
         
-        if autosave:
-            return HttpResponse(_('autosave successful'))
+        if save or autosave:
+            return HttpResponse(_('save successful'))
         
         if document_form.is_valid():
             documents = set(request.docstash['documents'])
