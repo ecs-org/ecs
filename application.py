@@ -204,6 +204,8 @@ django-reversion:inst:all:pypi:django-reversion
 # diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
+# for testing the export we need concurrent requests
+django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 """
 
 
@@ -240,9 +242,6 @@ ipython:inst:all:pypi:ipython
 simplejson:inst:all:pypi:simplejson
 # deployment: massimport statistics 
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
-
-# for testing the export we need concurrent requests
-django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 """
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0
