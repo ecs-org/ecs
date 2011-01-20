@@ -2,7 +2,6 @@
 from datetime import datetime
 import tempfile
 import re
-from StringIO import StringIO
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse

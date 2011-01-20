@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+import tempfile
+from cStringIO import StringIO
 
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.core.files.uploadedfile import UploadedFile
 
 from ecs.core.forms.forms import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document
-from ecs.utils.pdfutils import pdf_isvalid
+from ecs.utils.pdfutils import pdf_isvalid, pdf2pdfa
 
 
 class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
@@ -33,17 +36,23 @@ class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
 
 class DocumentForm(SimpleDocumentForm):
     def clean_file(self):
-        file = self.cleaned_data['file']
-        if not file:
+        pdf = self.cleaned_data['file']
+        if not pdf:
             return
 
-        if not pdf_isvalid(file):
-            file.seek(0)
+        if not pdf_isvalid(pdf):
+            pdf.seek(0)
             raise ValidationError(_(u'This Document is not a valid PDF document.'))
 
-        file.seek(0)
-        return file
-        
+        pdf.seek(0)
+        pdfa = StringIO()
+        size = pdf2pdfa(pdf, pdfa)
+        pdf.close()
+        pdfa.seek(0)
+        self.cleaned_data['file'] = pdfa
+
+        return UploadedFile(pdfa, pdf.name, pdf.content_type, size, pdf.charset)
+
     class Meta:
         model = Document
         fields = ('file', 'doctype', 'name', 'version', 'date', 'replaces_document')

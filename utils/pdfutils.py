@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os, subprocess, tempfile, binascii, logging
+from cStringIO import StringIO
 
 from django.conf import settings
 from django.template import Context, loader
@@ -157,6 +158,56 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
         pagenr += 1
         yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
+def pdf2pdfa(real_infile, real_outfile):
+    workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
+
+    gs = [GHOSTSCRIPT_PATH,
+        '-q',
+        '-dPDFA',
+        '-dBATCH',
+        '-dNOPAUSE',
+        '-dNOOUTERSAVE',
+        '-dUseCIEColor',
+        '-dSAFER',
+        '-dNOPLATFONTS',
+        '-dEmbedAllFonts=true',
+        '-dSubsetFonts=true',
+        '-sProcessColorModel=DeviceCMYK',
+        '-sDEVICE=pdfwrite',
+        '-dPDFACompatibilityPolicy=1',
+        '-sOutputFile=%stdout',
+        'PDFA_def.ps',
+        '-',
+    ]
+
+    if not hasattr(real_infile, 'fileno'):
+        infile = tempfile.TemporaryFile()
+        infile.write(real_infile.read())
+        infile.seek(0)
+    else:
+        infile = real_infile
+
+    if not hasattr(real_outfile, 'fileno'):
+        outfile = tempfile.TemporaryFile()
+    else:
+        outfile = real_outfile
+
+    offset = real_outfile.tell()
+
+    try:
+        p = subprocess.Popen(gs, cwd=workdir, stdin=infile, stdout=outfile, stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate()
+        if p.returncode != 0:
+            raise IOError('gs pipeline returned with errorcode %i , stderr: %s' % (p.returncode, stderr))
+    finally:
+        if not hasattr(real_infile, 'fileno'):
+            infile.close()
+        if not hasattr(real_outfile, 'fileno'):
+            outfile.seek(0)
+            real_outfile.write(outfile.read())
+            outfile.close()
+
+    return real_outfile.tell() - offset
 
 def xhtml2pdf(html, timeoutseconds=30):
     '''
@@ -174,10 +225,18 @@ def xhtml2pdf(html, timeoutseconds=30):
         stdout, stderr = popen.communicate()
         if popen.returncode != 0:
             raise IOError('xhtml2pdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-    return stdout 
 
+    pdf = StringIO(stdout)
+    pdfa = StringIO()
 
+    try:
+        pdf2pdfa(pdf, pdfa)
+        ret = pdfa.getvalue()
+    finally:
+        pdf.close()
+        pdfa.close()
 
+    return ret
 
 
 """
@@ -206,3 +265,4 @@ def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page
     if popen.returncode != 0:
         raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
 """
+

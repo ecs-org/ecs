@@ -7,7 +7,7 @@ from django.utils.encoding import smart_str
 from celery.decorators import task
 from haystack import site
 
-from ecs.utils.pdfutils import pdf2text
+from ecs.utils.pdfutils import pdf2text, pdf2pdfa
 from ecs.utils.storagevault import getVault
 from ecs.utils import gpgutils
 
