@@ -26,7 +26,7 @@
                 {% for annotation in annotations %}
                     <li>
                         <a href="{% url pdf_show doc.pk %}#{{ annotation.page_number }}">
-                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<i>Kein Text</i>' }}
+                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<em>Kein Text</em>' }}
                         </a>
                     </li>
                 {% endfor %}

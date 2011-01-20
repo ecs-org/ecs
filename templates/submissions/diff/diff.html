@@ -7,6 +7,11 @@
     EK-Nr. {{ submission|ec_number }}
 {% endblock %}
 
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/diff.css" />
+{% endblock %}
+
 {% block content %}
     <div class="diff_toggles">
         <a href="#" id="diff_show_old">{% trans "old" %}</a>
@@ -18,11 +23,6 @@
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}
-
-{% block htmlcss %}
-  {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/diff.css" />
-{% endblock %}
 
 {% block jsbottom %}
   {{ block.super }}
