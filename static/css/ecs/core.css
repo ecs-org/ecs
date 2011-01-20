@@ -668,16 +668,15 @@ fieldset.disabled {
 
 .doclist {
   background: #eee;
+  border: 1px solid #ccc;
   padding: 10px;
 }
-.doclist h3 {
+.doclist h4 {
   background-repeat: no-repeat;
-  padding-left: 24px;
 }
-.doclist div {
+.doclist .list_item {
   display: block;
-  margin-left: 30px;
-  padding-left: 24px;
+  margin: 0 0 10px 5px;
   background-repeat: no-repeat; 
 }
 
