@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-19 12:45+0100\n"
+"POT-Creation-Date: 2011-01-20 23:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:66
@@ -908,7 +908,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:223 core/models/submissions.py:413
+#: core/paper_forms.py:223 core/models/submissions.py:414
 msgid "open"
 msgstr "offen"
 
@@ -924,7 +924,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:227 core/models/submissions.py:413
+#: core/paper_forms.py:227 core/models/submissions.py:414
 msgid "blind"
 msgstr "blind"
 
@@ -940,7 +940,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:413
+#: core/paper_forms.py:231 core/models/submissions.py:414
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1189,20 +1189,25 @@ msgstr "Gebührenbefreiung"
 msgid "Sponsor"
 msgstr ""
 
-#: core/parties.py:45
+#: core/parties.py:38
+#, fuzzy
+msgid "Invoice"
+msgstr "Einladen"
+
+#: core/parties.py:44
 msgid "Submitter"
 msgstr ""
 
-#: core/parties.py:47
+#: core/parties.py:46
 #, fuzzy
 msgid "Presenter"
 msgstr "Zentren"
 
-#: core/parties.py:59
+#: core/parties.py:58
 msgid "Board Member Review"
 msgstr ""
 
-#: core/parties.py:62
+#: core/parties.py:61
 #, fuzzy
 msgid "Additional Review"
 msgstr "Einstufungs-Review"
@@ -1397,12 +1402,12 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:32 core/models/submissions.py:669 users/forms.py:55
+#: core/models/names.py:32 core/models/submissions.py:663 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:32 core/models/submissions.py:669 users/forms.py:55
+#: core/models/names.py:32 core/models/submissions.py:663 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1415,11 +1420,11 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:700
+#: core/models/submissions.py:694
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:700
+#: core/models/submissions.py:694
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1559,7 +1564,7 @@ msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
-#: documents/forms.py:42
+#: documents/forms.py:45
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
@@ -1570,16 +1575,16 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
-"%(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
+"(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s "
-"%(meeting_title)s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
+"s"
 msgstr ""
 
 #: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
@@ -1953,16 +1958,16 @@ msgstr "an"
 msgid "von"
 msgstr "von"
 
-#: templates/documents/compact_list.html:18
+#: templates/documents/compact_list.html:23
 #: templates/submissions/readonly_form.html:183
 msgid "Download"
 msgstr ""
 
-#: templates/documents/compact_list.html:19
+#: templates/documents/compact_list.html:24
 msgid "View"
 msgstr ""
 
-#: templates/documents/compact_list.html:21
+#: templates/documents/compact_list.html:26
 msgid "Share Annotations"
 msgstr ""
 
@@ -2215,7 +2220,7 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:201
+#: templates/submissions/base_form.html:206
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -2411,15 +2416,15 @@ msgstr "Einreichungs-Helfer"
 msgid "Next"
 msgstr ""
 
-#: templates/submissions/diff/diff.html:12
+#: templates/submissions/diff/diff.html:17
 msgid "old"
 msgstr "alt"
 
-#: templates/submissions/diff/diff.html:13
+#: templates/submissions/diff/diff.html:18
 msgid "new"
 msgstr "neu"
 
-#: templates/submissions/diff/diff.html:14
+#: templates/submissions/diff/diff.html:19
 msgid "all"
 msgstr "alle"
 
