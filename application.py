@@ -240,6 +240,9 @@ ipython:inst:all:pypi:ipython
 simplejson:inst:all:pypi:simplejson
 # deployment: massimport statistics 
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
+
+# for testing the export we need concurrent requests
+django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 """
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0

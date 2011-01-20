@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     'sentry.client',
     'reversion',
     'windmill',
+    'django_concurrent_test_server',
 
     'ecs.core',
     'ecs.utils',
