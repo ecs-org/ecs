@@ -9,18 +9,14 @@ class S3url(object):
     def __init__(self, KeyId, KeySecret):
         self.keystore = {KeyId: KeySecret}
         
-    def createUrl(self, baseurl, bucket, objectid, keyId, expires, only_path=False):
+    def createUrl(self, baseurl, bucket, objectid, keyId, expires):
         signature = self._createSignature(bucket, objectid, keyId, expires)
         qd = {
             'AWSAccessKeyId': keyId,
             'Expires': expires,
             'Signature': signature,
         }
-        url = '{0}{1}?{2}'.format(bucket, objectid, urlencode(qd)) 
-        if only_path:
-            return url
-        else:
-            return '{0}{1}'.format(baseurl, url)
+        url = '{0}{1}{2}?{3}'.format(baseurl, bucket, objectid, urlencode(qd)) 
         #auth_header = "Authorization: AWS %s:%s" % (keyId, signature)
         return url
     

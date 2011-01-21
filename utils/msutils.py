@@ -9,43 +9,31 @@ from django.http import Http404
 
 from ecs.utils import s3utils
 
-def generate_media_url(uuid, filename, mimetype="application/pdf", branduuid=True, personalbranding=None):
-    if mimetype != "application/pdf" or branduuid == False:
-        return generate_blob_url(uuid, filename, mimetype)
-    else:
-        return generate_document_url(uuid, filename, personalbranding)
-    
-def generate_blob_url(uuid, filename, mimetype):
-    baseurl = settings.MS_CLIENT ["server"]
-    bucket = settings.MS_CLIENT ["bucket"]
-    key_id = settings.MS_CLIENT ["key_id"]
-    key_secret = settings.MS_CLIENT ["key_secret"]
-    expiration_sec = settings.MS_SHARED ["url_expiration_sec"]
-    expires = int(time()) + expiration_sec
-    mime_part1, dummy, mime_part2 = mimetype.partition("/")
-    objectid = "download/%s/%s/%s/%s/" % (uuid, mime_part1, mime_part2, filename)
-    return s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, objectid, key_id, expires)
+def generate_media_url(uuid, filename, mimetype='application/pdf', personalization=None, brand=False):
+    mime_part1, mime_part2 = mimetype.split('/', 1)
 
-def generate_document_url(uuid, filename, branding=None, only_path=False):
-    baseurl = settings.MS_CLIENT ["server"]
-    bucket = settings.MS_CLIENT ["bucket"]
-    key_id = settings.MS_CLIENT ["key_id"]
-    key_secret = settings.MS_CLIENT ["key_secret"]
-    expiration_sec = settings.MS_SHARED ["url_expiration_sec"]
-    expires = int(time()) + expiration_sec
-    if branding:
-        objectid = "download/%s/application/pdf/personalize/%s/%s/" % (uuid, branding, filename)
-    else:
-        objectid = "download/%s/application/pdf/brand/%s/" % (uuid, filename)
-    return s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, objectid, key_id, expires, only_path=only_path)      
+    objid_parts = ['download', uuid, mime_part1, mime_part2]
+    if personalization:
+        objid_parts += ['personalize', personalization]
+    elif brand:
+        objid_parts.append('brand')
+    objid_parts.append(filename)
 
-def get_from_mediaserver(uuid, filename, branding=None):
+    objid = '/'.join(objid_parts) + '/'
+
+    key_id = settings.MS_CLIENT ["key_id"]
+    expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
+
+    s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
+    return s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
+
+def get_from_mediaserver(uuid, filename, personalization=None, brand=False):
     if settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.mediaprovider import MediaProvider
         mediaprovider = MediaProvider()
         return mediaprovider.getBlob(uuid)
     else:
-        f = urlopen(generate_document_url(uuid, filename, branding=branding))
+        f = urlopen(generate_media_url(uuid, filename, personalization=personalization, brand=brand))
         return f
 
 def generate_pages_urllist(uuid, pages):
