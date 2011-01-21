@@ -241,24 +241,40 @@ INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs
 
 # Storage Vault settings
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
-STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir':
-     os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-STORAGE_ENCRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-                   "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
-                   "owner": "mediaserver",
-                   }
-STORAGE_DECRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-                   "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
-                   "owner": "mediaserver",
-                   }
+STORAGE_VAULT_OPTIONS = {
+    'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
+    'authid': 'blu',
+    'authkey': 'bla'
+}
+STORAGE_ENCRYPT = {
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
+    "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
+    "owner": "mediaserver",
+}
+STORAGE_DECRYPT = {
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
+    "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
+    "owner": "mediaserver",
+}
 # Mediaserver Shared Settings
-MS_SHARED = {"url_expiration_sec": 6*60*60, "tiles": [1, 3, 5], "resolutions": [800, 768],
-             "aspect_ratio": 1.41428, "dpi": 96, "depth": 8}
+MS_SHARED = {
+    "url_expiration_sec": 6*60*60,
+    "tiles": [1, 3, 5],
+    "resolutions": [800, 768],
+    "aspect_ratio": 1.41428,
+    "dpi": 96,
+    "depth": 8,
+}
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-MS_CLIENT = {"server": "http://localhost:8000", "bucket": "/mediaserver/",
+MS_CLIENT = {
+    "server": "http://localhost:8000",
+    "bucket": "/mediaserver/",
     # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
-    "key_id": "b2SpFfUvfD44LUzHDu7w", "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN" }
+    "key_id": "b2SpFfUvfD44LUzHDu7w",
+    "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
+    "same_host_as_server": True,
+}
                
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
@@ -271,7 +287,7 @@ MS_SERVER = {
     "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
     "render_memcache_maxsize": 2**29,
     # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-    }
+}
 
 
 # mail config, standard django values

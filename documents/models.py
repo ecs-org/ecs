@@ -20,9 +20,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
-from ecs.utils.msutils import generate_media_url, generate_blob_url, generate_document_url 
+from ecs.utils.msutils import generate_media_url, get_from_mediaserver
 from ecs.utils.pdfutils import pdf_page_count, pdf_isvalid
 from ecs.authorization import AuthorizationManager
+from ecs.users.utils import get_current_user
 
 
 class DocumentPersonalization(models.Model):
@@ -131,16 +132,22 @@ class Document(models.Model):
         if (not self.allow_download) or (self.branding not in [c[0] for c in C_BRANDING_CHOICES]):
             return None
     
-        if self.mimetype != "application/pdf"or self.branding == "n":
-            response = generate_blob_url(self.uuid_document, self.get_filename(), self.mimetype)
-        elif self.branding == "b":
-            response = generate_document_url(self.uuid_document, self.get_filename(), None)
-        elif self.branding == "p":
-            personalization = self.add_personalization(request.user)
-            response = generate_document_url(self.uuid_document, self.get_filename(), personalization.id)
+        if self.mimetype != 'application/pdf' or self.branding == 'n':
+            personalization = None
+            brand = False
+        elif self.branding == 'b':
+            personalization = None
+            brand = True
+        elif self.branding == 'p':
+            personalization = self.add_personalization(get_current_user()).id
+            brand = False
         else:
-            response = None
-        return response
+            return None
+
+        return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
+
+    def get_from_mediaserver(self):
+        return get_from_mediaserver(self.uuid_document, self.get_filename(), self.add_personlization(request.user) if self.branding=='p' else None)
         
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''

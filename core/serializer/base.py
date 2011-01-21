@@ -300,7 +300,7 @@ class DocumentSerializer(ModelSerializer):
         if isinstance(field, models.FileField):
             name, ext = os.path.splitext(val.name)
             zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
-            f = urlopen(obj.get_downloadurl())
+            f = obj.get_from_mediaserver()
             zf.writestr(zip_name, f.read())
             f.close()
             return zip_name

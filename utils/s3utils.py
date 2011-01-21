@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-
 from time import time
 from urlparse import urlparse, parse_qs
+from urllib import urlencode
+
 from ecs.utils.django_signed.signed import base64_hmac
 
 class S3url(object):
@@ -10,7 +11,12 @@ class S3url(object):
         
     def createUrl(self, baseurl, bucket, objectid, keyId, expires):
         signature = self._createSignature(bucket, objectid, keyId, expires)
-        url = "%s%s%s?AWSAccessKeyId=%s&Expires=%s&Signature=%s" % (baseurl, bucket, objectid, keyId, expires, signature) 
+        qd = {
+            'AWSAccessKeyId': keyId,
+            'Expires': expires,
+            'Signature': signature,
+        }
+        url = '{0}{1}{2}?{3}'.format(baseurl, bucket, objectid, urlencode(qd)) 
         #auth_header = "Authorization: AWS %s:%s" % (keyId, signature)
         return url
     
