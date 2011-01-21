@@ -25,16 +25,6 @@
   border-bottom: 1px solid #ccc;
   margin: 0;
 }
-.submission_item:nth-child(odd) {
-  background-color: #e8e8d8;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
-}
-.submission_item:nth-child(even) {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
-}
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
   width: 16px;
   height: 16px;

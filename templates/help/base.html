@@ -3,6 +3,11 @@
 
 {% block htmltitle %}Online Hilfe | {{ block.super }}{% endblock %}
 
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/help_formatting.css" />
+{% endblock %}
+
 {% block htmlbody %}
 <div id="help">
 	 <h1>ECS Onlinehilfe</h1>

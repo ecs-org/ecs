@@ -29,7 +29,7 @@ Liste aller Studien
 
 <ol class="submission_list">
 {% for submission in submissions.object_list %}
-    <li class="{% cycle 'even' 'odd' %}">
+    <li>
         {% with submission.current_submission_form as submission_form %}
             <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission.get_ec_number_display }}</a>
         {% endwith %}

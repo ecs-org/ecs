@@ -2,9 +2,9 @@
 
 {% block htmlbody %}
     {% if attachments %}
-    <ul>
+    <ul class="attachments">
     {% for attachment in attachments %}
-        <li class="{% cycle 'even' 'odd' %}">{{ attachment.name }}</li>
+        <li>{{ attachment.name }}</li>
     {% endfor %}
     </ul>
     {% endif %}

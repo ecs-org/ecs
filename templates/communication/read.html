@@ -3,7 +3,7 @@
 <div class="message_display">
   <h3>{{ thread.subject }} ({{ message_list|length }})</h3>
   {% for message in message_list %}
-  <div class="item {% cycle 'even' 'odd' %}">
+  <div class="item">
     <ol>
       <li><strong>Von:</strong> {{ message.sender }}</li>
       <li><strong>An:</strong> {{ message.receiver }}</li>

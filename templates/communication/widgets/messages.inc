@@ -11,7 +11,7 @@
 </div>
 <ol class="messages">
 {% for thread in page.object_list %}
-    <li class="message {% cycle 'even' 'odd' %}">
+    <li>
         <span class="head">
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}

@@ -27,8 +27,6 @@
 }
 .message_display {
   display: block;
-  padding: 20px;
-  font-size: 9pt;
 }
 .message_display form {
   width: 500px;
@@ -48,7 +46,6 @@
 }
 .message_display h3 {
   display: block;
-  font-size: 1.2em;
   font-weight: lighter;
   margin-bottom: 10px;
 }
@@ -65,7 +62,11 @@
   right: 0px;
 }
 .message_display pre {
-  padding: 20px;
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #C6C9CB;
+  -moz-box-shadow: 1px 1px 0 #d8d8d8;
 }
 .message_display .actions a {
   display: inline-block;
@@ -83,14 +84,7 @@ table.messages .threadstart {
 #content .messages_header, #content .messages th, #content .messages td {
   padding: 5px;
 }
-.message_display .item.odd {
-  background-color: #e8e8d8;
-	border: 1px solid #ddd;
-}
-.message_display .item.even {
-  background-color: #efefdd;
-	border: 1px solid #ddd;
-}
+
 
 /* icons */
 

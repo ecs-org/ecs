@@ -686,6 +686,7 @@ fieldset.disabled {
   list-style: none;
 }
 .notification_list li {
+  padding: 5px;
   margin-bottom: 10px;
 }
 .notification_list, .overview {
@@ -712,17 +713,6 @@ content ol.submission_list h3 .ecnr {
 #content ol.submission_list li {
   padding: 10px;
 }
-#content ol.submission_list li:nth-child(odd) {
-  background-color: #f1f1e6;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
-}
-#content ol.submission_list li:nth-child(even) {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
-}
-
 content ol.submission_list li .actions {
   margin-bottom: 5px;
 }
@@ -737,3 +727,33 @@ content ol.submission_list li .actions {
   visibility: hidden; 
 }
 
+/* list cycles */
+
+#content ol.submission_list li:nth-child(odd) ,
+.submission_list li:nth-child(odd) ,
+.submission_item:nth-child(odd) ,
+.notification_list li:nth-child(odd) ,
+.dashboard_widget .messages li:nth-child(odd) ,
+.messages li:nth-child(odd) ,
+.attachments li:nth-child(odd) ,
+.message_display li:nth-child(odd) ,
+.dashboard_widget .messages li:nth-child(odd) ,
+.dashboard_widget .submission_widget_list li:nth-child(odd) {
+  background-color: #f1f1e6;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ddd;  
+}
+#content ol.submission_list li:nth-child(even) ,
+.submission_list li:nth-child(even) ,
+.submission_item:nth-child(even) ,
+.notification_list li:nth-child(even) ,
+.dashboard_widget .messages li:nth-child(even) ,
+.messages li:nth-child(even) ,
+.attachments li:nth-child(even) ,
+.message_display li:nth-child(even) ,
+.dashboard_widget .messages li:nth-child(even) ,
+.dashboard_widget .submission_widget_list li:nth-child(even) {
+  background-color: #efefdd;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ddd;  
+}

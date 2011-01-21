@@ -2,7 +2,7 @@
 
 <ol class="submission_list">
 {% for submission in submissions %}
-    <li class="{% cycle 'even' 'odd' %}">
+    <li>
         <h3><span class="ecnr">{{ submission|ec_number }}</span> {{ submission.project_title_display|default:'<i>Ohne Titel</i>' }}</h3>
         <div class="actions">
             {% with submission.current_submission_form as submission_form %}
