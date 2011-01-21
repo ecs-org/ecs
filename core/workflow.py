@@ -84,6 +84,10 @@ class InitialReview(Activity):
         sf.acknowledged = choice
         sf.save()
 
+        if is_acknowledged(self.workflow):
+            # schedule submission for the next schedulable meeting
+            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
+            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
 
 class Resubmission(Activity):
     class Meta:
@@ -217,13 +221,6 @@ class VoteRecommendationReview(Activity):
         
     def get_url(self):
         return None # FIXME: missing feature (FMD3)
-
-class MeetingSchedule(Activity):
-    class Meta:
-        model = Submission
-
-    def get_url(self):
-        return reverse('ecs.meetings.views.schedule_submission', kwargs={'submission_pk': self.workflow.data.pk})
 
 class VoteFinalization(Activity):
     class Meta:

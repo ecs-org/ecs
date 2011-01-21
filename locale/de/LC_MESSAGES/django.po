@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-20 23:33+0100\n"
+"POT-Creation-Date: 2011-01-21 17:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:66
@@ -120,14 +120,12 @@ msgid "Payment request"
 msgstr ""
 
 #: communication/tasks.py:50
-#, fuzzy
 msgid "New ECS-Mail: from {sender} to {receiver}."
-msgstr "Neue ECS-Mail: von %(sender)s an %(receiver)s."
+msgstr "Neue ECS-Mail: von {sender} an {receiver}."
 
 #: communication/tasks.py:51
-#, fuzzy
 msgid "Subject: {subject}{linesep}{text}"
-msgstr "Betreff: %(subject)s%(linesep)s%(text)s"
+msgstr "Betreff: {subject}{linesep}{text}"
 
 #: communication/views.py:35
 #, python-format
@@ -186,7 +184,6 @@ msgid "Dokumente"
 msgstr ""
 
 #: core/paper_forms.py:41
-#, fuzzy
 msgid "studies"
 msgstr "Studien"
 
@@ -896,7 +893,6 @@ msgstr ""
 "Interessen der Prüferin/des Prüfers/der Prüfer"
 
 #: core/paper_forms.py:219
-#, fuzzy
 msgid "additional information"
 msgstr "Weitere Informationen"
 
@@ -1181,7 +1177,6 @@ msgid "Institution"
 msgstr "Institution"
 
 #: core/paper_forms.py:313
-#, fuzzy
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
@@ -1575,23 +1570,23 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
-"(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
+"%(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
-"s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s "
+"%(meeting_title)s"
 msgstr ""
 
-#: mediaserver/views.py:17 mediaserver/views.py:33 mediaserver/views.py:51
+#: mediaserver/views.py:17 mediaserver/views.py:34
 msgid "Invalid expiring url"
 msgstr ""
 
-#: mediaserver/views.py:71
+#: mediaserver/views.py:59
 msgid "sorry, unfinished"
 msgstr ""
 
@@ -1674,20 +1669,17 @@ msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
 #: notifications/views.py:52 templates/core.html:53
-#, fuzzy
 msgid "All Notifications"
-msgstr "Meldungen"
+msgstr "Alle Meldungen"
 
 #: notifications/views.py:55 templates/core.html:54
 #: templates/submissions/readonly_form.html:123
-#, fuzzy
 msgid "Open Notifications"
-msgstr "Meldungen"
+msgstr "Offene Meldungen"
 
 #: notifications/views.py:161
-#, fuzzy
 msgid "save successful"
-msgstr "automatisch gespeichert"
+msgstr "speichern erflogreich"
 
 #: notifications/views.py:239
 #, fuzzy
@@ -1786,9 +1778,8 @@ msgid "Mir zugeordnete Studien"
 msgstr ""
 
 #: templates/core.html:44
-#, fuzzy
 msgid "Meine Studien"
-msgstr "Studien"
+msgstr "Meine Studien"
 
 #: templates/core.html:51
 msgid "Study Notifications"
@@ -1796,36 +1787,31 @@ msgstr "Studien Meldungen"
 
 #: templates/core.html:56 templates/notifications/form.html:9
 msgid "New Notification"
-msgstr "Neue Meldungen"
+msgstr "Neue Meldung"
 
 #: templates/core.html:61
 msgid "Meetings"
 msgstr "Sitzungen"
 
 #: templates/core.html:63
-#, fuzzy
 msgid "Next Meeting"
-msgstr "Sitzungen"
+msgstr "Nächste Sitzung"
 
 #: templates/core.html:65
-#, fuzzy
 msgid "Upcoming Meetings"
-msgstr "Sitzungen"
+msgstr "Kommende Sitzungen"
 
 #: templates/core.html:66
-#, fuzzy
 msgid "Past Meetings"
-msgstr "Beantwortete Meldungen"
+msgstr "Vergangene Sitzungen"
 
 #: templates/core.html:68
-#, fuzzy
 msgid "New Meeting"
-msgstr "Sitzungen"
+msgstr "Neue Sitzungen"
 
 #: templates/core.html:70
-#, fuzzy
 msgid "Fast Lane Meetings"
-msgstr "Beantwortete Meldungen"
+msgstr "Fast Lane Sitzungen"
 
 #: templates/core.html:72
 msgid "New Fast Lane Meeting"
@@ -1875,9 +1861,8 @@ msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
 #: templates/core.html:234
-#, fuzzy
 msgid "New Messages"
-msgstr "Neue Nachricht"
+msgstr "Neue Nachrichten"
 
 #: templates/administration/detail.html:4 templates/users/details.html:4
 msgid "ECS Administration"
@@ -1909,7 +1894,7 @@ msgid "Save"
 msgstr "Speichern"
 
 #: templates/boilerplate/list.html:10 templates/fastlane/status.html:18
-#: templates/meetings/status.html:19
+#: templates/meetings/status.html:21
 msgid "New"
 msgstr "Neu"
 
@@ -2033,7 +2018,7 @@ msgstr "Fast Lane Sitzung"
 
 #: templates/fastlane/detail.html:11 templates/fastlane/status.html:5
 #: templates/fastlane/status.html.py:11 templates/meetings/detail.html:11
-#: templates/meetings/status.html:6 templates/meetings/status.html.py:12
+#: templates/meetings/status.html:6 templates/meetings/status.html.py:14
 #: templates/submissions/readonly_form.html:28
 #: templates/submissions/readonly_form.html:31
 msgid "Status"
@@ -2081,19 +2066,19 @@ msgstr "Titel"
 msgid "Scheduled for"
 msgstr ""
 
-#: templates/fastlane/status.html:14 templates/meetings/status.html:15
+#: templates/fastlane/status.html:14 templates/meetings/status.html:17
 msgid "Ended"
 msgstr ""
 
-#: templates/fastlane/status.html:16 templates/meetings/status.html:17
+#: templates/fastlane/status.html:16 templates/meetings/status.html:19
 msgid "Started"
 msgstr "Gestartet"
 
-#: templates/fastlane/status.html:24 templates/meetings/status.html:25
+#: templates/fastlane/status.html:24 templates/meetings/status.html:27
 msgid "Started at"
 msgstr "Gestartet um"
 
-#: templates/fastlane/status.html:27 templates/meetings/status.html:28
+#: templates/fastlane/status.html:27 templates/meetings/status.html:30
 msgid "Ended at"
 msgstr ""
 
@@ -2102,9 +2087,8 @@ msgid "Submissions"
 msgstr "Einreichungen"
 
 #: templates/help/view_page.html:13
-#, fuzzy
 msgid "last edited"
-msgstr "Nachname"
+msgstr "zuletzt bearbeitet"
 
 #: templates/help/view_page.html:13
 msgid "ago by"
@@ -2118,9 +2102,9 @@ msgstr "Sitzung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/detail.html:14 templates/meetings/status.html:38
+#: templates/meetings/detail.html:14 templates/meetings/status.html:40
 msgid "Timetable"
-msgstr ""
+msgstr "Zeitplan"
 
 #: templates/meetings/detail.html:17
 msgid "Signatur der Voten"
@@ -2131,29 +2115,37 @@ msgstr ""
 msgid "Reschedule Submission"
 msgstr "Einreichung"
 
-#: templates/meetings/status.html:31
-msgid "Agenda"
-msgstr ""
+#: templates/meetings/status.html:11
+msgid "Deadline for Submission"
+msgstr "Letzter Einreichtermin"
+
+#: templates/meetings/status.html:12
+msgid "Deadline for Thesis Submission"
+msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
 #: templates/meetings/status.html:33
+msgid "Agenda"
+msgstr "Tagesordnung"
+
+#: templates/meetings/status.html:35
 msgid "Agenda PDF"
-msgstr ""
+msgstr "Tagesordnung PDF"
 
-#: templates/meetings/status.html:39
+#: templates/meetings/status.html:41
 msgid "Timetable PDF"
-msgstr ""
+msgstr "Zeitplan-PDF"
 
-#: templates/meetings/status.html:42
+#: templates/meetings/status.html:44
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/status.html:43
+#: templates/meetings/status.html:45
 msgid "Protocol PDF"
-msgstr ""
+msgstr "Protokoll PDF"
 
 #: templates/meetings/assistant/base.html:16
 msgid "Comments"
-msgstr ""
+msgstr "Kommentare"
 
 #: templates/meetings/assistant/top.html:71
 #, fuzzy
@@ -2162,7 +2154,7 @@ msgstr "External Reviewer"
 
 #: templates/meetings/assistant/top.html:73
 msgid "copy comment"
-msgstr ""
+msgstr "Kommentar kopieren"
 
 #: templates/meetings/timetable/editor.html:53
 msgid "before"
@@ -2195,7 +2187,7 @@ msgstr ""
 
 #: templates/notifications/answers/view.html:6
 msgid "Download PDF"
-msgstr ""
+msgstr "Als PDF herunterladen"
 
 #: templates/notifications/answers/xhtml2pdf/base.html:9
 #, fuzzy
@@ -2203,14 +2195,12 @@ msgid "Notification Answer"
 msgstr "Meldungen"
 
 #: templates/notifications/view/AmendmentNotificationForm.html:10
-#, fuzzy
 msgid "Old Version"
-msgstr "Version"
+msgstr "Alte Version"
 
 #: templates/notifications/view/AmendmentNotificationForm.html:11
-#, fuzzy
 msgid "New Version"
-msgstr "Version"
+msgstr "Neue Version"
 
 #: templates/pdfviewer/annotations/sharing/share.html:10
 msgid "Share"
@@ -2314,7 +2304,7 @@ msgstr ""
 #: templates/submissions/readonly_form.html:42
 #: templates/submissions/tabs/involved_parties.html:2
 msgid "Involved Parties"
-msgstr ""
+msgstr "Beitiligte Parteien"
 
 #: templates/submissions/readonly_form.html:45
 #: templates/submissions/tabs/developer.html:2
@@ -2438,7 +2428,7 @@ msgstr "Beteiligung"
 
 #: templates/submissions/tabs/involved_parties.html:6
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: templates/submissions/tabs/involved_parties.html:7
 msgid "Organization"
@@ -2446,7 +2436,7 @@ msgstr "Organisation"
 
 #: templates/submissions/tabs/involved_parties.html:8
 msgid "E-Mail"
-msgstr ""
+msgstr "E-Mail"
 
 #: templates/submissions/tabs/involved_parties.html:21
 #, python-format
@@ -2596,18 +2586,16 @@ msgid "Invite"
 msgstr "Einladen"
 
 #: templates/users/invitation/set_password_form.html:11
-#, fuzzy
 msgid "Set Password"
-msgstr "Passwort ändern"
+msgstr "Passwort setzen"
 
 #: users/forms.py:18
 msgid "Email"
 msgstr "E-mail"
 
 #: users/forms.py:19
-#, fuzzy
 msgid "Password"
-msgstr "Passwort ändern"
+msgstr "Passwort"
 
 #: users/forms.py:33
 msgid ""
@@ -2634,19 +2622,16 @@ msgid "Never forward unread messages"
 msgstr ""
 
 #: users/forms.py:85
-#, fuzzy
 msgid "Forward unread messages after 5 minutes"
-msgstr "ungelesende ECS Nachrichten für %(user)s"
+msgstr "ungelesende ECS Nachrichten nach fünf Minuten weiterleiten"
 
 #: users/forms.py:86
-#, fuzzy
 msgid "Forward unread messages after 10 minutes"
-msgstr "ungelesende ECS Nachrichten für %(user)s"
+msgstr "ungelesende ECS Nachrichten nach zehn Minuten weiterleiten"
 
 #: users/forms.py:87
-#, fuzzy
 msgid "Forward unread messages after 6 hours"
-msgstr "ungelesende ECS Nachrichten für %(user)s"
+msgstr "ungelesende ECS Nachrichten nach sechs Stunden weiterleiten"
 
 #: users/forms.py:115 users/forms.py:120
 msgid "Both"
@@ -2679,9 +2664,8 @@ msgid "Mr."
 msgstr "Herr"
 
 #: users/utils.py:96
-#, fuzzy
 msgid "There is already a user with this email address."
-msgstr "Es liegen bereits Voten anderer Ethikkommissionen vor."
+msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
 
 #: users/utils.py:102
 #, fuzzy
@@ -2789,100 +2773,3 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
-
-#~ msgid "Are also non competent includable?"
-#~ msgstr "Sind auch nicht persönlich Einwilligungsfähige einschließbar?"
-
-#~ msgid "male"
-#~ msgstr "männliche"
-
-#~ msgid "female"
-#~ msgstr "weibliche"
-
-#~ msgid "Messages"
-#~ msgstr "Nachrichten"
-
-#~ msgid "Copy"
-#~ msgstr "Kopieren"
-
-#, fuzzy
-#~ msgid "Studien"
-#~ msgstr "Studien"
-
-#, fuzzy
-#~ msgid "Studienbezug"
-#~ msgstr "Studien"
-
-#, fuzzy
-#~ msgid "Weitere Informationen"
-#~ msgstr "Allgemeine Angaben"
-
-#, fuzzy
-#~ msgid "monozentrisch"
-#~ msgstr "monozentrisch"
-
-#, fuzzy
-#~ msgid "doppelblind"
-#~ msgstr "doppelblind"
-
-#, fuzzy
-#~ msgid "DVR-Nummer"
-#~ msgstr "EK-Number"
-
-#~ msgid "Collapse"
-#~ msgstr "Weniger"
-
-#~ msgid "Expand"
-#~ msgstr "Mehr"
-
-#~ msgid ""
-#~ "Error: Invalid pdf-id. Probably your signing session expired. Please "
-#~ "retry."
-#~ msgstr ""
-#~ "Fehler: Ungültige pdf-id. Wahrscheinlich ist ihre Signierungssitzung "
-#~ "abgelaufen. Bitte versuchen sie es erneut."
-
-#~ msgid "vote_sign_error: error=[%(error)s], cause=[%(cause)s]"
-#~ msgstr "vote_sign_error: Fehler=[%(error)s], Grund=[%(cause)s]"
-
-#~ msgid "Mark User Indisposed"
-#~ msgstr "Benutzer als verhindert markieren"
-
-#~ msgid "Sort by"
-#~ msgstr "Sortieren nach"
-
-#~ msgid "Mine"
-#~ msgstr "Meine"
-
-#~ msgid "Assigned"
-#~ msgstr "Zugewiesen"
-
-#~ msgid "Open"
-#~ msgstr "Offen"
-
-#~ msgid "Proxy"
-#~ msgstr "Stellvertreter"
-
-#~ msgid "thesis"
-#~ msgstr "Diplomarbeit"
-
-#~ msgid "Preview"
-#~ msgstr "Vorschau"
-
-#~ msgid "Decline"
-#~ msgstr "Ablehnen"
-
-#~ msgid "Open Tasks"
-#~ msgstr "Offene Tätigkeiten"
-
-#~ msgid "Proxy Tasks"
-#~ msgstr "Vertetene Tätigkeiten"
-
-#~ msgid "There are no tasks for you."
-#~ msgstr "Keine Tätigkeiten"
-
-#~ msgid "creating new submission form"
-#~ msgstr "erstelle neue einreichung"
-
-#~ msgid "English"
-#~ msgstr "Englisch"

@@ -8,6 +8,8 @@
 <table>
     <tr><th>{% trans "Title" %}:</th><td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td></tr>
     <tr><th>{% trans "Scheduled for" %}:</th><td>{{ meeting.start|date:'d.m.Y H:i' }}</td></tr>
+    <tr><th>{% trans "Deadline for Submission" %}:</th><td>{{ meeting.deadline|date:'d.m.Y' }}</td></tr>
+    <tr><th>{% trans "Deadline for Thesis Submission" %}:</th><td>{{ meeting.deadline_diplomathesis|date:'d.m.Y' }}</td></tr>
     <tr>
         <th>{% trans "Status" %}:</th>
         <td>

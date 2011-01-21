@@ -49,7 +49,7 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
-        ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview, MeetingSchedule)
+        ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
@@ -93,21 +93,18 @@ def submission_workflow():
             'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
-            'meeting_schedule': Args(MeetingSchedule, group=OFFICE_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
             ('start', 'initial_thesis_review'): Args(guard=is_thesis),
 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'meeting_schedule'): Args(guard=is_acknowledged),
-            ('meeting_schedule', 'categorization_review'): Args(guard=is_thesis, negated=True),
-            ('meeting_schedule', 'paper_submission_review'): None,
+            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
+            ('initial_review', 'paper_submission_review'): None,
 
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'meeting_schedule'): Args(guard=is_acknowledged),
-            ('meeting_schedule', 'thesis_categorization_review'): Args(guard=is_thesis),
-            ('meeting_schedule', 'paper_submission_review'): None,
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
+            ('initial_thesis_review', 'paper_submission_review'): None,
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),

@@ -108,6 +108,31 @@ class AssignedMedicalCategory(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.meeting.title, self.category.name)
 
+class MeetingManager(models.Manager):
+    def next(self):
+        now = datetime.now()
+        dday = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=1)
+        try:
+            return self.filter(start__gt=dday).order_by('start')[0]
+        except IndexError:
+            raise self.model.DoesNotExist()
+
+    def next_schedulable_meeting(self, submission):
+        now = datetime.now()
+        if submission.thesis is None:
+            is_thesis = submission.current_submission_form.project_type_education_context is not None
+        else:
+            is_thesis = submission.thesis
+
+        deadline_key = 'deadline'
+        if is_thesis:
+            deadline_key = 'deadline_diplomathesis'
+
+        try:
+            return self.filter(**{'{0}__gt'.format(deadline_key): now}).order_by('start')[0]
+        except IndexError:
+            raise self.model.DoesNotExist()
+
 class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200, blank=True)
@@ -118,6 +143,8 @@ class Meeting(models.Model):
     comments = models.TextField(null=True, blank=True)
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
+
+    objects = MeetingManager()
     
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
