@@ -309,7 +309,6 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(link=u'Zentrum 1')
     client.click(id=u'id_investigator-0-organisation')
     client.type(text=cicero.sentences(n=1, min=6, max=6)[0], id=u'id_investigator-0-organisation')
-    client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_investigator-0-organisation')
     client.type(text=random.randint(0,999), id=u'id_investigator-0-subject_count')
     client.click(value=u'21')
     client.select(option=u'Ethikkomission der Medizinischen Universit\xe4t Wien', id=u'id_investigator-0-ethics_commission')
@@ -341,7 +340,6 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_investigatoremployee-0-organisation')
 
     # and now submit!
-    client.click(id=u'submit-button')
     client.click(name=u'submit')
     client.waits.forPageLoad(timeout=u'20000')
     client.waits.sleep(milliseconds=u'5000')
