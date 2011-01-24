@@ -18,6 +18,7 @@
               | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
               | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
           {% endif %}
+          | <a href="{% url ecs.help.views.search %}">Suche</a>
 					</div>
       {% endblock %}
 	 <div id="help_body">

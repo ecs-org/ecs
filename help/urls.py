@@ -4,6 +4,8 @@ from django.conf import settings
 
 urlpatterns = patterns('ecs.help.views',
     url(r'^$', 'index'),
+    url(r'^search/$', 'search'),
+    
     url(r'^page/(?P<page_pk>\d+)/$', 'view_help_page'),
     url(r'^page/(?P<page_pk>\d+)/delete/$', 'delete_help_page'),
     url(r'^page/(?P<page_pk>\d+)/edit/$', 'edit_help_page'),

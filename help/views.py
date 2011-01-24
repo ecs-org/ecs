@@ -11,6 +11,11 @@ from django.db.models import Q
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
+from haystack.views import SearchView
+from haystack.forms import HighlightedSearchForm
+from haystack.query import SearchQuerySet
+from haystack.utils import Highlighter
+
 from reversion import revision
 
 from ecs.utils.viewutils import render, redirect_to_next_url
@@ -110,6 +115,59 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
         'form': form,
         'related_pages': related_pages,
     })
+    
+    
+HIGHLIGHT_PREFIX_WORD_COUNT = 3
+
+class HelpHighlighter(Highlighter):
+    def find_window(self, highlight_locations):
+        best_start, best_end = super(HelpHighlighter, self).find_window(highlight_locations)
+        return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
+
+
+class HelpSearchView(SearchView):
+    session_key = 'ecs.help.views.search:q'
+
+    def get_query(self):
+        q = super(HelpSearchView, self).get_query()
+        self.request.session[self.session_key] = q
+        return q
+
+    def build_form(self, form_kwargs=None): # mostly copied from haystack.forms
+        data = None
+        kwargs = {
+            'load_all': self.load_all,
+        }
+        if form_kwargs:
+            kwargs.update(form_kwargs)
+
+        q = self.request.session.get(self.session_key, '')
+
+        if len(self.request.GET):
+            data = self.request.GET
+
+        if q and not data:
+            data = {'q': q}
+
+        if self.searchqueryset is not None:
+            kwargs['searchqueryset'] = self.searchqueryset
+
+        return self.form_class(data, **kwargs)
+
+
+# haystack's search_view_factory does not pass *args and **kwargs
+def search_view_factory(view_class=SearchView, *args, **kwargs):
+    def search_view(request, *view_args, **view_kwargs):
+        return view_class(*args, **kwargs)(request, *view_args, **view_kwargs)
+    return search_view
+
+search = search_view_factory(
+    view_class=HelpSearchView,
+    template='help/search.html',
+    searchqueryset=SearchQuerySet().models(Page).order_by('title'),
+    form_class=HighlightedSearchForm,
+)
+
 
 
 @user_flag_required('help_writer')

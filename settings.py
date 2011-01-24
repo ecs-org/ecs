@@ -379,6 +379,7 @@ CELERY_IMPORTS = (
     'ecs.workflow.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',
+    'ecs.help.tasks',
 )                 
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True

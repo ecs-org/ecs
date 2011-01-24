@@ -2,6 +2,7 @@ import os
 import mimetypes
 
 from django.db import models
+from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
@@ -69,3 +70,14 @@ class Attachment(models.Model):
 
 import reversion
 reversion.register(Page)
+
+def _post_page_delete(sender, **kwargs):
+    from haystack import site
+    site.get_index(Page).remove_object(kwargs['instance'])
+    
+def _post_page_save(sender, **kwargs):
+    from ecs.help.tasks import index_help_page
+    index_help_page.apply_async(args=[kwargs['instance'].pk])
+
+post_delete.connect(_post_page_delete, sender=Page)
+post_save.connect(_post_page_save, sender=Page)
