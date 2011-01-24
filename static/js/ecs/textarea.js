@@ -33,16 +33,29 @@ ecs.textarea = {
         }
     },
     measureHeight: function(textarea){
-        if(!this.helper){
-            this.helper = new Element('div');
-            this.helper.setStyles({position: 'absolute', left: '-9999px', top: '0px', 'white-space': 'pre-wrap'});
-            //this.helper.setStyles({left: '800px', 'z-index': 100000, 'background-color': '#ffffff'});
-            document.body.appendChild(this.helper);
+        if(!this.measure_helper){
+            this.measure_helper = new Element('div');
+            this.measure_helper.setStyles({position: 'absolute', left: '-9999px', top: '0px', 'white-space': 'pre-wrap', 'word-wrap': 'break-word'});
+            //this.measure_helper.setStyles({left: '800px', 'z-index': 100000, 'background-color': '#ffffff'});
+            document.body.appendChild(this.measure_helper);
         }
-        this.helper.setStyle('width', textarea.cols + 'em');
-        this.helper.setStyles(textarea.getStyles('font-family', 'letter-spacing', 'font-size', 'font-weight', 'font-variant', 'line-height', 'padding-left', 'padding-top', 'border'));
-        this.helper.innerHTML = textarea.value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g, '<br/>') + '.';
-        return this.helper.getSize().y;
+        if(!this.width_helper){
+            this.width_helper = new Element('div');
+            this.width_helper.setStyles({position: 'absolute', left: '-9999px', top: '0px'});
+            document.body.appendChild(this.width_helper);
+        }
+        if(!textarea.isVisible()){
+            var textarea_copy = textarea.clone();
+            textarea_copy.inject(this.width_helper);
+            var width = textarea_copy.getStyle('width');
+            textarea_copy.dispose();
+        } else {
+            var width = textarea.getStyle('width');
+        }
+        this.measure_helper.setStyles(textarea.getStyles('font-family', 'letter-spacing', 'font-size', 'font-weight', 'font-variant', 'line-height', 'padding-left', 'padding-top', 'border'));
+        this.measure_helper.setStyle('width', width);
+        this.measure_helper.innerHTML = textarea.value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g, '<br/>') + '.';
+        return this.measure_helper.getSize().y;
     },
     installToolbar: function(el, items, target){
         return $(el).retrieve('ecs.textarea.TextArea').installToolbar(items, target);
