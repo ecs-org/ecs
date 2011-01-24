@@ -29,7 +29,7 @@ def windmill_run(browser, command, targettest=None, targethost=None, *args):
 
 ## decorators ##
 
-def logged_in(username='windmill@example.org', password='shfnajwg9e'):
+def authenticated(username='windmill@example.org', password='shfnajwg9e'):
     def decorator(fn):
         @wraps(fn)
         def decorated(*args, **kwargs):

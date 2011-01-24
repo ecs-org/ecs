@@ -3,7 +3,7 @@ import os
 import random
 import cicero
 
-from ecs.integration.windmillsupport import logged_in
+from ecs.integration.windmillsupport import authenticated
 
 MENSCHENRECHTSERKLAERUNG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'menschenrechtserklaerung.pdf')
 
@@ -349,42 +349,42 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(value=u'Ok')
     client.waits.forPageLoad(timeout=u'20000')
     client.waits.sleep(milliseconds=u'5000')
-   # client.select(option=u'---------', id=u'userswitcher_input')
-   # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
+    # client.select(option=u'---------', id=u'userswitcher_input')
+    # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
-@logged_in()
+@authenticated()
 def test_submit_simplest(client):
     create_submission(client)
 
-@logged_in()
+@authenticated()
 def test_submit_simple(client):
     create_submission(client, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_amg(client):
     create_submission(client, amg=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_mpg(client):
     create_submission(client, mpg=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_thesis(client):
     create_submission(client, thesis=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_amg_mpg(client):
     create_submission(client, amg=True, mpg=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_amg_thesis(client):
     create_submission(client, amg=True, thesis=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_mpg_thesis(client):
     create_submission(client, mpg=True, thesis=True, upload=True)
 
-@logged_in()
+@authenticated()
 def test_submit_amg_mpg_thesis(client):
     create_submission(client, amg=True, mpg=True, thesis=True, upload=True)
 

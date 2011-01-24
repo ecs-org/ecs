@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import cicero
 
-from ecs.integration.windmillsupport import logged_in
+from ecs.integration.windmillsupport import authenticated
 
 
 def create_message(client, times=1):
@@ -28,11 +28,11 @@ def create_message(client, times=1):
     client.select(option=u'---------', id=u'userswitcher_input')
     client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
-@logged_in()
+@authenticated()
 def test_new_message(client):
     create_message(client)
 
-@logged_in()
+@authenticated()
 def test_10_new_messages(client):
     create_message(client, times=10)
 
