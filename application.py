@@ -56,7 +56,8 @@ django-nose:inst:all:pypi:django-nose
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 # for manage.py test_windmill we need windmill
 windmill:inst:all:https://github.com/windmill/windmill/tarball/master
-
+# for random text generation in windmill tests
+cicero:inst:all:pypi:cicero
 
 # queuing: celery 
 amqplib:inst:all:pypi:amqplib\>=0.6
