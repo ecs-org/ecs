@@ -351,6 +351,8 @@ BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/p
 # ecs.help system
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
+# set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
+USE_TEXTBOXLIST = True
 
 # thirdparty settings
 ######################
@@ -399,7 +401,7 @@ COMPRESS_JS_FILTERS = []
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
-USE_TEXTBOXLIST = True
+
 
 # settings override 
 ###################

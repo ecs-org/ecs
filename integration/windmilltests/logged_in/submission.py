@@ -3,22 +3,21 @@ import os
 import random
 import cicero
 
-from django.conf import settings
-
 from ecs.integration.windmillsupport import logged_in
 
-
-MENSCHENRECHTSERKLAERUNG = os.path.join(settings.PROJECT_DIR, 'integration', 'tests', 'menschenrechtserklaerung.pdf')
+MENSCHENRECHTSERKLAERUNG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'menschenrechtserklaerung.pdf')
 
 def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
     client.click(xpath=u"//div[@id='usermenu']/ul/li[4]/span")
+    client.waits.forPageLoad(timeout=u'3000')
+    client.waits.forElement(link=u'presenter1@example.org', timeout=u'3000')
     client.click(link=u'Neuer Antrag')
 
     # Eckdaten
-    client.waits.forPageLoad(timeout=u'2000')
+    client.waits.forPageLoad(timeout=u'3000')
     client.waits.sleep(milliseconds=u'2000')
     if amg:
         client.check(id=u'id_project_type_reg_drug_within_indication')
@@ -113,7 +112,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.check(id=u'id_submitter_is_main_investigator')
     client.click(id=u'id_submitter_contact_gender')
     client.select(option=u'Frau', id=u'id_submitter_contact_gender')
-    client.click(xpath=u"//select[@id='id_submitter_contact_gender']/option[2]")
+    #client.click(xpath=u"//select[@id='id_submitter_contact_gender']/option[2]")
     client.click(id=u'id_submitter_contact_title')
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_submitter_contact_title')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_submitter_contact_first_name')
@@ -144,7 +143,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
         client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_substance_p_c_t_application_type')
         client.click(id=u'id_substance_p_c_t_gcp_rules')
         client.select(option=u'Ja', id=u'id_substance_p_c_t_gcp_rules')
-        client.click(xpath=u"//select[@id='id_substance_p_c_t_gcp_rules']/option[2]")
+        #client.click(xpath=u"//select[@id='id_substance_p_c_t_gcp_rules']/option[2]")
         client.click(id=u'id_substance_p_c_t_final_report')
         client.select(option=u'Nein', id=u'id_substance_p_c_t_final_report')
 
@@ -161,16 +160,16 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
         client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_medtech_manufacturer')
         client.click(id=u'id_medtech_certified_for_exact_indications')
         client.select(option=u'Ja', id=u'id_medtech_certified_for_exact_indications')
-        client.click(xpath=u"//select[@id='id_medtech_certified_for_exact_indications']/option[2]")
+        #client.click(xpath=u"//select[@id='id_medtech_certified_for_exact_indications']/option[2]")
         client.click(id=u'id_medtech_certified_for_other_indications')
         client.select(option=u'Ja', id=u'id_medtech_certified_for_other_indications')
-        client.click(xpath=u"//select[@id='id_medtech_certified_for_other_indications']/option[2]")
+        #client.click(xpath=u"//select[@id='id_medtech_certified_for_other_indications']/option[2]")
         client.click(id=u'id_medtech_ce_symbol')
         client.select(option=u'Nein', id=u'id_medtech_ce_symbol')
-        client.click(xpath=u"//select[@id='id_medtech_ce_symbol']/option[3]")
+        #client.click(xpath=u"//select[@id='id_medtech_ce_symbol']/option[3]")
         client.click(id=u'id_medtech_manual_included')
         client.select(option=u'Nein', id=u'id_medtech_manual_included')
-        client.click(xpath=u"//select[@id='id_medtech_manual_included']/option[3]")
+        #client.click(xpath=u"//select[@id='id_medtech_manual_included']/option[3]")
         client.click(id=u'id_medtech_technical_safety_regulations')
         client.type(text=cicero.sentences(n=1, min=10, max=10)[0], id=u'id_medtech_technical_safety_regulations')
         client.click(id=u'id_medtech_departure_from_regulations')
@@ -236,7 +235,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(link=u'Biometrie')
     client.click(id=u'id_study_plan_blind')
     client.select(option=u'doppelblind', id=u'id_study_plan_blind')
-    client.click(xpath=u"//select[@id='id_study_plan_blind']/option[4]")
+    #client.click(xpath=u"//select[@id='id_study_plan_blind']/option[4]")
     client.check(id=u'id_study_plan_placebo')
     client.click(id=u'id_study_plan_misc')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_study_plan_misc')
@@ -280,7 +279,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
         client.execJS(js=u'ecs.windmill_upload("{0}");'.format(MENSCHENRECHTSERKLAERUNG))
         client.click(id=u'id_document-doctype')
         client.select(option=u'patient information', id=u'id_document-doctype')
-        client.click(xpath=u"//select[@id='id_document-doctype']/option[3]")
+        #client.click(xpath=u"//select[@id='id_document-doctype']/option[3]")
         client.click(id=u'id_document-name')
         client.type(text=u'Menschenrechtserkl\xe4rung', id=u'id_document-name')
         client.click(id=u'id_document-version')
@@ -314,10 +313,10 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=random.randint(0,999), id=u'id_investigator-0-subject_count')
     client.click(value=u'21')
     client.select(option=u'Ethikkomission der Medizinischen Universit\xe4t Wien', id=u'id_investigator-0-ethics_commission')
-    client.click(xpath=u"//select[@id='id_investigator-0-ethics_commission']/option[2]")
+    #client.click(xpath=u"//select[@id='id_investigator-0-ethics_commission']/option[2]")
     client.click(id=u'id_investigator-0-contact_gender')
     client.select(option=u'Herr', id=u'id_investigator-0-contact_gender')
-    client.click(xpath=u"//select[@id='id_investigator-0-contact_gender']/option[3]")
+    #client.click(xpath=u"//select[@id='id_investigator-0-contact_gender']/option[3]")
     client.click(id=u'id_investigator-0-contact_title')
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_investigator-0-contact_title')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigator-0-contact_first_name')
@@ -334,7 +333,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_investigator-0-specialist')
     client.click(id=u'id_investigatoremployee-0-sex')
     client.select(option=u'Herr', id=u'id_investigatoremployee-0-sex')
-    client.click(xpath=u"//select[@id='id_investigatoremployee-0-sex']/option[2]")
+    #client.click(xpath=u"//select[@id='id_investigatoremployee-0-sex']/option[2]")
     client.click(id=u'id_investigatoremployee-0-title')
     client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_investigatoremployee-0-title')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigatoremployee-0-surname')
@@ -345,8 +344,13 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(id=u'submit-button')
     client.click(name=u'submit')
     client.waits.forPageLoad(timeout=u'20000')
-    client.select(option=u'---------', id=u'userswitcher_input')
-    client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
+    client.waits.sleep(milliseconds=u'5000')
+    client.waits.forElement(timeout=u'10000', id=u'overlay')
+    client.click(value=u'Ok')
+    client.waits.forPageLoad(timeout=u'20000')
+    client.waits.sleep(milliseconds=u'5000')
+   # client.select(option=u'---------', id=u'userswitcher_input')
+   # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
 
 @logged_in()
 def test_submit_simplest(client):
