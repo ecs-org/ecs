@@ -100,11 +100,11 @@ def submission_workflow():
 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
-            ('initial_review', 'paper_submission_review'): None,
+            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged),
 
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
-            ('initial_thesis_review', 'paper_submission_review'): None,
+            ('initial_thesis_review', 'paper_submission_review'): Args(guard=is_acknowledged),
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
