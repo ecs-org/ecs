@@ -3,17 +3,25 @@
 
 {% block htmltitle %}Online Hilfe | {{ block.super }}{% endblock %}
 
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/help_formatting.css" />
+{% endblock %}
+
 {% block htmlbody %}
 <div id="help">
 	 <h1>ECS Onlinehilfe</h1>
+      {% block actions %}
+          <div id="help_nav">
+          <a href="{% url ecs.help.views.index %}">Übersicht</a>
+          {% if user|has_flag:'help_writer' %}
+              | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
+              | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
+          {% endif %}
+          | <a href="{% url ecs.help.views.search %}">Suche</a>
+					</div>
+      {% endblock %}
 	 <div id="help_body">
-	    {% block actions %}
-	        <a href="{% url ecs.help.views.index %}">Übersicht</a>
-	        {% if user|has_flag:'help_writer' %}
-	            | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
-	            | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
-	        {% endif %}
-	    {% endblock %}
 	    <div id="help_content">
 	        {% block content %}
 	

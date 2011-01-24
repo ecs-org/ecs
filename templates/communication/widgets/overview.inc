@@ -2,7 +2,7 @@
 
 <ol class="messages">
 {% for thread in threads %}
-    <li class="message {% cycle 'even' 'odd' %}{% if thread.last_message.unread %} unread{% endif %}">
+    <li class="message {% if thread.last_message.unread %} unread{% endif %}">
         <h3>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h3>
         <ol>
             {% for message in thread.messages.all %}

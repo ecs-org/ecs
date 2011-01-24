@@ -48,7 +48,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
     }
     order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type').order_by(*order_by)
+    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None)
     related_url = request.GET.get('url', None)
     if related_url:
         related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if related_url in t.get_final_urls()]
@@ -95,10 +95,10 @@ def my_tasks(request, template='tasks/compact_list.html'):
     }
 
     task_flavors = {
-        'mine': lambda tasks: tasks.filter(assigned_to=request.user, accepted=True),
-        'assigned': lambda tasks: tasks.filter(assigned_to=request.user, accepted=False),
-        'open': lambda tasks: tasks.filter(assigned_to=None),
-        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__indisposed=True),
+        'mine': lambda tasks: tasks.filter(assigned_to=request.user, accepted=True).order_by(*order_by),
+        'assigned': lambda tasks: tasks.filter(assigned_to=request.user, accepted=False).order_by(*order_by),
+        'open': lambda tasks: tasks.filter(assigned_to=None).order_by(*order_by),
+        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__indisposed=True).order_by(*order_by),
     }
 
     for key, func in task_flavors.items():
@@ -109,6 +109,9 @@ def my_tasks(request, template='tasks/compact_list.html'):
 
 def list(request):
     return my_tasks(request, template='tasks/list.html')
+
+def popup(request):
+    return my_tasks(request, template='tasks/popup.html')
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)

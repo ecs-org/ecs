@@ -102,12 +102,12 @@ def submission_billing(request):
         htmlmail = unicode(render_html(request, 'billing/email/submissions.html', {}))
         plainmail = whitewash(htmlmail)
 
-        deliver(subject=_(u'Billing request'), 
+        deliver(settings.BILLING_RECIPIENT_LIST,
+            subject=_(u'Billing request'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('billing-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=settings.BILLING_RECIPIENT_LIST, 
         )
 
         summary, total = collect_submission_billing_stats(selected_for_billing)
@@ -147,7 +147,7 @@ def external_review_payment(request):
             submissions = reviewer.reviewed_submissions.filter(pk__in=[s.pk for s in selected_for_payment])
             xls.write_row(i + 1, [
                 len(submissions),
-                reviewer.get_full_name(),
+                unicode(reviewer),
                 ", ".join(s.get_ec_number_display() for s in submissions),
                 len(submissions) * price.price,
             ])
@@ -169,12 +169,12 @@ def external_review_payment(request):
         htmlmail = unicode(render_html(request, 'billing/email/external_review.html', {}))
         plainmail = whitewash(htmlmail)
         
-        deliver(subject=_(u'Payment request'), 
+        deliver(settings.BILLING_RECIPIENT_LIST,
+            subject=_(u'Payment request'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[('externalreview-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=settings.BILLING_RECIPIENT_LIST, 
         )
         
         return render(request, 'billing/external_review_summary.html', {

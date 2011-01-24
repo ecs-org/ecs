@@ -21,6 +21,14 @@ logger = logging.getLogger('sentry.errors')
 logger.propagate = False
 logger.addHandler(logging.StreamHandler())
 
+# patch the user __unicode__ method, so the hash in the username field does not show up
+def _patch_user_unicode():
+    from django.contrib.auth.models import User
+    from ecs.users.utils import get_full_name
+
+    User.__unicode__ = get_full_name
+
+_patch_user_unicode()
 
 urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/'}),

@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load i18n core userutils %}
+{% load i18n core %}
 
 {% block menuSelection %}communication{% endblock %}
 
@@ -30,8 +30,8 @@
           <td>{{ thread.last_message.unread|yesno }}</td>
           <td>{{ thread.task|default:'-' }}</td>
           {% block extra_message_table_cells %}
-              <td>{{ thread.last_message.sender|full_name }}</td>
-              <td>{{ thread.last_message.receiver|full_name }}</td>
+              <td>{{ thread.last_message.sender }}</td>
+              <td>{{ thread.last_message.receiver }}</td>
           {% endblock %}
           <td>
               {% block message_actions %}

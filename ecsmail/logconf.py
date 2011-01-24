@@ -43,15 +43,25 @@ class _LogFormatter(logging.Formatter):
             formatted = formatted.rstrip() + "\n" + record.exc_text
         return formatted.replace("\n", "\n    ")
 
-logging.getLogger().setLevel(logging.DEBUG)
-color = False
-if curses and sys.stderr.isatty():
-    try:
-        curses.setupterm()
-        if curses.tigetnum("colors") > 0:
-            color = True
-    except:
-        pass
-channel = logging.StreamHandler()
-channel.setFormatter(_LogFormatter(color=color))
-logging.getLogger().addHandler(channel)
+
+def setLogging(logfile=None, loglevel=None):
+    if not loglevel:
+        loglevel = logging.DEBUG
+
+    logging.getLogger().setLevel(loglevel)
+    color = False
+    if curses and sys.stderr.isatty():
+        try:
+            curses.setupterm()
+            if curses.tigetnum("colors") > 0:
+                color = True
+        except:
+            pass
+    
+    if not logfile:
+        channel = logging.StreamHandler()
+    else:
+        channel = logging.FileHandler(logfile, 'a', 'utf-8')
+
+    channel.setFormatter(_LogFormatter(color=color))
+    logging.getLogger().addHandler(channel)

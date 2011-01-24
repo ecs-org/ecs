@@ -12,7 +12,7 @@ from ecs.utils.viewutils import render, redirect_to_next_url, render_html
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.core.forms import DocumentForm
+from ecs.documents.forms import DocumentForm
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
@@ -141,12 +141,12 @@ def create_notification(request, notification_type_pk=None):
 
     doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
     
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
+        save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
         
         request.docstash.update({
@@ -157,8 +157,8 @@ def create_notification(request, notification_type_pk=None):
         })
         request.docstash.name = "%s" % notification_type.name
         
-        if autosave:
-            return HttpResponse(_('autosave successful'))
+        if save or autosave:
+            return HttpResponse(_('save successful'))
         
         if document_form.is_valid():
             documents = set(request.docstash['documents'])
@@ -168,7 +168,7 @@ def create_notification(request, notification_type_pk=None):
                 if doc in documents:
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+            document_form = DocumentForm(prefix='document')
 
         if submit and form.is_valid():
             notification = form.save(commit=False)
@@ -235,11 +235,12 @@ def distribute_notification_answer(request, notification_pk=None):
                     }))
                     plainmail = whitewash(htmlmail)
 
-                    deliver(subject=_('New Notification Answer'), 
+                    deliver(party.email,
+                        subject=_('New Notification Answer'), 
                         message=plainmail,
                         message_html=htmlmail,
                         from_email=settings.DEFAULT_FROM_EMAIL,
-                        recipient_list=[party.email])
+                    )
 
     return render(request, 'notifications/answers/distribute.html', {
         'notification': notification,

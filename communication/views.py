@@ -19,7 +19,7 @@ from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadD
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 
-def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None):
+def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None, bump_message_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
 
     if submission_pk is not None:
@@ -36,6 +36,13 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None)
             
         }, instance = Message(thread=thread))
         submission = thread.submission
+    elif bump_message_pk is not None:
+        bump_message = get_object_or_404(Message, pk=bump_message_pk)
+        thread = bump_message.thread
+        form = ReplyToMessageForm(request.POST or None, initial={
+            'text': bump_message.text
+        }, instance = Message(thread=thread))
+        to_user = bump_message.receiver
     else:
         form = SendMessageForm(request.POST or None)
         task_pk = request.GET.get('task')
@@ -65,6 +72,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None)
         'task': task,
         'form': form,
         'thread': thread,
+        'bump': bump_message_pk is not None,
     })
 
 def read_thread(request, thread_pk=None):
@@ -77,11 +85,6 @@ def read_thread(request, thread_pk=None):
         'thread': thread,
         'message_list': thread.messages.order_by('-timestamp'),
     })
-
-def bump_message(request, message_pk=None):
-    message = get_object_or_404(Message.objects.by_user(request.user), pk=message_pk)
-    message.thread.add_message(request.user, message.text)
-    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
 
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)

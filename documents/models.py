@@ -20,8 +20,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
+from ecs.utils.msutils import generate_media_url, get_from_mediaserver
 from ecs.utils.pdfutils import pdf_page_count, pdf_isvalid
 from ecs.authorization import AuthorizationManager
+from ecs.users.utils import get_current_user
 
 
 class DocumentPersonalization(models.Model):
@@ -62,7 +64,6 @@ class DocumentFileStorage(FileSystemStorage):
             # file_ext includes the dot.
             counter += 1
             name = os.path.join(dir_name, "%s_%04d%s" % (file_root, counter, file_ext))
-        print name
         return name
 
     def path(self, name):
@@ -91,22 +92,25 @@ C_BRANDING_CHOICES = (
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
-    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
-    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     pages = models.IntegerField(null=True, blank=True)
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
+    deleted = models.BooleanField(default=False, blank=True)
 
+    # user supplied data
+    file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
+    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
+    name = models.CharField(max_length=250)
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
-    deleted = models.BooleanField(default=False, blank=True)
+    replaces_document = models.ForeignKey('Document', null=True, blank=True)
     
+    # relation to a object
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
-    replaces_document = models.ForeignKey('Document', null=True, blank=True)
     
     objects = DocumentManager()
     
@@ -114,17 +118,37 @@ class Document(models.Model):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
-        return "%s Version %s vom %s" % (t, self.version, self.date.strftime('%d.%m.%Y'))
+        return "{0} {1}-{2} vom {3}".format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
         ext = mimetypes.guess_extension(self.mimetype)
-        name_slices = [self.doctype and self.doctype.name or 'Unterlage', self.version, self.date.strftime('%Y.%m.%d')]
+        name_slices = [self.doctype.name if self.doctype else 'Unterlage', self.name, self.version, self.date.strftime('%Y.%m.%d')]
         if self.parent_object and hasattr(self.parent_object, 'get_filename_slice'):
             name_slices.insert(0, self.parent_object.get_filename_slice())
         name = slugify('-'.join(name_slices))
-        fullname = '%s%s' % (name, ext)
-        return fullname
+        return ''.join([name, ext])
+    
+    def get_downloadurl(self):
+        if (not self.allow_download) or (self.branding not in [c[0] for c in C_BRANDING_CHOICES]):
+            return None
+    
+        if self.mimetype != 'application/pdf' or self.branding == 'n':
+            personalization = None
+            brand = False
+        elif self.branding == 'b':
+            personalization = None
+            brand = True
+        elif self.branding == 'p':
+            personalization = self.add_personalization(get_current_user()).id
+            brand = False
+        else:
+            return None
 
+        return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
+
+    def get_from_mediaserver(self):
+        return get_from_mediaserver(self.uuid_document, self.get_filename(), self.add_personlization(request.user) if self.branding=='p' else None)
+        
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
         return None
@@ -160,13 +184,14 @@ class Document(models.Model):
         if self.mimetype == 'application/pdf':
             self.pages = pdf_page_count(self.file) # calculate number of pages
 
-        first_save = True if self.pk is None else False
-        super(Document, self).save(**kwargs)
+        first_save = self.pk is None
+        rval = super(Document, self).save(**kwargs)
         
         if first_save:
-            #print("doc file %s , path %s, original %s" % (str(self.file.name), str(self.file.path), str(self.original_file_name)))
             # upload it via celery to the storage vault
             encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
+
+        return rval
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)

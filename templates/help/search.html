@@ -1,0 +1,36 @@
+{% extends 'help/base.html' %}
+{% load highlight %}
+
+{% block content %}
+<form method="get" action="" style="background-color:#eeeeff">
+    {{ form.q }}
+    <input type="submit" value="Suchen">
+</form>
+{% if query %}
+    {% if page.object_list %}
+        <ul class="results">
+        {% for result in page.object_list %}
+            <li>
+                <a class="page" href="{% url ecs.help.views.view_help_page page_pk=result.pk %}">
+                    {{ result.title }}
+                </a>
+                {% highlight result.object.text with query class "highlight" %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+    {% if page.has_previous or page.has_next %}
+        <div>
+            {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
+            |
+            {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
+        </div>
+    {% endif %}
+{% else %}
+    Suchbegriffe werden mit UND verknüpft, exakte Phrasen mit Anführungszeichen, "-" Präfix um Begriffe auszuschließen.
+{% endif %}
+</div>
+
+{% endblock %}

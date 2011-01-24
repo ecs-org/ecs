@@ -144,6 +144,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.12', 'project_type_retrospective', _(u'Retrospective data analysis')), # new
     FieldInfo('2.1.13', 'project_type_questionnaire', _(u'Questionnaire investigation')), # new
     FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=_(u'Psychological study')), # new
+    FieldInfo('2.1.15', 'project_type_nursing_study', _(u'Nursing Scientific Study')), # new
     FieldInfo('2.2', 'specialism', _(u'special field')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _(u'Test substances')),
@@ -157,10 +158,10 @@ FormInfo(SubmissionForm, fields=(
     # 2.10 Charakterisierung der Prüfungsteilnehmer/innen
     FieldInfo('2.10.1', 'subject_minage', _(u'minimum age')),
     FieldInfo('2.10.2', 'subject_maxage', _(u'maximum age')),
-    FieldInfo('2.10.3', 'subject_noncompetents', _(u'Are also non competent includable?')),
-    FieldInfo('2.10.4', 'subject_males', _(u'male')),
-    FieldInfo('2.10.4', 'subject_females', _(u'female')),
-    FieldInfo('2.10.5', 'subject_childbearing', _(u'Are women of childbearing age includable?')),
+    FieldInfo('2.10.3', 'subject_noncompetents', _(u'Study includes non competent participants')),
+    FieldInfo('2.10.4', 'subject_males', _(u'Study includes male participants')),
+    FieldInfo('2.10.4', 'subject_females', _(u'Study includes female participants')),
+    FieldInfo('2.10.5', 'subject_childbearing', _(u'Study includes women of childbearing age')),
     FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study')),
     FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase')),
     FieldInfo('2.11.2', 'subject_duration_controls', _(u'Follow-up inspections')),

@@ -2,7 +2,7 @@
 {% load core %}
 
 {% block content %}
-<form action="" method="post" class="form main child">
+<form action="" method="post" class="form_main">
 <h3>Neues Top für die Sitzung {{ meeting.title }} am {{ meeting.start|date:"d.m.Y" }}</h3>
     <ol>
         {% for field in form %}

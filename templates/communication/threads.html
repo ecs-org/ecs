@@ -1,5 +1,5 @@
 {% extends "communication/list.html" %}
-{% load i18n userutils %}
+{% load i18n %}
 
 {% block content %}
 <div class="messages_overview">
@@ -24,7 +24,7 @@
 {% block message_actions %}
     {{ block.super }}
     {% if thread.last_message.sender == request.user %}
-        <a class="icon_bump" href="{% url ecs.communication.views.bump_message message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
+        <a class="icon_bump open-in-popup" href="{% url ecs.communication.views.send_message bump_message_pk=thread.last_message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
     {% else %}
         <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=thread.last_message.pk %}" title="{% trans 
         "answer" %}">answer</a>
@@ -38,9 +38,9 @@
 {% block extra_message_table_cells %}
     {% load userutils %}
     {% if thread.last_message.sender == request.user %}
-        <td>{% trans "an" %} {{ thread.last_message.receiver|full_name }}</td>
+        <td>{% trans "an" %} {{ thread.last_message.receiver }}</td>
     {% else %}
-        <td>{% trans "von" %} {{ thread.last_message.sender|full_name }}</td>
+        <td>{% trans "von" %} {{ thread.last_message.sender }}</td>
     {% endif %}
 {% endblock %}
 

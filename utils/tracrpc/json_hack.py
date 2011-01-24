@@ -48,13 +48,13 @@ def monkey_load(obj):
     if type(obj) is types.ListType:
         return_list = []
         for entry in obj:
-            return_list.append(load(entry))
+            return_list.append(monkey_load(entry))
         return return_list
     # Othewise, it's a dict type
     if '__jsonclass__' not in obj.keys():
         return_dict = {}
         for key, value in obj.iteritems():
-            new_value = load(value)
+            new_value = monkey_load(value)
             return_dict[key] = new_value
         return return_dict
     # It's a dict, and it's a __jsonclass__

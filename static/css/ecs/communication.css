@@ -2,44 +2,34 @@
   margin: 0;
   padding: 0;
 }
-.messages_overview {
-  display: block;
-  min-width: 700px;
-  border: 1px solid #ddd;
-  background: #f9feff;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-.messages_overview, .messages {
-  font-size: 10pt;
-}
-.form.message ol li {
+.form_main .message ol li {
   display: block;
   clear: both;
   list-style-type: none;
   margin-bottom: 10px;
   font-size: 9pt;
 }
-.form.message ol li label {
+.form_main .message ol li label {
   display: block;
   width: 100px;
   margin: 0 10px 10px 0;
   text-align: right;
   float: left;
 }
-.form.message ol li textarea {
+.form_main .message ol li textarea {
   height: 16em;
   display: block;
   width: 30em;
 }
-.form.message input, .form.message textarea {
+.form_main .message input, .form_main message textarea {
   border: 1px solid #999;
   padding: 2px;
 }
 .message_display {
   display: block;
-  padding: 20px;
-  font-size: 9pt;
+}
+.message_display form {
+  width: 500px;
 }
 .message_display .item {
   position: relative;
@@ -56,9 +46,14 @@
 }
 .message_display h3 {
   display: block;
-  font-size: 1.2em;
   font-weight: lighter;
   margin-bottom: 10px;
+}
+.message_display label {
+  display: inline-block;
+  width: 100px;
+  font-weight: bolder;
+  vertical-align: top;
 }
 .message_display .actions {
   width: 30px;
@@ -67,7 +62,11 @@
   right: 0px;
 }
 .message_display pre {
-  padding: 20px;
+  margin: 10px 0;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #C6C9CB;
+  -moz-box-shadow: 1px 1px 0 #d8d8d8;
 }
 .message_display .actions a {
   display: inline-block;
@@ -85,26 +84,7 @@ table.messages .threadstart {
 #content .messages_header, #content .messages th, #content .messages td {
   padding: 5px;
 }
-.messages th {
-  background: #eee;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-  font-size: 11pt;
-}
-.messages td {
-  background: #fff;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
-}
 
-.message_display .item.odd {
-  background-color: #e8e8d8;
-	border: 1px solid #ddd;
-}
-.message_display .item.even {
-  background-color: #efefdd;
-	border: 1px solid #ddd;
-}
 
 /* icons */
 

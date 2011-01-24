@@ -200,6 +200,7 @@ ecs.setupInvestigatorFormSet = function(tabController, readonly){
                 f.getElement('.delete_row').show();
             });
         }
+
         
         var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
             prefix: 'investigatoremployee',
@@ -238,7 +239,7 @@ ecs.setupForms = function(){
     var setup = {};
     if(tabHeaders.length){
         var tabController = new ecs.TabController($$('.tab_header_groups > li'));
-        var mainForm = document.getElement('form.tabbed.main');
+        var mainForm = document.getElement('.innerwrap');
         if(mainForm){
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                 tabController: tabController,
@@ -247,7 +248,7 @@ ecs.setupForms = function(){
             setup.mainForm = form;
         }
         var readonly = true;
-        if(document.getElement('.form.main').tagName == 'FORM'){
+        if(document.getElement('.form_main').tagName == 'FORM'){
             readonly = false;
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);
@@ -277,7 +278,7 @@ ecs.setupForms = function(){
     }
 
     /* XXX: cleanup the following code (FMD2) */
-    $$('form.main').getElements('input[type=submit].hidden').each(function(button){
+    $$('form_main').getElements('input[type=submit].hidden').each(function(button){
         button.setStyle('display', 'none');
     });
     $$('a.submit_main_form').each(function(link){
@@ -343,7 +344,33 @@ ecs.FormFieldController = new Class({
     },
     onFieldValueChange: function(e, initial){
         if(this.toggleTab){
-            this.toggleTab.tab.setDisabled(!this.getValues().some(function(x){ return !!x;}));
+            var enable = this.getValues().some(function(x){ return !!x;});
+            this.toggleTab.tab.setDisabled(!enable);
+            if(this.toggleTab.requiredFields){
+                this.toggleTab.requiredFields.map($).each(function(f){
+                    var li = f.getParent('li');
+                    var label = li.getChildren('label')[0];
+                    if(enable && !li.hasClass('required')){
+                        li.addClass('required');
+                        var star = new Element('span', {'class': 'star', 'style': 'color: red;'});
+                        star.innerHTML = '*';
+                        var paperform_number = label.getChildren('.paperform_number')[0];
+                        if(paperform_number){
+                            star.injectBefore(paperform_number);
+                        } else {
+                            star.inject(label, 'bottom');
+                        }
+                    } else if(!enable && li.hasClass('required')){
+                        li.removeClass('required');
+                        label.getChildren('.star').each(function(s){
+                            s.dispose();
+                        });
+                        li.getChildren('.errorlist').each(function(e){
+                            e.hide();
+                        });
+                    }
+                }, this);
+            }
         }
     },
     onChange: function(e, initial){
@@ -385,3 +412,18 @@ ecs.FormFieldController = new Class({
         }, this);
     }
 });
+
+
+/* windmill helper stuff*/
+ecs.windmill_upload = function(filename) {
+    var element = document.createElement('UploadAssistantDataElement');
+    element.setAttribute('target_id', 'id_document-file');
+    element.setAttribute('target_value', filename);
+    document.documentElement.appendChild(element);
+
+    var evt = document.createEvent('Events');
+    evt.initEvent('UploadAssistantSetValue', true, false);
+    element.dispatchEvent(evt);
+}
+
+

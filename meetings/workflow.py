@@ -33,5 +33,5 @@ class MeetingDay(Activity):
 class MeetingProtocolSending(Activity):
     class Meta:
         model = Meeting
-        
-        
+
+    pass

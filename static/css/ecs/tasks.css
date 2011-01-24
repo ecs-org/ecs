@@ -1,35 +1,28 @@
-.task_back_log table {
-  border: 1px solid #ddd;
-  border-left: none;
-}
-.task_back_log td, .task_back_log th {
-  border-left: 1px solid #ddd;
-}
-.task_back_log th {
-  border-bottom: 1px solid #ddd;
-}
-.task_back_log tr.closed td {
-  color: #999;
-}
-
 /* TaskForm */
 
 #task_form {
   padding: 10px;
-  font-size: 10pt;
+  font-size: 12px;
   max-width: 650px;
 }
 #task_form ul {
   float: left;
   display: block;
-  max-width: 100%;
+  width: 100%;
 }
 #task_form li {
-  height: 30px;
-  vertical-align: text-top;
   list-style-type: none;
   display: block;
+  float: left;
+  width: 100%;
   clear: both;
+  padding-top: 3px;
+}
+#task_form li:nth-child(odd) {
+  background: #ddd;
+}
+#task_form li:nth-child(even) {
+  background: #eee;
 }
 #task_form .errors {
   color: #ff0000;
@@ -67,7 +60,7 @@
   margin-bottom: 0;
 }
 #task_form .task_indent textarea {
-  height: 10em;
+  height: 150px;
 }
 .show_all {
   margin-bottom: 10px;
@@ -93,37 +86,30 @@
 
 /* TaskList */
 
-#task_main {
-  padding: 10px;
-}
-.task_full {
-  background: #f9feff;
-  min-width: 700px;
-  width: 100%;
-  display: block;
-	border: 1px solid #ddd;
-}
 .task_list {
   margin-bottom: 10px;
 }
 #task_list_filter {
   margin-bottom: 10px;
 }
-.task_list_choose input[type=checkbox] {
-  margin-top: 5px;
-}
 .task_list_choose label {
   display: inline-block;
-  margin: 5px 5px 3px 1px;
+  margin: 0 5px;
   cursor: pointer;
 }
 #task_main .task_list_choose {
   min-width: 100px;
   border-bottom: 1px solid #ccc;
   padding-bottom: 3px;
+  margin: 0 0 5px;
 }
 #task_main .task_list_choose select {
   padding: 0 !important;
+  width: 150px;
+}
+.task_list_choose li {
+  display: inline;
+  list-style: none;
 }
 .task_item {
   background-color: #EFEFD1;
@@ -135,7 +121,7 @@
   margin-right: 5px;
 }
 .task_list a, #task_main label, #task_main table {
-  font-size: 10pt;
+  font-size: 12px;
 }
 .task_item:nth-child(odd) {
   background-color: #e8e8d8;
@@ -148,26 +134,6 @@
   border-bottom: 1px solid #ddd;
 }
 
-#task_main h1 {
-  display: block;
-  font-size: 1.4em;
-  margin-bottom: 20px;
-  font-weight: lighter;
-}
-#task_main h2, .TaskList h2 {
-  display: block;
-  font-size: 1.2em;
-  margin: 5px 0;
-  font-weight: lighter;
-  letter-spacing: 1px;
-}
-#task_main h3, .TaskList h3 {
-  display: block;
-  font-size: 1.0em;
-  font-weight: lighter;
-  margin: 5px 0;
-  letter-spacing: 1px;
-}
 a {
   text-decoration: none;
   color: #2b558e;
@@ -175,18 +141,12 @@ a {
 a:hover {
   text-decoration: underline;
 }
-.task_list_choose li {
-  display: inline;
-  list-style: none;
-}
-#content ul.task_list_choose {
-  border-bottom: 1px solid #ccc;
-  margin: 0;
-}
+
 .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
   width: 16px;
   height: 16px;
-  padding-left: 20px;
+  padding-left: 16px;
+  margin-right: 5px;
 }
 .task_mine {
   background: url(/static/images/icons.png) 0 -16px no-repeat;

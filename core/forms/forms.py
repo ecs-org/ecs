@@ -7,18 +7,15 @@ from django.core.validators import EMPTY_VALUES
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db.models import F
 
-from ecs.documents.models import Document
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
-from ecs.utils.pdfutils import pdf_isvalid
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -145,7 +142,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register', 
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_education_context', 
-            'project_type_misc', 
+            'project_type_misc', 'project_type_nursing_study',
             
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 'subject_childbearing', 
             'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration', 
@@ -211,71 +208,29 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
         return cleaned_data
 
-## documents ##
-
-class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
-    date = DateField(required=True)
-
-    def clean(self):
-        file = self.cleaned_data.get('file')
-        if not self.cleaned_data.get('original_file_name') and file:
-            self.cleaned_data['original_file_name'] = file.name
-        return self.cleaned_data
-        
-    def save(self, commit=True):
-        obj = super(SimpleDocumentForm, self).save(commit=False)
-        obj.original_file_name = self.cleaned_data.get('original_file_name')
-        if commit:
-            obj.save()
-        return obj
-    
-    class Meta:
-        model = Document
-        fields = ('file', 'date', 'version')
-
-
-class DocumentForm(SimpleDocumentForm):
-    def __init__(self, *args, **kwargs):
-        document_pks = kwargs.get('document_pks', [])
-        if 'document_pks' in kwargs.keys():
-            del kwargs['document_pks']
-        super(DocumentForm, self).__init__(*args, **kwargs)
-        self.fields['replaces_document'].queryset = Document.objects.filter(pk__in=document_pks)
-
-    def clean_file(self):
-        file = self.cleaned_data['file']
-        if not file:
-            return
-
-        if not pdf_isvalid(file):
-            file.seek(0)
-            raise ValidationError(_(u'This Document is not a valid PDF document.'))
-
-        file.seek(0)
-        return file
-        
-    class Meta:
-        model = Document
-        exclude = ('uuid_document', 'hash', 'mimetype', 'pages', 'deleted', 'original_file_name', 'content_type', 'object_id')
-
-
 ## ##
 
-class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        if 'initial' not in kwargs:
-            kwargs.setdefault('queryset', ForeignParticipatingCenter.objects.none())
-        super(BaseForeignParticipatingCenterFormSet, self).__init__(*args, **kwargs)
+class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = ForeignParticipatingCenter
+        exclude = ('submission_form',)
 
-ForeignParticipatingCenterFormSet = modelformset_factory(ForeignParticipatingCenter, formset=BaseForeignParticipatingCenterFormSet, extra=0, exclude=('submission_form',))
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
-class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseModelFormSet):
-    def __init__(self, *args, **kwargs):
-        if 'initial' not in kwargs:
-            kwargs.setdefault('queryset', NonTestedUsedDrug.objects.none())
-        super(BaseNonTestedUsedDrugFormSet, self).__init__(*args, **kwargs)
+ForeignParticipatingCenterFormSet = formset_factory(ForeignParticipatingCenterForm, formset=BaseForeignParticipatingCenterFormSet, extra=0)
+
+class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
+    class Meta:
+        model = NonTestedUsedDrug
+        exclude = ('submission_form',)
+
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
-NonTestedUsedDrugFormSet = modelformset_factory(NonTestedUsedDrug, formset=BaseNonTestedUsedDrugFormSet, extra=0, exclude=('submission_form',))
+NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm, formset=BaseNonTestedUsedDrugFormSet, extra=0)
 
 class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))

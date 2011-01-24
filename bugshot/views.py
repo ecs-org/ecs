@@ -6,8 +6,19 @@ from django.http import HttpResponse, HttpResponseBadRequest
 
 def shoot(request):
     trac = xmlrpclib.ServerProxy(settings.BUGSHOT_CONFIG['bugshoturl'])
+    
+    priority = "normal"
+    if request.POST.get('priority', ''):
+        try:
+            prioritynr = trac.ticket.priority.get(request.POST.get('priority', ''))
+            priority = request.POST.get('priority', '')
+        except xmlrpclib.Fault:
+            pass
+    
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
+        "owner": request.POST.get('owner', ''),
+        "priority": priority,
         "milestone": settings.BUGSHOT_CONFIG['milestone'], 
         "absoluteurl": request.POST.get('url', ''),
     }, True)

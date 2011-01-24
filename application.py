@@ -31,6 +31,9 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 
 # timezone handling
 pytz:inst:all:pypi:pytz
+# python docutils, needed by django, ecs, and others
+roman:inst:all:pypi:roman
+docutils:inst:all:pypi:docutils\>=0.7
 
 
 # django main
@@ -41,15 +44,20 @@ django-extensions:inst:all:http://github.com/django-extensions/django-extensions
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
-docutils:inst:all:pypi:docutils
 django-dbtemplates:inst:all:pypi:django-dbtemplates
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
-# testing
+
+# unit testing
 nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
-
+# for testing the export we need concurrent requests
+django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
+# for manage.py test_windmill we need windmill
+windmill:inst:all:https://github.com/windmill/windmill/tarball/master
+# for random text generation in windmill tests
+cicero:inst:all:pypi:cicero
 
 # queuing: celery 
 amqplib:inst:all:pypi:amqplib\>=0.6
@@ -184,8 +192,6 @@ mpmath:inst:all:pypi:mpmath
 # feedback: jsonrpclib for ecs feedback and fab ticket
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 
-# debugging
-django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 
 # logging: django-sentry
 django-indexer:inst:all:pypi:django-indexer
@@ -194,9 +200,23 @@ django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
 django-sentry:inst:all:pypi:django-sentry
 
-# diff_match_patch is used for the submission diff
+# ecs.help needs reversion from now on
+django-reversion:inst:all:pypi:django-reversion
+
+# diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
+"""
+
+
+# packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
+guitest_packages = """
+windmill:inst:all:https://github.com/windmill/windmill/tarball/master
+# for random text generation in windmill tests
+cicero:inst:all:pypi:cicero
+# Firefox and a vncserver is needed for headless gui testing
+firefox:req:apt:apt-get:firefox
+vncserver:req:apt:apt-get:vnc4server
 """
 
 
@@ -216,28 +236,32 @@ pylint:inst:all:pypi:pylint
 
 # packages needed or nice to have for development
 developer_packages=  """
+# debugging
+django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
+
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
 
-# mutt is needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
-mutt:req:apt:apt-get:mutt
-mutt:req:suse:zypper:mutt
-mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
-mutt:req:mac:macports:mutt
+## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
+#mutt:req:apt:apt-get:mutt
+#mutt:req:suse:zypper:mutt
+#mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
+#mutt:req:mac:macports:mutt
 
 # interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
 
+# FIXME: who needs simplejson, and why is it in developer packages
 simplejson:inst:all:pypi:simplejson
-# deployment: massimport statistics and diff-match-patch
+# deployment: massimport statistics 
 levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
+
 # required for django_extensions unittests:
 #pycrypto:inst:all:pypi:pycrypto>=2.0
 #pyasn1:inst:all:pypi:pyasn1
 #keyczar:inst:all:http://keyczar.googlecode.com/files/python-keyczar-0.6b.061709.tar.gz
-
 # maybe interesting: fudge:inst:all:pypi:fudge
 
 
@@ -294,7 +318,7 @@ a2enmod wsgi #should be automatic active because is extra package
 testing_bundle = main_packages
 default_bundle = main_packages
 future_bundle = main_packages
-developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
+developer_bundle = package_merge((default_bundle, quality_packages, guitest_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 system_bundle = package_merge((default_bundle, system_packages))
 
@@ -302,9 +326,11 @@ package_bundles = {
     'default': default_bundle,
     'testing': testing_bundle,
     'future': future_bundle,
+
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
+    'guitestaddon': guitest_packages,
     'system': system_bundle,
 }
 
@@ -320,6 +346,7 @@ upstart_targets = {
 
 test_flavors = {
     'default': './manage.py test',
+    'windmill': './manage.py test_windmill firefox integration',
     'mainapp': './manage.py test',
     'mediaserver': 'false',  # include in the mainapp tests
     'mailserver': 'false', # included in the mainapp tests
@@ -470,4 +497,25 @@ def wsgi_config(appname, use_sudo=True, dry=False, hostname=None, ip=None):
 def system_setup(appname, use_sudo=True, dry=False, hostname=None, ip=None):
     s = SetupApplication(use_sudo, dry, hostname, ip)
     s.system_setup()
+    
+
+def _wm_helper(browser, command, targettest, targethost, *args):
+    import sys
+    from deployment.utils import fabdir
+    # FIXME it seems without a PYTHON_PATH set we cant import from ecs...
+    sys.path.append(fabdir())
+    from ecs.integration.windmillsupport import windmill_run
+    return windmill_run(browser, command, targettest, targethost, *args)
+    
+def wmrun(browser, targettest, *args, **kwargs):
+    """ run windmill tests; Usage: fab app:ecs,wmrun,<browser>,targettest[,*args,[targethost=<url>]] """
+    print "args", args
+    print "kwargs", kwargs
+    targethost = kwargs["targethost"] if "targethost" in kwargs else "http://localhost:8000" 
+    _wm_helper(browser, "run", targettest, targethost, *args)
+    
+def wmshell(browser="firefox", *args, **kwargs):    
+    """ run windmill shell; Usage: fab app:ecs,wmshell,[<browser=firefox>[,*args,[targethost=<url>]]] """ 
+    targethost = kwargs["targethost"] if "targethost" in kwargs else "http://localhost:8000"
+    _wm_helper(browser, "shell", None, targethost, *args)
     

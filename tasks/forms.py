@@ -4,8 +4,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.users.forms import UserChoiceField
-
 
 class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
@@ -21,9 +19,9 @@ class TaskChoiceField(forms.ModelChoiceField):
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=TASK_MANAGEMENT_CHOICES)
     question_type = forms.ChoiceField(required=False, choices=TASK_QUESTION_TYPE)
-    assign_to = UserChoiceField(queryset=User.objects.all(), required=False, empty_label=_('<group>'))
+    assign_to = forms.ModelChoiceField(queryset=User.objects.all(), required=False, empty_label=_('<group>'))
     question = forms.CharField(required=False, widget=forms.Textarea())
-    receiver = UserChoiceField(queryset=User.objects.all(), required=False)
+    receiver = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')

@@ -162,6 +162,14 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.german_project_title
+
+    def project_title_display(self):
+        if self.german_project_title:
+            return self.german_project_title
+        elif self.project_title:
+            return self.project_title
+        else:
+            return None
         
     @property
     def multicentric(self):
@@ -272,6 +280,7 @@ class SubmissionForm(models.Model):
     sponsor_email = models.EmailField(null=True)
     sponsor_agrees_to_publishing = models.BooleanField(default=True)
     
+    invoice = models.ForeignKey(User, null=True, related_name='charged_submission_forms')
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
     invoice_address = models.CharField(max_length=60, null=True, blank=True)
@@ -303,6 +312,7 @@ class SubmissionForm(models.Model):
     project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
     project_type_misc = models.TextField(null=True, blank=True)
     project_type_psychological_study = models.BooleanField()
+    project_type_nursing_study = models.BooleanField()
     
     # 2.2
     specialism = models.TextField(null=True)
@@ -337,7 +347,7 @@ class SubmissionForm(models.Model):
     # 2.11
     subject_duration = models.CharField(max_length=200)
     subject_duration_active = models.CharField(max_length=200)
-    subject_duration_controls = models.CharField(max_length=200)
+    subject_duration_controls = models.CharField(max_length=200, null=True, blank=True)
 
     # 2.12
     subject_planned_total_duration = models.CharField(max_length=250)
@@ -383,7 +393,7 @@ class SubmissionForm(models.Model):
     german_primary_hypothesis = models.TextField(null=True)
     german_inclusion_exclusion_crit = models.TextField(null=True)
     german_ethical_info = models.TextField(null=True)
-    german_protected_subjects_info = models.TextField(null=True)
+    german_protected_subjects_info = models.TextField(null=True, blank=True)
     german_recruitment_info = models.TextField(null=True)
     german_consent_info = models.TextField(null=True)
     german_risks_info = models.TextField(null=True)
@@ -465,10 +475,11 @@ class SubmissionForm(models.Model):
             user = get_current_user()
             if user:
                 self.presenter = user
-        for x in ('submitter', 'sponsor'):
-            if getattr(self, '%s_email' % x):
+        for x in ('submitter', 'sponsor', 'invoice'):
+            email = getattr(self, '{0}_email'.format(x))
+            if email:
                 try:
-                    user = User.objects.filter(email=getattr(self, '%s_email' % x))[0]
+                    user = User.objects.filter(email=email)[0]
                 except IndexError:
                     pass
                 else:
@@ -555,22 +566,14 @@ class SubmissionForm(models.Model):
 
 
 def attach_to_submissions(user):
-    print "attach"
-    sf_by_submitter_email = SubmissionForm.objects.filter(submitter_email=user.email)
-    for sf in sf_by_submitter_email:
-        print "sf submitter"
-        sf.submitter = user
-        sf.save()
-        
-    sf_by_sponsor_email = SubmissionForm.objects.filter(sponsor_email=user.email)
-    for sf in sf_by_sponsor_email:
-        print "sf sponsor"
-        sf.sponsor = user
-        sf.save()
-        
+    for x in ('submitter', 'sponsor', 'invoice'):
+        submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): user.email})
+        for sf in submission_forms:
+            setattr(sf, x, user)
+            sf.save()
+
     investigator_by_email = Investigator.objects.filter(email=user.email)
     for inv in investigator_by_email:
-        print "sf investigator"
         inv.user = user
         inv.save()
 

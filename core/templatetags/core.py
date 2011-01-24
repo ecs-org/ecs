@@ -4,6 +4,8 @@ from django.template import Library
 from django.utils.safestring import mark_safe
 
 from ecs.core import paper_forms
+from ecs.core.models import Submission
+from ecs.docstash.models import DocStash
 
 register = Library()
 
@@ -84,4 +86,16 @@ def smart_truncate(s, n):
 def class_for_field(field):
     return 'wide' if field.field.max_length > 50 else 'narrow'
 
-    
+@register.filter
+def my_submissions_count(user):
+    count = Submission.objects.mine(user).count()
+    count += len([
+        d for d in DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=user) if d.current_value
+    ])
+    return count
+
+@register.filter
+def assigned_submissions_count(user):
+    return Submission.objects.reviewed_by_user(user).count()
+
+

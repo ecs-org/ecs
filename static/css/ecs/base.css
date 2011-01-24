@@ -12,6 +12,7 @@
 body {
   background: white;
   overflow: auto;
+	font-size: 12px;
 }
 #container {
   position: absolute;
@@ -27,7 +28,7 @@ body {
   background: #d8e6ef;
   padding: 10px;
   display: block;
-  border-bottom: 1px solid #999;
+  border-bottom: 1px solid #B5CFDF;
 }
 #headertitle {
   float: left;
@@ -42,7 +43,7 @@ body {
   float: left;
   width: 100%;
   background: #d8e6ef;
-  font-size: 11pt;
+  font-size: 14px;
 }
 #content {
   position: absolute;
@@ -56,9 +57,13 @@ body {
   overflow-y: auto;
 }
 .innerwrap {
+  display: block;
   margin: 10px;
+  padding: 10px;
+  border: 1px solid #d8e6ef;
+  background: #f9feff;
+  min-width: 700px;
 }
-
 #sidebar {
   position: absolute;
   top: 0;
@@ -78,47 +83,46 @@ body {
 }
 #content h1 {
   display: block;
-  font-size: 1.4em;
+  font-size: 20px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
-#content h2 {
+#content h2, #task_main h2 {
   display: block;
-  font-size: 1.2em;
+  font-size: 18px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
 }
-#content h3 {
+#content h3, #task_main h3 {
   display: block;
-  font-size: 1.0em;
+  font-size: 16px;
   font-weight: lighter;
   margin-bottom: 10px;
 }
 #content h4 {
   display: block;
-  font-size: 0.9em;
+  font-size: 14px;
 	font-weight: lighter;
   margin-bottom: 5px;
 }
 #content h5 {
   display: block;
-  font-size: 0.8em;
+  font-size: 12px;
   margin-bottom: 10px;
 }
-.main.form h3 {
+.form_main h3 {
   padding: 10px;
+  margin: -10px -10px 0;
   border-bottom: 1px solid #eee;
 }
 #content p {
   margin-bottom: 20px;
-  font-size: 10pt;
 }
 #content a {
   text-decoration: none;
   color: #2b558e;
-  font-size: 10pt;
 }
 #content a:hover {
   text-decoration: underline;
@@ -129,7 +133,6 @@ a {
 }
 #content ul {
   margin: 0 0 20px 30px;
-	font-size: 10pt;
 }
 input, textarea, #content select {
   border: 1px solid #999;
@@ -139,7 +142,6 @@ input, textarea, #content select {
 select {
   border: 1px solid #999;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 11pt;
 }
 #content table {
   margin: 10px 0;
@@ -164,9 +166,14 @@ input[type=submit], .cancel a {
 }
 #content .cancel a {
   color: #fff;
-  font-size: 9pt;
+  font-size: 12px;
   vertical-align: middle;
   line-height: 18px;
+  margin-top: 20px;
+  border: 1px solid #999;
+}
+#content .cancel a:hover {
+  text-decoration: none;
 }
 
 /* header */
@@ -208,13 +215,12 @@ input[type=submit], .cancel a {
 #usermenu .elements {
   display: none;
 }
-
 #sidebar ul {
   list-style-type: none;
 }
 #sidebar li {
-  font-size: 11pt;
-  line-height: 16pt;
+	font-size: 14px;
+  line-height: 22px;
 }
 #sidebar li li {
   margin-left: 10px;
@@ -233,19 +239,21 @@ input[type=submit], .cancel a {
 }
 #toggle_sidebar_button {
   position: absolute;
-  top: 216px;
-  right: 22px;
-  width: 30px;
-  height: 30px;
+  top: 223px;
+  right: 20px;
   z-index: 200;
 }
-.toggle_sidebar {
-  width: 32px;
-  height: 32px;
-  display: inline-block;
+#toggle_sidebar_button a.toggle_sidebar {
+  width: 24px;
+  height: 22px;
+  display: block;
   text-indent: -9999px;
+	background: url(/static/images/icons.png) -324px -135px no-repeat;
+	border: 1px solid #666;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
 }
-
 
 
 /* general links */

@@ -54,10 +54,9 @@ def create_mail(subject, message, from_email, recipient, message_html=None, atta
     return msg
 
     
-def deliver(subject, message, from_email, recipient_list, message_html=None, attachments= None, callback=None, **kwargs):
+def deliver(recipient_list, *args, **kwargs):
     """
-    send email to recipient list (filter them through settings.EMAIL_WHITELIST if exists), 
-    puts messages to send into celery queue
+    send email to recipient list, puts messages to send into celery queue
     returns a list of (msgid, rawmessage) for each messages to be sent
     if callback is set to a celery task:
        it will be called on every single recipient delivery with callback(msgid, status)
@@ -66,32 +65,18 @@ def deliver(subject, message, from_email, recipient_list, message_html=None, att
     if isinstance(recipient_list, basestring):
         recipient_list = [recipient_list]
  
-    # filter out recipients which are not in the whitelist
-    mylist = set(recipient_list)
-    bad = None
-    if hasattr(settings, "EMAIL_WHITELIST") and settings.EMAIL_WHITELIST:
-        bad = set([x for x in recipient_list if x not in settings.EMAIL_WHITELIST])
-    if bad:
-        logger = logging.getLogger()
-        logger.warning('BAD EMAILS: %s are bad out of %s' % (str(bad), str(mylist)))
-        recipient_list = list(mylist - bad)
-
     sentids = []
     for recipient in recipient_list:
-        msgid = make_msgid()
-        msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
-        
-        queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
-        #queued_mail_send(msgid, msg, from_email, recipient, callback)
-        sentids += [[msgid, msg.message()]]
+        sentids.append(deliver_to_recipient(recipient, *args, **kwargs))
+
     return sentids
 
+def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, **kwargs):
+    if msgid is None:
+        msgid = make_msgid()
 
-def send_mail(subject, message, from_email, recipient_list, message_html=None, attachments=None, callback=None, **kwargs):
-    raise(DeprecationWarning('deprecated, use deliver for sending emails'))
-    return deliver(subject, message, from_email, recipient_list, message_html, attachments, callback)
+    msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
+    
+    queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
+    return (msgid, msg.message(),)
 
-
-def send_html_email(subject, message_html, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL, attachments=None, callback=None, **kwargs):
-    raise(DeprecationWarning('deprecated, use deliver with message=None, message_html= htmltext for sending emails'))
-    return deliver(subject, None, from_email, recipient_list, message_html, attachments, callback)

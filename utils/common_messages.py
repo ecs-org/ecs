@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 from ecs.communication.models import Thread
 from ecs.users.utils import get_user
 
-def send_submission_message(submission, subject, text, recipients, email='root@system'):
+def send_submission_message(submission, subject, text, recipients, email='root@example.org'):
     for recipient in recipients:
         thread, created = Thread.objects.get_or_create(
             subject=subject,
@@ -21,7 +21,7 @@ def send_submission_message(submission, subject, text, recipients, email='root@s
         )
         message = thread.add_message(get_user(email), text=text)
 
-def send_submission_creation(sf, registered_recipients, email='root@system'):
+def send_submission_creation(sf, registered_recipients, email='root@example.org'):
     nr = sf.submission.get_ec_number_display()
     text = _(u'The study EC-Nr. %s was created.\n' % nr )
     url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': sf.pk })
@@ -29,7 +29,7 @@ def send_submission_creation(sf, registered_recipients, email='root@system'):
     subject = _(u'New study EC-Nr. %s' % nr )
     send_submission_message(sf.submission, subject, text, registered_recipients, email=email)
     
-def send_submission_invitation(sf, unregistered_recipients, email='root@system'):
+def send_submission_invitation(sf, unregistered_recipients, email='root@example.org'):
     nr = sf.submission.get_ec_number_display()
     text = _(u'The study EC-Nr. %s was created.\n' % nr )
     url = reverse('ecs.users.views.register')
@@ -37,7 +37,7 @@ def send_submission_invitation(sf, unregistered_recipients, email='root@system')
     subject = _(u'New study EC-Nr. %s' % nr )
     send_submission_message(sf.submission, subject, text, unregistered_recipients, email=email)
 
-def send_submission_change(old_sf, new_sf, recipients, email='root@system'):
+def send_submission_change(old_sf, new_sf, recipients, email='root@example.org'):
     newnr = new_sf.submission.get_ec_number_display()
     text = _(u'Changes were made to study EC-Nr. %s.\n' % newnr)
     url = reverse('ecs.core.views.diff', kwargs={'old_submission_form_pk': old_sf.pk, 'new_submission_form_pk': new_sf.pk})

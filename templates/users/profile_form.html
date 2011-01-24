@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block content %}
+<div class="profile">
 <h2>{% blocktrans with request.user as user %}Profile of {{ user }}{% endblocktrans %}</h2>
 
 <form action="" method="post">
@@ -11,4 +12,5 @@
     </table>
     <input type="submit" value="{% trans 'Save' %}" />
 </form>
+</div>
 {% endblock %}

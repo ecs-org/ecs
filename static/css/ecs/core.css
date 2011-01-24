@@ -99,8 +99,10 @@
   cursor: pointer;
   z-index: 100;
   color: #333;
-  font-size: 11pt;
+  font-size: 14px;
   text-decoration: none;
+  background: #ddd;
+  border: 1px solid #ccc;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -108,31 +110,31 @@
 .header_actions a:hover {
   text-decoration: none;
 }
-.button_save {
+.header_actions .button_save {
   background: #ccc;
   border: 1px solid #999;  
 }
-.button_save_change {
+.header_actions .button_save_change {
   background: #999;
   border: 1px solid #666;  
 }
-.button_validate {
+.header_actions .button_validate {
   background: #ccc;
-  border: 1px solid #999;  
+  border: 1px solid #999;
 }
-.button_validate_valid_error {
+.header_actions .button_validate_valid_error {
   background: #f84205;
   border: 1px solid #d03704;  
 }
-.button_validate_valid {
+.header_actions .button_validate_valid {
   background: #71ce09;
   border: 1px solid #5ca907;  
 }
-.button_submit {
+.header_actions .button_submit {
   background: #54aade;
   border: 1px solid #7bc4f0;
 }
-.button_submit_valid {
+.header_actions .button_submit_valid {
   background: #84cefb;
   border: 1px solid #61b6e9;
 }
@@ -201,7 +203,7 @@
   width: 215px;
 }
 #account {
-  font-size: 11pt;
+  font-size: 14px;
 }
 .user_data {
   display: block;
@@ -217,17 +219,15 @@
   float: left;
   width: 163px;
   height: 43px;
-  line-height: 13pt;
 }
 .user_logout {
   position: absolute;
-  top: 22px;
-  right: 0;
+  top: 30px;
+  right: 10px;
 }
 #sidebar .user_logout a {
-  font-size: 10pt;
-  font-weight: bolder;
   color: #800000;
+	font-size: 13px;
 }
 .icon_help, .icon_feedback, .icon_workflow, .user_icon {
   display: inline-block;
@@ -291,6 +291,30 @@
   font-size: 10pt;
 }
 
+/* table border definitions */
+
+#status_tab th, #involved_parties_tab th, .messages th, .meeting_detail th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
+  background: #eee;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-collapse: collapse;
+}
+#status_tab td, #involved_parties_tab td, .messages td, .meeting_detail td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+  border-bottom: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  background: #fff;
+}
+.task_back_log tr.closed td {
+  color: #999;
+}
+#content #status_tab table table {
+  margin: -3px 0 3px;
+}
+
 /* content */
 
 li.ModelChoiceField select {
@@ -313,8 +337,7 @@ li.TypedChoiceField ul > li label{
   margin-left: none;
 }
 .paginator {
-  margin: 5px 0 0 10px;
-  font-size: 10pt;
+  margin: 5px 0 10px 10px;
   display: block;
 }
 .paginator img {
@@ -330,109 +353,94 @@ li.TypedChoiceField ul > li label{
 
 /* form layout */
 
-.form {
-  border: 1px solid #ddd;
-}
-.form.main .field, .form.main .tab, .form.child {
-  background: #f9feff;
-  min-width: 700px;
-  width: 100%;
-  display: block;
-}
-.form.main #tabs {
+.form_main #tabs {
   clear: both;
 }
-.form.main .field h2, .form.main .tab h2, .form.main .field h3, .form.main .tab h3 {
+.form_main .field h2, .form_main .tab h2, .form_main .field h3, .form_main .tab h3 {
   letter-spacing: 1px;
   line-break: normal;
 }
-.form.main table, .form.main ol, .form.main select, .form.main option, .form.main input, .form.main textarea {
-  font-size: 9pt;
+.form_main table, .form_main ol, .form_main select, .form_main option, .form_main input, .form_main textarea {
 }
-.form ol {
-  margin: 10px;
-  list-style-type: none;
-}
-.form.main ol {
+.form_main ol {
   display: inline-block;
   width: 100%;
 }
-.form.main ol li {
+.form_main ol li {
   display: block;
   clear: both;
 }
-.form.main ol li textarea {
-  width: 30em;
-  height: 4em;
+.form_main ol li textarea {
+  height: 40px;
 }
-.form.main ol li label, .form.main ol li input[type=text], .form.main ol li textarea, .form.main ol li select {
+.form_main ol li label, .form_main ol li input[type=text], .form_main ol li textarea, .form_main ol li select {
   float: left;
   display: block;
 	margin-bottom: 10px;
 }
-.form.main ol li.focus {
+.form_main ol li.focus {
   background-color: #eeeeff;
 }
-.form.main ol li label {
+.form_main ol li label {
   width: 220px;
   padding: 0 10px;
   text-align: right;
 }
-.form.main th.label {
+.form_main th.label {
   text-align: left;
 }
 .errorlist {
   clear: both;
   list-style-type: none;
 }
-.form.main ul.errorlist li {
+.form_main ul.errorlist li {
   margin-left: 220px;
   margin-bottom: 5px;
   color: #ff0000;
 }
-.form.main table td li {
+.form_main table td li {
   margin: 0px;
   float: none;
 }
-.form.main ol li.BooleanField {
+.form_main ol li.BooleanField {
   padding-left: 240px;
 }
-.form.main ol li.BooleanField label {
+.form_main ol li.BooleanField label {
   width: 400px;
   display: inline-block;
   float: none;
   padding-left: 1em;
   text-align: left;
 }
-.form.main ol li.BooleanField label:after {
+.form_main ol li.BooleanField label:after {
   content: none;
 }
-.form.main ol li.BooleanField input {
+.form_main ol li.BooleanField input {
   display: inline-block;
   float: left;
 }
-.form.main .field input.subchoice {
+.form_main .field input.subchoice {
   margin-left: 30px;
 }
-.form.main ol li div.input {
+.form_main ol li div.input {
   float: left;
 }
-.form.main ol li .notes {
+.form_main ol li .notes {
   font-size: 0.9em;
   color: #666666;
   padding-left: 10px;
 }
-.form.main th.label .notes {
+.form_main th.label .notes {
   display: block;
 }
-.form.main ol li .help_text {
+.form_main ol li .help_text {
   margin: 0 0 10px 230px;
   display: block;
   clear: both;
   color: #666;
   padding-left: 10px;
 }
-.form.main ol li.BooleanField .help_text {
+.form_main ol li.BooleanField .help_text {
   clear: both;
   margin: 10px 0 0 20px;
   height: 15px;
@@ -442,17 +450,24 @@ li.TypedChoiceField ul > li label{
 }
 .inline_formset .form {
   position: relative;
-  padding-top: 20px;
+  margin-top: 20px;
 }
 #content .inline_formset td {
 	padding: 0;
 }
-tr.form td{
+.form ol {
+  margin: 10px;
+  list-style-type: none;
+}
+.form .notes {
+  margin: 0 5px;
+}
+tr.form td {
   vertical-align: top;
 }
-.form.main .investigator_tab .field a.delete_row,
+.form_main .investigator_tab .field a.delete_row,
 .inline_formset .form a.delete_row {
-  background: url(/static/images/icons.png) 0 -144px no-repeat;
+  background: url(/static/images/icons.png) -240px -336px no-repeat;
   height: 16px;
   width: 20px;
   display: inline-block;
@@ -468,8 +483,8 @@ div.inline_formset .form a.delete_row {
   top: 0px;
   left: 0px;
 }
-.form.main a.add_row, #meeting_constraint_editor a.add_row {
-  background: url(/static/images/icons.png) 0 -128px no-repeat;
+.form_main a.add_row, #meeting_constraint_editor a.add_row {
+  background: url(/static/images/icons.png) -240px -320px no-repeat;
   width: 20px;
   height: 16px;
   display: inline-block;
@@ -480,10 +495,10 @@ div.inline_formset .form a.delete_row {
 table.inline_formset td {
   vertical-align: top;
 }
-.form.main table.inline_formset td ul.errorlist li {
+.form_main table.inline_formset td ul.errorlist li {
   margin-left: 0px;
 }
-#content .form.main table.inline_formset td ul.errorlist {
+#content .form_main table.inline_formset td ul.errorlist {
   margin-left: 0px;
   width: 100%;
 }
@@ -493,8 +508,8 @@ table.inline_formset td {
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
 }
-.form.main .investigator_tab a.add_row,
-.form.main .investigator_tab a.delete_row {
+.form_main .investigator_tab a.add_row,
+.form_main .investigator_tab a.delete_row {
   display: inline-block;
   overflow: visible;
   width: auto;
@@ -505,96 +520,102 @@ table.inline_formset td {
   padding-right: 10px;
   cursor: pointer;
 }
-.form.main .investigator_tab a.add_row {
-  background: url(/static/images/core/add.png) no-repeat;
+.form_main .investigator_tab a.add_row {
+  background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
-.form.main .investigator_tab a.delete_row {
-  background: url(/static/images/core/remove.png) no-repeat;
+.form_main .investigator_tab a.delete_row {
+  background: url(/static/images/icons.png) -240px -336px no-repeat;
 }
 
 fieldset.disabled {
   display: none;
 }
-.form.main ol li .mooeditable-container {
+.form_main ol li .mooeditable-container {
   border: 1px solid #666666;
   margin-left: 240px;
   overflow: hidden;
 }
-.form.main ol li .mooeditable-ui-toolbar .toolbar-item,
-.form.main ol li .mooeditable-ui-toolbar .toolbar-separator {
+.form_main ol li .mooeditable-ui-toolbar .toolbar-item,
+.form_main ol li .mooeditable-ui-toolbar .toolbar-separator {
   margin-left: 0px;
 }
-.form.main ol li .mooeditable-iframe{
+.form_main ol li .mooeditable-iframe{
 }
-.form.main ol li .rte_display {
+.form_main ol li .rte_display {
   display: block;
   width: 350px;
   margin-left: 240px;
-  padding: 0.5em;
+  padding: 10px;
   margin-bottom: 10px;
-  min-height: 4em;
+  min-height: 60px;
   background-color: #fff;
   border: 1px solid #999;
 }
-.form.main ol li .rte_display p {
+.form_main ol li .rte_display p {
   margin: 0 !important;
   padding: 0 !important;
-  line-height: 14pt;
+  line-height: 18px;
   display: block;
 }
-.form.main ol li .rte_display * {
+.form_main ol li .rte_display * {
   margin: 0px;
   padding: 0px;
   left: 0px;
   text-indent: 0px;
 }
-.form.main ol li .rte_display blockquote{
-    margin-left: 2em;
+.form_main ol li .rte_display blockquote{
+  margin-left: 30px;
 }
-.form.main ol li .paperform_number {
+.form_main ol li .paperform_number {
   color: #666666;
-  font-size: 0.9em;
+  font-size: 10px;
 }
-.form.main ol li .paperform_number:before {
+.form_main ol li .paperform_number:before {
   content: "[";
 }
-.form.main ol li .paperform_number:after {
+.form_main ol li .paperform_number:after {
   content: "]";
 }
 
-.form.main li.max10 input{ width: 60px;}
-.form.main li.max20 input{ width: 100px;}
-.form.main li.max40 input{ width: 200px;}
-.form.main li.max60 input{ width: 340px;}
+.form_main li.max10 input { width: 60px;}
+.form_main li.max20 input { width: 100px;}
+.form_main li.max40 input { width: 200px;}
+.form_main li.max60 input { width: 340px;}
 
-.form .wide {
-  width: 16em;
+.form_main .wide {
+  width: 300px;
 }
-.form .narrow {
-  width: 10em;
+.form_main .narrow {
+  width: 200px;
 }
-.form.main .textboxlist-bit {
+.form_main .textboxlist-bit {
   list-style-type: none;
   clear: none;
 }
-.form.main .textboxlist {
+.form_main .textboxlist {
   width: 90%;
+}
+.form_main .textboxlist ul {
   background: #fff;
 }
-.form.main .textboxlist-autocomplete {
+.form_main .textboxlist-autocomplete {
   margin: -20px  0 0 240px;
 }
 .textboxlist-autocomplete ul {
   margin: 0 !important;
+}
+.ecs-TextAreaToolbar a {
+	margin-right: 10px;
 }
 
 /* specific formset styles */
 
 #measure_formset textarea,
 #routinemeasure_formset textarea {
-    height: 1.4em;
+  height: 20px;
+  width: 90%;
 }
-.form.main ol li .datepicker_toggler {
+.form_main ol li .datepicker_toggler {
   position: absolute;
   text-indent: -9999px; 
   background: url(/static/images/icons.png) -80px 0 no-repeat;
@@ -602,21 +623,28 @@ fieldset.disabled {
   width: 16px;
   margin-left: 5px;
 }
-.form .star {
+.form_main .star {
   margin: 0 5px 0 3px;
   font-size: 14px;
 }
-.form #id_start_1, .form #id_deadline_1, .form #id_deadline_diplomathesis_1 {
+.form_main #id_start_1, .form_main #id_deadline_1, .form_main #id_deadline_diplomathesis_1 {
   margin-left: 30px;
 }
-.form textarea#id_project_title, .form textarea#id_german_summary {
-  height: 5.5em;
+.form_main textarea{
+    /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
+    width: 400px; 
 }
-.form input#id_title {
-  width: 20em;
+.form_main textarea#id_project_title, .form_main textarea#id_german_summary {
+  height: 90px;
 }
-.form td.15em textarea {
-  width: 15em;
+.form_main input#id_title {
+  width: 350px;
+}
+.form_main td.15em textarea {
+  width: 250px;
+}
+.form_main input[type=submit] {
+  margin: 20px 10px 10px 0;
 }
 
 /* paginator icons */
@@ -644,16 +672,15 @@ fieldset.disabled {
 
 .doclist {
   background: #eee;
+  border: 1px solid #ccc;
   padding: 10px;
 }
-.doclist h3 {
+.doclist h4 {
   background-repeat: no-repeat;
-  padding-left: 24px;
 }
-.doclist div {
+.doclist .list_item {
   display: block;
-  margin-left: 2em;
-  padding-left: 24px;
+  margin: 0 0 10px 5px;
   background-repeat: no-repeat; 
 }
 
@@ -663,40 +690,16 @@ fieldset.disabled {
   list-style: none;
 }
 .notification_list li {
+  padding: 5px;
   margin-bottom: 10px;
-}
-table.notification th {
-    text-align: right;
-    padding-right: 1em;
-}
-table.notif_meta {
-  border: 1px solid #cccccc;
-  border-left: none;
-  border-collapse: collapse;
-  margin-bottom: 1em;
-  width: 100%;
-}
-table.notif_meta td, table.notif_meta th {
-  border-left: 1px solid #cccccc;
-  padding: 0.2em;
-}
-table.notif_meta th {
-  text-align: left;
-  border-bottom: 1px solid #cccccc;
 }
 .notification_list, .overview {
-  display: block;
-  min-width: 700px;
-  border: 1px solid #ddd;
-  background: #f9feff;
-  padding: 10px;
-  margin-bottom: 10px;
+
 }
 
 #content ol.submission_list {
   list-style: none;
-  font-size: 10pt;
-  margin-bottom: 2em;
+  margin-bottom: 20px;
 }
 #content ol.submission_list h3 {
   margin-bottom: 5px;
@@ -712,27 +715,14 @@ content ol.submission_list h3 .ecnr {
   margin-left: -80px;
 }
 #content ol.submission_list li {
-  padding: 0.5em;
-  padding-left: 80px;
+  padding: 10px;
 }
-#content ol.submission_list li:nth-child(odd) {
-  background-color: #f1f1e6;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
-}
-#content ol.submission_list li:nth-child(even) {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
-}
-
 content ol.submission_list li .actions {
   margin-bottom: 5px;
 }
 #content ol.submission_list li .info {
 }
-#content .overview h2 {
-}
+
 
 .checklist_field { 
   visibility: visible; 
@@ -741,3 +731,33 @@ content ol.submission_list li .actions {
   visibility: hidden; 
 }
 
+/* list cycles */
+
+#content ol.submission_list li:nth-child(odd) ,
+.submission_list li:nth-child(odd) ,
+.submission_item:nth-child(odd) ,
+.notification_list li:nth-child(odd) ,
+.dashboard_widget .messages li:nth-child(odd) ,
+.messages li:nth-child(odd) ,
+.attachments li:nth-child(odd) ,
+.message_display li:nth-child(odd) ,
+.dashboard_widget .messages li:nth-child(odd) ,
+.dashboard_widget .submission_widget_list li:nth-child(odd) {
+  background-color: #f1f1e6;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ddd;  
+}
+#content ol.submission_list li:nth-child(even) ,
+.submission_list li:nth-child(even) ,
+.submission_item:nth-child(even) ,
+.notification_list li:nth-child(even) ,
+.dashboard_widget .messages li:nth-child(even) ,
+.messages li:nth-child(even) ,
+.attachments li:nth-child(even) ,
+.message_display li:nth-child(even) ,
+.dashboard_widget .messages li:nth-child(even) ,
+.dashboard_widget .submission_widget_list li:nth-child(even) {
+  background-color: #efefdd;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #ddd;  
+}

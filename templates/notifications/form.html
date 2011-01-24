@@ -31,7 +31,8 @@
 {% endblock %}
 
 {% block content %}
-<form action="" method="post" enctype="multipart/form-data" class="form tabbed main">
+<div class="form_main">
+<form action="" method="post" enctype="multipart/form-data">
     <div id="tabs">
         {% for tab, fieldsets in tabs %}
             <div id="tabs-{{ forloop.counter }}" class="tab">
@@ -67,7 +68,7 @@
     <input type="submit" value="submit" name="submit" class="hidden" />
     <input type="submit" value="validate" name="validate" class="hidden" />
 </form>
-
+</div>
 {% endblock %}
 
 {% block menuSelection %}notifications{% endblock %}
@@ -77,7 +78,7 @@
         window.addEvent('domready', function(){
             ecs.setupForms();
             $('save-button').addEvent('click', function(){
-                ecs.mainForm.autosave(true);
+                ecs.mainForm.save(true);
                 return false;
             });
             $('validate-button').addEvent('click', function(){

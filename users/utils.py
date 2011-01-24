@@ -19,11 +19,11 @@ from ecs.utils.viewutils import render_html
 def hash_email(email):
     return hashlib.md5(email.lower()).hexdigest()[:30]
 
-def get_or_create_user(email, defaults=None):
+def get_or_create_user(email, defaults=None, **kwargs):
     if defaults is None:
         defaults = {}
 
-    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults)
+    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
 
 def create_user(email, **kwargs):
     return User.objects.create(username=hash_email(email), email=email, **kwargs)
@@ -48,6 +48,12 @@ def get_full_name(user):
             if user.ecs_profile.gender == 'm':
                 nameparts.insert(0, force_unicode(_('Mr.')))
         return u' '.join(nameparts)
+    else:
+        return unicode(user.email)
+
+def get_formal_name(user):
+    if user.first_name and user.last_name:
+        return u'{0}, {1}'.format(user.last_name, user.first_name)
     else:
         return unicode(user.email)
         
@@ -98,7 +104,7 @@ def invite_user(request, email):
         htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
             'link': link,
         }))
-        transferlist = deliver(subject, None, settings.DEFAULT_FROM_EMAIL, email, message_html=htmlmail)
+        transferlist = deliver(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
         try:
             msgid, rawmail = transferlist[0]
             print rawmail

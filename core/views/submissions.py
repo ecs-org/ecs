@@ -2,7 +2,6 @@
 from datetime import datetime
 import tempfile
 import re
-from StringIO import StringIO
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -24,11 +23,12 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, DocumentForm, SubmissionListFilterForm, SimpleDocumentForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionListFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
+from ecs.documents.forms import DocumentForm, SimpleDocumentForm
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -164,6 +164,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     return render(request, template, context)
 
 
+@user_flag_required('internal')
 def retrospective_thesis_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
@@ -182,6 +183,7 @@ def categorization_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
+@user_flag_required('internal')
 def befangene_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
@@ -189,6 +191,8 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
+
+@user_flag_required('internal')
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
@@ -237,6 +241,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     })
 
 
+@user_flag_required('internal')
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
@@ -247,6 +252,8 @@ def vote_review(request, submission_form_pk=None):
         vote_review_form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
 
+
+@user_flag_required('internal')
 def b2_vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
@@ -288,7 +295,6 @@ def create_submission_form(request):
     
     doc_post = 'document-file' in request.FILES
     document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        document_pks=[x.pk for x in request.docstash.get('documents', [])], 
         prefix='document'
     )
     notification_type = request.docstash.get('notification_type', None)
@@ -296,6 +302,7 @@ def create_submission_form(request):
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
+        save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
 
         request.docstash.update({
@@ -303,10 +310,16 @@ def create_submission_form(request):
             'formsets': formsets,
             'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
         })
-        request.docstash.name = "%s" % request.POST.get('project_title', '')
+        
+        # set docstash name
+        project_title_german = request.POST.get('german_project_title', '')
+        if project_title_german:
+            request.docstash.name = project_title_german
+        else:
+            request.docstash.name = request.POST.get('project_title', '')
 
-        if autosave:
-            return HttpResponse('autosave successfull')
+        if save or autosave:
+            return HttpResponse('save successfull')
         
         if document_form.is_valid():
             documents = set(request.docstash['documents'])
@@ -316,49 +329,46 @@ def create_submission_form(request):
                 if doc in documents:
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(document_pks=[x.pk for x in documents], prefix='document')
+            document_form = DocumentForm(prefix='document')
             
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        if submit and valid:
-            if not request.user.get_profile().approved_by_office:
-                messages.add_message(request, messages.INFO, _('You cannot submit studies yet. Please wait until the office has approved your account.'))
-            else:
-                submission_form = form.save(commit=False)
-                submission = request.docstash.get('submission') or Submission.objects.create()
-                submission_form.submission = submission
-                submission_form.presenter = request.user
-                submission_form.is_notification_update = bool(notification_type)
-                submission_form.transient = bool(notification_type)
-                submission_form.save()
-                form.save_m2m()
-                submission_form.documents = request.docstash['documents']
-                submission_form.save()
-                for doc in request.docstash['documents']:
-                    doc.parent_object = submission_form
-                    doc.save()
-            
-                formsets = formsets.copy()
-                investigators = formsets.pop('investigator').save(commit=False)
-                for investigator in investigators:
-                    investigator.submission_form = submission_form
-                    investigator.save()
-                for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
-                    employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
-                    employee.save()
+        if submit and valid and request.user.get_profile().approved_by_office:
+            submission_form = form.save(commit=False)
+            submission = request.docstash.get('submission') or Submission.objects.create()
+            submission_form.submission = submission
+            submission_form.presenter = request.user
+            submission_form.is_notification_update = bool(notification_type)
+            submission_form.transient = bool(notification_type)
+            submission_form.save()
+            form.save_m2m()
+            submission_form.documents = request.docstash['documents']
+            submission_form.save()
+            for doc in request.docstash['documents']:
+                doc.parent_object = submission_form
+                doc.save()
+        
+            formsets = formsets.copy()
+            investigators = formsets.pop('investigator').save(commit=False)
+            for investigator in investigators:
+                investigator.submission_form = submission_form
+                investigator.save()
+            for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
+                employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
+                employee.save()
 
-                for formset in formsets.itervalues():
-                    for instance in formset.save(commit=False):
-                        instance.submission_form = submission_form
-                        instance.save()
-                request.docstash.delete()
+            for formset in formsets.itervalues():
+                for instance in formset.save(commit=False):
+                    instance.submission_form = submission_form
+                    instance.save()
+            request.docstash.delete()
 
-                if notification_type:
-                    return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
-                        'submission_form_pk': submission_form.pk,
-                        'notification_type_pk': notification_type.pk,
-                    }))
-                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            if notification_type:
+                return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
+                    'submission_form_pk': submission_form.pk,
+                    'notification_type_pk': notification_type.pk,
+                }))
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
         'form': form,
@@ -401,7 +411,7 @@ def submission_form_list(request, submissions, stashed_submission_forms, meeting
     return render(request, 'submissions/list.html', {
         'unscheduled_submissions': submissions.filter(meetings__isnull=True).distinct().order_by('ec_number'),
         'meetings': meetings,
-        'stashed_submission_forms': stashed_submission_forms,
+        'stashed_submission_forms': [x for x in stashed_submission_forms if x.current_value],
         'keyword': keyword,
     })
 
@@ -455,9 +465,10 @@ def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
     serializer = Serializer()
-    buf = StringIO()
-    serializer.write(submission_form, buf)
-    response = HttpResponse(buf.getvalue(), mimetype='application/ecx')
+    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
+        serializer.write(submission_form, tmpfile)
+        tmpfile.seek(0)
+        response = HttpResponse(tmpfile.read(), mimetype='application/ecx')
     response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')
     return response
 

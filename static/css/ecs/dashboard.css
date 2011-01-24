@@ -1,7 +1,14 @@
 /* dashboard */
 
-#dashboard .left_column, #dashboard .right_column {
+#dashboard {
   display: block;
+  float: left;
+  margin: -11px 0 0 -11px;
+  width: 103%;
+  background: #fff;
+}
+#dashboard .left_column, #dashboard .right_column {
+  display: inline-block;
 	float: left;
 	width: 50%;
 }
@@ -31,7 +38,6 @@
 }
 .dashboard_widget .messages_header {
   margin-bottom: 5px;
-  font-size: 11pt;
 }
 .dashboard_widget .messages > li,
 .dashboard_widget .submission_widget_list  > li {
@@ -45,18 +51,6 @@
 }
 .dashboard_widget .submission_widget_list  > li {
   padding: 5px 10px;
-}
-.dashboard_widget .messages > li.odd,
-.dashboard_widget .submission_widget_list > li.odd {
-  background-color: #e8e8d8;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;
-}
-.dashboard_widget .messages > li.even,
-.dashboard_widget .submission_widget_list > li.even {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;
 }
 .dashboard_widget .unread {
   display: inline-block;

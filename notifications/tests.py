@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
 import os
+
 from django.core.urlresolvers import reverse
+
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
 from ecs.notifications.models import NotificationType, Notification
@@ -45,9 +48,7 @@ class NotificationFormTest(LoginTestCase):
         # POST the form in `save` mode
         response = self.client.post(url, self._create_POST_data(save='save', comments='bar comment'))
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnless('<form' in response.content)
-        form = response.context['form']
-        self.failUnlessEqual(form['comments'].data, 'bar comment')
+        self.failIf('<form' in response.content)
         
         # POST the form in `submit` mode (incomplete data)
         response = self.client.post(url, self._create_POST_data(submit='submit'))
@@ -87,16 +88,15 @@ class NotificationFormTest(LoginTestCase):
         
     def test_document_upload(self):
         url = self._setup_POST_url()
-        data = self._create_POST_data(save='save')
+        data = self._create_POST_data()
         doctype = DocumentType.objects.create(name='foo doctype')
         f = open(os.path.join(os.path.dirname(__file__), '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf'), 'rb')
         data.update({
             'document-file': f,
             'document-doctype': doctype.pk,
+            'document-name': u'menschenrechtserklärung',
             'document-version': '3.1415',
-            'document-branding': 'b',
             'document-date': '17.03.2010',
-            'document-allow_download': 'on',
         })
         response = self.client.post(url, data)
         f.close()
@@ -116,7 +116,7 @@ class NotificationFormTest(LoginTestCase):
     def test_incomplete_upload(self):
         """ Regression test for the KeyError bug fixed in r729:b022598f8e55"""
         url = self._setup_POST_url()
-        data = self._create_POST_data(save='save')
+        data = self._create_POST_data()
         doctype = DocumentType.objects.create(name='regression doctype')
         data.update({
            'document-0-doctype': doctype.pk,

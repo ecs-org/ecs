@@ -5,7 +5,7 @@
           {% if submission %}
           <li>
               <label>Studie</label>
-              <span>{{ submission|ec_number }} {{ submission.project_title|smart_truncate:50 }}</span>
+              <span>{{ submission|ec_number }} {{ submission.project_title_display|smart_truncate:50 }}</span>
           </li>
           {% endif %}
 
@@ -26,7 +26,7 @@
           </li>
           {% endif %}
 
-          {% if form.instance.thread %}
+          {% if form.instance.thread and not bump %}
             <li>
             <label for="id_participants">antworten an:</label><br>
             </li>

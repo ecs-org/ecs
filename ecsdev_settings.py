@@ -85,12 +85,11 @@ if user == "testecs":
     HAYSTACK_SEARCH_ENGINE = "solr"
     HAYSTACK_SOLR_URL = "http://localhost:8099/solr"
     
-    # testecs does not show django debug messages
-    DEBUG = False
-    TEMPLATE_DEBUG = False
+    DEBUG = False # testecs does not show django debug messages
+    TEMPLATE_DEBUG = True # but sentry does show template errors
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 elif user == "chipper":
-    DEBUG = False
-    TEMPLATE_DEBUG = False
+    DEBUG = False # do not show django debug messages
+    TEMPLATE_DEBUG = True # but sentry does show template errors
     CELERY_SEND_TASK_ERROR_EMAILS = True # send errors of tasks via email to admins
 

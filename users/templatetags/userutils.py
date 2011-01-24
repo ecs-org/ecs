@@ -2,7 +2,7 @@
 
 from django.template import Library
 
-from ecs.users.utils import get_full_name
+from ecs.users.utils import get_formal_name
 
 
 register = Library()
@@ -16,6 +16,6 @@ def is_member_of(user, groupname):
     return bool(user.groups.filter(name=groupname).count())
 
 @register.filter
-def full_name(user):
-    return get_full_name(user)
+def formal_name(user):
+    return get_formal_name(user)
 

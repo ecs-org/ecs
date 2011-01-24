@@ -33,20 +33,36 @@ ecs.TabbedForm = new Class({
             $(window).addEvent('unload', this.autosave.bind(this));
         }
     },
-    autosave: function(force){
+    _save: function(callback, extraParameter){
         var currentData = this.form.toQueryString();
-        if(!this.autosaveDisabled && (force === true || (this.lastSave.data != currentData))){
-            this.lastSave.timestamp = new Date();
-            this.lastSave.data = currentData;
-            var request = new Request({
-                url: window.location.href,
-                method: 'post',
-                data: currentData + '&autosave=autosave',
-                onSuccess: function(responseText, response){
-                    ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');
-                }
-            });
-            request.send();
+
+        this.lastSave.timestamp = new Date();
+        this.lastSave.data = currentData;
+
+
+        if(!callback){
+            callback = function(){ecs.messages.alert('_save', 'Das Formular wurde gespeichert');};
+        }
+        if(!extraParameter){
+            extraParameter = '_save';
+        }
+
+        var request = new Request({
+            url: window.location.href,
+            method: 'post',
+            data: currentData + '&' + extraParameter + '=' + extraParameter,
+            onSuccess: callback,
+        });
+        request.send();
+
+
+    },
+    save: function(){
+        this._save(function(responseText, response){ecs.messages.alert('Save', 'Das Formular wurde gespeichert.');}, 'save');
+    },
+    autosave: function(force){
+        if(!this.autosaveDisabled && (force === true || (this.lastSave.data != this.form.toQueryString()))){
+            this._save(function(responseText, response){ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');}, 'autosave');
         }
     },
     submit: function(name){

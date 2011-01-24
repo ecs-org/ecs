@@ -30,6 +30,7 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required, invite_user
 from ecs.users.forms import EmailLoginForm
 from ecs.users.utils import get_user, create_user
+from ecs.workflow.models import Graph
 
 
 class TimestampedTokenFactory(object):
@@ -88,8 +89,8 @@ def register(request):
             'activation_url': activation_url,
             'form': form,
         }))
-        deliver(subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
+        deliver(form.cleaned_data['email'], subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/registration/registration_complete.html', {})
         
     return render(request, 'users/registration/registration_form.html', {
@@ -116,7 +117,12 @@ def activate(request, token=None):
         user.groups = Group.objects.filter(name__in=settings.DEFAULT_USER_GROUPS)
         # the userprofile is auto-created, we only have to update some fields.
         user.ecs_profile.gender = data['gender']
+        user.ecs_profile.forward_messages_after_minutes = 5
         user.ecs_profile.save()
+
+        wf = Graph.objects.get(model=UserProfile, auto_start=True).create_workflow(data=user.ecs_profile)
+        wf.start()
+
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,
         })
@@ -137,8 +143,8 @@ def request_password_reset(request):
         htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
             'reset_url': reset_url,
         }))
-        deliver(subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL, recipient_list=form.cleaned_data['email'])
+        deliver(form.cleaned_data['email'], subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/password_reset/request_complete.html', {
             'email': form.cleaned_data['email'],
         })
@@ -248,6 +254,7 @@ def administration(request, limit=20):
         'page': '1',
         'group': '',
         'approval': 'both',
+        'activity': 'active',
         'keyword': '',
     }
 
@@ -262,6 +269,11 @@ def administration(request, limit=20):
     }
 
     users = approval_lookup[filterform.cleaned_data['approval']]
+
+    if filterform.cleaned_data['activity'] == 'active':
+        users = users.filter(is_active=True)
+    elif filterform.cleaned_data['activity'] == 'inactive':
+        users = users.filter(is_active=False)
 
     if filterform.cleaned_data['group']:
         users = users.filter(groups=filterform.cleaned_data['group'])
@@ -279,7 +291,7 @@ def administration(request, limit=20):
         users = users.filter(keyword_q)
 
 
-    paginator = Paginator(users.order_by('email'), limit, allow_empty_first_page=True)
+    paginator = Paginator(users.order_by('last_name', 'first_name', 'email'), limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
     except EmptyPage, InvalidPage:

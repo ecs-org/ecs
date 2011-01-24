@@ -11,13 +11,29 @@ Liste aller Studien
 
 {% include "submissions/filterform.inc" %}
 
+<div class="paginator">
+    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
+    {% if not submissions.number == 1 %}
+        <a href="#" id="submission_list_first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+    {% endif %}
+    {% if submissions.has_previous %}
+        <a href="#" id="submission_list_prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+    {% endif %}
+    {% if submissions.has_next %}
+        <a href="#" id="submission_list_next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+    {% endif %}
+    {% if not submissions.number == submissions.paginator.num_pages %}
+        <a href="#" id="submission_list_last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+    {% endif %}
+</div>
+
 <ol class="submission_list">
 {% for submission in submissions.object_list %}
-    <li class="{% cycle 'even' 'odd' %}">
+    <li>
         {% with submission.current_submission_form as submission_form %}
             <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission.get_ec_number_display }}</a>
         {% endwith %}
-        {{ submission.project_title|default:'<i>{% trans "No title." %}</i>' }}
+        {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% with submission.medical_categories.all as categories %}
             {% if categories %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>

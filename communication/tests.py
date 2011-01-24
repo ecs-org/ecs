@@ -11,6 +11,7 @@ from ecs.communication.testcases import CommunicationTestCase
 
 class CommunicationTest(CommunicationTestCase):        
     
+    """
     def test_from_ecs_to_outside_and_back_to_us(self):
         ''' 
         standard test setup makes a new ecs internal message (which currently will send an email to the user)
@@ -24,7 +25,8 @@ class CommunicationTest(CommunicationTestCase):
             )
         eq_(self.queue_count(), 2)
         ok_(self.is_delivered("second message"))
-        
+    """
+
         
     def test_send_message(self):
         self.client.login(email='alice@example.com', password='password')
@@ -98,9 +100,15 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(response.status_code, 200)
         
     def test_bump_message(self):
+        message = self.last_message
         self.client.login(email='alice@example.com', password='password')
-        response = self.client.get(reverse('ecs.communication.views.bump_message', kwargs={'message_pk': self.thread.last_message.pk}))
+        response = self.client.post(reverse('ecs.communication.views.send_message', 
+            kwargs={'bump_message_pk': message.pk}), {'text': 'REPLY TEXT',})
         self.failUnlessEqual(response.status_code, 302)
+        self.failUnlessEqual(Message.objects.count(), 2)
+        message = Message.objects.exclude(pk=message.pk).get()
+        self.failUnlessEqual(message.sender, self.alice)
+        self.failUnlessEqual(message.receiver, self.bob)
 
     def test_close_thread(self):
         self.client.login(email='alice@example.com', password='password')

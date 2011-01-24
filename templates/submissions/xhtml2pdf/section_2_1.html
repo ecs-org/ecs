@@ -51,6 +51,9 @@
     {{ submission_form.project_type_psychological_study|checkbox }} 2.1.14 <b>Psychologische Studie</b></p>
 
     <p style="margin-top: 0.11cm;   ">
+    {{ submission_form.project_type_nursing_study|checkbox }} 2.1.15 <b>Pflegewissenschaftliche Studie</b></p>
+
+    <p style="margin-top: 0.11cm;   ">
     {{ submission_form.project_type_misc|checkbox }} 2.1.7 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
     spezifizieren:</p>
     <p style="page-break-inside: avoid" class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>

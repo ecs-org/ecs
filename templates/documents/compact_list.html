@@ -2,17 +2,26 @@
 {% load core pdfviewer i18n %}
 {% block document_list %}
 <div class="doclist">
-{% if documents %}
-    {% for doc in documents %}
-        {% ifchanged doc.doctype %}<h3>{{ doc.doctype.name|default:"Sonstige Unterlagen" }}</h3>{% endifchanged %}
-        <div>
+
+{% regroup documents|dictsort:"doctype.name" by doctype as doctype_list %}
+
+{% for doctype in doctype_list %}
+    <h4>{{ doctype.grouper }}</h4>
+    {% for doc in doctype.list %}
+        <div class="list_item">
             {% get_annotations for doc as annotations %}
             <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
-                Version {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
-                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
-            </a>
+                {% if doc.name %}
+                {{ doc.name|smart_truncate:40 }}
+                {% else %}
+                Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
+                {% endif %} 
+                - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+                {% if doc.original_file_name %}{% endif %}
+            </a><br />
             {% block actions %}
-                <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
+                <a href="{% url ecs.documents.views.download_document doc.pk %}">{% trans "Download" %}</a>
+                | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
                 {% if annotations %}
                     | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
                 {% endif %}
@@ -22,7 +31,7 @@
                 {% for annotation in annotations %}
                     <li>
                         <a href="{% url pdf_show doc.pk %}#{{ annotation.page_number }}">
-                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<i>Kein Text</i>' }}
+                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<em>Kein Text</em>' }}
                         </a>
                     </li>
                 {% endfor %}
@@ -30,8 +39,10 @@
             {% endif %}
         </div>
     {% endfor %}
-{% else %}
+{% empty %}
     <p>Noch keine Unterlagen</p>
-{% endif %}
+{% endfor %}
+
 </div>
 {% endblock %}
+

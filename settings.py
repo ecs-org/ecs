@@ -32,6 +32,14 @@ DATABASES['default'] = {
     'HOST': '',
     'PORT': '',
 }
+DATABASES['windmill'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(PROJECT_DIR, 'test_windmill.db'),
+    'USER': '',
+    'PASSWORD': '',
+    'HOST': '',
+    'PORT': '',
+}
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
 # although not all choices may be available on all operating systems.
@@ -169,6 +177,9 @@ INSTALLED_APPS = (
     'indexer',
     'sentry',
     'sentry.client',
+    'reversion',
+    'windmill',
+    'django_concurrent_test_server',
 
     'ecs.core',
     'ecs.utils',
@@ -230,24 +241,40 @@ INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs
 
 # Storage Vault settings
 STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
-STORAGE_VAULT_OPTIONS = {'LocalFileStorageVault.rootdir':
-     os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'), 'authid': 'blu', 'authkey': 'bla'}
-STORAGE_ENCRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-                   "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
-                   "owner": "mediaserver",
-                   }
-STORAGE_DECRYPT = {"gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-                   "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
-                   "owner": "mediaserver",
-                   }
+STORAGE_VAULT_OPTIONS = {
+    'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
+    'authid': 'blu',
+    'authkey': 'bla'
+}
+STORAGE_ENCRYPT = {
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
+    "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
+    "owner": "mediaserver",
+}
+STORAGE_DECRYPT = {
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
+    "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
+    "owner": "mediaserver",
+}
 # Mediaserver Shared Settings
-MS_SHARED = {"url_expiration_sec": 6*60*60, "tiles": [1, 3, 5], "resolutions": [800, 768],
-             "aspect_ratio": 1.41428, "dpi": 96, "depth": 8}
+MS_SHARED = {
+    "url_expiration_sec": 6*60*60,
+    "tiles": [1, 3, 5],
+    "resolutions": [800, 768],
+    "aspect_ratio": 1.41428,
+    "dpi": 96,
+    "depth": 8,
+}
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-MS_CLIENT = {"server": "http://localhost:8000", "bucket": "/mediaserver/",
+MS_CLIENT = {
+    "server": "http://localhost:8000",
+    "bucket": "/mediaserver/",
     # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
-    "key_id": "b2SpFfUvfD44LUzHDu7w", "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN" }
+    "key_id": "b2SpFfUvfD44LUzHDu7w",
+    "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
+    "same_host_as_server": True,
+}
                
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
@@ -260,7 +287,7 @@ MS_SERVER = {
     "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
     "render_memcache_maxsize": 2**29,
     # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
-    }
+}
 
 
 # mail config, standard django values
@@ -272,7 +299,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 ECSMAIL_DEFAULT = {
     'queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail"),
     'log_dir':   LOGFILE_DIR,
-    'postmaster': 'root@system', # the email address of the ecs user where emails from local machine to postmaster will get send
+    'postmaster': 'root@example.org', # the email address of the ecs user where emails from local machine to postmaster will get send
                                  # THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,
@@ -282,8 +309,6 @@ ECSMAIL_DEFAULT = {
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
-# FIXME: we currently only sends to email addresses listed in EMAIL_WHITELST (FMD2)
-EMAIL_WHITELIST = {}
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
@@ -292,7 +317,7 @@ DIFF_REVIEW_LIST = ('root',)
 
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
-if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv:
+if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv or 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
     # there is no user root at this time, so we cant create a audit log
     ENABLE_AUDIT_TRAIL = False
 
@@ -305,6 +330,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'south.models.*',
     'djcelery.models.*',
     'ghettoq.models.*',
+    'reversion.models.*',
     
     'ecs.utils.countries.models.*',
     'ecs.tracking.models.*',
@@ -313,17 +339,20 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'ecs.pdfviewer.models.*',
     'ecs.feedback.models.*',
     'ecs.users.models.UserSettings',
+    'ecs.help.models.*',
 )
 
 
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 10',}
+BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 11',}
 
 # ecs.help system
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
+# set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
+USE_TEXTBOXLIST = True
 
 # thirdparty settings
 ######################
@@ -350,6 +379,7 @@ CELERY_IMPORTS = (
     'ecs.workflow.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',
+    'ecs.help.tasks',
 )                 
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
@@ -372,7 +402,7 @@ COMPRESS_JS_FILTERS = []
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
-USE_TEXTBOXLIST = True
+
 
 # settings override 
 ###################
@@ -407,6 +437,12 @@ for override in local_overrides:
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain']) 
 
+if 'test_windmill' in sys.argv:
+    DATABASES['default'] = DATABASES['windmill']
+
+if 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
+    USE_TEXTBOXLIST = False
+
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
     from version import *
@@ -420,7 +456,7 @@ DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
 INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
    
 # hack some settings for test and runserver    
-if 'test' in sys.argv:
+if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
 elif 'runserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

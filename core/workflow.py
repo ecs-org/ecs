@@ -1,11 +1,15 @@
-from datetime import datetime
+# -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
+
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
+from ecs.meetings.models import Meeting
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -20,7 +24,6 @@ def is_thesis(wf):
     if wf.data.thesis is None:
         return wf.data.current_submission_form.project_type_education_context is not None
     return wf.data.thesis
-    
 
 @guard(model=Submission)
 def has_b2vote(wf):
@@ -81,6 +84,10 @@ class InitialReview(Activity):
         sf.acknowledged = choice
         sf.save()
 
+        if is_acknowledged(self.workflow):
+            # schedule submission for the next schedulable meeting
+            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
+            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
 
 class Resubmission(Activity):
     class Meta:
@@ -214,7 +221,6 @@ class VoteRecommendationReview(Activity):
         
     def get_url(self):
         return None # FIXME: missing feature (FMD3)
-
 
 class VoteFinalization(Activity):
     class Meta:

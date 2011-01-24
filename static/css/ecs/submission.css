@@ -15,7 +15,7 @@
   cursor: pointer;
 }
 #submission_widget a, #submission_widget li, #submission_widget label, #submission_widget table {
-  font-size: 10pt;
+  font-size: 12px;
 }
 .submission_list_choose li {
   display: inline;
@@ -24,16 +24,6 @@
 #content ul.submission_list_choose {
   border-bottom: 1px solid #ccc;
   margin: 0;
-}
-.submission_item:nth-child(odd) {
-  background-color: #e8e8d8;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
-}
-.submission_item:nth-child(even) {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
 }
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
   width: 16px;
@@ -60,9 +50,5 @@
 }
 .submission_other {
   background: url(/static/images/icons.png) 0 -64px no-repeat;
-}
-
-#status_tab td, #status_tab th, #involved_parties_tab th, #involved_parties_tab td {
-  border: 1px solid #ddd;
 }
 

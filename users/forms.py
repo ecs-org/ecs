@@ -9,14 +9,9 @@ from django.conf import settings
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget
-from ecs.users.utils import get_full_name
 
 
 email_length = User._meta.get_field('email').max_length
-
-class UserChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, user):
-        return get_full_name(user)
 
 class EmailLoginForm(forms.Form):
     # Note: This has to be called "username", so we can use the django login view
@@ -78,12 +73,38 @@ class RequestPasswordResetForm(forms.Form):
 
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        rval = super(ProfileForm, self).__init__(*args, **kwargs)
+
+        forward_messages_initial = '0'
+        if self.instance:
+            forward_messages_initial = str(self.instance.forward_messages_after_minutes)
+
+        self.fields['forward_messages_after_minutes'] = forms.ChoiceField(required=False, choices=(
+            ('0', _(u'Never forward unread messages')),
+            ('5', _(u'Forward unread messages after 5 minutes')),
+            ('10', _(u'Forward unread messages after 10 minutes')),
+            ('360', _(u'Forward unread messages after 6 hours')),
+        ), initial=forward_messages_initial)
+
+        return rval
+
+    def save(self, *args, **kwargs):
+        instance = super(ProfileForm, self).save(*args, **kwargs)
+
+        forward_messages_minutes = self.cleaned_data.get('forward_messages_after_minutes', '0')
+        instance.forward_messages_after_minutes = int(forward_messages_minutes)
+        instance.save()
+
+        return instance
+        
+
     class Meta:
         model = UserProfile
         fields = ('gender', 'title', 'organisation', 'jobtitle', 'swift_bic', 'iban',
             'address1', 'address2', 'zip_code', 'city', 'phone', 'fax', 'social_security_number',
         )
-        
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
@@ -94,6 +115,11 @@ class AdministrationFilterForm(forms.Form):
         ('both', _(u'Both')),
         ('yes', _(u'Approved')),
         ('no', _(u'Not Approved')),
+    ))
+    activity = forms.ChoiceField(required=False, choices=(
+        ('both', _(u'Both')),
+        ('active', _(u'active')),
+        ('inactive', _(u'inactive')),
     ))
     group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())

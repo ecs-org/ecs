@@ -2,14 +2,14 @@
 {% load core i18n userutils %} 
 
 {% block headertitle %}
-  {{ submission_form.submission|ec_number }} {{ submission_form.project_title }}
+  {{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<i>Ohne Titel</i>' }}
 {% endblock %}
 
 {% block header_actions %}
     {{ block.super }}
     {% if submission_form.presenter == request.user %}
         {% if submission_form.submission.current_submission_form == submission_form %}
-            <div class="floating_box">
+            <div class="header_actions">
                 <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
                 {% for notification_type in diff_notification_types %}
                     <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
@@ -49,6 +49,7 @@
 
         {{ block.super }}
 
+        {% if user|has_flag:'internal' %}
         <li>
             <a href="#">{% trans "Review" %}</a>
             <ul class="tab_headers">
@@ -77,6 +78,7 @@
                 </li>
             </ul>
         </li>
+        {% endif %}
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
@@ -187,52 +189,55 @@
             <p>{% trans "There are no published votes." %}</p>
         {% endif %}
     </div>
-    <div id="categorization_review_tab" class="tab">
-        {% block categorization_review_tab_content %}
-            {% with categorization_review_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
-            {% endwith %}
-        {% endblock %}
-    </div>
-    <div id="retrospective_thesis_review_tab" class="tab">
-        {% block retrospective_thesis_review_tab_content %}
-            {% with retrospective_thesis_review_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
-            {% endwith %}
-        {% endblock %}
-    </div>
-    {% if b2_vote_review_form %}
-        <div id="b2vote_review_tab" class="tab">
-            <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
-            <h4>Upgrade auf B1</h4>
-            {% with b2_vote_review_form as review_form %}
+    
+    {% if user|has_flag:'internal' %}
+        <div id="categorization_review_tab" class="tab">
+            {% block categorization_review_tab_content %}
+                {% with categorization_review_form as review_form %}
+                    {% include 'submissions/review_form.inc' %}
+                {% endwith %}
+            {% endblock %}
+        </div>
+        <div id="retrospective_thesis_review_tab" class="tab">
+            {% block retrospective_thesis_review_tab_content %}
+                {% with retrospective_thesis_review_form as review_form %}
+                    {% include 'submissions/review_form.inc' %}
+                {% endwith %}
+            {% endblock %}
+        </div>
+        {% if b2_vote_review_form %}
+            <div id="b2vote_review_tab" class="tab">
+                <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+                <h4>Upgrade auf B1</h4>
+                {% with b2_vote_review_form as review_form %}
+                    {% include 'submissions/review_form.inc' %}
+                {% endwith %}
+            </div>
+        {% else %}
+            <div id="vote_review_tab" class="tab">
+                {% block vote_review_tab_content %}
+                    <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+                    {% with vote_review_form as review_form %}
+                        {% include 'submissions/review_form.inc' %}
+                    {% endwith %}
+                {% endblock %}
+            </div>
+        {% endif %}
+        {% for checklist, checklist_review_form in checklist_reviews %}
+        <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
+            {% with checklist_review_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
         </div>
-    {% else %}
-        <div id="vote_review_tab" class="tab">
-            {% block vote_review_tab_content %}
-                <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
-                {% with vote_review_form as review_form %}
+        {% endfor %}
+        <div id="befangene_review_tab" class="tab">
+            {% block befangene_review_tab_content %}
+                {% with befangene_review_form as review_form %}
                     {% include 'submissions/review_form.inc' %}
                 {% endwith %}
             {% endblock %}
         </div>
     {% endif %}
-    {% for checklist, checklist_review_form in checklist_reviews %}
-    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
-        {% with checklist_review_form as review_form %}
-            {% include 'submissions/review_form.inc' %}
-        {% endwith %}
-    </div>
-    {% endfor %}
-    <div id="befangene_review_tab" class="tab">
-        {% block befangene_review_tab_content %}
-            {% with befangene_review_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
-            {% endwith %}
-        {% endblock %}
-    </div>
     <div id="communication_tab" class="tab">
         <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>

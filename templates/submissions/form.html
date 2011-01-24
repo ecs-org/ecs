@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core i18n %} 
+{% load core i18n userutils %} 
 
 {% block headertitle %}
     {% if notification_type %}
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block content %}
-    <form action="" method="post" enctype="multipart/form-data" class="form tabbed main">
+    <form action="" method="post" enctype="multipart/form-data" class="form_main">
         {{ block.super }}
         <input type="submit" name="validate" value="validate" class="hidden" />
         <input type="submit" name="submit" value="submit" class="hidden" />
@@ -51,7 +51,7 @@
             });
             
             $('save-button').addEvent('click', function(){
-                ecs.mainForm.autosave(true);
+                ecs.mainForm.save();
                 return false;
             });
             $('validate-button').addEvent('click', function(){
@@ -63,11 +63,34 @@
                 return false;
             });
             
-            {% if valid %}
+            {% if valid and user|has_flag:'approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
                 });
             {% endif %}
+            {% if valid and not user|has_flag:'approved_by_office' %}
+                new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
+            {% endif %}
+
+
+            {# document upload magic #}
+
+            var file_field = $('id_document-file');
+            var name_field = $('id_document-name');
+            file_field.addEvent('change', function() {
+                var dot_offset = file_field.value.lastIndexOf('.');
+                var name = file_field.value;
+                if (dot_offset >= 0) {
+                    name = file_field.value.substring(0, dot_offset);
+                }
+                name_field.value = name;
+
+                var errorlist = file_field.getNext('.errorlist');
+                if (errorlist) {
+                    errorlist.hide();
+                }
+            });
+
         });
     </script>
 {% endblock %}

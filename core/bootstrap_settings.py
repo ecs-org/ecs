@@ -6,13 +6,15 @@ developers = (
     (u'Felix', u'Erkinger', u'felix@erkinger.at'),
     (u'Johannes', u'Dollinger', 'emulbreh@googlemail.com'),
     (u'Martin', u'Natano', 'natano@natano.net'),
-    (u'Amir', u'Hassan', 'amir@viel-zu.org' ),
-    (u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com' ),
+    (u'Amir', u'Hassan', 'amir@viel-zu.org'),
+    (u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com'),
     (u'Markus', u'Froehlich', 'froema@ep3.at'),
     (u'Nadia', u'Ratti', 'nadia.ratti@gmail.com'),
     (u'Maximilian', u'Stadler', 'sulpicius@socialanthropology.net'),
     (u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at'),
     (u'Thomas', u'Neumann', 'tom@newtone.cc'),
+    (u'Esther', u'Neumann', 'es_data@yahoo.de'),
+    (u'Hudson', u'Windmill', 'windmill@example.org'),
 )
 
 staff_users = ()

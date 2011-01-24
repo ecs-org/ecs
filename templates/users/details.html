@@ -6,10 +6,10 @@
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-<div class="administration_detail">
+<div class="administration_detail form_main">
 <h2>{{ user_form.instance }}</h2>
 
-<a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a>
+<p><a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a></p>
 <form action="" method="post">
     <div>
     <ol>

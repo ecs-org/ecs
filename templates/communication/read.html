@@ -1,12 +1,12 @@
-{% load core userutils%}
+{% load core %}
 
 <div class="message_display">
   <h3>{{ thread.subject }} ({{ message_list|length }})</h3>
   {% for message in message_list %}
-  <div class="item {% cycle 'even' 'odd' %}">
+  <div class="item">
     <ol>
-      <li><strong>Von:</strong> {{ message.sender|full_name }}</li>
-      <li><strong>An:</strong> {{ message.receiver|full_name }}</li>
+      <li><strong>Von:</strong> {{ message.sender }}</li>
+      <li><strong>An:</strong> {{ message.receiver }}</li>
       <li><strong>Datum:</strong> {{ message.timestamp|date:'d.m.Y H:i' }} Uhr</li>
       <li><strong>Betreff:</strong> 
           {% if message.thread.submission %}
@@ -16,7 +16,7 @@
       </li>
       <li class="actions">
           {% ifequal message.sender request.user %}
-              <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.bump_message message_pk=message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
+              <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.send_message bump_message_pk=message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
           {% else %}
               <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=message.pk %}" title="Antworten">answer</a>
               <a class="open-in-popup icon_delegate" href="{% url ecs.communication.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren">delegate</a>

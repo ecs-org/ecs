@@ -1,4 +1,5 @@
-import datetime
+# -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -41,10 +42,10 @@ def meeting_list(request, meetings):
     })
     
 def upcoming_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.datetime.now()))
+    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()))
 
 def past_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.datetime.now()))
+    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()))
 
 @developer
 def schedule_submission(request, submission_pk=None):
@@ -54,7 +55,7 @@ def schedule_submission(request, submission_pk=None):
     if form.is_valid():
         kwargs = form.cleaned_data.copy()
         meeting = kwargs.pop('meeting')
-        timetable_entry = meeting.add_entry(submission=submission, duration=datetime.timedelta(minutes=7.5), **kwargs)
+        timetable_entry = meeting.add_entry(submission=submission, duration=timedelta(minutes=7.5), **kwargs)
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'submissions/schedule.html', {
         'submission': submission,
@@ -94,9 +95,9 @@ def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     is_break = request.GET.get('break', False)
     if is_break:
-        entry = meeting.add_break(duration=datetime.timedelta(minutes=30))
+        entry = meeting.add_break(duration=timedelta(minutes=30))
     else:
-        entry = meeting.add_entry(duration=datetime.timedelta(minutes=7, seconds=30), submission=Submission.objects.order_by('?')[:1].get())
+        entry = meeting.add_entry(duration=timedelta(minutes=7, seconds=30), submission=Submission.objects.order_by('?')[:1].get())
         import random
         for user in User.objects.order_by('?')[:random.randint(1, 4)]:
             Participation.objects.create(entry=entry, user=user)
@@ -242,7 +243,7 @@ def meeting_assistant(request, meeting_pk=None):
         
 def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
-    meeting.started = datetime.datetime.now()
+    meeting.started = datetime.now()
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
     
@@ -250,7 +251,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     if meeting.open_tops.count():
         raise Http404(_("unfinished meetings cannot be stopped"))
-    meeting.ended = datetime.datetime.now()
+    meeting.ended = datetime.now()
     meeting.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
     
@@ -433,12 +434,13 @@ def agenda_htmlemail(request, meeting_pk=None):
         }))
         plainmail = whitewash(htmlmail)
 
-        deliver(subject=_('Invitation to meeting'), 
+        deliver(settings.AGENDA_RECIPIENT_LIST,
+            subject=_('Invitation to meeting'), 
             message=plainmail,
             message_html=htmlmail,
             attachments=[(filename, pdf,'application/pdf'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=settings.AGENDA_RECIPIENT_LIST)
+        )
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.upcoming_meetings'))
 
@@ -451,11 +453,11 @@ def timetable_htmlemailpart(request, meeting_pk=None):
 
 def next(request):
     try:
-        meeting = Meeting.objects.all().order_by('-start')[0]
-    except IndexError:
+        meeting = Meeting.objects.next()
+    except Meeting.DoesNotExist:
         return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
-
-    return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
+    else:
+        return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
 
 def status(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

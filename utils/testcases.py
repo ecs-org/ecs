@@ -8,7 +8,7 @@ from django.conf import settings
 from ecs.core import bootstrap as core_bootstrap
 from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
-from ecs.users.utils import create_user, get_user
+from ecs.users.utils import get_user, get_or_create_user
 
 
 class EcsTestCase(TestCase):
@@ -25,7 +25,7 @@ class EcsTestCase(TestCase):
     def setUp(self):
         self.logger = logging.getLogger() 
         
-        user = create_user('root@system', is_superuser=True)
+        user, created = get_or_create_user('root@example.org', is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
         
         for name in "alice", "bob", "unittest":
@@ -36,7 +36,7 @@ class EcsTestCase(TestCase):
         user.save()
         
     def create_user(self, name):
-        user = create_user('{0}@example.com'.format(name), is_superuser=True)
+        user, created = get_or_create_user('{0}@example.com'.format(name), is_superuser=True)
         user.set_password('password')
         user.save()
         profile = user.get_profile()

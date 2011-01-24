@@ -100,11 +100,11 @@ def submission_workflow():
 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
-            ('initial_review', 'paper_submission_review'): None,
+            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged),
 
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
-            ('initial_thesis_review', 'paper_submission_review'): None,
+            ('initial_thesis_review', 'paper_submission_review'): Args(guard=is_acknowledged),
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
@@ -280,7 +280,12 @@ def medical_categories():
         (u'techSec', u'technischer Sicherheitsbeauftragter'),
 
         (u'LaborDia', u'medizinische und chemische Labordiagnostik'),
-        (u'Psychol', u'Psychologie'), 
+        (u'Psychol', u'Psychologie'),
+        
+        (u'Virologie', u'Virologie'),
+        (u'Tropen', u'Tropen'),
+        (u'Ernährung', u'Ernährung'),
+        (u'Apotheke', u'Apotheke'),
     )
     for shortname, longname in categories:
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
@@ -293,19 +298,22 @@ def auth_user_developers():
     try:
         from ecs.core.bootstrap_settings import developers
     except ImportError:
-        developers = ((u'John', u'Doe', u'developer@example.com', 'changeme'),)
-    
-    for first, last, email, password in developers:
+        # first, Last, email, password, is_supeuser
+        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', False),)
+        
+    for first, last, email, password, is_superuser in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
         user.last_name = last
         user.set_password(password)
         user.is_staff = True
+        user.is_superuser = is_superuser
         user.groups.add(Group.objects.get(name="Presenter"))
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
         profile.help_writer = True
+        profile.forward_messages_after_minutes = 360
         profile.save()
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
@@ -348,7 +356,7 @@ def auth_user_testusers():
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
-            user, created = get_or_create_user('{0}{1}@example.com'.format(testuser, number))
+            user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number))
             user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(Group.objects.get(name="userswitcher_target"))
 
@@ -362,7 +370,7 @@ def auth_user_testusers():
             profile.save()
     
     for testuser, medcategories in boardtestusers:
-        user, created = get_or_create_user('{0}@example.com'.format(testuser))
+        user, created = get_or_create_user('{0}@example.org'.format(testuser))
         user.groups.add(Group.objects.get(name='EC-Board Member'))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
 
@@ -400,6 +408,9 @@ def auth_ec_staff_users():
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_questions', 'ecs.core.bootstrap.medical_categories', 'ecs.core.bootstrap.ethics_commissions', 'ecs.core.bootstrap.auth_user_testusers', 'ecs.documents.bootstrap.document_types',))
 def testsubmission():
+    # FIXME disabled testsubmission for now, because it is not valid, and produces more followup errors than usefull testing
+    return
+
     if Submission.objects.filter(ec_number=20104321):
         return
     submission, created = Submission.objects.get_or_create(ec_number=20104321)
@@ -500,7 +511,7 @@ def testsubmission():
             'sponsor_contact_gender': u'm',
             'sponsor_contact_last_name': u'Doe',
             'sponsor_contact_title': u'Dr.',
-            'sponsor_email': u'johndoe@example.com',
+            'sponsor_email': u'johndoe@example.org',
             'sponsor_fax': u'',
             'sponsor_id': None,
             'sponsor_name': u'John Doe',
@@ -556,7 +567,7 @@ def testsubmission():
             'submitter_contact_gender': u'm',
             'submitter_contact_last_name': u'Doe',
             'submitter_contact_title': u'',
-            'submitter_email': u'developer@example.com',
+            'submitter_email': u'developer@example.org',
             'submitter_id': 2,
             'submitter_is_authorized_by_sponsor': False,
             'submitter_is_coordinator': False,
@@ -579,7 +590,7 @@ def testsubmission():
         doc.save()
 
     test_submission_form['submission'] = submission
-    test_submission_form['presenter'] = User.objects.get(email='presenter1@example.com')
+    test_submission_form['presenter'] = User.objects.get(email='presenter1@example.org')
     submission_form = SubmissionForm.objects.create(**test_submission_form)
 
     doc.parent_object = submission_form
