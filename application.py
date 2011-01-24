@@ -54,6 +54,8 @@ nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
+# for manage.py test_windmill we need windmill
+windmill:inst:all:https://github.com/windmill/windmill/tarball/master
 
 
 # queuing: celery 
@@ -208,7 +210,7 @@ diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/maste
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
 guitest_packages = """
-windmill:inst:all:pypi:windmill
+windmill:inst:all:https://github.com/windmill/windmill/tarball/master
 # for random text generation in windmill tests
 cicero:inst:all:pypi:cicero
 # Firefox and a vncserver is needed for headless gui testing
