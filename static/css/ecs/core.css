@@ -630,6 +630,10 @@ fieldset.disabled {
 .form_main #id_start_1, .form_main #id_deadline_1, .form_main #id_deadline_diplomathesis_1 {
   margin-left: 30px;
 }
+.form_main textarea{
+    /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
+    width: 400px; 
+}
 .form_main textarea#id_project_title, .form_main textarea#id_german_summary {
   height: 90px;
 }
