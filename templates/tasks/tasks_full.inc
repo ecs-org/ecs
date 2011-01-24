@@ -5,7 +5,6 @@
     <h1>{{ submission }}</h1>
 {% endif %}
 
-{# this form needs an explicit action, because it is used in widgets #}
 <form id="{{ form_id }}" method="post" class="open-in-widget">
     <div class="task_list_choose">
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
@@ -27,7 +26,7 @@
 {% if mine_tasks %}
     <div class="task_list">
         <h3>{% trans "My Tasks" %}</h3>
-        {% regroup mine_tasks by task_type as task_type_list %}
+        {% regroup mine_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
@@ -44,7 +43,7 @@
 {% if assigned_tasks %}
     <div class="task_list">
         <h3>{% trans "Tasks assigned to me" %}</h3>
-        {% regroup assigned_tasks by task_type as task_type_list %}
+        {% regroup assigned_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
@@ -62,7 +61,7 @@
 {% if open_tasks %}
     <div class="task_list">
         <h3>{% trans "Open Tasks" %}</h3>
-        {% regroup open_tasks by task_type as task_type_list %}
+        {% regroup open_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
@@ -79,7 +78,7 @@
 {% if proxy_tasks %}
     <div class="task_list">
         <h2>{% trans "Proxy Tasks" %}</h2>
-        {% regroup proxy_tasks by task_type as task_type_list %}
+        {% regroup proxy_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
