@@ -164,6 +164,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     return render(request, template, context)
 
 
+@user_flag_required('internal')
 def retrospective_thesis_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
@@ -182,6 +183,7 @@ def categorization_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
+@user_flag_required('internal')
 def befangene_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
@@ -189,6 +191,8 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
+
+@user_flag_required('internal')
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
@@ -237,6 +241,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     })
 
 
+@user_flag_required('internal')
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
@@ -247,6 +252,8 @@ def vote_review(request, submission_form_pk=None):
         vote_review_form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
 
+
+@user_flag_required('internal')
 def b2_vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
