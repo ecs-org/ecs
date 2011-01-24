@@ -46,7 +46,7 @@ def get_presenting_parties(sf, include_workflow=True):
     yield Party(user=sf.presenter, involvement=_("Presenter"))
 
     for i in sf.investigators.filter(main=True):
-        yield Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email)
+        yield Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email, involvement=_("Primary Investigator"))
 
 def get_reviewing_parties(sf, include_workflow=True):
     if include_workflow:
