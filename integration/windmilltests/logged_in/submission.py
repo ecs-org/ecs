@@ -11,9 +11,9 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(id=u'userswitcher_input')
     client.waits.forPageLoad(timeout=u'20000')
     client.select(option=u'presenter1@example.org', id=u'userswitcher_input')
-    client.click(xpath=u"//div[@id='usermenu']/ul/li[4]/span")
     client.waits.forPageLoad(timeout=u'3000')
     client.waits.forElement(link=u'presenter1@example.org', timeout=u'3000')
+    client.click(xpath=u"//div[@id='usermenu']/ul/li[4]/span")
     client.click(link=u'Neuer Antrag')
 
     # Eckdaten
