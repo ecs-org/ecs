@@ -60,8 +60,9 @@
 }
 #help_content img {
 	max-width: 600px;
-  float: left;
-  margin: 0 10px 20px 0;
+  display: inline-block;
+  float: none;
+  margin: 0px;
 }
 #help_overlay {
   z-index: 100000;
