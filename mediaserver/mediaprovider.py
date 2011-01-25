@@ -101,7 +101,7 @@ class MediaProvider(object):
                     self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
                 else: 
                     # still not here, so we need to recache from scratch
-                    result = rerender_pages.apply_async(args=[page.id,])
+                    result = rerender_pages.delay(page.id)
                     # we wait for an answer, meaning rendering is async, but view waits
                     success, used_identifier, additional_msg = result.get()
                     if not success: 
@@ -113,7 +113,8 @@ class MediaProvider(object):
                 filelike.seek(0)
         return filelike
 
- 
+    def renderPages(self, blob_uuid):
+        rerender_pages.delay(blob_uuid)
 
 class VolatileCache(object):
     '''

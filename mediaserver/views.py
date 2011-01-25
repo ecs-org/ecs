@@ -9,6 +9,16 @@ from ecs.utils.pdfutils import Page
 
 from ecs.mediaserver.mediaprovider import MediaProvider
 
+@forceauth.exempt
+def prime_cache(request, uuid):
+    s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    if not s3url.verifyUrlString(request.get_full_path()):
+        return HttpResponseBadRequest(_("Invalid expiring url"))
+
+    mediaprovider = MediaProvider()
+    mediaprovider.renderPages(uuid)
+
+    return HttpResponse('ok')
 
 @forceauth.exempt
 def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
