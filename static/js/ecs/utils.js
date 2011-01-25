@@ -133,7 +133,7 @@ ecs.setupFormFieldHelpers = function(context){
         if(input){
             var maxlength = input.getProperty('maxlength');
             if(maxlength && maxlength > 0){
-                notes.push('max. ' +  maxlength + ' Zeichen');
+                //notes.push('max. ' +  maxlength + ' Zeichen');
                 var ml = 1 + parseInt(maxlength / 10)
                 if(ml == 3){
                     ml = 4;

@@ -9,7 +9,7 @@
             {% endif %}
         </label>
         {{ field }}
-        {% if field.errors %}
+        {% if field.errors and field.errors.0 != _('This field is required.') %}
             {{ field.errors }}
         {% endif %}
         {% if field_info.help_text %}
