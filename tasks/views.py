@@ -7,21 +7,24 @@ from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
 from ecs.communication.models import Thread
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 
+
 @user_flag_required('internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
-    tasks = Task.objects.order_by('created_at')
+    with sudo():
+        tasks = Task.objects.order_by('created_at')
     if submission_pk:
         submission_ct = ContentType.objects.get_for_model(Submission)
         tasks = tasks.filter(content_type=submission_ct, data_id=submission_pk)
     return render(request, template, {
         'tasks': tasks,
     })
+
 
 def my_tasks(request, template='tasks/compact_list.html'):
     usersettings = request.user.ecs_settings
