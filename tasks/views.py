@@ -2,7 +2,7 @@ import random
 
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 
@@ -149,17 +149,25 @@ def manage_task(request, task_pk=None):
         'task': task,
     })
     
+
 def accept_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
-    
+
+
 def decline_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
-    
-def do_task(request, task_pk=None):
-    task = get_object_or_404(Task, pk=task_pk)
-    task.done(request.user)
-    return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+
+
+def reopen_task(request, task_pk=None):
+    task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
+    if task.workflow_token.workflow.is_finished:
+        raise Http404()
+    if not task.node_controller.is_repeatable():
+        raise Http404()
+    new_task = task.reopen(user=request.user)
+    return HttpResponseRedirect(new_task.url)
+

@@ -5,7 +5,6 @@
 <ul>
     <li><a href="{% url ecs.meetings.views.schedule_submission submission_pk=submission.pk %}">Schedule</a></li>
     <li><a href="{% url ecs.core.views.start_workflow submission_pk=submission.pk %}">Start Workflow</a></li>
-    <li><a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}">{% trans "Categorization Review" %}</a></li>
     <li><a href="{% url ecs.core.views.retrospective_thesis_review submission_form_pk=submission_form.pk %}">{% trans "Thesis Review" %}</a></li>
     <li><a href="{% url ecs.core.views.checklist_review submission_form_pk=submission_form.pk blueprint_pk=1 %}">Statistik Review</a></li>
     <li><a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a></li>

@@ -159,6 +159,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
+        if request.user.ecs_profile.executive_board_member:
+            from ecs.core.workflow import CategorizationReview
+            tasks = Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).filter(closed_at__isnull=False).order_by('-closed_at')[:1]
+            if tasks:
+                context['categorization_task'] = tasks[0]
     
     if extra_context:
         context.update(extra_context)

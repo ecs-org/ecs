@@ -23,7 +23,8 @@ class TaskType(models.Model):
         elif self.workflow_node_id:
             return u'TaskType for %s' % self.workflow_node
         return u'TaskType <Anonymous>'
-    
+
+
 class TaskManager(AuthorizationManager):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
@@ -32,8 +33,14 @@ class TaskManager(AuthorizationManager):
     def acceptable_for_user(self, user):
         return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__indisposed=True))
         
-    def for_user(self, user):
-        return self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True))
+    def for_user(self, user, activity=None, data=None):
+        qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True))
+        if activity:
+            qs = qs.filter(workflow_token__node__node_type=activity._meta.node_type)
+        if data:
+            ct = ContentType.objects.get_for_model(type(data))
+            qs = qs.filter(content_type=ct, data_id=data.pk)
+        return qs
 
 
 class Task(models.Model):
@@ -109,6 +116,18 @@ class Task(models.Model):
             self.data.workflow.do(token, choice=choice)
         else:
             self.close(commit=commit)
+            
+    def reopen(self, user=None):
+        assert self.closed_at is not None
+        new = type(self)()
+        for attr in ('task_type', 'content_type', 'data_id'):
+            setattr(new, attr, getattr(self, attr))
+        new.workflow_token = self.node_controller.activate()
+        user = user or self.assigned_to
+        new.created_by = user
+        new.accept(user=user, check_authorization=False, commit=False)
+        new.save()
+        return new
         
     def assign(self, user, check_authorization=True, commit=True):
         if user and check_authorization:
@@ -124,9 +143,9 @@ class Task(models.Model):
         if commit:
             self.save()
         
-    def accept(self, user=None, commit=True):
+    def accept(self, user=None, commit=True, check_authorization=True):
         if user:
-            self.assign(user, commit=False)
+            self.assign(user, commit=False, check_authorization=check_authorization)
         self.accepted = True
         if commit:
             self.save()
@@ -148,18 +167,17 @@ class Task(models.Model):
 
 # workflow integration:
 def workflow_token_received(sender, **kwargs):
+    if sender.repeated:
+        return
     try:
         task_type = TaskType.objects.get(workflow_node=sender.node)
         Task.objects.create(workflow_token=sender, task_type=task_type, data=sender.workflow.data)
     except TaskType.DoesNotExist:
         pass
-    
+
 def workflow_token_consumed(sender, **kwargs):
-    try:
-        task = Task.objects.get(workflow_token=sender)
+    for task in Task.objects.filter(workflow_token=sender, closed_at__isnull=True):
         task.close()
-    except Task.DoesNotExist:
-        pass
 
 def node_saved(sender, **kwargs):
     node, created = kwargs['instance'], kwargs['created']

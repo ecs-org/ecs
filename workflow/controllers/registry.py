@@ -46,7 +46,7 @@ class ControllerRegistry(object):
                 self.guard_map[edge.guard_id] = func
             except KeyError:
                 raise KeyError("Missing guard implementation for %s" % edge.guard)
-        return lambda: func(workflow) != edge.negated
+        return lambda: bool(func(workflow)) != edge.negated
 
     def add_controller(self, controller):
         name = _fqn(controller)

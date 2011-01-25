@@ -230,6 +230,7 @@ class Token(models.Model):
     source = models.ForeignKey(Node, related_name='sent_tokens', null=True) # denormalized: can be derived from trail
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
+    repeated = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=datetime.datetime.now)
     consumed_at = models.DateTimeField(null=True, blank=True, default=None)
     consumed_by = models.ForeignKey(User, null=True, blank=True)

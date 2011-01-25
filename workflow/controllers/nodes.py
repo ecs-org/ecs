@@ -113,7 +113,7 @@ class NodeController(object):
         else:
             self.emit_token(deadline=deadline, trail=tokens)
             
-    def receive_token(self, source, trail=()):
+    def receive_token(self, source, trail=(), repeated=False):
         if not self.is_reentrant() and self.has_tokens(consumed=None):
             raise TokenRejected("%s is not repeatable" % self.node)
         token = self.workflow.tokens.create(
@@ -121,6 +121,7 @@ class NodeController(object):
             source=source, 
             deadline=self.get_deadline(),
             locked=self.is_locked(),
+            repeated=repeated,
         )
         if trail:
             token.trail = trail
@@ -152,17 +153,21 @@ class NodeController(object):
 class Activity(NodeController):
     def perform(self, choice=None):
         self.pre_perform(choice)
+        token = self.activate()
+        self.progress(token)
+        self.post_perform(choice, token=token)
+        
+    def activate(self):
         token = self.get_token(locked=False)
         if not token:
             token = self.get_token(locked=True)
             if token:
-                raise TokenRequired("Activities cannot be performed with locked tokens")
+                raise TokenRequired("Activities cannot be activated with locked tokens")
             elif self.is_repeatable() and self.has_tokens(consumed=None):
-                token = self.receive_token(None)
+                token = self.receive_token(None, repeated=True)
             else:
-                raise TokenRequired("Activities cannot be performed without a token")
-        self.progress(token)
-        self.post_perform(choice, token=token)
+                raise TokenRequired("Activities cannot be activated without a token")
+        return token
         
     def is_repeatable(self):
         return False
