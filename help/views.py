@@ -63,6 +63,11 @@ def find_help(request, view_pk=None, anchor=''):
 
 
 def index(request):
+    try:
+        page = Page.objects.get(slug='index')
+        return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+    except Page.DoesNotExist:
+        pass
     return render(request, 'help/index.html', {
         'pages': Page.objects.order_by('title'),
     })
@@ -101,8 +106,16 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     form = HelpPageForm(request.POST or None, instance=page, initial=initial)
 
     if form.is_valid():
+        new = not bool(page)
         page = form.save()
         revision.user = request.original_user if hasattr(request, "original_user") else request.user
+        if new and page.slug:
+            try:
+                index = Page.objects.get(slug='index')
+                index.text += "\n\n:doc:`%s <%s>`\n" % (page.title, page.slug)
+                index.save()
+            except Page.DoesNotExist:
+                pass
         return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
         
     related_pages = Page.objects.filter(view=view).order_by('title')
