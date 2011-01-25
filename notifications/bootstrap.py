@@ -39,6 +39,7 @@ def notification_workflow():
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name="Start"),
+            #'initial_amendment_review': Args(), -> sign
             'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP),
             'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP),
             'sign_notification_answer': Args(SignNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP),

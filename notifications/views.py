@@ -20,6 +20,7 @@ from ecs.core.parties import get_involved_parties
 from ecs.documents.models import Document
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
+from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm
 
@@ -131,6 +132,7 @@ def delete_docstash_entry(request):
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
 
+@tracking_hint(vary_on=['notification_type_pk'])
 @with_docstash_transaction
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)

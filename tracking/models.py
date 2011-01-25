@@ -3,14 +3,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve
 
+
 class ViewManager(models.Manager):
     def get_or_create_for_url(self, url):
         func, args, kwargs = resolve(url)
+        vary_on = []
+        if hasattr(func, 'tracking_hints'):
+             for name in func.tracking_hints.get('vary_on'):
+                 vary_on.append('%s=%s' % (name, kwargs.get(name)))
         try:
-            path = "%s.%s" % (func.__module__, func.__name__)
+            path = "%s.%s%s" % (func.__module__, func.__name__, "?%s" % "&".join(vary_on) if vary_on else "")
         except AttributeError:
             path = "<unknown>"
         return self.get_or_create(path=path)
+
 
 class View(models.Model):
     path = models.CharField(max_length=200, db_index=True, unique=True)
@@ -22,6 +28,7 @@ class View(models.Model):
             return "%s @ %s" % (func, module)
         except ValueError, TypeError:
             return self.path
+
 
 class Request(models.Model):
     timestamp = models.DateTimeField(default=datetime.datetime.now)
