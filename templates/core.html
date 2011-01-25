@@ -44,7 +44,9 @@
               <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
           {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
-          <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
+          {% if user|has_flag:"approved_by_office" %}
+              <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
+          {% endif %}
       </ul>
     </li>
     <li>

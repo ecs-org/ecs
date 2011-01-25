@@ -480,12 +480,15 @@ def export_submission(request, submission_pk):
     response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')
     return response
 
+
+@user_flag_required('approved_by_office')
 def import_submission_form(request):
     if 'file' in request.FILES:
         serializer = Serializer()
         submission_form = serializer.read(request.FILES['file'])
         return copy_submission_form(request, submission_form_pk=submission_form.pk, delete=True)
     return render(request, 'submissions/import.html', {})
+
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
