@@ -19,9 +19,10 @@ from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.utils.msutils import generate_media_url, get_from_mediaserver
-from ecs.utils.pdfutils import pdf_page_count, pdf_isvalid
+from ecs.utils.pdfutils import pdf_isvalid
 from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
 
@@ -87,7 +88,17 @@ C_BRANDING_CHOICES = (
     ('b', 'brand id'),
     ('p', 'personalize'),
     ('n', 'never brand'),
-    )
+)
+
+C_STATUS_CHOICES = (
+    ('new', _('new')),
+    ('uploading', _('uploading')),
+    ('uploaded', _('uploaded')),
+    ('indexing', _('indexing')),
+    ('indexed', _('indexed')),
+    ('ready', _('ready')),
+    ('aborted', _('aborted')),
+)
 
 class Document(models.Model):
     uuid_document = models.SlugField(max_length=36, unique=True)
@@ -98,6 +109,7 @@ class Document(models.Model):
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False, blank=True)
+    status = models.CharField(max_length=15, default='new', choices=C_STATUS_CHOICES)
 
     # user supplied data
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
@@ -158,8 +170,6 @@ class Document(models.Model):
         return "unique id"
 
     def save(self, **kwargs):
-        from ecs.documents.tasks import encrypt_and_upload_to_storagevault
-              
         if not self.file:
             raise ValueError('no file')
 
@@ -181,17 +191,7 @@ class Document(models.Model):
             self.file.seek(0)
             self.hash = m.hexdigest()
                        
-        if self.mimetype == 'application/pdf':
-            self.pages = pdf_page_count(self.file) # calculate number of pages
-
-        first_save = self.pk is None
-        rval = super(Document, self).save(**kwargs)
-        
-        if first_save:
-            # upload it via celery to the storage vault
-            encrypt_and_upload_to_storagevault.apply_async(args=[self.pk], countdown=3)
-
-        return rval
+        return super(Document, self).save(**kwargs)
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)

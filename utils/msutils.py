@@ -30,8 +30,7 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
 def get_from_mediaserver(uuid, filename, personalization=None, brand=False):
     if settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.mediaprovider import MediaProvider
-        mediaprovider = MediaProvider()
-        return mediaprovider.getBlob(uuid)
+        return MediaProvider().getBlob(uuid)
     else:
         f = urlopen(generate_media_url(uuid, filename, personalization=personalization, brand=brand))
         return f
