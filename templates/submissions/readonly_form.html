@@ -49,33 +49,41 @@
 
         {{ block.super }}
 
-        {% if user|has_flag:'internal' %}
+        {% if show_reviews %}
         <li>
             <a href="#">{% trans "Review" %}</a>
             <ul class="tab_headers">
-                <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
-                    <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
-                </li>
-                <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
-                    <a href="#retrospective_thesis_review_tab">Thesis Review</a>
-                </li>
-                {% if b2_vote_review_form %}
-                    <li class="active">
-                        <a href="#b2vote_review_tab">B2 Votum</a>
+                {% if categorization_review_form %}
+                    <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
-                {% else %}
-                    <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#vote_review_tab">Votum</a>
+                {% endif %}
+                {% if retrospective_thesis_review_form %}
+                    <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#retrospective_thesis_review_tab">Thesis Review</a>
                     </li>
+                {% endif %}
+                {% if vote_review_form or b2_vote_review_form %}
+                    {% if b2_vote_review_form %}
+                        <li class="active">
+                            <a href="#b2vote_review_tab">B2 Votum</a>
+                        </li>
+                    {% else %}
+                        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+                            <a href="#vote_review_tab">Votum</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
                     </li>
                 {% endfor %}
-                <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
-                    <a href="#befangene_review_tab">Befangene Review</a>
-                </li>
+                {% if befangene_review_form %}
+                    <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#befangene_review_tab">Befangene Review</a>
+                    </li>
+                {% endif %}
             </ul>
         </li>
         {% endif %}
@@ -190,7 +198,7 @@
         {% endif %}
     </div>
     
-    {% if user|has_flag:'internal' %}
+    {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
                 {% with categorization_review_form as review_form %}
@@ -198,6 +206,8 @@
                 {% endwith %}
             {% endblock %}
         </div>
+    {% endif %}
+    {% if retrospective_thesis_review_form %}
         <div id="retrospective_thesis_review_tab" class="tab">
             {% block retrospective_thesis_review_tab_content %}
                 {% with retrospective_thesis_review_form as review_form %}
@@ -205,6 +215,8 @@
                 {% endwith %}
             {% endblock %}
         </div>
+    {% endif %}
+    {% if b2_vote_review_form or vote_review_form %}
         {% if b2_vote_review_form %}
             <div id="b2vote_review_tab" class="tab">
                 <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
@@ -223,13 +235,15 @@
                 {% endblock %}
             </div>
         {% endif %}
-        {% for checklist, checklist_review_form in checklist_reviews %}
-        <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
-            {% with checklist_review_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
-            {% endwith %}
-        </div>
-        {% endfor %}
+    {% endif %}
+    {% for checklist, checklist_review_form in checklist_reviews %}
+    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
+        {% with checklist_review_form as review_form %}
+            {% include 'submissions/review_form.inc' %}
+        {% endwith %}
+    </div>
+    {% endfor %}
+    {% if befangene_review_form %}
         <div id="befangene_review_tab" class="tab">
             {% block befangene_review_tab_content %}
                 {% with befangene_review_form as review_form %}
@@ -238,6 +252,7 @@
             {% endblock %}
         </div>
     {% endif %}
+    
     <div id="communication_tab" class="tab">
         <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>

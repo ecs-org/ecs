@@ -40,6 +40,7 @@ from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
+from ecs.tasks.utils import has_task
 from ecs.users.utils import user_flag_required
 
 
@@ -118,13 +119,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote = submission_form.current_vote
     submission = submission_form.submission
 
-    retrospective_thesis_review_form = RetrospectiveThesisReviewForm(instance=submission, readonly=True)
-    categorization_review_form = CategorizationReviewForm(instance=submission, readonly=True)
-    befangene_review_form = BefangeneReviewForm(instance=submission, readonly=True)
-    vote_review_form = VoteReviewForm(instance=vote, readonly=True)
-    
     checklist_reviews = []
-    for checklist in submission.checklists.select_related('blueprint'):
+    for checklist in Checklist.objects.filter(submission=submission).select_related('blueprint'):
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
@@ -146,19 +142,27 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission_form': submission_form,
         'submission_forms': submission_forms,
         'vote': vote,
-        'retrospective_thesis_review_form': retrospective_thesis_review_form,
-        'categorization_review_form': categorization_review_form,
-        'vote_review_form': vote_review_form,
         'checklist_reviews': checklist_reviews,
-        'befangene_review_form': befangene_review_form,
+        'show_reviews': any(checklist_reviews),
         'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
         'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False),
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
     }
+    
+    if request.user.ecs_profile.internal:
+        context['show_reviews'] = True
+        context.update({
+            'retrospective_thesis_review_form': RetrospectiveThesisReviewForm(instance=submission, readonly=True),
+            'categorization_review_form': CategorizationReviewForm(instance=submission, readonly=True),
+            'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
+            'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
+        })
+    
     if extra_context:
         context.update(extra_context)
+    
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
@@ -192,10 +196,14 @@ def befangene_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
 
-@user_flag_required('internal')
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
+
+    from ecs.core.workflow import ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview
+    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview), submission_form.submission, data=blueprint):
+        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
     if blueprint.multiple:
         lookup_kwargs['user'] = request.user

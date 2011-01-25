@@ -1,6 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from ecs import authorization
-from ecs.core.models import Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Vote
+from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
+    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist)
 from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
@@ -89,3 +90,14 @@ class NotificationQFactory(authorization.QFactory):
 
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
     authorization.register(cls, factory=NotificationQFactory)
+    
+
+class ChecklistQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        q = self.make_q(submission__in=Submission.objects.filter(pk__gt=0).values('pk').query)
+        if not profile.internal:
+            q &= self.make_q(user=user)
+        return q
+        
+authorization.register(Checklist, factory=ChecklistQFactory)

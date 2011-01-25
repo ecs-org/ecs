@@ -5,7 +5,7 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models.submissions import Submission
-
+from ecs.authorization import AuthorizationManager
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
@@ -36,6 +36,8 @@ class Checklist(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     user = models.ForeignKey('auth.user')
     documents = models.ManyToManyField('documents.Document')
+    
+    objects = AuthorizationManager()
 
     class Meta:
         app_label = 'core'

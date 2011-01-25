@@ -3,7 +3,8 @@
 {% block document_list %}
 <div class="doclist">
 
-{% regroup documents|dictsort:"doctype.name" by doctype as doctype_list %}
+{# FIXME: "doctype.name" was used, but dictsort trips over None doctype values #}
+{% regroup documents|dictsort:"doctype" by doctype as doctype_list %}
 
 {% for doctype in doctype_list %}
     <h4>{{ doctype.grouper }}</h4>
