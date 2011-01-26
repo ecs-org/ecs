@@ -53,6 +53,7 @@ def authenticated(username='windmill@example.org', password='shfnajwg9e'):
                     client.execJS(js='var element=document.createElement("CookieCleaner"); document.documentElement.appendChild(element); var evt=document.createEvent("Events"); evt.initEvent("UploadAssistantDeleteCookies", true, false); element.dispatchEvent(evt);')
                     client.execJS(js='window.location.href = "/";')
                     client.waits.forPageLoad(timeout=u'20000')
+                    # next command clears executed windmill tests from gui as it slows down execution
                     client.execIDEJS(js="""fleegix.fx.fadeOut($('ideForm')); d= function() {$('ideForm').innerHTML = '';windmill.ui.recorder.recordOff(); fleegix.fx.fadeIn($('ideForm')); }; setTimeout("d()", 800);""")
 
             return rval
@@ -73,7 +74,7 @@ def anonymous():
     return decorator
 
 
-## HACK: dont look at this ##
+## HACK: inject firefox plugin ##
 def inject_firefox_plugins():
     from windmill.dep._mozrunner import get_moz as get_moz_orig
     
