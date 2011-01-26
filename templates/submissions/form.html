@@ -63,10 +63,13 @@
                 return false;
             });
             
-            {% if valid and user|has_flag:'approved_by_office' %}
+            {% if valid and not half_baked_documents and user|has_flag:'approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
                 });
+            {% endif %}
+            {% if valid and half_baked_documents and user|has_flag:'approved_by_office' %}
+                new MooDialog.Error('{% trans "You cannot submit study if there are unready documents. If you want to submit the study regardless of the unready documents, delete them." %}');
             {% endif %}
             {% if valid and not user|has_flag:'approved_by_office' %}
                 new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');

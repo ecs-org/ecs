@@ -294,7 +294,7 @@ def create_submission_form(request):
         formsets = get_submission_formsets(request.POST or None)
         if request.method == 'GET':
             # neither docstash nor POST data: this is a completely new submission
-            # => prepopulate submitter_* fields
+            # => prepopulate submitter_* fields with the presenters data
             profile = request.user.get_profile()
             form.initial.update({
                 'submitter_contact_first_name': request.user.first_name,
@@ -312,6 +312,7 @@ def create_submission_form(request):
     )
     notification_type = request.docstash.get('notification_type', None)
     valid = False
+    half_baked_documents = False
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -346,7 +347,10 @@ def create_submission_form(request):
             
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        if submit and valid and request.user.get_profile().approved_by_office:
+        half_baked_documents = bool([d for d in request.docstash['documents'] if not d.status == 'ready'])
+        submit_now = submit and valid and request.user.get_profile().approved_by_office and not half_baked_documents
+
+        if submit_now:
             submission_form = form.save(commit=False)
             submission = request.docstash.get('submission') or Submission.objects.create()
             submission_form.submission = submission
@@ -391,6 +395,7 @@ def create_submission_form(request):
         'valid': valid,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
+        'half_baked_documents': half_baked_documents,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset

@@ -4,7 +4,7 @@
 
 {% block actions %}
     {{ block.super }}
-    | <a href="" class="delete_document">{% trans "Delete" %}</a>
+    <a href="" class="delete_document">{% trans "Delete" %}</a>
     <input type="hidden" name="documents" value="{{ doc.pk }}" />
 {% endblock %}
 

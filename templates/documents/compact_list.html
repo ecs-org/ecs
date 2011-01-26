@@ -22,11 +22,12 @@
             </a><br />
             {% block actions %}
                 {% if doc.status == 'ready' %}
-                <a href="{% url ecs.documents.views.download_document doc.pk %}">{% trans "Download" %}</a>
-                | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
-                {% if annotations %}
-                    | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
-                {% endif %}
+                    <a href="{% url ecs.documents.views.download_document doc.pk %}">{% trans "Download" %}</a>
+                    | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
+                    {% if annotations %}
+                        | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
+                    {% endif %}
+                    |
                 {% endif %}
             {% endblock %}
             {% if annotations %}

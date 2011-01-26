@@ -29,7 +29,6 @@ def document_tamer(**kwargs):
     for doc in new_documents:
         upload_to_storagevault.delay(doc['pk'])
 
-    # FIXME: prime mediaserver (depends on resolution of #713) 
     uploaded_documents = Document.objects.filter(status='uploaded', mimetype='application/pdf').values('pk')
     if len(uploaded_documents):
         logger.info('{0} uploaded documents'.format(len(uploaded_documents)))
