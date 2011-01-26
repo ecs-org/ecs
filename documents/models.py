@@ -196,7 +196,7 @@ class Document(models.Model):
         # hack for situations where there is no celerybeat
         if settings.CELERY_ALWAYS_EAGER:
             from documents.tasks import document_tamer
-            document_tamer()
+            document_tamer.delay().get()
 
         return rval
 
