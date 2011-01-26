@@ -276,7 +276,8 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     # Unterlagen
     if upload:
         client.click(link=u'Unterlagen')
-        client.execJS(js=u'ecs.windmill_upload("{0}");'.format(MENSCHENRECHTSERKLAERUNG))
+        # filenames under windows have backslash as path seperator, we need to escape these
+        client.execJS(js=u'ecs.windmill_upload("{0}");'.format(MENSCHENRECHTSERKLAERUNG.replace("\\", "\\\\")))
         client.click(id=u'id_document-doctype')
         client.select(option=u'patient information', id=u'id_document-doctype')
         #client.click(xpath=u"//select[@id='id_document-doctype']/option[3]")
@@ -338,8 +339,11 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigatoremployee-0-surname')
     client.type(text=cicero.sentences(n=1, min=1, max=1)[0], id=u'id_investigatoremployee-0-firstname')
     client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_investigatoremployee-0-organisation')
+    # TODO: add 2 more employees
 
     # and now submit!
+    # any idea, why it only works by clicking id "submit-button", and afterwards name "submit" ?
+    client.click(id=u'submit-button')
     client.click(name=u'submit')
     client.waits.forPageLoad(timeout=u'20000')
     client.waits.sleep(milliseconds=u'5000')
