@@ -25,7 +25,7 @@ class Command(BaseCommand):
         pdf = render_pdf(FakeRequest(), 'db/submissions/xhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
             'submission_form': submission_form,
-            'documents': submission_form.documents.filter(deleted=False).order_by('doctype__name', '-date'),
+            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
         })
         
         open('%s.pdf' % s.get_ec_number_display(separator='-'), 'w').write(pdf)

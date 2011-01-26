@@ -522,7 +522,7 @@ class SubmissionForm(models.Model):
         
     @property
     def protocol(self):
-        protocol_doc = self.documents.filter(deleted=False, doctype__identifier='protocol').order_by('-date', '-version')[:1]
+        protocol_doc = self.documents.exclude(status='deleted').filter(doctype__identifier='protocol').order_by('-date', '-version')[:1]
         if protocol_doc:
             return protocol_doc[0]
         else:

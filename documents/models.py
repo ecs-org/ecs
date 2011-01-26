@@ -98,6 +98,7 @@ C_STATUS_CHOICES = (
     ('indexed', _('indexed')),
     ('ready', _('ready')),
     ('aborted', _('aborted')),
+    ('deleted', _('deleted')),
 )
 
 class Document(models.Model):
@@ -108,7 +109,6 @@ class Document(models.Model):
     pages = models.IntegerField(null=True, blank=True)
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
-    deleted = models.BooleanField(default=False, blank=True)
     status = models.CharField(max_length=15, default='new', choices=C_STATUS_CHOICES)
 
     # user supplied data
@@ -190,8 +190,15 @@ class Document(models.Model):
                 m.update(data)
             self.file.seek(0)
             self.hash = m.hexdigest()
-                       
-        return super(Document, self).save(**kwargs)
+
+        rval = super(Document, self).save(**kwargs)
+
+        # hack for situations where there is no celerybeat
+        if settings.CELERY_ALWAYS_EAGER:
+            from documents.tasks import document_tamer
+            document_tamer()
+
+        return rval
 
 class Page(models.Model):
     doc = models.ForeignKey(Document)
