@@ -1,11 +1,22 @@
 {% extends 'documents/compact_list.html' %}
 {# context: documents, document_formset #}
-{% load pdfviewer i18n %}
+{% load core pdfviewer i18n %}
 
 {% block actions %}
     {{ block.super }}
     <a href="" class="delete_document">{% trans "Delete" %}</a>
+    | <a href="" class="replace_document">{% trans "Replace" %}</a>
     <input type="hidden" name="documents" value="{{ doc.pk }}" />
+    <span class="document_display_name" style="display:none;">
+        {% if doc.name %}
+        {{ doc.name|smart_truncate:40 }}
+        {% else %}
+        Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
+        {% endif %}
+        - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+    </span>
+    <span class="document_name" style="display:none;">{{ doc.name }}</span>
+    <span class="document_type" style="display:none;">{{ doc.doctype.pk }}</span>
 {% endblock %}
 
 {% block document_list %}
@@ -21,6 +32,10 @@
                     {% include "forms/field.html" %}
                 {% endif %}
             {% endfor %}
+            <li style="display:none;">
+                {% trans "Replaces document" %} <span id="replaced_document_name"></span>
+                <a href="" class="new_document">{% trans "New Document" %}</a>
+            </li>
         </ol>
         {% endwith %}
     </div>

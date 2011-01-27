@@ -344,7 +344,7 @@ def create_submission_form(request):
                     documents.remove(doc)
             request.docstash['documents'] = list(documents)
             document_form = DocumentForm(prefix='document')
-            
+
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
         half_baked_documents = bool([d for d in request.docstash['documents'] if not d.status == 'ready'])

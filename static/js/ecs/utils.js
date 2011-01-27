@@ -299,6 +299,50 @@ ecs.setupForms = function(){
             return false;
         });
     });
+    $$('.doclist a.replace_document').each(function(link){
+        link.addEvent('click', function(){
+            var container = link.getParent('div');
+            var document_id = container.getElement('input').getAttribute('value');
+            $('id_document-replaces_document').setAttribute('value', document_id);
+
+            var replaced_document_name = $('replaced_document_name');
+            replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
+            replaced_document_name.getParent('li').show();
+
+            var document_name = $('id_document-name');
+            document_name.value = container.getElement('span.document_name').innerHTML;
+            document_name.setAttribute('readonly', 'readonly');
+
+            var document_type = $('id_document-doctype');
+            document_type.value = container.getElement('span.document_type').innerHTML;
+            document_type.setAttribute('readonly', 'readonly');
+
+            return false;
+        });
+    });
+    $$('#tabs-11 a.new_document').each(function(link){
+        link.addEvent('click', function(){
+            $('id_document-replaces_document').removeAttribute('value');
+            var replaced_document_name = $('replaced_document_name');
+            replaced_document_name.getParent('li').hide();
+
+            var document_name = $('id_document-name');
+            document_name.value = '';
+            document_name.removeAttribute('readonly');
+
+            var document_type = $('id_document-doctype');
+            document_type.value = '';
+            document_type.removeAttribute('readonly');
+
+            return false;
+        });
+    });
+
+    var document_replaces_document = $('id_document-replaces_document').value;
+    if(document_replaces_document){
+        var link = $$('.doclist input[value='+document_replaces_document+']')[0].getParent('div').getElement('a.replace_document');
+        link.fireEvent('click');
+    }
     
     return setup;
 };

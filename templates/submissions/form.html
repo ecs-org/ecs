@@ -86,7 +86,9 @@
                 if (dot_offset >= 0) {
                     name = file_field.value.substring(0, dot_offset);
                 }
-                name_field.value = name;
+                if (!name_field.getAttribute('readonly')) {
+                    name_field.value = name;
+                }
 
                 var errorlist = file_field.getNext('.errorlist');
                 if (errorlist) {
