@@ -5,4 +5,4 @@ from ecs.notifications.models import NotificationAnswer
 class NotificationAnswerForm(forms.ModelForm):
     class Meta:
         model = NotificationAnswer
-        fields = ('text',)
+        fields = ('valid', 'text',)

@@ -17,6 +17,16 @@ def needs_executive_answer(wf):
     return Submission.objects.filter(forms__notifications=wf.data, is_amg=True).exists() and wf.data.type.executive_answer_required_for_amg
 
 
+@guard(model=Notification)
+def is_amendment(wf):
+    return wf.data.type.diff
+    
+
+@guard(model=Notification)
+def is_valid_amendment(wf):
+    return wf.data.type.diff and wf.data.answer.valid
+
+
 class EditNotificationAnswer(Activity):
     class Meta:
         model = Notification

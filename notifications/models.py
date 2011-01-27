@@ -54,7 +54,7 @@ class Notification(models.Model):
     objects = AuthorizationManager()
     
     def __unicode__(self):
-        return u"%s" % (self.type,)
+        return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
 
 
 class ReportNotification(Notification):
@@ -86,5 +86,6 @@ class AmendmentNotification(DiffNotification, Notification):
 
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
+    valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     text = models.TextField()
     
