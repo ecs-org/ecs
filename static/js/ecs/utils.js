@@ -311,11 +311,11 @@ ecs.setupForms = function(){
 
             var document_name = $('id_document-name');
             document_name.value = container.getElement('span.document_name').innerHTML;
-            document_name.setAttribute('readonly', 'readonly');
+            document_name.setAttribute('disabled', 'disabled');
 
             var document_type = $('id_document-doctype');
             document_type.value = container.getElement('span.document_type').innerHTML;
-            document_type.setAttribute('readonly', 'readonly');
+            document_type.setAttribute('disabled', 'disabled');
 
             return false;
         });
@@ -328,11 +328,11 @@ ecs.setupForms = function(){
 
             var document_name = $('id_document-name');
             document_name.value = '';
-            document_name.removeAttribute('readonly');
+            document_name.removeAttribute('disabled');
 
             var document_type = $('id_document-doctype');
             document_type.value = '';
-            document_type.removeAttribute('readonly');
+            document_type.removeAttribute('disabled');
 
             return false;
         });

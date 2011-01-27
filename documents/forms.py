@@ -53,6 +53,17 @@ class DocumentForm(SimpleDocumentForm):
 
         return UploadedFile(pdfa, pdf.name, pdf.content_type, size, pdf.charset)
 
+    def clean(self):
+        cd = self.cleaned_data
+        replaced_document = cd.get('replaces_document', None)
+        if replaced_document:
+            for f in ('doctype', 'name'):
+                cd[f] = getattr(replaced_document, f)
+                if f in self._errors.keys():
+                    del self._errors[f]
+
+        return cd
+
     class Meta:
         model = Document
         fields = ('file', 'doctype', 'name', 'version', 'date', 'replaces_document')
