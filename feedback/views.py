@@ -23,9 +23,9 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
     
     def get_count(fb):
         count = len(fb.me_too_emails)
-        #creator_email is always in cc but shouldn't be counted here
-        #this count is only for all others but not the creator
-        count -= 1 if count > 0 else 0
+        #creator_email was always in cc but nevermore, regardless of that check that creator is not counted
+        if fb.creator_email in fb.me_too_emails_string:
+            count -= 1 if count > 0 else 0
         return count
 
     if not request.user.is_authenticated():
@@ -35,7 +35,7 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         if user is None:
             return HttpResponse("Error: user is none!")
         
-        if hasattr(request, "original_user"): # get the original user if the userswitcher is active
+        if hasattr(request, "original_user"): # XXX get the original user if the userswitcher is active
             user = request.original_user
             
     m = dict(Feedback.FEEDBACK_TYPES)
