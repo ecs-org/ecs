@@ -53,7 +53,8 @@ elif user == "chipper":
         'trusted_sources': ['127.0.0.1', '78.46.72.187'],
     }
 
-if user in ["shredder", "testecs", "chipper"] and not 'test' in sys.argv and not 'runserver' in sys.argv:
+if (user in ["shredder", "testecs", "chipper"] and
+    (not 'test' in sys.argv) and (not 'runserver' in sys.argv) and (not 'runconcurrentserver' in sys.argv)):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 

@@ -228,7 +228,8 @@ PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
 # PDF Signing settings, use port 4780 per default (as stated in source:/signing/readme.txt)
-PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
+#PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
+PDFAS_SERVICE = 'mock'
 
 
 # directory where to store logfiles, used by every daemon and apache
@@ -458,7 +459,7 @@ INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.
 # hack some settings for test and runserver    
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-elif 'runserver' in sys.argv:
+elif 'runserver' in sys.argv or 'runconcurrentserver' in sys.argv:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 import djcelery
