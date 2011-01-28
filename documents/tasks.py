@@ -35,7 +35,7 @@ def document_tamer(**kwargs):
     for doc in uploaded_documents:
         index_pdf.delay(doc['pk'])
 
-    indexed_documents = Document.objects.filter(Q(status='indexed', mimetype='application/pdf')|(Q(status='uploaded') | ~Q(mimetype='application/pdf')))
+    indexed_documents = Document.objects.filter(Q(status='indexed', mimetype='application/pdf')|(Q(status='uploaded') & ~Q(mimetype='application/pdf')))
     updated = indexed_documents.update(status='ready')
     if updated:
         logger.info('{0} documents are now ready'.format(updated))
