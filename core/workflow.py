@@ -85,11 +85,6 @@ class InitialReview(Activity):
         sf.acknowledged = choice
         sf.save()
 
-        if is_acknowledged(self.workflow):
-            # schedule submission for the next schedulable meeting
-            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
-            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
-
 class Resubmission(Activity):
     class Meta:
         model = Submission
@@ -127,6 +122,11 @@ class CategorizationReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
+    def pre_perform(self, choice):
+        if is_acknowledged(self.workflow):
+            # schedule submission for the next schedulable meeting
+            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
+            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
 
 class PaperSubmissionReview(Activity):
     class Meta:
