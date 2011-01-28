@@ -362,39 +362,39 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
 
 
 @authenticated()
-def test_submit_simplest(client):
+def test_submit_simple(client):
     create_submission(client)
 
 @authenticated()
-def test_submit_simple(client):
+def test_submit_simple_with_upload(client):
     create_submission(client, upload=True)
 
 @authenticated()
 def test_submit_amg(client):
-    create_submission(client, amg=True, upload=True)
+    create_submission(client, amg=True)
 
 @authenticated()
 def test_submit_mpg(client):
-    create_submission(client, mpg=True, upload=True)
+    create_submission(client, mpg=True)
 
 @authenticated()
 def test_submit_thesis(client):
-    create_submission(client, thesis=True, upload=True)
+    create_submission(client, thesis=True)
 
 @authenticated()
 def test_submit_amg_mpg(client):
-    create_submission(client, amg=True, mpg=True, upload=True)
+    create_submission(client, amg=True, mpg=True)
 
 @authenticated()
 def test_submit_amg_thesis(client):
-    create_submission(client, amg=True, thesis=True, upload=True)
+    create_submission(client, amg=True, thesis=True)
 
 @authenticated()
 def test_submit_mpg_thesis(client):
-    create_submission(client, mpg=True, thesis=True, upload=True)
+    create_submission(client, mpg=True, thesis=True)
 
 @authenticated()
 def test_submit_amg_mpg_thesis(client):
-    create_submission(client, amg=True, mpg=True, thesis=True, upload=True)
+    create_submission(client, amg=True, mpg=True, thesis=True)
 
 
