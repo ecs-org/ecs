@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission
+from ecs.core.models import Submission, Vote
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -69,8 +69,13 @@ class Task(models.Model):
         return rval
 
     def get_preview_url(self):
+        submission_form = None
         if self.content_type == ContentType.objects.get_for_model(Submission):
-            return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.data.current_submission_form.pk})
+            submission_form = self.data.current_submission_form
+        elif self.content_type == ContentType.objects.get_for_model(Vote):
+            submission_form = self.data.submission_form
+        if submission_form:
+            return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
         else:
             return None
 
