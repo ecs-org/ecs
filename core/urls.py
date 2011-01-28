@@ -34,16 +34,10 @@ urlpatterns = patterns(
     url(r'^submission_widget/$', 'ecs.core.views.submission_widget'),
     url(r'^submission_list/$', 'ecs.core.views.submission_list'),
     
-    url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'ecs.core.views.votes_signing'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_pdf/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_pdf'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/$', 'ecs.core.views.vote_sign'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/send$', 'ecs.core.views.vote_sign_send'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/error$', 'ecs.core.views.vote_sign_error'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive$', 'ecs.core.views.vote_sign_receive'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/preview$', 'ecs.core.views.vote_sign_preview'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/download$', 'ecs.core.views.download_signed_vote'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/show$', 'ecs.core.views.vote_show'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/vote_sign/(?P<vote_pk>\d+)/receive;jsessionid=null$', 'ecs.core.views.vote_sign_receive_landing'),
+    url(r'^vote/(?P<vote_pk>\d+)/show/html$', 'ecs.core.views.show_html_vote'),
+    url(r'^vote/(?P<vote_pk>\d+)/show/pdf$', 'ecs.core.views.show_pdf_vote'),
+    url(r'^vote/(?P<vote_pk>\d+)/download$', 'ecs.core.views.download_signed_vote'),   
+    url(r'^vote/(?P<vote_pk>\d+)/sign$', 'ecs.core.views.vote_sign'),
     
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 

@@ -37,4 +37,6 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/agenda_htmlemail/$', 'agenda_htmlemail'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'timetable_htmlemailpart'),
     url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'protocol_pdf'),
+    
+    url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'votes_signing'),
 )

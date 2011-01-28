@@ -465,3 +465,21 @@ def status(request, meeting_pk=None):
         'meeting': meeting,
     })
 
+def votes_signing(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    tops = meeting.timetable_entries.all()
+    votes_list = [ ]
+    for top in tops:
+        votes = Vote.objects.filter(top=top)
+        c = votes.count()
+        assert(c < 2)
+        if c is 0:
+            vote = None
+        else:
+            vote = votes[0]
+        votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
+    response = render(request, 'meetings/votes_signing.html', {
+        'meeting': meeting,
+        'votes_list': votes_list,
+    })
+    return response

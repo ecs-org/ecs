@@ -3,6 +3,6 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
     vote_review, b2_vote_review, export_submission, import_submission_form, befangene_review, diff, wizard, submission_widget, submission_list,
     my_submission_forms, assigned_submission_forms, delete_docstash_entry, view_submission,
 )
-from ecs.core.views.votes import vote_pdf, votes_signing, vote_sign, vote_sign_send, vote_sign_error, vote_sign_receive, vote_sign_receive_landing, vote_sign_preview, download_signed_vote, vote_show
+from ecs.core.views.votes import show_html_vote, show_pdf_vote, download_signed_vote, vote_sign 
 from ecs.core.views.checklists import checklist_comments
 from ecs.core.views.autocomplete import autocomplete
