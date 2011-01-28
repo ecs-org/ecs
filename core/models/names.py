@@ -21,6 +21,10 @@ class Name(object):
 
 
 class NameField(object):
+    def __init__(self, required=None):
+        self.required = required or []
+        return super(NameField, self).__init__()
+
     def __get__(self, obj, obj_type=None):
         if not obj:
             return self
@@ -28,14 +32,17 @@ class NameField(object):
         
     def contribute_to_class(self, cls, name):
         self.name = name
-        fields = {
-            'gender': models.CharField(max_length=1, choices=(('f', _('Ms')), ('m', _('Mr'))), blank=True, null=True),
-            'title': models.CharField(max_length=30, blank=True),
-            'first_name': models.CharField(max_length=50, blank=True),
-            'last_name': models.CharField(max_length=50, blank=True),
-        }
-        for fieldname, field in fields.items():
-            field.contribute_to_class(cls, "%s_%s" % (name, fieldname))
+
+        flist = (
+            ('gender', models.CharField, {'max_length': 1, 'choices': (('f', _('Ms')), ('m', _('Mr'))), 'null': True}),
+            ('title', models.CharField, {'max_length': 30}),
+            ('first_name', models.CharField, {'max_length': 50}),
+            ('last_name', models.CharField, {'max_length': 50}),
+        )
+
+        for fname, fcls, fkwargs in flist:
+            fkwargs['blank'] = not fname in self.required
+            fcls(**fkwargs).contribute_to_class(cls, '{0}_{1}'.format(name, fname))
         
         setattr(cls, name, self)
         

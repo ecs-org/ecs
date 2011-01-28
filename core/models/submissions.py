@@ -631,8 +631,8 @@ class Investigator(models.Model):
     main = models.BooleanField(default=False, blank=True)
 
     user = models.ForeignKey(User, null=True, related_name='investigations')
-    contact = NameField()
-    organisation = models.CharField(max_length=80, blank=True)
+    contact = NameField(required=('first_name', 'last_name',))
+    organisation = models.CharField(max_length=80)
     phone = models.CharField(max_length=30, blank=True)
     mobile = models.CharField(max_length=30, blank=True)
     fax = models.CharField(max_length=30, blank=True)
