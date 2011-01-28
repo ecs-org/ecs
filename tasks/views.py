@@ -8,7 +8,9 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission
+from ecs.core.models import Submission, Vote
+from ecs.meetings.models import Meeting
+from ecs.notifications.models import Notification
 from ecs.communication.models import Thread
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
@@ -18,9 +20,17 @@ from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     with sudo():
         tasks = Task.objects.order_by('created_at')
-    if submission_pk:
-        submission_ct = ContentType.objects.get_for_model(Submission)
-        tasks = tasks.filter(content_type=submission_ct, data_id=submission_pk)
+        if submission_pk:
+            submission = get_object_or_404(Submission, pk=submission_pk)
+            submission_ct = ContentType.objects.get_for_model(Submission)
+            q = Q(content_type=submission_ct, data_id=submission.pk)
+            vote_ct = ContentType.objects.get_for_model(Vote)
+            q |= Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
+            meeting_ct = ContentType.objects.get_for_model(Meeting)
+            q |= Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
+            notification_ct = ContentType.objects.get_for_model(Notification)
+            q |= Q(content_type=notification_ct, data_id__in=Notification.objects.filter(submission_forms__submission=submission).values('pk').query)
+            tasks = tasks.filter(q)
     return render(request, template, {
         'tasks': tasks,
     })
