@@ -94,6 +94,33 @@
         metaKeySelect.value = 'alt';
         
     });
+    
+    {% comment %}
+    TODO: Warning, this duplicates get_origin,camera.Camera & camera.install from core.html to get bugshot in pdfviewer
+    {% endcomment %}
+
+    function get_origin() {
+        var re_id_axe = /[0-9a-f]{32}/;
+        var x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
+        return x;
+     }
+    camera.install();
+    new camera.Camera({
+        'class': 'bugshot',
+        'url': '/bugshot/',
+        'title': 'PdfBugShot',
+        'form': '<div><input type="text" name="summary" value="" /></div>'+
+        '<div>Owner: <input type="text" name="owner" value="" /></div>'+
+        '<div>Priority: <input type="text" name="priority" value="" /></div>'+
+        '<div><textarea name="description"></textarea></div>',
+        onShow: function(self){
+            self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
+            self.overlay.getElement('input[type=text]').value = "[bugshot] ";
+        },
+        keyTrigger: function(e){
+            return (e.meta || e.control) && e.key == ':';
+        }
+    });
 </script>
 
 {% endblock %}
