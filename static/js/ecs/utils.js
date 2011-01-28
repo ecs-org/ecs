@@ -239,17 +239,17 @@ ecs.setupForms = function(){
     var setup = {};
     if(tabHeaders.length){
         var tabController = new ecs.TabController($$('.tab_header_groups > li'));
-        var mainForm = document.getElement('.innerwrap');
+        var mainForm = document.getElement('.form_main');
+        var readonly = true;
+        if(mainForm.tagName == 'FORM'){
+            readonly = false;
+        }
         if(mainForm){
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
                 tabController: tabController,
-                autosaveInterval: 120
+                autosaveInterval: readonly ? 0 : 120
             });
             setup.mainForm = form;
-        }
-        var readonly = true;
-        if(document.getElement('.form_main').tagName == 'FORM'){
-            readonly = false;
         }
         ecs.setupInvestigatorFormSet(tabController, readonly);
         setup.tabController = tabController;

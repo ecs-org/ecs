@@ -156,7 +156,7 @@ ecs.widgets.enablePopupHandlers = function(context, widget){
                 }
             }
             catch(e){
-                console.log(e);
+                //console.log(e);
             }
             return false;
         });
