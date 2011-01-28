@@ -147,19 +147,16 @@ class Document(models.Model):
         if self.mimetype != 'application/pdf' or self.branding == 'n':
             personalization = None
             brand = False
-        elif self.branding == 'b':
-            personalization = None
-            brand = True
-        elif self.branding == 'p':
-            personalization = self.add_personalization(get_current_user()).id
-            brand = False
         else:
-            return None
+            personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
+            brand = self.branding == 'b'
 
         return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
-        return get_from_mediaserver(self.uuid_document, self.get_filename(), self.add_personlization(request.user) if self.branding=='p' else None)
+        personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
+        brand = self.branding == 'b'
+        return get_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, branding=branding)
         
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
