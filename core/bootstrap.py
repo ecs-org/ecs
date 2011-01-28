@@ -75,7 +75,7 @@ def submission_workflow():
         nodes={
             'start': Args(Generic, start=True, name="Start"),
             'generic_review': Args(Generic, name="Review Split"),
-            'resubmission': Args(Resubmission, group=PRESENTER_GROUP),
+            'resubmission': Args(Resubmission),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP),
             'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review", group=INTERNAL_REVIEW_GROUP),
             'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP),

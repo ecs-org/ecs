@@ -101,6 +101,13 @@ class Resubmission(Activity):
             reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf['pk']})
             for sf in self.workflow.data.forms.values('pk')
         ]
+        
+    def receive_token(self, *args, **kwargs):
+        token = super(Resubmission, self).receive_token(*args, **kwargs)
+        print token, self.workflow.data.current_submission_form.submitter, token.task.pk
+        token.task.assign(self.workflow.data.current_submission_form.submitter)
+        return token
+
 
 class B2VoteReview(Activity):
     class Meta:
