@@ -31,7 +31,7 @@
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
-                <ul> {% for task in task_type.list %} <li>
+                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
                     <a href="{{ task.url|default:manage_url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
@@ -48,7 +48,7 @@
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
-                <ul> {% for task in task_type.list %} <li>
+                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
                     <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
                     | <a class="open-in-widget" href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
@@ -66,7 +66,7 @@
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
-                <ul> {% for task in task_type.list %} <li>
+                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
                     <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
@@ -83,7 +83,7 @@
         {% for task_type in task_type_list %}
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
-                <ul> {% for task in task_type.list %} <li>
+                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
                     <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>

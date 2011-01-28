@@ -344,15 +344,22 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     # and now submit!
     # any idea, why it only works by clicking id "submit-button", and afterwards name "submit" ?
     client.click(id=u'submit-button')
-    client.click(name=u'submit')
+    #client.click(name=u'validate')
     client.waits.forPageLoad(timeout=u'20000')
-    client.waits.sleep(milliseconds=u'5000')
-    client.waits.forElement(timeout=u'10000', id=u'overlay')
+    #client.waits.sleep(milliseconds=u'5000')
+    #print client.commands.getNodeContents(xpath='//body')['result']
+    client.waits.forElement(timeout=u'10000', value=u"Ok")
     client.click(value=u'Ok')
     client.waits.forPageLoad(timeout=u'20000')
-    client.waits.sleep(milliseconds=u'5000')
+    #client.waits.sleep(milliseconds=u'5000')
     # client.select(option=u'---------', id=u'userswitcher_input')
     # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
+    client.waits.forElement(timeout=u'10000', xpath="//div[@id='headertitle']/h1")
+    headertitle = client.commands.getNodeContents(xpath="//div[@id='headertitle']/h1")['result'].strip()
+    ek, _ = headertitle.split(' ', 1)
+    #client.waits.forPageLoad(timeout=u'20000')
+    return ek
+
 
 @authenticated()
 def test_submit_simplest(client):
