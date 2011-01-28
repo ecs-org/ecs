@@ -646,6 +646,9 @@ fieldset.disabled {
 .form_main input[type=submit] {
   margin: 20px 10px 10px 0;
 }
+.form_main input[type=submit].hidden {
+  display: none;
+}
 
 /* paginator icons */
 
@@ -761,3 +764,4 @@ content ol.submission_list li .actions {
   border-top: 1px solid #eee;
   border-bottom: 1px solid #ddd;  
 }
+

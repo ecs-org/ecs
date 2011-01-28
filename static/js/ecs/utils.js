@@ -278,9 +278,6 @@ ecs.setupForms = function(){
     }
 
     /* XXX: cleanup the following code (FMD2) */
-    $$('form_main').getElements('input[type=submit].hidden').each(function(button){
-        button.setStyle('display', 'none');
-    });
     $$('a.submit_main_form').each(function(link){
         link.addEvent('click', function(){
             form.submit('submit');
