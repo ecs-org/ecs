@@ -21,7 +21,7 @@ from ecs.utils import s3utils
 
 @periodic_task(run_every=timedelta(seconds=10))
 def document_tamer(**kwargs):
-    logger = upload_to_storagevault.get_logger(**kwargs)
+    logger = document_tamer.get_logger(**kwargs)
 
     new_documents = Document.objects.filter(status='new').values('pk')
     if len(new_documents):
@@ -130,3 +130,4 @@ def index_pdf(document_pk=None, **kwargs):
         
     return True
 
+    
