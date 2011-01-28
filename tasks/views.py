@@ -14,6 +14,7 @@ from ecs.notifications.models import Notification
 from ecs.communication.models import Thread
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
+from ecs.tasks.signals import task_accepted, task_declined
 
 
 @user_flag_required('internal')
@@ -163,12 +164,14 @@ def manage_task(request, task_pk=None):
 def accept_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
+    task_accepted.send(type(task.node_controller), task=task)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
 
 def decline_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
+    task_declined.send(type(task.node_controller), task=task)
     return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
 
