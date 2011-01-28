@@ -249,12 +249,12 @@ STORAGE_VAULT_OPTIONS = {
 }
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "key": os.path.join(PROJECT_DIR, "..", "sys", "encryptkey.asc"),
+    "key": os.path.join(PROJECT_DIR, "..", "target", "encryptkey.asc"),
     "owner": "mediaserver",
 }
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-    "key": os.path.join(PROJECT_DIR, "..", "sys", "decryptkey.asc"),
+    "key": os.path.join(PROJECT_DIR, "..", "target", "decryptkey.asc"),
     "owner": "mediaserver",
 }
 # Mediaserver Shared Settings
