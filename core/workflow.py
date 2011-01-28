@@ -170,6 +170,9 @@ class ExternalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
         vary_on = ChecklistBlueprint
+        
+    def is_reentrant(self):
+        return True
 
     def receive_token(self, *args, **kwargs):
         token = super(ExternalChecklistReview, self).receive_token(*args, **kwargs)
