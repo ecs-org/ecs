@@ -10,6 +10,7 @@ from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 from ecs.meetings.models import Meeting
+from ecs.tasks.signals import task_accepted, task_declined
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -169,6 +170,9 @@ class ExternalChecklistReview(ChecklistReview):
     class Meta:
         model = Submission
         vary_on = ChecklistBlueprint
+        
+    def is_reentrant(self):
+        return True
 
     def receive_token(self, *args, **kwargs):
         token = super(ExternalChecklistReview, self).receive_token(*args, **kwargs)
@@ -178,6 +182,12 @@ class ExternalChecklistReview(ChecklistReview):
 def unlock_external_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExternalChecklistReview)
 post_save.connect(unlock_external_review, sender=Checklist)
+
+# treat declined external review tasks as if the deadline was reached
+def external_review_declined(sender, **kwargs):
+    task = kwargs['task']
+    task.node_controller.progress(task.workflow_token, deadline=True)
+task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
 class ExternalReviewInvitation(Activity):

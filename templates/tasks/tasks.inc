@@ -50,7 +50,11 @@
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
-                    <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+                    {% with task.get_preview_url as preview_url %}
+                        {% if preview_url %}
+                            <a class="preview" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                        {% endif %}
+                    {% endwith %}
                     | <a class="open-in-widget" href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
@@ -68,7 +72,14 @@
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
-                    <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                    {% spaceless %}
+                        {% with task.get_preview_url as preview_url %}
+                            {% if preview_url %}
+                                <a class="preview" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                            {% endif %}
+                        {% endwith %}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endspaceless %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -85,7 +96,14 @@
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
                     <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
-                    <a class="preview" href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                    {% spaceless %}
+                        {% with task.get_preview_url as preview_url %}
+                            {% if preview_url %}
+                                <a class="preview" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                            {% endif %}
+                        {% endwith %}
+                        {% if not forloop.last %}, {% endif %}
+                    {% endspaceless %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
