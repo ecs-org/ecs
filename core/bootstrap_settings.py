@@ -15,6 +15,8 @@ developers = (
     (u'Thomas', u'Neumann', 'tom@newtone.cc'),
     (u'Esther', u'Neumann', 'es_data@yahoo.de'),
     (u'Hudson', u'Windmill', 'windmill@example.org'),
+    (u'Sentry A', u'User', 'sentrya@example.org'),
+    (u'Sentry B', u'User', 'sentryb@example.org'),
 )
 
 staff_users = ()
