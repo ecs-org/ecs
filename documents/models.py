@@ -156,7 +156,7 @@ class Document(models.Model):
     def get_from_mediaserver(self):
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
         brand = self.branding == 'b'
-        return get_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, branding=branding)
+        return get_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
         
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
