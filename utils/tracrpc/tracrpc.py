@@ -358,9 +358,12 @@ class TracRpc():
             print "could not fetch ticket %d" % tid
             return
         
-        old_time = ticket['remaining_time']
-        old_time = float(old_time) if '.' in old_time else int(old_time)
-        new_time = float(new_time) if '.' in new_time else int(new_time)
+        old_time = None
+        if ticket['remaining_time'] != '':
+            old_time = ticket['remaining_time']
+            old_time = float(old_time) if '.' in old_time else int(old_time)
+            new_time = float(new_time) if '.' in new_time else int(new_time)
+        
         if old_time != new_time:
             ticket['remaining_time'] = new_time
             self._update_ticket(tid, ticket, comment=comment)
