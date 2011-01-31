@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-21 17:02+0100\n"
+"POT-Creation-Date: 2011-01-31 07:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:66
@@ -1198,6 +1198,11 @@ msgstr ""
 msgid "Presenter"
 msgstr "Zentren"
 
+#: core/parties.py:49
+#, fuzzy
+msgid "Primary Investigator"
+msgstr "Prüfarzt"
+
 #: core/parties.py:58
 msgid "Board Member Review"
 msgstr ""
@@ -1236,11 +1241,11 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:78
+#: core/workflow.py:79
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:79
+#: core/workflow.py:80
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1397,12 +1402,12 @@ msgstr "Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:32 core/models/submissions.py:663 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:663 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:32 core/models/submissions.py:663 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:663 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1563,6 +1568,41 @@ msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
+#: documents/models.py:94 templates/submissions/diff/diff.html:18
+msgid "new"
+msgstr "neu"
+
+#: documents/models.py:95
+msgid "uploading"
+msgstr ""
+
+#: documents/models.py:96
+msgid "uploaded"
+msgstr ""
+
+#: documents/models.py:97
+msgid "indexing"
+msgstr ""
+
+#: documents/models.py:98
+msgid "indexed"
+msgstr ""
+
+#: documents/models.py:99
+#, fuzzy
+msgid "ready"
+msgstr "Pause"
+
+#: documents/models.py:100
+#, fuzzy
+msgid "aborted"
+msgstr "Gestartet"
+
+#: documents/models.py:101
+#, fuzzy
+msgid "deleted"
+msgstr "Löschen"
+
 #: fastlane/forms.py:14 meetings/forms.py:14
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -1570,23 +1610,23 @@ msgstr "Datum und Uhrzeit"
 #: fastlane/views.py:74
 #, python-format
 msgid ""
-"You have been selected for the Fast Lane Meeting at %(meeting_date)s "
-"%(meeting_title)s\n"
+"You have been selected for the Fast Lane Meeting at %(meeting_date)s %"
+"(meeting_title)s\n"
 "as a participant to the submissions: %(submissions)s"
 msgstr ""
 
 #: fastlane/views.py:79
 #, python-format
 msgid ""
-"Your Participation in the Fast Lane Meeting %(meeting_date)s "
-"%(meeting_title)s"
+"Your Participation in the Fast Lane Meeting %(meeting_date)s %(meeting_title)"
+"s"
 msgstr ""
 
-#: mediaserver/views.py:17 mediaserver/views.py:34
+#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:44
 msgid "Invalid expiring url"
 msgstr ""
 
-#: mediaserver/views.py:59
+#: mediaserver/views.py:69
 msgid "sorry, unfinished"
 msgstr ""
 
@@ -1662,26 +1702,26 @@ msgstr "Zeitfenster"
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: notifications/views.py:49 templates/core.html:55
-#: templates/submissions/readonly_form.html:91
-#: templates/submissions/readonly_form.html:141
+#: notifications/views.py:50 templates/core.html:57
+#: templates/submissions/readonly_form.html:101
+#: templates/submissions/readonly_form.html:151
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: notifications/views.py:52 templates/core.html:53
+#: notifications/views.py:53 templates/core.html:55
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:55 templates/core.html:54
-#: templates/submissions/readonly_form.html:123
+#: notifications/views.py:56 templates/core.html:56
+#: templates/submissions/readonly_form.html:133
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:161
+#: notifications/views.py:163
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/views.py:239
+#: notifications/views.py:241
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -1756,7 +1796,7 @@ msgid "Dashboard"
 msgstr "Übersicht"
 
 #: templates/core.html:32 templates/communication/list.html:6
-#: templates/submissions/readonly_form.html:95
+#: templates/submissions/readonly_form.html:105
 msgid "Communication"
 msgstr "Nachrichten"
 
@@ -1781,69 +1821,69 @@ msgstr ""
 msgid "Meine Studien"
 msgstr "Meine Studien"
 
-#: templates/core.html:51
+#: templates/core.html:53
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:56 templates/notifications/form.html:9
+#: templates/core.html:58 templates/notifications/form.html:9
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:61
+#: templates/core.html:63
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:63
+#: templates/core.html:65
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: templates/core.html:65
+#: templates/core.html:67
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: templates/core.html:66
+#: templates/core.html:68
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: templates/core.html:68
+#: templates/core.html:70
 msgid "New Meeting"
 msgstr "Neue Sitzungen"
 
-#: templates/core.html:70
+#: templates/core.html:72
 msgid "Fast Lane Meetings"
 msgstr "Fast Lane Sitzungen"
 
-#: templates/core.html:72
+#: templates/core.html:74
 msgid "New Fast Lane Meeting"
 msgstr "Neue Fast Lane Sitzung"
 
-#: templates/core.html:80 templates/administration/detail.html:9
+#: templates/core.html:82 templates/administration/detail.html:9
 #: templates/administration/detail.html:19 templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/core.html:83 templates/administration/detail.html:11
+#: templates/core.html:85 templates/administration/detail.html:11
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
-#: templates/core.html:87 templates/boilerplate/form.html:6
+#: templates/core.html:89 templates/boilerplate/form.html:6
 #: templates/boilerplate/list.html:6
 msgid "Boilerplate"
 msgstr "Vorlage"
 
-#: templates/core.html:89
+#: templates/core.html:91
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:95
+#: templates/core.html:97
 msgid "Demo"
 msgstr "Demo"
 
-#: templates/core.html:101
+#: templates/core.html:103
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:118
+#: templates/core.html:120
 #, python-format
 msgid ""
 "\n"
@@ -1852,15 +1892,15 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:218
+#: templates/core.html:220
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:218
+#: templates/core.html:220
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:234
+#: templates/core.html:236
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -1943,18 +1983,33 @@ msgstr "an"
 msgid "von"
 msgstr "von"
 
-#: templates/documents/compact_list.html:23
-#: templates/submissions/readonly_form.html:183
+#: templates/documents/compact_list.html:25
+#: templates/submissions/readonly_form.html:193
 msgid "Download"
 msgstr ""
 
-#: templates/documents/compact_list.html:24
+#: templates/documents/compact_list.html:26
 msgid "View"
 msgstr ""
 
-#: templates/documents/compact_list.html:26
+#: templates/documents/compact_list.html:28
 msgid "Share Annotations"
 msgstr ""
+
+#: templates/documents/upload_form.html:8
+#, fuzzy
+msgid "Replace"
+msgstr "Placebo"
+
+#: templates/documents/upload_form.html:36
+#, fuzzy
+msgid "Replaces document"
+msgstr "Ersetze Dokument"
+
+#: templates/documents/upload_form.html:37
+#, fuzzy
+msgid "New Document"
+msgstr "Unterlagen"
 
 #: templates/fastlane/assistant.html:8
 msgid "Fast Lane Assistant"
@@ -2046,7 +2101,7 @@ msgid "Fast Lanes"
 msgstr ""
 
 #: templates/fastlane/list.html:18 templates/meetings/list.html:20
-#: templates/submissions/readonly_form.html:166
+#: templates/submissions/readonly_form.html:176
 msgid "Ansehen"
 msgstr ""
 
@@ -2085,6 +2140,10 @@ msgstr ""
 #: templates/fastlane/status.html:30
 msgid "Submissions"
 msgstr "Einreichungen"
+
+#: templates/forms/field.html:12
+msgid "This field is required."
+msgstr ""
 
 #: templates/help/view_page.html:13
 msgid "last edited"
@@ -2244,6 +2303,12 @@ msgstr ""
 
 #: templates/submissions/form.html:72
 msgid ""
+"You cannot submit study if there are unready documents. If you want to "
+"submit the study regardless of the unready documents, delete them."
+msgstr ""
+
+#: templates/submissions/form.html:75
+msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
 msgstr ""
@@ -2311,82 +2376,86 @@ msgstr "Beitiligte Parteien"
 msgid "Developer"
 msgstr "Entwickler"
 
-#: templates/submissions/readonly_form.html:53
+#: templates/submissions/readonly_form.html:54
 msgid "Review"
 msgstr "Review"
 
-#: templates/submissions/readonly_form.html:56
-#: templates/submissions/tabs/developer.html:8
+#: templates/submissions/readonly_form.html:58
 msgid "Categorization Review"
 msgstr "Einstufungs-Review"
 
-#: templates/submissions/readonly_form.html:81
+#: templates/submissions/readonly_form.html:91
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:83
-#: templates/submissions/readonly_form.html:159
+#: templates/submissions/readonly_form.html:93
+#: templates/submissions/readonly_form.html:169
 msgid "Pending Votes"
 msgstr "Ausstehende Voten"
 
-#: templates/submissions/readonly_form.html:84
-#: templates/submissions/readonly_form.html:178
+#: templates/submissions/readonly_form.html:94
+#: templates/submissions/readonly_form.html:188
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:88
+#: templates/submissions/readonly_form.html:98
 msgid "Notifications"
 msgstr "Meldungen"
 
-#: templates/submissions/readonly_form.html:90
+#: templates/submissions/readonly_form.html:100
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:97
-#: templates/submissions/readonly_form.html:237
+#: templates/submissions/readonly_form.html:107
+#: templates/submissions/readonly_form.html:260
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:98
-#: templates/submissions/readonly_form.html:243
+#: templates/submissions/readonly_form.html:108
+#: templates/submissions/readonly_form.html:266
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:134
+#: templates/submissions/readonly_form.html:144
 #, fuzzy
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:137
-#: templates/submissions/readonly_form.html:155
+#: templates/submissions/readonly_form.html:147
+#: templates/submissions/readonly_form.html:165
 msgid "Create a new notification"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:152
+#: templates/submissions/readonly_form.html:162
 msgid "There are no answered notifications."
 msgstr ""
 
-#: templates/submissions/readonly_form.html:168
+#: templates/submissions/readonly_form.html:178
 msgid "Signieren"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:174
+#: templates/submissions/readonly_form.html:184
 msgid "There are no pending votes."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:187
+#: templates/submissions/readonly_form.html:197
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:240
+#: templates/submissions/readonly_form.html:205
+#, fuzzy
+msgid "Reopen"
+msgstr "offen"
+
+#: templates/submissions/readonly_form.html:263
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:309
+#: templates/submissions/readonly_form.html:332
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
-#: templates/submissions/readonly_form.html:312
+#: templates/submissions/readonly_form.html:335
 msgid "Insert Boilerplate"
 msgstr "Vorlage einfügen"
 
@@ -2410,15 +2479,11 @@ msgstr ""
 msgid "old"
 msgstr "alt"
 
-#: templates/submissions/diff/diff.html:18
-msgid "new"
-msgstr "neu"
-
 #: templates/submissions/diff/diff.html:19
 msgid "all"
 msgstr "alle"
 
-#: templates/submissions/tabs/developer.html:9
+#: templates/submissions/tabs/developer.html:8
 msgid "Thesis Review"
 msgstr "Diplomarbeit Review"
 
