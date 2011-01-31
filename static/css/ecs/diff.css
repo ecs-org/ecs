@@ -24,3 +24,20 @@ ul.diff li {
   margin: 15px;
 }
 
+.diff .item{
+    margin-left: 2em;
+    margin-bottom: 1em;
+    border: 1px dotted #cccccc;
+}
+
+.diff .item .title{
+    font-size: 180%;
+}
+
+.diff .item .item .title{
+    font-size: 140%;
+}
+
+.diff .atomic > div{
+    display: inline;
+}

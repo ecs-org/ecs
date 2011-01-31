@@ -19,7 +19,10 @@
         | <a href="#" id="diff_show_all">{% trans "all" %}</a>
     </div>
     
-    {% include 'submissions/diff/diff.inc.html' %}
+    <div class="diff">
+        {{ diff.html|safe }}
+    </div>
+    
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}

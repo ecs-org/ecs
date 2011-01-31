@@ -1,6 +1,6 @@
 {% load core i18n %}
 
-<a href="{% url pdf_show doc.pk %}" target="_blank"">
+<a href="{% url pdf_show doc.pk %}" target="_blank">
     Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
     {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name }}){% endif %}
 </a>

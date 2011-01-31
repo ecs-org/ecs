@@ -685,6 +685,9 @@ class InvestigatorEmployee(models.Model):
     @property
     def geschlecht_string(self):
         return dict(m="Hr", f="Fr").get(self.sex, "")
+        
+    def __unicode__(self):
+        return self.full_name
 
 
 # 6.1 + 6.2

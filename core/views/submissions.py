@@ -504,11 +504,11 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
     new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
 
-    diffs = diff_submission_forms(old_submission_form, new_submission_form)
+    diff = diff_submission_forms(old_submission_form, new_submission_form)
 
     return render(request, 'submissions/diff/diff.html', {
         'submission': new_submission_form.submission,
-        'diffs': diffs,
+        'diff': diff,
     })
 
 @with_docstash_transaction

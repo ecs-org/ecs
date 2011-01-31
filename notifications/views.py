@@ -100,10 +100,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
     old_submission_form = new_submission_form.submission.current_submission_form
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     
-    tpl = loader.get_template('submissions/diff/diff.inc.html')
-    diff = tpl.render(Context({
-        'diffs': diff_submission_forms(old_submission_form, new_submission_form),
-    }))
+    diff = diff_submission_forms(old_submission_form, new_submission_form).html()
     
     docstash = DocStash.objects.create(group='ecs.notifications.views.create_notification', owner=request.user)
     
