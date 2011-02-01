@@ -151,7 +151,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
     }
     
-    if request.user.ecs_profile.internal:
+    if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
         context['show_reviews'] = True
         context.update({
             'retrospective_thesis_review_form': RetrospectiveThesisReviewForm(instance=submission, readonly=True),
