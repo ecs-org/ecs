@@ -28,9 +28,10 @@ REMOVED = -1
 
 
 class DiffNode(object):
-    def __init__(self, old, new, ignore_old=False, ignore_new=False):
+    def __init__(self, old, new, identity=None, ignore_old=False, ignore_new=False):
         self.old = old
         self.new = new
+        self.identity = identity
         self.ignore_old = ignore_old
         self.ignore_new = ignore_new
 
@@ -68,13 +69,15 @@ class AtomicDiffNode(DiffNode):
 
 
 class ModelDiffNode(DiffNode):
-    def __init__(self, old, new, field_diffs, identity=None, **kwargs):
+    def __init__(self, old, new, field_diffs, **kwargs):
         super(ModelDiffNode, self).__init__(old, new, **kwargs)
         self.field_diffs = field_diffs
-        self.identity = identity
         
     def __nonzero__(self):
         return bool(self.field_diffs)
+        
+    def __getitem__(self, label):
+        return self.field_diffs[label]
     
     def html(self):
         try:
@@ -103,7 +106,6 @@ class ListDiffNode(DiffNode):
         
     def _prepare(self):
         diffs = []
-        print self.old, self.new
         for old, new in zip(self.old, self.new):
             item_diff = diff_model_instances(old, new, ignore_old=self.ignore_old, ignore_new=self.ignore_new)
             if item_diff:

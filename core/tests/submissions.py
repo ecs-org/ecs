@@ -11,7 +11,6 @@ from ecs.documents.models import Document
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
-from ecs.core.diff import diff_submission_forms
 from ecs.users.utils import get_user, create_user, get_or_create_user
 
 def create_submission_form(ec_number=None, presenter=None):
@@ -331,26 +330,6 @@ class SubmissionFormTest(EcsTestCase):
         ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
         ek1.save()
         Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
-
-class SubmissionFormDiffTest(EcsTestCase):
-    def setUp(self, *args, **kwargs):
-        rval = super(SubmissionFormDiffTest, self).setUp(*args, **kwargs)
-        self.old_sf = create_submission_form()
-        self.new_sf = create_submission_form()
-
-        # both submission forms have to belong to the same submission
-        self.new_sf.submission.current_submission_form = None
-        self.new_sf.submission.save()
-        self.new_sf.submission = self.old_sf.submission
-        self.new_sf.save()
-
-        return rval
-
-    def test_submission_form_diff(self):
-        self.new_sf.project_title = 'roflcopter'
-        diff = diff_submission_forms(self.old_sf, self.new_sf)
-        self.failUnless(dict(diff).get(u'1.1 %s' % _('project title (english)'), None))
-        self.failIf(not (1, 'roflcopter') in dict(diff)[u'1.1 %s' % _('project title (english)')])
 
 
 class SubmissionAttachUserTest(EcsTestCase):
