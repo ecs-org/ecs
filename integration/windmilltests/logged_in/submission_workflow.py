@@ -71,3 +71,10 @@ def test_recordingSuite0(client):
     complete_task(client, 0)
     
     
+    # paper review
+    select_user(client, u'office1@example.org')
+    open_workflow(client)
+    click_task(client, ek, 'Paper Submission Review')
+    click_task(client, ek, 'Paper Submission Review')
+    complete_task(client, 0)
+    
