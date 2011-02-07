@@ -410,19 +410,21 @@ def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
     filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.get_ec_number_display(separator='-')
     
-    if not submission_form.pdf_document:
+    if not submission_form.pdf_document or not submission_form.pdf_document.status == 'new':
         pdf = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
             'submission_form': submission_form,
             'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
         })
-        doc = Document.objects.create_from_buffer(pdf)
-        submission_form.pdf_document = doc
-        submission_form.save()
-        pdf = doc.file.read()
+        if not submission_form.pdf_document:
+            doc = Document.objects.create_from_buffer(pdf)
+            submission_form.pdf_document = doc
+            submission_form.save()
+    else:
+        f = submission_form.pdf_document.get_from_mediaserver()
+        pdf = f.read()
+        f.close()
     
-    submission_form.pdf_document.file.seek(0)
-    pdf = submission_form.pdf_document.file.read()
     return pdf_response(pdf, filename=filename)
 
 def submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=None):

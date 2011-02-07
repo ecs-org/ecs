@@ -19,24 +19,28 @@ from ecs.documents.models import Document, Page, DocumentFileStorage
 from ecs.utils.pdfutils import pdf_page_count
 from ecs.utils import s3utils
 
+
+TO_BE_INDEXED_Q = Q(status='new', mimetype='application/pdf')
+TO_BE_UPLOADED_Q = Q(status='indexed', mimetype='application/pdf')|(Q(status='new') & ~Q(mimetype='application/pdf'))
+
+
 @periodic_task(run_every=timedelta(seconds=10))
 def document_tamer(**kwargs):
     logger = document_tamer.get_logger(**kwargs)
 
-    new_documents = Document.objects.filter(status='new').values('pk')
-    if len(new_documents):
-        logger.info('{0} new documents'.format(len(new_documents)))
-    for doc in new_documents:
-        upload_to_storagevault.delay(doc['pk'])
-
-    uploaded_documents = Document.objects.filter(status='uploaded', mimetype='application/pdf').values('pk')
-    if len(uploaded_documents):
-        logger.info('{0} uploaded documents'.format(len(uploaded_documents)))
-    for doc in uploaded_documents:
+    to_be_indexed_documents = Document.objects.filter(TO_BE_INDEXED_Q).values('pk')
+    if len(to_be_indexed_documents):
+        logger.info('{0} new documents to be indexed'.format(len(to_be_indexed_documents)))
+    for doc in to_be_indexed_documents:
         index_pdf.delay(doc['pk'])
 
-    indexed_documents = Document.objects.filter(Q(status='indexed', mimetype='application/pdf')|(Q(status='uploaded') & ~Q(mimetype='application/pdf')))
-    updated = indexed_documents.update(status='ready')
+    to_be_uploaded_documents = Document.objects.filter(TO_BE_UPLOADED_Q).values('pk')
+    if len(to_be_uploaded_documents):
+        logger.info('{0} new documents to be uploaded'.format(len(to_be_uploaded_documents)))
+    for doc in to_be_uploaded_documents:
+        upload_to_storagevault.delay(doc['pk'])
+
+    updated = Document.objects.filter(status='uploaded').update(status='ready')
     if updated:
         logger.info('{0} documents are now ready'.format(updated))
 
@@ -47,7 +51,7 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     logger.info('Uploading document with pk={0} to storagevault'.format(document_pk))
 
     # atomic operation
-    updated = Document.objects.filter(pk=document_pk, status='new').update(status='uploading')
+    updated = Document.objects.filter(TO_BE_UPLOADED_Q, pk=document_pk).update(status='uploading')
     if not updated:
         logger.warning('Document with pk={0} and status=new does not exist'.format(document_pk))
         return False
@@ -100,7 +104,10 @@ def upload_to_storagevault(document_pk=None, **kwargs):
         return False
     else:
         doc.status = 'uploaded'
+        filename = doc.file.name
+        doc.file = None
         doc.save()
+        DocumentFileStorage().delete(filename)
     
     return True
     
@@ -110,7 +117,7 @@ def index_pdf(document_pk=None, **kwargs):
     logger.info('Indexing document with pk={0}'.format(document_pk))
 
     # atomic operation
-    updated = Document.objects.filter(pk=document_pk, status='uploaded').update(status='indexing')
+    updated = Document.objects.filter(TO_BE_INDEXED_Q, pk=document_pk).update(status='indexing')
     if not updated:
         logger.warning('Document with pk={0} and status=uploaded does not exist'.format(document_pk))
         return False
@@ -126,8 +133,6 @@ def index_pdf(document_pk=None, **kwargs):
         
         index = site.get_index(Page)
         index.backend.update(index, doc.page_set.all())
-
-        #DocumentFileStorage().delete(doc.file.name)
 
     except Exception as e:
         doc.status = 'aborted'

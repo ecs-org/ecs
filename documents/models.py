@@ -167,9 +167,6 @@ class Document(models.Model):
         return "unique id"
 
     def save(self, **kwargs):
-        if not self.file:
-            raise ValueError('no file')
-
         if not self.uuid_document: 
             self.uuid_document = uuid4().get_hex() # generate a new random uuid
             content_type, encoding = mimetypes.guess_type(self.file.name) # look what kind of mimetype we would guess

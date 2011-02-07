@@ -38,7 +38,7 @@ class DocumentForm(SimpleDocumentForm):
     def clean_file(self):
         pdf = self.cleaned_data['file']
         if not pdf:
-            return
+            raise ValidationError(_(u'no file'))
 
         if not pdf_isvalid(pdf):
             pdf.seek(0)
