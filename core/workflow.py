@@ -123,10 +123,11 @@ class CategorizationReview(Activity):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
     def pre_perform(self, choice):
+        s = self.workflow.data
         if is_acknowledged(self.workflow):
             # schedule submission for the next schedulable meeting
-            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
-            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
 class PaperSubmissionReview(Activity):
     class Meta:
