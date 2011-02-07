@@ -335,9 +335,9 @@ ecs.setupForms = function(){
         });
     });
 
-    var document_replaces_document = $('id_document-replaces_document').value;
-    if(document_replaces_document){
-        var link = $$('.doclist input[value='+document_replaces_document+']')[0].getParent('div').getElement('a.replace_document');
+    var document_replaces_document = $('id_document-replaces_document');
+    if(document_replaces_document && document_replaces_document.value){
+        var link = $$('.doclist input[value='+document_replaces_document.value+']')[0].getParent('div').getElement('a.replace_document');
         link.fireEvent('click');
     }
     
