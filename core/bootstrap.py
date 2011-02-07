@@ -316,6 +316,23 @@ def auth_user_developers():
         profile.forward_messages_after_minutes = 360
         profile.save()
 
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_user_sentryuser():
+        user, created = get_or_create_user('sentry@example.org')
+        user.groups.add(Group.objects.get(name="Presenter"))
+        user.groups.add(Group.objects.get(name="userswitcher_target"))
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        flags = {'approved_by_office': True}
+        profile = user.get_profile()
+        for flagname, flagvalue in flags.items():
+            setattr(profile, flagname, flagvalue)
+        profile.save()
+
+
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
@@ -343,8 +360,6 @@ def auth_user_testusers():
             {'internal': False, 'thesis_review': True),
         ('external.reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
-        ('sentry.rev', u'Presenter',
-            {'is_superuser': True, 'is_staff': True),
     )
         
     boardtestusers = (
@@ -355,6 +370,7 @@ def auth_user_testusers():
          ('b.member5.kardio', ('Kardio',)),
          ('b.member6.paed', ('Päd',)), 
     )
+
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
@@ -370,6 +386,7 @@ def auth_user_testusers():
                 profile.help_writer = True
                 
             profile.save()
+
     
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser))
