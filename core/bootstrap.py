@@ -343,7 +343,7 @@ def auth_user_testusers():
             {'internal': False, 'thesis_review': True),
         ('external.reviewer', u'External Reviewer',            
             {'external_review': True, 'approved_by_office': True}),
-        ('sentry.rev', u'Sentry ErrorLog Reviewer',            
+        ('sentry.rev', u'Presenter',
             {'is_superuser': True, 'is_staff': True),
     )
         
