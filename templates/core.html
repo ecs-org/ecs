@@ -96,7 +96,7 @@
     <li>
       <span class="togglers">{% trans "Demo" %}</span>
       <ul class="elements">
-      {% if user|has_flag:"staff" %}
+      {% if user.is_superuser %}
            <li><a href="{% url sentry.views.index %}">{% trans "Sentry ErrorLog" %}</a></li>
       {% endif %}
       </ul>
