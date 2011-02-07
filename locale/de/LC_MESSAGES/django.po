@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-01-31 07:04+0100\n"
+"POT-Creation-Date: 2011-02-07 20:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,50 +137,43 @@ msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/diff.py:101
+#: core/diff.py:133 core/diff.py:195 core/diff.py:196 core/diff.py:232
+#: core/diff.py:233
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:103 core/forms/fields.py:45
+#: core/diff.py:135 core/forms/fields.py:45
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:105 core/forms/fields.py:45
+#: core/diff.py:137 core/forms/fields.py:45
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:167
-#, python-format
-msgid "Name: %(name)s, Investigator: %(investigator)s"
-msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
-
-#: core/diff.py:190
-#, python-format
-msgid ""
-"Generic Name: %(generic_name)s, Preparation Form: %(preparation_form)s, "
-"Dosage: %(dosage)s"
-msgstr ""
-
-#: core/diff.py:268
+#: core/diff.py:264
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:269
+#: core/diff.py:265
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:270
+#: core/diff.py:266
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:271
+#: core/diff.py:267
 msgid ""
 "Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit "
 "und/oder Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:272
+#: core/diff.py:268
 msgid "Dokumente"
+msgstr ""
+
+#: core/diff.py:276
+msgid "Mitarbeiter"
 msgstr ""
 
 #: core/paper_forms.py:41
@@ -295,8 +288,8 @@ msgstr "Dosis"
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:95 core/tests/submissions.py:352
-#: core/tests/submissions.py:353
+#: core/paper_forms.py:95 core/tests/submission_diffs.py:26
+#: core/tests/submission_diffs.py:27
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
@@ -1420,11 +1413,11 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:694
+#: core/models/submissions.py:697
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:694
+#: core/models/submissions.py:697
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1563,6 +1556,11 @@ msgstr "Sonstige"
 msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
+
+#: documents/forms.py:41
+#, fuzzy
+msgid "no file"
+msgstr "Datei"
 
 #: documents/forms.py:45
 msgid "This Document is not a valid PDF document."
@@ -1717,11 +1715,11 @@ msgstr "Alle Meldungen"
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:163
+#: notifications/views.py:160
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/views.py:241
+#: notifications/views.py:238
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -2838,3 +2836,6 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Name: %(name)s, Investigator: %(investigator)s"
+#~ msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
