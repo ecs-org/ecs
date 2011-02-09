@@ -35,17 +35,17 @@
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
           {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
-              <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "Eingereichte und Neue" %}</a></li>
+              <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|assigned_submissions_count %}
-              <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Mir zugeordnete Studien" %}</a></li>
+              <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Assigned Studies" %}</a></li>
           {% endif %}
           {% if user|my_submissions_count %}
-              <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "Meine Studien" %}</a></li>
+              <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "My Studies" %}</a></li>
           {% endif %}
-          <li><a href="{% url ecs.core.views.create_submission_form %}">Neuer Antrag</a></li>
+          <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>
           {% if user|has_flag:"approved_by_office" %}
-              <li><a href="{% url ecs.core.views.import_submission_form %}">Import</a></li>
+              <li><a href="{% url ecs.core.views.import_submission_form %}">{% trans "Import" %}</a></li>
           {% endif %}
       </ul>
     </li>
