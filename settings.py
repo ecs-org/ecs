@@ -350,7 +350,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 11',}
+BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 12',}
 
 # ecs.help system
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
