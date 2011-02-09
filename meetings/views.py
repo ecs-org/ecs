@@ -181,7 +181,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
-        return HttpResponseRedirect(reverse('ecs.meetings.views.meetings.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
     return render(request, 'meetings/constraints/user_form.html', {
         'meeting': meeting,
         'participant': user,
