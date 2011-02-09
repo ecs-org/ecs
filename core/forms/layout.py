@@ -98,7 +98,7 @@ SUBMISSION_FORM_TABS = (
     (_(u'centres abroad'), [
         (_(u'centers abroad'), []),
     ]),
-    (_(u'centre'), []),
+    (_(u'centres'), []),
 )
 
 def get_all_used_submission_form_fields():

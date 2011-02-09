@@ -163,30 +163,24 @@ ecs.setupFormFieldHelpers = function(context){
     */
 };
 
-ecs.setupInvestigatorFormSet = function(tabController, readonly){
-    var ifs = $('investigator_formset');
+ecs.setupInvestigatorFormSet = function(readonly){
+    var ifs = $('tabs-13');
     if(ifs){
-        var centerTabGroup = tabController.getTabGroupForElement('submission_headers');
         var investigatorFormset = new ecs.InlineFormSet(ifs, {
             prefix: 'investigator',
-            formSelector: '.investigator_tab',
+            formSelector: '.investigator',
             removeButtonInject: 'top',
             addButton: false,
             removeButton: !readonly,
             addButtonText: 'Weiteres Zentrum Hinzufügen',
             removeButtonText: 'Dieses Zentrum Entfernen',
             onFormSetup: function(form, index, added, formset){
-                tabController.addTab(centerTabGroup, 'Zentrum ' + (index + 1) +  '', form);
                 if(readonly){
                     return;
                 }
                 var addButton = formset.createAddButton(ifs);
                 addButton.inject(form, 'top');
             },
-            onFormRemoved: function(form, index){
-                var tab = tabController.getTabForElement(form);
-                tabController.removeTab(tab);
-            }
         });
         if(readonly){
             return;
@@ -251,7 +245,7 @@ ecs.setupForms = function(){
             });
             setup.mainForm = form;
         }
-        ecs.setupInvestigatorFormSet(tabController, readonly);
+        ecs.setupInvestigatorFormSet(readonly);
         setup.tabController = tabController;
 
         function updateHeaderHeight() {

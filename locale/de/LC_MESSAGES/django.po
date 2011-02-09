@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-09 16:51+0100\n"
+"POT-Creation-Date: 2011-02-09 19:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1343,8 +1343,8 @@ msgid "centers abroad"
 msgstr "Zentren im Ausland"
 
 #: core/forms/layout.py:101
-msgid "centre"
-msgstr "Zentrum"
+msgid "centres"
+msgstr "Zentren"
 
 #: core/forms/layout.py:115 core/forms/layout.py:116 core/forms/layout.py:124
 #: core/forms/layout.py:125 core/forms/layout.py:133 core/forms/layout.py:134
@@ -2278,7 +2278,7 @@ msgstr "Teilen"
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:206
+#: templates/submissions/base_form.html:210
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 

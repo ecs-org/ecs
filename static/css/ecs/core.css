@@ -465,7 +465,7 @@ li.TypedChoiceField ul > li label{
 tr.form td {
   vertical-align: top;
 }
-.form_main .investigator_tab .field a.delete_row,
+.form_main .investigator .field a.delete_row,
 .inline_formset .form a.delete_row {
   background: url(/static/images/icons.png) -240px -336px no-repeat;
   height: 16px;
@@ -508,8 +508,8 @@ table.inline_formset td {
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
 }
-.form_main .investigator_tab a.add_row,
-.form_main .investigator_tab a.delete_row {
+.form_main .investigator a.add_row,
+.form_main .investigator a.delete_row {
   display: inline-block;
   overflow: visible;
   width: auto;
@@ -520,10 +520,10 @@ table.inline_formset td {
   padding-right: 10px;
   cursor: pointer;
 }
-.form_main .investigator_tab a.add_row {
+.form_main .investigator a.add_row {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
-.form_main .investigator_tab a.delete_row {
+.form_main .investigator a.delete_row {
   background: url(/static/images/icons.png) -240px -336px no-repeat;
 }
 
