@@ -45,13 +45,8 @@ class Vote(models.Model):
         return dict(VOTE_RESULT_CHOICES)[self.result]
 
     def get_ec_number(self):
-        if self.top:
-            top = self.top
-            if top.submission:
-                submission = top.submission
-                if submission.ec_number:
-                    ec_number = submission.ec_number
-                    return ec_number
+        if self.top and self.top.submission:
+            return self.top.submission.get_ec_number_display()
         return None
 
     def __unicode__(self):
