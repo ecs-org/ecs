@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, subprocess, tempfile, binascii, logging
+import os, subprocess, tempfile, binascii, logging, copy
 from cStringIO import StringIO
 
 from django.conf import settings
@@ -72,18 +72,39 @@ def pdf_page_count(filelike):
     return pages
 
 
-def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, timeoutseconds=30):
+def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, barcodetype="qrcode", timeoutseconds=30):
     '''
     takes source pdf, stamps a barcode into it and output it to dest
     raises IOError if something goes wrong (including exit errorcode and stderr output attached)
-    '''  
+    ''' 
+    S_BARCODE_TEMPLATE = """
+        gsave 
+        {{ moveto }} moveto {{ scale }} scale {{ rotate }} rotate
+        ({{ header }}{{ barcode }}) ({{options}}) /{{barcodetype}} /uk.co.terryburton.bwipp findresource exec
+        grestore
+        """
+    D_CODE128 = {'moveto': '50 600', 'scale': '0.5 0.5', 'rotate': '89.999', 
+        'header': '^104', 'options': 'includetext', 'barcodetype': "code128",
+        }
+    D_QRCODE =  {'moveto': '20 100', 'scale': '0.5 0.5', 'rotate': '0', 
+        'header': '', 'options': '', 'barcodetype': "qrcode",
+        }
+    barcode1dict = copy.deepcopy(D_QRCODE)
+    barcode1dict['barcode']= barcode1
+    barcode1s = loader.get_template_from_string(S_BARCODE_TEMPLATE).render(Context(barcode1dict))
+      
     if barcode2:
-        raise(NotImplementedError)
-        # TODO: barcode2_content is currently unimplemented
-        
+        barcode2dict = copy.deepcopy(D_QRCODE)
+        barcode2dict['moveto'] = '20 600'
+        barcode2dict['barcode'] =  barcode2
+        barcode2s = loader.get_template_from_string(S_BARCODE_TEMPLATE).render(Context(barcode2dict))
+    else:
+        barcode2s = ""
+    
     # render barcode template to ready to use postscript file
-    template = loader.get_template('xhtml2pdf/barcode.ps')
-    barcode_ps = template.render(Context({'barcode': barcode1})) 
+    template = loader.get_template_from_string("""{{barcode1}}{{barcode2}}""")
+    barcode_ps = loader.render_to_string('xhtml2pdf/barcode.ps')+ template.render(Context({
+        'barcode1': barcode1s, 'barcode2': barcode2s,}))
     
     try:
         # render barcode postscript file to pdf
