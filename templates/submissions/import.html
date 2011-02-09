@@ -9,7 +9,7 @@ Import
 {% block content %}
 
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" />
+    {{ form.as_p }}
     <input type="submit" value="Importieren" />
 </form>
 

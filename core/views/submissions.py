@@ -23,7 +23,7 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionListFilterForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionListFilterForm, SubmissionImportForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -495,11 +495,21 @@ def export_submission(request, submission_pk):
 
 @user_flag_required('approved_by_office')
 def import_submission_form(request):
+    form = SubmissionImportForm(request.POST or None, request.FILES or None)
+
+    if request.method == 'POST' and form.is_valid():
+        return copy_submission_form(request, submission_form_pk=form.submission_form.pk, delete=True)
+    return render(request, 'submissions/import.html', {
+        'form': form,
+    })
+
+    """
     if 'file' in request.FILES:
         serializer = Serializer()
         submission_form = serializer.read(request.FILES['file'])
         return copy_submission_form(request, submission_form_pk=submission_form.pk, delete=True)
     return render(request, 'submissions/import.html', {})
+    """
 
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):

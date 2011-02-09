@@ -294,4 +294,17 @@ class SubmissionListFilterForm(forms.Form):
     other = forms.BooleanField(required=False)
     page = forms.CharField(required=False, widget=forms.HiddenInput())
 
+class SubmissionImportForm(forms.Form):
+    file = forms.FileField()
+
+    def clean_file(self):
+        f = self.cleaned_data['file']
+        from ecs.core.serializer import Serializer
+        serializer = Serializer()
+        try:
+            self.submission_form = serializer.read(self.cleaned_data['file'])
+        except:
+            self._errors['file'] = self.error_class([u'This file is not a valid ECX archive.'])
+        f.seek(0)
+        return f
 
