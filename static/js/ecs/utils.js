@@ -188,8 +188,10 @@ ecs.InvestigatorFormset = new Class({
             removeButtonText: 'Dieses Zentrum Entfernen'
         });
 
-        this.show(0);
-        this.generateJumpList();
+        if (this.inline_formset.getFormCount() > 0) {
+            this.show(0);
+            this.generateJumpList();
+        }
 
         if(this.options.readonly){
             return;
@@ -238,11 +240,14 @@ ecs.InvestigatorFormset = new Class({
             this.generateJumpList();
         }).bind(this));
 
-        this.inline_formset.addEvent('formIndexChanged', function(form, newIndex){
+        this.inline_formset.addEvent('formIndexChanged', (function(form, newIndex){
+            console.log(form);
+            console.log(this.options.investigatorEmployeeFormsetClass);
+            console.log(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
             form.getElement('.'+this.options.investigatorEmployeeFormsetClass).getElements('input[name$=-investigator_index]').each(function(indexField){
                 indexField.value = newIndex;
             });
-        });
+        }).bind(this));
 
     },
     show: function(index) {
