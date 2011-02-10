@@ -169,7 +169,8 @@ ecs.InvestigatorFormset = new Class({
         readonly: false,
         investigatorClass: 'investigator',
         addButtonClass: 'add_centre',
-        investigatorEmployeeFormsetClass: 'investigatoremployee_formset'
+        investigatorEmployeeFormsetClass: 'investigatoremployee_formset',
+        investigatorTranslation: 'Zentrum'
     },
     initialize: function(container, options) {
         this.container = $(container);
@@ -187,15 +188,15 @@ ecs.InvestigatorFormset = new Class({
         this.show(0);
 
         var i = 0;
-        this.container.getElement('.centre_list').getElements('li').each((function(li){
+        this.container.getElement('.centre_list').getElements('li').each(function(li){
             li.getElement('a').addEvent('click', (function(index){
                 this.show(index);
                 return false;
             }).bind(this, i));
             i += 1;
-        }).bind(this));
+        }, this);
 
-        this.container.getElements('.'+this.options.addButtonClass).each((function(elm){
+        this.container.getElements('.'+this.options.addButtonClass).each(function(elm){
             if (!this.options.readonly) {
                 elm.addEvent('click', (function(){
                     this.add();
@@ -204,7 +205,7 @@ ecs.InvestigatorFormset = new Class({
             } else {
                 elm.hide();
             }
-        }).bind(this));
+        }, this);
 
         if(this.options.readonly){
             return;
