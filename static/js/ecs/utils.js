@@ -213,7 +213,6 @@ ecs.InvestigatorFormset = new Class({
             prefix: 'investigatoremployee',
             onFormAdded: (function(form, index, added){
                 var indexField = form.getElement('input[name$=-investigator_index]');
-                console.log(indexField);
                 indexField.value = this.inline_formset.getIndexForElement(form);
             }).bind(this)
         });
@@ -241,9 +240,6 @@ ecs.InvestigatorFormset = new Class({
         }).bind(this));
 
         this.inline_formset.addEvent('formIndexChanged', (function(form, newIndex){
-            console.log(form);
-            console.log(this.options.investigatorEmployeeFormsetClass);
-            console.log(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
             form.getElement('.'+this.options.investigatorEmployeeFormsetClass).getElements('input[name$=-investigator_index]').each(function(indexField){
                 indexField.value = newIndex;
             });
