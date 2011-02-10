@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-09 19:00+0100\n"
+"POT-Creation-Date: 2011-02-10 16:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Firma"
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:79 core/forms/layout.py:54 core/forms/layout.py:55
+#: billing/views.py:79 core/forms/layout.py:55 core/forms/layout.py:56
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -1285,74 +1285,70 @@ msgstr "Teilnehmer"
 msgid "test participant"
 msgstr "Prüfungsteilnehmer"
 
-#: core/forms/layout.py:27 core/forms/layout.py:28
+#: core/forms/layout.py:26
+msgid "centers abroad"
+msgstr "Zentren im Ausland"
+
+#: core/forms/layout.py:28 core/forms/layout.py:29
 msgid "outline"
 msgstr "Kurzfassung"
 
-#: core/forms/layout.py:37 core/forms/layout.py:38
+#: core/forms/layout.py:38 core/forms/layout.py:39
 msgid "sponsor"
 msgstr "Sponsor"
 
-#: core/forms/layout.py:46
+#: core/forms/layout.py:47
 msgid "invoice recipient"
 msgstr "Rechnungsempfänger"
 
-#: core/forms/layout.py:61 core/forms/layout.py:63
+#: core/forms/layout.py:62 core/forms/layout.py:64
 #: templates/submissions/filterform.inc:10 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/layout.py:62
+#: core/forms/layout.py:63
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
 
-#: core/forms/layout.py:70 core/forms/layout.py:72
+#: core/forms/layout.py:71 core/forms/layout.py:73
 #: templates/submissions/filterform.inc:11 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/layout.py:71
+#: core/forms/layout.py:72
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: core/forms/layout.py:77 core/forms/layout.py:78
+#: core/forms/layout.py:78 core/forms/layout.py:79
 msgid "measures"
 msgstr "Maßnahmen"
 
-#: core/forms/layout.py:80 core/forms/layout.py:81
+#: core/forms/layout.py:81 core/forms/layout.py:82
 msgid "biometrics"
 msgstr "Biometrie"
 
-#: core/forms/layout.py:92 core/forms/layout.py:93
+#: core/forms/layout.py:93 core/forms/layout.py:94
 msgid "insurance"
 msgstr "Versicherung"
 
-#: core/forms/layout.py:97 core/forms/layout.py:120 core/forms/layout.py:129
-#: core/forms/layout.py:138
+#: core/forms/layout.py:98 core/forms/layout.py:118 core/forms/layout.py:127
+#: core/forms/layout.py:136
 msgid "documents"
 msgstr "Unterlagen"
 
-#: core/forms/layout.py:98
-msgid "centres abroad"
-msgstr "Auslandszentren"
-
 #: core/forms/layout.py:99
-msgid "centers abroad"
-msgstr "Zentren im Ausland"
-
-#: core/forms/layout.py:101
 msgid "centres"
 msgstr "Zentren"
 
-#: core/forms/layout.py:115 core/forms/layout.py:116 core/forms/layout.py:124
-#: core/forms/layout.py:125 core/forms/layout.py:133 core/forms/layout.py:134
-#: core/forms/layout.py:159 core/forms/layout.py:160
+#: core/forms/layout.py:113 core/forms/layout.py:114 core/forms/layout.py:122
+#: core/forms/layout.py:123 core/forms/layout.py:131 core/forms/layout.py:132
+#: core/forms/layout.py:157 core/forms/layout.py:158
 msgid "General information"
 msgstr "Allgemeine Angaben"
 
-#: core/forms/layout.py:139
+#: core/forms/layout.py:137
 #: templates/notifications/view/AmendmentNotificationForm.html:7
 #, fuzzy
 msgid "Changes"
@@ -2278,7 +2274,7 @@ msgstr "Teilen"
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:210
+#: templates/submissions/base_form.html:205
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -2923,6 +2919,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "centres abroad"
+#~ msgstr "Auslandszentren"
 
 #~ msgid "Name: %(name)s, Investigator: %(investigator)s"
 #~ msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
