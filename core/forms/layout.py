@@ -23,6 +23,7 @@ SUBMISSION_FORM_TABS = (
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
             'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
+        (_(u'centers abroad'), []),
     ]),
     (_(u'outline'), [
         (_(u'outline'), [
@@ -95,9 +96,6 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (_(u'documents'), []),
-    (_(u'centres abroad'), [
-        (_(u'centers abroad'), []),
-    ]),
     (_(u'centres'), []),
 )
 
