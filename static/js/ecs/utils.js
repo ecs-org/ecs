@@ -163,70 +163,111 @@ ecs.setupFormFieldHelpers = function(context){
     */
 };
 
-ecs.setupInvestigatorFormSet = function(readonly){
-    var ifs = $('tabs-13');
-    if(ifs){
-        var investigatorFormset = new ecs.InlineFormSet(ifs, {
+ecs.InvestigatorFormset = new Class({
+    Implements: [Options],
+    options: {
+        readonly: false,
+        investigatorClass: 'investigator',
+        addButtonClass: 'add_centre',
+        investigatorEmployeeFormsetClass: 'investigatoremployee_formset'
+    },
+    initialize: function(container, options) {
+        this.container = $(container);
+        this.setOptions(options);
+
+        this.inline_formset = new ecs.InlineFormSet(this.container, {
             prefix: 'investigator',
             formSelector: '.investigator',
             removeButtonInject: 'top',
             addButton: false,
-            removeButton: !readonly,
-            addButtonText: 'Weiteres Zentrum Hinzufügen',
-            removeButtonText: 'Dieses Zentrum Entfernen',
-            onFormSetup: function(form, index, added, formset){
-                if(readonly){
-                    return;
-                }
-                var addButton = formset.createAddButton(ifs);
-                addButton.inject(form, 'top');
-            },
+            removeButton: !this.options.readonly,
+            removeButtonText: 'Dieses Zentrum Entfernen'
         });
-        if(readonly){
+
+        this.show(0);
+
+        var i = 0;
+        this.container.getElement('.centre_list').getElements('li').each((function(li){
+            li.getElement('a').addEvent('click', (function(index){
+                this.show(index);
+                return false;
+            }).bind(this, i));
+            i += 1;
+        }).bind(this));
+
+        this.container.getElements('.'+this.options.addButtonClass).each((function(elm){
+            if (!this.options.readonly) {
+                elm.addEvent('click', (function(){
+                    this.add();
+                    return false;
+                }).bind(this));
+            } else {
+                elm.hide();
+            }
+        }).bind(this));
+
+        if(this.options.readonly){
             return;
         }
+        /*** read/write ***/
+
+        
         // HACK
-        if(investigatorFormset.getFormCount() == 1){
-            investigatorFormset.forms[0].getElement('.delete_row').hide();
+        if(this.inline_formset.getFormCount() == 1){
+            this.inline_formset.forms[0].getElement('.delete_row').hide();
         }
         else{
-            investigatorFormset.forms.each(function(f){
+            this.inline_formset.forms.each(function(f){
                 f.getElement('.delete_row').show();
             });
         }
 
-        
-        var employeeFormSet = new ecs.InlineFormSet($$('.investigatoremployee_formset'), {
+        this.employee_formset = new ecs.InlineFormSet($$('.'+this.options.investigatorEmployeeFormsetClass), {
             prefix: 'investigatoremployee',
             onFormAdded: function(form, index, added){
                 var indexField = form.getElement('input[name$=-investigator_index]');
                 indexField.value = investigatorFormset.getIndexForElement(form);
             }
         });
-        investigatorFormset.addEvent('formAdded', function(form, index){
+
+        this.inline_formset.addEvent('formAdded', (function(form, index){
             form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
-            employeeFormSet.addContainer(form.getElement('.investigatoremployee_formset'));
+            this.employee_formset.addContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
             // HACK
-            if(investigatorFormset.getFormCount() > 1){
-                investigatorFormset.forms.each(function(f){
+            if(this.inline_formset.getFormCount() > 1){
+                this.inline_formset.forms.each(function(f){
                     f.getElement('.delete_row').show();
                 });
             }
-        });
-        investigatorFormset.addEvent('formRemoved', function(form, index){
-            employeeFormSet.removeContainer(form.getElement('.investigatoremployee_formset'));
+        }).bind(this));
+
+        this.inline_formset.addEvent('formRemoved', (function(form, index){
+            this.employee_formset.removeContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
             // HACK
-            if(investigatorFormset.getFormCount() == 1){
-                investigatorFormset.forms[0].getElement('.delete_row').hide();
+            if(this.inline_formset.getFormCount() == 1){
+                this.inline_formset.forms[0].getElement('.delete_row').hide();
             }
-        });
-        investigatorFormset.addEvent('formIndexChanged', function(form, newIndex){
-            form.getElement('.investigatoremployee_formset').getElements('input[name$=-investigator_index]').each(function(indexField){
+        }).bind(this));
+
+        this.inline_formset.addEvent('formIndexChanged', function(form, newIndex){
+            form.getElement('.'+this.options.investigatorEmployeeFormsetClass).getElements('input[name$=-investigator_index]').each(function(indexField){
                 indexField.value = newIndex;
             });
         });
+
+    },
+    show: function(index) {
+        var i = 0;
+        this.inline_formset.forms.each(function(f){
+            (i == index) ? f.show() : f.hide();
+            i += 1;
+        });
+    },
+    add: function() {
+        this.inline_formset.add.apply(this.inline_formset, [this.container]);
+        this.show(this.inline_formset.getFormCount() - 1);
     }
-};
+});
 
 ecs.setupForms = function(){
     var tabHeaders = $$('.tab_headers');
@@ -245,7 +286,14 @@ ecs.setupForms = function(){
             });
             setup.mainForm = form;
         }
-        ecs.setupInvestigatorFormSet(readonly);
+
+        var ifs = $('tabs-13');
+        if (ifs) {
+            var investigatorFormset = new ecs.InvestigatorFormset(ifs, {
+                readonly: readonly
+            });
+        }
+
         setup.tabController = tabController;
 
         function updateHeaderHeight() {
@@ -340,8 +388,8 @@ ecs.setupForms = function(){
 
 ecs.FormFieldController = new Class({
     initialize: function(fields, options){
-        fields = fields.map($);
-        if(!fields[0].getParent('form')){
+        fields = fields.map($).erase(null);
+        if(!fields.length || !fields[0].getParent('form')){
             return;
         }
         this.fields = fields;

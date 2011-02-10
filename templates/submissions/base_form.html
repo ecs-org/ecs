@@ -65,11 +65,12 @@
                     {% endifequal %}
 
                     {% ifequal tab "Zentren" %}
-                        <ul>
+                        <ul class="centre_list">
                         {% for form in investigator_formset.forms %}
                             <li><a href="">{% trans "Zentrum" %} {{ forloop.counter }}</a></li>
                         {% endfor %}
                         </ul>
+                        <a href="" class="add_centre add_row">{% trans "Add New Centre" %}</a>
 
                         {{ investigator_formset.management_form }}
                         {{ investigatoremployee_formset.management_form }}
@@ -78,7 +79,7 @@
                             {% with forloop.counter0 as investigator_index %}
                             <div class="investigator" id="investigator{{ forloop.counter0 }}">
                                 <div class="field">
-                                    <h3 class="partbno">Zentrum</h3>
+                                    <h3 class="partbno">Zentrum {{ forloop.counter }}</h3>
                                     <div class="investigator_form">
                                         {% for hidden in form.hidden_fields %}
                                             {{ hidden }}
@@ -91,7 +92,8 @@
                                             {% endfor %}
                                         </ol>
                                     </div>
-
+                                </div>
+                                <div class="field">
                                     <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
                                     {# XXX: reuse forms/tables/inline_formset.html (FMD2) #}
                                     <table class="inline_formset investigatoremployee_formset">

@@ -508,7 +508,8 @@ table.inline_formset td {
 #meeting_constraint_editor a.add_row {
   margin-left: 2px;
 }
-.form_main .investigator a.add_row,
+
+.form_main a.add_centre,
 .form_main .investigator a.delete_row {
   display: inline-block;
   overflow: visible;
@@ -520,7 +521,8 @@ table.inline_formset td {
   padding-right: 10px;
   cursor: pointer;
 }
-.form_main .investigator a.add_row {
+
+.form_main a.add_centre {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
 .form_main .investigator a.delete_row {
