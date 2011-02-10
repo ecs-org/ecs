@@ -509,7 +509,18 @@ table.inline_formset td {
   margin-left: 2px;
 }
 
-.form_main a.add_centre,
+.form_main ul.investigator_list li {
+    clear: none;
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+
+.form_main .investigator_list_clear {
+    clear: both;
+    height: 30px;
+}
+
+.form_main .investigator_list a.add_centre,
 .form_main .investigator a.delete_row {
   display: inline-block;
   overflow: visible;
@@ -522,7 +533,7 @@ table.inline_formset td {
   cursor: pointer;
 }
 
-.form_main a.add_centre {
+.form_main .investigator_list a.add_centre {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
 .form_main .investigator a.delete_row {
