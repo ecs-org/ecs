@@ -2,8 +2,11 @@
 
 from django.core.urlresolvers import reverse
 
-from ecs.workflow import guard, Activity
+from ecs.workflow import guard, Activity, register
 from ecs.users.models import UserProfile
+
+
+register(UserProfile)
 
 
 @guard(model=UserProfile)
