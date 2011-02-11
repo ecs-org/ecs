@@ -509,15 +509,50 @@ table.inline_formset td {
   margin-left: 2px;
 }
 
+.form_main ul.investigator_list li a {
+    text-decoration: none;
+    color: #2b558e !important;
+}
+.form_main ul.investigator_list li.active a {
+    color: #e2eaf0 !important;
+}
+.form_main ul.investigator_list li.readonly a {
+    color: #333333 !important;
+}
+.form_main ul.investigator_list li.errors a {
+    color: #ffffff !important;
+}
+
 .form_main ul.investigator_list li {
-    clear: none;
-    float: left;
-    margin: 0px 10px 0px 10px;
+    display: inline-block;
+    margin: 3px 5px;
+    line-height: 24px;
+    -moz-border-radius: 3px;
+    border: 1px solid #B7D4E5;
+    background-color: #e2eaf0;
+    padding: 0px 5px;
+}
+
+.form_main ul.investigator_list li.active {
+    background-color: #2b558e;
+}
+.form_main ul.investigator_list li.readonly {
+    border: 1px solid #bbbbbb;
+    background-color: #dddac8;
+}
+.form_main ul.investigator_list li.readonly.active {
+    background-color: #f2f0e5;
+}
+.form_main ul.investigator_list li.errors {
+    border: 1px solid #ff0000;
+    background-color: #fb6464;
+}
+.form_main ul.investigator_list li.errors.active {
+    background-color: #ff8000;
 }
 
 .form_main .investigator_list_clear {
-    clear: both;
-    height: 30px;
+    height: 20px;
 }
 
 .form_main .investigator_list a.add_centre,

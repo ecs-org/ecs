@@ -189,8 +189,8 @@ ecs.InvestigatorFormset = new Class({
         });
 
         if (this.inline_formset.getFormCount() > 0) {
-            this.show(0);
             this.generateJumpList();
+            this.show(0);
         }
 
         if(this.options.readonly){
@@ -226,7 +226,6 @@ ecs.InvestigatorFormset = new Class({
                     f.getElement('.delete_row').show();
                 });
             }
-            this.generateJumpList();
         }).bind(this));
 
         this.inline_formset.addEvent('formRemoved', (function(form, index){
@@ -235,8 +234,8 @@ ecs.InvestigatorFormset = new Class({
             if(this.inline_formset.getFormCount() == 1){
                 this.inline_formset.forms[0].getElement('.delete_row').hide();
             }
-            this.show(this.inline_formset.getFormCount() - 1);
             this.generateJumpList();
+            this.show(this.inline_formset.getFormCount() - 1);
         }).bind(this));
 
         this.inline_formset.addEvent('formIndexChanged', (function(form, newIndex){
@@ -248,6 +247,19 @@ ecs.InvestigatorFormset = new Class({
     },
     show: function(index) {
         var i = 0;
+
+        var ul = this.container.getElement('.'+this.options.jumpListClass);
+        var offset = this.options.readonly ? 0 : 1;
+        ul.getElements('li').each(function(li){
+            if (i == index+offset) {
+                li.addClass('active');
+            } else {
+                li.removeClass('active');
+            }
+            i += 1;
+        }, this);
+
+        i = 0;
         this.inline_formset.forms.each(function(f){
             (i == index) ? f.show() : f.hide();
             i += 1;
@@ -257,7 +269,10 @@ ecs.InvestigatorFormset = new Class({
     },
     add: function() {
         this.inline_formset.add.apply(this.inline_formset, [this.container]);
-        this.show(this.inline_formset.getFormCount() - 1);
+        var new_form_index = this.inline_formset.getFormCount() - 1;
+        this.inline_formset.forms[new_form_index].getElements('.errors').removeClass('errors');
+        this.generateJumpList();
+        this.show(new_form_index);
     },
     generateJumpList: function() {
         var ul = this.container.getElement('.'+this.options.jumpListClass);
@@ -283,6 +298,12 @@ ecs.InvestigatorFormset = new Class({
         var i = 0;
         this.inline_formset.forms.each(function(){
             var li = new Element('li');
+            if (this.options.readonly) {
+                li.addClass('readonly');
+            }
+            if (this.inline_formset.forms[i].getElement('.errors')) {
+                li.addClass('errors');
+            }
             var a = new Element('a', {
                 href: '',
                 html: this.options.investigatorTranslation+' '+(i+1),
