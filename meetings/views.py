@@ -333,27 +333,6 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         'checklist_review_states': checklist_review_states.items(),
     })
 
-def meeting_assistant_clear(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    votes = Vote.objects.filter(top__meeting=meeting)
-
-    # deassociate all foreign keys from the instance, so we can delete it without cascading
-    for vote in votes:
-        vote.submission_form.current_published_vote = None
-        vote.submission_form.current_pending_vote = None
-        vote.submission_form.save()
-        vote.submission_form = None
-        vote.top = None
-        vote.save()
-        vote.delete()
-
-    meeting.timetable_entries.update(is_open=True)
-    meeting.started = None
-    meeting.ended = None
-    meeting.save()
-    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
-
-
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (

@@ -6,7 +6,6 @@
     <div class="meeting_assistant_nav">
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
-            <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_clear meeting_pk=meeting.pk %}">Clear</a></div>
             {% if not meeting.started %}
             <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
