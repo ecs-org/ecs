@@ -23,7 +23,7 @@ FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
 
 
 class Vote(models.Model):
-    submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes')
+    submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_(u'vote'))
     executive_review_required = models.NullBooleanField(blank=True)
@@ -84,6 +84,8 @@ class Vote(models.Model):
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
     submission_form = vote.submission_form
+    if submission_form is None:
+        return
     if (vote.published_at and submission_form.current_published_vote_id == vote.pk) or (not vote.published_at and submission_form.current_pending_vote_id == vote.pk):
         return
     if vote.published_at:

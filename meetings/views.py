@@ -335,7 +335,18 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
 
 def meeting_assistant_clear(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    Vote.objects.filter(top__meeting=meeting).delete()
+    votes = Vote.objects.filter(top__meeting=meeting)
+
+    # deassociate all foreign keys from the instance, so we can delete it without cascading
+    for vote in votes:
+        vote.submission_form.current_published_vote = None
+        vote.submission_form.current_pending_vote = None
+        vote.submission_form.save()
+        vote.submission_form = None
+        vote.top = None
+        vote.save()
+        vote.delete()
+
     meeting.timetable_entries.update(is_open=True)
     meeting.started = None
     meeting.ended = None
