@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-09 19:00+0100\n"
+"POT-Creation-Date: 2011-02-11 14:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Firma"
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:79 core/forms/layout.py:54 core/forms/layout.py:55
+#: billing/views.py:79 core/forms/layout.py:55 core/forms/layout.py:56
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -1285,74 +1285,70 @@ msgstr "Teilnehmer"
 msgid "test participant"
 msgstr "Prüfungsteilnehmer"
 
-#: core/forms/layout.py:27 core/forms/layout.py:28
+#: core/forms/layout.py:26
+msgid "centers abroad"
+msgstr "Zentren im Ausland"
+
+#: core/forms/layout.py:28 core/forms/layout.py:29
 msgid "outline"
 msgstr "Kurzfassung"
 
-#: core/forms/layout.py:37 core/forms/layout.py:38
+#: core/forms/layout.py:38 core/forms/layout.py:39
 msgid "sponsor"
 msgstr "Sponsor"
 
-#: core/forms/layout.py:46
+#: core/forms/layout.py:47
 msgid "invoice recipient"
 msgstr "Rechnungsempfänger"
 
-#: core/forms/layout.py:61 core/forms/layout.py:63
+#: core/forms/layout.py:62 core/forms/layout.py:64
 #: templates/submissions/filterform.inc:10 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/layout.py:62
+#: core/forms/layout.py:63
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
 
-#: core/forms/layout.py:70 core/forms/layout.py:72
+#: core/forms/layout.py:71 core/forms/layout.py:73
 #: templates/submissions/filterform.inc:11 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/layout.py:71
+#: core/forms/layout.py:72
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: core/forms/layout.py:77 core/forms/layout.py:78
+#: core/forms/layout.py:78 core/forms/layout.py:79
 msgid "measures"
 msgstr "Maßnahmen"
 
-#: core/forms/layout.py:80 core/forms/layout.py:81
+#: core/forms/layout.py:81 core/forms/layout.py:82
 msgid "biometrics"
 msgstr "Biometrie"
 
-#: core/forms/layout.py:92 core/forms/layout.py:93
+#: core/forms/layout.py:93 core/forms/layout.py:94
 msgid "insurance"
 msgstr "Versicherung"
 
-#: core/forms/layout.py:97 core/forms/layout.py:120 core/forms/layout.py:129
-#: core/forms/layout.py:138
+#: core/forms/layout.py:98 core/forms/layout.py:118 core/forms/layout.py:127
+#: core/forms/layout.py:136
 msgid "documents"
 msgstr "Unterlagen"
 
-#: core/forms/layout.py:98
-msgid "centres abroad"
-msgstr "Auslandszentren"
-
 #: core/forms/layout.py:99
-msgid "centers abroad"
-msgstr "Zentren im Ausland"
-
-#: core/forms/layout.py:101
 msgid "centres"
 msgstr "Zentren"
 
-#: core/forms/layout.py:115 core/forms/layout.py:116 core/forms/layout.py:124
-#: core/forms/layout.py:125 core/forms/layout.py:133 core/forms/layout.py:134
-#: core/forms/layout.py:159 core/forms/layout.py:160
+#: core/forms/layout.py:113 core/forms/layout.py:114 core/forms/layout.py:122
+#: core/forms/layout.py:123 core/forms/layout.py:131 core/forms/layout.py:132
+#: core/forms/layout.py:157 core/forms/layout.py:158
 msgid "General information"
 msgstr "Allgemeine Angaben"
 
-#: core/forms/layout.py:139
+#: core/forms/layout.py:137
 #: templates/notifications/view/AmendmentNotificationForm.html:7
 #, fuzzy
 msgid "Changes"
@@ -1684,25 +1680,25 @@ msgstr "Dieses Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:349 meetings/views.py:424
+#: meetings/views.py:339 meetings/views.py:414
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:360
+#: meetings/views.py:350
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:412
+#: meetings/views.py:402
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:438
+#: meetings/views.py:428
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
 #: notifications/views.py:50 templates/core.html:57
-#: templates/submissions/readonly_form.html:101
-#: templates/submissions/readonly_form.html:151
+#: templates/submissions/readonly_form.html:98
+#: templates/submissions/readonly_form.html:145
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
@@ -1711,7 +1707,7 @@ msgid "All Notifications"
 msgstr "Alle Meldungen"
 
 #: notifications/views.py:56 templates/core.html:56
-#: templates/submissions/readonly_form.html:133
+#: templates/submissions/readonly_form.html:127
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -1794,7 +1790,7 @@ msgid "Dashboard"
 msgstr "Übersicht"
 
 #: templates/core.html:32 templates/communication/list.html:6
-#: templates/submissions/readonly_form.html:105
+#: templates/submissions/readonly_form.html:102
 msgid "Communication"
 msgstr "Nachrichten"
 
@@ -1996,7 +1992,7 @@ msgid "von"
 msgstr "von"
 
 #: templates/documents/compact_list.html:25
-#: templates/submissions/readonly_form.html:193
+#: templates/submissions/readonly_form.html:187
 msgid "Download"
 msgstr "Download"
 
@@ -2110,7 +2106,7 @@ msgid "Fast Lanes"
 msgstr "Expedited Reviews"
 
 #: templates/fastlane/list.html:18 templates/meetings/list.html:20
-#: templates/submissions/readonly_form.html:176
+#: templates/submissions/readonly_form.html:170
 msgid "Ansehen"
 msgstr ""
 
@@ -2211,7 +2207,7 @@ msgstr "Protokoll"
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
-#: templates/meetings/assistant/base.html:16
+#: templates/meetings/assistant/base.html:15
 msgid "Comments"
 msgstr "Kommentare"
 
@@ -2278,7 +2274,7 @@ msgstr "Teilen"
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:210
+#: templates/submissions/base_form.html:205
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -2392,93 +2388,88 @@ msgstr "Workflow Protokoll"
 #: templates/submissions/readonly_form.html:42
 #: templates/submissions/tabs/involved_parties.html:2
 msgid "Involved Parties"
-msgstr "Beitiligte Parteien"
+msgstr "Beteiligte Parteien"
 
-#: templates/submissions/readonly_form.html:45
-#: templates/submissions/tabs/developer.html:2
-msgid "Developer"
-msgstr "Entwickler"
+#: templates/submissions/readonly_form.html:51
+msgid "Activities"
+msgstr "Tätigkeiten"
 
-#: templates/submissions/readonly_form.html:54
-msgid "Review"
-msgstr "Review"
-
-#: templates/submissions/readonly_form.html:58
+#: templates/submissions/readonly_form.html:55
 msgid "Categorization Review"
 msgstr "Einstufungs-Review"
 
-#: templates/submissions/readonly_form.html:91
+#: templates/submissions/readonly_form.html:88
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:93
-#: templates/submissions/readonly_form.html:169
+#: templates/submissions/readonly_form.html:90
+#: templates/submissions/readonly_form.html:163
 msgid "Pending Votes"
 msgstr "Ausstehende Voten"
 
-#: templates/submissions/readonly_form.html:94
-#: templates/submissions/readonly_form.html:188
+#: templates/submissions/readonly_form.html:91
+#: templates/submissions/readonly_form.html:182
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:98
+#: templates/submissions/readonly_form.html:95
 msgid "Notifications"
 msgstr "Meldungen"
 
-#: templates/submissions/readonly_form.html:100
+#: templates/submissions/readonly_form.html:97
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:107
-#: templates/submissions/readonly_form.html:260
+#: templates/submissions/readonly_form.html:104
+#: templates/submissions/readonly_form.html:254
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:108
-#: templates/submissions/readonly_form.html:266
+#: templates/submissions/readonly_form.html:105
+#: templates/submissions/readonly_form.html:260
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:144
+#: templates/submissions/readonly_form.html:138
 #, fuzzy
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:147
-#: templates/submissions/readonly_form.html:165
+#: templates/submissions/readonly_form.html:141
+#: templates/submissions/readonly_form.html:159
 msgid "Create a new notification"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:162
+#: templates/submissions/readonly_form.html:156
 msgid "There are no answered notifications."
 msgstr ""
 
-#: templates/submissions/readonly_form.html:178
+#: templates/submissions/readonly_form.html:172
 msgid "Signieren"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:184
+#: templates/submissions/readonly_form.html:178
 msgid "There are no pending votes."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:197
+#: templates/submissions/readonly_form.html:191
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:205
+#: templates/submissions/readonly_form.html:199
 #, fuzzy
 msgid "Reopen"
 msgstr "offen"
 
-#: templates/submissions/readonly_form.html:263
+#: templates/submissions/readonly_form.html:257
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:332
+#: templates/submissions/readonly_form.html:326
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
-#: templates/submissions/readonly_form.html:335
+#: templates/submissions/readonly_form.html:329
 msgid "Insert Boilerplate"
 msgstr "Vorlage einfügen"
 
@@ -2505,10 +2496,6 @@ msgstr "alt"
 #: templates/submissions/diff/diff.html:19
 msgid "all"
 msgstr "alle"
-
-#: templates/submissions/tabs/developer.html:8
-msgid "Thesis Review"
-msgstr "Diplomarbeit Review"
 
 #: templates/submissions/tabs/involved_parties.html:5
 msgid "Involvement"
@@ -2923,6 +2910,18 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "centres abroad"
+#~ msgstr "Auslandszentren"
+
+#~ msgid "Developer"
+#~ msgstr "Entwickler"
+
+#~ msgid "Review"
+#~ msgstr "Review"
+
+#~ msgid "Thesis Review"
+#~ msgstr "Diplomarbeit Review"
 
 #~ msgid "Name: %(name)s, Investigator: %(investigator)s"
 #~ msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
