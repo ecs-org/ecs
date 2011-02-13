@@ -9,8 +9,12 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # set doctype "other" for documents without document type
         db.start_transaction()
-        doctype = orm.DocumentType.objects.get(identifier='other')
-        orm.Document.objects.filter(doctype__isnull=True).update(doctype=doctype)
+        try:
+            doctype = orm.DocumentType.objects.filter(identifier='other')[0]
+        except IndexError:
+            pass
+        else:
+            orm.Document.objects.filter(doctype__isnull=True).update(doctype=doctype)
         db.commit_transaction()
 
         db.start_transaction()
