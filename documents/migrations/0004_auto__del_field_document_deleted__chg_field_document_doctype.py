@@ -7,6 +7,9 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # set doctype "other" for documents without document type
+        doctype = orm.DocumentType.objects.get(identifier='other')
+        orm.Document.objects.filter(doctype__isnull=True).update(doctype=doctype)
         
         # Deleting field 'Document.deleted'
         db.delete_column('documents_document', 'deleted')
