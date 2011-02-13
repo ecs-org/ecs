@@ -182,9 +182,8 @@ ecs.InvestigatorFormset = new Class({
         this.inline_formset = new ecs.InlineFormSet(this.container, {
             prefix: 'investigator',
             formSelector: '.investigator',
-            removeButtonInject: 'top',
             addButton: false,
-            removeButton: !this.options.readonly,
+            removeButton: false,
             removeButtonText: 'Dieses Zentrum Entfernen'
         });
 
@@ -198,17 +197,6 @@ ecs.InvestigatorFormset = new Class({
         }
         /*** read/write ***/
 
-        
-        // HACK
-        if(this.inline_formset.getFormCount() == 1){
-            this.inline_formset.forms[0].getElement('.delete_row').hide();
-        }
-        else{
-            this.inline_formset.forms.each(function(f){
-                f.getElement('.delete_row').show();
-            });
-        }
-
         this.employee_formset = new ecs.InlineFormSet($$('.'+this.options.investigatorEmployeeFormsetClass), {
             prefix: 'investigatoremployee',
             onFormAdded: (function(form, index, added){
@@ -220,22 +208,14 @@ ecs.InvestigatorFormset = new Class({
         this.inline_formset.addEvent('formAdded', (function(form, index){
             form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
             this.employee_formset.addContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
-            // HACK
-            if(this.inline_formset.getFormCount() > 1){
-                this.inline_formset.forms.each(function(f){
-                    f.getElement('.delete_row').show();
-                });
-            }
         }).bind(this));
 
         this.inline_formset.addEvent('formRemoved', (function(form, index){
             this.employee_formset.removeContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
-            // HACK
-            if(this.inline_formset.getFormCount() == 1){
-                this.inline_formset.forms[0].getElement('.delete_row').hide();
-            }
             this.generateJumpList();
-            this.show(this.inline_formset.getFormCount() - 1);
+
+            var form_count = this.inline_formset.getFormCount();
+            this.show(form_count-1 <= index ? form_count - 1 : index);
         }).bind(this));
 
         this.inline_formset.addEvent('formIndexChanged', (function(form, newIndex){
@@ -264,8 +244,25 @@ ecs.InvestigatorFormset = new Class({
             (i == index) ? f.show() : f.hide();
             i += 1;
         });
+
         var header = this.container.getElement('.'+this.options.investigatorHeaderClass);
-        header.innerHTML = this.options.investigatorTranslation + ' ' + (index + 1);
+        header.innerHTML = '';
+
+        var title = new Element('h3', {
+            html: this.options.investigatorTranslation + ' ' + (index + 1),
+        });
+        title.inject(header);
+
+        if (!this.options.readonly && this.inline_formset.getFormCount() > 1) {
+            var removeLink =  new Element('a', {
+                html: this.inline_formset.options.removeButtonText,
+                'class': this.inline_formset.options.removeButtonClass,
+                events: {
+                    click: this.inline_formset.remove.bind(this.inline_formset, index)
+                }
+            });
+            removeLink.inject(header);
+        }
     },
     add: function() {
         this.inline_formset.add.apply(this.inline_formset, [this.container]);

@@ -555,8 +555,13 @@ table.inline_formset td {
     height: 20px;
 }
 
+.form_main .investigator_header h3 {
+    display: inline-block !important;
+    margin-right: 15px;
+}
+
 .form_main .investigator_list a.add_centre,
-.form_main .investigator a.delete_row {
+.form_main .investigator_header a.delete_row {
   display: inline-block;
   overflow: visible;
   width: auto;
@@ -571,7 +576,7 @@ table.inline_formset td {
 .form_main .investigator_list a.add_centre {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
 }
-.form_main .investigator a.delete_row {
+.form_main .investigator_header a.delete_row {
   background: url(/static/images/icons.png) -240px -336px no-repeat;
 }
 

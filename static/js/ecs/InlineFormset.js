@@ -49,6 +49,15 @@ ecs.InlineFormSet = new Class({
             }
         });
     },
+    createRemoveButton: function(){
+        return new Element('a', {
+            html: this.options.removeButtonText,
+            'class': this.options.removeButtonClass,
+            events: {
+                click: this.onRemoveButtonClick.bind(this)
+            }
+        });
+    },
     addContainer: function(container){
         if(this.options.addButton){
             var addButton = this.createAddButton(container);
@@ -74,13 +83,7 @@ ecs.InlineFormSet = new Class({
     },
     setupForm: function(form, index, added){
         if(this.options.removeButton){
-            var removeLink = new Element('a', {
-                html: this.options.removeButtonText,
-                'class': this.options.removeButtonClass,
-                events: {
-                    click: this.onRemoveButtonClick.bind(this)
-                }
-            });
+            var removeLink = this.createRemoveButton();
             if(this.isTable){
                 form.getElement('td').grab(removeLink);
             }
