@@ -64,7 +64,7 @@
     <tr><th>Exedited Review:</th><td>{{ submission_form.submission.expedited|yesno }}</td></tr>
 </table>
 <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}">Export</a>
-{% if user|has_flag:'internal' %}
+{% if show_reviews and befangene_review_form %}
     | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
 {% endif %}
 
