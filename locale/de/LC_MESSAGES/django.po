@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-11 14:55+0100\n"
+"POT-Creation-Date: 2011-02-13 16:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,8 +164,8 @@ msgstr ""
 
 #: core/diff.py:267
 msgid ""
-"Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit "
-"und/oder Sicherheit nicht Gegenstand der Prüfung sind"
+"Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
+"Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
 #: core/diff.py:268
@@ -1321,7 +1321,7 @@ msgstr "MPG"
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: core/forms/layout.py:78 core/forms/layout.py:79
+#: core/forms/layout.py:78
 msgid "measures"
 msgstr "Maßnahmen"
 
@@ -2274,7 +2274,7 @@ msgstr "Teilen"
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:205
+#: templates/submissions/base_form.html:207
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -2308,25 +2308,34 @@ msgstr "Korrektur absenden"
 msgid "Resubmit"
 msgstr "Neu Einreichen"
 
-#: templates/submissions/form.html:67
+#: templates/submissions/form.html:42 templates/submissions/form.html.py:43
+#: templates/submissions/form.html:44
+msgid "Add new measure"
+msgstr "Neue Maßnahme hinzufügen"
+
+#: templates/submissions/form.html:45
+msgid "Add new foreign particiating centre"
+msgstr "Neues Zentrum im Ausland hinzufügen"
+
+#: templates/submissions/form.html:71
 #, fuzzy
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:67
+#: templates/submissions/form.html:71
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:72
+#: templates/submissions/form.html:76
 msgid ""
 "You cannot submit study if there are unready documents. If you want to "
 "submit the study regardless of the unready documents, delete them."
 msgstr ""
 
-#: templates/submissions/form.html:75
+#: templates/submissions/form.html:79
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."

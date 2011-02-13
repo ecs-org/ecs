@@ -34,19 +34,19 @@
                     {% ifequal tab "Maßnahmen" %}
                         {# FIXME (FMD2) #}
                         <div class="field">
-                            <h3>Studienbezogen durchzuführende Therapie und Diagnostik</h3>
+                            <h3>Studienbezogen durchzuführende Therapie und Diagnostik <span class="paperform_number">6.1</span></h3>
                             {% with measure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
                         </div>
                         <div class="field">
-                            <h3>Routinemäßig durchzuführende Therapie und Diagnostik</h3>
+                            <h3>Routinemäßig durchzuführende Therapie und Diagnostik <span class="paperform_number">6.2</span></h3>
                             {% with routinemeasure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
                         </div>
                         <div class="field">
-                            <h3>Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind</h3>
+                            <h3>Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind <span class="paperform_number">3b</span></h3>
                             {% with nontesteduseddrug_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}

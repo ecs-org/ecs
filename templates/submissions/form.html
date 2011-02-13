@@ -39,14 +39,18 @@
     <script type="text/javascript"> 
         window.addEvent('domready', function(){
             var formsets = [
-                '{{ measure_formset.prefix }}', 
-                '{{ routinemeasure_formset.prefix }}', 
-                '{{ nontesteduseddrug_formset.prefix }}', 
-                '{{ foreignparticipatingcenter_formset.prefix }}', 
-            ].map(function(prefix){
+                ['{{ measure_formset.prefix }}', '{% trans "Add new measure" %}'],
+                ['{{ routinemeasure_formset.prefix }}', '{% trans "Add new measure" %}'],
+                ['{{ nontesteduseddrug_formset.prefix }}', '{% trans "Add new measure" %}'],
+                ['{{ foreignparticipatingcenter_formset.prefix }}', '{% trans "Add new foreign particiating centre" %}']
+            ].map(function(el){
+                var prefix = el[0];
+                var addButtonText = el[1];
                 console.log(prefix);
+                console.log(addButtonText);
                 return new ecs.InlineFormSet($(prefix + '_formset'), {
-                    prefix: prefix
+                    prefix: prefix,
+                    addButtonText: addButtonText
                 });
             });
             

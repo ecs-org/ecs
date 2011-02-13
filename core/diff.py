@@ -264,7 +264,7 @@ _differs = {
             ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
             ('investigators', _(u'Zentren')),
             ('measures', _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
-            ('nontesteduseddrug_set', _(u'Sonstige im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
+            ('nontesteduseddrug_set', _(u'Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
             ('documents', _(u'Dokumente')),
         ]),
     ),

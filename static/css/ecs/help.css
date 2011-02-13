@@ -99,6 +99,12 @@
 #help_content th {
 	width: 80px;
 }
+#help_content dt {
+    font-weight: bold;
+}
+#help_content dd {
+    margin-left: 10px;
+}
 
 #help_iframe {
   width: 100%;

@@ -76,7 +76,7 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     (_(u'measures'), [
-        (_(u'measures'), ['additional_therapy_info',]),
+        (u'', ['additional_therapy_info',]),
     ]),
     (_(u'biometrics'), [
         (_(u'biometrics'), [

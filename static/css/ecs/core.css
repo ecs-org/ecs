@@ -356,6 +356,9 @@ li.TypedChoiceField ul > li label{
 .form_main #tabs {
   clear: both;
 }
+.form_main .field {
+  margin-bottom: 30px;
+}
 .form_main .field h2, .form_main .tab h2, .form_main .field h3, .form_main .tab h3 {
   letter-spacing: 1px;
   line-break: normal;
@@ -485,12 +488,13 @@ div.inline_formset .form a.delete_row {
 }
 .form_main a.add_row, #meeting_constraint_editor a.add_row {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
-  width: 20px;
+  width: auto;
   height: 16px;
-  display: inline-block;
-  overflow: hidden;
+  /*display: inline-block;*/
+  overflow: visible;
   cursor: pointer;
   text-indent: -9999px;
+  padding-left: 20px;
 }
 table.inline_formset td {
   vertical-align: top;
@@ -619,14 +623,17 @@ fieldset.disabled {
 .form_main ol li .rte_display blockquote{
   margin-left: 30px;
 }
-.form_main ol li .paperform_number {
+.form_main ol li .paperform_number,
+.form_main h3 .paperform_number {
   color: #666666;
   font-size: 10px;
 }
-.form_main ol li .paperform_number:before {
+.form_main ol li .paperform_number:before,
+.form_main h3 .paperform_number:before {
   content: "[";
 }
-.form_main ol li .paperform_number:after {
+.form_main ol li .paperform_number:after,
+.form_main h3 .paperform_number:after {
   content: "]";
 }
 
