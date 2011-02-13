@@ -113,7 +113,7 @@ class Document(models.Model):
 
     # user supplied data
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
-    doctype = models.ForeignKey(DocumentType, null=True, blank=True)
+    doctype = models.ForeignKey(DocumentType)
     name = models.CharField(max_length=250)
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
