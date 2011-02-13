@@ -8,14 +8,18 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # set doctype "other" for documents without document type
+        db.start_transaction()
         doctype = orm.DocumentType.objects.get(identifier='other')
         orm.Document.objects.filter(doctype__isnull=True).update(doctype=doctype)
-        
+        db.commit_transaction()
+
+        db.start_transaction()
         # Deleting field 'Document.deleted'
         db.delete_column('documents_document', 'deleted')
 
         # Changing field 'Document.doctype'
         db.alter_column('documents_document', 'doctype_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['documents.DocumentType']))
+        db.commit_transaction()
 
 
     def backwards(self, orm):
