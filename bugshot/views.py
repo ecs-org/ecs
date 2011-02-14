@@ -14,12 +14,14 @@ def shoot(request):
             priority = request.POST.get('priority', '')
         except xmlrpclib.Fault:
             pass
-    
+
+    bugshot_reporter = request.original_user.__unicode__() if hasattr(request, "original_user") else request.user.username.__unicode__()    
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
         "owner": request.POST.get('owner', ''),
         "priority": priority,
         "milestone": settings.BUGSHOT_CONFIG['milestone'], 
+        "bugshot_reporter": bugshot_reporter,
         "absoluteurl": request.POST.get('url', ''),
     }, True)
 
