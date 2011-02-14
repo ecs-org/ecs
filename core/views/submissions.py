@@ -16,7 +16,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
 from ecs.utils.decorators import developer
 from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
@@ -417,7 +417,8 @@ def submission_pdf(request, submission_form_pk=None):
             'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
         })
         if not submission_form.pdf_document:
-            doc = Document.objects.create_from_buffer(pdf)
+            doctype = DocumentType.objects.get(identifier='other')
+            doc = Document.objects.create_from_buffer(pdf, doctype=doctype)
             submission_form.pdf_document = doc
             submission_form.save()
     else:

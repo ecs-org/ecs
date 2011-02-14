@@ -15,6 +15,7 @@ class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):    
         core_bootstrap.templates()
+        documents_bootstrap.document_types()
         mediaserver_bootstrap.import_decryption_key()
         documents_bootstrap.import_encryption_key()
         

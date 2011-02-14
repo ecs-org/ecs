@@ -24,8 +24,9 @@ def document_types():
         (_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
     )
     for name, identifier, helptext in names:
-        d, created = DocumentType.objects.get_or_create(name=name, identifier=identifier)
-        d.helptext= helptext
+        d, created = DocumentType.objects.get_or_create(identifier=identifier)
+        d.name = name
+        d.helptext = helptext
         d.save()
 
 @bootstrap.register()

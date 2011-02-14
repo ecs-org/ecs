@@ -11,6 +11,7 @@ from ecs.core.models import MedicalCategory
 from ecs.core import bootstrap
 from ecs.core.models import SubmissionForm
 from ecs.core.models import EthicsCommission
+from ecs.documents.models import DocumentType
 
 VALID_SUBMISSION_FORM_DATA = {
     u'investigator-0-ethics_commission': [u'1'], u'study_plan_abort_crit': [u'Peto'], u'submitter_contact_title': [u'Univ. Doz. Dr.'], 
@@ -90,6 +91,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         
     def get_post_data(self, update=None):
         data = VALID_SUBMISSION_FORM_DATA.copy()
+        data['document-doctype'] = str(DocumentType.objects.get(identifier='other').pk)
         if update:
             data.update(update)
         return data
@@ -110,7 +112,6 @@ class SubmissionViewsTestCase(LoginTestCase):
         with open(file_path, 'rb') as f:
             response = self.client.post(url, self.get_post_data({
                 'document-file': f,
-                'document-doctype': '',
                 'document-name': u'Menschenrechtserklärung',
                 'document-version': '3.1415',
                 'document-date': '26.10.2010',
@@ -123,7 +124,6 @@ class SubmissionViewsTestCase(LoginTestCase):
         with open(file_path, 'rb') as f:
             response = self.client.post(url, self.get_post_data({
                 'document-file': f,
-                'document-doctype': '',
                 'document-name': u'Menschenrechtserklärung',
                 'document-version': '3',
                 'document-date': '26.10.2010',

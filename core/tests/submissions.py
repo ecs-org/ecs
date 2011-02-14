@@ -165,7 +165,7 @@ def create_submission_form(ec_number=None, presenter=None):
     sform.substance_registered_in_countries = []
     sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
     sform.save()
-    doctype, created = DocumentType.objects.get_or_create(identifier='other', defaults={'name': 'other'})
+    doctype = DocumentType.objects.get(identifier='other')
     doc = Document.objects.create_from_buffer("foobar", mimetype="text/plain", parent_object=sform, doctype=doctype)
     sform.documents.add(doc)
     ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
