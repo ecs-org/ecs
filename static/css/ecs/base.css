@@ -33,8 +33,6 @@ body {
   float: left;
   width: 90%;
   display: block;
-  margin-bottom: 5px;
-  padding: 5px;
 }
 #headernav {
   position: relative;
@@ -46,7 +44,7 @@ body {
 }
 #content {
   position: absolute;
-  top: 65px;
+  top: 37px;
   right: 220px;
   bottom: 0px;
   left: 0px;
@@ -185,12 +183,16 @@ input[type=submit], .cancel a {
   color: #333;
   background: #D8E6EF;
 }
-#headertitle h1 {
-  font-size: 12pt;
-  margin-bottom: 5px;
+#header h1 {
+  font-size: 14px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bolder;
   letter-spacing: 1px;
+}
+#headertitle_submission {
+  display: block;
+  width: 90%;
+  margin-bottom: 10px;
 }
 
 /* sidebar */
