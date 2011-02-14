@@ -20,9 +20,9 @@
             <input type="checkbox" name="pay_{{ submission.pk }}" checked="checked" /> {{ submission.external_reviewer_name }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
             <div><span class="price">{{ price.price|euro }}</span> ({{ price.text }})</div>
           </li>
+          <li><input type="submit"></li>
         </ol>
     {% endfor %}
-    <input type="submit">
     </form>
 {% endblock %}
 
