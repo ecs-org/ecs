@@ -1,3 +1,47 @@
+#help_top {
+  display: block;
+  height: 40px;
+  background: #d8e6ef;
+  border-bottom: 1px solid #B5CFDF;
+}
+#help_logo {
+  float: left;
+  display: block;
+  width: 60px;
+  height: 20px;
+  background: #fff;
+  padding: 10px;
+  border-right: 1px solid #B5CFDF;
+}
+#help_button {
+  float: left;
+  margin: 3px 0 0 5px;
+}
+#help_title {
+  float: left;
+  height: 20px;
+  margin: 12px 0 0 5px;
+  font-size: 14px;
+  font-weight: bolder;
+}
+#help_search {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 200px;
+  background: #fff;
+  height: 30px;
+  padding: 10px 10px 0;
+  border-left: 1px solid #B5CFDF;
+}
+#help_search input[type=text] {
+  display: inline-block;
+}
+#help_search input[type=submit] {
+  display: inline-block;
+  margin-left: 10px;
+}
 #help_body {
   padding: 10px;
   font-size: 14px;
@@ -7,10 +51,25 @@
   display: block;
   font-size: 22px;
   letter-spacing: 1px;  
-	padding: 10px 20px;
   font-weight: lighter;
-	background: #d8e6ef;
-  border-bottom: 1px solid #B5CFDF;
+}
+.help_overview a {
+  position: absolute;
+  top: 8px;
+  right: 250px;
+  display: block;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background-color: #E2EAF0;
+  border: 1px solid #B7D4E5;
+  padding: 3px 7px;
+  font-size: 14px;
+}
+.help_overview a:hover {
+  text-decoration: none;
+  background: #2B558E;
+  color: #fff;
 }
 #help_content h2,
 #help_preview h2 {
@@ -28,11 +87,18 @@
   font-weight: lighter;
 }
 #help_nav {
-	display: block;
-	padding: 10px 20px;
+	padding: 5px 20px;
+  height: 15px;
 	background: #eee;
 	font-size: 14px;
 	border-bottom: 1px solid #ddd;
+}
+.nav_left {
+  float: left;
+}
+.nav_right {
+  display: block;
+  float: right;
 }
 #help_content {
 	margin: 10px;
@@ -74,6 +140,9 @@
 #help_content .dir, #help_content .title, #help_content .options {
 	margin-bottom: 10px;
 }
+#help_content .dir input, #help_content .dir select {
+  margin-bottom: 10px;
+}
 #help_content .title input {
   width: 100%;
   font-size: 20px;
@@ -92,9 +161,10 @@
 }
 #help_content table {
 	padding: 5px;
-  background: #f6f6e9;
+  background: #eee;
 	text-align: left;
 	width: 100%;
+  border: 1px solid #ddd;
 }
 #help_content th {
 	width: 80px;
@@ -114,9 +184,14 @@
 
 #help_attachments {
   width: 240px;
+  height: 100%;
   position: absolute;
   right: 0px;
-  top: 100px;
+  top: 80px;
+  padding: 10px;
+  background: #eee;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
 }
 
 #help_attachments > .list > div {

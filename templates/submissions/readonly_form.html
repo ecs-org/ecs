@@ -3,7 +3,7 @@
 
 
 {% block headertitle %}
-  <h1 id="headertitle_submission">{{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}</h1>
+  {{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
 {% endblock %}
 
 
