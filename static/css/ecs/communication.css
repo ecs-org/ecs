@@ -56,10 +56,14 @@
   vertical-align: top;
 }
 .message_display .actions {
-  width: 30px;
+  width: 20px;
+  height: 70px;
   position: absolute;
-  top: 10px;
   right: 0px;
+  top: 0;
+  padding: 10px;
+  border-left: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 .message_display pre {
   margin: 10px 0;

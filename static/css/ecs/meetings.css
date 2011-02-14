@@ -285,6 +285,7 @@
 }
 #meeting_assistant #meeting_assistant_body {
   float: left;
+  width: 70%;
   padding: 5px;
   background: #fff;
   border: 1px solid #ddd;
@@ -312,6 +313,7 @@
 #meeting_assistant .buttons ul {
   float: left;
   width: 100%;
+  margin-left: 10px;
 }
 #meeting_assistant .buttons ul li {
   list-style: none;
