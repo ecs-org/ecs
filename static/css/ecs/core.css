@@ -29,6 +29,7 @@
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
+  text-shadow: 0 1px 2px #fff;
 }
 .tab_headers li a, #headernav li.readonly_review a {
   text-decoration: none;
@@ -40,6 +41,7 @@
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  text-shadow: 0 0 0 #fff;
 }
 .tab_header_groups li a.active {
   background: #b7d4e5;
@@ -54,6 +56,7 @@
   background: #fb6464;
   color: #fff !important;
   border: 1px solid #ff0000;
+  text-shadow: 0 1px 2px #FB6464;
 }
 .tab_header_groups a.active.errors, .tab_headers .active.errors a {
   color: #fff;
@@ -86,7 +89,7 @@
   top: 0;
   padding: 5px;
   display: block;
-  width: 80px;
+  width: 90px;
   text-align: center;
   border-radius: 5px;
   -moz-border-radius: 5px;
@@ -158,10 +161,12 @@
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   -moz-border-radius: 5px 5px 0 0;
+  text-shadow: 0 1px 2px #333;
 }
 .readonly .tab_header_groups li a.active {
   background: #C7C5BB;
   color: #333;
+  text-shadow: 0 1px 2px #fff;
 }
 .readonly .tab_headers {
   position: absolute;
@@ -183,6 +188,7 @@
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  text-shadow: 0 0 0 #fff;
 }
 .readonly .tab_headers li.active a {
   border: 1px solid #bbb;

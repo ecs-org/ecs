@@ -6,9 +6,9 @@
     {{ form.errors }}
     <form action="" method="post" id="helpform">
         <div class="dir">
+            Slug: {{ form.slug }}
             View: {{ form.view }}
             Anchor: {{ form.anchor }}
-            Slug: {{ form.slug }}
         </div>
         <div class="title">{{ form.title }}</div>
         <div class="text">
@@ -23,7 +23,7 @@
         <input type="submit" value="Speichern" />
     </form>
     <div id="help_attachments">
-        <input type="text" id="help_attachments_filter_input"/>
+        <label>Filter <input type="text" id="help_attachments_filter_input"/></label>
         <div class="list"></div>
     </div>
 {% endblock %}

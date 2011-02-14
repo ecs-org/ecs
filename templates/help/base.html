@@ -10,23 +10,45 @@
 
 {% block htmlbody %}
 <div id="help">
-	 <h1>ECS Onlinehilfe</h1>
+  <div id="help_top">
+    <div id="help_logo">
+      <a href="{% url ecs.help.views.index %}"><img src="{{ MEDIA_URL }}/images/logo_small.png" alt="EC-Meduni Wien Hilfe"/></a>
+    </div>
+    <span href="" id="help_button" class="help_trigger icon_help">help</span>
+    <div id="help_title">
+      {{ page.title }}
+    </div>
+    <span class="help_overview"><a href="{% url ecs.help.views.index %}">Inhaltsverzeichnis</a></span>
+    <div id="help_search">
+      <div class="searchbox">
+      <form method="get" action="">
+      {{ form.q }}
+      <input type="submit" value="" title="suchen">
+      </form>
+      </div>
+    </div>
+  </div>
+    {% if user|has_flag:'help_writer' %}
       {% block actions %}
           <div id="help_nav">
-          <a href="{% url ecs.help.views.index %}">Übersicht</a>
-          {% if user|has_flag:'help_writer' %}
-              | <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
+            <div class="nav_left">
+              
+              <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
+            </div>
+            <div class="nav_right">
+              <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
               | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
-          {% endif %}
-          | <a href="{% url ecs.help.views.search %}">Suche</a>
-					</div>
+            </div>
+          </div>
       {% endblock %}
-	 <div id="help_body">
-	    <div id="help_content">
-	        {% block content %}
-	
-	        {% endblock %}
-	    </div>
-	</div>
+    {% endif %}
+
+   <div id="help_body">
+      <div id="help_content">
+          {% block content %}
+
+          {% endblock %}
+      </div>
+  </div>
 </div>
 {% endblock %}
