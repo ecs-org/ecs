@@ -6,17 +6,15 @@
 <div id="container">
 
 	  <div id="header">
-        {% block header %}
-            <div id="headertitle">
-                <h1>{% block headertitle %}{% endblock %}</h1>
-            </div>
-            <div id="headernav">
-                {% block headernav %}
-                {% endblock %}
-            </div>
-                {% block header_actions %}
-                {% endblock %}
-        {% endblock %}
+      {% block header %}
+        <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
+        <div id="headernav">
+          {% block headernav %}
+          {% endblock %}
+        </div>
+          {% block header_actions %}
+          {% endblock %}
+      {% endblock %}
 	  </div>
 
     <div id="content">

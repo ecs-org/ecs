@@ -45,7 +45,7 @@
   position: relative;
 }
 .dashboard_widget .messages > li {
-  height: 45px;
+  height: auto;
   padding: 5px 30px;
   overflow: hidden;
 }

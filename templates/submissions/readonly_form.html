@@ -1,9 +1,11 @@
 {% extends "submissions/base_form.html" %}
 {% load core i18n userutils %} 
 
+
 {% block headertitle %}
-  {{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<i>Ohne Titel</i>' }}
+  <h1 id="headertitle_submission">{{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}</h1>
 {% endblock %}
+
 
 {% block header_actions %}
     {{ block.super }}

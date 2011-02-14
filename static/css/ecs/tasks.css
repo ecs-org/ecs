@@ -110,6 +110,7 @@
 .task_list_choose li {
   display: inline;
   list-style: none;
+  line-height: 18px;
 }
 .task_item {
   background-color: #EFEFD1;
