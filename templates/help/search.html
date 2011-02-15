@@ -2,10 +2,15 @@
 {% load highlight %}
 
 {% block content %}
-<form method="get" action="">
-    {{ form.q }}
-    <input type="submit" value="Suchen">
-</form>
+<h2>Suche</h2>
+  <div id="help_search">
+    <div class="searchbox">
+      <form method="get" action="">
+          {{ form.q }}
+          <input type="submit" value="Suchen">
+      </form>
+    </div>
+  </div>
 {% if query %}
     {% if page.object_list %}
         <ul class="results">

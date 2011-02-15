@@ -301,6 +301,7 @@
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
+  text-indent: -9999px;
 }
 #userswitcher_form select {
   width: 190px;

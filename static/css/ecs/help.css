@@ -24,22 +24,24 @@
   font-weight: bolder;
 }
 #help_search {
-  position: absolute;
-  top: 0;
-  right: 0;
+  float: left;
+  clear: both;
+  width: 100%;
+}
+#help_search .searchbox form {
   display: block;
-  width: 200px;
+  width: 290px;
   background: #fff;
   height: 30px;
-  padding: 10px 10px 0;
-  border-left: 1px solid #B5CFDF;
+  padding: 10px 10px 0 0;
 }
 #help_search input[type=text] {
   display: inline-block;
+  width: 250px;
 }
 #help_search input[type=submit] {
   display: inline-block;
-  margin-left: 10px;
+  text-indent: -9999px;
 }
 #help_body {
   padding: 10px;
@@ -55,7 +57,7 @@
 .help_overview a {
   position: absolute;
   top: 8px;
-  right: 250px;
+  right: 100px;
   display: block;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -65,10 +67,23 @@
   padding: 3px 7px;
   font-size: 14px;
 }
-.help_overview a:hover {
+.help_overview a:hover, .help_search a:hover {
   text-decoration: none;
   background: #2B558E;
   color: #fff;
+}
+.help_search a {
+  position: absolute;
+  top: 8px;
+  right: 30px;
+  display: block;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background-color: #E2EAF0;
+  border: 1px solid #B7D4E5;
+  padding: 3px 7px;
+  font-size: 14px;
 }
 #help_content h2,
 #help_preview h2 {
