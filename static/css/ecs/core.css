@@ -255,6 +255,13 @@
 .icon_workflow {
   background: url(/static/images/icons.png) -320px -64px no-repeat;
 }
+.icon_diff {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  padding-right: 5px;
+  background: url(/static/images/icons.png) -80px -240px no-repeat;
+}
 .user_icon {
   background: url(/static/images/icons.png) -320px 0 no-repeat;
 }

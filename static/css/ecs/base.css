@@ -168,6 +168,7 @@ input[type=submit], .cancel a {
 }
 input[type=submit]:active, .cancel a:active {
   background: #eee;
+  color: #333;
 }
 #content .cancel a {
   color: #fff;

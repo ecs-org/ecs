@@ -4,10 +4,12 @@ ul.diff {
   list-style: none;
 }
 .diff .deleted {
-  color: #ff0000;
+  display: block;
+  color: #d50000;
 }
 .diff .inserted {
-  color: #00ff00;
+  display: block;
+  color: #00a400;
 }
 .diff .indent {
   margin-left: 20px;
@@ -21,23 +23,48 @@ ul.diff li {
   margin: 10px;
 }
 .diff_toggles {
-  margin: 15px;
+  margin-bottom: 10px;
+}
+.diff_toggles a {
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background: #E2EAF0;
+  border: 1px solid #B7D4E5;
+  display: inline-block;
+  line-height: 20px;
+  margin: 2px;
+  padding: 0 8px;
+}
+.diff_toggles a:hover {
+  background-color: #2B558E;
+  color: #fff !important;
+  text-decoration: none !important;
+}
+.diff .field {
+  display: block;
+  margin-bottom: 5px;
+}
+.diff .item {
+  margin: 5px 10px 0;
+  padding: 5px;
+  background: #fff;
+  border: 1px dotted #cccccc;
+}
+.diff .atomic {
+  display: block;
+  margin: 5px 10px 0;
+}
+.diff .item .title {
+  display: inline-block;
+  font-size: 16px;
+  padding-bottom: 5px;
 }
 
-.diff .item{
-    margin-left: 2em;
-    margin-bottom: 1em;
-    border: 1px dotted #cccccc;
+.diff .item .item .title {
+  font-size: 14px;
 }
 
-.diff .item .title{
-    font-size: 180%;
-}
-
-.diff .item .item .title{
-    font-size: 140%;
-}
-
-.diff .atomic > div{
-    display: inline;
+.diff .atomic > div {
+  display: inline;
 }

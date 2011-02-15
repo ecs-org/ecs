@@ -16,15 +16,15 @@
                 <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                 <td>
                     {% if sf.previous_form %}
-                        <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">aktuelle Änderungen</a>
                     {% endif %}
                     {% if sf != submission_form %}
-                        | <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur neuesten Version</a>
                     {% endif %}
                     {% if sf.is_notification_update %}
                         {% with sf.new_for_notification.all.0 as notif %}
                             {% if notif %}
-                            | <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                            <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
                             {% endif %}
                         {% endwith %}
                     {% endif %}
