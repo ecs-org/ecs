@@ -10,26 +10,26 @@
                 <th></th>
             </tr>
             {% for sf in submission_forms %}
-                <tr>
-                    <td>{{ forloop.revcounter }}</td>
-                    <td>{{ sf.presenter }}</td>
-                    <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
-                    <td>
-                        {% if sf.previous_form %}
-                            <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
-                        {% endif %}
-                        {% if sf != submission_form %}
-                            | <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
-                        {% endif %}
-                        {% if sf.is_notification_update %}
-                            {% with sf.new_for_notification.all.0 as notif %}
-                                {% if notif %}
-                                | <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
-                                {% endif %}
-                            {% endwith %}
-                        {% endif %}
-                    </td>
-                </tr>
+            <tr class="version">
+                <td>{{ forloop.revcounter }}</td>
+                <td>{{ sf.presenter }}</td>
+                <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
+                <td>
+                    {% if sf.previous_form %}
+                        <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Änderungen dieser Version</a>
+                    {% endif %}
+                    {% if sf != submission_form %}
+                        | <a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur aktuellen Version</a>
+                    {% endif %}
+                    {% if sf.is_notification_update %}
+                        {% with sf.new_for_notification.all.0 as notif %}
+                            {% if notif %}
+                            | <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </td>
+            </tr>
             {% endfor %}
         </table>
     </td></tr>

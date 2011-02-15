@@ -13,8 +13,7 @@
   padding: 10px;
   border-right: 1px solid #B5CFDF;
 }
-#help_button {
-  float: left;
+.help_button {
   margin: 3px 0 0 5px;
 }
 #help_title {
@@ -183,7 +182,7 @@
 }
 
 #help_attachments {
-  width: 240px;
+  width: 250px;
   height: 100%;
   position: absolute;
   right: 0px;

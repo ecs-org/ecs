@@ -166,6 +166,9 @@ input[type=submit], .cancel a {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+input[type=submit]:active, .cancel a:active {
+  background: #eee;
+}
 #content .cancel a {
   color: #fff;
   font-size: 12px;

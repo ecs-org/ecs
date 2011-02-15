@@ -14,7 +14,7 @@
     <div id="help_logo">
       <a href="{% url ecs.help.views.index %}"><img src="{{ MEDIA_URL }}/images/logo_small.png" alt="EC-Meduni Wien Hilfe"/></a>
     </div>
-    <span href="" id="help_button" class="help_trigger icon_help">help</span>
+    <span href="" class="help_button icon_help">help</span>
     <div id="help_title">
       {{ page.title }}
     </div>
@@ -28,20 +28,32 @@
       </div>
     </div>
   </div>
-    {% if user|has_flag:'help_writer' %}
       {% block actions %}
+        {% if user|has_flag:'help_writer' %}
           <div id="help_nav">
             <div class="nav_left">
               
-              <span class="location">{{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}</span>
+              <span class="help_edit">
+                <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+              </span>
+              <span class="location">
+                {{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}
+              </span>
+              <span class="help_diff">
+                <a href="{% url ecs.help.views.difference_help_pages page_pk=page.pk %}">Version: {{ versions }} ({% trans "last edited" %} {% endif %} {{ current.revision.date_created|timesince }} {% trans "ago by" %} {{ current.revision.user }}) {% endif %} </a>
+              </span>
+              <span class="location">
+                {{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}
+              </span>
+              
             </div>
             <div class="nav_right">
               <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
               | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
             </div>
           </div>
-      {% endblock %}
-    {% endif %}
+        {% endif %}
+      {% endblock actions %}
 
    <div id="help_body">
       <div id="help_content">

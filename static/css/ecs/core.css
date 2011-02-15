@@ -13,7 +13,7 @@
   left: 0;
   line-height: 30px;
   background: #B7D4E5;
-  width: 86%;
+  width: 84%;
   padding: 2px 5px;
   border-radius: 0 5px 5px 5px;
   -moz-border-radius: 0 5px 5px 5px;
@@ -89,7 +89,7 @@
   top: 0;
   padding: 5px;
   display: block;
-  width: 90px;
+  width: 100px;
   text-align: center;
   border-radius: 5px;
   -moz-border-radius: 5px;
@@ -677,6 +677,9 @@ fieldset.disabled {
 }
 .form_main .textboxlist-autocomplete {
   margin: -20px  0 0 240px;
+}
+#content .form_main tr.version:nth-of-type(2) td {
+  background: #f4f4f4;
 }
 .textboxlist-autocomplete ul {
   margin: 0 !important;
