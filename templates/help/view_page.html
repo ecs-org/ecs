@@ -18,3 +18,20 @@
     </ul>
     {% endif %}
 {% endblock %}
+
+{% block nav_left %}
+    {% if user|has_flag:"help_writer" %}
+        <span class="help_edit">
+            <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a>
+        </span>
+        <span class="location">
+            {{ page.view.path }}{% if page.anchor %} #{{ page.anchor }}{% endif %}
+        </span>
+        <span class="help_diff">
+            <a href="{% url ecs.help.views.difference_help_pages page_pk=page.pk %}">Version: {{ versions }} ({% trans "last edited" %} {{ current.revision.date_created|timesince }} {% trans "ago by" %} {{ current.revision.user }})</a>
+        </span>
+    {% endif %}
+{% endblock %}
+      
+      
+
