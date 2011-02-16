@@ -127,7 +127,7 @@ def list(request):
 def popup(request):
     return my_tasks(request, template='tasks/popup.html')
     
-def manage_task(request, task_pk=None):
+def manage_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task, pk=task_pk)
     form = ManageTaskForm(request.POST or None, task=task)
     if request.method == 'POST' and form.is_valid():
@@ -154,25 +154,34 @@ def manage_task(request, task_pk=None):
                 sender=request.user,
                 receiver=to,
             )
-        return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
+        if full:
+            return HttpResponseRedirect(reverse('ecs.tasks.views.list'))
+        else:
+            return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
     return render(request, 'tasks/manage_task.html', {
         'form': form,
         'task': task,
     })
     
 
-def accept_task(request, task_pk=None):
+def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
     task_accepted.send(type(task.node_controller), task=task)
-    return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+    if full:
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.list'))
+    else:
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
 
-def decline_task(request, task_pk=None):
+def decline_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
     task_declined.send(type(task.node_controller), task=task)
-    return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+    if full:
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks', kwargs={'template': 'tasks/list.html'}))
+    else:
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
 
 def reopen_task(request, task_pk=None):
