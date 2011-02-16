@@ -54,7 +54,7 @@
                   {% if submission or task %}
                       <div class="input">
                       {% if submission %}
-                          <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.submitter }}) <br/>
+                          <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.current_submission_form.submitter }}) <br/>
                       {% endif %}
 
                       {% if task %}

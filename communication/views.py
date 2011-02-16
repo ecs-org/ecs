@@ -6,7 +6,7 @@ import os
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -95,13 +95,19 @@ def delegate_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     form = ThreadDelegationForm(request.POST or None)
     if form.is_valid():
-        message = thread.add_message(request.user, text=form.cleaned_data['text'])
         thread.delegate(request.user, form.cleaned_data['to'])
 
-        return render(request, 'communication/delegate_thread_response.html', {
-            'to': form.cleaned_data['to'],
-            'thread': thread,
-        })
+        new_thread = Thread.objects.create(
+            subject=_(u'Abgeben von: {0}').format(thread.subject),
+            sender=request.user,
+            receiver=form.cleaned_data['to'],
+            task=thread.task,
+            submission=thread.submission,
+        )
+        message = new_thread.add_message(request.user, text=form.cleaned_data['text'])
+
+        return HttpResponseRedirect(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': new_thread.pk}))
+
     return render(request, 'communication/delegate_thread.html', {
         'thread': thread,
         'form': form,

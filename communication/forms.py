@@ -13,7 +13,7 @@ class SendMessageForm(forms.ModelForm):
     
     class Meta:
         model = Message
-        fields = ( 'text','receiver')
+        fields = ('text','receiver',)
         
 class ReplyToMessageForm(forms.ModelForm):
     class Meta:
