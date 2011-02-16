@@ -129,7 +129,7 @@ class Thread(models.Model):
             receiver = self.receiver
             origin = MESSAGE_ORIGIN_ALICE
         else:
-            raise ValueError("Messages for this thread must only be sent from %s or %s." % (self.sender, self.receiver))
+            raise ValueError("Messages for this thread must only be sent from %s or %s. Sender is %s" % (self.sender.email, self.receiver.email, user.email))
         
         # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
         smtp_delivery_state = "received" if is_received else "new"

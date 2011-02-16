@@ -3,6 +3,8 @@
 import logging
 import re
 import hashlib
+import traceback
+import os
 
 from socket import gethostbyname
 
@@ -15,6 +17,7 @@ from django.contrib.auth.models import User
 
 from ecs.communication.models import Message
 from ecs.ecsmail.persil import whitewash
+from ecs.ecsmail.mail import deliver_to_recipient
 
 @route(".+")
 def SOFT_BOUNCE(message):
@@ -25,7 +28,7 @@ def SOFT_BOUNCE(message):
     # notify users about soft bounces only once
     if prevBounce is None:
         ecsmsg, ecshash = __findInitiatingMessage(message)
-        body = __prepareBody(message)
+        body, attachment_count = __prepareBody(message)
         bouncemsg = ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg)
         bouncemsg.soft_bounced = True;
         bouncemsg.save()
@@ -39,17 +42,17 @@ def HARD_BOUNCE(message):
     # __logRawMessage(message, ecshash)
     
     if ecsmsg:
-        body = __prepareBody(message)
+        body, attachment_count = __prepareBody(message)
         ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg)
     return START
 
 def __findInitiatingMessage(message):
-    ecshash = __parseEcsHash(message.To)
+    ecshash = __parseEcsHash(message.To[0])
 
     if ecshash:
         try:
             ecsmsg = Message.objects.get(uuid=ecshash)
-        except:
+        except Message.DoesNotExist:
             ecsmsg = None
         
         if ecsmsg is None:
@@ -74,7 +77,7 @@ def __findPreviousBounce(message):
     return previousBounce, ecshash
 
 def __parseEcsHash(address): 
-    mat = re.match('ecs-([^@]+)', address)
+    mat = re.match(r'ecs-([^@]+)', address)
     if mat is not None:
         groups = mat.groups()
         if groups is not None:
@@ -84,6 +87,7 @@ def __parseEcsHash(address):
         return None
 
 def __prepareBody(message):
+    attachment_count = 0
     if not message.base.parts:
         body = message.body()
     else:
@@ -91,12 +95,17 @@ def __prepareBody(message):
         for part in message.walk():
             if (not body) and ('text/plain' in part.content_encoding['Content-Type']):
                 body = part.body
-            elif (not body) and ('html' in part.content_encoding['Content-Type']):
+            elif (not body) and ('text/html' in part.content_encoding['Content-Type']):
                 body = whitewash(part.body)
+            else:
+                attachment_count += 1
         if not body:
             body = message.body()
-            
-    return body
+
+    if attachment_count > 0:
+        logging.info('Stripped {0} attachments from mail'.format(attachment_count))
+
+    return (body, attachment_count)
 
 def __stripLongestQuotation(body):
     lines = body.splitlines()
@@ -131,19 +140,39 @@ def START(message, address=None, host=None):
     from ecs.ecsmail.mailconf import relay
     __checkConstraints(message)
 
-    if host == settings.ECSMAIL ['authoritative_domain']: # we acccept mail for this address
+    if host == settings.ECSMAIL['authoritative_domain']: # we acccept mail for this address
         ecsmsg,ecshash = __findInitiatingMessage(message)
 
         logging.info('REPLY %s %s %s %s %s' % ( ecshash, ecsmsg, address, host, type(message)))
 
-        body = __prepareBody(message)
+        body, attachment_count = __prepareBody(message)
         rawmsg = message.to_message().as_string()
-                
-        ecsmsg.thread.add_message(user=ecsmsg.receiver, text=unicode(body), reply_to=ecsmsg, 
-            rawmsg_msgid= message ['Message-ID'], rawmsg=rawmsg, 
+
+        ecsmsg.thread.add_message(ecsmsg.receiver, unicode(body), reply_to=ecsmsg, 
+            rawmsg_msgid= message['Message-ID'], rawmsg=rawmsg, 
             rawmsg_digest_hex= hashlib.md5(rawmsg).hexdigest())
-    
-    elif message.Peer[0] in settings.ECSMAIL ['trusted_sources']:
+
+        if attachment_count > 0:
+            notification_text = '\n'.join([
+                "Dear recipient, the Ethics Commission System does not accept e-mail attachments.",
+                "{0} attachments have been removed from your message.".format(attachment_count),
+                "The message has been delivered as seen below:",
+                "",
+                "Subject: {0}".format(ecsmsg.thread.subject),
+                "{0}".format(unicode(body)),
+            ])
+
+            try:
+                deliver_to_recipient(
+                    message.From,
+                    subject='ECS-Mail: Attachment removal notification',
+                    message=notification_text,
+                    from_email=settings.ECSMAIL['postmaster']
+                )
+            except:
+                traceback.print_exc()
+
+    elif message.Peer[0] in settings.ECSMAIL['trusted_sources']:
         host_addr = gethostbyname(host);
         local_addr = gethostbyname("localhost")
 
