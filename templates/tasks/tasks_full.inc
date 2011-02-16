@@ -50,7 +50,7 @@
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
-                    | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
+                    | <a href="{% url ecs.tasks.views.decline_task_full task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
