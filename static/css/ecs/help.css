@@ -14,10 +14,12 @@
   border-right: 1px solid #B5CFDF;
 }
 .help_button {
+  display: block;
+  float: left;
   margin: 3px 0 0 5px;
 }
 #help_title {
-  float: left;
+  display: inline-block;
   height: 20px;
   margin: 12px 0 0 5px;
   font-size: 14px;
@@ -92,6 +94,7 @@
   letter-spacing: 1px;  
   margin-bottom: 20px;
   font-weight: lighter;
+  clear: both;
 }
 #help_content h3 {
   display: block;
@@ -127,6 +130,11 @@
 #help_content .location {
 	display: block;
 	margin-bottom: 20px;
+}
+.help_edit,
+#help_content .location {
+  float: left;
+  margin-right: 10px;
 }
 #help_content blockquote p {
   margin-bottom: 5px;
