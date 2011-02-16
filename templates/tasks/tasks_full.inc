@@ -48,7 +48,7 @@
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
                     | <a href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
@@ -66,7 +66,7 @@
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
@@ -83,7 +83,7 @@
             <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}">{{ task.data }}</a>
+                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
                     <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>

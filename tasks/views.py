@@ -163,6 +163,8 @@ def manage_task(request, task_pk=None, full=False):
         'task': task,
     })
     
+def manage_task_full(request, task_pk=None):
+    return manage_task(request, task_pk=task_pk, full=True)
 
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
@@ -173,16 +175,20 @@ def accept_task(request, task_pk=None, full=False):
     else:
         return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
+def accept_task_full(request, task_pk=None):
+    return accept_task(request, task_pk=task_pk, full=True)
 
 def decline_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
     task_declined.send(type(task.node_controller), task=task)
     if full:
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks', kwargs={'template': 'tasks/list.html'}))
+        return redirect_to_next_url(request, reverse('ecs.tasks.views.list'))
     else:
         return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
 
+def decline_task_full(request, task_pk=None):
+    return decline_task(request, task_pk=task_pk, full=True)
 
 def reopen_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
