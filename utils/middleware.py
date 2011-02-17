@@ -33,3 +33,15 @@ class SignedCookiesMiddleware(object):
                 secure=morsel['secure']
             )
         return response
+
+class ConsoleExceptionMiddleware(object):
+    def process_exception(self, request, exception):
+        if not settings.DEBUG:
+            return
+
+        import traceback
+        print '######################## Exception ########################'
+        traceback.print_exc()
+        print '###########################################################'
+
+
