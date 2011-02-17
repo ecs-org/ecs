@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.forms.formsets import BaseFormSet, formset_factory
-from django.core.validators import EMPTY_VALUES
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -16,6 +15,7 @@ from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
+from ecs.utils.formutils import require_fields
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -113,11 +113,6 @@ MPG_FIELDS = (
 INSURANCE_FIELDS = (
     'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
 )
-
-def require_fields(form, fields):
-    for f in fields:
-        if f not in form.cleaned_data or form.cleaned_data[f] in EMPTY_VALUES:
-            form._errors[f] = form.error_class([form.fields[f].error_messages['required']])
 
 class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
 

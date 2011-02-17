@@ -44,14 +44,13 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None,
         }, instance = Message(thread=thread))
         to_user = bump_message.receiver
     else:
-        form = SendMessageForm(request.POST or None)
         task_pk = request.GET.get('task')
-        thread = None
         if task_pk is not None:
             task = get_object_or_404(Task, pk=task_pk)
-            data = task.data
-            if isinstance(data, Submission):
-                submission = data
+            submission = task.data.get_submission() or submission
+
+        form = SendMessageForm(submission, request.user, request.POST or None)
+        thread = None
 
     if request.method == 'POST' and form.is_valid():
         if not thread:

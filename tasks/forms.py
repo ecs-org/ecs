@@ -18,10 +18,7 @@ class TaskChoiceField(forms.ModelChoiceField):
 
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=TASK_MANAGEMENT_CHOICES)
-    question_type = forms.ChoiceField(required=False, choices=TASK_QUESTION_TYPE)
     assign_to = forms.ModelChoiceField(queryset=User.objects.all(), required=False, empty_label=_('<group>'))
-    question = forms.CharField(required=False, widget=forms.Textarea())
-    receiver = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
     
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
@@ -56,19 +53,6 @@ class ManageTaskForm(forms.Form):
         if action == 'delegate':
             if 'assign_to' not in cd:
                 self._errors['assign_to'] = self.error_class([_(u'You must select a user.')])
-        elif action == 'message':
-            question_type = cd.get('question_type')
-            if question_type == 'callback':
-                if not cd.get('callback_task'):
-                    self._errors['callback_task'] = self.error_class([_(u'You must select a user.')])
-            elif question_type == 'somebody':
-                if not cd.get('receiver'):
-                    self._errors['receiver'] = self.error_class([_(u'You must select a user.')])
-            elif question_type == 'related':
-                if not cd.get('related_task'):
-                    self._errors['related_task'] = self.error_class([_(u'You must select a user.')])
-            elif not question_type:
-                self._errors['question_type'] = self.error_class([_(u'You must select a recipient.')])
 
         return cd
 

@@ -18,7 +18,7 @@
 
           {% if form.subject %}
           <li>
-              <label for="id_subject">Betreff</label>
+              <label for="{{ form.subject.auto_id }}">Betreff</label>
               {{ form.subject }}
               {% if form.subject.errors %}
                   <span class="errors">{{ form.subject.errors }}</span>
@@ -42,44 +42,8 @@
             {% endfor %}
           {% endif %}
           
-          {% if form.receiver %}
-          <li>
-              <label for="id_receiver">Empfänger</label>
-              {% if to_user %}
-                <div class="input">
-                    {{ to_user }}
-                    <input type="hidden" name="receiver" value="{{ to_user.pk }}"/>
-                </div>
-              {% else %}
-                  {% if submission or task %}
-                      <div class="input">
-                      {% if submission %}
-                          <input type="radio" value="" name="receiver_type" checked="checked" disabled="disabled"/> Einreicher ({{ submission.current_submission_form.submitter }}) <br/>
-                      {% endif %}
+          {% include 'communication/send_base.inc' %}
 
-                      {% if task %}
-                          {% for t in task.trail %}
-                              <input type="radio" value="" name="receiver_type" /> {{ t.assigned_to }} ({{ t }}) <br/>
-                          {% endfor %}
-                      {% endif %}
-                      <input type="radio" value="" name="receiver_type" /> Andere {{ form.receiver }}
-                      </div>
-                  {% else %}
-                      {{ form.receiver }}
-                  {% endif %}
-                  {% if form.receiver.errors %}
-                      <span class="errors">{{ form.receiver.errors }}</span>
-                  {% endif %}
-              {% endif %}
-          </li>
-          {% endif %}
-          <li>
-              <label for="id_text">Nachricht</label>
-              {{ form.text }}
-              {% if form.text.errors %}
-                  <span class="errors">{{ form.text.errors }}</span>
-              {% endif %}
-          </li>
       </ol>
       
       {% if thread.last_message %}
@@ -95,3 +59,11 @@
       <input type="submit" value="Abschicken" />
   </form>
 </div>
+
+<script type="text/javascript">
+  window.addEvent('domready', function(){
+    ecs.setupMessagePopup($$('.message_display')[0]);
+  });
+</script>
+
+

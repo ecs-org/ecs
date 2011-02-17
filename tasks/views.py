@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
+from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
@@ -12,6 +13,7 @@ from ecs.core.models import Submission, Vote
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification
 from ecs.communication.models import Thread
+from ecs.communication.forms import TaskMessageForm
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
@@ -130,6 +132,8 @@ def popup(request):
 def manage_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task, pk=task_pk)
     form = ManageTaskForm(request.POST or None, task=task)
+    submission = task.data.get_submission()
+    message_form = TaskMessageForm(submission, request.user, request.POST or None, prefix='message')
     if request.method == 'POST' and form.is_valid():
         action = form.cleaned_data['action']
         if action == 'complete':
@@ -139,27 +143,29 @@ def manage_task(request, task_pk=None, full=False):
             task.assign(form.cleaned_data['assign_to'])
         
         elif action == 'message':
-            question_type = form.cleaned_data['question_type']
-            if question_type == 'callback':
-                to = form.cleaned_data['callback_task'].assigned_to
-            elif question_type == 'somebody':
-                to = form.cleaned_data['receiver']
-            elif question_type == 'related':
-                to = form.cleaned_data['related_task'].assigned_to
-            message = Thread.objects.create(
-                subject=u'Frage bzgl. %s' % task,
-                submission=task.data.get_submission(), 
-                task=task,
-                text=form.cleaned_data['question'],
-                sender=request.user,
-                receiver=to,
-            )
+            if message_form.is_valid():
+                thread = Thread.objects.create(
+                    subject=_('Question regarding {0}').format(task),
+                    submission=submission,
+                    task=task,
+                    sender=request.user,
+                    receiver=message_form.cleaned_data['receiver'],
+                )
+                thread.add_message(request.user, text=message_form.cleaned_data['text'])
+            else:
+                return render(request, 'tasks/manage_task.html', {
+                    'form': form,
+                    'message_form': message_form,
+                    'task': task,
+                })
+
         if full:
             return HttpResponseRedirect(reverse('ecs.tasks.views.list'))
         else:
             return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
     return render(request, 'tasks/manage_task.html', {
         'form': form,
+        'message_form': message_form,
         'task': task,
     })
     
