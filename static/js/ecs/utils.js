@@ -551,23 +551,24 @@ ecs.setupMessagePopup = function(container, prefix) {
     container = $(container);
 
     var name_prefix = '';
-    var id_prefix = '#id_receiver_';
+    var id_prefix = '#id_';
     if (prefix) {
         name_prefix = prefix + '-';
-        id_prefix = '#id_' + prefix + '-receiver_';
+        id_prefix = '#id_' + prefix + '-';
     }
 
     function show_selected_receiver() {
         var checked_input = container.getElement('input[name="' + name_prefix + 'receiver_type"][checked]');
         var value = checked_input.value;
+        var receiver_prefix = id_prefix + 'receiver_';
 
         ['ec', 'involved', 'person'].each(function(x){
             if (x == value) {
-                container.getElements(id_prefix+x).show();
-                container.getElements(id_prefix+x+' + .errors').show();
+                container.getElements(receiver_prefix+x).show();
+                container.getElements(receiver_prefix+x+' + .errors').show();
             } else {
-                container.getElements(id_prefix+x).hide();
-                container.getElements(id_prefix+x+' + .errors').hide();
+                container.getElements(receiver_prefix+x).hide();
+                container.getElements(receiver_prefix+x+' + .errors').hide();
             }
         });
     }

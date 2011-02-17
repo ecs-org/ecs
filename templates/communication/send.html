@@ -1,4 +1,4 @@
-{% load core %}
+{% load core i18n userutils %}
 <div class="message_display">
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       <ol>
@@ -62,7 +62,22 @@
 
 <script type="text/javascript">
   window.addEvent('domready', function(){
-    ecs.setupMessagePopup($$('.message_display')[0]);
+    var container = $$('.message_display')[0];
+    ecs.setupMessagePopup(container);
+
+    var messageToolbarItems = [];
+
+    {% if submission %}
+        messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission.current_submission_form.pk }}'));
+    {% endif %}
+
+    {% if user|has_flag:'internal' %}
+        messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+    {% endif %}
+
+    var textarea = container.getElement('textarea[name="text"]');
+    new ecs.textarea.TextArea(textarea);
+    ecs.textarea.installToolbar(textarea, messageToolbarItems);
   });
 </script>
 

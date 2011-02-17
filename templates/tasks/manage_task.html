@@ -1,4 +1,4 @@
-{% load core i18n %}
+{% load core i18n userutils %}
 
 <div id="task_main">
 <form action="{% url ecs.tasks.views.manage_task task_pk=task.pk %}" method="post" id="task_form" class="open-in-widget">
@@ -62,6 +62,25 @@
                 $('id_action_message').checked = true;
             });
         });
-        ecs.setupMessagePopup($$('.task_message')[0], 'message');
+
+        var container = $$('.task_message')[0];
+
+        ecs.setupMessagePopup(container, 'message');
+
+        var messageToolbarItems = [];
+
+        {% if task.data.get_submission %}
+            messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ task.data.get_submission.current_submission_form.pk }}'));
+        {% endif %}
+
+        {% if user|has_flag:'internal' %}
+            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+        {% endif %}
+
+        var textarea = container.getElement('textarea[name="message-text"]');
+        console.log(container);
+        console.log(textarea);
+        new ecs.textarea.TextArea(textarea);
+        ecs.textarea.installToolbar(textarea, messageToolbarItems);
     });
 </script>
