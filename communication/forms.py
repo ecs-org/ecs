@@ -5,9 +5,11 @@ from django import forms
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
+from ecs.users.utils import get_user
 
 class BaseMessageForm(forms.ModelForm):
     receiver_involved = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
@@ -53,7 +55,7 @@ class BaseMessageForm(forms.ModelForm):
         receiver_type = cd.get('receiver_type', None)
 
         if receiver_type == 'ec':
-            self._errors['receiver_type'] = self.error_class([u'Message to ec is not implemented'])
+            receiver = get_user(settings.DEFAULT_CONTACT)
         elif receiver_type == 'involved':
             require_fields(self, ['receiver_involved',])
             receiver = cd['receiver_involved']
