@@ -122,14 +122,14 @@
 }
 #help_content ul,
 #help_preview ul {
-  margin: 0 0 20px 20px;
+  margin: 0 0 15px 20px;
 }
 #help p,
 #help_preview p,
 .help_edit,
 #help_content .location {
 	display: block;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
 }
 .help_edit,
 #help_content .location {

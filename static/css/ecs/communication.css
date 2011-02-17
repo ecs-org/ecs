@@ -29,7 +29,14 @@
   display: block;
 }
 .message_display form {
-  width: 500px;
+  width: 100%;
+}
+.message_display #id_subject {
+  width: 400px;
+}
+.message_display #id_text {
+  width: 400px;
+  height: 300px;
 }
 .message_display .item {
   position: relative;

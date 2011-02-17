@@ -104,8 +104,8 @@
   color: #333;
   font-size: 12px;
   text-decoration: none;
-  background: #ddd;
-  border: 1px solid #ccc;
+  background: #f4f4f4;
+  border: 1px solid #999;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -117,7 +117,7 @@
   text-decoration: none;
 }
 .header_actions .button_save {
-  background: #ccc;
+  background: #f4f4f4;
   border: 1px solid #999;  
 }
 .header_actions .button_save_change {
@@ -125,7 +125,7 @@
   border: 1px solid #666;  
 }
 .header_actions .button_validate {
-  background: #ccc;
+  background: #f4f4f4;
   border: 1px solid #999;
 }
 .header_actions .button_validate_valid_error {
@@ -310,20 +310,19 @@
 
 /* table border definitions */
 
+/*
+#status_tab table, #involved_parties_tab table, .messages table, .meeting_detail table, .task_back_log table, .profile table, table.notif_meta table, table.notification table {
+  background: #fff;
+} 
+*/
 #status_tab th, #involved_parties_tab th, .messages th, .meeting_detail th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
-  background: #eee;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  background: #eaf4fa;
   border-collapse: collapse;
+  border-bottom: 1px solid #c5deef;
 }
 #status_tab td, #involved_parties_tab td, .messages td, .meeting_detail td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
-  border-top: 1px solid #eee;
-  border-left: 1px solid #eee;
-  border-bottom: 1px solid #ccc;
-  border-right: 1px solid #ccc;
   background: #fff;
+  border-bottom: 1px solid #ddd;
 }
 .task_back_log tr.closed td {
   color: #999;
@@ -417,6 +416,12 @@ li.TypedChoiceField ul > li label{
   margin-left: 220px;
   margin-bottom: 5px;
   color: #ff0000;
+}
+.errorlist li {
+  color: #ff0000;
+  padding: 5px;
+  border: 1px solid #ff0000;
+  max-width: 250px;
 }
 .form_main table td li {
   margin: 0px;
@@ -687,7 +692,7 @@ fieldset.disabled {
   margin: -20px  0 0 240px;
 }
 #content .form_main tr.version:nth-of-type(2) td {
-  background: #f4f4f4;
+  background: #eee;
 }
 .textboxlist-autocomplete ul {
   margin: 0 !important;
@@ -824,6 +829,20 @@ content ol.submission_list li .actions {
 
 /* list cycles */
 
+#content ol.submission_list li:nth-of-type(1) ,
+.submission_list li:nth-of-type(1) ,
+.submission_item:nth-of-type(1) ,
+.notification_list li:nth-of-type(1) ,
+.dashboard_widget .messages li:nth-of-type(1) ,
+.messages li:nth-of-type(1) ,
+.attachments li:nth-of-type(1) ,
+.message_display li:nth-of-type(1) ,
+.dashboard_widget .messages li:nth-of-type(1) ,
+.dashboard_widget .submission_widget_list li:nth-of-type(1) ,
+.task_item:nth-of-type(1) ,
+#task_form li:nth-of-type(1) {
+  border-top: 1px solid #D8E6EF;
+}
 #content ol.submission_list li:nth-child(odd) ,
 .submission_list li:nth-child(odd) ,
 .submission_item:nth-child(odd) ,
@@ -833,10 +852,12 @@ content ol.submission_list li .actions {
 .attachments li:nth-child(odd) ,
 .message_display li:nth-child(odd) ,
 .dashboard_widget .messages li:nth-child(odd) ,
-.dashboard_widget .submission_widget_list li:nth-child(odd) {
-  background-color: #f1f1e6;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
+.dashboard_widget .submission_widget_list li:nth-child(odd) ,
+.administration_detail .user_list tr:nth-child(odd) ,
+.task_item:nth-child(odd) ,
+#task_form li:nth-child(odd) {
+  background-color: #eaf4fa;
+  border-bottom: 1px solid #D8E6EF;
 }
 #content ol.submission_list li:nth-child(even) ,
 .submission_list li:nth-child(even) ,
@@ -847,9 +868,11 @@ content ol.submission_list li .actions {
 .attachments li:nth-child(even) ,
 .message_display li:nth-child(even) ,
 .dashboard_widget .messages li:nth-child(even) ,
-.dashboard_widget .submission_widget_list li:nth-child(even) {
-  background-color: #efefdd;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #ddd;  
+.dashboard_widget .submission_widget_list li:nth-child(even) ,
+.administration_detail .user_list tr:nth-child(even) ,
+.task_item:nth-child(even) ,
+#task_form li:nth-child(even) {
+  background-color: #EFF9FF;
+  border-bottom: 1px solid #D8E6EF;  
 }
 

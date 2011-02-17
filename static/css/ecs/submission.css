@@ -22,7 +22,7 @@
   list-style: none;
 }
 #content ul.submission_list_choose {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #D8E6EF;
   margin: 0;
 }
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
