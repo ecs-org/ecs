@@ -317,6 +317,9 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 # default contact person if someone sends message to "EK"
 DEFAULT_CONTACT = 'office1@example.org'
 
+# server url, so we dont have to do request hacks
+SERVER_BASE_URL = 'http://localhost:8000'
+
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST

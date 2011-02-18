@@ -56,11 +56,10 @@ def forward_messages(**kwargs):
             )
             msg.smtp_delivery_state = 'pending'
             msg.rawmsg = unicode(mail_list[1])
-            msg.rawmsg_digest_hex = hashlib.md5(unicode(msg.rawmsg)).hexdigest()
+            msg.rawmsg_digest_hex = hashlib.md5(msg.rawmsg).hexdigest()
         except:
             traceback.print_exc()
             msg.smtp_delivery_state = 'failure'
 
         msg.save()
-
 

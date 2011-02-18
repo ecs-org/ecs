@@ -15,6 +15,7 @@ from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_pr
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
 from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
+from ecs.users.utils import get_user, create_phantom_user
 
 MIN_EC_NUMBER = 1000
 
@@ -479,11 +480,12 @@ class SubmissionForm(models.Model):
             email = getattr(self, '{0}_email'.format(x))
             if email:
                 try:
-                    user = User.objects.filter(email=email)[0]
-                except IndexError:
-                    pass
-                else:
-                    setattr(self, x, user)
+                    user = get_user(email)
+                except User.DoesNotExist:
+                    user = create_phantom_user(email, role=x)
+
+                setattr(self, x, user)
+
         return super(SubmissionForm, self).save(**kwargs)
    
     def __unicode__(self):

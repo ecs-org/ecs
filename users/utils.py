@@ -12,7 +12,7 @@ from django.utils.encoding import force_unicode
 
 from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
-from ecs.ecsmail.mail import deliver
+from ecs.ecsmail.mail import deliver, deliver_to_recipient
 from ecs.utils.viewutils import render_html
 
 
@@ -89,8 +89,8 @@ def user_group_required(group):
 
 def invite_user(request, email):
     comment = None
+    sid = transaction.savepoint()
     try:
-        sid = transaction.savepoint()
         user, created = get_or_create_user(email)
         if not created:
             raise ValueError(_(u'There is already a user with this email address.'))
@@ -121,4 +121,30 @@ def invite_user(request, email):
         comment = _(u'The user has been invited.')
 
     return comment
+
+def create_phantom_user(email, role=None):
+    sid = transaction.savepoint()
+    try:
+        user = create_user(email)
+        user.ecs_profile.phantom = True
+        user.ecs_profile.save()
+
+        invitation = Invitation.objects.create(user=user)
+
+        subject = _(u'ECS account creation')
+        link = ''.join([settings.SERVER_BASE_URL, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid})])
+        from django.http import HttpRequest
+        htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
+            'link': link,
+        }))
+        msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
+        print rawmail
+    except Exception, e:
+        transaction.savepoint_rollback(sid)
+        raise e
+    else:
+        transaction.savepoint_commit(sid)
+
+    return user
+
 
