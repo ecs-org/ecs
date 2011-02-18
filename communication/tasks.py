@@ -13,6 +13,7 @@ from django.core.mail import make_msgid
 
 from ecs.communication.models import Message
 from ecs.ecsmail.mail import deliver_to_recipient
+from ecs.users.utils import get_full_name
 
 
 @task()
@@ -49,12 +50,12 @@ def forward_messages(**kwargs):
                 msg.receiver.email,
                 subject=_('New ECS-Mail: from {sender} to {receiver}.').format(sender=msg.sender, receiver=msg.receiver),
                 message=_('Subject: {subject}{linesep}{text}').format(subject=msg.thread.subject, text=msg.text, linesep=os.linesep),
-                from_email=msg.return_address,
+                from_email='{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
                 callback=subtask(update_smtp_delivery),
                 msgid=msg.rawmsg_msgid,
             )
             msg.smtp_delivery_state = 'pending'
-            msg.rawmsg = mail_list[0][1]
+            msg.rawmsg = unicode(mail_list[1])
             msg.rawmsg_digest_hex = hashlib.md5(unicode(msg.rawmsg)).hexdigest()
         except:
             traceback.print_exc()

@@ -194,6 +194,6 @@ class Message(models.Model):
     
     @property
     def return_address(self):
-        return '%s@%s' % (self.return_username, settings.ECSMAIL ['authoritative_domain'])
+        return '%s@%s' % (self.return_username, settings.ECSMAIL['authoritative_domain'])
 
 
