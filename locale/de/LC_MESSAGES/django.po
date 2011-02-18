@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-16 15:39+0100\n"
+"POT-Creation-Date: 2011-02-18 01:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,6 +119,20 @@ msgstr "EK-Nr"
 msgid "Payment request"
 msgstr ""
 
+#: communication/forms.py:17 communication/forms.py:28
+#, fuzzy
+msgid "Ethics Commission"
+msgstr "Ethik-Kommission"
+
+#: communication/forms.py:34
+#, fuzzy
+msgid "Involved Party"
+msgstr "Beteiligte Parteien"
+
+#: communication/forms.py:42 templates/communication/threads.html:16
+msgid "Person"
+msgstr "Person"
+
 #: communication/tasks.py:50
 msgid "New ECS-Mail: from {sender} to {receiver}."
 msgstr "Neue ECS-Mail: von {sender} an {receiver}."
@@ -131,6 +145,10 @@ msgstr "Betreff: {subject}{linesep}{text}"
 #, python-format
 msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"
+
+#: communication/views.py:100
+msgid "Abgeben von: {0}"
+msgstr ""
 
 #: communication/management/commands/unreadmessages.py:36
 #, python-format
@@ -1265,7 +1283,7 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/forms.py:134
+#: core/forms/forms.py:129
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
 
@@ -1757,33 +1775,33 @@ msgstr ""
 msgid "related"
 msgstr ""
 
-#: tasks/forms.py:22
+#: tasks/forms.py:21
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#: tasks/forms.py:36
+#: tasks/forms.py:33
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:58 tasks/forms.py:63 tasks/forms.py:66 tasks/forms.py:69
+#: tasks/forms.py:55
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
 #: tasks/forms.py:71
-msgid "You must select a recipient."
-msgstr "Sie müssen einen Adressaten auswählen."
-
-#: tasks/forms.py:87
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:88
+#: tasks/forms.py:72
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:89
+#: tasks/forms.py:73
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
+
+#: tasks/views.py:148
+msgid "Question regarding {0}"
+msgstr ""
 
 #: templates/core.html:31
 msgid "Dashboard"
@@ -1952,6 +1970,18 @@ msgstr "Löschen"
 msgid "read"
 msgstr "lesen"
 
+#: templates/communication/send.html:71
+#: templates/submissions/readonly_form.html:328
+#: templates/tasks/manage_task.html:73
+msgid "Insert Annotations"
+msgstr "Anmerkungen einfügen"
+
+#: templates/communication/send.html:75
+#: templates/submissions/readonly_form.html:331
+#: templates/tasks/manage_task.html:77
+msgid "Insert Boilerplate"
+msgstr "Vorlage einfügen"
+
 #: templates/communication/threads.html:9
 msgid "Incoming"
 msgstr "Einkommend"
@@ -1968,10 +1998,6 @@ msgstr "Neue Nachricht"
 #: templates/communication/widgets/messages.inc:6
 msgid "sort"
 msgstr "sortieren"
-
-#: templates/communication/threads.html:16
-msgid "Person"
-msgstr "Person"
 
 #: templates/communication/threads.html:17
 msgid "Old/New"
@@ -2474,14 +2500,6 @@ msgstr "offen"
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:328
-msgid "Insert Annotations"
-msgstr "Anmerkungen einfügen"
-
-#: templates/submissions/readonly_form.html:331
-msgid "Insert Boilerplate"
-msgstr "Vorlage einfügen"
-
 #: templates/submissions/widget.html:31
 msgid "More"
 msgstr "Mehr"
@@ -2919,6 +2937,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "You must select a recipient."
+#~ msgstr "Sie müssen einen Adressaten auswählen."
 
 #~ msgid "centres abroad"
 #~ msgstr "Auslandszentren"
