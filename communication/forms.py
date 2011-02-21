@@ -10,6 +10,7 @@ from django.conf import settings
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_user
+from ecs.users.utils import sudo
 
 class BaseMessageForm(forms.ModelForm):
     receiver_involved = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
@@ -34,7 +35,9 @@ class BaseMessageForm(forms.ModelForm):
                 ('involved', _('Involved Party')),
             ]
             receiver_type_initial = 'involved'
-            involved_parties = User.objects.filter(pk__in=[p.user.pk for p in submission.current_submission_form.get_involved_parties() if p.user])
+            with sudo():
+                involved_parties = list(submission.current_submission_form.get_involved_parties())
+            involved_parties = User.objects.filter(pk__in=[p.user.pk for p in involved_parties if p.user])
             self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
 
         if user.ecs_profile.internal:
