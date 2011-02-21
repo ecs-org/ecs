@@ -85,6 +85,32 @@ def read_thread(request, thread_pk=None):
         'message_list': thread.messages.order_by('-timestamp'),
     })
 
+def thread(request, thread_pk=None):
+    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
+    msg = thread.last_message 
+    if msg.unread and msg.receiver == request.user:
+        msg.unread = False
+        msg.save()
+
+    def get_reply_text(msg):
+        if msg.sender == request.user:  # bump
+            return u'\n>' + u'\n>'.join(msg.text.splitlines())
+        else:
+            reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
+            return reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
+
+    form = ReplyToMessageForm(request.POST or None, initial={'text': get_reply_text(msg)})
+
+    if request.method == 'POST' and form.is_valid():
+        msg = thread.add_message(request.user, text=form.cleaned_data['text'])
+        form = ReplyToMessageForm(None, initial={'text': get_reply_text(msg)})
+
+    return render(request, 'communication/thread.html', {
+        'thread': thread,
+        'message_list': thread.messages.order_by('timestamp'),
+        'form': form,
+    })
+
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)

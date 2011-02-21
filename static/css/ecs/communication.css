@@ -123,3 +123,65 @@ table.messages .threadstart {
 .icon_sort {
   background: url(/static/images/icons.png) 0 -208px no-repeat;
 }
+
+/*
+ * Communication Thread
+ */
+
+ul.thread {
+    list-style-type: none;
+    margin: 20px 0px !important;
+}
+
+.thread > .message {
+    -moz-border-radius: 5px;
+    background: #ffffff;
+    border: 1px solid #C6C9CB;
+    /*margin: 10px;*/
+    padding: 7px;
+    margin-bottom: 2px;
+}
+.thread > .message.collapsed {
+    -moz-border-radius-bottomleft: 0px;
+    -moz-border-radius-bottomright: 0px;
+    margin-bottom: -5px;
+}
+
+ /* head */
+.thread > .message > .head {
+    border-bottom: 1px solid #C6C9CB;
+    cursor: pointer;
+}
+.thread > .message.collapsed > .head {
+    border: none;
+}
+.thread > .message > .head > .preview {
+    margin-left: 5px;
+    color: #777777;
+}
+.thread > .message > .head > .time {
+    float: right;
+    color: #777777;
+}
+.thread > .message > .head > .preview {
+    display: none;
+}
+.thread > .message.collapsed > .head > .preview {
+    display: inline;
+}
+
+/* body */
+.thread > .message > .body {
+    margin-top: 10px;
+    white-space: pre-wrap;
+    overflow: hidden;
+}
+.thread > .message.collapsed > .body {
+    display: none;
+}
+
+.communication_thread form.send {
+    margin: 20px 0px;
+}
+
+
