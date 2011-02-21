@@ -5,11 +5,10 @@ from django import forms
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
-from ecs.users.utils import get_user
+from ecs.users.utils import get_ec_user
 from ecs.users.utils import sudo
 
 class BaseMessageForm(forms.ModelForm):
@@ -24,6 +23,9 @@ class BaseMessageForm(forms.ModelForm):
 
     def __init__(self, submission, user, *args, **kwargs):
         super(BaseMessageForm, self).__init__(*args, **kwargs)
+
+        self.submission = submission
+        self.user = user
 
         receiver_type_choices = [
             ('ec', _('Ethics Commission')),
@@ -58,7 +60,7 @@ class BaseMessageForm(forms.ModelForm):
         receiver_type = cd.get('receiver_type', None)
 
         if receiver_type == 'ec':
-            receiver = get_user(settings.DEFAULT_CONTACT)
+            receiver = get_ec_user(submission=self.submission)
         elif receiver_type == 'involved':
             require_fields(self, ['receiver_involved',])
             receiver = cd['receiver_involved']

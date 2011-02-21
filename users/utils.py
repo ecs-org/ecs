@@ -15,6 +15,10 @@ from ecs.users.models import Invitation
 from ecs.ecsmail.mail import deliver, deliver_to_recipient
 from ecs.utils.viewutils import render_html
 
+# Do not import models here which depend on the AuthorizationManager, because
+# the AuthorizationManager depends on this module. If you need to import a
+# model, do it inside a function.
+
 
 def hash_email(email):
     return hashlib.md5(email.lower()).hexdigest()[:30]
@@ -146,5 +150,20 @@ def create_phantom_user(email, role=None):
         transaction.savepoint_commit(sid)
 
     return user
+
+def get_ec_user(submission=None):
+    from ecs.tasks.models import Task
+    if submission is not None:
+        with sudo():
+            workflow_tokens = submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query
+            tasks = Task.objects.filter(workflow_token__in=workflow_tokens, assigned_to__ecs_profile__internal=True).order_by('-closed_at')
+        try:
+            task = tasks[0]
+        except IndexError:
+            return get_user(settings.DEFAULT_CONTACT)
+        else:
+            return task.assigned_to
+    else:
+        return get_user(settings.DEFAULT_CONTACT)
 
 
