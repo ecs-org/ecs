@@ -94,8 +94,8 @@ class Resubmission(Activity):
         
     def get_final_urls(self):
         return super(Resubmission, self).get_final_urls() + [
-            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf['pk']})
-            for sf in self.workflow.data.forms.values('pk')
+            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf})
+            for sf in self.workflow.data.forms.values_list('pk', flat=True)
         ]
         
     def receive_token(self, *args, **kwargs):

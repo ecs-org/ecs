@@ -29,18 +29,23 @@ class EcsTestCase(TestCase):
         user, created = get_or_create_user('root@example.org', is_superuser=True)
         settings.ENABLE_AUDIT_TRAIL = True
         
-        for name in "alice", "bob", "unittest":
+        self.create_user('alice', profile_extra={'internal': True})
+        for name in ('bob', 'unittest',):
             self.create_user(name)
         
         user = get_user('unittest@example.com')
         user.is_superuser = True
         user.save()
         
-    def create_user(self, name):
-        user, created = get_or_create_user('{0}@example.com'.format(name), is_superuser=True)
+    def create_user(self, name, extra=None, profile_extra=None):
+        extra = extra or {}
+        profile_extra = profile_extra or {}
+        user, created = get_or_create_user('{0}@example.com'.format(name), is_superuser=True, **extra)
         user.set_password('password')
         user.save()
         profile = user.get_profile()
+        for k, v in profile_extra.iteritems():
+            setattr(profile, k, v)
         profile.approved_by_office = True
         profile.save()
     

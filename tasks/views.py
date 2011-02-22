@@ -132,7 +132,10 @@ def popup(request):
 def manage_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task, pk=task_pk)
     form = ManageTaskForm(request.POST or None, task=task)
-    submission = task.data.get_submission()
+    try:
+        submission = task.data.get_submission()
+    except AttributeError:
+        submission = None
     message_form = TaskMessageForm(submission, request.user, request.POST or None, prefix='message')
     if request.method == 'POST' and form.is_valid():
         action = form.cleaned_data['action']

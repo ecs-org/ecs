@@ -38,7 +38,8 @@ class CommunicationTest(CommunicationTestCase):
         response = self.client.post(reverse('ecs.communication.views.new_thread'), {
             'subject': 'SUBJECT',
             'text': 'TEXT',
-            'receiver': self.bob.pk,
+            'receiver_type': 'person',
+            'receiver_person': self.bob.pk,
         })
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(Message.objects.count(), message_count+1)
@@ -82,9 +83,10 @@ class CommunicationTest(CommunicationTestCase):
     def test_reply_message(self):
         message = self.last_message
         self.client.login(email='bob@example.com', password='password')
-        response = self.client.post(reverse('ecs.communication.views.new_thread', 
-            kwargs={'reply_to_pk': message.pk}), {'text': 'REPLY TEXT',})
-        self.failUnlessEqual(response.status_code, 302)
+
+        response = self.client.post(reverse('ecs.communication.views.read_thread',
+            kwargs={'thread_pk': self.thread.pk}), {'text': 'REPLY TEXT'})
+        self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()
         self.failUnlessEqual(message.receiver, self.alice)
@@ -102,9 +104,10 @@ class CommunicationTest(CommunicationTestCase):
     def test_bump_message(self):
         message = self.last_message
         self.client.login(email='alice@example.com', password='password')
-        response = self.client.post(reverse('ecs.communication.views.new_thread', 
-            kwargs={'bump_message_pk': message.pk}), {'text': 'REPLY TEXT',})
-        self.failUnlessEqual(response.status_code, 302)
+
+        response = self.client.post(reverse('ecs.communication.views.read_thread',
+            kwargs={'thread_pk': self.thread.pk}), {'text': 'BUMP TEXT'})
+        self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()
         self.failUnlessEqual(message.sender, self.alice)
@@ -128,3 +131,4 @@ class CommunicationTest(CommunicationTestCase):
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
+
