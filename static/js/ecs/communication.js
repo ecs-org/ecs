@@ -24,12 +24,14 @@ ecs.communication.Message = new Class({
 });
 
 ecs.communication.Thread = new Class({
-    initialize: function(container){
+    initialize: function(container, collapse_link, expand_link){
         this.container = $(container);
+        this.collapse_link = $(collapse_link);
+        this.expand_link = $(expand_link);
         this.container.store('ecs.communication.Thread', this);
         this.setup();
     },
-    setup: function() {
+    setup: function(){
         var messages = this.container.getElements('.message');
         var message_count = messages.length;
         var i = 0;
@@ -48,6 +50,29 @@ ecs.communication.Thread = new Class({
         var offset_parent = last_message.getOffsetParent();
         var pos = last_message.getPosition(offset_parent);
         offset_parent.scrollTo(pos.x, pos.y);
+
+        this.collapse_link.addEvent('click', (function(){
+            this.collapse_all();
+            return false;
+        }).bind(this));
+        this.expand_link.addEvent('click', (function(){
+            this.expand_all();
+            return false;
+        }).bind(this));
+    },
+    collapse_all: function(){
+        var messages = this.container.getElements('.message');
+        messages.each(function(el){
+            var message = $(el).retrieve('ecs.communication.Message');
+            message.collapse();
+        }, this);
+    },
+    expand_all: function(){
+        var messages = this.container.getElements('.message');
+        messages.each(function(el){
+            var message = $(el).retrieve('ecs.communication.Message');
+            message.show();
+        }, this);
     }
 });
 

@@ -184,4 +184,9 @@ ul.thread {
     margin: 20px 0px;
 }
 
+.communication_thread .expand_collapse {
+    float: right;
+    margin-top: -15px;
+}
+
 

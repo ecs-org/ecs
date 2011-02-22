@@ -32,9 +32,13 @@
     </li>
 {% endfor %}
 </ul>
+<div class="expand_collapse">
+    <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
+    | <a href="" class="expand_all">{% trans "Expand all" %}</a>
+</div>
 
 {% if not thread|closed_by:user %}
-    <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
+    <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
 {% endif %}
 
 <form class="send" method="post">
@@ -58,7 +62,9 @@
       window.addEvent('domready', function(){
         var communication_thread = $$('.communication_thread')[0];
         var container = communication_thread.getElement('ul');
-        new ecs.communication.Thread(container);
+        var collapse_link = communication_thread.getElement('.collapse_all');
+        var expand_link = communication_thread.getElement('.expand_all');
+        new ecs.communication.Thread(container, collapse_link, expand_link);
 
         var messageToolbarItems = [];
 
