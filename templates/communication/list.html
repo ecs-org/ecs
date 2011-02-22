@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load i18n core %}
+{% load i18n core communication %}
 
 {% block menuSelection %}communication{% endblock %}
 
@@ -22,7 +22,7 @@
       <tr>
           <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
           <td>
-              <a class="open-in-popup" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}">
+              <a href="{% url ecs.communication.views.thread thread_pk=thread.pk %}">
                   {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
                   {{ thread.subject }}
               </a>
@@ -36,7 +36,7 @@
           <td>
               {% block message_actions %}
                   <a class="open-in-popup icon_read" href="{% url ecs.communication.views.read_thread thread_pk=thread.pk %}" title="{% trans "read" %}">read</a>
-                  {% if not message.thread.closed %}
+                  {% if not thread|closed_by:user %}
                   <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
                   {% endif %}
               {% endblock %}

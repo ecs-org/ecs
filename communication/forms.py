@@ -76,6 +76,14 @@ class SendMessageForm(BaseMessageForm):
 class TaskMessageForm(BaseMessageForm):
     pass
 
+class ReplyDelegateForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea())
+
+    def __init__(self, user, *args, **kwargs):
+        super(ReplyDelegateForm, self).__init__(*args, **kwargs)
+        if user.ecs_profile.internal:
+            self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False)
+            self.fields.keyOrder = ['to', 'text']
 
 class ReplyToMessageForm(forms.ModelForm):
     class Meta:

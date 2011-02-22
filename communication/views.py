@@ -15,7 +15,7 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.communication.models import Message, Thread
-from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm
+from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 
@@ -99,11 +99,24 @@ def thread(request, thread_pk=None):
             reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
             return reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
 
-    form = ReplyToMessageForm(request.POST or None, initial={'text': get_reply_text(msg)})
+    form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': get_reply_text(msg)})
 
     if request.method == 'POST' and form.is_valid():
+        delegate_to = form.cleaned_data.get('to')
+        # delegation is optional; if there is no delegation target, we just
+        # append the message to the present thread, else we delegate the
+        # present thread and create a new one with the message inside
+        if delegate_to:
+            thread.delegate(request.user, delegate_to)
+            thread = Thread.objects.create(
+                subject=_(u'Abgeben von: {0}').format(thread.subject),
+                sender=request.user,
+                receiver=delegate_to,
+                task=thread.task,
+                submission=thread.submission,
+            )
         msg = thread.add_message(request.user, text=form.cleaned_data['text'])
-        form = ReplyToMessageForm(None, initial={'text': get_reply_text(msg)})
+        form = ReplyDelegateForm(request.user, None, initial={'text': get_reply_text(msg)})
 
     return render(request, 'communication/thread.html', {
         'thread': thread,
@@ -115,28 +128,6 @@ def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
     return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
-    
-def delegate_thread(request, thread_pk=None):
-    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
-    form = ThreadDelegationForm(request.POST or None)
-    if form.is_valid():
-        thread.delegate(request.user, form.cleaned_data['to'])
-
-        new_thread = Thread.objects.create(
-            subject=_(u'Abgeben von: {0}').format(thread.subject),
-            sender=request.user,
-            receiver=form.cleaned_data['to'],
-            task=thread.task,
-            submission=thread.submission,
-        )
-        message = new_thread.add_message(request.user, text=form.cleaned_data['text'])
-
-        return HttpResponseRedirect(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': new_thread.pk}))
-
-    return render(request, 'communication/delegate_thread.html', {
-        'thread': thread,
-        'form': form,
-    })
     
 @tracking_hint(exclude=True)
 def incoming_message_widget(request):

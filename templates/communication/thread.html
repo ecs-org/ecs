@@ -1,9 +1,10 @@
 {% extends "core.html" %}
-{% load i18n core userutils %}
+{% load i18n core userutils communication %}
 
 {% block menuSelection %}communication{% endblock %}
 
 {% block headertitle %}
+    {{ thread|remote:user }} -
     {% if thread.submission %}
         {{ thread.submission|ec_number }} -
     {% endif %}
@@ -14,20 +15,27 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the thread overview" %}</a>
+<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the communication overview" %}</a>
+{% if thread.submission %}
+    | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+{% endif %}
 
 <ul class="thread">
 {% for message in message_list %}
     <li class="message">
         <div class="head">
             <span class="sender">{{ message.sender }}</span>
-            <span class="preview">{{ message.text|safe|smart_truncate:80 }}</span>
+            <span class="preview">{{ message|preview:80 }}</span>
             <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
         </div>
         <pre class="body">{{ message.text|safe }}<pre>
     </li>
 {% endfor %}
 </ul>
+
+{% if not thread|closed_by:user %}
+    <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
+{% endif %}
 
 <form class="send" method="post">
     <table>
@@ -36,7 +44,10 @@
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the thread overview" %}</a>
+<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the communication overview" %}</a>
+{% if thread.submission %}
+    | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+{% endif %}
 
 </div>
 {% endblock %}

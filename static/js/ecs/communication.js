@@ -42,6 +42,12 @@ ecs.communication.Thread = new Class({
             }
             i += 1;
         }, this);
+
+        /* scroll to the last message */
+        var last_message = messages[messages.length-1];
+        var offset_parent = last_message.getOffsetParent();
+        var pos = last_message.getPosition(offset_parent);
+        offset_parent.scrollTo(pos.x, pos.y);
     }
 });
 

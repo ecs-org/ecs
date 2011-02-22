@@ -19,7 +19,6 @@
               <a class="open-in-widget icon_bump" href="{% url ecs.communication.views.send_message bump_message_pk=message.pk %}?next={{ request.path|urlencode }}" title="Bump">bump</a>
           {% else %}
               <a class="open-in-popup icon_answer" href="{% url ecs.communication.views.send_message reply_to_pk=message.pk %}" title="Antworten">answer</a>
-              <a class="open-in-popup icon_delegate" href="{% url ecs.communication.views.delegate_thread thread_pk=message.thread.pk %}" title="Delegieren">delegate</a>
           {% endifequal %}
           <a class="close-popup icon_done" href="{% url ecs.communication.views.close_thread thread_pk=message.thread.pk %}" title="Erledigt">done</a>
       </li>
