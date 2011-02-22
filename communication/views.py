@@ -19,7 +19,7 @@ from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 
-def send_message(request, submission_pk=None, to_user_pk=None):
+def new_thread(request, submission_pk=None, to_user_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
 
     if submission_pk is not None:
@@ -47,7 +47,7 @@ def send_message(request, submission_pk=None, to_user_pk=None):
             )
 
         message = thread.add_message(request.user, text=form.cleaned_data['text'])
-        return redirect_to_next_url(request, reverse('ecs.communication.views.thread', kwargs={'thread_pk': thread.pk}))
+        return redirect_to_next_url(request, reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': thread.pk}))
 
     return render(request, 'communication/send.html', {
         'submission': submission,
@@ -57,7 +57,7 @@ def send_message(request, submission_pk=None, to_user_pk=None):
         'thread': thread,
     })
 
-def thread(request, thread_pk=None):
+def read_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     msg = thread.last_message 
     if msg.unread and msg.receiver == request.user:
@@ -179,7 +179,7 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
         context.update(extra_context)
     return render(request, template, context)
 
-def threads(request):
+def list_threads(request):
     usersettings = request.user.ecs_settings
 
     filter_defaults = {

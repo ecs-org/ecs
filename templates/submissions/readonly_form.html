@@ -256,7 +256,7 @@
         <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
-        <a class="open-in-popup" href="{% url ecs.communication.views.send_message submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
     </div>
     <div id="communication_overview_tab" class="tab">
         <h3>{% trans "Communication Overview" %}</h3>

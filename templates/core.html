@@ -29,7 +29,7 @@
 {% block usermenu %}
   <ul>
     <li class="main_item"><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
-    <li class="main_item"><a href="{% url ecs.communication.views.threads %}">{% trans "Communication" %}</a></li>
+    <li class="main_item"><a href="{% url ecs.communication.views.list_threads %}">{% trans "Communication" %}</a></li>
     <li class="main_item"><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
     <li>
       <span class="togglers">{% trans "Studies" %}</span>

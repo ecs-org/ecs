@@ -1,5 +1,21 @@
-{% load core i18n userutils %}
+{% extends "core.html" %}
+{% load i18n core userutils communication %}
+
+{% block menuSelection %}communication{% endblock %}
+
+{% block headertitle %}
+    {% if submission %}
+        {{ thread.submission|ec_number }} -
+    {% endif %}
+    {% trans "New Message" %}
+{% endblock %}
+
+{% block content %}
 <div class="message_display">
+  <a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
+  {% if submission %}
+      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+  {% endif %}
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       <ol>
           {% if submission %}
@@ -45,40 +61,36 @@
           {% include 'communication/send_base.inc' %}
 
       </ol>
-      
-      {% if thread.last_message %}
-        <ol>
-        <li><span>Letze Meldung</span></li>
-        <li><span>Betreff: {{thread.subject}}</span></li>
-        <li><span>Von: {{ thread.last_message.sender }}</span></li>
-        <li><span>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }}</span></li>
-        <li><span>{{ thread.last_message.text }}</span></li>
-        </ol>
-      {% endif %}
-
       <input type="submit" value="Abschicken" />
   </form>
+  <a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
+  {% if submission %}
+      | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+  {% endif %}
 </div>
+{% endblock %}
 
-<script type="text/javascript">
-  window.addEvent('domready', function(){
-    var container = $$('.message_display')[0];
-    ecs.setupMessagePopup(container);
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+      window.addEvent('domready', function(){
+        var container = $$('.message_display')[0];
+        ecs.setupMessagePopup(container);
 
-    var messageToolbarItems = [];
+        var messageToolbarItems = [];
 
-    {% if submission %}
-        messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission.current_submission_form.pk }}'));
-    {% endif %}
+        {% if submission %}
+            messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission.current_submission_form.pk }}'));
+        {% endif %}
 
-    {% if user|has_flag:'internal' %}
-        messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
-    {% endif %}
+        {% if user|has_flag:'internal' %}
+            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+        {% endif %}
 
-    var textarea = container.getElement('textarea[name="text"]');
-    new ecs.textarea.TextArea(textarea);
-    ecs.textarea.installToolbar(textarea, messageToolbarItems);
-  });
-</script>
-
+        var textarea = container.getElement('textarea[name="text"]');
+        new ecs.textarea.TextArea(textarea);
+        ecs.textarea.installToolbar(textarea, messageToolbarItems);
+      });
+    </script>
+{% endblock %}
 

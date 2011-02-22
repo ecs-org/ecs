@@ -28,14 +28,14 @@ class CommunicationTest(CommunicationTestCase):
     """
 
         
-    def test_send_message(self):
+    def test_new_thread(self):
         self.client.login(email='alice@example.com', password='password')
 
-        response = self.client.get(reverse('ecs.communication.views.send_message'))
+        response = self.client.get(reverse('ecs.communication.views.new_thread'))
         self.failUnlessEqual(response.status_code, 200)
         
         message_count = Message.objects.count()
-        response = self.client.post(reverse('ecs.communication.views.send_message'), {
+        response = self.client.post(reverse('ecs.communication.views.new_thread'), {
             'subject': 'SUBJECT',
             'text': 'TEXT',
             'receiver': self.bob.pk,
@@ -66,13 +66,13 @@ class CommunicationTest(CommunicationTestCase):
 
         self.client.logout()
 
-    def test_send_message_invalid_submission(self):
+    def test_new_thread_invalid_submission(self):
         self.client.login(email='alice@example.com', password='password')
         try:
             non_existing_pk = Submission.objects.all().order_by('-pk')[0].pk+1
         except IndexError:
             non_existing_pk = 42
-        response = self.client.post(reverse('ecs.communication.views.send_message', kwargs={'submission_pk': non_existing_pk}), {
+        response = self.client.post(reverse('ecs.communication.views.new_thread', kwargs={'submission_pk': non_existing_pk}), {
             'subject': 'SUBJECT',
             'text': 'TEXT',
             'receiver': self.bob.pk,
@@ -82,7 +82,7 @@ class CommunicationTest(CommunicationTestCase):
     def test_reply_message(self):
         message = self.last_message
         self.client.login(email='bob@example.com', password='password')
-        response = self.client.post(reverse('ecs.communication.views.send_message', 
+        response = self.client.post(reverse('ecs.communication.views.new_thread', 
             kwargs={'reply_to_pk': message.pk}), {'text': 'REPLY TEXT',})
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(Message.objects.count(), 2)
@@ -102,7 +102,7 @@ class CommunicationTest(CommunicationTestCase):
     def test_bump_message(self):
         message = self.last_message
         self.client.login(email='alice@example.com', password='password')
-        response = self.client.post(reverse('ecs.communication.views.send_message', 
+        response = self.client.post(reverse('ecs.communication.views.new_thread', 
             kwargs={'bump_message_pk': message.pk}), {'text': 'REPLY TEXT',})
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(Message.objects.count(), 2)

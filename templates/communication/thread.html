@@ -15,7 +15,7 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
 {% if thread.submission %}
     | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
 {% endif %}
@@ -48,7 +48,7 @@
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.threads %}">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
 {% if thread.submission %}
     | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
 {% endif %}

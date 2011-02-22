@@ -17,7 +17,7 @@
                 <td>{{ party.email|default:'' }}</td>
                 <td>
                     {% if party.user %}
-                        <a class="open-in-popup" href="{% url ecs.communication.views.send_message submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}">
+                        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}">
                         {% blocktrans with party.user as user %}
                             Send a message to {{ user }}
                         {% endblocktrans %}
