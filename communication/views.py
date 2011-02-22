@@ -15,11 +15,11 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.communication.models import Message, Thread
-from ecs.communication.forms import SendMessageForm, ReplyToMessageForm, ThreadDelegationForm, ReplyDelegateForm
+from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 
-def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None, bump_message_pk=None):
+def send_message(request, submission_pk=None, to_user_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
 
     if submission_pk is not None:
@@ -28,29 +28,13 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None,
     if to_user_pk is not None:
         to_user = get_object_or_404(User, pk=to_user_pk)
     
-    if reply_to_pk is not None:
-        reply_to = get_object_or_404(Message, pk=reply_to_pk)
-        thread = reply_to.thread
-        form = ReplyToMessageForm(request.POST or None, initial={
-            'text': _('%(sender)s schrieb:%(linesep)s> %(text)s' % {'linesep':os.linesep, 'sender': reply_to.sender, 'text': '\n> '.join(reply_to.text.split('\n'))})
-            
-        }, instance = Message(thread=thread))
-        submission = thread.submission
-    elif bump_message_pk is not None:
-        bump_message = get_object_or_404(Message, pk=bump_message_pk)
-        thread = bump_message.thread
-        form = ReplyToMessageForm(request.POST or None, initial={
-            'text': bump_message.text
-        }, instance = Message(thread=thread))
-        to_user = bump_message.receiver
-    else:
-        task_pk = request.GET.get('task')
-        if task_pk is not None:
-            task = get_object_or_404(Task, pk=task_pk)
-            submission = task.data.get_submission() or submission
+    task_pk = request.GET.get('task')
+    if task_pk is not None:
+        task = get_object_or_404(Task, pk=task_pk)
+        submission = task.data.get_submission() or submission
 
-        form = SendMessageForm(submission, request.user, request.POST or None)
-        thread = None
+    form = SendMessageForm(submission, request.user, request.POST or None)
+    thread = None
 
     if request.method == 'POST' and form.is_valid():
         if not thread:
@@ -63,7 +47,7 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None,
             )
 
         message = thread.add_message(request.user, text=form.cleaned_data['text'])
-        return redirect_to_next_url(request, reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': thread.pk}))
+        return redirect_to_next_url(request, reverse('ecs.communication.views.thread', kwargs={'thread_pk': thread.pk}))
 
     return render(request, 'communication/send.html', {
         'submission': submission,
@@ -71,18 +55,6 @@ def send_message(request, submission_pk=None, reply_to_pk=None, to_user_pk=None,
         'task': task,
         'form': form,
         'thread': thread,
-        'bump': bump_message_pk is not None,
-    })
-
-def read_thread(request, thread_pk=None):
-    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
-    msg = thread.last_message 
-    if msg.unread and msg.receiver == request.user:
-        msg.unread = False
-        msg.save()
-    return render(request, 'communication/read.html', {
-        'thread': thread,
-        'message_list': thread.messages.order_by('-timestamp'),
     })
 
 def thread(request, thread_pk=None):

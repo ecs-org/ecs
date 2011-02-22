@@ -85,14 +85,6 @@ class ReplyDelegateForm(forms.Form):
             self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False)
             self.fields.keyOrder = ['to', 'text']
 
-class ReplyToMessageForm(forms.ModelForm):
-    class Meta:
-        model = Message
-        fields = ('text',)
-        
-class ThreadDelegationForm(forms.Form):
-    to = forms.ModelChoiceField(User.objects.all())
-    text = Message._meta.get_field('text').formfield()
 
 class ThreadListFilterForm(forms.Form):
     incoming = forms.BooleanField(required=False)
