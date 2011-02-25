@@ -12,7 +12,7 @@ DEFAULT_DOCUTILS_SETTINGS = {
 }
 
 DOC_REF_RE = re.compile(r':doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
-IMAGE_RE = re.compile(r'\.\. image:: ([a-zA-Z0-9._-]+)', re.UNICODE)
+IMAGE_RE = re.compile(r'\.\.\s+(\|(?P<ref>([^|]+))\|\s+)?image::\s+(?P<target>[a-zA-Z0-9._-]+)', re.UNICODE)
 
 class Linker(object):
     def __init__(self, image_url=None, page_url=None, doc_roles=True):
@@ -33,7 +33,7 @@ class Linker(object):
             source = DOC_REF_RE.sub(self._replace_ref, source)
 
         for match in IMAGE_RE.finditer(source):
-            self.images[match.group(1)] = None
+            self.images[match.group('target')] = None
         for image in Attachment.objects.filter(slug__in=self.images.keys()):
             self.images[image.slug] = image
         source = IMAGE_RE.sub(self._replace_image, source)
@@ -47,19 +47,23 @@ class Linker(object):
             text = match.group(1)
             target = match.group(2)
         page = self.targets[target]
-        if page:
-            if not text:
-                text = page.title
-            return u'`%s <%s>`_' % (text, self.page_url(page))
-        return "**bad reference: '%s'**" % target
+        if not page:
+            return "**bad reference: '{0}'**".format(target)
+
+        return u'`{0} <{1}>`_'.format(text or page.title, self.page_url(page))
         
     def _replace_image(self, match):
-        target = match.group(1)
+        ref = match.group('ref')
+        target = match.group('target')
         image = self.images[target]
-        if image:
-            return '.. image:: %s' % self.image_url(image)
-        return "**bad image reference: '%s'**" % target
-        
+        if not image:
+            return "**bad image reference: '{0}'**".format(target)
+
+        if not ref:
+            return '.. image:: {0}'.format(self.image_url(image))
+        else:
+            return '.. |{0}| image:: {1}'.format(ref, self.image_url(image))
+
 
 def publish_parts(source):
     linker = Linker()
