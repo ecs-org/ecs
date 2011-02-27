@@ -62,7 +62,7 @@ class AttachmentSerializer(Serializer):
     model = Attachment
 
     def serialize_file(self, zf, instance):
-        zip_name = 'attachments/{0}'.format(instance.slug)
+        zip_name = u'attachments/{0}'.format(instance.slug)
         zf.writestr(zip_name, instance.file.read())
         return zip_name
 
