@@ -27,5 +27,8 @@ urlpatterns = patterns('ecs.help.views',
     url(r'^attachment/(?P<attachment_pk>\d+)/download/$', 'download_attachment'),
     
     url(r'^screenshot/$', 'screenshot'),
+
+    url(r'^export/$', 'export'),
+    url(r'^import/$', 'load'),
 )
 

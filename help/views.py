@@ -1,6 +1,6 @@
 import re
 import tempfile
-import datetime
+from datetime import datetime
 from base64 import b64decode
 
 from django.shortcuts import get_object_or_404
@@ -22,8 +22,9 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.tracking.models import View
 from ecs.users.utils import user_flag_required
 from ecs.help.models import Page, Attachment
-from ecs.help.forms import HelpPageForm, AttachmentUploadForm
+from ecs.help.forms import HelpPageForm, AttachmentUploadForm, ImportForm
 from ecs.help.utils import publish_parts
+from ecs.help import serializer
 
 
 def redirect_to_page(page):
@@ -270,7 +271,7 @@ def screenshot(request):
         
         slug = request.POST.get('slug', '')
         if not slug:
-            slug = 'screenshot_%s.%s' % (datetime.datetime.now().strftime('%y%m%d%H%I%S'), mimetype[-3:])
+            slug = 'screenshot_%s.%s' % (datetime.now().strftime('%y%m%d%H%I%S'), mimetype[-3:])
         
         tmp = tempfile.NamedTemporaryFile() 
         tmp.write(data) 
@@ -280,3 +281,26 @@ def screenshot(request):
         tmp.close() 
 
     return HttpResponse('OK')
+
+@user_flag_required('help_writer')
+def export(request):
+    with tempfile.TemporaryFile(mode='w+b') as tmpfile:
+        serializer.export(tmpfile)
+        tmpfile.seek(0)
+        response = HttpResponse(tmpfile.read(), mimetype='application/ech')
+    response['Content-Disposition'] = 'attachment;filename=help-{0}.ech'.format(datetime.now().strftime('%Y-%m-%d'))
+    return response
+
+@user_flag_required('help_writer')
+def load(request):
+
+    form = ImportForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        serializer.load(request.FILES['file'])
+        form = ImportForm(None)
+
+    return render(request, 'help/import.html', {
+        'form': form,
+    })
+
+

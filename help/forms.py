@@ -11,3 +11,8 @@ class AttachmentUploadForm(forms.ModelForm):
     class Meta:
         model = Attachment
         fields = ('file', 'slug',)
+
+class ImportForm(forms.Form):
+    file = forms.FileField()
+
+

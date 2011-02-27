@@ -1,0 +1,13 @@
+{% extends 'help/base.html' %}
+
+{% block content %}
+<h2>Import</h2>
+
+<div id="help_import">
+    <form method="post" enctype="multipart/form-data">
+        {{ form }}
+        <input type="submit" value="Import">
+    </form>
+</div>
+
+{% endblock %}

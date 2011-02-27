@@ -32,6 +32,8 @@
         {% if user|has_flag:"help_writer" %}
             <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
             | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
+            | <a href="{% url ecs.help.views.export %}">Export</a>
+            | <a href="{% url ecs.help.views.load %}">Import</a>
         {% endif %}
     </div>
   </div>
