@@ -8,6 +8,7 @@ from django.core.files.base import ContentFile
 from ecs.help.models import Page, Attachment
 from ecs.tracking.models import View
 
+import reversion
 
 class Serializer(object):
     fields = []
@@ -38,11 +39,13 @@ class Serializer(object):
             else:
                 kwargs[f] = func(zf, data, extra=extra)
 
-        unique = dict((k, kwargs.pop(k)) for k in self.unique)
-        instance, created = self.model.objects.get_or_create(**unique)
+        create_kwargs = dict((k, kwargs.pop(k)) for k in self.unique)
+        create_kwargs['defaults'] = kwargs
+        instance, created = self.model.objects.get_or_create(**create_kwargs)
         for k, v in kwargs.iteritems():
             setattr(instance, k, v)
-        instance.save()
+        with reversion.revision:
+            instance.save()
         return instance
 
 class PageSerializer(Serializer):
@@ -54,7 +57,7 @@ class PageSerializer(Serializer):
         return instance.view.path if instance.view else None
 
     def load_view(self, zf, data, extra=None):
-        return View.objects.get(path=data['view']) if data['view'] else None
+        return View.objects.get_or_create(path=data['view'])[0] if data['view'] else None
 
 class AttachmentSerializer(Serializer):
     fields = ['file', 'mimetype', 'screenshot', 'slug', 'view', 'page']
@@ -79,13 +82,14 @@ class AttachmentSerializer(Serializer):
         return f
 
     def load_view(self, zf, data, extra=None):
-        return View.objects.get(path=data['view']) if data['view'] else None
+        return View.objects.get_or_create(path=data['view'])[0] if data['view'] else None
 
     def load_page(self, zf, data, extra):
         page_pks = extra
-        old_pk = str(data['page'])
+        old_pk = data['page']
         if not old_pk:
             return None
+        old_pk = str(old_pk)
         new_pk = int(page_pks[old_pk])
         return Page.objects.get(pk=new_pk)
 
