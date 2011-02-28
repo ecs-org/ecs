@@ -51,6 +51,21 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_subject_duration_controls')
     client.type(text=cicero.sentences(n=1, min=8, max=8)[0], id=u'id_subject_planned_total_duration')
 
+    # Auslandszentren
+    client.click(link=u"Neues Zentrum im Ausland hinzufügen")
+    client.click(id=u'id_foreignparticipatingcenter-0-name')
+    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-0-name')
+    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-0-investigator_name')
+    client.click(link=u"Neues Zentrum im Ausland hinzufügen")
+    client.click(id=u'id_foreignparticipatingcenter-1-name')
+    client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_foreignparticipatingcenter-1-name')
+    client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_foreignparticipatingcenter-1-investigator_name')
+    client.click(link=u"Neues Zentrum im Ausland hinzufügen")
+    client.click(id=u'id_foreignparticipatingcenter-2-name')
+    client.type(text=cicero.sentences(n=1, min=4, max=4)[0], id=u'id_foreignparticipatingcenter-2-name')
+    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-2-investigator_name')
+
+
     # Kurzfassung
     client.click(link=u'Kurzfassung')
     client.click(id=u'id_project_title')
@@ -291,23 +306,8 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
         client.waits.forPageLoad(timeout=u'20000')
         client.waits.sleep(milliseconds=u'5000')
 
-    # Auslandszentren
-    client.click(link=u'Auslandszentren')
-    client.click(xpath=u"//div[@id='tabs-12']/div/a")
-    client.click(id=u'id_foreignparticipatingcenter-0-name')
-    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-0-name')
-    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-0-investigator_name')
-    client.click(xpath=u"//div[@id='tabs-12']/div/a")
-    client.click(id=u'id_foreignparticipatingcenter-1-name')
-    client.type(text=cicero.sentences(n=1, min=5, max=5)[0], id=u'id_foreignparticipatingcenter-1-name')
-    client.type(text=cicero.sentences(n=1, min=2, max=2)[0], id=u'id_foreignparticipatingcenter-1-investigator_name')
-    client.click(xpath=u"//div[@id='tabs-12']/div/a")
-    client.click(id=u'id_foreignparticipatingcenter-2-name')
-    client.type(text=cicero.sentences(n=1, min=4, max=4)[0], id=u'id_foreignparticipatingcenter-2-name')
-    client.type(text=cicero.sentences(n=1, min=3, max=3)[0], id=u'id_foreignparticipatingcenter-2-investigator_name')
-
-    # Zentrum 1
-    client.click(link=u'Zentrum 1')
+    # Zentren
+    client.click(link=u'Zentren')
     client.click(id=u'id_investigator-0-organisation')
     client.type(text=cicero.sentences(n=1, min=6, max=6)[0], id=u'id_investigator-0-organisation')
     client.type(text=random.randint(0,999), id=u'id_investigator-0-subject_count')
@@ -354,8 +354,8 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     #client.waits.sleep(milliseconds=u'5000')
     # client.select(option=u'---------', id=u'userswitcher_input')
     # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
-    client.waits.forElement(timeout=u'10000', xpath="//div[@id='headertitle']/h1")
-    headertitle = client.commands.getNodeContents(xpath="//div[@id='headertitle']/h1")['result'].strip()
+    client.waits.forElement(timeout=u'10000', xpath="//h1[@id='headertitle']")
+    headertitle = client.commands.getNodeContents(xpath="//h1[@id='headertitle']")['result'].strip()
     ek, _ = headertitle.split(' ', 1)
     #client.waits.forPageLoad(timeout=u'20000')
     return ek
@@ -365,9 +365,11 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
 def test_submit_simple(client):
     create_submission(client)
 
+"""
 @authenticated()
 def test_submit_simple_with_upload(client):
     create_submission(client, upload=True)
+"""
 
 @authenticated()
 def test_submit_amg(client):
