@@ -102,3 +102,4 @@ def monkey_mozrunner():
     
     from windmill.dep import _mozrunner
     _mozrunner.run_command = monkey_patched_mozrunner_run_command
+
