@@ -8,7 +8,7 @@ from pprint import pprint
 
 import json_hack
 import jsonrpclib
-
+import codecs
 
 jsonrpclib.config.use_jsonclass = True
 jsonrpclib.config.classes.add(datetime.datetime)
@@ -95,7 +95,7 @@ class TracRpc():
     def _smartertext2ticket(text):
         ''' '''
         
-        nl = '\n'
+        nl = u'\n'
         ticket={}
         lines = text.splitlines()
         #ticket['summary'] = lines[0] if len(lines) > 0 else None
@@ -305,6 +305,7 @@ class TracRpc():
         '''
         edits a ticket via texteditor, updates the ticket if contents changed
         '''
+        
         editor = get_editor()
         if not editor:
             print "error: i do not know which editor to call, please set EDITOR environment variable"
@@ -316,18 +317,16 @@ class TracRpc():
             return
 
         tempfd, tempname = tempfile.mkstemp()
-        #os.write(tempfd, self._ticket2text(ticket))
-        
+        utffd = codecs.open(tempname, "w", encoding="utf-8")
         ticket['description'] = ticket['description'].replace('\r\n', '\n')
-        
-        os.write(tempfd, self._smarterticket2text(ticket))
-        os.close(tempfd)
+        utffd.write(self._smarterticket2text(ticket))
+        utffd.close()
 
         editproc = subprocess.Popen(" ".join((editor, tempname)), shell=True)
         editproc.wait()
         
         try:
-            newticket = self._minimize_ticket(self._smartertext2ticket(open(tempname).read()))
+            newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
         except Exception, e:
             print Exception, e
             os.remove(tempname)
