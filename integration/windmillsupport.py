@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from .functional import wraps # copied from django 1.2.3 into integration, to get rid of django dependencies
+from functools import wraps
    
 from windmill.authoring import WindmillTestClient
 from windmill.bin.admin_lib import configure_global_settings, process_options, setup
