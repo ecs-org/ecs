@@ -50,6 +50,7 @@ def authenticated(username='windmill@example.org', password='shfnajwg9e'):
                     client.click(link=u'Logout')
                     client.waits.forPageLoad(timeout=u'20000')
                 finally:
+                    # call our firefox extension to clear the cookies
                     client.execJS(js='var element=document.createElement("CookieCleaner"); document.documentElement.appendChild(element); var evt=document.createEvent("Events"); evt.initEvent("UploadAssistantDeleteCookies", true, false); element.dispatchEvent(evt);')
                     client.execJS(js='window.location.href = "/";')
                     client.waits.forPageLoad(timeout=u'20000')

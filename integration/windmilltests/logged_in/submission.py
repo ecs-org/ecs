@@ -356,14 +356,15 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     # client.click(xpath=u"//select[@id='userswitcher_input']/option[1]")
     client.waits.forElement(timeout=u'10000', xpath="//h1[@id='headertitle']")
     headertitle = client.commands.getNodeContents(xpath="//h1[@id='headertitle']")['result'].strip()
-    ek, _ = headertitle.split(' ', 1)
+    ec_number, _ = headertitle.split(' ', 1)
     #client.waits.forPageLoad(timeout=u'20000')
-    return ek
+    return ec_number
 
 
 @authenticated()
 def test_submit_simple(client):
     create_submission(client)
+
 
 """
 @authenticated()
