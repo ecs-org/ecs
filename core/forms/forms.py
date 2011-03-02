@@ -98,11 +98,12 @@ class SubmissionEditorForm(forms.ModelForm):
         model = Submission
 
 
-AMG_FIELDS = (
-    'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
+AMG_REQUIRED_FIELDS = (
+    'substance_preexisting_clinical_tries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
     'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'submission_type', 'eudract_number', 
     'pharma_checked_substance', 'pharma_reference_substance', 
 )
+AMG_FIELDS = AMG_REQUIRED_FIELDS + ('substance_registered_in_countries', 'substance_p_c_t_countries',)
 
 MPG_FIELDS = (
     'medtech_checked_product', 'medtech_reference_substance', 
@@ -193,7 +194,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         cleaned_data['project_type_medical_device'] = any(self.cleaned_data.get(f, False) for f in ('project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 'project_type_medical_device_performance_evaluation'))
         
         if any(cleaned_data.get(f, False) for f in ('project_type_reg_drug', 'project_type_non_reg_drug')):
-            require_fields(self, AMG_FIELDS)
+            require_fields(self, AMG_REQUIRED_FIELDS)
 
         if cleaned_data.get('project_type_medical_device', False):
             require_fields(self, MPG_FIELDS)
