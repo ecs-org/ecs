@@ -124,7 +124,7 @@ class CategorizationReview(Activity):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        if is_acknowledged(self.workflow):
+        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0:
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
