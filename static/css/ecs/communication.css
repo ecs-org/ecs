@@ -99,7 +99,7 @@ table.messages .threadstart {
 
 /* icons */
 
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort {
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send {
   display: inline-block;
   text-indent: -9999px;
   width: 16px;
@@ -122,6 +122,9 @@ table.messages .threadstart {
 }
 .icon_sort {
   background: url(/static/images/icons.png) 0 -208px no-repeat;
+}
+.icon_send {
+  background: url(/static/images/icons.png) -160px -48px no-repeat;
 }
 
 /*
