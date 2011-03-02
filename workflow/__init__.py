@@ -43,7 +43,7 @@ def _post_save(sender, **kwargs):
         cts = [ContentType.objects.get_for_model(cls) for cls in sender.__mro__ if issubclass(cls, Model) and cls != Model and not cls._meta.abstract]
         graphs = Graph.objects.filter(content_type__in=cts, auto_start=True)
         for graph in graphs:
-            wf = Workflow.objects.create(graph=graph, data=obj)
+            wf = graph.create_workflow(data=obj)
             wf.start()
 post_save.connect(_post_save)
 

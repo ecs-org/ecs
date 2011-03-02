@@ -474,14 +474,6 @@ def assigned_submission_forms(request):
 
     return submission_form_list(request, submissions, stashed_submission_forms, meetings)
 
-@developer
-def start_workflow(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    from ecs.workflow.models import Graph
-    wf = Graph.objects.get(model=Submission, auto_start=True).create_workflow(data=submission)
-    wf.start()
-    return HttpResponseRedirect(reverse('ecs.core.views.submission_forms'))
-
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form

@@ -5,11 +5,8 @@ from ecs.workflow import Activity, guard, register
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, NotificationAnswer
 from ecs.core.models import Submission
 
-def _autostart_if(n, created):
-    return n.submission_forms.exists()
-
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
-    register(cls, autostart_if=_autostart_if)
+    register(cls, autostart_if=lambda n, created: n.submission_forms.exists())
 
 
 @guard(model=Notification)

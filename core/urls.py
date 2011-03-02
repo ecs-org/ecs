@@ -7,7 +7,6 @@ urlpatterns = patterns(
     url(r'^autocomplete/(?P<queryset_name>[^/]+)/$', 'ecs.core.views.autocomplete'),
 
     url(r'^submission/(?P<submission_pk>\d+)/$', 'ecs.core.views.view_submission'),
-    url(r'^submission/(?P<submission_pk>\d+)/start_workflow/$', 'ecs.core.views.start_workflow'),
     url(r'^submission/(?P<submission_pk>\d+)/copy_form/$', 'ecs.core.views.copy_latest_submission_form'),
     url(r'^submission/(?P<submission_pk>\d+)/messages/new/$', 'ecs.communication.views.new_thread'),
     url(r'^submission/(?P<submission_pk>\d+)/export/$', 'ecs.core.views.export_submission'),

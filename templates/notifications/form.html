@@ -100,7 +100,7 @@
             function loadSubmissionFormData(pks){
                 var querystring = [];
                 var request = new Request.HTML({
-                    url: '/submission_data_for_notification/',
+                    url: '{% url ecs.notifications.views.submission_data_for_notification %}',
                     data: 'submission_form=' + pks.join('&submission_form='),
                     method: 'get',
                     evalScripts: false,

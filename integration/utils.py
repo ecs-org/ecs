@@ -2,9 +2,11 @@ from django.contrib.auth.models import Group
 from ecs.utils import Args, camel_split
 from ecs.workflow.models import Graph, Node, Edge
 from ecs.tasks.models import TaskType
+from copy import deepcopy
 
 def workflow_graph_needs_upgrade(graph, nodes, edges):
     existing_nodes = {}
+    nodes = deepcopy(nodes)
     for name, args in nodes.iteritems():
         args.pop('group', None)
         try:
