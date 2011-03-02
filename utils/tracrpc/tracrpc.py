@@ -5,6 +5,7 @@ a class for interfacing with Trac via jsonrpc
 
 import os, sys, tempfile, datetime, subprocess, re
 from pprint import pprint
+import urllib2, urllib
 
 import json_hack
 import jsonrpclib
@@ -29,15 +30,170 @@ def get_editor():
         editor = os.getenv("EDITOR")
     return editor
 
+def _get_agilo_links(raw=False, testtrac=False):
+    ''' get it somewhere else
+usage: calls getlinks.sh as ecsdev@ecsdev.ep3.at
+getlinks makes a select * from ecs.agilo_link from database ecsdev as user ecsdev, and pipes its output to stdout
+result is a list with source|dest links, to be parsed
 
+this is to be called to construct links from agilo to make the "perfect" validation company documents ,-)
+
+    '''
+    from fabric.api import run, env, settings, hide
+    env.host_string = 'ecsdev@ecsdev.ep3.at'
+    with settings(hide('stdout')):
+        if testtrac:
+            result = run("~/getlinks_ekreqtest.sh")
+        else:
+            result = run("~/getlinks.sh")
+    if raw:
+        return result
+    else:
+        return _parse_agilo_links(result)
+
+def _parse_agilo_links(text):
+    ''' '''
+    
+    ids = []
+    lines = text.splitlines()
+    ids = [int(id) for line in text.splitlines() for id in line.split('|')]
+    links=[]            #list of ticketlinkstuples, (src,dst)
+    linkd = {}          #dict of linksources:[targets]
+    reverselinkd = {}   #dict of linktargets:[sources]
+    for line in lines:
+        src,dst = line.split("|")
+        src = int(src)
+        dst = int(dst)
+        links.append((src,dst))
+        if not linkd.has_key(src):
+            linkd[src] = [dst]
+        else:
+            linkd[src].append(dst)
+        if not reverselinkd.has_key(dst):
+            reverselinkd[dst] = [src]
+        else:
+            reverselinkd[dst].append(src)
+    
+    return ids,links,linkd,reverselinkd
+
+
+class HttpBot():
+    ''' '''
+    
+    tracproto = "https"
+    trachost = "ecsdev.ep3.at"
+    tracpath = "/project/ekreq"
+    #tracurl = "https://ecsdev.ep3.at/project/ekreq"
+    tracurl = "%s://%s%s" % (tracproto, trachost, tracpath)
+    ticketlinkurl = tracurl +"/links"
+    
+    username='sharing'
+    password='uehkdkDijepo833'
+    
+    opener = None
+    cookie_handler = None
+    auth_handler = None
+    form_token = None
+    
+    def __init__(self):
+        self.auth_handler = urllib2.HTTPBasicAuthHandler()
+        self.auth_handler.add_password(realm='ecsdev.ep3.at',
+                                  uri=self.tracurl,
+                                  user=self.username,
+                                  passwd=self.password)
+        self.cookie_handler = urllib2.HTTPCookieProcessor()
+        self.opener = urllib2.build_opener(self.auth_handler, self.cookie_handler)
+        self.opener.addheaders = [('User-agent', 'frankenzilla/1.0')] #Mozilla/5.0
+        urllib2.install_opener(self.opener)
+        response = self.opener.open(self.tracurl)
+        cj = self.cookie_handler.cookiejar
+        self.form_token = None
+        for c in cj:
+            if c.name == 'trac_form_token':
+                self.form_token = c.value
+    
+    def _update_form_token(self):
+        cj = self.cookie_handler.cookiejar
+        self.form_token = None
+        for c in cj:
+            if c.name == 'trac_form_token':
+                self.form_token = c.value
+        
+    def create_ticket_link(self, srcid, destid):
+        self._ticket_link(srcid, destid, create=True)
+    
+    def delete_ticket_link(self, srcid, destid):
+        self._ticket_link(srcid, destid, create=False)
+        
+    def _ticket_link(self, srcid, destid, create=True):
+        if create:
+            cmd = 'create link'
+        else:
+            cmd = 'delete link'
+        data = urllib.urlencode([('url_orig', '%s/ticket/%d?pane=edit' % (self.tracpath, srcid)),
+        ('__FORM_TOKEN', self.form_token),
+        ('src', srcid),
+        ('dest', destid),
+        ('autocomplete_parameter', ''),
+        ('cmd', cmd)])
+        print "sending '%s' request" % (cmd)
+        try:
+            response = self.opener.open(self.ticketlinkurl, data)
+        except urllib2.HTTPError, e: #, Exception
+            if e.getcode() == 500:
+                print "something wrent wrong and produced a http error 500 while linking ticket %d with %d (src, dst)" % (srcid, destid)
+            else:
+                print "unexpected error:"
+                print  sys.exc_info()[0]
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
+        
+        self._update_form_token()
+    
+    
+class Agilolinks():
+    
+    fetched_once = False
+    testtrac=False
+    ids = None
+    links = None
+    linkdict = None
+    reverselinkdict = None
+    
+    def __init__(self, testtrac=False):
+        self.testtrac = testtrac
+    
+    def updatecache(self):
+        self.ids, self.links, self.linkdict, self.reverselinkdict = _get_agilo_links(raw=False, testtrac=self.testtrac)
+        self.fetched_once = True
+        
+    def get_ticket_childs(self, tid):
+        if not self.fetched_once:
+            self.updatecache()
+        if self.linkdict.has_key(tid):
+            return self.linkdict[tid]
+        else:
+            return []
+        
+    def get_ticket_parents(self, tid):
+        if not self.fetched_once:
+            self.updatecache()
+        if self.reverselinkdict.has_key(tid):
+            return self.reverselinkdict[tid]
+        else:
+            return []
+    
 class TracRpc():
     '''
     makes the communication with Trac
     '''
     jsonrpc = None
     _url = None
+    debugmode = False
+    link_cache = None
+    httpbot = None
     
-    def __init__(self, username, password, protocol, hostname, urlpath):
+    def __init__(self, username, password, protocol, hostname, urlpath, debug=False):
         '''
         example: TracRpc('user', 'password', 'https', 'ecsdev.ep3.at', '/project/ecs')
         '''
@@ -45,7 +201,10 @@ class TracRpc():
         self._url = '%s://%s:%s@%s%s/%s' % (protocol, username, password, hostname,
                                       urlpath, C_TRAC_AUTH_JSON)
         self.jsonrpc = jsonrpclib.Server(self._url)
-    
+        self.debugmode = debug
+        self.link_cache = Agilolinks(testtrac = debug)
+        self.httpbot = HttpBot()
+        
     #see http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
     @classmethod
     def from_dict(cls, config_dict):
@@ -110,12 +269,25 @@ class TracRpc():
                 ticket['milestone'] = re.sub('^Milestone=', '', line)
             if re.search('^Priority=', line) != None:
                 ticket['priority'] = re.sub('^Priority=', '', line)
+            if re.search('^Childlinks=', line) != None:
+                tmp = re.sub('^Childlinks=', '', line)
+                tmp = tmp.split(',')
+                tmpclinks = []
+                for link in tmp:
+                    if link.strip() != '':
+                        tmpclinks.append(int(link.strip()))
+                ticket['childlinks'] = tmpclinks
+            if re.search('^Parentlinks=', line) != None:
+                tmp = re.sub('^Parentlinks=', '', line)
+                tmp = tmp.split(',')
+                tmpplinks = []
+                for link in tmp:
+                    if link.strip() != '':
+                        tmpplinks.append(int(link.strip()))
+                ticket['parentlinks'] = tmpplinks
             if line == '---description---':
                 ticket['description'] = nl.join(lines[i+1:len(lines)])
             i+= 1
-            
-        #ticket['remaining_time'] = None #??
-        #ticket['type'] = None #??
         return ticket
         
     
@@ -127,7 +299,7 @@ class TracRpc():
         descr = ticket['description'].replace(u'\r\n', u'\n')
         summary = ticket['summary']
         nl = u'\n'
-        return "%s%sMilestone=%s%sPriority=%s%s---description---%s%s%s" % (summary, nl, ticket['milestone'], nl, ticket['priority'], nl, nl, descr, nl)
+        return "%s%sMilestone=%s%sChildlinks=%s%sParentlinks=%s%sPriority=%s%s---description---%s%s%s" % (summary, nl, ticket['milestone'], nl, ticket['childlinks'], nl, ticket['parentlinks'], nl, ticket['priority'], nl, nl, descr, nl)
     
     @staticmethod
     def _minimize_ticket(ticket):
@@ -319,29 +491,57 @@ class TracRpc():
         tempfd, tempname = tempfile.mkstemp()
         utffd = codecs.open(tempname, "w", encoding="utf-8")
         ticket['description'] = ticket['description'].replace('\r\n', '\n')
+        ticket['childlinks'] = ', '.join([str(x) for x in self.link_cache.get_ticket_childs(ticket['id'])])
+        ticket['parentlinks'] = ', '.join([str(x) for x in self.link_cache.get_ticket_parents(ticket['id'])])
         utffd.write(self._smarterticket2text(ticket))
         utffd.close()
 
         editproc = subprocess.Popen(" ".join((editor, tempname)), shell=True)
         editproc.wait()
         
+        #newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
+        
         try:
             newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
+            
         except Exception, e:
             print Exception, e
             os.remove(tempname)
             raise Exception
             #abort("exception")
+            
+        ticket['childlinks'] = [x for x in self.link_cache.get_ticket_childs(ticket['id'])]
+        ticket['parentlinks'] = [x for x in self.link_cache.get_ticket_parents(ticket['id'])]
+        """print "clinks:"
+        pprint(newticket['childlinks'])
+        pprint(ticket['childlinks'])
+        print "plinks:"
+        pprint(newticket['parentlinks'])
+        pprint(ticket['parentlinks'])"""
         
+        if newticket['childlinks'] != ticket['childlinks']:
+            #print "would update ticket links"
+            self.link_tickets(ticket['id'], newticket['childlinks'], deletenonlistedtargets=True)
+            print "updated ticket child links"
+        if newticket['parentlinks'] != ticket['parentlinks']:
+            print "parentlinks:"
+            print "THIS is not working yet! i have to edit all parent tickets and delete the actual ticket.id from their child links"
+            """
+            for pid in newticket['parentlinks']:
+                self.link_tickets(pid, [ticket['id']], deletenonlistedtargets=False)
+            print "updated ticket parent links - experimental"
+            
+            """
+            
         #can't just compare dicts here
         #ticket will have type & remaining_time set in most cases
         if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']\
             or ticket['priority'] != newticket['priority'] or ticket['milestone'] != newticket['milestone']:
             success, additional = self._update_ticket(tid, newticket, comment=comment)
-            #print "EDITTING TICKET"
+            print "updated ticket via rpc"
             # fixme: check if successfull
         else:
-            print "ticket didn't change - not updated - you saved bandwidth"
+            print "ticket didn't change - not updated(via rpc) - you saved bandwidth"
     
     
     def update_remaining_time(self, tid, new_time, comment=None):
@@ -448,8 +648,9 @@ class TracRpc():
             mc.ticket.get(tid)
         results = self._safe_rpc(mc)
         
-        for result in results.results['result']:
-            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        if results:
+            for result in results.results['result']:
+                tickets.append(self._get_ticket_from_rawticket(result['result']))
         
         return tickets
     
@@ -565,5 +766,72 @@ class TracRpc():
             self.edit_ticket(id, comment=None)
             print "press any key to continue or CTRL-C to quit"
             tmpuser = raw_input()
-            
-    
+        
+                
+    def link_tickets(self, srcid=None, destids=None, deletenonlistedtargets=False):
+        ''' '''
+        import urllib2, urllib
+        if not srcid:
+            print "no source ticket id specified for linking - returning"
+            return
+        
+        if len(destids) < 1:
+            print "no target ticket id(s) specified for linking - returning"
+            return
+        
+        print "linking ticket %d with %s" % (srcid, destids)
+        
+        targetids = []
+        #check that no duplicate link is tried to be created
+        srclinks = self.link_cache.get_ticket_childs(srcid)
+        if srclinks != None:
+            for tid in destids:
+                if tid not in srclinks:
+                    targetids.append(tid)
+                else:
+                    print "ticket %d already linked with ticket %d. ignoring it." % (tid, srcid)
+                    pass
+        else:
+            targetids = destids
+        
+        #delete ticket links not supplied as arg
+        if deletenonlistedtargets and srclinks != None:
+            for tid in srclinks:
+                if tid not in destids:
+                    self.httpbot.delete_ticket_link(srcid, tid)
+        
+        #check if targetIDs exist as tickets:
+        #FIXME: here a multicall would be better
+        for tid in targetids:
+            if self._get_ticket(tid) == None:
+                print "ticket %d does not exist.ignoring it" % tid 
+                targetids.remove(tid)
+        
+        #check if src exists:
+        if self._get_ticket(srcid) == None:
+            print "src ticket %d does not exist. returning!" % srcid
+            return
+        
+        #do the actual linking:
+        for tid in targetids:
+            self.httpbot.create_ticket_link(srcid, tid)
+        if len(targetids) > 0:
+            self.link_cache.updatecache()
+        
+    def linktest(self):
+        #pprint(self._safe_rpc(self.jsonrpc.ticket.get, 2921))
+        #self._get_ticket_links()
+        #self.link_tickets(2921, [1898, 2922])
+        #self.link_tickets(2921, [1898], deletenonlistedtargets=True)
+        self.link_tickets(2921, [2920], deletenonlistedtargets=False)
+        #self.httpbot.delete_ticket_link(2921, 1898)
+        #print "trying to link 504 w 2921 & 1337:"
+        #self.link_tickets(504, [2921, 1337])
+        
+                
+    def _get_ticket_links(self):
+        pprint(_get_agilo_links(testtrac=True))
+        
+
+
+
