@@ -13,28 +13,9 @@ from ecs.documents.models import Document
 from ecs.utils.pdfutils import pdf_isvalid, pdf2pdfa
 
 
-class SimpleDocumentForm(ModelFormPickleMixin, forms.ModelForm):
+class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
 
-    def clean(self):
-        file = self.cleaned_data.get('file')
-        if not self.cleaned_data.get('original_file_name') and file:
-            self.cleaned_data['original_file_name'] = file.name
-        return self.cleaned_data
-        
-    def save(self, commit=True):
-        obj = super(SimpleDocumentForm, self).save(commit=False)
-        obj.original_file_name = self.cleaned_data.get('original_file_name')
-        if commit:
-            obj.save()
-        return obj
-    
-    class Meta:
-        model = Document
-        fields = ('file', 'date', 'version')
-
-
-class DocumentForm(SimpleDocumentForm):
     def clean_file(self):
         pdf = self.cleaned_data['file']
         if not pdf:
@@ -63,6 +44,13 @@ class DocumentForm(SimpleDocumentForm):
                     del self._errors[f]
 
         return cd
+
+    def save(self, commit=True):
+        obj = super(DocumentForm, self).save(commit=False)
+        obj.original_file_name = self.cleaned_data.get('original_file_name')
+        if commit:
+            obj.save()
+        return obj
 
     class Meta:
         model = Document

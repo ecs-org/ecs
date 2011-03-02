@@ -28,7 +28,7 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
-from ecs.documents.forms import DocumentForm, SimpleDocumentForm
+from ecs.documents.forms import DocumentForm
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -218,28 +218,11 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
-    if request.method == 'POST':
-        checklist.documents = Document.objects.filter(pk__in=request.POST.getlist('documents'))
-    checklist_documents = checklist.documents.all()
 
     form = make_checklist_form(checklist)(request.POST or None)
-    
-    document_form_is_empty = True
-    if blueprint.min_document_count is None:
-        document_form = None
-    elif 'document-file' in request.FILES:
-        document_form = SimpleDocumentForm(request.POST or None, request.FILES or None, prefix='document')
-        if document_form.is_valid():
-            doc = document_form.save()
-            checklist.documents.add(doc)
-            document_form = SimpleDocumentForm(prefix='document')
-        else:
-            document_form_is_empty = False
-    else:
-        document_form = SimpleDocumentForm(prefix='document')
-        
+
     if request.method == 'POST':
-        if form.is_valid() and (not document_form or document_form_is_empty or document_form.is_valid()):
+        if form.is_valid():
             for i, question in enumerate(blueprint.questions.order_by('text')):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
                 answer.answer = form.cleaned_data['q%s' % i]
@@ -248,10 +231,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
         checklist.save() # touch the checklist instance to trigger the post_save signal
 
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context={
-        'checklist_document_form': document_form,
-        'checklist_documents': checklist_documents,
-    })
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form})
 
 
 @user_flag_required('internal')
