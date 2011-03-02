@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-28 13:34+0100\n"
+"POT-Creation-Date: 2011-03-02 19:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Firma"
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:79 core/forms/layout.py:55 core/forms/layout.py:56
+#: billing/views.py:79 core/forms/layout.py:57 core/forms/layout.py:58
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -373,7 +373,7 @@ msgid "fax"
 msgstr "FAX"
 
 #: core/paper_forms.py:112 core/paper_forms.py:123 core/paper_forms.py:272
-#: core/paper_forms.py:296
+#: core/paper_forms.py:297
 msgid "e-mail"
 msgstr "E-Mail"
 
@@ -648,7 +648,7 @@ msgstr "Allfällige Abweichungen von den o.a. Bestimmungen (Normen)"
 msgid "insurance company"
 msgstr "Versicherungsgesellschaft"
 
-#: core/paper_forms.py:192 core/paper_forms.py:293
+#: core/paper_forms.py:192 core/paper_forms.py:294
 msgid "phone"
 msgstr "Telefon"
 
@@ -1082,16 +1082,16 @@ msgstr "Wie erfolgt die Anonymisierung?"
 msgid "salutation"
 msgstr "Anrede"
 
-#: core/paper_forms.py:269 core/paper_forms.py:306 meetings/forms.py:15
+#: core/paper_forms.py:269 core/paper_forms.py:307 meetings/forms.py:15
 #: meetings/forms.py:33
 msgid "title"
 msgstr "Titel"
 
-#: core/paper_forms.py:270 core/paper_forms.py:307
+#: core/paper_forms.py:270 core/paper_forms.py:308
 msgid "first name"
 msgstr "Vorname"
 
-#: core/paper_forms.py:271 core/paper_forms.py:308
+#: core/paper_forms.py:271 core/paper_forms.py:309
 msgid "last name"
 msgstr "Nachname"
 
@@ -1124,67 +1124,78 @@ msgstr "vom Sponsor autorisierte Person/Organisation"
 msgid "The sponsor agrees with the publication."
 msgstr "Der Sponsor stimmt der Veröffentlichung zu."
 
-#: core/paper_forms.py:286
+#: core/paper_forms.py:282
+msgid ""
+"The sponsor agrees with the publication of following data by the Ethics "
+"Commission as appropiate: EC-Number, Submission Date, Project Title, Main "
+"Investigator, Sponsor/CRO and the Centres"
+msgstr ""
+"Der Sponsor stimmt zu, dass die folgenden Daten des Antrags ggf. durch die "
+"Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt "
+"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, Hauptprüfer, "
+"Sponsor/CRO und weitere Zentren"
+
+#: core/paper_forms.py:287
 msgid "study site"
 msgstr "Prüfzentrum"
 
-#: core/paper_forms.py:287
+#: core/paper_forms.py:288
 msgid "ethics commission"
 msgstr "Ethik-Kommission"
 
-#: core/paper_forms.py:288
+#: core/paper_forms.py:289
 msgid "principal investigator"
 msgstr "Hauptprüfer"
 
-#: core/paper_forms.py:289
+#: core/paper_forms.py:290
 msgid "salutation of the Investigator"
 msgstr "Anrede des Prüfarztes"
 
-#: core/paper_forms.py:290
+#: core/paper_forms.py:291
 msgid "title of the Investigator"
 msgstr "Titel des Prüfarztes"
 
-#: core/paper_forms.py:291
+#: core/paper_forms.py:292
 msgid "first name of the Investigator"
 msgstr "Vorname des Prüfarztes"
 
-#: core/paper_forms.py:292
+#: core/paper_forms.py:293
 msgid "last name of the Investigator"
 msgstr "Nachname des Prüfarztes"
 
-#: core/paper_forms.py:294
+#: core/paper_forms.py:295
 msgid "mobile"
 msgstr "\"Pieps\"/Mobil"
 
-#: core/paper_forms.py:295
+#: core/paper_forms.py:296
 msgid "FAX"
 msgstr "FAX"
 
-#: core/paper_forms.py:297
+#: core/paper_forms.py:298
 msgid "Jus practicandi"
 msgstr ""
 
-#: core/paper_forms.py:298
+#: core/paper_forms.py:299
 msgid "specialist for"
 msgstr "Facharzt für"
 
-#: core/paper_forms.py:299
+#: core/paper_forms.py:300
 msgid "certified"
 msgstr "Prüfärztekurs"
 
-#: core/paper_forms.py:301
+#: core/paper_forms.py:302
 msgid "number of participants"
 msgstr "Anzahl Teilnehmer/innen"
 
-#: core/paper_forms.py:305
+#: core/paper_forms.py:306
 msgid "Ms/Mr"
 msgstr "Fr/Hr"
 
-#: core/paper_forms.py:309
+#: core/paper_forms.py:310
 msgid "Institution"
 msgstr "Institution"
 
-#: core/paper_forms.py:313
+#: core/paper_forms.py:314
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
@@ -1312,58 +1323,58 @@ msgstr "Kurzfassung"
 msgid "sponsor"
 msgstr "Sponsor"
 
-#: core/forms/layout.py:47
+#: core/forms/layout.py:49
 msgid "invoice recipient"
 msgstr "Rechnungsempfänger"
 
-#: core/forms/layout.py:62 core/forms/layout.py:64
+#: core/forms/layout.py:64 core/forms/layout.py:66
 #: templates/submissions/filterform.inc:10 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/layout.py:63
+#: core/forms/layout.py:65
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
 
-#: core/forms/layout.py:71 core/forms/layout.py:73
+#: core/forms/layout.py:73 core/forms/layout.py:75
 #: templates/submissions/filterform.inc:11 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/layout.py:72
+#: core/forms/layout.py:74
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: core/forms/layout.py:78
+#: core/forms/layout.py:80
 msgid "measures"
 msgstr "Maßnahmen"
 
-#: core/forms/layout.py:81 core/forms/layout.py:82
+#: core/forms/layout.py:83 core/forms/layout.py:84
 msgid "biometrics"
 msgstr "Biometrie"
 
-#: core/forms/layout.py:93 core/forms/layout.py:94
+#: core/forms/layout.py:95 core/forms/layout.py:96
 msgid "insurance"
 msgstr "Versicherung"
 
-#: core/forms/layout.py:98 core/forms/layout.py:118 core/forms/layout.py:127
-#: core/forms/layout.py:136
+#: core/forms/layout.py:100 core/forms/layout.py:120 core/forms/layout.py:129
+#: core/forms/layout.py:138
 msgid "documents"
 msgstr "Unterlagen"
 
-#: core/forms/layout.py:99
+#: core/forms/layout.py:101
 msgid "centres"
 msgstr "Zentren"
 
-#: core/forms/layout.py:113 core/forms/layout.py:114 core/forms/layout.py:122
-#: core/forms/layout.py:123 core/forms/layout.py:131 core/forms/layout.py:132
-#: core/forms/layout.py:157 core/forms/layout.py:158
+#: core/forms/layout.py:115 core/forms/layout.py:116 core/forms/layout.py:124
+#: core/forms/layout.py:125 core/forms/layout.py:133 core/forms/layout.py:134
+#: core/forms/layout.py:159 core/forms/layout.py:160
 msgid "General information"
 msgstr "Allgemeine Angaben"
 
-#: core/forms/layout.py:137
+#: core/forms/layout.py:139
 #: templates/notifications/view/AmendmentNotificationForm.html:7
 #, fuzzy
 msgid "Changes"
@@ -1572,11 +1583,11 @@ msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
-#: documents/forms.py:41
+#: documents/forms.py:22
 msgid "no file"
 msgstr "keine Datei"
 
-#: documents/forms.py:45
+#: documents/forms.py:26
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
