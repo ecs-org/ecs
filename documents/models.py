@@ -130,7 +130,7 @@ class Document(models.Model):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
-        return "{0} {1}-{2} vom {3}".format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
+        return u'{0} {1}-{2} vom {3}'.format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
         ext = mimetypes.guess_extension(self.mimetype)
