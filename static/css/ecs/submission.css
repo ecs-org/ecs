@@ -6,29 +6,34 @@
 #submission_list_filter {
   margin-bottom: 10px;
 }
+.submission_list_choose {
+  border-bottom: 1px solid #eddfbf;
+}
 .submission_list_choose input[type=checkbox] {
-  margin-top: 5px;
+  position: absolute;
+  top: 5px;
 }
 .submission_list_choose label {
   display: inline-block;
-  margin: 5px 5px 3px 1px;
+  margin: 0 5px 5px;
   cursor: pointer;
-}
-#submission_widget a, #submission_widget li, #submission_widget label, #submission_widget table {
-  font-size: 12px;
 }
 .submission_list_choose li {
   display: inline;
   list-style: none;
+  margin-left: 14px;
 }
-#content ul.submission_list_choose {
-  border-bottom: 1px solid #D8E6EF;
-  margin: 0;
+#content ul.submission_list_choose, ul.submission_list_choose {
+  position: relative;
+  margin: 0 0 3px;
+  line-height: 16px;
+  padding: 3px 0 0;
 }
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
   width: 16px;
   height: 16px;
   padding-left: 20px;
+  padding-bottom: 1px;
 }
 .submission_new {
   background: url(/static/images/icons.png) -80px -256px no-repeat;

@@ -86,25 +86,26 @@
 #task_list_filter {
   margin-bottom: 10px;
 }
+.task_list_choose {
+  border-bottom: 1px solid #eddfbf;
+}
 .task_list_choose label {
   display: inline-block;
-  margin: 0 5px;
+  margin: 0 5px 5px;
   cursor: pointer;
-}
-#task_main .task_list_choose {
-  min-width: 100px;
-  border-bottom: 1px solid #D8E6EF;
-  padding-bottom: 3px;
-  margin: 0 0 5px;
 }
 #task_main .task_list_choose select {
   padding: 0 !important;
   width: 150px;
 }
+.task_list_choose input[type=checkbox] {
+  position: absolute;
+  top: 5px;
+}
 .task_list_choose li {
   display: inline;
   list-style: none;
-  line-height: 20px;
+  margin-left: 14px;
 }
 .task_item {
   background-color: #EFEFD1;
@@ -114,9 +115,13 @@
   float: left;
   display: inline;
   margin-right: 10px;
+  padding: 2px 0;
 }
-.task_list a, #task_main label, #task_main table {
-  font-size: 12px;
+#content ul.task_list_choose, ul.task_list_choose {
+  position: relative;
+  margin: 0 0 3px;
+  line-height: 16px;
+  padding: 3px 0 0;
 }
 
 a {
@@ -131,6 +136,7 @@ a:hover {
   width: 16px;
   height: 16px;
   padding-left: 16px;
+  padding-bottom: 1px;
   margin-right: 5px;
 }
 .task_mine {

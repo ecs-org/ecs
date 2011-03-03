@@ -316,13 +316,12 @@
 } 
 */
 #status_tab th, #involved_parties_tab th, .messages th, .meeting_detail th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
-  background: #eaf4fa;
+  background-color: #ebe8d0;
+  border-bottom: 1px solid #eddfbf;
   border-collapse: collapse;
-  border-bottom: 1px solid #c5deef;
 }
 #status_tab td, #involved_parties_tab td, .messages td, .meeting_detail td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #eddfbf;
 }
 .task_back_log tr.closed td {
   color: #999;
@@ -841,7 +840,7 @@ content ol.submission_list li .actions {
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 .task_item:nth-of-type(1) ,
 #task_form li:nth-of-type(1) {
-  border-top: 1px solid #D8E6EF;
+  border-top: 1px solid #eddfbf;
 }
 #content ol.submission_list li:nth-child(odd) ,
 .submission_list li:nth-child(odd) ,
@@ -856,8 +855,8 @@ content ol.submission_list li .actions {
 .administration_detail .user_list tr:nth-child(odd) ,
 .task_item:nth-child(odd) ,
 #task_form li:nth-child(odd) {
-  background-color: #eaf4fa;
-  border-bottom: 1px solid #D8E6EF;
+  background-color: #EFEFDD;
+  border-bottom: 1px solid #eddfbf;
 }
 #content ol.submission_list li:nth-child(even) ,
 .submission_list li:nth-child(even) ,
@@ -872,7 +871,7 @@ content ol.submission_list li .actions {
 .administration_detail .user_list tr:nth-child(even) ,
 .task_item:nth-child(even) ,
 #task_form li:nth-child(even) {
-  background-color: #EFF9FF;
-  border-bottom: 1px solid #D8E6EF;  
+  background-color: #E8E8D8;
+  border-bottom: 1px solid #eddfbf;  
 }
 
