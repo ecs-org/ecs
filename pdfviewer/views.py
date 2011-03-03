@@ -12,18 +12,13 @@ from ecs.core.models import SubmissionForm
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
-from ecs.utils.msutils import generate_pages_urllist
 
 
 def show(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
 
-    return render(request, 'pdfviewer/viewer.html', {
-        'document': document,
-        'annotations': simplejson.dumps(annotations),
-        'images': simplejson.dumps(generate_pages_urllist(document.uuid_document, document.pages)),
-    })
+    return render(request, 'pdfviewer/viewer.html', {'document': document})
 
 @csrf_exempt
 def edit_annotation(request, document_pk=None):
