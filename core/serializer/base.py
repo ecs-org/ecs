@@ -6,7 +6,7 @@ from urllib2 import urlopen
 
 from django.utils import simplejson
 from django.db import models
-from django.core.files.base import File, ContentFile
+from django.core.files.base import ContentFile
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes import generic
 
