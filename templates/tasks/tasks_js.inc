@@ -13,6 +13,8 @@
           });
       });
 
+      var threshold = 7;
+
       var toggle_collapse = function(){
           var item = this.getParent();
           var lis = item.getElement('ul').getElements('li');
@@ -22,15 +24,18 @@
               lis.pop().hide();
           } else {
               this.innerHTML = '{% trans "Expand" %}';
-              lis.splice(0, 3);
+              lis.splice(0, threshold);
               lis.hide();
               lis.pop().show();
           }
           item.toggleClass('collapsed');
       };
       $$('#task_main .task_item.toggle_collapse').each(function(item){
+          if (item.getElement('ul').getElements('li').length <= threshold) {
+              return;
+          }
           var toggler = new Element('a', {
-              'text': 'roflcopter',
+              'text': 'foo',
               'events': {
                   'click': toggle_collapse
               },

@@ -28,7 +28,7 @@
         <h3>{% trans "My Tasks" %}</h3>
         {% regroup mine_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
-            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+            <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
@@ -45,7 +45,7 @@
         <h3>{% trans "Tasks assigned to me" %}</h3>
         {% regroup assigned_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
-            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+            <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
@@ -63,7 +63,7 @@
         <h3>{% trans "Open Tasks" %}</h3>
         {% regroup open_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
-            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+            <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
@@ -80,7 +80,7 @@
         <h2>{% trans "Proxy Tasks" %}</h2>
         {% regroup proxy_tasks by task_type.name as task_type_list %}
         {% for task_type in task_type_list %}
-            <div class="task_item{% if task_type.list|length > 3 %} toggle_collapse{% endif %}">
+            <div class="task_item toggle_collapse">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
