@@ -327,7 +327,7 @@ class SubmissionForm(models.Model):
     medtech_reference_substance = models.TextField(null=True, blank=True)
 
     # 2.5
-    clinical_phase = models.CharField(max_length=10)
+    clinical_phase = models.CharField(max_length=10, null=True, blank=True)
     
     # 2.6 + 2.7 (via ParticipatingCenter)
     
