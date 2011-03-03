@@ -145,6 +145,10 @@ class HttpBot():
             else:
                 print "unexpected error:"
                 print  sys.exc_info()[0]
+                print  sys.exc_info()
+                pprint(e.__dict__)
+                pprint(e.__builtin__)
+                pprint(e)
         except:
             print "Unexpected error:", sys.exc_info()[0]
         
@@ -268,7 +272,11 @@ class TracRpc():
             if re.search('^Milestone=', line) != None:
                 ticket['milestone'] = re.sub('^Milestone=', '', line)
             if re.search('^Priority=', line) != None:
-                ticket['priority'] = re.sub('^Priority=', '', line)
+                tmp = re.sub('^Priority=', '', line)
+                if tmp == 'None':
+                    ticket['priority'] = None
+                else:
+                    ticket['priority'] = tmp
             if re.search('^Childlinks=', line) != None:
                 tmp = re.sub('^Childlinks=', '', line)
                 tmp = tmp.split(',')
@@ -502,8 +510,8 @@ class TracRpc():
         #newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
         
         try:
-            newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
-            
+            #newticket = self._minimize_ticket(self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read()))
+            newticket = self._smartertext2ticket(codecs.open(tempname, "r", encoding="utf-8").read())
         except Exception, e:
             print Exception, e
             os.remove(tempname)
@@ -520,24 +528,39 @@ class TracRpc():
         pprint(ticket['parentlinks'])"""
         
         if newticket['childlinks'] != ticket['childlinks']:
-            #print "would update ticket links"
             self.link_tickets(ticket['id'], newticket['childlinks'], deletenonlistedtargets=True)
             print "updated ticket child links"
         if newticket['parentlinks'] != ticket['parentlinks']:
-            print "parentlinks:"
-            print "THIS is not working yet! i have to edit all parent tickets and delete the actual ticket.id from their child links"
+            #print "updating parentlinks:"
             """
-            for pid in newticket['parentlinks']:
-                self.link_tickets(pid, [ticket['id']], deletenonlistedtargets=False)
-            print "updated ticket parent links - experimental"
+            get all parent tickets that are not linked to this child anymore
+                delete this child from there
+            
+            get all parent tickets that are newly linked to this child
+                link this child to that ticket  (pid, cid)
             
             """
+            deletedparents = []
+            for pid in ticket['parentlinks']:
+                if pid not in newticket['parentlinks']:
+                    deletedparents.append(pid)
+            
+            newparents = []
+            for pid in newticket['parentlinks']:
+                if pid not in ticket['parentlinks']:
+                    newparents.append(pid)
+            
+            for pid in deletedparents:
+                self.delete_ticket_links(pid, [ticket['id']])
+            
+            for pid in newparents:
+                self.link_tickets(pid, [ticket['id']], deletenonlistedtargets=False)
             
         #can't just compare dicts here
         #ticket will have type & remaining_time set in most cases
         if ticket['summary'] != newticket['summary'] or ticket['description'] != newticket['description']\
             or ticket['priority'] != newticket['priority'] or ticket['milestone'] != newticket['milestone']:
-            success, additional = self._update_ticket(tid, newticket, comment=comment)
+            success, additional = self._update_ticket(tid, self._minimize_ticket(newticket), comment=comment)
             print "updated ticket via rpc"
             # fixme: check if successfull
         else:
@@ -767,10 +790,25 @@ class TracRpc():
             print "press any key to continue or CTRL-C to quit"
             tmpuser = raw_input()
         
-                
+    def delete_ticket_links(self, srcid=None, destids=None):
+        ''' '''
+        if not srcid:
+            print "no source ticket id specified for link deletion - returning"
+            return
+        
+        if len(destids) < 1:
+            print "no target ticket id(s) specified for link deletion - returning"
+            return
+        
+        for tid in destids:
+            self.httpbot.delete_ticket_link(srcid, tid)
+        
+        if len(targetids) > 0:
+            self.link_cache.updatecache()
+             
     def link_tickets(self, srcid=None, destids=None, deletenonlistedtargets=False):
         ''' '''
-        import urllib2, urllib
+        
         if not srcid:
             print "no source ticket id specified for linking - returning"
             return
