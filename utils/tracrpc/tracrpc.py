@@ -739,7 +739,7 @@ class TracRpc():
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
     
-    def simple_query(self, query=None, verbose=False, only_numbers=False):
+    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None):
         ''' '''
         
         if not query:
@@ -747,12 +747,21 @@ class TracRpc():
             return
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query) # XXX trac has max=100 many queries
         
+        if skip:
+            if skip > len(ticket_ids):
+                print "with skip=%d, i would skip all tickets... skipping 0 tickets."
+                skip = 0
+            else:
+                ticket_ids = ticket_ids[skip:]
+        
         if only_numbers:
-            print "ticket IDs:"
             idlist = " ".join(unicode(id) for id in ticket_ids)
+            print "ticket IDs:"
             print idlist
             print ""
-            print "fetched %s tickets" % len(ticket_ids)
+            print "fetched %s tickets" % len(idlist)
+            if skip > 0:
+                print "%d tickets skipped" % skip
             return
         
         tickets = []
@@ -777,6 +786,8 @@ class TracRpc():
             
         print ""
         print "fetched %s tickets" % len(tickets)
+        if skip > 0:
+            print "%d tickets skipped" % skip
     
     def batch_edit(self, query=None, verbose=False):
         ''' '''
@@ -793,6 +804,8 @@ class TracRpc():
             
     def interactive_batch_edit(self, query=None, skip=None, verbose=False):
         ''' a simple trac shell (hopefully)'''
+        from tracshell import TracShell
+        
         if not query:
             print "please supply a query"
             return
@@ -800,12 +813,14 @@ class TracRpc():
         print "%d tickets returned by query" % len(ticket_ids)
         print "lala"
         
+        
+        
         for id in ticket_ids:
-            print "editing ticket %s" % id
+            #print "editing ticket %s" % id
             #self.edit_ticket(id, comment=None)
-            print "press any key to continue or CTRL-C to quit"
-            cmd = raw_input()
-            pprint(cmd)
+            #print "press any key to continue or CTRL-C to quit"
+            shell = TracShell(tracrpc=self, ticketid=id)
+            shell.run()
         
     def delete_ticket_links(self, srcid=None, destids=None):
         ''' '''
