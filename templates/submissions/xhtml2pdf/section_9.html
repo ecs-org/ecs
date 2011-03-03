@@ -16,7 +16,7 @@ cellspacing="1">
 </td>
 <td width="178"><b>{{ doc.version }}</b></td>
 </td>
-<td width="82"><b>{{ doc.date }}</b></td>
+<td width="82"><b>{{ doc.date|date:'d.m.Y' }}</b></td>
 </tr>
 {% endfor %}
 </table>
