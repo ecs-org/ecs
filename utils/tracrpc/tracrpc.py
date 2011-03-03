@@ -761,8 +761,9 @@ class TracRpc():
             mc.ticket.get(tid)
         results = self._safe_rpc(mc)
         
-        for result in results.results['result']:
-            tickets.append(self._get_ticket_from_rawticket(result['result']))
+        if results:
+            for result in results.results['result']:
+                tickets.append(self._get_ticket_from_rawticket(result['result']))
         
         #print " ID  summary                            milestone      priority"
         print "%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
@@ -789,6 +790,22 @@ class TracRpc():
             self.edit_ticket(id, comment=None)
             print "press any key to continue or CTRL-C to quit"
             tmpuser = raw_input()
+            
+    def interactive_batch_edit(self, query=None, skip=None, verbose=False):
+        ''' a simple trac shell (hopefully)'''
+        if not query:
+            print "please supply a query"
+            return
+        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        print "%d tickets returned by query" % len(ticket_ids)
+        print "lala"
+        
+        for id in ticket_ids:
+            print "editing ticket %s" % id
+            #self.edit_ticket(id, comment=None)
+            print "press any key to continue or CTRL-C to quit"
+            cmd = raw_input()
+            pprint(cmd)
         
     def delete_ticket_links(self, srcid=None, destids=None):
         ''' '''
