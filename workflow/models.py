@@ -159,12 +159,12 @@ class Node(models.Model):
         return Edge.objects.create(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
         
     def add_branches(self, guard, true, false):
-        self.add_edge(true, guard=guard.instance)
-        self.add_edge(false, guard=guard.instance, negated=True)
+        self.add_edge(true, guard=guard._meta.instance)
+        self.add_edge(false, guard=guard._meta.instance, negated=True)
     
     def get_edge(self, to, guard=None, negated=False, deadline=False):
         if guard:
-            guard = guard.instance
+            guard = guard._meta.instance
         return Edge.objects.get(from_node=self, to_node=to, guard=guard, negated=negated, deadline=deadline)
         
     def bind(self, workflow):
