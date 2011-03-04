@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 11:41+0100\n"
+"POT-Creation-Date: 2011-03-04 12:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -165,29 +165,29 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:269
+#: core/diff.py:270
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:270
+#: core/diff.py:271
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:271
+#: core/diff.py:272
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:273
+#: core/diff.py:274
 msgid ""
 "Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
 "Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:274
+#: core/diff.py:275
 msgid "Dokumente"
 msgstr ""
 
-#: core/diff.py:282
+#: core/diff.py:283
 msgid "Mitarbeiter"
 msgstr ""
 
@@ -1100,7 +1100,6 @@ msgid "Institution / Company"
 msgstr "Institution/ Firma"
 
 #: core/paper_forms.py:275
-#, fuzzy
 msgid "position"
 msgstr "Position"
 
@@ -1204,32 +1203,28 @@ msgid "Sponsor"
 msgstr ""
 
 #: core/parties.py:38
-#, fuzzy
 msgid "Invoice"
-msgstr "Einladen"
+msgstr "Rechnung"
 
 #: core/parties.py:44
 msgid "Submitter"
 msgstr ""
 
 #: core/parties.py:46
-#, fuzzy
 msgid "Presenter"
-msgstr "Zentren"
+msgstr "Präsentator"
 
 #: core/parties.py:49
-#, fuzzy
 msgid "Primary Investigator"
-msgstr "Prüfarzt"
+msgstr "Hauptprüfer"
 
 #: core/parties.py:58
 msgid "Board Member Review"
 msgstr ""
 
 #: core/parties.py:61
-#, fuzzy
 msgid "Additional Review"
-msgstr "Einstufungs-Review"
+msgstr "Zusatz-Review"
 
 #: core/task_queue.py:26
 #, python-format
@@ -1376,9 +1371,8 @@ msgstr "Allgemeine Angaben"
 
 #: core/forms/layout.py:139
 #: templates/notifications/view/AmendmentNotificationForm.html:7
-#, fuzzy
 msgid "Changes"
-msgstr "Passwort ändern"
+msgstr "Änderungen"
 
 #: core/forms/review.py:43
 msgid "Studies cannot be classified 'expedited' and 'thesis' at the same time."
@@ -1413,9 +1407,8 @@ msgid "other University"
 msgstr "andere Universität"
 
 #: core/models/checklist.py:13
-#, fuzzy
 msgid "optional documents"
-msgstr "Unterlagen"
+msgstr "Optionale Unterlagen"
 
 #: core/models/checklist.py:13
 msgid "one mandatory document"
@@ -2062,16 +2055,16 @@ msgstr "an"
 msgid "von"
 msgstr "von"
 
-#: templates/documents/compact_list.html:28
+#: templates/documents/compact_list.html:30
 #: templates/submissions/readonly_form.html:189
 msgid "Download"
 msgstr "Download"
 
-#: templates/documents/compact_list.html:29
+#: templates/documents/compact_list.html:31
 msgid "View"
 msgstr "Ansicht"
 
-#: templates/documents/compact_list.html:31
+#: templates/documents/compact_list.html:33
 msgid "Share Annotations"
 msgstr "Anmerkungen Teilen"
 
@@ -2553,9 +2546,8 @@ msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
 #: templates/submissions/readonly_form.html:201
-#, fuzzy
 msgid "Reopen"
-msgstr "offen"
+msgstr "Neu öffnen"
 
 #: templates/submissions/readonly_form.html:263
 msgid "Write a new message"
@@ -2602,19 +2594,16 @@ msgid "E-Mail"
 msgstr "E-Mail"
 
 #: templates/submissions/tabs/involved_parties.html:26
-#, fuzzy
 msgid "Send Message"
-msgstr "Neue Nachricht"
+msgstr "Nachricht senden"
 
 #: templates/submissions/tabs/involved_parties.html:36
-#, fuzzy
 msgid "Add Additional Reviewers"
-msgstr "Einstufungs-Review"
+msgstr "Zusätzlichen Gutachter hinzufügen"
 
 #: templates/submissions/tabs/status.html:49
-#, fuzzy
 msgid "Reschedule"
-msgstr "Einreichung"
+msgstr "Neu planen"
 
 #: templates/tasks/manage_task.html:5
 msgid "Show all tasks"
@@ -2868,14 +2857,12 @@ msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
 #: users/forms.py:121
-#, fuzzy
 msgid "active"
-msgstr "Aktiv"
+msgstr "aktiv"
 
 #: users/forms.py:122
-#, fuzzy
 msgid "inactive"
-msgstr "Aktiv"
+msgstr "inaktiv"
 
 #: users/utils.py:51
 msgid "Ms."

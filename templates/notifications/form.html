@@ -44,7 +44,7 @@
                 
                 {% ifequal tab "Changes" %}
                     <div class="field">
-                        {{ request.docstash.extra.diff }}
+                        {{ request.docstash.extra.diff|safe }}
                     </div>
                 {% endifequal %}
                 
