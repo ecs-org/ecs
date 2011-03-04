@@ -12,6 +12,10 @@ import json_hack
 import jsonrpclib
 import codecs
 
+#urllib2 madness fix:
+import base64
+
+    
 jsonrpclib.config.use_jsonclass = True
 jsonrpclib.config.classes.add(datetime.datetime)
 
@@ -81,6 +85,7 @@ def _parse_agilo_links(text):
     
     return ids,links,linkd,reverselinkd
 
+ 
 
 class HttpBot():
     ''' '''
@@ -100,6 +105,10 @@ class HttpBot():
     auth_handler = None
     form_token = None
     
+    
+    authstring = None
+    
+    
     def __init__(self, user=None, password=None):
         '''Constructor'''
         
@@ -116,18 +125,25 @@ class HttpBot():
         self.opener = urllib2.build_opener(self.auth_handler, self.cookie_handler)
         #self.opener.addheaders = [('User-agent', 'frankenzilla/1.0')] #Mozilla/5.0
         urllib2.install_opener(self.opener)
-        print "first request:"
-        response = self.opener.open(self.tracurl)
-        print "done"
+        
+        self.authstring = base64.encodestring('%s:%s' % (self.username, self.password)).replace('\n', '')
+        
+        request = urllib2.Request(self.tracurl)
+        request.add_header("Authorization", "Basic %s" % self.authstring)
+        response = self.opener.open(request)
+        
         cj = self.cookie_handler.cookiejar
         self.form_token = None
         for c in cj:
             if c.name == 'trac_form_token':
                 self.form_token = c.value
     
+    
     def _try_vanilla_request_for_form_token(self):
         print "doing vanilla request"
-        response = self.opener.open(self.tracurl)
+        request = urllib2.Request(self.tracurl)
+        request.add_header("Authorization", "Basic %s" % self.authstring)
+        response = self.opener.open(request)
         cj = self.cookie_handler.cookiejar
         oldtoken = self.form_token
         for c in cj:
@@ -163,7 +179,10 @@ class HttpBot():
         ('cmd', cmd)])
         print "sending '%s' request" % (cmd)
         try:
-            response = self.opener.open(self.ticketlinkurl, data)
+            request = urllib2.Request(self.ticketlinkurl, data)
+            request.add_header("Authorization", "Basic %s" % self.authstring)
+            response = self.opener.open(request)
+            #response = self.opener.open(self.ticketlinkurl, data)
         except urllib2.HTTPError, e: #, Exception
             if e.getcode() == 500:
                 print "something wrent wrong and produced a http error 500 while linking ticket %d with %d (src, dst)" % (srcid, destid)
@@ -934,14 +953,15 @@ class TracRpc():
                 newparents.append(pid)
         
         for pid in deletedparents:
-            self.delete_ticket_links(pid, [tid])
+            self.delete_ticket_links(pid, [tid], updatecache=False)
         
         for pid in newparents:
-            self.link_tickets(pid, [tid], deletenonlistedtargets=False)
+            self.link_tickets(pid, [tid], deletenonlistedtargets=False, updatecache=False)
+        self.link_cache.updatecache() #faster than calling it once after every link creation
             
         
     
-    def delete_ticket_links(self, srcid=None, destids=None):
+    def delete_ticket_links(self, srcid=None, destids=None, updatecache=True):
         ''' '''
         if not srcid:
             print "no source ticket id specified for link deletion - returning"
@@ -954,9 +974,10 @@ class TracRpc():
         for tid in destids:
             self.httpbot.delete_ticket_link(srcid, tid)
         
-        self.link_cache.updatecache()
+        if updatecache:
+            self.link_cache.updatecache()
              
-    def link_tickets(self, srcid=None, destids=None, deletenonlistedtargets=False):
+    def link_tickets(self, srcid=None, destids=None, deletenonlistedtargets=False, updatecache=True):
         ''' '''
         
         if not srcid:
@@ -967,7 +988,8 @@ class TracRpc():
             srclinks = self.link_cache.get_ticket_childs(srcid)
             for tid in srclinks:
                 self.httpbot.delete_ticket_link(srcid, tid)
-            self.link_cache.updatecache()
+            if updatecache:
+                self.link_cache.updatecache()
             return
         
         if len(destids) < 1:
@@ -1010,7 +1032,7 @@ class TracRpc():
         #do the actual linking:
         for tid in targetids:
             self.httpbot.create_ticket_link(srcid, tid)
-        if len(targetids) > 0:
+        if len(targetids) > 0 and updatecache:
             self.link_cache.updatecache()
         
     def linktest(self):
