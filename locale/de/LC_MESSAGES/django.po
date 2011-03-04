@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-02 19:56+0100\n"
+"POT-Creation-Date: 2011-03-04 11:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,8 +152,8 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/diff.py:133 core/diff.py:195 core/diff.py:196 core/diff.py:232
-#: core/diff.py:233
+#: core/diff.py:133 core/diff.py:197 core/diff.py:198 core/diff.py:234
+#: core/diff.py:235
 msgid "No Information"
 msgstr "Keine Angaben"
 
@@ -165,29 +165,29 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:264
+#: core/diff.py:269
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:265
+#: core/diff.py:270
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:266
+#: core/diff.py:271
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:267
+#: core/diff.py:273
 msgid ""
 "Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
 "Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:268
+#: core/diff.py:274
 msgid "Dokumente"
 msgstr ""
 
-#: core/diff.py:276
+#: core/diff.py:282
 msgid "Mitarbeiter"
 msgstr ""
 
@@ -1291,7 +1291,7 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/forms.py:129
+#: core/forms/forms.py:130
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
 
@@ -1758,7 +1758,7 @@ msgstr "mitte"
 msgid "bottom"
 msgstr "unten"
 
-#: pdfviewer/views.py:44
+#: pdfviewer/views.py:39
 #, python-format
 msgid "invalid data: %s"
 msgstr ""
@@ -1974,6 +1974,22 @@ msgstr "Neu"
 msgid "Delete"
 msgstr "Löschen"
 
+#: templates/communication/list.html:11
+msgid "Date"
+msgstr "Datum"
+
+#: templates/communication/list.html:12
+msgid "Subject"
+msgstr "Betreff"
+
+#: templates/communication/list.html:13
+msgid "Unread"
+msgstr "Ungelesen"
+
+#: templates/communication/list.html:14
+msgid "Task"
+msgstr "Aufgabe"
+
 #: templates/communication/send.html:10
 #: templates/communication/threads.html:14
 msgid "New Message"
@@ -1992,13 +2008,13 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:83 templates/communication/thread.html:72
-#: templates/submissions/readonly_form.html:328
+#: templates/submissions/readonly_form.html:332
 #: templates/tasks/manage_task.html:73
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:87 templates/communication/thread.html:76
-#: templates/submissions/readonly_form.html:331
+#: templates/submissions/readonly_form.html:335
 #: templates/tasks/manage_task.html:77
 msgid "Insert Boilerplate"
 msgstr "Vorlage einfügen"
@@ -2321,6 +2337,22 @@ msgstr "Alte Version"
 msgid "New Version"
 msgstr "Neue Version"
 
+#: templates/pdfviewer/viewer.html:36
+#, fuzzy
+msgid "Your document is not ready yet."
+msgstr "Die Datei ist kein gültiges PDF-Dokument."
+
+#: templates/pdfviewer/viewer.html:37
+#, fuzzy
+msgid ""
+"\n"
+"        Click <a href=\"\" click=\"window.location.reload; return false;"
+"\">here</a> to reload the page.\n"
+"    "
+msgstr ""
+"Um sie anzusehen klicken sie <a href=\"#\" onclick=\"window.parent.location."
+"href='%s';\">hier</a>."
+
 #: templates/pdfviewer/annotations/sharing/share.html:10
 msgid "Share"
 msgstr "Teilen"
@@ -2485,12 +2517,12 @@ msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
 #: templates/submissions/readonly_form.html:106
-#: templates/submissions/readonly_form.html:256
+#: templates/submissions/readonly_form.html:260
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
 #: templates/submissions/readonly_form.html:107
-#: templates/submissions/readonly_form.html:262
+#: templates/submissions/readonly_form.html:266
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
@@ -2525,7 +2557,7 @@ msgstr "Es existieren derzeit keine veröffentlichten Voten."
 msgid "Reopen"
 msgstr "offen"
 
-#: templates/submissions/readonly_form.html:259
+#: templates/submissions/readonly_form.html:263
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
@@ -2565,19 +2597,16 @@ msgstr "Name"
 msgid "Organization"
 msgstr "Organisation"
 
-#: templates/submissions/tabs/involved_parties.html:8
+#: templates/submissions/tabs/involved_parties.html:9
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#: templates/submissions/tabs/involved_parties.html:21
-#, python-format
-msgid ""
-"\n"
-"                            Send a message to %(user)s\n"
-"                        "
-msgstr ""
+#: templates/submissions/tabs/involved_parties.html:26
+#, fuzzy
+msgid "Send Message"
+msgstr "Neue Nachricht"
 
-#: templates/submissions/tabs/involved_parties.html:33
+#: templates/submissions/tabs/involved_parties.html:36
 #, fuzzy
 msgid "Add Additional Reviewers"
 msgstr "Einstufungs-Review"
@@ -2632,7 +2661,7 @@ msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
 #: templates/tasks/tasks.inc:55 templates/tasks/tasks.inc.py:78
-#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:52
+#: templates/tasks/tasks.inc:101 templates/tasks/tasks_full.inc:52
 #: templates/tasks/tasks_full.inc.py:70 templates/tasks/tasks_full.inc:87
 msgid "Preview"
 msgstr "Vorschau"
@@ -2645,19 +2674,19 @@ msgstr "Ablehnen"
 msgid "Open Tasks"
 msgstr "Offen"
 
-#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:80
+#: templates/tasks/tasks.inc:91 templates/tasks/tasks_full.inc:80
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:115 templates/tasks/tasks_full.inc:96
+#: templates/tasks/tasks.inc:113 templates/tasks/tasks_full.inc:96
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_js.inc:20
+#: templates/tasks/tasks_js.inc:22
 msgid "Collapse"
 msgstr "weniger"
 
-#: templates/tasks/tasks_js.inc:24
+#: templates/tasks/tasks_js.inc:26
 msgid "Expand"
 msgstr "mehr"
 
@@ -2969,9 +2998,6 @@ msgstr ""
 
 #~ msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 #~ msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"
-
-#~ msgid "read"
-#~ msgstr "lesen"
 
 #~ msgid "You must select a recipient."
 #~ msgstr "Sie müssen einen Adressaten auswählen."

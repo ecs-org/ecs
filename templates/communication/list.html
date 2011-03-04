@@ -8,10 +8,10 @@
 {% block content %}
   <table class="messages">
       <tr>
-          <th>Datum</th>
-          <th>Betreff</th>
-          <th>Unglesen</th>
-          <th>Task</th>
+          <th>{% trans "Date" %}</th>
+          <th>{% trans "Subject" %}</th>
+          <th>{% trans "Unread" %}</th>
+          <th>{% trans "Task" %}</th>
           {% block extra_message_table_headers %}
               <th>Von</th>
               <th>An</th>
