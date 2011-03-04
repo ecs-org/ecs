@@ -778,6 +778,12 @@ fieldset.disabled {
   margin: 0 0 10px 5px;
   background-repeat: no-repeat; 
 }
+.doclist .list_item .status:before {
+  content: "[";
+}
+.doclist .list_item .status:after {
+  content: "]";
+}
 
 /* notifications */
 

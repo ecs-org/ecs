@@ -11,18 +11,23 @@
     {% for doc in doctype.list %}
         <div class="list_item">
             {% get_annotations for doc as annotations %}
-            <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">
+            <span>
                 {% if doc.name %}
                 {{ doc.name|smart_truncate:40 }}
                 {% else %}
                 Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
                 {% endif %} 
-                - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }} [{{ doc.status }}]
+                - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+                {% if not doc|is_ready %}
+                    <span class="status">
+                        {{ doc.get_status_display }}
+                    </span>
+                {% endif %}
                 {% if doc.original_file_name %}{% endif %}
-            </a><br />
+            </span><br />
             {% block actions %}
                 {% if doc.status == 'ready' %}
-                    <a href="{% url ecs.documents.views.download_document doc.pk %}">{% trans "Download" %}</a>
+                    <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
                     | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
                     {% if annotations %}
                         | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
