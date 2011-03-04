@@ -18,10 +18,6 @@ import optparse
 
 from pprint import pprint
 
-from deployment.utils import get_homedir, fabdir, import_from
-from deployment.utils import strbool as _strb, strbool
-
-
 
 class ShellOptParser(optparse.OptionParser):
     
@@ -117,6 +113,7 @@ class TracShell(cmd.Cmd):
         if not tracrpc:
             #print "pass a tacrpc instance as arg. scripty's OOriented foo lol is very lol..."
             #return None
+            from deployment.utils import fabdir
             sys.path.append(fabdir())
             from deployment.ada.issuetracker import _getbot
             self.tracrpc, self.username = _getbot(tracpath=tracpath, debug=debug)
