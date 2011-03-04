@@ -59,8 +59,8 @@ body {
   display: block;
   margin: 10px;
   padding: 10px;
-  border: 1px solid #d8e6ef;
-  background: #f9feff;
+  border: 1px solid #ebdfc3;
+  background: #f8f8ef;
   min-width: 700px;
 }
 #sidebar {
@@ -116,8 +116,8 @@ body {
 .form_main h3 {
   padding: 10px;
   margin: -10px -10px 0;
-  background: #f4fafb;
-  border-bottom: 1px solid #d8e6ef;
+  background: #f3f3db;
+  border-bottom: 1px solid #ebdfc3;
 }
 #content p {
   margin-bottom: 20px;

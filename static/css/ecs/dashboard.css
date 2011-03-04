@@ -15,9 +15,9 @@
 .dashboard_widget {
   display: block;
   float: left;
-  border: 1px solid #D8E6EF;
+  border: 1px solid #ebdfc3;
   padding: 10px;
-  background-color: #f9feff;
+  background: #f8f8ef;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -26,8 +26,8 @@
   min-width: 340px;
 }
 #dashboard h3 {
-  margin-bottom: 10px;
   display: inline-block;
+  line-height: 20px;
 }
 .dashboard_widget td {
   padding-left: 5px;
@@ -39,7 +39,7 @@
 }
 .dashboard_widget .messages_header {
   display: inline-block;
-  background: #EFF9FF;
+  background: #EFEFDD;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
