@@ -172,6 +172,8 @@ class ModelDiffer(object):
         return names.union(self.follow)
 
     def diff_field(self, name, old, new, **kwargs):
+        from django.db.models import Manager
+
         old_val = getattr(old, name, None)
         new_val = getattr(new, name, None)
         
@@ -185,9 +187,9 @@ class ModelDiffer(object):
         
         if isinstance(field, models.ForeignKey):
             return diff_model_instances(old_val, new_val, model=field.rel.to, **kwargs)
-        elif hasattr(new_val, 'all') and hasattr(new_val, 'count') or hasattr(old_val, 'all') and hasattr(old_val, 'count'):
-            old_val = list(old_val.all()) if old else []
-            new_val = list(new_val.all()) if new else []
+        elif isinstance(new_val, Manager) or isinstance(old_val, Manager):
+            old_val = list(old_val.all().order_by('pk')) if old else []
+            new_val = list(new_val.all().order_by('pk')) if new else []
             if not old_val and not new_val:
                 return None
             return ListDiffNode(old_val, new_val, **kwargs)
@@ -252,19 +254,23 @@ class UserDiffer(AtomicModelDiffer):
     model = User
 
     def format(self, user):
-        return u'%s <%s>' % (user.username, user.email)
+        from ecs.users.utils import get_full_name
+        return u'{0} <{1}>'.format(get_full_name(user), user.email)
 
 
 _differs = {
     SubmissionForm: ModelDiffer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
-            'pdf_document', 'current_pending_vote', 'current_published_vote', 'acknowledged', 'created_at'),
-        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set','documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
+            'pdf_document', 'current_pending_vote', 'current_published_vote', 'acknowledged',
+            'created_at', 'presenter', 'sponsor', 'invoice', 'submitter'),
+        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set',
+            'documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
         label_map=dict([
             ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
             ('investigators', _(u'Zentren')),
             ('measures', _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
-            ('nontesteduseddrug_set', _(u'Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
+            ('nontesteduseddrug_set',
+                _(u'Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
             ('documents', _(u'Dokumente')),
         ]),
     ),
