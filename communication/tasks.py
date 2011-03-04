@@ -48,9 +48,9 @@ def forward_messages(**kwargs):
             msg.save()
             mail_list = deliver_to_recipient(
                 msg.receiver.email,
-                subject=_('New ECS-Mail: from {sender} to {receiver}.').format(sender=msg.sender, receiver=msg.receiver),
-                message=_('Subject: {subject}{linesep}{text}').format(subject=msg.thread.subject, text=msg.text, linesep=os.linesep),
-                from_email='{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
+                subject=_(u'New ECS-Mail: from {sender} to {receiver}.').format(sender=get_full_name(msg.sender), get_full_name(receiver=msg.receiver)),
+                message=_(u'Subject: {subject}{linesep}{text}').format(subject=msg.thread.subject, text=msg.text, linesep=os.linesep),
+                from_email=u'{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
                 callback=subtask(update_smtp_delivery),
                 msgid=msg.rawmsg_msgid,
             )
