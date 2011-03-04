@@ -52,7 +52,7 @@ def get_reviewing_parties(sf, include_workflow=True):
     if include_workflow:
         from ecs.tasks.models import Task
         for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query).select_related('task_type'):
-            yield Party(user=task.assigned_to, involvement=task.task_type.name)
+            yield Party(user=task.assigned_to, involvement=task.task_type.trans_name)
 
     for user in User.objects.filter(meeting_participations__entry__submission=sf.submission):
         yield Party(user=user, involvement=_("Board Member Review"))

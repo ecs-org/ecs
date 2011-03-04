@@ -20,6 +20,10 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
 
 
+# We use this helper function for marking task names as translatable, they are
+# getting translated later.
+_ = lambda s: s
+
 @bootstrap.register()
 def default_site():
     # default_site is needed for dbtemplates
@@ -73,26 +77,26 @@ def submission_workflow():
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True, name="Start"),
-            'generic_review': Args(Generic, name="Review Split"),
-            'resubmission': Args(Resubmission),
-            'initial_review': Args(InitialReview, group=OFFICE_GROUP),
-            'b2_resubmission_review': Args(InitialReview, name="B2 Resubmission Review", group=INTERNAL_REVIEW_GROUP),
-            'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP),
-            'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP),
-            'additional_review_split': Args(AdditionalReviewSplit),
-            'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=u"Additional Review"),
-            'initial_thesis_review': Args(InitialReview, name="Initial Thesis Review", group=THESIS_REVIEW_GROUP),
-            'thesis_categorization_review': Args(CategorizationReview, name="Thesis Categorization Review", group=THESIS_EXECUTIVE_GROUP),
-            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP),
-            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=u"Legal and Patient Review", group=INTERNAL_REVIEW_GROUP),
-            'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=u"Insurance Review", group=INSURANCE_REVIEW_GROUP),
-            'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=u"Statistical Review", group=STATISTIC_REVIEW_GROUP),
-            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=u"Board Member Review", group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=u"External Review", group=EXTERNAL_REVIEW_GROUP),
-            'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP),
-            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP),
-            'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP),
+            'start': Args(Generic, start=True, name=_("Start")),
+            'generic_review': Args(Generic, name=_("Review Split")),
+            'resubmission': Args(Resubmission, name=_("Resubmission")),
+            'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
+            'b2_resubmission_review': Args(InitialReview, name=_("B2 Resubmission Review"), group=INTERNAL_REVIEW_GROUP),
+            'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP, name=_("B2 Vote Review")),
+            'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
+            'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
+            'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
+            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
+            'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
+            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
+            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
+            'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
+            'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
+            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
+            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
+            'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP, name=_("External Review Invitaion")),
+            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
+            'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP, name=_("Vote Recommendation Review")),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
@@ -150,17 +154,17 @@ def vote_workflow():
     setup_workflow_graph(Vote, 
         auto_start=True, 
         nodes={
-            'start': Args(Generic, start=True, name="Start"),
-            'review': Args(Generic, name="Review Split"),
-            'b2upgrade': Args(Generic, name="B2 Upgrade", end=True),
-            'executive_vote_finalization': Args(VoteReview, name="Executive Vote Finalization", group=EXECUTIVE_GROUP),
-            'executive_vote_review': Args(VoteReview, name="Executive Vote Review", group=EXECUTIVE_GROUP),
-            'internal_vote_review': Args(VoteReview, name="Internal Vote Review", group=INTERNAL_REVIEW_GROUP),
-            'office_vote_finalization': Args(VoteReview, name="Office Vote Finalization", group=OFFICE_GROUP),
-            'office_vote_review': Args(VoteReview, name="Office Vote Review", group=OFFICE_GROUP),
-            'final_office_vote_review': Args(VoteReview, name="Office Vote Review", group=OFFICE_GROUP),
-            'vote_signing': Args(VoteSigning, group=SIGNING_GROUP),
-            'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP),
+            'start': Args(Generic, start=True, name=_("Start")),
+            'review': Args(Generic, name=_("Review Split")),
+            'b2upgrade': Args(Generic, name=_("B2 Upgrade"), end=True),
+            'executive_vote_finalization': Args(VoteReview, name=_("Executive Vote Finalization"), group=EXECUTIVE_GROUP),
+            'executive_vote_review': Args(VoteReview, name=_("Executive Vote Review"), group=EXECUTIVE_GROUP),
+            'internal_vote_review': Args(VoteReview, name=_("Internal Vote Review"), group=INTERNAL_REVIEW_GROUP),
+            'office_vote_finalization': Args(VoteReview, name=_("Office Vote Finalization"), group=OFFICE_GROUP),
+            'office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
+            'final_office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
+            'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
+            'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP, name=_("Vote Publication")),
         }, 
         edges={
             ('start', 'review'): Args(guard=is_b2upgrade, negated=True),

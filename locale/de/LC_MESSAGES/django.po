@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 12:06+0100\n"
+"POT-Creation-Date: 2011-03-04 15:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,16 +152,138 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
+#: core/bootstrap.py:80 core/bootstrap.py:157 notifications/bootstrap.py:46
+#: users/bootstrap.py:23
+msgid "Start"
+msgstr "Start"
+
+#: core/bootstrap.py:81 core/bootstrap.py:158
+#, fuzzy
+msgid "Review Split"
+msgstr "Review"
+
+#: core/bootstrap.py:82
+msgid "Resubmission"
+msgstr "Neueinreichung"
+
+#: core/bootstrap.py:83
+msgid "Initial Review"
+msgstr "Formale Prüfung Einreichung"
+
+#: core/bootstrap.py:84
+#, fuzzy
+msgid "B2 Resubmission Review"
+msgstr "Diplomarbeit Review"
+
+#: core/bootstrap.py:85
+#, fuzzy
+msgid "B2 Vote Review"
+msgstr "B2 Voten"
+
+#: core/bootstrap.py:86 templates/submissions/readonly_form.html:57
+msgid "Categorization Review"
+msgstr "Einstufung und Zuteilung"
+
+#: core/bootstrap.py:87
+#, fuzzy
+msgid "Additional Review Split"
+msgstr "Zusatz-Review"
+
+#: core/bootstrap.py:88
+#, fuzzy
+msgid "Additional Checklist Review"
+msgstr "Zusatz-Review"
+
+#: core/bootstrap.py:89
+msgid "Initial Thesis Review"
+msgstr "Formale Prüfung Diplomarbeit"
+
+#: core/bootstrap.py:90
+msgid "Thesis Categorization Review"
+msgstr "Einstufung und Zuteilung Diplomarbeit"
+
+#: core/bootstrap.py:91
+msgid "Paper Submission Review"
+msgstr "Formale Prüfung Unterschrift"
+
+#: core/bootstrap.py:92
+msgid "Legal and Patient Review"
+msgstr "Überprüfung Patinfo"
+
+#: core/bootstrap.py:93
+msgid "Insurance Review"
+msgstr "Überprüfung Versicherung"
+
+#: core/bootstrap.py:94
+msgid "Statistical Review"
+msgstr "Gutachten Statistik"
+
+#: core/bootstrap.py:95 core/parties.py:58
+msgid "Board Member Review"
+msgstr ""
+
+#: core/bootstrap.py:96
+msgid "External Review"
+msgstr "Gutachten"
+
+#: core/bootstrap.py:97
+msgid "External Review Invitaion"
+msgstr "Einladung Gutachter"
+
+#: core/bootstrap.py:98
+msgid "Vote Recommendation"
+msgstr ""
+
+#: core/bootstrap.py:99
+#, fuzzy
+msgid "Vote Recommendation Review"
+msgstr "Zurück zur Nachrichtenübersicht"
+
+#: core/bootstrap.py:159
+msgid "B2 Upgrade"
+msgstr ""
+
+#: core/bootstrap.py:160
+msgid "Executive Vote Finalization"
+msgstr "Votum bearbeiten Executive"
+
+#: core/bootstrap.py:161
+#, fuzzy
+msgid "Executive Vote Review"
+msgstr "External Reviewer"
+
+#: core/bootstrap.py:162
+#, fuzzy
+msgid "Internal Vote Review"
+msgstr "Formale Prüfung Einreichung"
+
+#: core/bootstrap.py:163
+msgid "Office Vote Finalization"
+msgstr "Votum bearbeiten Office"
+
+#: core/bootstrap.py:164 core/bootstrap.py:165
+msgid "Office Vote Review"
+msgstr ""
+
+#: core/bootstrap.py:166
+msgid "Vote Signing"
+msgstr ""
+
+#: core/bootstrap.py:167
+#, fuzzy
+msgid "Vote Publication"
+msgstr "Nachrichten"
+
 #: core/diff.py:133 core/diff.py:197 core/diff.py:198 core/diff.py:234
 #: core/diff.py:235
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:135 core/forms/fields.py:45
+#: core/diff.py:135 core/forms/fields.py:55
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:137 core/forms/fields.py:45
+#: core/diff.py:137 core/forms/fields.py:55
 msgid "No"
 msgstr "Nein"
 
@@ -1218,10 +1340,6 @@ msgstr "Präsentator"
 msgid "Primary Investigator"
 msgstr "Hauptprüfer"
 
-#: core/parties.py:58
-msgid "Board Member Review"
-msgstr ""
-
 #: core/parties.py:61
 msgid "Additional Review"
 msgstr "Zusatz-Review"
@@ -1267,21 +1385,21 @@ msgstr "Ablehnen"
 msgid "comment"
 msgstr "Kommentar"
 
-#: core/forms/fields.py:17
+#: core/forms/fields.py:26
 msgid "Please enter a date in the format dd.mm.yyyy."
 msgstr "Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein."
 
-#: core/forms/fields.py:24
+#: core/forms/fields.py:33
 msgid "Please enter a date in dd.mm.yyyy format and time in format HH:MM."
 msgstr ""
 "Bitte geben Sie ein Datum im Format TT.MM.JJJJ und eine Uhrzeit im Format HH:"
 "MM ein."
 
-#: core/forms/fields.py:29
+#: core/forms/fields.py:38
 msgid "Please enter a time in the format HH: MM."
 msgstr "Bitte geben Sie eine Uhrzeit im Format HH:MM ein."
 
-#: core/forms/fields.py:34
+#: core/forms/fields.py:44
 msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
@@ -1643,6 +1761,23 @@ msgstr ""
 msgid "sorry, unfinished"
 msgstr ""
 
+#: meetings/bootstrap.py:21
+msgid "Meeting Agenda Generation"
+msgstr ""
+
+#: meetings/bootstrap.py:22
+msgid "Meeting Agenda Sending"
+msgstr ""
+
+#: meetings/bootstrap.py:23
+#, fuzzy
+msgid "Meeting Day"
+msgstr "Sitzung"
+
+#: meetings/bootstrap.py:24
+msgid "Meeting Protocol Sending"
+msgstr ""
+
 #: meetings/forms.py:16
 msgid "deadline"
 msgstr "Stichtag"
@@ -1714,6 +1849,22 @@ msgstr "Zeitfenster"
 #: meetings/views.py:428
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
+
+#: notifications/bootstrap.py:47 notifications/bootstrap.py:49
+#: notifications/bootstrap.py:50
+#, fuzzy
+msgid "Edit Notification Answer"
+msgstr "Meldungen"
+
+#: notifications/bootstrap.py:51 notifications/bootstrap.py:52
+#, fuzzy
+msgid "Sign Notification Answer"
+msgstr "Meldungen"
+
+#: notifications/bootstrap.py:53
+#, fuzzy
+msgid "Distribute Notification Answer"
+msgstr "Neue Meldungen"
 
 #: notifications/views.py:50 templates/core.html:57
 #: templates/submissions/readonly_form.html:100
@@ -2483,10 +2634,6 @@ msgstr "Beteiligte Parteien"
 msgid "Activities"
 msgstr "Tätigkeiten"
 
-#: templates/submissions/readonly_form.html:57
-msgid "Categorization Review"
-msgstr "Einstufungs-Review"
-
 #: templates/submissions/readonly_form.html:90
 msgid "Votes"
 msgstr "Voten"
@@ -2800,6 +2947,15 @@ msgstr "Einladen"
 msgid "Set Password"
 msgstr "Passwort setzen"
 
+#: users/bootstrap.py:24
+msgid "User Approval"
+msgstr "Benutzer bestätigen"
+
+#: users/bootstrap.py:25
+#, fuzzy
+msgid "End"
+msgstr "Beendet"
+
 #: users/forms.py:18
 msgid "Email"
 msgstr "E-mail"
@@ -2994,12 +3150,6 @@ msgstr ""
 
 #~ msgid "Developer"
 #~ msgstr "Entwickler"
-
-#~ msgid "Review"
-#~ msgstr "Review"
-
-#~ msgid "Thesis Review"
-#~ msgstr "Diplomarbeit Review"
 
 #~ msgid "Name: %(name)s, Investigator: %(investigator)s"
 #~ msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"

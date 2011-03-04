@@ -6,6 +6,10 @@ from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 
+
+# for marking the task names translatable
+_ = lambda s: s
+
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync',))
 def meeting_workflow():
     from ecs.meetings.models import Meeting
@@ -14,10 +18,10 @@ def meeting_workflow():
     setup_workflow_graph(Meeting, 
         auto_start=True, 
         nodes={
-            'meeting_agenda_generation': Args(MeetingAgendaPreparation, start=True),
-            'meeting_agenda_sending': Args(MeetingAgendaSending),
-            'meeting_day': Args(MeetingDay),
-            'meeting_protocol_sending': Args(MeetingProtocolSending, end=True),
+            'meeting_agenda_generation': Args(MeetingAgendaPreparation, start=True, name=_("Meeting Agenda Generation")),
+            'meeting_agenda_sending': Args(MeetingAgendaSending, name=_("Meeting Agenda Sending")),
+            'meeting_day': Args(MeetingDay, name=_("Meeting Day")),
+            'meeting_protocol_sending': Args(MeetingProtocolSending, end=True, name=_("Meeting Protocol Sending")),
         }, 
         edges={
             ('meeting_agenda_generation', 'meeting_agenda_sending'): None,

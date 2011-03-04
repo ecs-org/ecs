@@ -5,6 +5,10 @@ from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 
+
+# for marking the task names translatable
+_ = lambda s: s
+
 @bootstrap.register()
 def notification_types():
     types = (
@@ -39,14 +43,14 @@ def notification_workflow():
     setup_workflow_graph(Notification,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True, name="Start"),
-            'initial_amendment_review': Args(EditNotificationAnswer, group=OFFICE_GROUP),
-            'regular_review': Args(Generic),
-            'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP),
-            'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP),
-            'sign_notification_answer': Args(SignNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP),
-            'sign_executive_notification_answer': Args(SignNotificationAnswer, group=EXECUTIVE_GROUP),
-            'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, end=True),
+            'start': Args(Generic, start=True, name=_("Start")),
+            'initial_amendment_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_("Edit Notification Answer")),
+            'regular_review': Args(Generic, name="Regular Review"),
+            'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Edit Notification Answer")),
+            'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Edit Notification Answer")),
+            'sign_notification_answer': Args(SignNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Sign Notification Answer")),
+            'sign_executive_notification_answer': Args(SignNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Sign Notification Answer")),
+            'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, end=True, name=_("Distribute Notification Answer")),
         },
         edges={
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),

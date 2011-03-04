@@ -5,6 +5,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
@@ -19,10 +20,14 @@ class TaskType(models.Model):
     
     def __unicode__(self):
         if self.name:
-            return self.name
+            return _(self.name)
         elif self.workflow_node_id:
             return u'TaskType for %s' % self.workflow_node
         return u'TaskType <Anonymous>'
+
+    @property
+    def trans_name(self):
+        return _(self.name)
 
 
 class TaskManager(AuthorizationManager):
