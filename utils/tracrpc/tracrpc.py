@@ -5,8 +5,8 @@ a class for interfacing with Trac via jsonrpc
 
 import os, sys, tempfile, datetime, subprocess, re
 from pprint import pprint
-import httplib, urllib2, urllib
-httplib.HTTPConnection.debuglevel = 1 
+import urllib2, urllib
+
 
 import json_hack
 import jsonrpclib
