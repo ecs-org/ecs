@@ -5,7 +5,8 @@ a class for interfacing with Trac via jsonrpc
 
 import os, sys, tempfile, datetime, subprocess, re
 from pprint import pprint
-import urllib2, urllib
+import httplib, urllib2, urllib
+httplib.HTTPConnection.debuglevel = 1 
 
 import json_hack
 import jsonrpclib
@@ -42,10 +43,14 @@ this is to be called to construct links from agilo to make the "perfect" validat
     from fabric.api import run, env, settings, hide
     env.host_string = 'ecsdev@ecsdev.ep3.at'
     with settings(hide('stdout')):
+        #TODO hide output of fabric executing the script
+        #saveout = sys.stdout
+        #sys.stdout = ''
         if testtrac:
             result = run("~/getlinks_ekreqtest.sh")
         else:
             result = run("~/getlinks.sh")
+        #sys.stdout = saveout
     if raw:
         return result
     else:
@@ -95,7 +100,13 @@ class HttpBot():
     auth_handler = None
     form_token = None
     
-    def __init__(self):
+    def __init__(self, user=None, password=None):
+        '''Constructor'''
+        
+        if user:
+            self.username = user
+        if password: 
+            self.password = password
         self.auth_handler = urllib2.HTTPBasicAuthHandler()
         self.auth_handler.add_password(realm='ecsdev.ep3.at',
                                   uri=self.tracurl,
@@ -103,21 +114,35 @@ class HttpBot():
                                   passwd=self.password)
         self.cookie_handler = urllib2.HTTPCookieProcessor()
         self.opener = urllib2.build_opener(self.auth_handler, self.cookie_handler)
-        self.opener.addheaders = [('User-agent', 'frankenzilla/1.0')] #Mozilla/5.0
+        #self.opener.addheaders = [('User-agent', 'frankenzilla/1.0')] #Mozilla/5.0
         urllib2.install_opener(self.opener)
+        print "first request:"
         response = self.opener.open(self.tracurl)
+        print "done"
         cj = self.cookie_handler.cookiejar
         self.form_token = None
         for c in cj:
             if c.name == 'trac_form_token':
                 self.form_token = c.value
     
+    def _try_vanilla_request_for_form_token(self):
+        print "doing vanilla request"
+        response = self.opener.open(self.tracurl)
+        cj = self.cookie_handler.cookiejar
+        oldtoken = self.form_token
+        for c in cj:
+            if c.name == 'trac_form_token':
+                self.form_token = c.value
+        if oldtoken != self.form_token:
+            print "form_token changed!!"
+        
     def _update_form_token(self):
         cj = self.cookie_handler.cookiejar
         self.form_token = None
         for c in cj:
             if c.name == 'trac_form_token':
                 self.form_token = c.value
+        #print "formtoken updated:",self.form_token
         
     def create_ticket_link(self, srcid, destid):
         self._ticket_link(srcid, destid, create=True)
@@ -125,7 +150,7 @@ class HttpBot():
     def delete_ticket_link(self, srcid, destid):
         self._ticket_link(srcid, destid, create=False)
         
-    def _ticket_link(self, srcid, destid, create=True):
+    def _ticket_link(self, srcid, destid, create=True, retry=False):
         if create:
             cmd = 'create link'
         else:
@@ -142,12 +167,17 @@ class HttpBot():
         except urllib2.HTTPError, e: #, Exception
             if e.getcode() == 500:
                 print "something wrent wrong and produced a http error 500 while linking ticket %d with %d (src, dst)" % (srcid, destid)
+            elif e.getcode() == 401 and e.msg == 'basic auth failed' and retry == False:
+                print "basic auth failed. retrying"
+                #self._try_vanilla_request_for_form_token()
+                self._ticket_link(srcid, destid, create=create, retry=True)
+            elif e.getcode() == 401 and e.msg == 'basic auth failed' and retry == True:
+                print "basic auth failed twice! giving up"
             else:
                 print "unexpected error:"
                 print  sys.exc_info()[0]
                 print  sys.exc_info()
                 pprint(e.__dict__)
-                pprint(e.__builtin__)
                 pprint(e)
         except:
             print "Unexpected error:", sys.exc_info()[0]
@@ -156,6 +186,7 @@ class HttpBot():
     
     
 class Agilolinks():
+    '''a class that holds all ticket links in agilo trac'''
     
     fetched_once = False
     testtrac=False
@@ -207,7 +238,7 @@ class TracRpc():
         self.jsonrpc = jsonrpclib.Server(self._url)
         self.debugmode = debug
         self.link_cache = Agilolinks(testtrac = debug)
-        self.httpbot = HttpBot()
+        self.httpbot = HttpBot(user=username, password=password)
         
     #see http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
     @classmethod
@@ -339,7 +370,7 @@ class TracRpc():
             '''
             return rawticket[3][fieldname] if rawticket[3].has_key(fieldname) else None
     
-    def _get_ticket(self, tid):
+    def _get_ticket(self, tid, getlinks=False):
         '''
         fetches a ticket and return simple dict w/ ticket contents
         '''
@@ -347,6 +378,10 @@ class TracRpc():
         if not rawticket:
             return None
         ticket = self._get_ticket_from_rawticket(rawticket)
+        if getlinks:
+            links = self.get_ticket_links(tid)
+            ticket['children'] = links['children']
+            ticket['parents'] = links['parents']
         return ticket
     
     def _get_ticket_from_rawticket(self, rawticket):
@@ -433,10 +468,43 @@ class TracRpc():
                 print "Description:"
                 for line in ticket['description'].splitlines():
                     print "\t%s" % line
-                print "remaining time: %sh" % ticket['remaining_time']
+                print "remaining time: %s%s" % (ticket['remaining_time'], 'h' if ticket['remaining_time'] != None else '') 
             else:
                 print tid, ticket['summary']
     
+    def get_components(self):
+        '''get all components'''
+        clist = self._safe_rpc(self.jsonrpc.ticket.component.getAll)
+        return clist
+    
+    def show_components(self):
+        '''print all defined components'''
+        print "defined components:"
+        for c in self.get_components():
+            print c
+    
+    def get_milestones(self):
+        '''get all milestones'''
+        mslist = self._safe_rpc(self.jsonrpc.ticket.agilomilestone.getAll)
+        return mslist
+    
+    def show_milestones(self, verbose=False):
+        '''print all defined milestones'''
+        print "defined Milestones:"
+        for ms in self.get_milestones():
+            print ms
+    
+    def get_priorities(self):
+        '''get all priorities'''
+        plist = self._safe_rpc(self.jsonrpc.ticket.priority.getAll)
+        return plist
+    
+    def show_priorities(self, verbose=False):
+        '''print all defined milestones'''
+        print "defined priorities:"
+        for p in self.get_priorities():
+            print p
+        
     def show_actions(self, tid, verbose=False):
         '''
         print a list of valid actions for a ticket
@@ -532,29 +600,7 @@ class TracRpc():
             print "updated ticket child links"
         if newticket['parentlinks'] != ticket['parentlinks']:
             #print "updating parentlinks:"
-            """
-            get all parent tickets that are not linked to this child anymore
-                delete this child from there
-            
-            get all parent tickets that are newly linked to this child
-                link this child to that ticket  (pid, cid)
-            
-            """
-            deletedparents = []
-            for pid in ticket['parentlinks']:
-                if pid not in newticket['parentlinks']:
-                    deletedparents.append(pid)
-            
-            newparents = []
-            for pid in newticket['parentlinks']:
-                if pid not in ticket['parentlinks']:
-                    newparents.append(pid)
-            
-            for pid in deletedparents:
-                self.delete_ticket_links(pid, [ticket['id']])
-            
-            for pid in newparents:
-                self.link_tickets(pid, [ticket['id']], deletenonlistedtargets=False)
+            self.update_ticket_parentlinks(ticket['id'], newticket['parentlinks'])
             
         #can't just compare dicts here
         #ticket will have type & remaining_time set in most cases
@@ -566,7 +612,25 @@ class TracRpc():
         else:
             print "ticket didn't change - not updated(via rpc) - you saved bandwidth"
     
+        
+    def update_ticket_field(self, tid, fieldname, new_value, forbiddenvaluelist=[None,], comment=None):
+        '''generic function to update a specific field in a ticket'''
+        for fv in forbiddenvaluelist:
+            if new_value == fv:
+                print "error: '%s' not allowed for field %s." % (new_value, fieldname)
+                return
+        ticket = self._get_ticket(tid)
+        if not ticket:
+            print "could not fetch ticket %d" % tid
+            return
+        if ticket[fieldname] != new_value:
+            ticket[fieldname] = new_value
+            self._update_ticket(tid, ticket, comment=comment)
+        else:
+            print "%s did not change - not updated - bandwidth saved" % (fieldname)
+        return
     
+        
     def update_remaining_time(self, tid, new_time, comment=None):
         '''
         udpates the remaining_time field of a ticket if it changed
@@ -789,12 +853,18 @@ class TracRpc():
         if skip > 0:
             print "%d tickets skipped" % skip
     
-    def batch_edit(self, query=None, verbose=False):
+    def batch_edit(self, query=None, verbose=False, skip=None):
         ''' '''
         if not query:
             print "please supply a query"
             return
         ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query)
+        if skip:
+            if skip > len(ticket_ids):
+                print "with skip=%d, i would skip all tickets... skipping 0 tickets."
+                skip = 0
+            else:
+                ticket_ids = ticket_ids[skip:]
         
         for id in ticket_ids:
             print "editing ticket %s" % id
@@ -821,7 +891,56 @@ class TracRpc():
             #print "press any key to continue or CTRL-C to quit"
             shell = TracShell(tracrpc=self, ticketid=id)
             shell.run()
+    
+    def get_ticket_childlinks(self, tid):
+        '''returns a list of ticketIDs that are targets of tid'''
+        return self.link_cache.get_ticket_childs(tid)
+    
+    def get_ticket_parentlinks(self, tid):
+        '''returns a list of ticketIDs that are sources of links to tid'''
+        return self.link_cache.get_ticket_parents(tid)
         
+    def get_ticket_links(self, tid):
+        '''returns a dict of links of ticket tid. {'children': [], 'parents': []}'''
+        return {'children': self.get_ticket_childlinks(tid), 'parents': self.get_ticket_parentlinks(tid)}
+    
+    def update_ticket_childlinks(self, tid=None, destids=None):
+        '''wrapper'''
+        if not tid:
+            return
+        return self.tracrpc.link_tickets(tid, destids, deletenonlistedtargets=True)
+    
+    def update_ticket_parentlinks(self, tid=None, newparentlistarg=[]):
+        """updates parent links of a ticket
+            get all parent tickets that are not linked to this child anymore
+                delete this child from there
+            
+            get all parent tickets that are newly linked to this child
+                link this child to that ticket  (pid, cid)
+            
+        """
+        if not tid:
+            return
+        
+        parentlinks = self.link_cache.get_ticket_parents(tid)
+        deletedparents = []
+        for pid in parentlinks:
+            if pid not in newparentlistarg:
+                deletedparents.append(pid)
+        
+        newparents = []
+        for pid in newparentlistarg:
+            if pid not in parentlinks:
+                newparents.append(pid)
+        
+        for pid in deletedparents:
+            self.delete_ticket_links(pid, [tid])
+        
+        for pid in newparents:
+            self.link_tickets(pid, [tid], deletenonlistedtargets=False)
+            
+        
+    
     def delete_ticket_links(self, srcid=None, destids=None):
         ''' '''
         if not srcid:
@@ -835,14 +954,20 @@ class TracRpc():
         for tid in destids:
             self.httpbot.delete_ticket_link(srcid, tid)
         
-        if len(targetids) > 0:
-            self.link_cache.updatecache()
+        self.link_cache.updatecache()
              
     def link_tickets(self, srcid=None, destids=None, deletenonlistedtargets=False):
         ''' '''
         
         if not srcid:
             print "no source ticket id specified for linking - returning"
+            return
+        
+        if len(destids) < 1 and deletenonlistedtargets == True:
+            srclinks = self.link_cache.get_ticket_childs(srcid)
+            for tid in srclinks:
+                self.httpbot.delete_ticket_link(srcid, tid)
+            self.link_cache.updatecache()
             return
         
         if len(destids) < 1:
@@ -890,17 +1015,13 @@ class TracRpc():
         
     def linktest(self):
         #pprint(self._safe_rpc(self.jsonrpc.ticket.get, 2921))
-        #self._get_ticket_links()
+
         #self.link_tickets(2921, [1898, 2922])
         #self.link_tickets(2921, [1898], deletenonlistedtargets=True)
         self.link_tickets(2921, [2920], deletenonlistedtargets=False)
         #self.httpbot.delete_ticket_link(2921, 1898)
         #print "trying to link 504 w 2921 & 1337:"
         #self.link_tickets(504, [2921, 1337])
-        
-                
-    def _get_ticket_links(self):
-        pprint(_get_agilo_links(testtrac=True))
         
 
 
