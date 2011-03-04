@@ -40,7 +40,7 @@ class BaseConstraintFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Constraint.objects.none())
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
-        
+
 class ConstraintForm(forms.ModelForm):
     start_time = TimeField(label=_(u'from (time)'), required=True)
     end_time = TimeField(label=_(u'to (time)'), required=True)

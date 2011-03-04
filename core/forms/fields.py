@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*
+import datetime
+
 from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -10,6 +12,13 @@ from ecs.utils.timedelta import parse_timedelta
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
 TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
 DATE_TIME_INPUT_FORMATS = tuple("%s %s" % (date_format, time_format) for time_format in TIME_INPUT_FORMATS for date_format in DATE_INPUT_FORMATS)
+
+
+class LooseTimeWidget(forms.TextInput):
+    def _format_value(self, value):
+        if isinstance(value, datetime.time):
+            return value.strftime('%H:%M')
+        return value
 
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
@@ -27,6 +36,7 @@ class DateTimeField(forms.DateTimeField):
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a time in the format HH: MM.')})
+        kwargs.setdefault('widget', LooseTimeWidget())
         super(TimeField, self).__init__(*args, **kwargs)
         
 class TimedeltaField(forms.CharField):
