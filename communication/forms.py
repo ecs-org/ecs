@@ -5,6 +5,7 @@ from django import forms
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_unicode
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
@@ -28,7 +29,7 @@ class BaseMessageForm(forms.ModelForm):
         self.user = user
 
         receiver_type_choices = [
-            ('ec', _('Ethics Commission')),
+            ('ec', '{0} ({1})'.format(force_unicode(_('Ethics Commission')), get_ec_user(submission=self.submission))),
         ]
         receiver_type_initial = 'ec'
 
