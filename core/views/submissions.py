@@ -127,11 +127,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = make_checklist_form(checklist)(readonly=True)
         checklist_reviews.append((checklist, checklist_form))
     
-    submission_forms = list(submission_form.submission.forms.order_by('-created_at'))
+    submission_forms = list(submission_form.submission.forms.order_by('created_at'))
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
         previous_form = sf
+
+    submission_forms = reversed(submission_forms)
     
     from ecs.notifications.models import NotificationType
     context = {
