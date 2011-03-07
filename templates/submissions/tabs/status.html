@@ -19,7 +19,7 @@
                         <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">aktuelle Änderungen</a>
                     {% endif %}
                     {% if sf != submission_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Änderungen zur neuesten Version</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a>
                     {% endif %}
                     {% if sf.is_notification_update %}
                         {% with sf.new_for_notification.all.0 as notif %}
@@ -38,7 +38,7 @@
         <th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
     <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td>
         <th>Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
-    <tr><th>Leitethikkommission:</th><td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td></tr>
+    <tr><th>Ethikkommission:</th><td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td></tr>
     <tr><th>Sitzungen:</th><td colspan="3">
         <ul>
             {% for meeting in submission_form.submission.meetings.all %}

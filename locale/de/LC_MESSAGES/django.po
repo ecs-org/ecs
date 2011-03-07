@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-07 11:45+0100\n"
+"POT-Creation-Date: 2011-03-07 22:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -448,7 +448,7 @@ msgstr "ISRCTN-Nr."
 
 #: core/paper_forms.py:100
 msgid "external reviewer suggestions"
-msgstr "Vorschläge für Externe Gutachter"
+msgstr "Vorschläge für Externe Gutachter (Nicht aus dem AKH Wien)"
 
 #: core/paper_forms.py:100
 msgid ""
@@ -608,7 +608,7 @@ msgstr "Referenzsubstanz"
 
 #: core/paper_forms.py:153
 msgid "Test products(e)"
-msgstr "Prüfprodukt(e)"
+msgstr "Prüfprodukt/e"
 
 #: core/paper_forms.py:154
 msgid "reference product"
@@ -630,7 +630,7 @@ msgstr "Es liegen bereits Voten anderer Ethikkommissionen vor."
 
 #: core/paper_forms.py:156
 msgid "If so, upload the votes on the documents tab"
-msgstr "Falls ja, laden sie die Voten über den Reiter Unterlagen hoch"
+msgstr "Falls ja, laden Sie die Voten über den Reiter \"Unterlagen\" hoch"
 
 #: core/paper_forms.py:157
 msgid "Planned number of trial participants total"
@@ -638,7 +638,7 @@ msgstr "Geplante Anzahl der Prüfungsteilnehmer/innen gesamt"
 
 #: core/paper_forms.py:157
 msgid "all participating centers"
-msgstr "alle teilnehmenden Zentren"
+msgstr "Gesamtanzahl in allen österreichischen Zentren"
 
 #: core/paper_forms.py:159
 msgid "minimum age"
@@ -650,7 +650,7 @@ msgstr "Höchstalter"
 
 #: core/paper_forms.py:161
 msgid "Study includes non competent participants"
-msgstr "Studie beinhaltet auch nicht persönlich Einwilligungsfähige"
+msgstr "Studie beinhaltet auch Nicht-persönlich-Einwilligungsfähige"
 
 #: core/paper_forms.py:162
 msgid "Study includes male participants"
@@ -662,7 +662,7 @@ msgstr "Studie beinhaltet weibliche Teilnehmer"
 
 #: core/paper_forms.py:164
 msgid "Study includes women of childbearing age"
-msgstr "Studie beinhaltet gebährfähige Frauen"
+msgstr "Studie beinhaltet gebärfähige Frauen"
 
 #: core/paper_forms.py:165
 msgid ""
@@ -694,7 +694,7 @@ msgstr ""
 
 #: core/paper_forms.py:172
 msgid "3.2.1 Countries in which the tests were conducted"
-msgstr "3.2.1 In welchen Staaten wurden die Prüfungen durchgeführt?"
+msgstr "In welchen Staaten wurden die Prüfungen durchgeführt?"
 
 #: core/paper_forms.py:173
 msgid "Phase"
@@ -724,7 +724,7 @@ msgid ""
 "Pharmaceutical Advisory Council using the upload tab"
 msgstr ""
 "Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein "
-"Gutachten des Arzneimittelbeirates über den Reiter Unterlagen hoch"
+"Gutachten des Arzneimittelbeirates über den Reiter \"Unterlagen\" hoch"
 
 #: core/paper_forms.py:178
 msgid "Submit as"
@@ -872,7 +872,7 @@ msgid ""
 "Approach at test center(s), for informing and  obtaining an informed consent "
 "of candidates, or parents or legal representatives, if applicable"
 msgstr ""
-"Vorgehensweise an der/den Prüfstelle(n), zur Information und Erlangung der "
+"Vorgehensweise an der/den Prüfstelle/n, zur Information und Erlangung der "
 "informierten Einwil ligung von Prüfungsteilnehmer/inne/n, bzw. Eltern oder "
 "gesetzlichen Vertreter/inne/n, wenn zu-treffend"
 
@@ -920,7 +920,7 @@ msgid ""
 "included in another study, participate or whether a required period of time "
 "has elapsed since a participation in another study"
 msgstr ""
-"Verfahren an der/den Prüfstelle(n), zur Feststellung, ob eine "
+"Verfahren an der/den Prüfstelle/n, zur Feststellung, ob eine "
 "einzuschließende Person gleichzeitig an einer anderen Studie teilnimmt oder "
 "ob eine erforderliche Zeitspanne seit einer Teilnahme an einer anderen "
 "Studie verstrichen ist"
@@ -965,7 +965,7 @@ msgid ""
 "source documents and the samples"
 msgstr ""
 "Verwendete Verfahren zum Schutz der Vertraulichkeit der erhobenen Daten, der "
-"Quell dokumente und von Proben"
+"Quelldokumente und von Proben"
 
 #: core/paper_forms.py:214
 msgid ""
@@ -1008,7 +1008,7 @@ msgid ""
 "Agreement on access of the examiner(s) to data, publication guidelines, etc"
 msgstr ""
 "Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten, "
-"Publikationsricht linien, etc."
+"Publikationsrichtlinien, etc."
 
 #: core/paper_forms.py:217 core/paper_forms.py:218
 msgid "if not included in the protocol"
@@ -1406,7 +1406,7 @@ msgstr ""
 
 #: core/forms/forms.py:130
 msgid "The account beneficiary is not the sponsor"
-msgstr "Der Rechnungsempfänger ist nicht der Sponsor"
+msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
 #: core/forms/layout.py:11
 msgid "Key data"
@@ -2365,7 +2365,7 @@ msgstr "Einreichungen"
 
 #: templates/forms/field.html:12
 msgid "This field is required."
-msgstr "Diesed Feld ist erforderlich"
+msgstr "Dieses Feld ist erforderlich"
 
 #: templates/help/view_page.html:31
 msgid "last edited"
@@ -2385,7 +2385,7 @@ msgstr ""
 
 #: templates/meetings/detail.html:14 templates/meetings/status.html:40
 msgid "Timetable"
-msgstr "Zeitplan"
+msgstr "Zeitplanung"
 
 #: templates/meetings/detail.html:17
 msgid "Signatur der Voten"
@@ -2555,7 +2555,8 @@ msgstr "Neues Zentrum im Ausland hinzufügen"
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
-"Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung erstellen?"
+"Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
+"erstellen?"
 
 #: templates/submissions/form.html:71
 msgid "You filled out the form correctly. Do want to submit the study?"
@@ -2933,7 +2934,7 @@ msgstr "Öffentliches Register"
 
 #: templates/users/profile.html:11
 msgid "Edit Profile"
-msgstr "Profile bearbeiten"
+msgstr "Profil bearbeiten"
 
 #: templates/users/profile.html:13
 msgid "Change Password"
@@ -2948,8 +2949,8 @@ msgstr "Profil von %(user)s"
 #, python-format
 msgid ""
 "\n"
-"        An user account on the ECS system has been created for you.\n"
-"        To accept the invitation follow <a href=\"%(link)s\">this link</a>\n"
+"        A user account on the ECS system has been created for you.\n"
+"        To accept the invitation follow <a href=\"%(link)s\">this link</a>.\n"
 "        "
 msgstr ""
 

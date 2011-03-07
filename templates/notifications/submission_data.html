@@ -1,6 +1,6 @@
 {% if submission_forms %}
 <table class="notif_meta" style="clear:both">
-    <tr><th>Studie</th><th>Protokoll Nr.</th><th>EudraCT-Nr.</th><th>Ethik-Komission</th><th>Prüfer</th></tr>
+    <tr><th>Studie</th><th>Protokoll Nr.</th><th>EudraCT-Nr.</th><th>Ethik-Kommission</th><th>Prüfer</th></tr>
     {% for submission_form in submission_forms %}
         <tr>
            <td><a href="{% url ecs.core.views.view_submission submission_pk=submission_form.submission.pk %}">{{ submission_form.submission }} {{ submission_form.project_title_display }}</a></td>
