@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-07 22:04+0100\n"
+"POT-Creation-Date: 2011-03-07 22:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2900,13 +2900,12 @@ msgid "Approve"
 msgstr "Bestätigen"
 
 #: templates/users/administration.html:59
-#, fuzzy
 msgid "Unmark Indisposed"
-msgstr "Verhindert markieren"
+msgstr "als Anwesend markieren"
 
 #: templates/users/administration.html:61
 msgid "Mark Indisposed"
-msgstr "Verhindert markieren"
+msgstr "als Verhindert markieren"
 
 #: templates/users/administration.html:66
 msgid "Deactivate"
