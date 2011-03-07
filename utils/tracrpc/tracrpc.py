@@ -664,11 +664,15 @@ class TracRpc():
             return
         
         old_time = None
-        if ticket['remaining_time'] != '':
-            old_time = ticket['remaining_time']
-            old_time = float(old_time) if '.' in old_time else int(old_time)
+        #new_time can be a int or float or str
+        if isinstance(new_time, str):
             new_time = float(new_time) if '.' in new_time else int(new_time)
         
+        #remaining_time is string
+        if ticket['remaining_time'] != '' and ticket['remaining_time'] != None:
+            old_time = ticket['remaining_time']
+            old_time = float(old_time) if '.' in old_time else int(old_time)
+            
         if old_time != new_time:
             ticket['remaining_time'] = new_time
             self._update_ticket(tid, ticket, comment=comment)

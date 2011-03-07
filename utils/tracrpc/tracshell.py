@@ -63,6 +63,8 @@ DEFAULT_ALIASES = {
     'sm': 'showmilestones',
     'milestones': 'showmilestones',
     'pt': 'parsetest $0',
+    'rt': 'remainingtime $0',
+    'eta': 'remainingtime $0',
     
 }
 
@@ -275,7 +277,7 @@ class TracShell(cmd.Cmd):
     
     
     #@parsercleanup
-    #@refetchticketafteredit
+    @refetchticketafteredit
     def do_edit(self, args):
         '''edit a ticket'''
         parser = ShellOptParser()
@@ -622,10 +624,44 @@ class TracShell(cmd.Cmd):
         '''show all defnied components'''
         self.tracrpc.show_components()
     
+    @refetchticketafteredit
+    def do_remainingtime(self, args):
+        '''udpate the remaining time of the current ticket. e.g.: remainingtime 7.5'''
+        if not self.currentticketid:
+            print "please get a ticket first. g <ticketid>"
+            return
+        
+        parser = ShellOptParser()
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        if len(args) < 1:
+            print "argument needed"
+            return
+        if len(args) > 1:
+            print "too many arguments"
+            return
+        
+        new_time=None
+        try:
+            new_time=float(args[0])
+        except ValueError,e:
+            print "bad argument. i want ints or floats"
+            return
+        
+        print "new time:", new_time," type:",type(new_time)
+        self.tracrpc.update_remaining_time(self.currentticketid, new_time, comment=None)
+    
     def print_ticket(self,ticket):
         '''prints a ticket in a nicer way than tracrpc'''
         pprint(ticket)
-        
+    
+    
+    
 if __name__ == '__main__':
     s = TracShell()
     s.run()
