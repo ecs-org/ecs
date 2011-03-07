@@ -70,6 +70,9 @@
             {% if valid and not half_baked_documents and user|has_flag:'approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
+                }, null, {
+                    okText: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
+                    cancelText: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}'
                 });
             {% endif %}
             {% if valid and half_baked_documents and user|has_flag:'approved_by_office' %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-04 16:38+0100\n"
+"POT-Creation-Date: 2011-03-07 11:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -119,15 +119,15 @@ msgstr "EK-Nr"
 msgid "Payment request"
 msgstr ""
 
-#: communication/forms.py:17 communication/forms.py:31
+#: communication/forms.py:18 communication/forms.py:32
 msgid "Ethics Commission"
 msgstr "Ethik-Kommission"
 
-#: communication/forms.py:37
+#: communication/forms.py:38
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:47 templates/communication/threads.html:16
+#: communication/forms.py:48 templates/communication/threads.html:16
 msgid "Person"
 msgstr "Person"
 
@@ -1532,12 +1532,12 @@ msgstr "Optionale Unterlagen"
 msgid "one mandatory document"
 msgstr ""
 
-#: core/models/names.py:37 core/models/submissions.py:665 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:671 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:665 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:671 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1550,11 +1550,11 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:699
+#: core/models/submissions.py:705
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:699
+#: core/models/submissions.py:705
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1702,7 +1702,7 @@ msgstr "keine Datei"
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: documents/models.py:94 templates/submissions/diff/diff.html:18
+#: documents/models.py:94 templates/submissions/diff/diff.html:21
 msgid "new"
 msgstr "neu"
 
@@ -2148,6 +2148,8 @@ msgstr "Zurück zur Nachrichtenübersicht"
 #: templates/communication/send.html:17 templates/communication/send.html:68
 #: templates/communication/thread.html:20
 #: templates/communication/thread.html:53
+#: templates/submissions/diff/diff.html:17
+#: templates/submissions/diff/diff.html:29
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
@@ -2452,6 +2454,7 @@ msgid "Validate"
 msgstr "Validieren"
 
 #: templates/notifications/form.html:29 templates/submissions/form.html:23
+#: templates/submissions/form.html.py:74
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -2549,24 +2552,35 @@ msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
 #: templates/submissions/form.html:71
-#, fuzzy
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
-"Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
+"Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung erstellen?"
 
 #: templates/submissions/form.html:71
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:76
+#: templates/submissions/form.html:74
+msgid "Create Notification"
+msgstr "Meldung Erstellen"
+
+#: templates/submissions/form.html:75
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: templates/submissions/form.html:75
+msgid "Don't Submit"
+msgstr "Nicht Einreichen"
+
+#: templates/submissions/form.html:79
 msgid ""
 "You cannot submit study if there are unready documents. If you want to "
 "submit the study regardless of the unready documents, delete them."
 msgstr ""
 
-#: templates/submissions/form.html:79
+#: templates/submissions/form.html:82
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
@@ -2716,11 +2730,11 @@ msgstr "Einreichungs-Helfer"
 msgid "Next"
 msgstr ""
 
-#: templates/submissions/diff/diff.html:17
+#: templates/submissions/diff/diff.html:20
 msgid "old"
 msgstr "alt"
 
-#: templates/submissions/diff/diff.html:19
+#: templates/submissions/diff/diff.html:22
 msgid "all"
 msgstr "alle"
 
