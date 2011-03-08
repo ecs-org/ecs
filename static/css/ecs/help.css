@@ -119,6 +119,7 @@
 }
 #help_content {
 	margin: 10px;
+	max-width: 900px;
 }
 #help_content ul,
 #help_preview ul {
