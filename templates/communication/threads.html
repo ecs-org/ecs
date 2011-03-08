@@ -9,6 +9,10 @@
             {{ filterform.incoming }} <label class="thread_incoming">{% trans "Incoming" %}</label>
             {{ filterform.outgoing }} <label class="thread_outgoing">{% trans "Outgoing" %}</label>
         </div>
+        <div class="thread_list_choose">
+            {{ filterform.pending }} <label class="thread_outgoing">{% trans "Pending" %}</label>
+            {{ filterform.closed }} <label class="thread_outgoing">{% trans "Closed" %}</label>
+        </div>
     </form>
 
     <a href="{% url ecs.communication.views.new_thread %}">{% trans "New Message" %}</a>

@@ -182,10 +182,9 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
 def list_threads(request):
     usersettings = request.user.ecs_settings
 
-    filter_defaults = {
-        'incoming': 'on',
-        'outgoing': 'on',
-    }
+    filter_defaults = {}
+    for key in ('incoming', 'outgoing', 'closed', 'pending'):
+        filter_defaults[key] = 'on'
 
     filterdict = request.POST or usersettings.communication_filter or filter_defaults
     filterform = ThreadListFilterForm(filterdict)
@@ -194,15 +193,23 @@ def list_threads(request):
     usersettings.communication_filter = filterform.cleaned_data
     usersettings.save()
 
-    queryset = Thread.objects.none()
+    queryset_stage1 = Thread.objects.none()
     if filterform.cleaned_data['incoming']:
-        queryset |= Thread.objects.incoming(request.user)
+        queryset_stage1 |= Thread.objects.incoming(request.user)
     if filterform.cleaned_data['outgoing']:
-        queryset |= Thread.objects.outgoing(request.user)
+        queryset_stage1 |= Thread.objects.outgoing(request.user)
+
+    queryset_stage2 = queryset_stage1.none()
+    if filterform.cleaned_data['closed'] and filterform.cleaned_data['pending']:
+        queryset_stage2 = queryset_stage1
+    elif filterform.cleaned_data['closed']:
+        queryset_stage2 |= queryset_stage1.filter(Q(closed_by_receiver=True, receiver=request.user) | Q(closed_by_sender=True, sender=request.user))
+    elif filterform.cleaned_data['pending']:
+        queryset_stage2 |= queryset_stage1.filter(Q(closed_by_receiver=False, receiver=request.user) | Q(closed_by_sender=False, sender=request.user))
 
     return message_widget(request, 
         template='communication/threads.html',
-        queryset=queryset.order_by('-last_message__timestamp'),
+        queryset=queryset_stage2.order_by('-last_message__timestamp'),
         session_prefix='messages:unified',
         user_sort='receiver__username',
         page_size=10,

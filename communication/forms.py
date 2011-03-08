@@ -90,4 +90,6 @@ class ReplyDelegateForm(forms.Form):
 class ThreadListFilterForm(forms.Form):
     incoming = forms.BooleanField(required=False)
     outgoing = forms.BooleanField(required=False)
+    closed = forms.BooleanField(required=False)
+    pending = forms.BooleanField(required=False)
 
