@@ -57,7 +57,7 @@
                     new ecs.pdfviewer.Controller('3x3', 3, 3),
                     new ecs.pdfviewer.Controller('1x1', 1, 1)
                 ],
-                metaKey: 'alt',
+                metaKey: '{{ user.ecs_settings.pdfviewer_settings.metaKey }}',
                 searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
                 editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
                 deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
@@ -100,7 +100,7 @@
                     mk.innerHTML = metaKeySelect.value.capitalize();
                 });
             });
-            metaKeySelect.value = 'alt';
+            metaKeySelect.value = '{{ user.ecs_settings.pdfviewer_settings.metaKey }}';
 
         {% else %}
             setTimeout(function() {

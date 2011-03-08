@@ -18,6 +18,14 @@ def show(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
 
+    if request.method == 'POST':
+        usersettings = request.user.ecs_settings
+
+        settings = {'metaKey': request.POST['metaKey']}
+
+        usersettings.pdfviewer_settings = settings
+        usersettings.save()
+
     return render(request, 'pdfviewer/viewer.html', {'document': document})
 
 @csrf_exempt

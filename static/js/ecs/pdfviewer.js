@@ -188,6 +188,14 @@ ecs.pdfviewer.DocumentViewer = new Class({
     },
     setMetaKey: function(meta){
         this.metaKey = meta;
+
+        var request = new Request({
+            url: window.location.href,
+            method: 'post',
+            data: 'metaKey=' + this.metaKey,
+            onSuccess: function(){},
+        });
+        request.send();
     },
     getImageSetKey: function(x, y){
         return x + 'x' + y;
