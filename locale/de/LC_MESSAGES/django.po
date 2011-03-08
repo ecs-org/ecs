@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-07 22:48+0100\n"
+"POT-Creation-Date: 2011-03-08 17:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2576,17 +2576,21 @@ msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
 #: templates/submissions/form.html:79
+#, fuzzy
 msgid ""
 "You cannot submit study if there are unready documents. If you want to "
 "submit the study regardless of the unready documents, delete them."
 msgstr ""
+"Sie können keine Studie abschicken, die noch unfertige Dokumente beinhaltet."
+"Wenn Sie die Studie dennoch abschicken möchten. Löschen sie die unfertigen "
+"Dokumente."
 
 #: templates/submissions/form.html:82
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
 msgstr ""
-"Sie koennen noch keine Studien abschicken, da ihr Account noch nicht "
+"Sie können noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
 
 #: templates/submissions/internal_list.html:15
