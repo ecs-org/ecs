@@ -71,8 +71,22 @@ class ActivationForm(forms.Form):
 class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField()
 
-
 class ProfileForm(forms.ModelForm):
+    gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('Gender'))
+    title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('Title'))
+    organisation = forms.CharField(max_length=UserProfile._meta.get_field('organisation').max_length, required=False, label=_('Organisation'))
+    jobtitle = forms.CharField(max_length=UserProfile._meta.get_field('jobtitle').max_length, required=False, label=_('Job Title'))
+    swift_bic = forms.CharField(max_length=UserProfile._meta.get_field('swift_bic').max_length, required=False, label=_('SWIFT-BIC'))
+    iban = forms.CharField(max_length=UserProfile._meta.get_field('iban').max_length, required=False, label=_('IBAN'))
+
+    address1 = forms.CharField(max_length=UserProfile._meta.get_field('address1').max_length, required=False, label=_('Address'))
+    address2 = forms.CharField(max_length=UserProfile._meta.get_field('address2').max_length, required=False, label=_('Additional Address Information'))
+    zip_code = forms.CharField(max_length=UserProfile._meta.get_field('zip_code').max_length, required=False, label=_('ZIP-Code'))
+    city = forms.CharField(max_length=UserProfile._meta.get_field('city').max_length, required=False, label=_('City'))
+    phone = forms.CharField(max_length=UserProfile._meta.get_field('phone').max_length, required=False, label=_('Phone'))
+    fax = forms.CharField(max_length=UserProfile._meta.get_field('fax').max_length, required=False, label=_('Fax'))
+    social_security_number = forms.CharField(max_length=UserProfile._meta.get_field('social_security_number').max_length, required=False, label=_('Social Security Number'))
+
     def __init__(self, *args, **kwargs):
         rval = super(ProfileForm, self).__init__(*args, **kwargs)
 
@@ -85,7 +99,7 @@ class ProfileForm(forms.ModelForm):
             ('5', _(u'Forward unread messages after 5 minutes')),
             ('10', _(u'Forward unread messages after 10 minutes')),
             ('360', _(u'Forward unread messages after 6 hours')),
-        ), initial=forward_messages_initial)
+        ), initial=forward_messages_initial, label=_('Forwarding of unread messages'))
 
         return rval
 
