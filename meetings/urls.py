@@ -3,7 +3,6 @@ from django.conf import settings
 
 urlpatterns = patterns('ecs.meetings.views',
     url(r'^users/by_medical_category/$', 'users_by_medical_category'),
-    url(r'^submission/(?P<submission_pk>\d+)/schedule/', 'schedule_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/reschedule/', 'reschedule_submission'),
 
     url(r'^meeting/next/$', 'next'),

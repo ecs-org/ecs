@@ -71,7 +71,7 @@ class Vote(models.Model):
     @property
     def final(self):
         return self.result in FINAL_VOTE_RESULTS
-        
+
     @property
     def recessed(self):
         return self.result in ('3', '5', '5b')

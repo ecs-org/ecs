@@ -129,7 +129,7 @@ class MeetingManager(models.Manager):
             deadline_key = 'deadline_diplomathesis'
 
         try:
-            return self.filter(**{'{0}__gt'.format(deadline_key): now}).order_by('start')[0]
+            return self.filter(**{'{0}__gt'.format(deadline_key): now, 'started__isnull': True}).order_by('start')[0]
         except IndexError:
             raise self.model.DoesNotExist()
 

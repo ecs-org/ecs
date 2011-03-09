@@ -47,21 +47,6 @@ def upcoming_meetings(request):
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()))
 
-@developer
-def schedule_submission(request, submission_pk=None):
-    """ Developer: this will happen automatically """
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    form = SubmissionSchedulingForm(request.POST or None)
-    if form.is_valid():
-        kwargs = form.cleaned_data.copy()
-        meeting = kwargs.pop('meeting')
-        timetable_entry = meeting.add_entry(submission=submission, duration=timedelta(minutes=7.5), **kwargs)
-        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    return render(request, 'submissions/schedule.html', {
-        'submission': submission,
-        'form': form,
-    })
-
 @user_flag_required('executive_board_member')
 def reschedule_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
@@ -304,6 +289,10 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             if form.cleaned_data['close_top']:
                 top.is_open = False
                 top.save()
+            if vote.recessed:
+                # schedule submission for the next schedulable meeting
+                next_meeting = Meeting.objects.next_schedulable_meeting(top.submission)
+                next_meeting.add_entry(submission=top.submission, duration=timedelta(minutes=7.5))
             return next_top_redirect()
     elif request.method == 'POST':
         top.is_open = False
