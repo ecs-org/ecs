@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if not review_form.readonly %}
-    <form action="" method="post">
+    <form action="" method="post" class="review">
 {% endif %}
 
 <ol>

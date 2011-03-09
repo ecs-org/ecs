@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-08 18:40+0100\n"
+"POT-Creation-Date: 2011-03-09 13:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,9 +131,17 @@ msgstr "Ethik-Kommission"
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:48 templates/communication/threads.html:16
+#: communication/forms.py:48 templates/communication/threads.html:20
 msgid "Person"
 msgstr "Person"
+
+#: communication/forms.py:81
+msgid "Text"
+msgstr ""
+
+#: communication/forms.py:86
+msgid "Delegate to"
+msgstr "Abgeben an"
 
 #: communication/tasks.py:51
 msgid "New ECS-Mail: from {sender} to {receiver}."
@@ -1822,35 +1830,35 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:228
+#: meetings/views.py:213
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:236
+#: meetings/views.py:221
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:241
+#: meetings/views.py:226
 msgid "This meeting has not yet started."
 msgstr "Dieses Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:253
+#: meetings/views.py:238
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:339 meetings/views.py:414
+#: meetings/views.py:328 meetings/views.py:403
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:350
+#: meetings/views.py:339
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:402
+#: meetings/views.py:391
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:428
+#: meetings/views.py:417
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
@@ -2139,7 +2147,7 @@ msgid "Task"
 msgstr "Aufgabe"
 
 #: templates/communication/send.html:10
-#: templates/communication/threads.html:14
+#: templates/communication/threads.html:18
 msgid "New Message"
 msgstr "Neue Nachricht"
 
@@ -2189,25 +2197,35 @@ msgstr "Einkommend"
 msgid "Outgoing"
 msgstr "Ausgehend"
 
-#: templates/communication/threads.html:15
+#: templates/communication/threads.html:13
+#, fuzzy
+msgid "Pending"
+msgstr "Ausstehende Voten"
+
+#: templates/communication/threads.html:14
+#, fuzzy
+msgid "Closed"
+msgstr "Schliessen"
+
+#: templates/communication/threads.html:19
 #: templates/communication/widgets/messages.inc:6
 msgid "sort"
 msgstr "sortieren"
 
-#: templates/communication/threads.html:17
+#: templates/communication/threads.html:21
 msgid "Old/New"
 msgstr "Alt/Neu"
 
-#: templates/communication/threads.html:24
+#: templates/communication/threads.html:28
 msgid "Von/An"
 msgstr "Von/An"
 
-#: templates/communication/threads.html:30
+#: templates/communication/threads.html:34
 #: templates/communication/widgets/messages.inc:18
 msgid "an"
 msgstr "an"
 
-#: templates/communication/threads.html:32
+#: templates/communication/threads.html:36
 #: templates/communication/widgets/messages.inc:18
 msgid "von"
 msgstr "von"

@@ -5,7 +5,7 @@
         <div class="document">{{ annotation.document }} ({{ annotation.document.original_file_name }})</div>
     {% endifchanged %}
     <div class="annotation">
-        <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/><span class="text">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}:
-{{ annotation.text }}</span>
+        <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/><span class="location">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}</span>
+        <pre class="text">{{ annotation.text }}</pre>
     </div>
 {% endfor %}

@@ -78,12 +78,12 @@ class TaskMessageForm(BaseMessageForm):
     pass
 
 class ReplyDelegateForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea())
+    text = forms.CharField(widget=forms.Textarea(), label=_('Text'))
 
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.ecs_profile.internal:
-            self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False)
+            self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False, label=_('Delegate to'))
             self.fields.keyOrder = ['to', 'text']
 
 

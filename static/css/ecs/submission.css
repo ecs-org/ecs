@@ -57,3 +57,10 @@
   background: url(/static/images/icons.png) 0 -64px no-repeat;
 }
 
+.annotation .text {
+  white-space: pre-wrap;
+  overflow: hidden;
+  max-width: 700px;
+  margin-left: 20px;
+}
+
