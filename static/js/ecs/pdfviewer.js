@@ -356,7 +356,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
             pageEl.getChildren('.annotation').each((function(annotationElement){
                 var annotation = annotationElement.retrieve('annotation');
                 annotation.endAnnotationMode(annotationElement);
-                this.sendAnnotationUpdate(annotation);
             }).bind(this));
         }
         else{
@@ -734,9 +733,7 @@ ecs.pdfviewer.AnnotationEditor = new Class({
             this.annotation.text = this.textarea.value;
             this.annotation.author = null;
             this.annotationElement.removeClass('foreign');
-            if(!this.viewer.annotationMode){
-                this.viewer.sendAnnotationUpdate(this.annotation);
-            }
+            this.viewer.sendAnnotationUpdate(this.annotation);
         }
         this.dispose();
     },
