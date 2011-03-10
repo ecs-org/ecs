@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 20:44+0100\n"
+"POT-Creation-Date: 2011-03-10 20:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1867,9 +1867,8 @@ msgstr "Einladung zur Sitzung"
 
 #: notifications/bootstrap.py:47 notifications/bootstrap.py:49
 #: notifications/bootstrap.py:50
-#, fuzzy
 msgid "Edit Notification Answer"
-msgstr "Meldungen"
+msgstr "Meldungsantwort bearbeiten"
 
 #: notifications/bootstrap.py:51 notifications/bootstrap.py:52
 #, fuzzy
