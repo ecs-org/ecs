@@ -3,8 +3,9 @@
 <form action="{% url ecs.pdfviewer.views.share_annotations document.pk %}" method="post" class="open-in-widget">
     {{ form.user }}
     {% for annotation in annotations %}
-        <div>
-            <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/>Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text }}
+        <div class="annotation">
+            <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/><span class="location">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}</span>
+            <pre class="text">{{ annotation.text }}</pre>
         </div>
     {% endfor %}
     <input type="submit" value="{% trans 'Share' %}" />
