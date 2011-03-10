@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 17:15+0100\n"
+"POT-Creation-Date: 2011-03-10 20:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -156,7 +156,7 @@ msgid "{sender} schrieb:"
 msgstr ""
 
 #: communication/views.py:84
-msgid "Abgeben von: {0}"
+msgid "Anfrage bezüglich: {0}"
 msgstr ""
 
 #: communication/management/commands/unreadmessages.py:36
@@ -1896,11 +1896,11 @@ msgstr "Alle Meldungen"
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:160
+#: notifications/views.py:161
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/views.py:238
+#: notifications/views.py:239
 #, fuzzy
 msgid "New Notification Answer"
 msgstr "Neue Meldungen"
@@ -1966,8 +1966,8 @@ msgstr "Alter, ältere zuerst"
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
-#: tasks/views.py:151
-msgid "Question regarding {0}"
+#: tasks/views.py:152
+msgid "Anfrage bezüglich {0}"
 msgstr ""
 
 #: templates/core.html:31
@@ -2522,7 +2522,7 @@ msgstr ""
 "Um sie anzusehen klicken sie <a href=\"#\" onclick=\"window.parent.location."
 "href='%s';\">hier</a>."
 
-#: templates/pdfviewer/annotations/sharing/share.html:10
+#: templates/pdfviewer/annotations/sharing/share.html:11
 msgid "Share"
 msgstr "Teilen"
 
@@ -3088,9 +3088,8 @@ msgid "Forward unread messages after 6 hours"
 msgstr "ungelesende ECS Nachrichten nach sechs Stunden weiterleiten"
 
 #: users/forms.py:102
-#, fuzzy
 msgid "Forwarding of unread messages"
-msgstr "Ungelesene Nachrichten nicht weiterleiten"
+msgstr "Weiterleitung von ungelesenen Nachrichten"
 
 #: users/forms.py:129 users/forms.py:134
 msgid "Both"
