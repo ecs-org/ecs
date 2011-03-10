@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-09 13:36+0100\n"
+"POT-Creation-Date: 2011-03-10 17:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1485,7 +1485,7 @@ msgid "insurance"
 msgstr "Versicherung"
 
 #: core/forms/layout.py:100 core/forms/layout.py:120 core/forms/layout.py:129
-#: core/forms/layout.py:138
+#: core/forms/layout.py:138 core/forms/layout.py:155
 msgid "documents"
 msgstr "Unterlagen"
 
@@ -1503,6 +1503,10 @@ msgstr "Allgemeine Angaben"
 #: templates/notifications/view/AmendmentNotificationForm.html:7
 msgid "Changes"
 msgstr "Änderungen"
+
+#: core/forms/layout.py:144
+msgid "Study status"
+msgstr "Studien-Status"
 
 #: core/forms/review.py:43
 msgid "Studies cannot be classified 'expedited' and 'thesis' at the same time."
@@ -1782,9 +1786,8 @@ msgid "Meeting Agenda Sending"
 msgstr ""
 
 #: meetings/bootstrap.py:23
-#, fuzzy
 msgid "Meeting Day"
-msgstr "Sitzung"
+msgstr "Sitzungstag"
 
 #: meetings/bootstrap.py:24
 msgid "Meeting Protocol Sending"
@@ -2198,14 +2201,12 @@ msgid "Outgoing"
 msgstr "Ausgehend"
 
 #: templates/communication/threads.html:13
-#, fuzzy
 msgid "Pending"
-msgstr "Ausstehende Voten"
+msgstr "Ausstehend"
 
 #: templates/communication/threads.html:14
-#, fuzzy
 msgid "Closed"
-msgstr "Schliessen"
+msgstr "Erledigt"
 
 #: templates/communication/threads.html:19
 #: templates/communication/widgets/messages.inc:6
@@ -2415,9 +2416,8 @@ msgid "Signatur der Voten"
 msgstr ""
 
 #: templates/meetings/reschedule.html:5
-#, fuzzy
 msgid "Reschedule Submission"
-msgstr "Einreichung"
+msgstr "Sitzung verlegen"
 
 #: templates/meetings/status.html:11
 msgid "Deadline for Submission"
@@ -2482,9 +2482,8 @@ msgid "Submit"
 msgstr "Einreichen"
 
 #: templates/notifications/list.html:55
-#, fuzzy
 msgid "There are no notifications yet."
-msgstr "Es existieren derzeit keine ausstehenden Voten."
+msgstr "Es existieren derzeit keine Studienmeldungen."
 
 #: templates/notifications/answers/distribute.html:9
 msgid "Distribute"
@@ -2878,9 +2877,8 @@ msgid "Approval"
 msgstr "Bestätigung"
 
 #: templates/users/administration.html:10
-#, fuzzy
 msgid "Activity"
-msgstr "Aktivieren"
+msgstr "Aktivität"
 
 #: templates/users/administration.html:11
 msgid "Group"
