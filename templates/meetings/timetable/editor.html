@@ -9,12 +9,9 @@
     <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
     {% if not running_optimization %}
         <ol class="options">
-				  <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
-          <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">RandomAdd</a></li>
-          <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='random' %}">Zufällig Sortieren</a></li>
-        {% comment %}| <a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='brute_force' %}">brute force</a> {% endcomment %}
-          <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
-				</ol>
+            <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
+            <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+        </ol>
     {% endif %}
     <div class="waiting_time">
     Wartezeit: 
