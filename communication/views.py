@@ -81,7 +81,7 @@ def read_thread(request, thread_pk=None):
         if delegate_to:
             thread.delegate(request.user, delegate_to)
             thread = Thread.objects.create(
-                subject=_(u'Abgeben von: {0}').format(thread.subject),
+                subject=_(u'Anfrage bezüglich: {0}').format(thread.subject),
                 sender=request.user,
                 receiver=delegate_to,
                 task=thread.task,

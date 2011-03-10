@@ -148,7 +148,7 @@ def manage_task(request, task_pk=None, full=False):
         elif action == 'message':
             if message_form.is_valid():
                 thread = Thread.objects.create(
-                    subject=_('Question regarding {0}').format(task),
+                    subject=_(u'Anfrage bezüglich {0}').format(task),
                     submission=submission,
                     task=task,
                     sender=request.user,
