@@ -563,7 +563,7 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
         if filterform.cleaned_data[key]:
             submissions_stage2 |= submissions_stage1.filter(query)
 
-    submissions = submissions_stage2.order_by('-current_submission_form__pk')
+    submissions = submissions_stage2.exclude(current_submission_form__isnull=True).order_by('-current_submission_form__pk')
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
     try:
         submissions = paginator.page(int(filterform.cleaned_data['page']))
