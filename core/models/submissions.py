@@ -487,7 +487,7 @@ class SubmissionForm(models.Model):
                     user.last_name = getattr(self, '{0}_contact_last_name'.format(x))
                     user.save()
                     user.ecs_profile.title = getattr(self, '{0}_contact_title'.format(x))
-                    user.ecs_profile.gender = getattr(self, '{0}_contact_gender'.format(x))
+                    user.ecs_profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
                     user.ecs_profile.save()
 
                 setattr(self, x, user)

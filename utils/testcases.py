@@ -13,7 +13,9 @@ from ecs.users.utils import get_user, get_or_create_user
 
 class EcsTestCase(TestCase):
     @classmethod
-    def setUpClass(self):    
+    def setUpClass(self):
+        get_or_create_user('root@example.org', is_superuser=True)
+        get_or_create_user(settings.DEFAULT_CONTACT)
         core_bootstrap.templates()
         documents_bootstrap.document_types()
         mediaserver_bootstrap.import_decryption_key()
@@ -25,8 +27,7 @@ class EcsTestCase(TestCase):
     
     def setUp(self):
         self.logger = logging.getLogger() 
-        
-        user, created = get_or_create_user('root@example.org', is_superuser=True)
+
         settings.ENABLE_AUDIT_TRAIL = True
         
         self.create_user('alice', profile_extra={'internal': True})
