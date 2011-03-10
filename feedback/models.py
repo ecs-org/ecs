@@ -8,6 +8,7 @@ class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'idea'),('q','question'),('p', 'problem'),('l','praise'))
     ftdict = dict(FEEDBACK_TYPES)
     rpc_query_base = "order=id&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component"
+    tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
     
     def __init__(self, *args, **kwargs):
         self.ftdict = dict(self.FEEDBACK_TYPES)
@@ -21,7 +22,6 @@ class Feedback(models.Model):
         me_too_emails = []
         creator_email = ''
         trac_ticket_id = 0
-        self.tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
         super(Feedback, self).__init__(*args, **kwargs)
         
     @classmethod
