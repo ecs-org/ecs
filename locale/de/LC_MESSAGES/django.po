@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 20:47+0100\n"
+"POT-Creation-Date: 2011-03-10 21:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -247,9 +247,8 @@ msgid "Vote Recommendation"
 msgstr ""
 
 #: core/bootstrap.py:99
-#, fuzzy
 msgid "Vote Recommendation Review"
-msgstr "Zurück zur Nachrichtenübersicht"
+msgstr "Empfehlungsgutachten"
 
 #: core/bootstrap.py:159
 msgid "B2 Upgrade"
@@ -260,14 +259,12 @@ msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
 #: core/bootstrap.py:161
-#, fuzzy
 msgid "Executive Vote Review"
-msgstr "External Reviewer"
+msgstr "Prüfung Votum Executive"
 
 #: core/bootstrap.py:162
-#, fuzzy
 msgid "Internal Vote Review"
-msgstr "Formale Prüfung Einreichung"
+msgstr "Interne Prüfung Votum"
 
 #: core/bootstrap.py:163
 msgid "Office Vote Finalization"
@@ -282,9 +279,8 @@ msgid "Vote Signing"
 msgstr ""
 
 #: core/bootstrap.py:167
-#, fuzzy
 msgid "Vote Publication"
-msgstr "Nachrichten"
+msgstr "Votum Bekanntmachung"
 
 #: core/diff.py:133 core/diff.py:197 core/diff.py:198 core/diff.py:234
 #: core/diff.py:235
@@ -1871,14 +1867,12 @@ msgid "Edit Notification Answer"
 msgstr "Meldungsantwort bearbeiten"
 
 #: notifications/bootstrap.py:51 notifications/bootstrap.py:52
-#, fuzzy
 msgid "Sign Notification Answer"
-msgstr "Meldungen"
+msgstr "Meldungsantwort Unterschrift"
 
 #: notifications/bootstrap.py:53
-#, fuzzy
 msgid "Distribute Notification Answer"
-msgstr "Neue Meldungen"
+msgstr "Meldungsantwort Verteilen"
 
 #: notifications/views.py:50 templates/core.html:57
 #: templates/submissions/readonly_form.html:100
@@ -1900,9 +1894,8 @@ msgid "save successful"
 msgstr "speichern erflogreich"
 
 #: notifications/views.py:239
-#, fuzzy
 msgid "New Notification Answer"
-msgstr "Neue Meldungen"
+msgstr "Neue Meldungsantwort"
 
 #: pdfviewer/models.py:22
 msgid "top"
@@ -2451,9 +2444,8 @@ msgid "Comments"
 msgstr "Kommentare"
 
 #: templates/meetings/assistant/top.html:71
-#, fuzzy
 msgid "Expedited Review"
-msgstr "External Reviewer"
+msgstr "Express Gutachten"
 
 #: templates/meetings/assistant/top.html:73
 msgid "copy comment"
@@ -2493,9 +2485,8 @@ msgid "Download PDF"
 msgstr "Als PDF herunterladen"
 
 #: templates/notifications/answers/xhtml2pdf/base.html:9
-#, fuzzy
 msgid "Notification Answer"
-msgstr "Meldungen"
+msgstr "Meldungsantwort"
 
 #: templates/notifications/view/AmendmentNotificationForm.html:10
 msgid "Old Version"
@@ -2506,9 +2497,8 @@ msgid "New Version"
 msgstr "Neue Version"
 
 #: templates/pdfviewer/viewer.html:36
-#, fuzzy
 msgid "Your document is not ready yet."
-msgstr "Die Datei ist kein gültiges PDF-Dokument."
+msgstr "Das Dokument steht noch nicht bereit."
 
 #: templates/pdfviewer/viewer.html:37
 #, fuzzy
