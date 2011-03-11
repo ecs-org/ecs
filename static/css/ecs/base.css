@@ -177,9 +177,13 @@ input[type=submit]:active, .cancel a:active {
   line-height: 18px;
   margin-top: 10px;
   border: 1px solid #999;
+  display: inline-block;
 }
 #content .cancel a:hover {
   text-decoration: none;
+}
+.form_main .cancel a {
+  margin-left: 240px;
 }
 
 /* header */

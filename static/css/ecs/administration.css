@@ -28,3 +28,6 @@
 	display: inline-block;
 	width: 100px;
 }
+.useradministration_choose input[type=submit] {
+  margin-left: 102px;
+}
