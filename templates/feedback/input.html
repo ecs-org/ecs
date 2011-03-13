@@ -49,7 +49,7 @@
   {% if list %}
     {% for fb in list %}
     <li class="fb_list_item">
-      <span class="fb_summary"">{{fb.summary|truncate:38}}</span>
+      <span class="fb_summary" title="{{fb.summary}} {{ fb.description }}">{{fb.summary|truncate:38}}</span>
     {% ifequal fb.me2 'yours' %}
       <span class="fb_yours">(von Ihnen)</span>
     {% endifequal %}
@@ -60,7 +60,7 @@
       <span class="fb_me2"><a href="#" id="id_{{ fb.id }}">Ich auch!</a></span>
     {% endifequal %}
       <br/>
-      <div class="fb_description" >{{ fb.description|wordwrap:45|truncate:90 }}</div>
+      <div class="fb_description" title="{{fb.summary}} {{ fb.description }}">{{ fb.description|wordwrap:45|truncate:90 }}</div>
       <span class="fb_others">{{ type|fb_count:fb.count|fb_me2:fb.me2 }}</span>
     </li>
     {% endfor %}
