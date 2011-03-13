@@ -299,6 +299,9 @@
   padding-right: 10px;
   border-right: 1px solid #ccc
 }
+#meeting_assistant_form textarea {
+	border: 1px solid #ddd;
+}
 #meeting_assistant_body .reviews {
   float: left;
   width: 25%;
@@ -329,7 +332,7 @@
   border: 1px solid #ccc;
   background: #666;
   color: #fff;
-  margin: 5px 0;
+  margin: 0 0 5px;
   padding: 5px;
   border-radius: 3px;
   -moz-border-radius: 3px;
@@ -349,7 +352,7 @@
 #meeting_assistant .button a, #meeting_assistant .navigation a {
   display: block;
   padding: 3px;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
   background: #666;
   text-align: center;
   font-size: 12px;
@@ -381,6 +384,8 @@
   display: block;
   clear: both;
   font-size: 12px;
+	padding: 2px;
+	background: #fff;
 }
 #meeting_assistant textarea {
   width: 98%;
@@ -407,9 +412,13 @@
 #meeting_assistant ul li {
   list-style: none
 }
+#meeting_assistant .reviews ul {
+	margin: 0 10px 10px;
+}
 #meeting_assistant .reviews li {
   display: block;
   padding: 5px;
+	margin-bottom: 5px;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
