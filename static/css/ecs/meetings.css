@@ -358,7 +358,6 @@
   font-size: 12px;
   clear: both;  
   color: #fff;
-  border: 1px solid #ccc;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -384,8 +383,12 @@
   display: block;
   clear: both;
   font-size: 12px;
-	padding: 2px;
-	background: #fff;
+	padding: 2px 4px;
+  margin-top: 2px;
+	background: #efefef;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 #meeting_assistant textarea {
   width: 98%;
@@ -426,22 +429,22 @@
   color: #fff;
 }
 #meeting_assistant .reviews li.absent {
-  background-color: #cccccc;
+  background-color: #ccc;
 }
 #meeting_assistant .reviews li.positive {
-  background-color: #31eb10;
+  background-color: #71ce09;
 }
 #meeting_assistant .reviews li.positive.comments {
-  background-color: #77ff00;
+  background-color: #8bf82b;
 }
 #meeting_assistant .reviews li.negative {
-  background-color: #ff0000;
+  background-color: #DF0D0D;
 }
 #meeting_assistant .reviews li.negative.comments {
-  background-color: #ff7700;
+  background-color: #df430d;
 }
 #meeting_assistant .reviews li.incomplete {
-  background-color: #cccccc;
+  background-color: #ccc;
 }
 #meeting_assistant_body .reviews a:hover {
   text-decoration: none;
