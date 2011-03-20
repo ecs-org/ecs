@@ -27,11 +27,17 @@ if user in DBPWD_DICT:
 
 # change urls of signing application depending username
 if user == "shredder":
-    PDFAS_SERVICE = 'http://s.ecsdev.ep3.at:4780/pdf-as/'
+    pass
+    # FIXME: Disabled, will use mock interface default
+    # PDFAS_SERVICE = 'http://s.ecsdev.ep3.at:4780/pdf-as/'
 elif user == "testecs":
-    PDFAS_SERVICE = 'http://test.ecsdev.ep3.at:4780/pdf-as/'
+    pass
+    # FIXME: Disabled, will use mock interface default
+    # PDFAS_SERVICE = 'http://test.ecsdev.ep3.at:4780/pdf-as/'
 elif user == "chipper":
-    PDFAS_SERVICE = 'http://doc.ecsdev.ep3.at:4780/pdf-as/'
+    pass
+    # FIXME: Disabled, will use mock interface default
+    # PDFAS_SERVICE = 'http://doc.ecsdev.ep3.at:4780/pdf-as/'
 
 # ecsmail server settings
 if user == "shredder":
