@@ -16,6 +16,7 @@ import sys
 import os
 import optparse
 
+from deployment.utils import get_homedir
 from pprint import pprint
 
 
@@ -100,7 +101,7 @@ class TracShell(cmd.Cmd):
         Constructor
         '''
         
-        histfile = os.path.join(os.environ["HOME"], ".tracshellhist")
+        histfile = os.path.join(get_homedir(), ".tracshellhist")
         try:
             readline.read_history_file(histfile)
         except IOError:
