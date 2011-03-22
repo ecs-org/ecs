@@ -16,8 +16,18 @@ import sys
 import os
 import optparse
 
-from deployment.utils import get_homedir
+
 from pprint import pprint
+
+def get_homedir():
+    if sys.platform in ['win32', 'cygwin']:
+        from win32com.shell import shell,shellcon
+        home = shell.SHGetFolderPath(0, shellcon.CSIDL_PROFILE, None, 0)
+        return home
+        #return os.environ['USERPROFILE']
+    else:
+        return os.environ['HOME']
+
 
 
 class ShellOptParser(optparse.OptionParser):
