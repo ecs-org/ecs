@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 21:16+0100\n"
+"POT-Creation-Date: 2011-03-22 11:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr "Gebührennotennachreichungen"
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:79 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "amt."
 msgstr "Anz."
 
@@ -99,23 +99,23 @@ msgstr "Antragsteller"
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:79 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:106
+#: billing/views.py:107
 msgid "Billing request"
 msgstr ""
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:173
+#: billing/views.py:175
 msgid "Payment request"
 msgstr ""
 
@@ -2279,8 +2279,8 @@ msgstr "Sitzung Beenden"
 #: templates/fastlane/assistant_recommendation.html:28
 #: templates/submissions/internal_list.html:15
 #: templates/submissions/internal_list.html:54
-#: templates/submissions/widget.html:38 templates/users/administration.html:24
-#: templates/users/administration.html:84
+#: templates/submissions/widget.html:38 templates/users/administration.html:25
+#: templates/users/administration.html:85
 msgid "of"
 msgstr "von"
 
@@ -2311,7 +2311,6 @@ msgstr "Expedited Review"
 #: templates/fastlane/detail.html:11 templates/fastlane/status.html:5
 #: templates/fastlane/status.html.py:11 templates/meetings/detail.html:11
 #: templates/meetings/status.html:6 templates/meetings/status.html.py:14
-#: templates/submissions/readonly_form.html:30
 #: templates/submissions/readonly_form.html:33
 msgid "Status"
 msgstr "Status"
@@ -2451,15 +2450,15 @@ msgstr "Express Gutachten"
 msgid "copy comment"
 msgstr "Kommentar kopieren"
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "before"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "waiting"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "after"
 msgstr ""
 
@@ -2606,8 +2605,8 @@ msgstr ""
 
 #: templates/submissions/internal_list.html:15
 #: templates/submissions/internal_list.html:54
-#: templates/submissions/widget.html:38 templates/users/administration.html:24
-#: templates/users/administration.html:84
+#: templates/submissions/widget.html:38 templates/users/administration.html:25
+#: templates/users/administration.html:85
 msgid "Page"
 msgstr "Seite"
 
@@ -2644,6 +2643,10 @@ msgstr ""
 "\n"
 "            Studien für die Sitzung am %(start)s (%(title)s)\n"
 "        "
+
+#: templates/submissions/readonly_form.html:30
+msgid "General"
+msgstr "Generell"
 
 #: templates/submissions/readonly_form.html:36
 #: templates/submissions/tabs/workflow.html:2
@@ -2861,7 +2864,7 @@ msgid "List of Users"
 msgstr "Liste der Benutzer"
 
 #: templates/users/administration.html:9
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "Approval"
 msgstr "Bestätigung"
 
@@ -2877,59 +2880,59 @@ msgstr "Gruppe"
 msgid "Search"
 msgstr "Suche"
 
-#: templates/users/administration.html:35
+#: templates/users/administration.html:36
 msgid "User"
 msgstr "Benutzer"
 
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "Unapproved users may not be able to sumit studies"
 msgstr "Unbestätigte Benutzer können nicht einreichen"
 
-#: templates/users/administration.html:37
+#: templates/users/administration.html:38
 msgid "If you mark an user indisposed, somone else has to do the users work"
 msgstr ""
 
-#: templates/users/administration.html:37 templates/users/base_profile.inc:25
+#: templates/users/administration.html:38 templates/users/base_profile.inc:25
 msgid "Indisposed"
 msgstr "Verhindert"
 
-#: templates/users/administration.html:38
+#: templates/users/administration.html:39
 msgid "Inactive users are not able to log into the system"
 msgstr "Inaktive Benutzer können das System nicht verwenden"
 
-#: templates/users/administration.html:38
+#: templates/users/administration.html:39
 msgid "Active"
 msgstr "Aktiv"
 
-#: templates/users/administration.html:46
+#: templates/users/administration.html:47
 msgid "phantom"
 msgstr "phantom"
 
-#: templates/users/administration.html:52
+#: templates/users/administration.html:53
 msgid "Revoke Approval"
 msgstr "Bestätigung zurückziehen"
 
-#: templates/users/administration.html:54
+#: templates/users/administration.html:55
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/users/administration.html:59
+#: templates/users/administration.html:60
 msgid "Unmark Indisposed"
 msgstr "als Anwesend markieren"
 
-#: templates/users/administration.html:61
+#: templates/users/administration.html:62
 msgid "Mark Indisposed"
 msgstr "als Verhindert markieren"
 
-#: templates/users/administration.html:66
+#: templates/users/administration.html:67
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
-#: templates/users/administration.html:68
+#: templates/users/administration.html:69
 msgid "Activate"
 msgstr "Aktivieren"
 
-#: templates/users/administration.html:73
+#: templates/users/administration.html:74
 msgid "No Users."
 msgstr "Keine Benutzer."
 
