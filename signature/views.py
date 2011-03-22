@@ -13,14 +13,14 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpRespons
 from django.core.urlresolvers import reverse, get_callable
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.documents.models import Document, DocumentType
+from ecs.tasks.models import Task
 
 from ecs.utils import forceauth
 from ecs.utils.pdfutils import pdf_barcodestamp
-
-from .utils import SigningDepot
-
+from ecs.signature.utils import SigningDepot
 
 
 def sign(request, sign_dict):
@@ -179,6 +179,10 @@ def sign_receive(request, jsessionid=None):
     document = Document.objects.create(uuid_document=sign_dict["document_uuid"],
         parent_object=parent_obj, branding='n', doctype=doctype, file=f,
         original_file_name=sign_dict["document_filename"], date=datetime.now())
+
+    ct = ContentType.objects.get_for_model(parent_obj.__class__)
+    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=parent_obj.id)
+    task.close()
 
     return HttpResponseRedirect(reverse(sign_dict['redirect_view'], kwargs={'document_pk': document.pk}))
 

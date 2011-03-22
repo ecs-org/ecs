@@ -3,6 +3,8 @@ from uuid import uuid4
 
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 
 from ecs.core.models import Vote
 from ecs.documents.models import Document
@@ -11,7 +13,7 @@ from ecs.signature.views import sign
 from ecs.users.utils import user_group_required
 
 from ecs.utils.pdfutils import xhtml2pdf
-from .utils import render, pdf_response
+from ecs.core.views.utils import render, pdf_response
 
 
 
@@ -79,6 +81,12 @@ def download_signed_vote(request, vote_pk=None):
     
     return download_document(request, signed_vote_doc.pk)
 
+def vote_sign_finished(request, document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    vote = document.parent_object
+
+    return HttpResponseRedirect(reverse(
+        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#pending_votes_tab')
 
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
@@ -90,7 +98,7 @@ def vote_sign(request, vote_pk=None):
     context = vote_context(vote)
     
     sign_dict = {
-        'redirect_view': 'ecs.pdfviewer.views.show',
+        'redirect_view': 'ecs.core.views.votes.vote_sign_finished',
         'parent_name': 'ecs.core.models.Vote',
         'parent_pk': vote_pk,    
         'document_uuid': uuid4().get_hex(),
