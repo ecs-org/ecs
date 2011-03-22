@@ -65,7 +65,7 @@
 </table>
 <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}">Export</a>
 {% if show_reviews and befangene_review_form %}
-    | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}">Befangene Review</a>
+    | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab">Befangene Review</a>
 {% endif %}
 
 
