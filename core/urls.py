@@ -37,6 +37,7 @@ urlpatterns = patterns(
     url(r'^vote/(?P<vote_pk>\d+)/show/pdf$', 'ecs.core.views.show_pdf_vote'),
     url(r'^vote/(?P<vote_pk>\d+)/download$', 'ecs.core.views.download_signed_vote'),   
     url(r'^vote/(?P<vote_pk>\d+)/sign$', 'ecs.core.views.vote_sign'),
+    url(r'^vote/(?P<document_pk>\d+)/sign_finished/$', 'ecs.core.views.vote_sign_finished'),
     
     url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
 

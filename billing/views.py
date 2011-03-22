@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils.decorators import developer
 from ecs.core.models import Submission
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
@@ -95,7 +95,8 @@ def submission_billing(request):
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
-        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now)
+        doctype = DocumentType.objects.get(identifier='other')
+        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
 
         Submission.objects.filter(pk__in=[s.pk for s in selected_for_billing]).update(billed_at=now)
 
@@ -162,7 +163,8 @@ def external_review_payment(request):
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
-        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now)
+        doctype = DocumentType.objects.get(identifier='other')
+        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
         
         Submission.objects.filter(pk__in=[s.pk for s in selected_for_payment]).update(external_reviewer_billed_at=now)
         

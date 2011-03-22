@@ -58,7 +58,6 @@
 }
 .message_display label {
   display: inline-block;
-  width: 100px;
   font-weight: bolder;
   vertical-align: top;
 }

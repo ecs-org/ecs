@@ -1,5 +1,5 @@
 {% load i18n userutils %}
-<h3>{% trans 'Involved Parties' %}</h3>
+<h3>{% trans "Involved Parties" %}</h3>
 <table>
     <thead>
         <th>{% trans 'Involvement' %}</th>
@@ -34,5 +34,15 @@
 
 {% if user|has_flag:'executive_board_member' %}
     <a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}">{% trans 'Add Additional Reviewers' %}</a>
+{% endif %}
+
+
+{% if befangene_review_form %}
+    <h3>{% trans "Biased Parties" %}</h3>
+    <div id="befangene_review" class="tab">
+        {% with befangene_review_form as review_form %}
+            {% include 'submissions/review_form.inc' %}
+        {% endwith %}
+    </div>
 {% endif %}
 

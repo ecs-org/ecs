@@ -6,4 +6,4 @@ urlpatterns = patterns('ecs.signature.views',
     url(r'^signature/preview$', 'sign_preview'),
     url(r'^signature/receive$', 'sign_receive'),
     url(r'^signature/receive;jsessionid=null$', 'sign_receive_landing'),
-    )
+)

@@ -27,7 +27,7 @@
     <ul class="tab_header_groups">
     {% block tab_header_groups %}
         <li>
-            <a href="#">{% trans "Status" %}</a>
+            <a href="#">{% trans "General" %}</a>
             <ul class="tab_headers">
                 <li>
                     <a href="#status_tab">{% trans 'Status' %}</a>
@@ -78,11 +78,6 @@
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
                     </li>
                 {% endfor %}
-                {% if befangene_review_form %}
-                    <li{% if not befangene_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#befangene_review_tab">Befangene Review</a>
-                    </li>
-                {% endif %}
             </ul>
         </li>
         {% endif %}
@@ -246,15 +241,6 @@
         {% endwith %}
     </div>
     {% endfor %}
-    {% if befangene_review_form %}
-        <div id="befangene_review_tab" class="tab">
-            {% block befangene_review_tab_content %}
-                {% with befangene_review_form as review_form %}
-                    {% include 'submissions/review_form.inc' %}
-                {% endwith %}
-            {% endblock %}
-        </div>
-    {% endif %}
     
     <div id="communication_tab" class="tab">
         <h3>{% trans "My Communication" %}</h3>

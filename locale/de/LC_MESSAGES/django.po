@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-10 21:16+0100\n"
+"POT-Creation-Date: 2011-03-22 18:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr "Gebührennotennachreichungen"
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:79 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "amt."
 msgstr "Anz."
 
@@ -99,23 +99,23 @@ msgstr "Antragsteller"
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:79 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:106
+#: billing/views.py:107
 msgid "Billing request"
 msgstr ""
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:173
+#: billing/views.py:175
 msgid "Payment request"
 msgstr ""
 
@@ -1765,11 +1765,11 @@ msgid ""
 "%(meeting_title)s"
 msgstr ""
 
-#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:44
+#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:42
 msgid "Invalid expiring url"
 msgstr ""
 
-#: mediaserver/views.py:69
+#: mediaserver/views.py:67
 msgid "sorry, unfinished"
 msgstr ""
 
@@ -1875,8 +1875,8 @@ msgid "Distribute Notification Answer"
 msgstr "Meldungsantwort Verteilen"
 
 #: notifications/views.py:50 templates/core.html:57
-#: templates/submissions/readonly_form.html:100
-#: templates/submissions/readonly_form.html:147
+#: templates/submissions/readonly_form.html:95
+#: templates/submissions/readonly_form.html:142
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
@@ -1885,7 +1885,7 @@ msgid "All Notifications"
 msgstr "Alle Meldungen"
 
 #: notifications/views.py:56 templates/core.html:56
-#: templates/submissions/readonly_form.html:129
+#: templates/submissions/readonly_form.html:124
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -1967,7 +1967,7 @@ msgid "Dashboard"
 msgstr "Übersicht"
 
 #: templates/core.html:32 templates/communication/list.html:6
-#: templates/submissions/readonly_form.html:104
+#: templates/submissions/readonly_form.html:99
 msgid "Communication"
 msgstr "Nachrichten"
 
@@ -2134,8 +2134,8 @@ msgid "Subject"
 msgstr "Betreff"
 
 #: templates/communication/list.html:13
-msgid "Unread"
-msgstr "Ungelesen"
+msgid "Read"
+msgstr "Gelesen"
 
 #: templates/communication/list.html:14
 msgid "Task"
@@ -2161,13 +2161,13 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:83 templates/communication/thread.html:72
-#: templates/submissions/readonly_form.html:332
+#: templates/submissions/readonly_form.html:318
 #: templates/tasks/manage_task.html:73
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:87 templates/communication/thread.html:76
-#: templates/submissions/readonly_form.html:335
+#: templates/submissions/readonly_form.html:321
 #: templates/tasks/manage_task.html:77
 msgid "Insert Boilerplate"
 msgstr "Vorlage einfügen"
@@ -2224,7 +2224,7 @@ msgid "von"
 msgstr "von"
 
 #: templates/documents/compact_list.html:30
-#: templates/submissions/readonly_form.html:189
+#: templates/submissions/readonly_form.html:184
 msgid "Download"
 msgstr "Download"
 
@@ -2279,8 +2279,8 @@ msgstr "Sitzung Beenden"
 #: templates/fastlane/assistant_recommendation.html:28
 #: templates/submissions/internal_list.html:15
 #: templates/submissions/internal_list.html:54
-#: templates/submissions/widget.html:38 templates/users/administration.html:24
-#: templates/users/administration.html:84
+#: templates/submissions/widget.html:38 templates/users/administration.html:25
+#: templates/users/administration.html:85
 msgid "of"
 msgstr "von"
 
@@ -2311,7 +2311,6 @@ msgstr "Expedited Review"
 #: templates/fastlane/detail.html:11 templates/fastlane/status.html:5
 #: templates/fastlane/status.html.py:11 templates/meetings/detail.html:11
 #: templates/meetings/status.html:6 templates/meetings/status.html.py:14
-#: templates/submissions/readonly_form.html:30
 #: templates/submissions/readonly_form.html:33
 msgid "Status"
 msgstr "Status"
@@ -2338,7 +2337,7 @@ msgid "Fast Lanes"
 msgstr "Expedited Reviews"
 
 #: templates/fastlane/list.html:18 templates/meetings/list.html:20
-#: templates/submissions/readonly_form.html:172
+#: templates/submissions/readonly_form.html:167
 msgid "Ansehen"
 msgstr ""
 
@@ -2451,15 +2450,15 @@ msgstr "Express Gutachten"
 msgid "copy comment"
 msgstr "Kommentar kopieren"
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "before"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "waiting"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:53
+#: templates/meetings/timetable/editor.html:50
 msgid "after"
 msgstr ""
 
@@ -2606,8 +2605,8 @@ msgstr ""
 
 #: templates/submissions/internal_list.html:15
 #: templates/submissions/internal_list.html:54
-#: templates/submissions/widget.html:38 templates/users/administration.html:24
-#: templates/users/administration.html:84
+#: templates/submissions/widget.html:38 templates/users/administration.html:25
+#: templates/users/administration.html:85
 msgid "Page"
 msgstr "Seite"
 
@@ -2645,13 +2644,15 @@ msgstr ""
 "            Studien für die Sitzung am %(start)s (%(title)s)\n"
 "        "
 
+#: templates/submissions/readonly_form.html:30
+msgid "General"
+msgstr "Generell"
+
 #: templates/submissions/readonly_form.html:36
-#: templates/submissions/tabs/workflow.html:2
 msgid "Workflow"
 msgstr ""
 
 #: templates/submissions/readonly_form.html:40
-#: templates/submissions/tabs/workflow_log.html:2
 msgid "Workflow Log"
 msgstr "Workflow Protokoll"
 
@@ -2664,69 +2665,69 @@ msgstr "Beteiligte Parteien"
 msgid "Activities"
 msgstr "Tätigkeiten"
 
-#: templates/submissions/readonly_form.html:90
+#: templates/submissions/readonly_form.html:85
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:92
-#: templates/submissions/readonly_form.html:165
+#: templates/submissions/readonly_form.html:87
+#: templates/submissions/readonly_form.html:160
 msgid "Pending Votes"
 msgstr "Ausstehende Voten"
 
-#: templates/submissions/readonly_form.html:93
-#: templates/submissions/readonly_form.html:184
+#: templates/submissions/readonly_form.html:88
+#: templates/submissions/readonly_form.html:179
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:97
+#: templates/submissions/readonly_form.html:92
 msgid "Notifications"
 msgstr "Meldungen"
 
-#: templates/submissions/readonly_form.html:99
+#: templates/submissions/readonly_form.html:94
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:106
-#: templates/submissions/readonly_form.html:260
+#: templates/submissions/readonly_form.html:101
+#: templates/submissions/readonly_form.html:246
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:107
-#: templates/submissions/readonly_form.html:266
+#: templates/submissions/readonly_form.html:102
+#: templates/submissions/readonly_form.html:252
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:140
+#: templates/submissions/readonly_form.html:135
 #, fuzzy
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:143
-#: templates/submissions/readonly_form.html:161
+#: templates/submissions/readonly_form.html:138
+#: templates/submissions/readonly_form.html:156
 msgid "Create a new notification"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:158
+#: templates/submissions/readonly_form.html:153
 msgid "There are no answered notifications."
 msgstr ""
 
-#: templates/submissions/readonly_form.html:174
+#: templates/submissions/readonly_form.html:169
 msgid "Signieren"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:180
+#: templates/submissions/readonly_form.html:175
 msgid "There are no pending votes."
 msgstr "Es existieren derzeit keine ausstehenden Voten."
 
-#: templates/submissions/readonly_form.html:193
+#: templates/submissions/readonly_form.html:188
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:201
+#: templates/submissions/readonly_form.html:196
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:263
+#: templates/submissions/readonly_form.html:249
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
@@ -2778,7 +2779,11 @@ msgstr "Nachricht senden"
 msgid "Add Additional Reviewers"
 msgstr "Zusätzlichen Gutachter hinzufügen"
 
-#: templates/submissions/tabs/status.html:49
+#: templates/submissions/tabs/involved_parties.html:41
+msgid "Biased Parties"
+msgstr "Befangene Parteien"
+
+#: templates/submissions/tabs/status.html:48
 msgid "Reschedule"
 msgstr "Neu planen"
 
@@ -2861,7 +2866,7 @@ msgid "List of Users"
 msgstr "Liste der Benutzer"
 
 #: templates/users/administration.html:9
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "Approval"
 msgstr "Bestätigung"
 
@@ -2877,59 +2882,59 @@ msgstr "Gruppe"
 msgid "Search"
 msgstr "Suche"
 
-#: templates/users/administration.html:35
+#: templates/users/administration.html:36
 msgid "User"
 msgstr "Benutzer"
 
-#: templates/users/administration.html:36
+#: templates/users/administration.html:37
 msgid "Unapproved users may not be able to sumit studies"
 msgstr "Unbestätigte Benutzer können nicht einreichen"
 
-#: templates/users/administration.html:37
+#: templates/users/administration.html:38
 msgid "If you mark an user indisposed, somone else has to do the users work"
 msgstr ""
 
-#: templates/users/administration.html:37 templates/users/base_profile.inc:25
+#: templates/users/administration.html:38 templates/users/base_profile.inc:25
 msgid "Indisposed"
 msgstr "Verhindert"
 
-#: templates/users/administration.html:38
+#: templates/users/administration.html:39
 msgid "Inactive users are not able to log into the system"
 msgstr "Inaktive Benutzer können das System nicht verwenden"
 
-#: templates/users/administration.html:38
+#: templates/users/administration.html:39
 msgid "Active"
 msgstr "Aktiv"
 
-#: templates/users/administration.html:46
+#: templates/users/administration.html:47
 msgid "phantom"
 msgstr "phantom"
 
-#: templates/users/administration.html:52
+#: templates/users/administration.html:53
 msgid "Revoke Approval"
 msgstr "Bestätigung zurückziehen"
 
-#: templates/users/administration.html:54
+#: templates/users/administration.html:55
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/users/administration.html:59
+#: templates/users/administration.html:60
 msgid "Unmark Indisposed"
 msgstr "als Anwesend markieren"
 
-#: templates/users/administration.html:61
+#: templates/users/administration.html:62
 msgid "Mark Indisposed"
 msgstr "als Verhindert markieren"
 
-#: templates/users/administration.html:66
+#: templates/users/administration.html:67
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
-#: templates/users/administration.html:68
+#: templates/users/administration.html:69
 msgid "Activate"
 msgstr "Aktivieren"
 
-#: templates/users/administration.html:73
+#: templates/users/administration.html:74
 msgid "No Users."
 msgstr "Keine Benutzer."
 
@@ -3218,6 +3223,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Unread"
+#~ msgstr "Ungelesen"
 
 #~ msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 #~ msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"

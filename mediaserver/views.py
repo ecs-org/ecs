@@ -36,9 +36,7 @@ def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
     return HttpResponse(data, mimetype='image/png')
         
 @forceauth.exempt
-def get_blob(request, uuid, filename, mime_part1='application', mime_part2='pdf', branding=None):
-    mimetype = '/'.join((mime_part1, mime_part2,))
-
+def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None):
     s3url = S3url(settings.MS_CLIENT['key_id'], settings.MS_CLIENT['key_secret'])
     if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
@@ -57,15 +55,15 @@ def get_blob(request, uuid, filename, mime_part1='application', mime_part2='pdf'
 
 @forceauth.exempt
 def get_pdf(request, *args, **kwargs):
-    kwargs['mime_part1'], kwargs['mime_part2'] = ('application', 'pdf')
+    kwargs['mimetype'] = 'application/pdf'
     return get_blob(request, *args, **kwargs)
 
 @forceauth.exempt
-def prepare_branded(request, uuid, mime_part1="application", mime_part2= "pdf", brandprepare=True):
-    return prepare(request, uuid, mime_part1, mime_part2, brandprepare)
+def prepare_branded(request, uuid, mimetype='application/pdf', brandprepare=True):
+    return prepare(request, uuid, mimetype, brandprepare)
 
 @forceauth.exempt
-def prepare(request, uuid, mime_part1="application", mime_part2= "pdf", brandprepare=False):
+def prepare(request, uuid, mimetype='application/pdf', brandprepare=False):
     return HttpResponseBadRequest(_("sorry, unfinished"))
 
 

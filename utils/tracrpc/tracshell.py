@@ -390,7 +390,7 @@ class TracShell(cmd.Cmd):
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
-        parser.add_option('-n', '--onlynumbers', action='store_true', dest='onlynumbers', default=False)
+        parser.add_option('-n', '--onlynumbers', action='store_true', dest='only_numbers', default=False)
         parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
         try:
             (opts, args) = parser.parse_args(args.split())
