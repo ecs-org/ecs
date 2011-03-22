@@ -10,9 +10,7 @@ from django.http import Http404
 from ecs.utils import s3utils
 
 def generate_media_url(uuid, filename, mimetype='application/pdf', personalization=None, brand=False):
-    mime_part1, mime_part2 = mimetype.split('/', 1)
-
-    objid_parts = ['download', uuid, mime_part1, mime_part2]
+    objid_parts = ['download', uuid, mimetype]
     if personalization:
         objid_parts += ['personalize', personalization]
     elif brand:
