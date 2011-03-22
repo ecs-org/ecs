@@ -40,17 +40,8 @@ def sign(request, sign_dict):
     pdf_data_size = len(sign_dict['pdf_data'])
     pdf_id = SigningDepot().deposit(sign_dict)
 
-    PDFAS_SERVICE = "" if not hasattr(settings, 'PDFAS_SERVICE') else settings.PDFAS_SERVICE
+    PDFAS_SERVICE = getattr(settings, 'PDFAS_SERVICE', 'mock:')
     
-    url_sign = '%sSign' % PDFAS_SERVICE
-    url_send = request.build_absolute_uri('send')
-    url_error = request.build_absolute_uri('error')
-    url_receive = request.build_absolute_uri('receive')
-    url_preview = request.build_absolute_uri('preview')
-    print 'url_sign: "%s"' % url_sign
-    print 'url_send: "%s"' % url_send
-    print 'url_error: "%s"' % url_error
-    print 'url_receive: "%s"' % url_receive
     values = {
         'preview': 'false',
         'connector': 'moc',  # undocumented feature! selects ONLINE CCE/BKU
@@ -59,18 +50,18 @@ def sign(request, sign_dict):
         'inline': 'false',
         'filename': sign_dict['document_filename'],
         'num-bytes': '%s' % pdf_data_size,
-        'pdf-url': url_send,
+        'pdf-url': request.build_absolute_uri('send'),
         'pdf-id': pdf_id,
-        'invoke-app-url': url_receive,
-        'invoke-preview-url': url_preview,
+        'invoke-app-url': request.build_absolute_uri('receive'),
+        'invoke-preview-url': request.build_absolute_uri('preview'),
         # session-id=9085B85B364BEC31E7D38047FE54577D, not used
         'locale': 'de',
     }
     data = urllib.urlencode(values)
-    redirect = '%s?%s' % (url_sign, data)
+    redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
     print 'sign: redirect to [%s]' % redirect
 
-    if PDFAS_SERVICE and not PDFAS_SERVICE == 'mock:':
+    if not PDFAS_SERVICE == 'mock:':
         return HttpResponseRedirect(redirect)
 
     # we mock calling the applet, and directly go to sign_receive, to make automatic tests possible
@@ -80,7 +71,7 @@ def sign(request, sign_dict):
     pdf_data = sign_send(request).content
     assert SigningDepot().get(request.REQUEST['pdf-id']), pdf_data
     fakeget['pdfas-session-id'] = 'mock_pdf_as' # inject pdfas-session-id
-    fakeget['pdf-url'] = url_send
+    fakeget['pdf-url'] = request.build_absolute_uri('send')
     fakeget['num-bytes'] = pdf_data_size
     request.GET = fakeget
     
@@ -157,8 +148,8 @@ def sign_receive(request, jsessionid=None):
     to be accessed by pdf-as so it can bump ecs to download the signed pdf.
     called by the sign_receive_landing view, to workaround some pdf-as issues
     '''
-    
-    PDFAS_SERVICE = "" if not hasattr(settings, 'PDFAS_SERVICE') else settings.PDFAS_SERVICE 
+
+    PDFAS_SERVICE = getattr(settings, 'PDFAS_SERVICE', 'mock:')
 
     q = {}
     for k in ('pdf-url', 'pdf-id', 'num-bytes', 'pdfas-session-id',):
@@ -174,7 +165,7 @@ def sign_receive(request, jsessionid=None):
     if sign_dict is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
 
-    if PDFAS_SERVICE and not PDFAS_SERVICE == 'mock:':
+    if not PDFAS_SERVICE == 'mock:':
         sock_pdfas = urllib2.urlopen(url)
         pdf_data = sock_pdfas.read(q['num-bytes'])
     else:
