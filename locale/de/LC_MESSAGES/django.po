@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-22 12:20+0100\n"
+"POT-Creation-Date: 2011-03-22 18:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1765,11 +1765,11 @@ msgid ""
 "%(meeting_title)s"
 msgstr ""
 
-#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:44
+#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:42
 msgid "Invalid expiring url"
 msgstr ""
 
-#: mediaserver/views.py:69
+#: mediaserver/views.py:67
 msgid "sorry, unfinished"
 msgstr ""
 
@@ -2134,8 +2134,8 @@ msgid "Subject"
 msgstr "Betreff"
 
 #: templates/communication/list.html:13
-msgid "Unread"
-msgstr "Ungelesen"
+msgid "Read"
+msgstr "Gelesen"
 
 #: templates/communication/list.html:14
 msgid "Task"
@@ -3223,6 +3223,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Unread"
+#~ msgstr "Ungelesen"
 
 #~ msgid "%(sender)s schrieb:%(linesep)s> %(text)s"
 #~ msgstr "%(sender)s schrieb:%(linesep)s> %(text)s"

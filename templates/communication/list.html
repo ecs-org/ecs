@@ -10,7 +10,7 @@
       <tr>
           <th>{% trans "Date" %}</th>
           <th>{% trans "Subject" %}</th>
-          <th>{% trans "Unread" %}</th>
+          <th>{% trans "Read" %}</th>
           <th>{% trans "Task" %}</th>
           {% block extra_message_table_headers %}
               <th>Von</th>
@@ -27,7 +27,7 @@
                   {{ thread.subject }}
               </a>
           </td>
-          <td>{{ thread.last_message.unread|yesno }}</td>
+          <td>{{ thread.last_message.unread|yesno:'Nein,Ja' }}</td>
           <td>{{ thread.task|default:'-' }}</td>
           {% block extra_message_table_cells %}
               <td>{{ thread.last_message.sender }}</td>
