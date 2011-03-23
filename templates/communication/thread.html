@@ -9,7 +9,7 @@
         {{ thread.submission|ec_number }} -
     {% endif %}
     {{ thread.subject }}
-    ({{ message_list|length }})
+    ({{ thread.message_list|length }})
 {% endblock %}
 
 {% block content %}
@@ -21,7 +21,7 @@
 {% endif %}
 
 <ul class="thread">
-{% for message in message_list %}
+{% for message in thread.message_list %}
     <li class="message">
         <div class="head">
             <span class="sender">{{ message.sender }}</span>
@@ -64,7 +64,8 @@
         var container = communication_thread.getElement('ul');
         var collapse_link = communication_thread.getElement('.collapse_all');
         var expand_link = communication_thread.getElement('.expand_all');
-        new ecs.communication.Thread(container, collapse_link, expand_link);
+        var thread = new ecs.communication.Thread(container, collapse_link, expand_link);
+        thread.scroll_to_last_message();
 
         var messageToolbarItems = [];
 

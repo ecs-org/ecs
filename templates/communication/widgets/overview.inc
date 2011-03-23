@@ -1,20 +1,32 @@
 {% load humanize core communication %}
 
-<ol class="messages">
 {% for thread in threads %}
-    <li class="message {% if thread.last_message.unread %} unread{% endif %}">
-        <h3>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h3>
-        <ol>
-            {% for message in thread.messages.all %}
-                <li>
-                    <h4>{{ message.timestamp|naturalday:'d.m.Y' }}, {{ message.timestamp|date:'H:i'}}</h4>
-                    {{ message.sender }} -&gt; {{ message.receiver }}
-                    <div>
-                        {{ message.text }}
-                    </div>
-                </li>
-            {% endfor %}
-        </ol>
-    </li>
+<div class="communication_thread">
+    <h3>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h3>
+
+    <ul class="thread">
+    {% for message in thread.message_list %}
+        <li class="message">
+            <div class="head">
+                <span class="sender">{{ message.sender }}</span>
+                <span class="preview">{{ message|preview:80 }}</span>
+                <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
+            </div>
+            <pre class="body">{{ message.text|safe }}<pre>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
 {% endfor %}
-</ol>
+
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        var threads = $$('.communication_thread');
+        threads.each(function(el){
+            var container = el.getElement('ul');
+            var thread = new ecs.communication.Thread(container);
+            thread.collapse_all();
+        }, this);
+    });
+</script>
+
