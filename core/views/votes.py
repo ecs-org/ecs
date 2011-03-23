@@ -86,7 +86,8 @@ def vote_sign_finished(request, document_pk=None):
     vote = document.parent_object
 
     return HttpResponseRedirect(reverse(
-        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#pending_votes_tab')
+        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + 
+        ('#b2_vote_review_tab' if vote.result == '2' else '#vote_review_tab'))
 
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):

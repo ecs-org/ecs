@@ -62,17 +62,6 @@
                         <a href="#retrospective_thesis_review_tab">Thesis Review</a>
                     </li>
                 {% endif %}
-                {% if vote_review_form or b2_vote_review_form %}
-                    {% if b2_vote_review_form %}
-                        <li class="active">
-                            <a href="#b2vote_review_tab">B2 Votum</a>
-                        </li>
-                    {% else %}
-                        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-                            <a href="#vote_review_tab">Votum</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
@@ -84,7 +73,19 @@
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                <li><a href="#pending_votes_tab">{% trans "Pending Votes" %}</a></li>
+                {% if show_reviews %}
+                {% if vote_review_form or b2_vote_review_form %}
+                    {% if b2_vote_review_form %}
+                        <li class="active">
+                            <a href="#b2vote_review_tab">B2 Votum</a>
+                        </li>
+                    {% else %}
+                        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+                            <a href="#vote_review_tab">Votum</a>
+                        </li>
+                    {% endif %}
+                {% endif %}
+                {% endif %}
                 <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
             </ul>
         </li>
@@ -156,25 +157,30 @@
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    <div id="pending_votes_tab" class="tab">
-        <h3>{% trans "Pending Votes" %}</h3>
-        {% if pending_votes %}
-            <ul>
-                {% for vote in pending_votes %}
-                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
-                    {% if user|is_member_of:"EC-Signing Group" %}
-                        {% if vote.signed_at %}
-                            <a href="{% url ecs.core.views.show_html_vote vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a>
-                        {% else %}
-                            <a href="{% url ecs.core.views.vote_sign vote_pk=vote.pk %}" target="_blank">{% trans "Signieren" %}</a>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </ul>
+    {% if b2_vote_review_form or vote_review_form %}
+        {% if b2_vote_review_form %}
+            <div id="b2vote_review_tab" class="tab">
+                <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+                <h4>Upgrade auf B1</h4>
+                <form action="" method="post">
+                    {% with b2_vote_review_form as review_form %}
+                        {% include 'submissions/review_form.inc' %}
+                    {% endwith %}
+                </form>
+            </div>
         {% else %}
-            <p>{% trans "There are no pending votes." %}</p>
+            <div id="vote_review_tab" class="tab">
+                {% block vote_review_tab_content %}
+                    <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
+                    <form action="" method="post">
+                        {% with vote_review_form as review_form %}
+                            {% include 'submissions/review_form.inc' %}
+                        {% endwith %}
+                    </form>
+                {% endblock %}
+            </div>
         {% endif %}
-    </div>
+    {% endif %}
     <div id="published_votes_tab" class="tab">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
@@ -209,30 +215,6 @@
                 {% endwith %}
             {% endblock %}
         </div>
-    {% endif %}
-    {% if b2_vote_review_form or vote_review_form %}
-        {% if b2_vote_review_form %}
-            <div id="b2vote_review_tab" class="tab">
-                <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
-                <h4>Upgrade auf B1</h4>
-                <form action="" method="post">
-                    {% with b2_vote_review_form as review_form %}
-                        {% include 'submissions/review_form.inc' %}
-                    {% endwith %}
-                </form>
-            </div>
-        {% else %}
-            <div id="vote_review_tab" class="tab">
-                {% block vote_review_tab_content %}
-                    <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }} ({{ vote.top }})</h3>
-                    <form action="" method="post">
-                        {% with vote_review_form as review_form %}
-                            {% include 'submissions/review_form.inc' %}
-                        {% endwith %}
-                    </form>
-                {% endblock %}
-            </div>
-        {% endif %}
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
