@@ -476,33 +476,36 @@ ecs.FormFieldController = new Class({
         }
         this.onChange(null, true);
     },
+    requireField: function(f, enable){
+        var li = f.getParent('li');
+        var label = li.getChildren('label')[0];
+        if(enable && !li.hasClass('required')){
+            li.addClass('required');
+            var star = new Element('span', {'class': 'star', 'style': 'color: red;'});
+            star.innerHTML = '*';
+            var paperform_number = label.getChildren('.paperform_number')[0];
+            if(paperform_number){
+                star.injectBefore(paperform_number);
+            } else {
+                star.inject(label, 'bottom');
+            }
+        } else if(!enable && li.hasClass('required')){
+            li.removeClass('required');
+            label.getChildren('.star').each(function(s){
+                s.dispose();
+            });
+            li.getChildren('.errorlist').each(function(e){
+                e.hide();
+            });
+        }
+    },
     onFieldValueChange: function(e, initial){
         if(this.toggleTab){
             var enable = this.getValues().some(function(x){ return !!x;});
             this.toggleTab.tab.setDisabled(!enable);
             if(this.toggleTab.requiredFields){
                 this.toggleTab.requiredFields.map($).each(function(f){
-                    var li = f.getParent('li');
-                    var label = li.getChildren('label')[0];
-                    if(enable && !li.hasClass('required')){
-                        li.addClass('required');
-                        var star = new Element('span', {'class': 'star', 'style': 'color: red;'});
-                        star.innerHTML = '*';
-                        var paperform_number = label.getChildren('.paperform_number')[0];
-                        if(paperform_number){
-                            star.injectBefore(paperform_number);
-                        } else {
-                            star.inject(label, 'bottom');
-                        }
-                    } else if(!enable && li.hasClass('required')){
-                        li.removeClass('required');
-                        label.getChildren('.star').each(function(s){
-                            s.dispose();
-                        });
-                        li.getChildren('.errorlist').each(function(e){
-                            e.hide();
-                        });
-                    }
+                    this.requireField(f, enable);
                 }, this);
             }
         }

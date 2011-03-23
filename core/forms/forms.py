@@ -115,6 +115,10 @@ INSURANCE_FIELDS = (
     'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
 )
 
+INVOICE_REQUIRED_FIELDS = (
+    'invoice_name', 'invoice_address', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email'
+)
+
 class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
 
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
@@ -201,6 +205,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             
         if any(cleaned_data.get(f, False) for f in ('project_type_medical_device_without_ce', 'project_type_reg_drug', 'project_type_non_reg_drug')):
             require_fields(self, INSURANCE_FIELDS)
+
+        if cleaned_data.get('invoice_differs_from_sponsor', False):
+            require_fields(self, INVOICE_REQUIRED_FIELDS)
 
         return cleaned_data
 

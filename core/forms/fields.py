@@ -84,6 +84,9 @@ class StrippedTextInput(forms.TextInput):
     input_type = 'stripped_text'
 
     def value_from_datadict(self, *args, **kwargs):
-        return super(StrippedTextInput, self).value_from_datadict(*args, **kwargs).strip()
+        v = super(StrippedTextInput, self).value_from_datadict(*args, **kwargs)
+        if v is not None:
+            v = v.strip()
+        return v
 
 
