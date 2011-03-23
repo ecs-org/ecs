@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-22 18:43+0100\n"
+"POT-Creation-Date: 2011-03-23 13:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2160,14 +2160,14 @@ msgstr "Zurück zur Nachrichtenübersicht"
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
-#: templates/communication/send.html:83 templates/communication/thread.html:72
-#: templates/submissions/readonly_form.html:318
+#: templates/communication/send.html:83 templates/communication/thread.html:73
+#: templates/submissions/readonly_form.html:316
 #: templates/tasks/manage_task.html:73
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
-#: templates/communication/send.html:87 templates/communication/thread.html:76
-#: templates/submissions/readonly_form.html:321
+#: templates/communication/send.html:87 templates/communication/thread.html:77
+#: templates/submissions/readonly_form.html:319
 #: templates/tasks/manage_task.html:77
 msgid "Insert Boilerplate"
 msgstr "Vorlage einfügen"
@@ -2688,12 +2688,10 @@ msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
 #: templates/submissions/readonly_form.html:101
-#: templates/submissions/readonly_form.html:246
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
 #: templates/submissions/readonly_form.html:102
-#: templates/submissions/readonly_form.html:252
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
@@ -2727,7 +2725,7 @@ msgstr "Es existieren derzeit keine veröffentlichten Voten."
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:249
+#: templates/submissions/readonly_form.html:248
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
@@ -2801,7 +2799,7 @@ msgstr "Abgeben"
 
 #: templates/tasks/manage_task.html:41
 msgid "Ask"
-msgstr ""
+msgstr "Fragen"
 
 #: templates/tasks/tasks.inc:11 templates/tasks/tasks_full.inc:10
 msgid "Sort by"
