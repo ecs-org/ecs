@@ -2,10 +2,16 @@
 
 {% for annotation in annotations %}
     {% ifchanged annotation.document %}
-        <div class="document">{{ annotation.document }} ({{ annotation.document.original_file_name }})</div>
+        <div class="document">
+            {{ annotation.document }} ({{ annotation.document.original_file_name }})
+            <a href="{% url pdf_show annotation.document.pk %}" target="_blank">{% trans "View" %}</a>
+        </div>
     {% endifchanged %}
     <div class="annotation">
-        <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/><span class="location">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}</span>
+        <input type="checkbox" name="annotation" value="{{ annotation.pk }}"/>
+        <span class="location">
+            <a href="{% url pdf_show annotation.document.pk %}#{{ annotation.page_number }}" target="_blank">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}</a>
+        </span>
         <pre class="text">{{ annotation.text }}</pre>
     </div>
 {% endfor %}
