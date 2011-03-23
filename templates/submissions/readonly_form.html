@@ -243,13 +243,11 @@
     {% endfor %}
     
     <div id="communication_tab" class="tab">
-        <h3>{% trans "My Communication" %}</h3>
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
     </div>
     <div id="communication_overview_tab" class="tab">
-        <h3>{% trans "Communication Overview" %}</h3>
         <div id="communication_overview_messages"></div>
     </div>
     <div id="workflow_tab" class="tab">

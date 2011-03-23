@@ -92,7 +92,6 @@ def read_thread(request, thread_pk=None):
 
     return render(request, 'communication/thread.html', {
         'thread': thread,
-        'message_list': thread.messages.order_by('timestamp'),
         'form': form,
     })
 

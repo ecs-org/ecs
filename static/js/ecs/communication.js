@@ -26,8 +26,8 @@ ecs.communication.Message = new Class({
 ecs.communication.Thread = new Class({
     initialize: function(container, collapse_link, expand_link){
         this.container = $(container);
-        this.collapse_link = $(collapse_link);
-        this.expand_link = $(expand_link);
+        this.collapse_link = collapse_link ? $(collapse_link) : null;
+        this.expand_link = expand_link ? $(expand_link) : null;
         this.container.store('ecs.communication.Thread', this);
         this.setup();
     },
@@ -45,20 +45,25 @@ ecs.communication.Thread = new Class({
             i += 1;
         }, this);
 
-        /* scroll to the last message */
+        if (this.collapse_link) {
+            this.collapse_link.addEvent('click', (function(){
+                this.collapse_all();
+                return false;
+            }).bind(this));
+        }
+        if (this.expand_link) {
+            this.expand_link.addEvent('click', (function(){
+                this.expand_all();
+                return false;
+            }).bind(this));
+        }
+    },
+    scroll_to_last_message: function(){
+        var messages = this.container.getElements('.message');
         var last_message = messages[messages.length-1];
         var offset_parent = last_message.getOffsetParent();
         var pos = last_message.getPosition(offset_parent);
         offset_parent.scrollTo(pos.x, pos.y);
-
-        this.collapse_link.addEvent('click', (function(){
-            this.collapse_all();
-            return false;
-        }).bind(this));
-        this.expand_link.addEvent('click', (function(){
-            this.expand_all();
-            return false;
-        }).bind(this));
     },
     collapse_all: function(){
         var messages = this.container.getElements('.message');
