@@ -15,7 +15,6 @@
         </div>
     </form>
 
-    <a href="{% url ecs.communication.views.new_thread %}">{% trans "New Message" %}</a>
     <span class="icon_sort">{% trans "sort" %}</span>
     <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
     | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
@@ -35,6 +34,13 @@
     {% else %}
         <td>{% trans "von" %} {{ thread.last_message.sender }}</td>
     {% endif %}
+{% endblock %}
+
+{% block hint %}
+    {% blocktrans %}
+        Please note: To write a message, open the read-only view of a study and change to the communication tab.
+        For general Questions write an email to the <a href=\"mailto:ethikkom@meduniwien.ac.at\">Ethics-Commission</a>.
+    {% endblocktrans %}
 {% endblock %}
 
 {% block jsbottom %}

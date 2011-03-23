@@ -56,6 +56,7 @@
           <a class="open-in-widget next_page" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}">next</a>
           <a class="open-in-widget last_page" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}">last</a>
       {% endif %}
-  
   </div>
+  <div class="hint">{% block hint %}{% endblock %}</div>
+
 {% endblock %}

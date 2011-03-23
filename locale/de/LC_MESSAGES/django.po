@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-23 13:33+0100\n"
+"POT-Creation-Date: 2011-03-23 16:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -131,7 +131,7 @@ msgstr "Ethik-Kommission"
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:48 templates/communication/threads.html:20
+#: communication/forms.py:48 templates/communication/threads.html:19
 msgid "Person"
 msgstr "Person"
 
@@ -2142,7 +2142,6 @@ msgid "Task"
 msgstr "Aufgabe"
 
 #: templates/communication/send.html:10
-#: templates/communication/threads.html:18
 msgid "New Message"
 msgstr "Neue Nachricht"
 
@@ -2200,28 +2199,44 @@ msgstr "Ausstehend"
 msgid "Closed"
 msgstr "Erledigt"
 
-#: templates/communication/threads.html:19
+#: templates/communication/threads.html:18
 #: templates/communication/widgets/messages.inc:6
 msgid "sort"
 msgstr "sortieren"
 
-#: templates/communication/threads.html:21
+#: templates/communication/threads.html:20
 msgid "Old/New"
 msgstr "Alt/Neu"
 
-#: templates/communication/threads.html:28
+#: templates/communication/threads.html:27
 msgid "Von/An"
 msgstr "Von/An"
 
-#: templates/communication/threads.html:34
+#: templates/communication/threads.html:33
 #: templates/communication/widgets/messages.inc:18
 msgid "an"
 msgstr "an"
 
-#: templates/communication/threads.html:36
+#: templates/communication/threads.html:35
 #: templates/communication/widgets/messages.inc:18
 msgid "von"
 msgstr "von"
+
+#: templates/communication/threads.html:40
+msgid ""
+"\n"
+"        Please note: To write a message, open the read-only view of a study "
+"and change to the communication tab.\n"
+"        For general Questions write an email to the <a href=\\\"mailto:"
+"ethikkom@meduniwien.ac.at\\\">Ethics-Commission</a>.\n"
+"    "
+msgstr ""
+"\n"
+"        Beachten Sie: Um eine neue Nachricht zu erstellen, wechseln Sie in "
+"die betreffende Studie in den Reiter Nachrichten.\n"
+"        Für allgemeine Fragen schreiben sie eine E-Mail an die <a href=\\"
+"\"mailto:ethikkom@meduniwien.ac.at\\\">Ethik-Kommission</a>.\n"
+"    "
 
 #: templates/documents/compact_list.html:30
 #: templates/submissions/readonly_form.html:184
@@ -2229,6 +2244,7 @@ msgid "Download"
 msgstr "Download"
 
 #: templates/documents/compact_list.html:31
+#: templates/pdfviewer/annotations/copy.html:7
 msgid "View"
 msgstr "Ansicht"
 
