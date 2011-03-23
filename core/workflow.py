@@ -66,7 +66,11 @@ def has_accepted_recommendation(wf):
 @guard(model=Submission)
 def needs_external_review(wf):
     return wf.data.external_reviewer
-    
+
+@guard(model=Submission)
+def needs_insurance_review(wf):
+    return wf.data.insurance_review_required
+
 class InitialReview(Activity):
     class Meta:
         model = Submission

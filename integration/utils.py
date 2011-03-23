@@ -13,6 +13,7 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
             existing_nodes[name] = args.apply(graph.get_node)
         except (Node.DoesNotExist, Node.MultipleObjectsReturned):
             return True
+    edges = deepcopy(edges)
     for node_names, args in edges.iteritems():
         if not args:
             args = Args()
