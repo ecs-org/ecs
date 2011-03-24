@@ -403,6 +403,15 @@ class TracRpc():
             ticket['parents'] = links['parents']
         return ticket
     
+    def _get_ticket_changelog(self, tid):
+        '''
+        fetches changelog of a ticket
+        '''
+        changelog = self._safe_rpc(self.jsonrpc.ticket.changeLog, tid)
+        if not changelog:
+            return None
+        return changelog
+    
     def _get_ticket_from_rawticket(self, rawticket):
         if not rawticket:
             return None
@@ -826,7 +835,7 @@ class TracRpc():
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
     
-    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None):
+    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80):
         ''' '''
         
         if not query:
@@ -861,15 +870,16 @@ class TracRpc():
             for result in results.results['result']:
                 tickets.append(self._get_ticket_from_rawticket(result['result']))
         
-        #print " ID  summary                            milestone      priority"
-        print u"%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
+        summarywidth = maxlinewidth-(5+17+11)-1 # id,milestone,prio plus spaces minus one for summary spacing
+        if summarywidth < 0:
+            summarywidth = 1
+        print u"{0:4} {1:{2}} {3:16} {4:10}".format('ID','summary',summarywidth,'milestone','priority')
         for t in tickets:
             if len(t['summary']) < 30:
                 pass
             if len(t['milestone']) < 10:
                 pass
-            print u"%4s %30s %16s %10s" % (t['id'],t['summary'][:30],t['milestone'],t['priority'])
-            #print t['id'],t['summary'][:30],t['milestone'],t['priority']
+            print u"{0:4} {1:{2}.{3}} {4:16} {5:10}".format(t['id'],t['summary'],summarywidth,summarywidth, t['milestone'],t['priority'])
             
         print ""
         print "fetched %s tickets" % len(tickets)

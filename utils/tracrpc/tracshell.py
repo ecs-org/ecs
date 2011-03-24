@@ -15,7 +15,7 @@ import readline
 import sys
 import os
 import optparse
-
+import textwrap
 
 from pprint import pprint
 
@@ -97,12 +97,16 @@ class TracShell(cmd.Cmd):
     batchticketindex = None
     currentticketid = None
     currentticket = None
+    currentticketchangelog = None
+    
+    maxlinewidth = 80
+    printsummaryonfetch = True
+    append_max0_toquery = True
+    changelogfieldstoignore = ['comment']
     
     #future use:
-    batch_showonnext = False
-    append_max0_toquery = False
     batchprefetch = 0
-    
+    changelogfields2honor = ['milestone','priority',]
     
     stdprompt = 'tshell> '
     optparser = None
@@ -166,6 +170,10 @@ class TracShell(cmd.Cmd):
         print "batchquery:",self.batchquery
         print "batchskip:",self.batchskip
         print "batchticketlist:",self.batchticketlist
+        print "maxlinewidth:",self.maxlinewidth
+        print "printsummaryonfetch:",self.printsummaryonfetch
+        print "append_max0_toquery:",self.append_max0_toquery
+        print "changelogfieldstoignore",self.changelogfieldstoignore
         
     
     def do_help(self, args):
@@ -181,6 +189,7 @@ class TracShell(cmd.Cmd):
             print "b or < for previous ticket"
             print "n or > for next ticket"
         """
+    
     def do_bugs(self, args):
         '''list known issues'''
         print "known issues/bugs:"
@@ -192,7 +201,29 @@ class TracShell(cmd.Cmd):
         print "    is first: permission problem, and second: some other fancy stuff, it seems to be an error only if tshell is used on ecsdev server."
         print "documentation / intro for the whole thing"
         print ""
+    
+    def do_maxlinewidth(self,args):
+        '''set the maximum width for output'''
+        parser = ShellOptParser()
+        tid = None
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
         
+        if len(args) < 1:
+            print "please supply length as argument"
+            return
+        try:
+            int(args[0])
+        except ValueError:
+            print "please supply an integer"
+            return
+        self.maxlinewidth = int(args[0])
+         
     def do_aliases(self, args):
         '''list aliases'''
         print "defined aliases:"
@@ -238,6 +269,7 @@ class TracShell(cmd.Cmd):
         
         self.cmdloop("ecsdev tracshell")
     
+            
     def postcmd(self, stop, line):
         ''' '''
         if self.batcheditmode:
@@ -342,6 +374,7 @@ class TracShell(cmd.Cmd):
         else:
             self.currentticketid = None
             self.currentticket = None
+            self.currentticketchangelog = None
         
     def do_get(self, args):
         '''get ticket specified by ID: >get <ID>
@@ -356,15 +389,17 @@ class TracShell(cmd.Cmd):
         except Exception as e:
             print e
             return
+        
         if len(args) < 1 and not self.batcheditmode:
             print("at least one ticket id is needed.")
             return
-        elif not self.batcheditmode:
-            try:
-                tid = int(args[0])
-            except ValueError:
-                print "only integers are valid ticket IDs"                
-                return
+        
+        
+        try:
+            tid = int(args[0])
+        except ValueError:
+            print "only integers are valid ticket IDs"                
+            return
         
         if self.batcheditmode and tid not in self.batchticketlist:
             print "that ticket is not in your current query. use 'pausequeryedit' or 'stopqueryedit'..."
@@ -377,6 +412,49 @@ class TracShell(cmd.Cmd):
             self.currentticketid =  tid
             self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True) 
         
+        if not self.currentticket:
+            self.currentticketid = None
+        
+        if self.printsummaryonfetch and self.currentticket != None:
+            print u"  {0:{1}.{2}}".format(self.currentticket['summary'], self.maxlinewidth-2, self.maxlinewidth-2)
+    
+    
+    def do_changelog(self, args):
+        '''show changelog of current ticket or ticket <ID> supplied as arg'''
+        parser = ShellOptParser()
+        parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
+        tid = None
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        if len(args) < 1 and not self.currentticketid:
+            print("no ticket id for me, no changelog for you.")
+            return
+        
+        if len(args) > 0:
+            try:
+                tid = int(args[0])
+            except ValueError:
+                print "only ints are valid ticket IDs"
+                return
+        elif self.currentticketid != None:
+            tid = self.currentticketid
+        else:
+            print "you should not end up here. no ticket id to work on..."
+            return
+        
+        
+        #if tid == self.currentticketid:
+        #    self.print_ticketchangelog(self.currentticketchangelog)            
+        #else:
+        #    self.print_ticketchangelog(self.tracrpc._get_ticket_changelog(tid))
+        self.print_ticketchangelog(self.tracrpc._get_ticket_changelog(tid))
+            
     def do_view(self, args):
         '''view a ticket: view <ID> [-v|--verbos=]'''
         parser = ShellOptParser()
@@ -400,7 +478,7 @@ class TracShell(cmd.Cmd):
             tid = self.currentticketid
         else:
             try:
-                tid = args[0]
+                tid = int(args[0])
             except ValueError:
                 print "only ints are valid ticket IDs"
                 return
@@ -436,9 +514,9 @@ class TracShell(cmd.Cmd):
             return
         
         q = args[0]
-        if opts.addmax0 == True:
+        if not "&max=0" in q and (self.append_max0_toquery or opts.addmax0 == True):
             q = '%s&max=0' % q
-        self.tracrpc.simple_query(query=q, only_numbers=opts.only_numbers, skip=opts.skip)
+        self.tracrpc.simple_query(query=q, only_numbers=opts.only_numbers, skip=opts.skip, maxlinewidth=self.maxlinewidth)
     
     
     def do_queryedit(self, args):
@@ -463,7 +541,7 @@ class TracShell(cmd.Cmd):
             return
         
         q = args[0]
-        if opts.addmax0 == True:
+        if not "&max=0" in q and (self.append_max0_toquery or opts.addmax0 == True):
             q = '%s&max=0' % q
         
         skip = opts.skip
@@ -503,6 +581,7 @@ class TracShell(cmd.Cmd):
             self.batchticketlist = None
             self.currentticketid = None
             self.currentticket = None
+            self.currentticketchangelog = None
             
         else:
             print "continuing query edit session"
@@ -521,8 +600,9 @@ class TracShell(cmd.Cmd):
         
         self.currentticketid = self.batchticketlist[self.batchticketindex]
         self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
-        if self.batch_showonnext:
-            self.tracrpc.show_ticket(self.currentticketid, verbose=True)
+        
+        if self.printsummaryonfetch and self.currentticket != None:
+            print u"  {0:{1}.{2}}".format(self.currentticket['summary'], self.maxlinewidth-2, self.maxlinewidth-2)
     
     def do_nextticket(self, args):
         '''select the next ticket in batchedit mode'''
@@ -538,8 +618,9 @@ class TracShell(cmd.Cmd):
         
         self.currentticketid = self.batchticketlist[self.batchticketindex]
         self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
-        if self.batch_showonnext:
-            self.tracrpc.show_ticket(self.currentticketid, verbose=True)
+        
+        if self.printsummaryonfetch and self.currentticket != None:
+            print u"  {0:{1}.{2}}".format(self.currentticket['summary'], self.maxlinewidth-2, self.maxlinewidth-2)
     
     
     @refetchticketafteredit
@@ -690,7 +771,62 @@ class TracShell(cmd.Cmd):
     
     def print_ticket(self,ticket):
         '''print a ticket'''
-        pprint(ticket)
+        keymaxlen=0
+        for k,v in ticket.iteritems():
+            if len(k) > keymaxlen:
+                keymaxlen=len(k)
+        
+        print ""
+        
+        k="ticket"
+        print u"ticket:%s%s" % (' '*(keymaxlen-len(k)+1), ticket['id'])
+        k="summary"
+        print u"summary:%s%s" % (' '*(keymaxlen-len(k)+1),ticket['summary'])
+        
+        wrapper = textwrap.TextWrapper()
+        wrapper.initial_indent = "  "
+        wrapper.subsequent_indent = "  "
+        wrapper.width = 60
+        print u"description:"
+        print wrapper.fill(text=ticket['description'])
+        
+        for k,v in ticket.iteritems():
+            if k not in ['id', 'summary', 'description']:
+                print u"%s:%s%s" % (k,' '*(keymaxlen-len(k)+1), v)
+        
+    def print_ticketchangelog(self, changelog):
+        '''print a nice summary of the ticket changelog'''
+        
+        if not changelog or len(changelog) < 1:
+            print "no changes"
+            return
+        
+        wrapper = textwrap.TextWrapper()
+        wrapper.initial_indent = "    "
+        wrapper.subsequent_indent = "    "
+        wrapper.width = 60
+        
+        for entry in changelog:
+            cdate = entry[0]
+            user = entry[1]
+            field = entry[2]
+            old = entry[3]
+            new = entry[4]
+            if field in self.changelogfieldstoignore:
+                continue
+            
+            if field not in ['description', 'summary']:
+                print u"{0}: {1}: '{2}' => '{3}'".format(cdate.strftime("%a %b %d %H:%M:%S %Y"), field, old, new)
+            else:
+                print u"{0}: {1} changed from:".format(cdate.strftime("%a %b %d %H:%M:%S %Y"), field)
+                print wrapper.fill(text=old)
+                print "  to:"
+                print wrapper.fill(text=new)
+            #print ""
+                
+        #pprint(changelog)
+        
+        
     
     
     
