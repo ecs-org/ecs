@@ -185,7 +185,7 @@ class HttpBot():
             #response = self.opener.open(self.ticketlinkurl, data)
         except urllib2.HTTPError, e: #, Exception
             if e.getcode() == 500:
-                print "something wrent wrong and produced a http error 500 while linking ticket %d with %d (src, dst)" % (srcid, destid)
+                print "something wrent wrong and produced a http error 500 while linking ticket %s with %s (src, dst)" % (srcid, destid)
             elif e.getcode() == 401 and e.msg == 'basic auth failed' and retry == False:
                 print "basic auth failed. retrying"
                 #self._try_vanilla_request_for_form_token()
@@ -333,7 +333,10 @@ class TracRpc():
                 tmpclinks = []
                 for link in tmp:
                     if link.strip() != '':
-                        tmpclinks.append(int(link.strip()))
+                        try:
+                            tmpclinks.append(int(link.strip()))
+                        except ValueError:
+                            print "malformed id for linking. ignoring."
                 ticket['childlinks'] = tmpclinks
             if re.search('^Parentlinks=', line) != None:
                 tmp = re.sub('^Parentlinks=', '', line)
@@ -341,7 +344,10 @@ class TracRpc():
                 tmpplinks = []
                 for link in tmp:
                     if link.strip() != '':
-                        tmpplinks.append(int(link.strip()))
+                        try:
+                            tmpplinks.append(int(link.strip()))
+                        except ValueError:
+                            print "malformed id for linking. ignoring."
                 ticket['parentlinks'] = tmpplinks
             if line == '---description---':
                 ticket['description'] = nl.join(lines[i+1:len(lines)])
@@ -835,13 +841,20 @@ class TracRpc():
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
     
-    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80):
-        ''' '''
+    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80, tidlist=None):
+        '''query trac for tickets and print them in a readable way '''
         
-        if not query:
+        if (not query and not tidlist):
             print "please supply a query"
             return
-        ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query) # XXX trac has max=100 many queries
+        elif tidlist and len(tidlist) < 1:
+            print "id list has len 0. returning"
+            return
+        
+        if query:
+            ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query) # XXX trac has max=100 many queries
+        else:
+            ticket_ids = tidlist
         
         if skip:
             if skip > len(ticket_ids):

@@ -77,6 +77,9 @@ DEFAULT_ALIASES = {
     'pt': 'parsetest $0',
     'rt': 'remainingtime $0',
     'eta': 'remainingtime $0',
+    'r':  'removefromquery',
+    'a':  'addtoquery $0',
+    
     
 }
 
@@ -519,6 +522,117 @@ class TracShell(cmd.Cmd):
         self.tracrpc.simple_query(query=q, only_numbers=opts.only_numbers, skip=opts.skip, maxlinewidth=self.maxlinewidth)
     
     
+    def do_showqueryset(self, args):
+        '''display a summary of all tickets in current queryset
+        showqueryset [-n show - ticket IDs only]'''
+        
+        if not self.batcheditmode:
+            print "this is for batchedit mode only"
+            return
+        
+        parser = ShellOptParser()
+        parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
+        parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
+        parser.add_option('-n', '--onlynumbers', action='store_true', dest='only_numbers', default=False)
+        parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        self.tracrpc.simple_query(query=None, only_numbers=opts.only_numbers, skip=opts.skip, maxlinewidth=self.maxlinewidth, tidlist=self.batchticketlist)
+    
+    
+    def do_addtoquery(self, args):
+        '''add ticket specified by <ID> to current queryset'''
+        if not self.batcheditmode:
+            print "this is for batchedit mode only"
+            return
+        
+        parser = ShellOptParser()
+        parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
+        tids = []
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        if len(args) < 1:
+            print "please supply a ticket ID to add as argument"
+            return
+        
+        for arg in args:
+            try:
+                tid = int(arg)
+                if tid not in self.batchticketlist:
+                    if self.tracrpc._get_ticket(tid) != None:
+                        self.batchticketlist.append(tid)
+                        print "added ticket %d" % tid
+            except ValueError:
+                print "malformed argument '%s' ignored" % arg
+        
+    
+         
+    
+    def do_removefromquery(self, args):
+        '''remove current ticket from current queryset'''
+        
+        if not self.batcheditmode:
+            print "this is for batchedit mode only"
+            return
+        
+        parser = ShellOptParser()
+        tids = []
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        
+        #ticket IDs supplied as args
+        for arg in args:
+            try:
+                tid = int(arg)
+                if tid in self.batchticketlist:
+                    self.batchticketlist.remove(tid)
+                    print "removed ticket %d" % tid
+                    if len(self.batchticketlist) < 1:
+                        print "no more tickets in query set. stopping queryedit mode."
+                        self._stop_queryedit()
+                        return
+                else:
+                    print "ticket %d not in current queryset. ignored" % tid
+                        
+            except ValueError:
+                print "malformed argument '%s' ignored" % arg
+        
+        #current ticket (if no arg was supplied)
+        if len(args) < 1:
+            self.batchticketlist.remove(self.currentticketid)
+            if len(self.batchticketlist) < 1:
+                print "no more tickets in query set. stopping queryedit mode."
+                self._stop_queryedit()
+                return
+        
+        #try to stay sane:
+        if self.batchticketindex > len(self.batchticketlist)-1:
+            self.batchticketindex = len(self.batchticketlist)-1
+        
+        self.currentticketid = self.batchticketlist[self.batchticketindex]
+        self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
+        
+        if self.printsummaryonfetch and self.currentticket != None:
+            print u"  {0:{1}.{2}}".format(self.currentticket['summary'], self.maxlinewidth-2, self.maxlinewidth-2)
+    
     def do_queryedit(self, args):
         '''batch edit a series of tickets.
         query <tracquery> [-s <int> - skip int tickets] [-m - add max0 to query]'''
@@ -562,7 +676,10 @@ class TracShell(cmd.Cmd):
         self.batchticketindex = 0
         self.currentticketid =  self.batchticketlist[self.batchticketindex]
         self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
-        print "batchmode turned on!"
+        
+        if self.printsummaryonfetch and self.currentticket != None:
+            print u"  {0:{1}.{2}}".format(self.currentticket['summary'], self.maxlinewidth-2, self.maxlinewidth-2)
+        
         return
     
     def do_pausequeryedit(self, args):
@@ -574,18 +691,19 @@ class TracShell(cmd.Cmd):
         '''stop a query edit session'''
         tmp = raw_input("sure? (y/n)")
         if tmp.lower() == 'y':
-            self.batcheditmode = False
-            self.batchquery = None
-            self.batchskip = None
-            self.batchticketindex = None
-            self.batchticketlist = None
-            self.currentticketid = None
-            self.currentticket = None
-            self.currentticketchangelog = None
-            
+            self._stop_queryedit()
         else:
             print "continuing query edit session"
-            
+    
+    def _stop_queryedit(self):
+        self.batcheditmode = False
+        self.batchquery = None
+        self.batchskip = None
+        self.batchticketindex = None
+        self.batchticketlist = None
+        self.currentticketid = None
+        self.currentticket = None
+        self.currentticketchangelog = None
     
     def do_previousticket(self, args):
         '''select the previous ticket in batchedit mode'''
@@ -700,6 +818,59 @@ class TracShell(cmd.Cmd):
         if choice.lower() == 'y':
             self.tracrpc.link_tickets(self.currentticketid, idlist, deletenonlistedtargets=True)
         
+    
+    def do_queryset_adopt(self, args):
+        '''add arguments(IDs) as children of all tickets in current queryset
+        think: the queryset adopts the arguments'''
+        parser = ShellOptParser()
+        parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        idlist = []
+        for arg in args:
+            try:
+                idlist.append(int(arg))
+            except ValueError:
+                print "malformed argument '%s' ignored." % arg
+        
+        for srcid in self.batchticketlist:
+            self.tracrpc.link_tickets(srcid, idlist, deletenonlistedtargets=False)
+        
+        #refetch
+        self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
+        
+    def do_queryset_procreate(self, args):
+        '''add arguments(IDs) as parents of all tickets in current queryset
+        think: the arguments adopt the queryset'''
+        parser = ShellOptParser()
+        parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        idlist = []
+        for arg in args:
+            try:
+                idlist.append(int(arg))
+            except ValueError:
+                print "malformed argument '%s' ignored." % arg
+        
+        for parentid in idlist:
+            for tid in self.batchticketlist:
+                self.tracrpc.link_tickets(parentid, [tid], deletenonlistedtargets=False)
+        
+        #refetch
+        self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True)
     
     @refetchticketafteredit
     def do_links(self,args):
