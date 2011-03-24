@@ -62,19 +62,28 @@ def get_formal_name(user):
         return unicode(user.email)
         
 class sudo(object):
+    """
+    Please note: sudo is not iterator save, so dont yield in a function
+    or block which is decorated with sudo
+    """
+
     def __init__(self, user=None):
         self.user = user
 
     def __enter__(self):
         from ecs.users.middleware import current_user_store
+        print 'enter sudo: current_user={0} previous_user={1}'.format(self.user, getattr(current_user_store, 'user', None))
+        self._previous_previous_user = getattr(current_user_store, '_previous_user', None)
         self._previous_user = getattr(current_user_store, 'user', None)
         user = self.user
         if callable(user):
             user = user()
+        current_user_store._previous_user = self._previous_user
         current_user_store.user = user
         
     def __exit__(self, *exc):
         from ecs.users.middleware import current_user_store
+        current_user_store._previous_user = self._previous_previous_user
         current_user_store.user = self._previous_user
         
     def __call__(self, func):
