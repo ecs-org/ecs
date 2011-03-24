@@ -31,6 +31,7 @@ def get_homedir():
 
 
 class ShellOptParser(optparse.OptionParser):
+    '''OptParser derived class for special errorhandling'''
     
     def __init__(self):
         optparse.OptionParser.__init__(self)
@@ -180,7 +181,18 @@ class TracShell(cmd.Cmd):
             print "b or < for previous ticket"
             print "n or > for next ticket"
         """
-    
+    def do_bugs(self, args):
+        '''list known issues'''
+        print "known issues/bugs:"
+        print "max=0 is not added automagically to queries - u have to always use -m"
+        print "(hard) abort on queries that dont return any tickets"
+        print "testtrac #1898 cant edit component"
+        print "prompt displays ticket id even if that ticket does not exist (testtrac: g 11)"
+        print "ticket linking does not work as expected"
+        print "    is first: permission problem, and second: some other fancy stuff, it seems to be an error only if tshell is used on ecsdev server."
+        print "documentation / intro for the whole thing"
+        print ""
+        
     def do_aliases(self, args):
         '''list aliases'''
         print "defined aliases:"
@@ -189,6 +201,8 @@ class TracShell(cmd.Cmd):
     
     def parsercleanup(fn):
         ''' decorator to remove all options from optparser instance does not work...'''
+        print "not implemented"
+        return
         def wrapped(self, *args, **kwargs):
             print "decorator not implemented!!!"
             ret = fn(self, *args, **kwargs)
@@ -216,13 +230,13 @@ class TracShell(cmd.Cmd):
     
     
     def run(self):
-        print "tracshell:"
+        #print "tracshell:"
         if self.singleticketmode:
             print "ticket:",self.ticketid
         else:
             pass
         
-        self.cmdloop("introbanner")
+        self.cmdloop("ecsdev tracshell")
     
     def postcmd(self, stop, line):
         ''' '''
@@ -237,6 +251,7 @@ class TracShell(cmd.Cmd):
         
     
     def do_test(self, args=None):
+        '''a test method'''
         print "test method"
         print "args:",args
         
@@ -290,7 +305,7 @@ class TracShell(cmd.Cmd):
     #@parsercleanup
     @refetchticketafteredit
     def do_edit(self, args):
-        '''edit a ticket'''
+        '''edit a ticket. [-c <commenttext>]'''
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
         parser.add_option('-c', '--comment', action='store', dest='comment', default=None)
@@ -329,7 +344,8 @@ class TracShell(cmd.Cmd):
             self.currentticket = None
         
     def do_get(self, args):
-        '''get ticket specified by ID - fetches the ticket for interactive editing.'''
+        '''get ticket specified by ID: >get <ID>
+        fetches the ticket for interactive editing.'''
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
         tid = None
@@ -362,7 +378,7 @@ class TracShell(cmd.Cmd):
             self.currentticket = self.tracrpc._get_ticket(self.currentticketid, getlinks=True) 
         
     def do_view(self, args):
-        '''view a ticket: view ID [-v|--verbos=]'''
+        '''view a ticket: view <ID> [-v|--verbos=]'''
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
         tid = None
@@ -397,7 +413,8 @@ class TracShell(cmd.Cmd):
     
     
     def do_query(self, args):
-        '''query trac for tickets,params: query,[(int)skip],[True|False (output only numbers]'''
+        '''query trac for tickets. 
+        query <tracquery> [-s <int> - skip int tickets] [-m - add max0 to query] [-n - only output ticket IDs]'''
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
@@ -425,7 +442,8 @@ class TracShell(cmd.Cmd):
     
     
     def do_queryedit(self, args):
-        '''batch edit a series of tickets,params: query,[(int)skip]'''
+        '''batch edit a series of tickets.
+        query <tracquery> [-s <int> - skip int tickets] [-m - add max0 to query]'''
         parser = ShellOptParser()
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
         parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
@@ -491,7 +509,7 @@ class TracShell(cmd.Cmd):
             
     
     def do_previousticket(self, args):
-        '''select the next ticket in batchedit mode'''
+        '''select the previous ticket in batchedit mode'''
         if not self.batcheditmode:
             print "not in batcheditmode!"
             return
@@ -605,6 +623,8 @@ class TracShell(cmd.Cmd):
     @refetchticketafteredit
     def do_links(self,args):
         '''set links of a ticket'''
+        print "not implemented yet - use childlinks or parentlinks command instead"
+        return
         if not self.currentticketid:
             print "no ticket set - use 'get ID' or do a queryedit"
             return
@@ -637,7 +657,8 @@ class TracShell(cmd.Cmd):
     
     @refetchticketafteredit
     def do_remainingtime(self, args):
-        '''udpate the remaining time of the current ticket. e.g.: remainingtime 7.5'''
+        '''udpate the remaining time of the current ticket.
+        >remainingtime <float or int>'''
         if not self.currentticketid:
             print "please get a ticket first. g <ticketid>"
             return
@@ -668,7 +689,7 @@ class TracShell(cmd.Cmd):
         self.tracrpc.update_remaining_time(self.currentticketid, new_time, comment=None)
     
     def print_ticket(self,ticket):
-        '''prints a ticket in a nicer way than tracrpc'''
+        '''print a ticket'''
         pprint(ticket)
     
     

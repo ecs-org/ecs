@@ -862,13 +862,13 @@ class TracRpc():
                 tickets.append(self._get_ticket_from_rawticket(result['result']))
         
         #print " ID  summary                            milestone      priority"
-        print "%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
+        print u"%4s %30s %16s %10s" % ('ID','summary','milestone','priority')
         for t in tickets:
             if len(t['summary']) < 30:
                 pass
             if len(t['milestone']) < 10:
                 pass
-            print "%4s %30s %16s %10s" % (t['id'],t['summary'][:30],t['milestone'],t['priority'])
+            print u"%4s %30s %16s %10s" % (t['id'],t['summary'][:30],t['milestone'],t['priority'])
             #print t['id'],t['summary'][:30],t['milestone'],t['priority']
             
         print ""
