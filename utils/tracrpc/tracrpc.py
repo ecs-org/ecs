@@ -841,7 +841,7 @@ class TracRpc():
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
     
-    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80, tidlist=None):
+    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80, tidlist=None, fieldlist=None):
         '''query trac for tickets and print them in a readable way '''
         
         if (not query and not tidlist):
@@ -883,17 +883,34 @@ class TracRpc():
             for result in results.results['result']:
                 tickets.append(self._get_ticket_from_rawticket(result['result']))
         
-        summarywidth = maxlinewidth-(5+17+11)-1 # id,milestone,prio plus spaces minus one for summary spacing
-        if summarywidth < 0:
-            summarywidth = 1
-        print u"{0:4} {1:{2}} {3:16} {4:10}".format('ID','summary',summarywidth,'milestone','priority')
-        for t in tickets:
-            if len(t['summary']) < 30:
-                pass
-            if len(t['milestone']) < 10:
-                pass
-            print u"{0:4} {1:{2}.{3}} {4:16} {5:10}".format(t['id'],t['summary'],summarywidth,summarywidth, t['milestone'],t['priority'])
-            
+        if not fieldlist:
+            summarywidth = maxlinewidth-(5+17+11)-1 # id,milestone,prio plus spaces minus one for summary spacing
+            if summarywidth < 0:
+                summarywidth = 1
+            print u"{0:4} {1:{2}} {3:16} {4:10}".format('ID','summary',summarywidth,'milestone','priority')
+            for t in tickets:
+                print u"{0:4} {1:{2}.{3}} {4:16} {5:10}".format(t['id'],t['summary'],summarywidth,summarywidth, t['milestone'],t['priority'])
+        else:
+            #optional fieldlist that can be supplied via -f
+            hparts = []
+            for field in fieldlist:
+                lpart = u"{0:{1}.{2}}".format(field[0],field[1],field[1])
+                hparts.append(lpart)
+            print u" ".join(hparts)
+            for t in tickets:
+                hparts = []
+                for field in fieldlist:
+                    if t.has_key(field[0]):
+                        if isinstance(t[field[0]], (int,long)):
+                            lpart = u"{0:{1}}".format(t[field[0]],field[1])
+                        else:
+                            lpart = u"{0:{1}.{2}}".format(t[field[0]],field[1],field[1])
+                    else:
+                        lpart =  u"{0:{1}.{2}}".format(' ',field[1],field[1])
+                    hparts.append(lpart)
+                    
+                print u" ".join(hparts)
+                
         print ""
         print "fetched %s tickets" % len(tickets)
         if skip > 0:

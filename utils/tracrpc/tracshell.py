@@ -501,6 +501,7 @@ class TracShell(cmd.Cmd):
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
         parser.add_option('-n', '--onlynumbers', action='store_true', dest='only_numbers', default=False)
         parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        parser.add_option('-f', '--fields', action='store', dest='tmpfields', default=None, help="ticket fields to display")
         try:
             (opts, args) = parser.parse_args(args.split())
             if '$0' in args:
@@ -519,7 +520,14 @@ class TracShell(cmd.Cmd):
         q = args[0]
         if not "&max=0" in q and (self.append_max0_toquery or opts.addmax0 == True):
             q = '%s&max=0' % q
-        self.tracrpc.simple_query(query=q, only_numbers=opts.only_numbers, skip=opts.skip, maxlinewidth=self.maxlinewidth)
+        
+        #optional fieldlist that can be supplied via -f
+        fields = None
+        if opts.tmpfields:
+            tmpfields = [f.strip() for f in opts.tmpfields.split(',')]
+            fields = zip(tmpfields[0::2], tmpfields[1::2])
+            
+        self.tracrpc.simple_query(query=q, only_numbers=opts.only_numbers, skip=opts.skip, maxlinewidth=self.maxlinewidth, fieldlist=fields)
     
     
     def do_showqueryset(self, args):
@@ -639,6 +647,7 @@ class TracShell(cmd.Cmd):
         parser = ShellOptParser()
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
         parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        
         try:
             (opts, args) = parser.parse_args(args.split())
             if '$0' in args:
