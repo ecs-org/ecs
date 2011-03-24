@@ -85,6 +85,10 @@
 .message_display img, .messages_overview img {
   vertical-align: middle;
 }
+.message_display select {
+  display: inline-block;
+  margin-left: 10px;
+}
 .thread_list_choose {
 	margin-bottom: 10px;
 }
