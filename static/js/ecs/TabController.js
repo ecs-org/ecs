@@ -16,6 +16,7 @@ ecs.Tab = new Class({
         this.panel.setClass(cls, set);
     },
     setSelected: function(selected){
+        window.location.hash = '#' + this.header.getElement('a').href.split('#')[1];
         this.setClass(this.controller.options.selectedTabClass, selected);
         this.panel.setStyle('display', selected ? 'block' : 'none');
         this.selected = selected;
@@ -134,11 +135,13 @@ ecs.TabController = new Class({
         }, this);
         this.selectTab(initialSelection || this.tabs[0], true);
     },
-    onTabHeaderClick: function(event, tab){
+    onTabHeaderClick: function(evt, tab){
         this.selectTab(tab);
+        evt.stop();
     },
-    onTabGroupHeaderClick: function(event, tabGroup){
+    onTabGroupHeaderClick: function(evt, tabGroup){
         this.selectTabGroup(tabGroup);
+        evt.stop();
     },
     selectTab: function(tab, initial){
         if(tab === this.selectedTab){
