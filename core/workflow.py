@@ -71,6 +71,10 @@ def needs_external_review(wf):
 def needs_insurance_review(wf):
     return wf.data.insurance_review_required
 
+@guard(model=Submission)
+def needs_gcp_review(wf):
+    return wf.data.gcp_review_required
+
 class InitialReview(Activity):
     class Meta:
         model = Submission

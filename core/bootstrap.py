@@ -56,7 +56,7 @@ def submission_workflow():
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
         ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import (is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review,
-        needs_insurance_review)
+        needs_insurance_review, needs_gcp_review)
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
@@ -64,6 +64,7 @@ def submission_workflow():
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
     external_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='external_review')
     additional_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='additional_review')
+    gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
@@ -75,6 +76,7 @@ def submission_workflow():
     INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
     STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
+    GCP_REVIEW_GROUP = 'GCP Review Group'
     
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -96,6 +98,7 @@ def submission_workflow():
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
+            'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
             'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP, name=_("External Review Invitaion")),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP, name=_("Vote Recommendation Review")),
@@ -138,6 +141,7 @@ def submission_workflow():
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): None,
             ('generic_review', 'legal_and_patient_review'): None,
+            ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
         }
     )
     
@@ -366,8 +370,10 @@ def auth_user_testusers():
             {'internal': False, 'thesis_review': True),
         ('external.reviewer', u'External Reviewer',
             {'external_review': True, 'approved_by_office': True}),
+        ('gcp.reviewer', u'GCP Review Group',
+            {'approved_by_office': True}),
     )
-        
+
     boardtestusers = (
          ('b.member1.klph', ('KlPh',)),
          ('b.member2.klph.onko', ('KlPh','Onko')),
@@ -424,6 +430,7 @@ def auth_ec_staff_users():
         u'boardmember_review': (u"42 ?",),
         u'external_review': (u"42 ?",),
         u'additional_review': (u"42 ?",),
+        u'gcp_review': (u"42 ?",),
     }
 
     for slug in questions.keys():
