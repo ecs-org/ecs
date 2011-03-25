@@ -17,7 +17,8 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories', 'external_reviewer', 'external_reviewer_name', 
-            'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'remission', 'keywords', 'additional_reviewers')
+            'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'remission', 'keywords', 'additional_reviewers',
+            'gcp_review_required')
 
     def __init__(self, *args, **kwargs):
         rval = super(CategorizationReviewForm, self).__init__(*args, **kwargs)

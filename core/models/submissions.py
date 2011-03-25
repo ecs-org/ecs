@@ -108,6 +108,7 @@ class Submission(models.Model):
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     transient = models.BooleanField(default=False)
     valid_until = models.DateField(null=True, blank=True)
+    gcp_review_required = models.NullBooleanField()
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz

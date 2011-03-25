@@ -209,6 +209,7 @@ def auth_groups():
         u'EC-Board Member',
         u'External Reviewer',
         u'userswitcher_target',
+        u'GCP Review Group',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
