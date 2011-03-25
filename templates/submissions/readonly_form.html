@@ -268,32 +268,6 @@
                 }
             });
             
-            new ecs.FormFieldController(['id_expedited'], {
-                sources: ['id_thesis'],
-                auto: function(values, initial){
-                    if(values[0] == 2){
-                        this.setValues([3]);
-                        this.setDisabled(true);
-                    }
-                    else{
-                        this.setDisabled(false);
-                    }
-                }
-            });
-            
-            new ecs.FormFieldController(['id_thesis'], {
-                sources: ['id_expedited'],
-                auto: function(values, initial){
-                    if(values[0] == 2){
-                        this.setValues([3]);
-                        this.setDisabled(true);
-                    }
-                    else{
-                        this.setDisabled(false);
-                    }
-                }
-            });
-            
             var reviewToolbarItems = [
                 ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}')
             ];
