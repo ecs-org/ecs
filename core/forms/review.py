@@ -38,13 +38,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
         cd = self.cleaned_data
         thesis = cd.get('thesis', None)
         expedited = cd.get('expedited', None)
-        print thesis, expedited
-        if thesis and expedited:
-            raise forms.ValidationError(ugettext("Studies cannot be classified 'expedited' and 'thesis' at the same time."))
-        if thesis:
-            cd['expedited'] = False
-        if expedited:
-            cd['thesis'] = False
         if thesis or expedited:
             cd['external_reviewer'] = False
             cd['external_reviewer_name'] = None
