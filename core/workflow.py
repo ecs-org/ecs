@@ -108,8 +108,8 @@ class Resubmission(Activity):
         
     def receive_token(self, *args, **kwargs):
         token = super(Resubmission, self).receive_token(*args, **kwargs)
-        print token, self.workflow.data.current_submission_form.submitter, token.task.pk
-        token.task.assign(self.workflow.data.current_submission_form.submitter)
+        print token, self.workflow.data.current_submission_form.presenter, token.task.pk
+        token.task.assign(self.workflow.data.current_submission_form.presenter)
         return token
 
 
