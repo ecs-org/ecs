@@ -8,7 +8,7 @@ def view_dashboard(request):
         reverse('ecs.communication.views.incoming_message_widget'),
     ]
 
-    if request.user.groups.exclude(name__in=[u'Presenter', u'Sponsor', u'Investigator', u'External Reviewer', u'userswitcher_target']).count():
+    if request.user.ecs_profile.has_explicit_workflow():
         widgets.append(reverse('ecs.tasks.views.my_tasks'))
 
     if request.user.ecs_profile.internal:

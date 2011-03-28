@@ -57,6 +57,9 @@ class UserProfile(models.Model):
             return True
         else:
             return False
+
+    def has_explicit_workflow(self):
+        return self.user.groups.exclude(name__in=[u'Presenter', u'Sponsor', u'Investigator', u'External Reviewer', u'userswitcher_target']).count() > 0
     
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
