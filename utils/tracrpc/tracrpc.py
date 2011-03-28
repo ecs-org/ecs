@@ -90,15 +90,15 @@ def _parse_agilo_links(text):
 class HttpBot():
     ''' '''
     
-    tracproto = "https"
-    trachost = "ecsdev.ep3.at"
-    tracpath = "/project/ekreq"
+    tracproto = None
+    trachost = None
+    tracpath = None
     #tracurl = "https://ecsdev.ep3.at/project/ekreq"
     tracurl = "%s://%s%s" % (tracproto, trachost, tracpath)
     ticketlinkurl = tracurl +"/links"
     
-    username='sharing'
-    password='uehkdkDijepo833'
+    username=None
+    password=None
     
     opener = None
     cookie_handler = None
@@ -109,15 +109,29 @@ class HttpBot():
     authstring = None
     
     
-    def __init__(self, user=None, password=None):
+    def __init__(self, user=None, password=None, protocol=None, hostname=None, urlpath=None, realm=None):
         '''Constructor'''
         
-        if user:
-            self.username = user
-        if password: 
-            self.password = password
+        if not user or not password:
+            print "error. No user or password for httpbot supplied."
+            return None
+        if not protocol or not hostname or not urlpath:
+            print "error. no protocol, or hostname or urlpath given."
+            return None
+        if not realm:
+            print "Warning. no realm specified. using ''"
+            realm = ''
+        
+        self.username = user #fuckup
+        self.password = password
+        self.tracproto = protocol
+        self.trachost = hostname
+        self.tracpath = urlpath
+        self.tracurl = "%s://%s%s" % (self.tracproto, self.trachost, self.tracpath)
+        self.ticketlinkurl = self.tracurl +"/links"
+        
         self.auth_handler = urllib2.HTTPBasicAuthHandler()
-        self.auth_handler.add_password(realm='ecsdev.ep3.at',
+        self.auth_handler.add_password(realm=realm,
                                   uri=self.tracurl,
                                   user=self.username,
                                   passwd=self.password)
@@ -247,7 +261,7 @@ class TracRpc():
     link_cache = None
     httpbot = None
     
-    def __init__(self, username, password, protocol, hostname, urlpath, debug=False):
+    def __init__(self, username, password, protocol, hostname, urlpath, debug=False, httprealm=None):
         '''
         example: TracRpc('user', 'password', 'https', 'ecsdev.ep3.at', '/project/ecs')
         '''
@@ -257,7 +271,7 @@ class TracRpc():
         self.jsonrpc = jsonrpclib.Server(self._url)
         self.debugmode = debug
         self.link_cache = Agilolinks(testtrac = debug)
-        self.httpbot = HttpBot(user=username, password=password)
+        self.httpbot = HttpBot(user=username, password=password, protocol=protocol, hostname=hostname, urlpath=urlpath, realm=httprealm)
         
     #see http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
     @classmethod
