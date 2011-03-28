@@ -367,6 +367,14 @@ def create_submission_form(request):
                     'submission_form_pk': submission_form.pk,
                     'notification_type_pk': notification_type.pk,
                 }))
+
+            try:
+                resubmission_task = Task.objects.for_user(request.user).for_data(submission).filter(task_type__workflow_node__uid='resubmission', closed_at=None)[0]
+            except IndexError:
+                pass
+            else:
+                resubmission_task.done(request.user)
+
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     
     context = {
