@@ -79,6 +79,8 @@ DEFAULT_ALIASES = {
     'eta': 'remainingtime $0',
     'r':  'removefromquery',
     'a':  'addtoquery $0',
+    'vc': 'viewchildren',
+    'vp': 'viewparents',
     
     
 }
@@ -1005,8 +1007,37 @@ class TracShell(cmd.Cmd):
             #print ""
                 
         #pprint(changelog)
+    
+    def viewrelatedtickets(self, showchildren=False, showparents=False):
+        '''generic function to show summary of children or parents of current ticket'''    
+        
+        if not self.currentticket:
+            print "no current ticket! use g <ticketID> or do queryedit!"
+        
+        query=''
+        if showchildren and self.currentticket.has_key('children'):
+            if len(self.currentticket['children']) > 0:
+                query = u'&id='.join([unicode(s) for s in self.currentticket['children']])
+                query = u'id=%s&max=0' % (query)
+                print "children of ticket %s:" % self.currentticketid
+                self.tracrpc.simple_query(query=query)
+        
+        query=''
+        if showparents and self.currentticket.has_key('parents'):
+            if len(self.currentticket['parents']) > 0:
+                query = u'&id='.join([unicode(s) for s in self.currentticket['parents']])
+                query = u'id=%s&max=0' % (query)
+                print "parents of ticket %s:" % self.currentticketid
+                self.tracrpc.simple_query(query=query)
         
         
+    def do_viewchildren(self, args):
+        '''view short summary of the children of the current ticket'''
+        self.viewrelatedtickets(showchildren=True, showparents=False)
+        
+    def do_viewparents(self, args):
+        '''view short summary of the parent tickets of the current ticket'''
+        self.viewrelatedtickets(showchildren=False, showparents=True)
     
     
     
