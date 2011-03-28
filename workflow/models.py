@@ -106,11 +106,11 @@ class Graph(NodeType):
             raise TypeError("nodes of type %s may not carry data, got: %r" % (nodetype, data))
         return nodetype
         
-    def create_node(self, nodetype=None, start=False, end=False, name='', data=None):
+    def create_node(self, nodetype=None, start=False, end=False, name='', data=None, uid=None):
         nodetype = self._prep_nodetype(nodetype, data)
-        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name, data=data or nodetype)
+        return Node.objects.create(graph=self, node_type=nodetype, is_start_node=start, is_end_node=end, name=name, data=data or nodetype, uid=uid)
         
-    def get_node(self, nodetype=None, start=False, end=False, name='', data=None):
+    def get_node(self, nodetype=None, start=False, end=False, name='', data=None, uid=None):
         nodetype = self._prep_nodetype(nodetype, data)
         data = data or nodetype
         return Node.objects.get(
@@ -121,6 +121,7 @@ class Graph(NodeType):
             name=name,
             data_id=data.pk, 
             data_ct=ContentType.objects.get_for_model(type(data)),
+            uid=uid,
         )
         
     def create_workflow(self, **kwargs):
@@ -147,6 +148,7 @@ class Node(models.Model):
     outputs = models.ManyToManyField('self', related_name='inputs', through='Edge', symmetrical=False)
     is_start_node = models.BooleanField(default=False)
     is_end_node = models.BooleanField(default=False)
+    uid = models.CharField(max_length=100, null=True)
 
     def __unicode__(self):
         if self.name:

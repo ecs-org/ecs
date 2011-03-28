@@ -371,7 +371,7 @@ def auth_user_testusers():
         ('external.reviewer', u'External Reviewer',
             {'external_review': True, 'approved_by_office': True}),
         ('gcp.reviewer', u'GCP Review Group',
-            {'approved_by_office': True}),
+            {'internal': True, 'approved_by_office': True}),
     )
 
     boardtestusers = (

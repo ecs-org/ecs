@@ -8,6 +8,7 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
     existing_nodes = {}
     nodes = deepcopy(nodes)
     for name, args in nodes.iteritems():
+        args.setdefault('uid', name)
         args.pop('group', None)
         try:
             existing_nodes[name] = args.apply(graph.get_node)
@@ -45,6 +46,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
     node_instances = {}
     for name, args in nodes.iteritems():
         args.setdefault('name', " ".join(camel_split(args[0].__name__)))
+        args.setdefault('uid', name)
         group = args.pop('group', None)
         node = args.apply(graph.create_node)
         node_instances[name] = node

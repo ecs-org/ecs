@@ -57,7 +57,6 @@ def my_tasks(request, template='tasks/compact_list.html'):
     usersettings.task_filter = filterform.cleaned_data
     usersettings.save()
     
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None).select_related('task_type')
     sortings = {
         'deadline': 'workflow_token__deadline',
         'oldest': '-created_at',
@@ -65,7 +64,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
     }
     order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
-    all_tasks = Task.objects.for_user(request.user).filter(closed_at=None)
+    all_tasks = Task.objects.for_widget(request.user).filter(closed_at=None).select_related('task_type')
     related_url = request.GET.get('url', None)
     if related_url:
         related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if related_url in t.get_final_urls()]

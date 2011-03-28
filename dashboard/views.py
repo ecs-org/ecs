@@ -6,8 +6,10 @@ def view_dashboard(request):
     widgets = [
         reverse('ecs.communication.views.outgoing_message_widget'),
         reverse('ecs.communication.views.incoming_message_widget'),
-        reverse('ecs.tasks.views.my_tasks'),
     ]
+
+    if request.user.groups.exclude(name__in=[u'Presenter', u'Sponsor', u'Investigator', u'External Reviewer', u'userswitcher_target']).count():
+        widgets.append(reverse('ecs.tasks.views.my_tasks'))
 
     if request.user.ecs_profile.internal:
         widgets.append(reverse('ecs.core.views.submission_widget'))
