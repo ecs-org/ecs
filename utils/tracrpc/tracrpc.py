@@ -450,6 +450,7 @@ class TracRpc():
             ticket['priority'] = self._get_field(rawticket, 'priority')
             ticket['component'] = self._get_field(rawticket, 'component')
             ticket['status'] = self._get_field(rawticket, 'status')
+            ticket['rd_points'] = self._get_field(rawticket, 'rd_points')
             return ticket
         
     
