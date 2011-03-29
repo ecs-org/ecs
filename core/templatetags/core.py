@@ -107,6 +107,14 @@ def resubmission(submission, user):
     return submission.resubmission_task_for(user)
 
 @register.filter
+def external_review(submission, user):
+    return submission.external_review_task_for(user)
+
+@register.filter
+def additional_review(submission, user):
+    return submission.additional_review_task_for(user)
+
+@register.filter
 def get_field(form, fname):
     return form[fname]
 

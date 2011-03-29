@@ -31,7 +31,7 @@
 }
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg,
 .submission_mpg, .submission_thesis, .submission_other,
-.submission_inprogress, .submission_resubmission {
+.submission_inprogress, .submission_resubmission, .submission_review {
   width: 16px;
   height: 16px;
   padding-left: 20px;
@@ -63,6 +63,9 @@
 }
 .submission_resubmission {
   background: url(/static/images/icons.png) 0 -112px no-repeat;
+}
+.submission_review {
+  background: url(/static/images/icons.png) 0 -672px no-repeat;
 }
 
 .annotation .text {
