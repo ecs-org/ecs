@@ -30,6 +30,9 @@
                 <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
+        <div class="actions">
+            {% if submission|resubmission:user %}<span class="submission_resubmission"></span>{% endif %}
+        </div>
         {% endwith %}
     {% endif %}
     </li>

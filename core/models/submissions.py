@@ -36,6 +36,12 @@ class SubmissionQuerySet(models.query.QuerySet):
     def b2(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
+    def b3(self):
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='3'), current_submission_form__isnull=False)
+
+    def b4(self):
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
+
     def new(self):
         return self.filter(meetings__isnull=True)
         
@@ -59,7 +65,10 @@ class SubmissionQuerySet(models.query.QuerySet):
             q |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
 
         return q.distinct()
-        
+
+    def none(self):
+        """ Ugly hack: per default none returne an EmptyQuerySet instance which does not have our methods """
+        return self.extra(where=['1=0']) 
         
 class SubmissionManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -77,6 +86,12 @@ class SubmissionManager(AuthorizationManager):
     def b2(self):
         return self.all().b2()
 
+    def b3(self):
+        return self.all().b3()
+
+    def b4(self):
+        return self.all().b4()
+
     def thesis(self):
         return self.all().thesis()
 
@@ -88,6 +103,9 @@ class SubmissionManager(AuthorizationManager):
 
     def reviewed_by_user(self, user, include_workflow=True):
         return self.all().reviewed_by_user(user, include_workflow=include_workflow)
+
+    def none(self):
+        return self.all().none()
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -142,6 +160,13 @@ class Submission(models.Model):
         registered = User.objects.filter(email__in=emails)
         unregistered = emails.difference(registered)
         return registered, unregistered
+
+    def resubmission_task_for(self, user):
+        from ecs.tasks.models import Task
+        try:
+            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission', closed_at=None)[0]
+        except IndexError:
+            return None
     
     @property
     def notifications(self):

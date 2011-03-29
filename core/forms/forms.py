@@ -287,15 +287,130 @@ class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMi
 
 InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 
-class SubmissionListFilterForm(forms.Form):
+_queries = {
+    'new':              lambda s,u: s.new(),
+    'next_meeting':     lambda s,u: s.next_meeting(),
+    'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
+    'amg':              lambda s,u: s.amg(),
+    'mpg':              lambda s,u: s.mpg(),
+    'thesis':           lambda s,u: s.thesis(),
+    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.thesis().values('pk').query),
+    'b2':               lambda s,u: s.b2(),
+    'b3':               lambda s,u: s.b3(),
+    'b4':               lambda s,u: s.b4(),
+    'other_votes':      lambda s,u: s.exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query),
+    'mine':             lambda s,u: s.mine(u),
+    'assigned':         lambda s,u: s.reviewed_by_user(u),
+    'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
+}
+
+class SubmissionFilterForm(forms.Form):
+    layout = ()
+    page = forms.CharField(required=False, widget=forms.HiddenInput())
+
+    def __init__(self, data=None, *args, **kwargs):
+        filter_defaults = dict(page='1')
+
+        keys = set(self.__class__.base_fields.keys())
+        keys.remove('page')
+
+        for key in keys:
+            filter_defaults[key] = 'on'
+
+        data = data or filter_defaults
+        return super(SubmissionFilterForm, self).__init__(data, *args, **kwargs)
+
+    def filter_submissions(self, submissions, user):
+        self.is_valid()   # force clean
+
+        for row in self.layout:
+            fnames = [x[0] for x in row]
+            new = submissions.none()
+            if all([self.cleaned_data[fname] for fname in fnames]):
+                new = submissions.all()
+            else:
+                for fname in fnames:
+                    if self.cleaned_data[fname]:
+                        new |= _queries[fname](submissions, user)
+            submissions = new
+
+        return submissions
+
+class SubmissionWidgetFilterForm(SubmissionFilterForm):
+    layout = (
+        (
+            ('new', _('New')),
+            ('next_meeting', _('Next Meeting')),
+            ('other_meetings', _('Other Meetings'))
+        ),
+        (
+            ('amg', _('AMG')),
+            ('mpg', _('MPG')),
+            ('thesis', _('Thesis')),
+            ('other', _('Other')),
+        ),
+    )
     new = forms.BooleanField(required=False)
     next_meeting = forms.BooleanField(required=False)
-    b2 = forms.BooleanField(required=False)
+    other_meetings = forms.BooleanField(required=False)
     amg = forms.BooleanField(required=False)
     mpg = forms.BooleanField(required=False)
     thesis = forms.BooleanField(required=False)
     other = forms.BooleanField(required=False)
-    page = forms.CharField(required=False, widget=forms.HiddenInput())
+
+class SubmissionListFilterForm(SubmissionWidgetFilterForm):
+    layout = (
+        (
+            ('new', _('New')),
+            ('next_meeting', _('Next Meeting')),
+            ('other_meetings', _('Other Meetings'))
+        ),
+        (
+            ('amg', _('AMG')),
+            ('mpg', _('MPG')),
+            ('thesis', _('Thesis')),
+            ('other', _('Other')),
+        ),
+        (
+            ('b2', _('B2 Votes')),
+            ('b3', _('B3 Votes')),
+            ('b4', _('B4 Votes')),
+            ('other_votes', _('Other Votes')),
+        ),
+    )
+    b2 = forms.BooleanField(required=False)
+    b3 = forms.BooleanField(required=False)
+    b4 = forms.BooleanField(required=False)
+    other_votes = forms.BooleanField(required=False)
+
+class SubmissionListFullFilterForm(SubmissionListFilterForm):
+    layout = (
+        (
+            ('new', _('New')),
+            ('next_meeting', _('Next Meeting')),
+            ('other_meetings', _('Other Meetings'))
+        ),
+        (
+            ('amg', _('AMG')),
+            ('mpg', _('MPG')),
+            ('thesis', _('Thesis')),
+            ('other', _('Other')),
+        ),
+        (
+            ('b2', _('B2 Votes')),
+            ('b3', _('B3 Votes')),
+            ('b4', _('B4 Votes')),
+            ('other_votes', _('Other Votes')),
+        ),
+        (
+            ('mine', _('Mine')),
+            ('assigned', _('Assigned')),
+            ('other_studies', _('Other Studies')),
+        ),
+    )
+    mine = forms.BooleanField(required=False)
+    assigned = forms.BooleanField(required=False)
+    other_studies = forms.BooleanField(required=False)
 
 class SubmissionImportForm(forms.Form):
     file = forms.FileField()

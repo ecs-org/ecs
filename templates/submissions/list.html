@@ -79,6 +79,12 @@ Liste aller Studien
                 <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}<a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
+        {% if submission|resubmission:user %}
+            <div>
+                <span class="submission_resubmission"></span>
+                {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
+            </div>
+        {% endif %}
         {% endwith %}
     {% endif %}
     </li>

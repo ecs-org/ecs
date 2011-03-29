@@ -102,3 +102,11 @@ def assigned_submissions_count(user):
 def is_docstash(obj):
     return isinstance(obj, DocStash)
 
+@register.filter
+def resubmission(submission, user):
+    return submission.resubmission_task_for(user)
+
+@register.filter
+def get_field(form, fname):
+    return form[fname]
+

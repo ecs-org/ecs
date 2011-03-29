@@ -23,7 +23,8 @@ from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistB
 from ecs.meetings.models import Meeting
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionListFilterForm, SubmissionImportForm
+    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionImportForm, \
+    SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -368,11 +369,8 @@ def create_submission_form(request):
                     'notification_type_pk': notification_type.pk,
                 }))
 
-            try:
-                resubmission_task = Task.objects.for_user(request.user).for_data(submission).filter(task_type__workflow_node__uid='resubmission', closed_at=None)[0]
-            except IndexError:
-                pass
-            else:
+            resubmission_task = submission.resubmission_task_for(request.user)
+            if resubmission_task:
                 resubmission_task.done(request.user)
 
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
@@ -488,40 +486,13 @@ def wizard(request):
         'form': screen_form,
     })
 
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, use_filters=True):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter'):
     usersettings = request.user.ecs_settings
 
-    filter_defaults = dict(page='1')
-    for key in ('amg', 'mpg', 'thesis', 'other', 'new', 'next_meeting', 'b2'):
-        filter_defaults[key] = 'on'
+    filterform = filter_form(request.POST or getattr(usersettings, filtername))
+    submissions = filterform.filter_submissions(submissions, request.user)
+    submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by('ec_number')
 
-    filterdict = request.POST or usersettings.submission_filter or filter_defaults
-    filterform = SubmissionListFilterForm(filterdict)
-    filterform.is_valid()  # force clean
-
-    queries = {
-        'new': Q(pk__in=submissions.new().values('pk').query),
-        'next_meeting': Q(pk__in=submissions.next_meeting().values('pk').query),
-        'b2': Q(pk__in=submissions.b2().values('pk').query),
-    }
-    submissions_stage1 = submissions.none()
-    for key, query in queries.items():
-        if filterform.cleaned_data[key]:
-            submissions_stage1 |= submissions.filter(query)
-
-    queries = {
-        'amg': Q(pk__in=submissions.amg().values('pk').query),
-        'mpg': Q(pk__in=submissions.mpg().values('pk').query),
-        'thesis': Q(pk__in=submissions.thesis().values('pk').query),
-    }
-    submissions_stage2 = submissions_stage1.none()
-    queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
-
-    for key, query in queries.items():
-        if filterform.cleaned_data[key]:
-            submissions_stage2 |= submissions_stage1.filter(query)
-
-    submissions = submissions_stage2.exclude(current_submission_form__isnull=True).distinct().order_by('ec_number')
     if stashed_submission_forms:
         submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)
 
@@ -531,11 +502,11 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     except EmptyPage, InvalidPage:
         submissions = paginator.page(1)
         filterform.cleaned_data['page'] = 1
-        filterform = SubmissionListFilterForm(filterform.cleaned_data)
+        filterform = filter_form(filterform.cleaned_data)
         filterform.is_valid()
 
     # save the filter in the user settings
-    usersettings.submission_filter = filterform.cleaned_data
+    setattr(usersettings, filtername, filterform.cleaned_data)
     usersettings.save()
     
     return render(request, template, {
@@ -550,10 +521,13 @@ def submission_widget(request, template='submissions/widget.html'):
 
     if request.user.ecs_profile.internal:
         data['submissions'] = Submission.objects.all()
+        data['filtername'] = 'submission_filter_widget_internal'
+        data['filter_form'] = SubmissionWidgetFilterForm
     else:
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
         data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
-        #data['use_filters'] = False
+        data['filtername'] = 'submission_filter_widget'
+        data['filter_form'] = SubmissionFilterForm
 
     return submission_list(request, **data)
 
@@ -574,16 +548,16 @@ def all_submissions(request):
 
         submissions = submissions.filter(submissions_q)
 
-    return submission_list(request, submissions, keyword=keyword)
+    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm)
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
-    return submission_list(request, submissions)
+    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=SubmissionListFilterForm)
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
     stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
-    return submission_list(request, submissions, stashed_submission_forms=stashed)
+    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm)
 
 @forceauth.exempt
 def catalog(request):
