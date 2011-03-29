@@ -449,6 +449,7 @@ class TracRpc():
             ticket['milestone'] = self._get_field(rawticket, 'milestone')
             ticket['priority'] = self._get_field(rawticket, 'priority')
             ticket['component'] = self._get_field(rawticket, 'component')
+            ticket['status'] = self._get_field(rawticket, 'status')
             return ticket
         
     
@@ -879,7 +880,7 @@ class TracRpc():
                 ticket_ids = ticket_ids[skip:]
         
         if only_numbers:
-            idlist = " ".join(unicode(id) for id in ticket_ids)
+            idlist = ",".join(unicode(id) for id in ticket_ids)
             print "ticket IDs:"
             print idlist
             print ""
