@@ -448,6 +448,7 @@ class TracRpc():
             ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
             ticket['milestone'] = self._get_field(rawticket, 'milestone')
             ticket['priority'] = self._get_field(rawticket, 'priority')
+            ticket['component'] = self._get_field(rawticket, 'component')
             return ticket
         
     
@@ -671,7 +672,7 @@ class TracRpc():
         if not ticket:
             print "could not fetch ticket %d" % tid
             return
-        if ticket[fieldname] != new_value:
+        if not ticket.has_key(fieldname) or ticket[fieldname] != new_value:
             ticket[fieldname] = new_value
             self._update_ticket(tid, ticket, comment=comment)
         else:
@@ -886,6 +887,10 @@ class TracRpc():
             if skip > 0:
                 print "%d tickets skipped" % skip
             return
+        
+        if not ticket_ids or len(ticket_ids) < 1:
+            print "no tickets."
+            return None
         
         tickets = []
         mc = self.multicall()

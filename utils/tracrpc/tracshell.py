@@ -16,6 +16,7 @@ import sys
 import os
 import optparse
 import textwrap
+import re
 
 from pprint import pprint
 
@@ -461,9 +462,11 @@ class TracShell(cmd.Cmd):
         self.print_ticketchangelog(self.tracrpc._get_ticket_changelog(tid))
             
     def do_view(self, args):
-        '''view a ticket: view <ID> [-v|--verbos=]'''
+        '''view a ticket: view <ID> [-w|--wrap wrap description at 60chars] [-r|--rst print restructured text]'''
         parser = ShellOptParser()
         parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False)
+        parser.add_option('-r', '--rst', action='store_true', dest='printrst', default=False)
+        parser.add_option('-w', '--wrap', action='store_true', dest='wrap', default=False)
         tid = None
         try:
             (opts, args) = parser.parse_args(args.split())
@@ -489,9 +492,9 @@ class TracShell(cmd.Cmd):
                 return
         
         if tid == self.currentticketid:
-            self.print_ticket(self.currentticket)            
+            self.print_ticket(self.currentticket,wrap=opts.wrap, printrst=opts.printrst)            
         else:
-            self.print_ticket(self.tracrpc._get_ticket(tid, getlinks=True))
+            self.print_ticket(self.tracrpc._get_ticket(tid, getlinks=True),wrap=opts.wrap, printrst=opts.printrst)
         
     
     
@@ -645,10 +648,13 @@ class TracShell(cmd.Cmd):
     
     def do_queryedit(self, args):
         '''batch edit a series of tickets.
-        query <tracquery> [-s <int> - skip int tickets] [-m - add max0 to query]'''
+        query <tracquery> [-s <int> - skip int tickets] [-m - add max0 to query] [-t <ticketID1,ticketID2,ticketID3,...>  - no spaces!]'''
         parser = ShellOptParser()
         parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
         parser.add_option('-m', '--max0', action='store_true', dest='addmax0', default=False, help="add max=0 to query")
+        parser.add_option('-t', '--tids', action='store', dest='ticketids', default=None, help="batchedit IDs separated by comma", type="string")
+        
+        q=None
         
         try:
             (opts, args) = parser.parse_args(args.split())
@@ -658,29 +664,50 @@ class TracShell(cmd.Cmd):
             print e
             return
         
-        if len(args) < 1:
+        if len(args) < 1 and not opts.ticketids:
             print "please supply a query"
             return
         elif len(args) > 1:
             print "too many arguments"
             return
         
-        q = args[0]
-        if not "&max=0" in q and (self.append_max0_toquery or opts.addmax0 == True):
-            q = '%s&max=0' % q
-        
         skip = opts.skip
-        self.batcheditmode = True
-        self.batchquery = q
-        self.batchticketlist = None
-        self.batchskip = skip
         
-        ticket_ids = self.tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.query, q)
-
+        tids_byarg = []
+        if opts.ticketids:
+            tids = opts.ticketids
+            tids = [tid.strip() for tid in tids.split(',')]
+            for id in tids: 
+                try:
+                    tid = int(id)
+                    if self.tracrpc._get_ticket(tid, getlinks=False) != None:
+                        tids_byarg.append(tid)
+                    
+                except ValueError:
+                    print "malformed argument '%s' ignored." % id
+                
+        
+        if len(tids_byarg) < 1:
+            q = args[0]
+            if not "&max=0" in q and (self.append_max0_toquery or opts.addmax0 == True):
+                q = '%s&max=0' % q
+            ticket_ids = self.tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.query, q)
+        else:
+            print "queryediting tickets %s" % u','.join([unicode(id) for id in tids_byarg])
+            ticket_ids = tids_byarg
+        
+        if not ticket_ids:
+            print "no tickets returned by query"
+            return
+        
         if skip > len(ticket_ids):
             print "with skip=%d, i would skip all tickets... skipping 0 tickets."
             skip = 0
         
+        self.batcheditmode = True
+        self.batchquery = q
+        self.batchticketlist = None
+        self.batchskip = skip
         self.batchticketlist = ticket_ids[skip:]
         
         print "%d tickets fetched - %s skipped" % (len(ticket_ids), skip)
@@ -759,7 +786,10 @@ class TracShell(cmd.Cmd):
             print "no ticket set - use 'get ID' or do a queryedit"
             return
         print "possible values:",', '.join(self.tracrpc.get_components())
-        print "current component: '%s'" % self.currentticket['component']
+        if self.currentticket.has_key('component'):
+            print "current component: '%s'" % self.currentticket['component']
+        else:
+            print "current component: None"
         component = raw_input('new component: ')
         self.tracrpc.update_ticket_field(self.currentticketid, fieldname='component', new_value=component, forbiddenvaluelist=[None,], comment=None)
     
@@ -770,7 +800,10 @@ class TracShell(cmd.Cmd):
             print "no ticket set - use 'get ID' or do a queryedit"
             return
         print "possible values:",', '.join(self.tracrpc.get_milestones())
-        print "current milestone: '%s'" % self.currentticket['milestone']
+        if self.currentticket.has_key('milestone'):
+            print "current milestone: '%s'" % self.currentticket['milestone']
+        else:
+            print "current milestone: None"
         milestone = raw_input('new milestone: ')
         self.tracrpc.update_ticket_field(self.currentticketid, fieldname='milestone', new_value=milestone, forbiddenvaluelist=[None,], comment=None)
     
@@ -780,54 +813,100 @@ class TracShell(cmd.Cmd):
         if not self.currentticketid:
             print "no ticket set - use 'get ID' or do a queryedit"
             return
-        print "current parents: ", self.currentticket['parents']
-        idlist = []
-        linkline = raw_input('new linklist(willoverwrite): ')
-        sepchar = ' '
-        if ',' in linkline:
-            sepchar = ','
-        tmpidlist = linkline.split(sepchar)
-        idlist = []
-        for id in tmpidlist:
-            if id != '':
-                try:
-                    idlist.append(int(id))
-                except ValueError:
-                    print "only integers are valid ticket IDS!"
-                    return
+        parser = ShellOptParser()
+        #parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
         
-        print "new parents: ", ', '.join([str(id) for id in idlist])
-        print "non listed links will be removed!"
-        choice = raw_input("correct? (y/n) :")
-        if choice.lower() == 'y':
-            self.tracrpc.update_ticket_parentlinks(self.currentticketid, newparentlistarg=idlist)
+        parentids = []
+        if len(args) > 0:
+            tmpparentids = [id.strip() for id in args[0].strip().split(',')]
+            for id in tmpparentids:
+                if not self.tracrpc._get_ticket(id, getlinks=False):
+                    print "ticket %s does not exist" % id
+                else:
+                    parentids.append(int(id))
+            
+            if len(parentids) > 0:
+                for id in parentids:
+                    self.tracrpc.link_tickets(id, [self.currentticketid], deletenonlistedtargets=False)
+        else:
+            print "current parents: ", self.currentticket['parents']
+            idlist = []
+            linkline = raw_input('new linklist(willoverwrite): ')
+            sepchar = ' '
+            if ',' in linkline:
+                sepchar = ','
+            tmpidlist = linkline.split(sepchar)
+            idlist = []
+            for id in tmpidlist:
+                if id != '':
+                    try:
+                        idlist.append(int(id))
+                    except ValueError:
+                        print "only integers are valid ticket IDS!"
+                        return
+            
+            print "new parents: ", ', '.join([str(id) for id in idlist])
+            print "non listed links will be removed!"
+            choice = raw_input("correct? (y/n) :")
+            if choice.lower() == 'y':
+                self.tracrpc.update_ticket_parentlinks(self.currentticketid, newparentlistarg=idlist)
         
     @refetchticketafteredit
     def do_childlinks(self,args):
-        '''set childlinks of a ticket'''
+        '''set childlinks of a ticket [<TicketID> add argument as child to current ticket]'''
         if not self.currentticketid:
             print "no ticket set - use 'get ID' or do a queryedit"
             return
-        print "current children: ", self.currentticket['children']
-        linkline = raw_input('new linklist(willoverwrite): ')
-        sepchar = ' '
-        if ',' in linkline:
-            sepchar = ','
-        tmpidlist = linkline.split(sepchar)
-        idlist = []
-        for id in tmpidlist:
-            if id != '':
-                try:
-                    idlist.append(int(id))
-                except ValueError:
-                    print "only integers are valid ticket IDS!"
-                    return
         
-        print "new children: ", ', '.join([str(id) for id in idlist])
-        print "non listed links will be removed!"
-        choice = raw_input("correct? (y/n) :")
-        if choice.lower() == 'y':
-            self.tracrpc.link_tickets(self.currentticketid, idlist, deletenonlistedtargets=True)
+        parser = ShellOptParser()
+        #parser.add_option('-s', '--skip', action='store', dest='skip', type='int', default=0)
+        try:
+            (opts, args) = parser.parse_args(args.split())
+            if '$0' in args:
+                args.remove('$0')
+        except Exception as e:
+            print e
+            return
+        
+        childids = []
+        if len(args) > 0:
+            tmpchildids = [id.strip() for id in args[0].strip().split(',')]
+            for id in tmpchildids:
+                if not self.tracrpc._get_ticket(id, getlinks=False):
+                    print "ticket %s does not exist" % id
+                else:
+                    childids.append(int(id))
+            
+            if len(childids) > 0:
+                self.tracrpc.link_tickets(self.currentticketid, childids, deletenonlistedtargets=False)
+        else:
+            print "current children: ", self.currentticket['children']
+            linkline = raw_input('new linklist(willoverwrite): ')
+            sepchar = ' '
+            if ',' in linkline:
+                sepchar = ','
+            tmpidlist = linkline.split(sepchar)
+            idlist = []
+            for id in tmpidlist:
+                if id != '':
+                    try:
+                        idlist.append(int(id))
+                    except ValueError:
+                        print "only integers are valid ticket IDS!"
+                        return
+            
+            print "new children: ", ', '.join([str(id) for id in idlist])
+            print "non listed links will be removed!"
+            choice = raw_input("correct? (y/n) :")
+            if choice.lower() == 'y':
+                self.tracrpc.link_tickets(self.currentticketid, idlist, deletenonlistedtargets=True)
         
     
     def do_queryset_adopt(self, args):
@@ -951,7 +1030,7 @@ class TracShell(cmd.Cmd):
         print "new time:", new_time," type:",type(new_time)
         self.tracrpc.update_remaining_time(self.currentticketid, new_time, comment=None)
     
-    def print_ticket(self,ticket):
+    def print_ticket(self,ticket, wrap=False, printrst=False):
         '''print a ticket'''
         keymaxlen=0
         for k,v in ticket.iteritems():
@@ -970,7 +1049,15 @@ class TracShell(cmd.Cmd):
         wrapper.subsequent_indent = "  "
         wrapper.width = 60
         print u"description:"
-        print wrapper.fill(text=ticket['description'])
+        if printrst:
+            text = _ticketdescription2rst(ticket['description'])
+        else:
+            text = ticket['description']
+        
+        if wrap:
+            print wrapper.fill(text=text)
+        else:
+            print text
         
         for k,v in ticket.iteritems():
             if k not in ['id', 'summary', 'description']:
@@ -1039,7 +1126,117 @@ class TracShell(cmd.Cmd):
         '''view short summary of the parent tickets of the current ticket'''
         self.viewrelatedtickets(showchildren=False, showparents=True)
     
+def _detectRST(text):
+    for line in text.splitlines():
+        if u"#!rst" in line:
+            print "RST found"
+            print "if you see this - you need to write more code..."
+            return True
     
+    return False
+
+def _ticketdescription2rst(text, indent=4):
+    '''modified version of ticketdescription2rst from docu generation for more readable console output '''
+    debug=False
+    
+    out = []
+    inliteralblock=False
+    titledecorator='-'
+    list_ws_stripcount = 0
+    inlist=False
+    _detectRST(text)
+    lines = text.splitlines()
+    for line in lines:
+        if inliteralblock:
+            if line.lstrip().find("}}}") != -1:
+                if line.strip() == "}}}":
+                    out.append(u"\n\n")
+                else:
+                    out.append(u"%s%s\n\n" % ((indent+2)*u' ', line))
+                inliteralblock=False
+            else:
+                out.append("%s%s" % ((indent+2)*u' ', line))
+        else:
+
+            #line = _handlemacros(line)
+            #reset list stuff
+            if line.lstrip().find("*") == -1 and inlist == True:
+                out.append(u'') #newline
+            
+            if line.lstrip().find("*") == -1:
+                inlist = False
+                list_ws_stripcount = 0
+            #hr's horizontal line:
+            #RST also has them - keep em!?
+            if line.lstrip().find("----") != -1:
+                #add extra newline before and after HR - so it doesnt get recognized as an title/heading..
+                out.append(u'\n%s%s\n\n' % (indent*u' ', line))
+            #lists
+            elif line.lstrip().find("*") != -1:
+                if not inlist:
+                    #first listline hit - check indentation and lstrip whitespace
+                    testline = line.lstrip()
+                    list_ws_stripcount = len(line)-len(testline)
+                    act_list_ws = list_ws_stripcount
+                    inlist=True
+                
+                testline = line.lstrip()
+                tmp_ws_stripcount = len(line)-len(testline)
+                if tmp_ws_stripcount != act_list_ws:
+                    act_list_ws = tmp_ws_stripcount
+                    out.append(u'')#newline out is joined w/ newlines
+                
+                line = line.replace("*","-")
+                line = line[list_ws_stripcount:len(line)]
+                out.append("%s%s" % (indent*u' ', line))
+            #enumerated lists
+            elif re.search('^[1-9]+\.', line.lstrip()) != None:
+                #print "enumlist:",line
+                if not inlist:
+                    #first listline hit - check indentation and lstrip whitespace
+                    testline = line.lstrip()
+                    list_ws_stripcount = len(line)-len(testline)
+                    act_list_ws = list_ws_stripcount
+                    inlist=True
+                
+                testline = line.lstrip()
+                tmp_ws_stripcount = len(line)-len(testline)
+                if tmp_ws_stripcount != act_list_ws:
+                    act_list_ws = tmp_ws_stripcount
+                    out.append(u'')#newline out is joined w/ newlines
+                
+                tmpindent = len(line[list_ws_stripcount:len(line)]) - len(line.lstrip()) #lol... that counts how much i must indent again after replacing 
+                strippedline = re.sub('^[1-9]+\.', '#.', line.lstrip())
+                line = '%s%s' % (tmpindent*u' ', strippedline)
+                #print "replaces:",line
+                #line = line[list_ws_stripcount:len(line)]
+                out.append("%s%s" % (indent*u' ', line))
+                
+            #headings
+            elif line.lstrip().find("=") == 0:
+                line = line.strip()
+                line = line.replace("=","")
+                line = line.strip() # strip again for spaces between === and actual header textbeginning..and ending
+                #out.append("%s%s" % (indent*u' ', line))
+                #out.append("%s%s" % (indent*u' ', u'-'*len(line)))
+                out.append("%s" % ( line))
+                out.append("%s" % ( titledecorator*len(line)))
+            #literal/code blocks:
+            elif line.lstrip().find("{{{") != -1:
+                if line.strip() == "{{{":
+                    out.append(u"%s::\n\n" % (indent*u' '))
+                else:
+                    out.append(u"%s%s::\n\n" % (indent*u' ', line))
+                inliteralblock = True
+            elif line.lstrip().find("}}}") != -1:
+                if line.strip() == "}}}":
+                    out.append(u"\n\n")
+                else:
+                    out.append(u"%s%s\n\n" % (indent*u' ', line))
+            else:
+                out.append("%s%s" % (indent*u' ', line))
+    
+    return u'\n'.join(out)    
     
 if __name__ == '__main__':
     s = TracShell()
