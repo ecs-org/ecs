@@ -16,7 +16,7 @@
 
 {% block usertoolbar %}
   <div class="searchbox">
-    <form action="{% url ecs.core.views.submission_forms %}" method="get" enctype="multipart/form-data">
+    <form action="{% url ecs.core.views.all_submissions %}" method="get" enctype="multipart/form-data">
       <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"/>
       <input type="submit" value="" title="suchen" />
     </form>
@@ -37,13 +37,13 @@
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
           {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
-              <li><a href="{% url ecs.core.views.submission_forms %}">{% trans "All Studies" %}</a></li>
+              <li><a href="{% url ecs.core.views.all_submissions %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|assigned_submissions_count %}
-              <li><a href="{% url ecs.core.views.assigned_submission_forms %}">{% trans "Assigned Studies" %}</a></li>
+              <li><a href="{% url ecs.core.views.assigned_submissions %}">{% trans "Assigned Studies" %}</a></li>
           {% endif %}
           {% if user|my_submissions_count %}
-              <li><a href="{% url ecs.core.views.my_submission_forms %}">{% trans "My Studies" %}</a></li>
+              <li><a href="{% url ecs.core.views.my_submissions %}">{% trans "My Studies" %}</a></li>
           {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>
           {% if user|has_flag:"approved_by_office" %}

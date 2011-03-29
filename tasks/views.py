@@ -44,9 +44,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
 
-    filter_defaults = {
-        'sorting': 'deadline',
-    }
+    filter_defaults = dict(sorting='deadline')
     for key in ('amg', 'mpg', 'thesis', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 

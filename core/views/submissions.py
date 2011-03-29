@@ -418,52 +418,6 @@ def submission_pdf(request, submission_form_pk=None):
     
     return pdf_response(pdf, filename=filename)
 
-def submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=None):
-    return render(request, 'submissions/list.html', {
-        'unscheduled_submissions': submissions.filter(meetings__isnull=True).distinct().order_by('ec_number'),
-        'meetings': meetings,
-        'stashed_submission_forms': [x for x in stashed_submission_forms if x.current_value],
-        'keyword': keyword,
-    })
-
-def submission_forms(request):
-    keyword = request.GET.get('keyword', None)
-
-    if keyword:
-        submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
-        m = re.match(r'(\d+)/(\d+)', keyword)
-        if m:
-            num = int(m.group(1))
-            year = int(m.group(2))
-            submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
-        fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
-        for field_name in fields:
-            submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
-
-        submissions = Submission.objects.filter(submissions_q)
-        stashed_submission_forms = DocStash.objects.none()  # XXX: we can not search in the docstash (FMD2)
-        meetings = [(meeting, submissions.filter(meetings=meeting).distinct().order_by('ec_number')) for meeting in Meeting.objects.filter(submissions__pk__in=submissions.values('pk').query).order_by('-start').distinct()]
-    else:
-        submissions = Submission.objects.all()
-        stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form')
-        meetings = [(meeting, meeting.submissions.order_by('ec_number').distinct()) for meeting in Meeting.objects.order_by('-start')]
-
-    return submission_form_list(request, submissions, stashed_submission_forms, meetings, keyword=keyword)
-
-def my_submission_forms(request):
-    submissions = Submission.objects.mine(request.user)
-    stashed_submission_forms = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
-    meetings = [(meeting, meeting.submissions.mine(request.user).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
-
-    return submission_form_list(request, submissions, stashed_submission_forms, meetings)
-
-def assigned_submission_forms(request):
-    submissions = Submission.objects.reviewed_by_user(request.user)
-    stashed_submission_forms = DocStash.objects.none()
-    meetings = [(meeting, meeting.submissions.filter(pk__in=submissions).distinct()) for meeting in Meeting.objects.filter(submissions__pk__in=submissions).distinct().order_by('-start')]
-
-    return submission_form_list(request, submissions, stashed_submission_forms, meetings)
-
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
@@ -534,13 +488,10 @@ def wizard(request):
         'form': screen_form,
     })
 
-@user_flag_required('internal')
-def submission_list(request, template='submissions/internal_list.html', limit=20):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, use_filters=True):
     usersettings = request.user.ecs_settings
 
-    filter_defaults = {
-        'page': '1',
-    }
+    filter_defaults = dict(page='1')
     for key in ('amg', 'mpg', 'thesis', 'other', 'new', 'next_meeting', 'b2'):
         filter_defaults[key] = 'on'
 
@@ -549,20 +500,19 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     filterform.is_valid()  # force clean
 
     queries = {
-        'new': Q(pk__in=Submission.objects.new().values('pk').query),
-        'next_meeting': Q(pk__in=Submission.objects.next_meeting().values('pk').query),
-        'b2': Q(pk__in=Submission.objects.b2().values('pk').query),
+        'new': Q(pk__in=submissions.new().values('pk').query),
+        'next_meeting': Q(pk__in=submissions.next_meeting().values('pk').query),
+        'b2': Q(pk__in=submissions.b2().values('pk').query),
     }
-    submissions_stage1 = Submission.objects.none()
+    submissions_stage1 = submissions.none()
     for key, query in queries.items():
         if filterform.cleaned_data[key]:
-            submissions_stage1 |= Submission.objects.filter(query)
-
+            submissions_stage1 |= submissions.filter(query)
 
     queries = {
-        'amg': Q(pk__in=Submission.objects.amg().values('pk').query),
-        'mpg': Q(pk__in=Submission.objects.mpg().values('pk').query),
-        'thesis': Q(pk__in=Submission.objects.thesis().values('pk').query),
+        'amg': Q(pk__in=submissions.amg().values('pk').query),
+        'mpg': Q(pk__in=submissions.mpg().values('pk').query),
+        'thesis': Q(pk__in=submissions.thesis().values('pk').query),
     }
     submissions_stage2 = submissions_stage1.none()
     queries['other'] = Q(~queries['amg'] & ~queries['mpg'] & ~queries['thesis'])
@@ -571,7 +521,10 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
         if filterform.cleaned_data[key]:
             submissions_stage2 |= submissions_stage1.filter(query)
 
-    submissions = submissions_stage2.exclude(current_submission_form__isnull=True).order_by('-current_submission_form__pk')
+    submissions = submissions_stage2.exclude(current_submission_form__isnull=True).distinct().order_by('ec_number')
+    if stashed_submission_forms:
+        submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)
+
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
     try:
         submissions = paginator.page(int(filterform.cleaned_data['page']))
@@ -588,11 +541,49 @@ def submission_list(request, template='submissions/internal_list.html', limit=20
     return render(request, template, {
         'submissions': submissions,
         'filterform': filterform,
+        'keyword': keyword,
     })
 
-@user_flag_required('internal')
+
 def submission_widget(request, template='submissions/widget.html'):
-    return submission_list(request, template=template, limit=5)
+    data = dict(template='submissions/widget.html', limit=5)
+
+    if request.user.ecs_profile.internal:
+        data['submissions'] = Submission.objects.all()
+    else:
+        data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
+        data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+        #data['use_filters'] = False
+
+    return submission_list(request, **data)
+
+def all_submissions(request):
+    keyword = request.GET.get('keyword', None)
+
+    submissions = Submission.objects.all()
+    if keyword:
+        submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
+        m = re.match(r'(\d+)/(\d+)', keyword)
+        if m:
+            num = int(m.group(1))
+            year = int(m.group(2))
+            submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+        fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
+        for field_name in fields:
+            submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
+
+        submissions = submissions.filter(submissions_q)
+
+    return submission_list(request, submissions, keyword=keyword)
+
+def assigned_submissions(request):
+    submissions = Submission.objects.reviewed_by_user(request.user)
+    return submission_list(request, submissions)
+
+def my_submissions(request):
+    submissions = Submission.objects.mine(request.user)
+    stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+    return submission_list(request, submissions, stashed_submission_forms=stashed)
 
 @forceauth.exempt
 def catalog(request):

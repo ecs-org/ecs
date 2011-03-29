@@ -29,7 +29,7 @@
   line-height: 16px;
   padding: 3px 0 0;
 }
-.submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other {
+.submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress {
   width: 16px;
   height: 16px;
   padding-left: 20px;
@@ -55,6 +55,9 @@
 }
 .submission_other {
   background: url(/static/images/icons.png) 0 -64px no-repeat;
+}
+.submission_inprogress {
+  background: url(/static/images/icons.png) 0 -688px no-repeat;
 }
 
 .annotation .text {

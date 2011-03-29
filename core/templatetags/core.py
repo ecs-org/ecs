@@ -98,4 +98,7 @@ def my_submissions_count(user):
 def assigned_submissions_count(user):
     return Submission.objects.reviewed_by_user(user).count()
 
+@register.filter
+def is_docstash(obj):
+    return isinstance(obj, DocStash)
 
