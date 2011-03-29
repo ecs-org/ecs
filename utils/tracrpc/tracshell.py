@@ -17,6 +17,7 @@ import os
 import optparse
 import textwrap
 import re
+import signal
 
 from pprint import pprint
 
@@ -29,6 +30,18 @@ def get_homedir():
     else:
         return os.environ['HOME']
 
+ctrl_c_hit = False
+
+def signal_handler(signal, frame):
+    '''my own sig int handler'''
+    global ctrl_c_hit
+    if ctrl_c_hit:
+        sys.exit(0)
+    ctrl_c_hit = True
+    print 'You pressed Ctrl+C!'
+    print "ctrl+c again to abort script!"
+    
+    return
 
 
 class ShellOptParser(optparse.OptionParser):
@@ -109,6 +122,7 @@ class TracShell(cmd.Cmd):
     printsummaryonfetch = True
     append_max0_toquery = True
     changelogfieldstoignore = ['comment']
+    handle_CTRL_C = True
     
     #future use:
     batchprefetch = 0
@@ -151,7 +165,9 @@ class TracShell(cmd.Cmd):
             except ValueError:
                 print "non integer value supplied to tracshell as ticketid"
                 return None
-        
+        if self.handle_CTRL_C:
+            signal.signal(signal.SIGINT, signal_handler)
+            
         cmd.Cmd.__init__(self)
         self.prompt = self.stdprompt
         self.aliases = {}
@@ -278,6 +294,8 @@ class TracShell(cmd.Cmd):
             
     def postcmd(self, stop, line):
         ''' '''
+        global ctrl_c_hit
+        ctrl_c_hit = False
         if self.batcheditmode:
             self.prompt = "batch>ID-%d: " % self.currentticketid
         elif not self.batcheditmode and self.currentticketid != None:
@@ -310,6 +328,8 @@ class TracShell(cmd.Cmd):
     
     def precmd(self, line):
         """handles alias commands for line (which can be a string or list of args)"""
+        global ctrl_c_hit
+        ctrl_c_hit = False
         if isinstance(line, basestring):
             parts = line.split(' ')
         else:
