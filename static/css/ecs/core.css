@@ -201,6 +201,9 @@
 .readonly .checklist_review_tab textarea {
   margin-left: 0;
 } 
+.checklist_review_tab input {
+  display: none;
+}
 
 /* sidebar */
 

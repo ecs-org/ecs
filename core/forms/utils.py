@@ -12,6 +12,7 @@ def mark_readonly(form):
 class ReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
+        self.complete_task = kwargs.pop('complete_task', False)
         super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             mark_readonly(self)

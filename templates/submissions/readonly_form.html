@@ -9,16 +9,24 @@
 
 {% block header_actions %}
     {{ block.super }}
+    <div class="header_actions">
     {% if submission_form.presenter == request.user %}
         {% if submission_form.submission.current_submission_form == submission_form %}
-            <div class="header_actions">
-                <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
-                {% for notification_type in diff_notification_types %}
-                    <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
-                {% endfor %}
-            </div>
+            <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
+            {% for notification_type in diff_notification_types %}
+                <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
+            {% endfor %}
         {% endif %}
     {% endif %}
+    {% for checklist, checklist_review_form in checklist_reviews %}
+        {% if not checklist_review_form.readonly %}
+            <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+            {% if checklist_review_form.complete_task %}
+                <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}complete {{ review }}{% endblocktrans %}</a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </div>
 {% endblock %}
 
 
@@ -279,6 +287,35 @@
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
             });
 
+            var review_save_buttons = $$('.header_actions')[0].getElements('a.review[id^=save_]');
+            review_save_buttons.each(function(el){
+                var tab_name = el.id.substring('save_'.length);
+                el.addEvent('click', function(){
+                    $(tab_name).getElement('input[type="submit"][name="save"]').click();
+                    return false;
+                });
+            }, this);
+
+            var review_close_buttons = $$('.header_actions')[0].getElements('a.review[id^=close_]');
+            review_close_buttons.each(function(el){
+                var tab_name = el.id.substring('close_'.length);
+                el.addEvent('click', function(){
+                    $(tab_name).getElement('input[type="submit"][name="complete_task"]').click();
+                    return false;
+                });
+            }, this);
+
+            {% if review_incomplete %}
+                new MooDialog.Error('{% trans "Your review is incomplete." %}');
+            {% endif %}
+            {% if review_complete %}
+                new MooDialog.Confirm('{{ _("Do you want to close the review?")|escapejs }}', function(){
+                    $('checklist_{{ review_complete }}_review_form').getElement('input[type="submit"][name="really_complete_task"]').click();
+                }, null, {
+                    okText: '{{ _("Close")|escapejs }}',
+                    cancelText: '{{ _("Don't Close")|escapejs }}'
+                })
+            {% endif %}
         });
     </script>
 {% endblock %}

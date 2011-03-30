@@ -222,9 +222,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-    form = make_checklist_form(checklist)(request.POST or None)
+    form = make_checklist_form(checklist)(request.POST or None, complete_task=True)
+    extra_context = {}
 
     if request.method == 'POST':
+        complete_task = request.POST.get('complete_task') == 'complete_task'
+        really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
         if form.is_valid():
             for i, question in enumerate(blueprint.questions.order_by('text')):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
@@ -232,9 +235,23 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 answer.comment = form.cleaned_data['c%s' % i]
                 answer.save()
 
-        checklist.save() # touch the checklist instance to trigger the post_save signal
+            checklist.save() # touch the checklist instance to trigger the post_save signal
 
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form})
+            if complete_task and checklist.is_complete:
+                extra_context['review_complete'] = checklist.pk
+            elif (complete_task or really_complete_task) and not checklist.is_complete:
+                extra_context['review_incomplete'] = True
+            elif really_complete_task and checklist.is_complete:
+                additional_review_task = submission_form.submission.additional_review_task_for(request.user)
+                external_review_task = submission_form.submission.external_review_task_for(request.user)
+                if blueprint.slug == 'additional_review' and additional_review_task:
+                    additional_review_task.done(request.user)
+                elif blueprint.slug == 'external_review' and external_review_task:
+                    external_review_task.done(request.user)
+                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+
+
+    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)
 
 
 @user_flag_required('internal')
