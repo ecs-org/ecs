@@ -10,7 +10,6 @@ from ecs.authorization import AuthorizationManager
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=50, db_index=True, unique=True)
-    min_document_count = models.PositiveIntegerField(null=True, choices=((None, 'none'), (0, _('optional documents')), (1, _('one mandatory document'))))
     multiple = models.BooleanField(default=False)
 
     class Meta:
@@ -35,7 +34,6 @@ class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     user = models.ForeignKey('auth.user')
-    documents = models.ManyToManyField('documents.Document')
     
     objects = AuthorizationManager()
 
@@ -49,12 +47,7 @@ class Checklist(models.Model):
         
     @property
     def is_complete(self):
-        if self.answers.filter(answer=None).count() == 0:
-            mindocs = self.blueprint.min_document_count
-            print mindocs, self.documents.count()
-            if mindocs is None or self.documents.count() >= mindocs:
-                return True
-        return False
+        return self.answers.filter(answer=None).count() == 0
         
     @property
     def is_positive(self):
