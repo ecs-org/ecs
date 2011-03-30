@@ -222,7 +222,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-    form = make_checklist_form(checklist)(request.POST or None, complete_task=True)
+    form = make_checklist_form(checklist)(request.POST or None, complete_task=(blueprint.slug in ['additional_review', 'external_review']))
     extra_context = {}
 
     if request.method == 'POST':
