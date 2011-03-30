@@ -157,7 +157,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         create_submission_form(20200001)
         create_submission_form(20200042)
         create_submission_form(20209942)
-        url = reverse('ecs.core.views.submission_forms')
+        url = reverse('ecs.core.views.all_submissions')
         
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)

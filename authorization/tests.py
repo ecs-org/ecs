@@ -131,7 +131,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, expect404, self.another_board_member_user, url)
 
     def test_views(self):
-        self._check_view(False, 'ecs.core.views.submission_forms')
+        self._check_view(False, 'ecs.core.views.all_submissions')
         self._check_view(False, 'ecs.core.views.readonly_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.export_submission', submission_pk=self.sf.submission.pk)
