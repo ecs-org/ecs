@@ -260,6 +260,7 @@ class TracRpc():
     debugmode = False
     link_cache = None
     httpbot = None
+    validclonetypes = ['task','story','requirement','bug']
     
     def __init__(self, username, password, protocol, hostname, urlpath, debug=False, httprealm=None):
         '''
@@ -498,11 +499,87 @@ class TracRpc():
         success, result = self._create_ticket(summary, ticket, description, verbose)
         if success:
             print "created ticket %d" % result
+            return result
         else:
             print "error creating ticket:"
             print result
+            return False
+    
+    def clone_ticket(self, tid=None, clonetype=None, linkcloneasparent=False, linkcloneaschild=False):
+        '''clones ticket tid as ticket of type type and optionally links it as  parent or child to source/original ticket'''
+        if not tid:
+            print "no ticket supplied. returning"
+            return None
+        ticket = self._get_ticket(tid, getlinks=True)
+        if not ticket:
+            print "no ticket with id %s. returning." % tid
+            return None
+        if len(ticket['parents']) > 0:
+            print "warning! ticket %s has parents! this relation will not be cloned!" % tid
+            confirm = raw_input("continue?(y/n)")
+            if confirm.lower() != 'y':
+                print "cloning of ticket %s aborted." % tid
+                return
+        if len(ticket['children']) > 0:
+            print "warning! ticket %s has children! this relation will not be cloned! children aswell won't be cloned."
+            confirm = raw_input("continue?(y/n)")
+            if confirm.lower() != 'y':
+                print "cloning of ticket %s aborted." % tid
+                return
+        
+        if ticket['type'] == '' or ticket['type'] == None:
+            print "ticket %s has no type! returning." % ticket['id']
+            return None
+        if clonetype not in self.validclonetypes:
+            print "type '%s' is not a valid type to clone 'into'" % clonetype
+            return None
+        
+        cloneticket = ticket
+        cloneticket['type'] = clonetype
+        success, result = self._create_ticket(cloneticket['summary'], cloneticket, cloneticket['description'])
+        if success:
+            print "ticket %s created as clone of %s" % (result, tid)
+            if linkcloneasparent:
+                self.link_tickets(int(result), [tid], deletenonlistedtargets=False)
+            if linkcloneaschild:
+                self.link_tickets(tid, [int(result)], deletenonlistedtargets=False)
+            return result
+        else:
+            print "cloning of %s as story failed" % (taskid)
+            return None
         
         
+    def clone_storyfromtask_andlinkthem(self, taskid=None):
+        '''takes a ticket w type=task and creates a story with same content as task and links the task to the story'''
+        if not taskid:
+            print "no task ticket supplied. returning"
+            return None
+        taskticket = self._get_ticket(taskid, getlinks=True)
+        if not taskticket:
+            print "no ticket with id %s. returning." % taskid
+            return None
+        if len(taskticket['parents']) > 0:
+            print "this task already has parentlink(s)! returning"
+            return None
+    
+        if taskticket.has_key("type"):
+            if taskticket['type'] != 'task':
+                print "ticket %s is not of type task! returning." % ticket['id']
+                return None
+        else:
+            print "ticket %s has no type! returning." % ticket['id']
+            return None
+        
+        story = taskticket
+        story['type'] = 'story'
+        success, result = self._create_ticket(story['summary'], story, story['description'])
+        if success:
+            print "ticket %s created as clone of %s" % (result, taskid)
+            self.link_tickets(int(result), [taskid], deletenonlistedtargets=False)
+            return result
+        else:
+            print "cloning of %s as story failed" % (taskid)
+            return None
     
     def show_ticket(self, tid, verbose=False):
         '''
@@ -858,11 +935,12 @@ class TracRpc():
                                         ' '*(termwidth-10-len(truncated_line)),
                                         ticket['remaining_time'] if ticket['remaining_time'] is not None else '-')
     
-    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80, tidlist=None, fieldlist=None):
+    def simple_query(self, query=None, verbose=False, only_numbers=False, skip=None, maxlinewidth=80, tidlist=None, fieldlist=None, parentids=None, childids=None):
         '''query trac for tickets and print them in a readable way '''
         
-        if (not query and not tidlist):
-            print "please supply a query"
+        
+        if (not query and not tidlist and not isinstance(parentids,list) and not isinstance(childids,list)):
+            print "please supply a query or ticketids or parentids or childids"
             return
         elif tidlist and len(tidlist) < 1:
             print "id list has len 0. returning"
@@ -870,8 +948,14 @@ class TracRpc():
         
         if query:
             ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, query) # XXX trac has max=100 many queries
-        else:
+        elif tidlist:
             ticket_ids = tidlist
+        elif isinstance(parentids,list) or isinstance(childids,list):
+            #get ALL TICKET
+            ticket_ids = self._safe_rpc(self.jsonrpc.ticket.query, 'max=0')
+        else:
+            print "hmm should you ever reach this point? no query, no ticket ids, no parentids, no childids..."
+            ticket_ids = []
         
         if skip:
             if skip > len(ticket_ids):
@@ -879,6 +963,38 @@ class TracRpc():
                 skip = 0
             else:
                 ticket_ids = ticket_ids[skip:]
+        
+        if isinstance(parentids,list):
+            tmp_ticket_ids = []
+            if len(parentids) > 0:
+                for id in ticket_ids:
+                    for pid in parentids:
+                        if pid in self.link_cache.get_ticket_parents(id):
+                            if id not in tmp_ticket_ids:
+                                tmp_ticket_ids.append(id)
+            else:
+                #empty parentids list means get tickets that dont have any parents
+                for id in ticket_ids:
+                    if len(self.link_cache.get_ticket_parents(id)) == 0:
+                        tmp_ticket_ids.append(id)
+            
+            ticket_ids = tmp_ticket_ids
+        
+        if isinstance(childids,list):
+            tmp_ticket_ids = []
+            if len(childids) > 0:
+                for id in ticket_ids:
+                    for pid in childids:
+                        if pid in self.link_cache.get_ticket_childs(id):
+                            if id not in tmp_ticket_ids:
+                                tmp_ticket_ids.append(id)
+            else:
+                #empty childids list means get tickets that dont have any parents
+                for id in ticket_ids:
+                    if len(self.link_cache.get_ticket_childs(id)) == 0:
+                        tmp_ticket_ids.append(id)
+                
+            ticket_ids = tmp_ticket_ids
         
         if only_numbers:
             idlist = ",".join(unicode(id) for id in ticket_ids)
