@@ -157,23 +157,23 @@ class SubmissionViewsTestCase(LoginTestCase):
         create_submission_form(20200001)
         create_submission_form(20200042)
         create_submission_form(20209942)
-        url = reverse('ecs.core.views.submission_forms')
+        url = reverse('ecs.core.views.all_submissions')
         
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len(response.context['unscheduled_submissions']), 3)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 3)
         
         response = self.client.get(url, {'keyword': '42'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len(response.context['unscheduled_submissions']), 2)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 2)
         
         response = self.client.get(url, {'keyword': '2020/42'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len(response.context['unscheduled_submissions']), 1)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
 
         response = self.client.get(url, {'keyword': '42/2020'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len(response.context['unscheduled_submissions']), 1)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
         
     def test_submission_form_copy(self):
         submission_form = create_submission_form(presenter=self.user)

@@ -222,7 +222,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-    form = make_checklist_form(checklist)(request.POST or None, complete_task=True)
+    form = make_checklist_form(checklist)(request.POST or None, complete_task=(blueprint.slug in ['additional_review', 'external_review']))
     extra_context = {}
 
     if request.method == 'POST':
@@ -423,7 +423,7 @@ def submission_pdf(request, submission_form_pk=None):
         })
         if not submission_form.pdf_document:
             doctype = DocumentType.objects.get(identifier='other')
-            doc = Document.objects.create_from_buffer(pdf, doctype=doctype)
+            doc = Document.objects.create_from_buffer(pdf, doctype=doctype, parent_object=submission_form)
             submission_form.pdf_document = doc
             submission_form.save()
     else:
@@ -559,6 +559,14 @@ def all_submissions(request):
             num = int(m.group(1))
             year = int(m.group(2))
             submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+        if re.match(r'([a-zA-Z0-9]{5,32})', keyword):
+            ct = ContentType.objects.get_for_model(Submission)
+            document_q = Document.objects.filter(uuid_document__icontains=keyword, content_type=ct).values('object_id').query
+            submissions_q |= Q(pk__in=document_q)
+            ct = ContentType.objects.get_for_model(SubmissionForm)
+            document_q = Document.objects.filter(uuid_document__icontains=keyword, content_type=ct).values('object_id').query
+            submissions_q |= Q(current_submission_form__pk__in=document_q)
+
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
             submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
