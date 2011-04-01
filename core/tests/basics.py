@@ -14,6 +14,6 @@ class CoreUrlsTest(LoginTestCase):
         self.failUnlessEqual(response.status_code, 200)
         
     def test_submission_forms(self):
-        response = self.client.get(reverse('ecs.core.views.submission_forms'))
+        response = self.client.get(reverse('ecs.core.views.all_submissions'))
         self.failUnlessEqual(response.status_code, 200)
 
