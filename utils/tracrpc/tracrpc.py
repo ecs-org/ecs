@@ -452,6 +452,10 @@ class TracRpc():
             ticket['component'] = self._get_field(rawticket, 'component')
             ticket['status'] = self._get_field(rawticket, 'status')
             ticket['rd_points'] = self._get_field(rawticket, 'rd_points')
+            ticket['resolution'] = self._get_field(rawticket, 'resolution')
+            ticket['owner'] = self._get_field(rawticket, 'owner')
+            ticket['severity'] = self._get_field(rawticket, 'severity')
+            ticket['sprint'] = self._get_field(rawticket, 'sprint')
             return ticket
         
     
