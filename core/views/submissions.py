@@ -352,7 +352,11 @@ def create_submission_form(request):
 
         if submit_now:
             submission_form = form.save(commit=False)
-            submission = request.docstash.get('submission') or Submission.objects.create()
+            submission = request.docstash.get('submission')
+            if submission:   # refetch submission object because it could have changed
+                submission = Submission.objects.get(pk=submission.pk)
+            else:
+                submission = Submission.objects.create()
             submission_form.submission = submission
             submission_form.presenter = request.user
             submission_form.is_notification_update = bool(notification_type)
