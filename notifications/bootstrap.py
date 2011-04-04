@@ -44,10 +44,10 @@ def notification_workflow():
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name=_("Start")),
-            'initial_amendment_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_("Edit Notification Answer")),
+            'initial_amendment_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_("Initial Amendment Review")),
             'regular_review': Args(Generic, name="Regular Review"),
-            'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Edit Notification Answer")),
-            'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Edit Notification Answer")),
+            'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Notification Answer")),
+            'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Notification Answer")),
             'sign_notification_answer': Args(SignNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Sign Notification Answer")),
             'sign_executive_notification_answer': Args(SignNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Sign Notification Answer")),
             'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, end=True, name=_("Distribute Notification Answer")),
