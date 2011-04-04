@@ -35,10 +35,10 @@ class TaskQuerySet(models.query.QuerySet):
         return self.filter(content_type=ct, data_id=data.pk)
 
     def acceptable_for_user(self, user):
-        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__indisposed=True)).exclude(deleted_at__isnull=True)
+        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__indisposed=True)).exclude(deleted_at__isnull=False)
 
     def for_user(self, user, activity=None, data=None):
-        qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=True)
+        qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)
         if activity:
             qs = qs.filter(workflow_token__node__node_type=activity._meta.node_type)
         if data:
@@ -48,7 +48,7 @@ class TaskQuerySet(models.query.QuerySet):
 
     def for_widget(self, user):
         not_for_widget = ['resubmission', 'additional_review', 'external_review']
-        return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget).exclude(deleted_at__isnull=True)
+        return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
 class TaskManager(AuthorizationManager):
     def get_base_query_set(self):
