@@ -428,9 +428,42 @@ def auth_ec_staff_users():
         u'legal_review': (u"42 ?",),
         u'insurance_review': (u"42 ?",),
         u'boardmember_review': (u"42 ?",),
-        u'external_review': (u"42 ?",),
+        u'external_review': (
+            u'1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',
+            u'''1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?
+                    Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit
+                    der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!''',
+            u'2. Ist die Fragestellung des Projektes relevant/wenig relevant/bereits bearbeitet/irrelevant?',
+            u'3. Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',
+            u'3a. Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',
+            u'''4a. Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?
+                    - durch eine neue Substanz mit hoher Nebenwirkungsrate
+                    - durch eine spezielle Dosierung von Medikamenten
+                    - durch radioaktive Isotope
+                    - durch Vorenthalten einer wirksamen Therapie''',
+            u'4b. Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',
+            u'5a. Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',
+            u'5b. Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',
+            u'6. Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',                     
+        ),
         u'additional_review': (u"42 ?",),
-        u'gcp_review': (u"42 ?",),
+        u'gcp_review': (
+            u'1. Sind die Allgemeinen Informationen ausreichend und korrekt angegeben?',
+            u'2. Sind die Hintergrund Informationen ausreichend und korrekt angegeben?',
+            u'3. Ist das Studienziel und der Studienzweck detailiert beschrieben?',
+            u'4. Ist das Studiendesign ausreichend dargelegt? (Endpunkte, Studienphase, Bias-Vermeidung, Prüfpräparat, Labelling, Dauer, Beendigung, Accountability, Randomisierung, Source Daten)',
+            u'5. Sind Patientenauswahl und -Austritts bzw. Abbruchkriterien ausreichend definiert? (Ein-/Ausschluss, Abbruch, Datenerhebung, follow up, Ersatz)',
+            u'6. Ist die Behandlung der Studienteilnehmer, samt erlaubter/nicht erlaubter Medikation und Überprüfungsverfahren ausreichend definiert?',
+            u'7. Sind die Efficacy Parameter sowie Methoden, zeitliche Planung und Erfassung & Analyse d. Efficacy Parameter ausreichend definiert?',
+            u'8. Ist Safety und Safety Reporting ausreichend definiert, und adäquat?',
+            u'9. Sind die Angaben zur statistischen Datenerhebung, -Auswertung, -Methoden ausreichend und adäquat?',
+            u'10. Ist die Qualitätskontrolle und Qualitätssicherung ausreichend beschrieben und sind diese Angaben adäquat?',
+            u'11. Ethik?',
+            u'12. Sind Angaben zu Datenerhebung‐. Dokumentation – und Verarbeitung ausreichend definiert und sind diese adäquat?',
+            u'13. Sind Angaben zu Finanzierung und Versicherung ausreichend definiert und sind diese adäquat?',
+            u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',
+            u'15. Anhang, wenn zutreffend?',
+        ),
     }
 
     for slug in questions.keys():
