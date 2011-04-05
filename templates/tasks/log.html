@@ -20,7 +20,7 @@
             <th></th><th></th>
         </tr>
     {% for task in tasks %}
-        <tr class="task{% if task.closed_at %} closed{% endif %}">
+        <tr class="task{% if task.closed_at %} closed{% endif %}{% if task.deleted_at %} deleted{% endif %}">
             <td>{{ task.pk }}</td>
             <td>{{ task.task_type }}</td>
             <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
