@@ -136,6 +136,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     submission_forms = reversed(submission_forms)
     
+    with sudo():
+        cancelable_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid__in=['additional_review', 'external_review'], closed_at=None)
+
     from ecs.notifications.models import NotificationType
     context = {
         'form': form,
@@ -152,6 +155,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
+        'cancelable_tasks': cancelable_tasks,
     }
     
     if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
@@ -175,6 +179,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
 
+@user_flag_required('internal')
+def delete_task(request, submission_form_pk=None, task_pk=None):
+    with sudo():
+        task = get_object_or_404(Task, pk=task_pk)
+    task.deleted_at = datetime.now()
+    task.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 @user_flag_required('internal')
 def retrospective_thesis_review(request, submission_form_pk=None):

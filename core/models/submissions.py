@@ -171,14 +171,14 @@ class Submission(models.Model):
     def external_review_task_for(self, user):
         from ecs.tasks.models import Task
         try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None)[0]
+            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
     
     def additional_review_task_for(self, user):
         from ecs.tasks.models import Task
         try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', closed_at=None)[0]
+            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
     

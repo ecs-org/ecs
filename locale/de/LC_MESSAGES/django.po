@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-30 17:46+0200\n"
+"POT-Creation-Date: 2011-04-05 11:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1417,74 +1417,74 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/forms.py:134
+#: core/forms/forms.py:129
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:342 core/forms/forms.py:364 core/forms/forms.py:389
+#: core/forms/forms.py:337 core/forms/forms.py:359 core/forms/forms.py:384
 #: templates/boilerplate/list.html:10 templates/fastlane/status.html:18
 #: templates/meetings/status.html:21
 msgid "New"
 msgstr "Neu"
 
-#: core/forms/forms.py:343 core/forms/forms.py:365 core/forms/forms.py:390
+#: core/forms/forms.py:338 core/forms/forms.py:360 core/forms/forms.py:385
 #: templates/core.html:69
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:344 core/forms/forms.py:366 core/forms/forms.py:391
+#: core/forms/forms.py:339 core/forms/forms.py:361 core/forms/forms.py:386
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:347 core/forms/forms.py:369 core/forms/forms.py:394
+#: core/forms/forms.py:342 core/forms/forms.py:364 core/forms/forms.py:389
 #: core/forms/layout.py:64 core/forms/layout.py:66
 #: templates/tasks/tasks.inc:20 templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:348 core/forms/forms.py:370 core/forms/forms.py:395
+#: core/forms/forms.py:343 core/forms/forms.py:365 core/forms/forms.py:390
 #: core/forms/layout.py:73 core/forms/layout.py:75
 #: templates/tasks/tasks.inc:21 templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:349 core/forms/forms.py:371 core/forms/forms.py:396
+#: core/forms/forms.py:344 core/forms/forms.py:366 core/forms/forms.py:391
 #: core/forms/wizard.py:51
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:350 core/forms/forms.py:372 core/forms/forms.py:397
+#: core/forms/forms.py:345 core/forms/forms.py:367 core/forms/forms.py:392
 #: templates/tasks/tasks.inc:23 templates/tasks/tasks_full.inc:22
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:375 core/forms/forms.py:400
+#: core/forms/forms.py:370 core/forms/forms.py:395
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:376 core/forms/forms.py:401
+#: core/forms/forms.py:371 core/forms/forms.py:396
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:377 core/forms/forms.py:402
+#: core/forms/forms.py:372 core/forms/forms.py:397
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:378 core/forms/forms.py:403
+#: core/forms/forms.py:373 core/forms/forms.py:398
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:406 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:401 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:407 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:402 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:408
+#: core/forms/forms.py:403
 msgid "Other Studies"
 msgstr "Andere Studien"
 
@@ -1905,10 +1905,15 @@ msgstr "Zeitfenster"
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: notifications/bootstrap.py:47 notifications/bootstrap.py:49
-#: notifications/bootstrap.py:50
-msgid "Edit Notification Answer"
-msgstr "Meldungsantwort bearbeiten"
+#: notifications/bootstrap.py:47
+#, fuzzy
+msgid "Initial Amendment Review"
+msgstr "Formale Prüfung Einreichung"
+
+#: notifications/bootstrap.py:49 notifications/bootstrap.py:50
+#: templates/notifications/answers/xhtml2pdf/base.html:9
+msgid "Notification Answer"
+msgstr "Meldungsantwort"
 
 #: notifications/bootstrap.py:51 notifications/bootstrap.py:52
 msgid "Sign Notification Answer"
@@ -2532,10 +2537,6 @@ msgstr "Verteilen"
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
 
-#: templates/notifications/answers/xhtml2pdf/base.html:9
-msgid "Notification Answer"
-msgstr "Meldungsantwort"
-
 #: templates/notifications/view/AmendmentNotificationForm.html:10
 msgid "Old Version"
 msgstr "Alte Version"
@@ -2822,6 +2823,22 @@ msgstr "Befangene Parteien"
 #: templates/submissions/tabs/status.html:48
 msgid "Reschedule"
 msgstr "Neu planen"
+
+#: templates/submissions/tabs/status.html:71
+#, python-format
+msgid ""
+"\n"
+"        %(task_name)s (%(assigned_to)s), invited at %(assigned_at)s\n"
+"    "
+msgstr ""
+"\n"
+"        %(task_name)s (%(assigned_to)s), eingeladen am %(assigned_at)s\n"
+"    "
+
+#: templates/submissions/tabs/status.html:76
+#, fuzzy
+msgid "No additional/external review"
+msgstr "Zusatz-Review"
 
 #: templates/tasks/manage_task.html:5
 msgid "Show all tasks"
@@ -3251,6 +3268,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Edit Notification Answer"
+#~ msgstr "Meldungsantwort bearbeiten"
 
 #~ msgid "optional documents"
 #~ msgstr "Optionale Unterlagen"

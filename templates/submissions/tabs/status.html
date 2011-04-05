@@ -63,6 +63,23 @@
     </td></tr>
     <tr><th>Exedited Review:</th><td colspan="3">{{ submission_form.submission.expedited|yesno }}</td></tr>
 </table>
+
+{% if user|has_flag:'internal' %}
+<ul>
+{% for task in cancelable_tasks %}
+    <li>
+        {% blocktrans with task.task_type as task_name and task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}
+            {{ task_name }} ({{ assigned_to }}), invited at {{ assigned_at }}
+        {% endblocktrans %}
+        <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
+    </li>
+{% empty %}
+    <li><i>{% trans "No additional/external review" %}</i></li>
+{% endfor %}
+</ul>
+{% endif %}
+
+
 <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}">Export</a>
 {% if show_reviews and befangene_review_form %}
     | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab">Befangene Review</a>

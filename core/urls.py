@@ -12,6 +12,8 @@ urlpatterns = patterns(
     url(r'^submission/(?P<submission_pk>\d+)/export/$', 'ecs.core.views.export_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/tasks/log/$', 'ecs.tasks.views.task_backlog'),
 
+    url(r'^submission/(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', 'ecs.core.views.submissions.delete_task'),
+
     url(r'^submission_form/(?P<submission_form_pk>\d+)/$', 'ecs.core.views.readonly_submission_form'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/pdf/$', 'ecs.core.views.submission_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/copy/$', 'ecs.core.views.copy_submission_form'),
