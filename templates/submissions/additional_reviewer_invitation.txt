@@ -1,0 +1,4 @@
+{% load i18n core %}
+{% blocktrans with submission|ec_number as ec_number %}
+You have been invited to make an additional review for the study {{ ec_number }}.
+{% endblocktrans %}

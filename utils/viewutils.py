@@ -1,4 +1,4 @@
-from django.template import RequestContext, Context, loader, Template
+from django.template import RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
 from piston.handler import BaseHandler
 
