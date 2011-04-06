@@ -54,7 +54,7 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
-        ChecklistReview, ExternalChecklistReview, ExternalReviewInvitation, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
+        ChecklistReview, ExternalChecklistReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import (is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review,
         needs_insurance_review, needs_gcp_review)
     
@@ -99,7 +99,6 @@ def submission_workflow():
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
-            'external_review_invitation': Args(ExternalReviewInvitation, group=OFFICE_GROUP, name=_("External Review Invitaion")),
             'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP, name=_("Vote Recommendation Review")),
         },
@@ -130,11 +129,9 @@ def submission_workflow():
 
             #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
-            ('categorization_review', 'external_review_invitation'): Args(guard=needs_external_review),
+            ('categorization_review', 'external_review'): Args(guard=needs_external_review),
             ('categorization_review', 'additional_review_split'): None,
             
-            ('external_review_invitation', 'external_review'): None,
-            ('external_review', 'external_review_invitation'): Args(deadline=True),
             ('additional_review_split', 'additional_review'): None,
 
             ('generic_review', 'board_member_review'): None,

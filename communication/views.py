@@ -18,6 +18,7 @@ from ecs.communication.models import Message, Thread
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
+from ecs.communication.utils import send_message
 
 def new_thread(request, submission_pk=None, to_user_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
@@ -37,16 +38,7 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
     thread = None
 
     if request.method == 'POST' and form.is_valid():
-        if not thread:
-            thread = Thread.objects.create(
-                subject=form.cleaned_data['subject'],
-                sender=request.user, 
-                receiver=form.cleaned_data['receiver'],
-                task=task,
-                submission=submission,
-            )
-
-        message = thread.add_message(request.user, text=form.cleaned_data['text'])
+        thread = send_message(request.user, form.cleaned_data['receiver'], form.cleaned_data['subject'], form.cleaned_data['text'], submission=submission, task=task)
         return redirect_to_next_url(request, reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': thread.pk}))
 
     return render(request, 'communication/send.html', {
@@ -64,14 +56,14 @@ def read_thread(request, thread_pk=None):
         msg.unread = False
         msg.save()
 
-    def get_reply_text(msg):
+    def _get_reply_text(msg):
         if msg.sender == request.user:  # bump
             return u'\n>' + u'\n>'.join(msg.text.splitlines())
         else:
             reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
             return reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
 
-    form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': get_reply_text(msg)})
+    form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': _get_reply_text(msg)})
 
     if request.method == 'POST' and form.is_valid():
         delegate_to = form.cleaned_data.get('to')
@@ -88,7 +80,7 @@ def read_thread(request, thread_pk=None):
                 submission=thread.submission,
             )
         msg = thread.add_message(request.user, text=form.cleaned_data['text'])
-        form = ReplyDelegateForm(request.user, None, initial={'text': get_reply_text(msg)})
+        form = ReplyDelegateForm(request.user, None, initial={'text': _get_reply_text(msg)})
 
     return render(request, 'communication/thread.html', {
         'thread': thread,

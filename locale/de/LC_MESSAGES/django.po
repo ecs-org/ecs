@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-05 11:31+0200\n"
+"POT-Creation-Date: 2011-04-06 20:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -151,11 +151,11 @@ msgstr "Neue ECS-Mail: von {sender} an {receiver}."
 msgid "Subject: {subject}{linesep}{text}"
 msgstr "Betreff: {subject}{linesep}{text}"
 
-#: communication/views.py:71
+#: communication/views.py:63
 msgid "{sender} schrieb:"
 msgstr ""
 
-#: communication/views.py:84
+#: communication/views.py:76
 msgid "Anfrage bezüglich: {0}"
 msgstr ""
 
@@ -164,12 +164,12 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:84 core/bootstrap.py:163 notifications/bootstrap.py:46
+#: core/bootstrap.py:84 core/bootstrap.py:160 notifications/bootstrap.py:46
 #: users/bootstrap.py:23
 msgid "Start"
 msgstr "Start"
 
-#: core/bootstrap.py:85 core/bootstrap.py:164
+#: core/bootstrap.py:85 core/bootstrap.py:161
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
@@ -244,46 +244,42 @@ msgid "GCP Review"
 msgstr "Vorschau"
 
 #: core/bootstrap.py:102
-msgid "External Review Invitaion"
-msgstr "Einladung Gutachter"
-
-#: core/bootstrap.py:103
 msgid "Vote Recommendation"
 msgstr ""
 
-#: core/bootstrap.py:104
+#: core/bootstrap.py:103
 msgid "Vote Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:165
+#: core/bootstrap.py:162
 msgid "B2 Upgrade"
 msgstr ""
 
-#: core/bootstrap.py:166
+#: core/bootstrap.py:163
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: core/bootstrap.py:167
+#: core/bootstrap.py:164
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: core/bootstrap.py:168
+#: core/bootstrap.py:165
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: core/bootstrap.py:169
+#: core/bootstrap.py:166
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: core/bootstrap.py:170 core/bootstrap.py:171
+#: core/bootstrap.py:167 core/bootstrap.py:168
 msgid "Office Vote Review"
 msgstr ""
 
-#: core/bootstrap.py:172
+#: core/bootstrap.py:169
 msgid "Vote Signing"
 msgstr ""
 
-#: core/bootstrap.py:173
+#: core/bootstrap.py:170
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
@@ -1386,13 +1382,21 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:87
+#: core/workflow.py:88
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:88
+#: core/workflow.py:89
 msgid "Reject"
 msgstr "Ablehnen"
+
+#: core/workflow.py:141
+msgid "External Review Invitation"
+msgstr "Einladung Gutachten"
+
+#: core/workflow.py:143
+msgid "Additional Review Invitation"
+msgstr "Einladung Zusatz-Gutachten"
 
 #: core/forms/checklist.py:14 core/models/voting.py:30
 msgid "comment"
@@ -2564,6 +2568,17 @@ msgstr ""
 msgid "Share"
 msgstr "Teilen"
 
+#: templates/submissions/additional_reviewer_invitation.txt:2
+#, python-format
+msgid ""
+"\n"
+"You have been invited to make an additional review for the study "
+"%(ec_number)s.\n"
+msgstr ""
+"\n"
+"Sie wurden eingeladen ein Zusatz-Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
+
 #: templates/submissions/base_form.html:12
 msgid "Submission"
 msgstr "Einreichung"
@@ -2579,6 +2594,17 @@ msgstr "Register der Genehmigten Studien"
 #: templates/submissions/catalog.html:24
 msgid "Meeting from"
 msgstr "Sitzung vom"
+
+#: templates/submissions/external_reviewer_invitation.txt:2
+#, python-format
+msgid ""
+"\n"
+"You have been invited to make an external review for the study "
+"%(ec_number)s.\n"
+msgstr ""
+"\n"
+"Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
 
 #: templates/submissions/form.html:18
 msgid "Submit Amendment"
@@ -2825,17 +2851,22 @@ msgid "Reschedule"
 msgstr "Neu planen"
 
 #: templates/submissions/tabs/status.html:71
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"        %(task_name)s (%(assigned_to)s), invited at %(assigned_at)s\n"
-"    "
+"            %(task_name)s (%(assigned_to)s), invited at %(assigned_at)s\n"
+"        "
 msgstr ""
 "\n"
 "        %(task_name)s (%(assigned_to)s), eingeladen am %(assigned_at)s\n"
 "    "
 
-#: templates/submissions/tabs/status.html:76
+#: templates/submissions/tabs/status.html:74
+#, fuzzy
+msgid "delete"
+msgstr "gelöscht"
+
+#: templates/submissions/tabs/status.html:77
 #, fuzzy
 msgid "No additional/external review"
 msgstr "Zusatz-Review"

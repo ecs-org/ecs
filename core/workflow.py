@@ -11,6 +11,7 @@ from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
+from ecs.communication.utils import send_system_message_template
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -136,6 +137,11 @@ class CategorizationReview(Activity):
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
+        if s.external_reviewer:
+            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
+        for add_rev in s.additional_reviewers.all():
+            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
+
 class PaperSubmissionReview(Activity):
     class Meta:
         model = Submission
@@ -198,6 +204,7 @@ def external_review_declined(sender, **kwargs):
 task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
+# remove the following activity when there is no system where it is referenced in the database
 class ExternalReviewInvitation(Activity):
     class Meta:
         model = Submission
