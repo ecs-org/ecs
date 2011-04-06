@@ -11,6 +11,7 @@ from ecs.users.utils import get_current_user
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
+from ecs.communication.utils import send_system_message
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -135,6 +136,12 @@ class CategorizationReview(Activity):
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
+
+        if s.external_reviewer:
+            send_system_message(s.external_reviewer_name, _('External Review Invitation'), _('You have been invited to make an external review for the study {0}').format(s.get_ec_number_display()))
+        for add_rev in s.additional_reviewers.all():
+            pass
+            #send_system_message(add_rev)
 
 class PaperSubmissionReview(Activity):
     class Meta:

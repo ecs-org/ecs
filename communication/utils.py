@@ -36,6 +36,9 @@ def send_message(sender, receiver, subject, text, submission=None, task=None):
     message = thread.add_message(sender, text=text)
     return thread
 
+def send_system_message(*args, **kwargs):
+    return send_message(get_user('root@example.org'), *args, **kwargs)
+
 @msg_fun
 def send_message_template(request, template, context, *args, **kwargs):
     context.setdefault('sender', sender)
