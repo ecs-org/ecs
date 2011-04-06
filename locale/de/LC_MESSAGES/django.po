@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-06 20:25+0200\n"
+"POT-Creation-Date: 2011-04-06 22:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1390,11 +1390,19 @@ msgstr "Bestätigen"
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:141
+#: core/workflow.py:99
+msgid "Study acknowledged"
+msgstr "Studie angenommen"
+
+#: core/workflow.py:101
+msgid "Study declined"
+msgstr "Studie abgelehnt"
+
+#: core/workflow.py:147
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:143
+#: core/workflow.py:149
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -2568,6 +2576,15 @@ msgstr ""
 msgid "Share"
 msgstr "Teilen"
 
+#: templates/submissions/acknowledge_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"Your study \"%(project_title)s\" (%(ec_number)s) has been acknowledged.\n"
+msgstr ""
+"\n"
+"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde angenommen.\n"
+
 #: templates/submissions/additional_reviewer_invitation.txt:2
 #, python-format
 msgid ""
@@ -2594,6 +2611,17 @@ msgstr "Register der Genehmigten Studien"
 #: templates/submissions/catalog.html:24
 msgid "Meeting from"
 msgstr "Sitzung vom"
+
+#: templates/submissions/decline_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"Your study \"%(project_title)s\" (%(ec_number)s) has been declined. You can "
+"resubmit your study.\n"
+msgstr ""
+"\n"
+"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie können "
+"die Studie neu einreichen.\n"
 
 #: templates/submissions/external_reviewer_invitation.txt:2
 #, python-format

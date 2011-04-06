@@ -90,9 +90,15 @@ class InitialReview(Activity):
         )
         
     def pre_perform(self, choice):
-        sf = self.workflow.data.current_submission_form
+        s = self.workflow.data
+        sf = s.current_submission_form
         sf.acknowledged = choice
         sf.save()
+
+        if sf.acknowledged:
+            send_system_message_template(sf.presenter, _('Study acknowledged'), 'submissions/acknowledge_message.txt', None, submission=s)
+        else:
+            send_system_message_template(sf.presenter, _('Study declined'), 'submissions/decline_message.txt', None, submission=s)
 
 class Resubmission(Activity):
     class Meta:
