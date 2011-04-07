@@ -456,7 +456,7 @@ def auth_ec_staff_users():
             u' 9. Sind die Angaben zur statistischen Datenerhebung, -Auswertung, -Methoden ausreichend und adäquat?',
             u'10. Ist die Qualitätskontrolle und Qualitätssicherung ausreichend beschrieben und sind diese Angaben adäquat?',
             u'11. Ethik?',
-            u'12. Sind Angaben zu Datenerhebung‐. Dokumentation – und Verarbeitung ausreichend definiert und sind diese adäquat?',
+            u'12. Sind Angaben zu Datenerhebung, Dokumentation und Verarbeitung ausreichend definiert und sind diese adäquat?',
             u'13. Sind Angaben zu Finanzierung und Versicherung ausreichend definiert und sind diese adäquat?',
             u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',
             u'15. Anhang, wenn zutreffend?',
