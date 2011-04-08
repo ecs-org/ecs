@@ -1,6 +1,6 @@
 {% load core i18n %}
 {% blocktrans with recipient as recipient and meeting.start|date:'d.m.Y, H:i' as meeting_start %}
-Sehr geehrte/r Frau/Herr {{ receiver }},
+Sehr geehrte/r {{ receiver }},
 
 sie sind eingeladen für die Sitzung der Ethik-Kommission
 am {{ meeting_start }} Uhr, sine tempore
