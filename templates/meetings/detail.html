@@ -10,7 +10,7 @@
             <ul class="tab_headers">
                 <li><a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a></li>
                 {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-                    <li><a href="{% url ecs.meetings.views.medical_categories meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
+                    <li><a href="{% url ecs.meetings.views.expert_assignment meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
                     <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
                 {% endif %}
                 {% if user|is_member_of:"EC-Signing Group" %}

@@ -1,6 +1,8 @@
 from django.core.urlresolvers import reverse
-from ecs.workflow import Activity, guard
+from ecs.workflow import Activity, guard, register
 from ecs.meetings.models import Meeting
+
+register(Meeting)
 
 
 class MeetingAgendaPreparation(Activity):
@@ -35,3 +37,11 @@ class MeetingProtocolSending(Activity):
         model = Meeting
 
     pass
+
+class MeetingExpertAssignment(Activity):
+    class Meta:
+        model = Meeting
+
+    def get_url(self):
+        return reverse('ecs.meetings.views.expert_assignment_edit', kwargs={'meeting_pk': self.workflow.data.pk})
+

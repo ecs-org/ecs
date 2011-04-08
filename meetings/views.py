@@ -123,7 +123,24 @@ def timetable_editor(request, meeting_pk=None):
         'running_optimization': bool(meeting.optimization_task_id),
     })
     
-def medical_categories(request, meeting_pk=None):
+def expert_assignment(request, meeting_pk=None, forms=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
+
+    categories = SortedDict()
+    for cat in required_categories:
+        try:
+            categories[cat] = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat).board_member
+        except AssignedMedicalCategory.DoesNotExist:
+            categories[cat] = None
+
+    return render(request, 'meetings/timetable/medical_categories.html', {
+        'meeting': meeting,
+        'forms': forms,
+        'categories': categories,
+    })
+
+def expert_assignment_edit(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
 
@@ -144,10 +161,7 @@ def medical_categories(request, meeting_pk=None):
                 for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
                     Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
 
-    return render(request, 'meetings/timetable/medical_categories.html', {
-        'meeting': meeting,    
-        'forms': forms,
-    })
+    return expert_assignment(request, meeting_pk=meeting_pk, forms=forms)
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
