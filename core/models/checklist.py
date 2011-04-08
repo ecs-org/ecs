@@ -20,8 +20,8 @@ class ChecklistBlueprint(models.Model):
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
-    text = models.TextField()
-    description = models.CharField(max_length=200, null=True, blank=True)
+    text = models.CharField(max_length=200) 
+    description = models.CharField(max_length=400, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
