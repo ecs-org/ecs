@@ -14,7 +14,7 @@ _ = lambda s: s
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def meeting_workflow():
     from ecs.meetings.models import Meeting
-    from ecs.meetings.workflow import MeetingAgendaPreparation, MeetingAgendaSending, MeetingDay, MeetingProtocolSending, MeetingExpertAssignment
+    from ecs.meetings.workflow import MeetingAgendaPreparation, MeetingDay, MeetingProtocolSending, MeetingExpertAssignment
 
     OFFICE_GROUP = 'EC-Office'
 
@@ -24,15 +24,13 @@ def meeting_workflow():
             'start': Args(Generic, start=True, name=_("Start")),
             'meeting_expert_assignment': Args(MeetingExpertAssignment, group=OFFICE_GROUP, name=_('Meeting Expert Assignment')),
             'meeting_agenda_generation': Args(MeetingAgendaPreparation, group=OFFICE_GROUP, name=_("Meeting Agenda Generation")),
-            'meeting_agenda_sending': Args(MeetingAgendaSending, group=OFFICE_GROUP, name=_("Meeting Agenda Sending")),
             'meeting_day': Args(MeetingDay, group=OFFICE_GROUP, name=_("Meeting Day")),
             'meeting_protocol_sending': Args(MeetingProtocolSending, group=OFFICE_GROUP, end=True, name=_("Meeting Protocol Sending")),
         }, 
         edges={
             ('start', 'meeting_expert_assignment'): None,
             ('meeting_expert_assignment', 'meeting_agenda_generation'): None,
-            ('meeting_agenda_generation', 'meeting_agenda_sending'): None,
-            ('meeting_agenda_sending', 'meeting_day'): None,
+            ('meeting_agenda_generation', 'meeting_day'): None,
             ('meeting_day', 'meeting_protocol_sending'): None,
         }
     )

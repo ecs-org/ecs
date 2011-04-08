@@ -411,32 +411,6 @@ def timetable_pdf(request, meeting_pk=None):
     })
     return pdf_response(pdf, filename=filename)
 
-def agenda_htmlemail(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-%s.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
-    )
-    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
-        'meeting': meeting,
-    })
-
-    for recipient in settings.AGENDA_RECIPIENT_LIST:        
-        htmlmail = unicode(render_html(request, 'meetings/email/invitation-with-agenda.html', {
-            'meeting': meeting,
-            'recipient': recipient,
-        }))
-        plainmail = whitewash(htmlmail)
-
-        deliver(settings.AGENDA_RECIPIENT_LIST,
-            subject=_('Invitation to meeting'), 
-            message=plainmail,
-            message_html=htmlmail,
-            attachments=[(filename, pdf,'application/pdf'),],
-            from_email=settings.DEFAULT_FROM_EMAIL,
-        )
-
-    return HttpResponseRedirect(reverse('ecs.meetings.views.upcoming_meetings'))
-
 def timetable_htmlemailpart(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     response = render(request, 'meetings/email/timetable.html', {
