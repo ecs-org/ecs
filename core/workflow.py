@@ -28,6 +28,10 @@ def is_thesis(wf):
     return wf.data.thesis
 
 @guard(model=Submission)
+def is_expedited(wf):
+    return wf.data.expedited is True
+
+@guard(model=Submission)
 def has_b2vote(wf):
     sf = wf.data.current_submission_form
     if sf.current_pending_vote:
@@ -75,6 +79,10 @@ def needs_insurance_review(wf):
 @guard(model=Submission)
 def needs_gcp_review(wf):
     return wf.data.gcp_review_required
+
+@guard(model=Submission)
+def needs_boardmember_review(wf):
+    return is_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
 
 class InitialReview(Activity):
     class Meta:
