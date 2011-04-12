@@ -1022,7 +1022,10 @@ class TracRpc():
         
         if results:
             for result in results.results['result']:
-                tickets.append(self._get_ticket_from_rawticket(result['result']))
+                if self._get_ticket_from_rawticket(result['result']) != None:
+                    tickets.append(self._get_ticket_from_rawticket(result['result']))
+                else:
+                    print result['error']['message']
         
         if not fieldlist:
             summarywidth = maxlinewidth-(5+17+11)-1 # id,milestone,prio plus spaces minus one for summary spacing
