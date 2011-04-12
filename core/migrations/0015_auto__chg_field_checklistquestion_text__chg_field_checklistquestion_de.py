@@ -7,6 +7,10 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Truncate text, so we can convert to a CharField
+        for cq in orm['core.ChecklistQuestion'].objects.all():
+            cq.text = cq.text[:200]
+            cq.save()
         
         # Changing field 'ChecklistQuestion.text'
         db.alter_column('core_checklistquestion', 'text', self.gf('django.db.models.fields.CharField')(max_length=200))
