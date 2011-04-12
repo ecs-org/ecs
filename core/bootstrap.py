@@ -56,7 +56,7 @@ def submission_workflow():
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
         ChecklistReview, ExternalChecklistReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import (is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review,
-        needs_insurance_review, needs_gcp_review)
+        needs_insurance_review, needs_gcp_review, needs_boardmember_review)
     
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
@@ -134,7 +134,7 @@ def submission_workflow():
             
             ('additional_review_split', 'additional_review'): None,
 
-            ('generic_review', 'board_member_review'): None,
+            ('generic_review', 'board_member_review'): Args(guard=needs_boardmember_review),
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): None,
             ('generic_review', 'legal_and_patient_review'): None,
