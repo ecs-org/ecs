@@ -203,6 +203,8 @@ django-reversion:inst:all:pypi:django-reversion
 # diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
+# django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main requirements for now
+django-rosetta:inst:all:pypi:django-rosetta
 """
 
 
@@ -228,6 +230,9 @@ logilab-common:inst:all:pypi:logilab-common\>=0.49.0
 logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
 #django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
+# django-test-utils is used for testmaker
+beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+django-test-utils:inst:all:pypi:django-test-utils
 """
 
 

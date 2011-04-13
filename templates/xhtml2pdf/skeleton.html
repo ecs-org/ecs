@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
   <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>{% block title %}{% endblock %}</title>
     <style type="text/css">
         {% block inline_css %}
@@ -26,7 +26,43 @@
               height: 1cm;
             }
         }
-      
+        
+        /* Normal */
+        @font-face {
+           font-family: "DejaSans";
+           src: "DejaVuSans.ttf";
+        }
+        /* Bold */
+        @font-face {
+           font-family: "DejaSans";
+           src: "DejaVuSans-Bold.ttf";
+           font-weight: bold;
+        }
+        /* Italic */
+        @font-face {
+           font-family: "DejaSans";
+           src: "DejaVuSans-Oblique.ttf";
+           font-style: italic;
+        }
+        /* Bold and italic */
+        @font-face {
+           font-family: "DejaSans";
+           src: "DejaVuSans-BoldOblique.ttf";
+           font-weight: bold;
+           font-style: italic;
+        }
+        /* Normal Monospace */
+        @font-face {
+           font-family: "DejaMono";
+           src: "DejaVuSansMono.ttf";
+        }
+        /* Bold Monospace*/
+        @font-face {
+           font-family: "DejaMono";
+           src: "DejaVuSansMono-Bold.ttf";
+           font-weight: bold;
+        }
+        
         div.header {
             text-align:center;
             font-weigth: bold;
@@ -43,7 +79,7 @@
         }
         
         body{
-            font-family: "Times New Roman", "Times", Serif;
+            font-family: DejaSans;
         }
         
         p{
@@ -51,7 +87,7 @@
         }
         
         .checkbox{
-            font-family: monospace;
+            font-family: DejaMono;
         }
         {% endblock %}
     </style>
