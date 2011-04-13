@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-13 20:30+0200\n"
+"POT-Creation-Date: 2011-04-13 22:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2485,6 +2485,10 @@ msgstr "Zeitplanung"
 msgid "Signatur der Voten"
 msgstr ""
 
+#: templates/meetings/form.html:8 templates/meetings/timetable/view.html:8
+msgid "new meeting"
+msgstr "Neue Sitzung"
+
 #: templates/meetings/reschedule.html:5
 msgid "Reschedule Submission"
 msgstr "Sitzung verlegen"
@@ -2799,18 +2803,17 @@ msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
 #: templates/submissions/readonly_form.html:145
-#, fuzzy
 msgid "There are no open notifications."
-msgstr "Es existieren derzeit keine ausstehenden Voten."
+msgstr "Es existieren derzeit keine offenen Meldungen."
 
 #: templates/submissions/readonly_form.html:148
 #: templates/submissions/readonly_form.html:166
 msgid "Create a new notification"
-msgstr ""
+msgstr "Eine neue Meldung erstellen"
 
 #: templates/submissions/readonly_form.html:163
 msgid "There are no answered notifications."
-msgstr ""
+msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 
 #: templates/submissions/readonly_form.html:203
 msgid "There are no published votes."
