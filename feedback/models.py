@@ -8,9 +8,9 @@ class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'idea'),('q','question'),('p', 'problem'),('l','praise'))
     ftdict = dict(FEEDBACK_TYPES)
     rpc_query_base = "order=id&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component"
+    tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])     
     
     def __init__(self, *args, **kwargs):
-        self.tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
         self.ftdict = dict(self.FEEDBACK_TYPES)
         feedbacktype = ''
         summary = '' 
