@@ -316,12 +316,12 @@ def auth_user_developers():
         user.is_staff = True
         user.is_superuser = is_superuser
         user.groups.add(Group.objects.get(name="Presenter"))
-        user.gender = gender
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
         profile.help_writer = True
         profile.forward_messages_after_minutes = 360
+        profile.gender = gender
         profile.save()
 
 
