@@ -176,6 +176,7 @@ INSTALLED_APPS = (
 
     'paging',
     'indexer',
+    # fixme: temporary disabled 'rosetta',
     'sentry',
     'sentry.client',
     'reversion',
@@ -239,6 +240,8 @@ PDFAS_SERVICE = 'mock:'
 # directory where to store logfiles, used by every daemon and apache
 LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 
+# directory where to store temporary files, used mostly with external utilities
+TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
@@ -328,7 +331,7 @@ DIFF_REVIEW_LIST = ('root',)
 
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
-if 'syncdb' in sys.argv or 'migrate' in sys.argv or 'test' in sys.argv or 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
+if any(word in sys.argv for word in set(['syncdb', 'migrate', 'test', 'test_windmill', 'start_windmill'])):
     # there is no user root at this time, so we cant create a audit log
     ENABLE_AUDIT_TRAIL = False
 
@@ -342,6 +345,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'djcelery.models.*',
     'ghettoq.models.*',
     'reversion.models.*',
+    'rosetta.models.*',
     
     'ecs.utils.countries.models.*',
     'ecs.tracking.models.*',
@@ -469,9 +473,11 @@ INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.
 # hack some settings for test and runserver    
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-elif 'runserver' in sys.argv or 'runconcurrentserver' in sys.argv:
+elif any(word in sys.argv for word in set(['runserver','runconcurrentserver','tesmaker'])):
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+elif 'testmaker' in sys.argv:
+    INSTALLED_APPS += ('test_utils',)
+    
 import djcelery
 djcelery.setup_loader()
 

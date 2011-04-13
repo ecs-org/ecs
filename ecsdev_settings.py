@@ -60,9 +60,8 @@ elif user == "chipper":
     }
 
 if (user in ["shredder", "testecs", "chipper"] and
-    (not 'test' in sys.argv) and (not 'runserver' in sys.argv) and (not 'runconcurrentserver' in sys.argv)):
+    (not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver', 'testmaker'])))):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)

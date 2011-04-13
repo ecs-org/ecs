@@ -5,8 +5,10 @@ from cStringIO import StringIO
 
 from django.conf import settings
 from django.template import Context, loader
+from django.utils.encoding import smart_str
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
+import ho.pisa as pisa
 
 import ecs.utils.killableprocess 
 from ecs.utils.pathutils import which
@@ -192,7 +194,7 @@ def pdf2pdfa(real_infile, real_outfile):
         '-dSAFER',
         '-dNOPLATFONTS',
         '-dEmbedAllFonts=true',
-        '-dSubsetFonts=true',
+        '-dSubsetFonts=false',
         '-sProcessColorModel=DeviceCMYK',
         '-sDEVICE=pdfwrite',
         '-dPDFACompatibilityPolicy=1',
@@ -202,14 +204,14 @@ def pdf2pdfa(real_infile, real_outfile):
     ]
 
     if not hasattr(real_infile, 'fileno'):
-        infile = tempfile.TemporaryFile()
+        infile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
         infile.write(real_infile.read())
         infile.seek(0)
     else:
         infile = real_infile
 
     if not hasattr(real_outfile, 'fileno'):
-        outfile = tempfile.TemporaryFile()
+        outfile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
     else:
         outfile = real_outfile
 
@@ -230,33 +232,247 @@ def pdf2pdfa(real_infile, real_outfile):
 
     return real_outfile.tell() - offset
 
+
+DEFAULT_CSS = """
+html {
+    font-family: DejaSans; 
+    font-size: 10px; 
+    font-weight: normal;
+    color: #000000; 
+    background-color: transparent;
+    margin: 0; 
+    padding: 0;
+    line-height: 150%;
+    border: 1px none;
+    display: inline;
+    width: auto;
+    height: auto;
+    white-space: normal;    
+}
+
+b, 
+strong { 
+    font-weight: bold; 
+}
+
+i, 
+em { 
+    font-style: italic; 
+}
+
+u {
+    text-decoration: underline;
+}
+
+s,
+strike {
+    text-decoration: line-through;
+}
+
+a {
+    text-decoration: underline;
+    color: blue;
+}
+
+ins {
+    color: green;
+    text-decoration: underline;
+}
+del {
+    color: red;
+    text-decoration: line-through;
+}
+
+pre,
+code,
+kbd,
+samp,
+tt {
+    font-family: "DejaMono";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight:bold;
+    -pdf-outline: true;    
+    -pdf-outline-open: false;
+}
+
+h1 {
+    /*18px via YUI Fonts CSS foundation*/
+    font-size:138.5%; 
+    -pdf-outline-level: 0;
+}
+
+h2 {
+    /*16px via YUI Fonts CSS foundation*/
+    font-size:123.1%;
+    -pdf-outline-level: 1;
+}
+
+h3 {
+    /*14px via YUI Fonts CSS foundation*/
+    font-size:108%;
+    -pdf-outline-level: 2;
+}
+
+h4 {
+    -pdf-outline-level: 3;
+}
+
+h5 {
+    -pdf-outline-level: 4;
+}
+
+h6 {
+    -pdf-outline-level: 5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+pre,
+hr {
+    margin:1em 0;
+}
+
+address,
+blockquote,
+body,
+center,
+dl,
+dir,
+div,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+isindex,
+menu,
+noframes,
+noscript,
+ol,
+p,
+pre,
+table,
+th,
+tr,
+td,
+ul,
+li,
+dd,
+dt,
+pdftoc {
+    display: block;
+}
+
+table {
+     -pdf-keep-in-frame-mode: shrink;
+}
+
+tr,
+th,
+td {
+
+    vertical-align: middle;
+    width: auto;
+}
+
+th {
+    text-align: center;
+    font-weight: bold;
+}
+
+center {
+    text-align: center;
+}
+
+big {
+    font-size: 125%;
+}
+
+small {
+    font-size: 75%;
+}
+
+
+ul {
+    margin-left: 1.5em;
+    list-style-type: disc;
+}
+
+ul ul {
+    list-style-type: circle;
+}
+
+ul ul ul {
+    list-style-type: square;
+}
+
+ol {
+    list-style-type: decimal;
+    margin-left: 1.5em;
+}
+
+pre {
+    white-space: pre;
+}
+
+blockquote {
+    margin-left: 1.5em;
+    margin-right: 1.5em;
+}
+
+noscript {
+    display: none;
+}  
+"""
+
 def xhtml2pdf(html, timeoutseconds=30):
     '''
     Takes custom (pisa style) xhtml and makes an pdf document out of it
-    Calls pisa `xhtml2pdf` from the commandline, takes xhtml with embedded css and returns pdf
-    Raises IOError (descriptive text, returncode, stderr) in case something went wrong
+    returns pdf data or makes error pdf data if something went wrong
+    takes fonts from ecs.utils.xhtml2pdf directory via callback fetch_resources
     '''
-    if isinstance(html, unicode):
-        html = html.encode("utf-8")
-    cmd = [which('xhtml2pdf').next(), '-q', '-', '-']
-  
-    with tempfile.NamedTemporaryFile() as t:
-        t.write(html); t.flush(); t.seek(0)
-        popen = ecs.utils.killableprocess.Popen(cmd, stdin=t, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = popen.communicate()
-        if popen.returncode != 0:
-            raise IOError('xhtml2pdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+    def fetch_resources(uri, rel):
+        """
+        Callback to allow pisa/reportlab to retrieve Images,Stylesheets, etc.
+        `uri` is the href attribute from the html link element.
+        `rel` gives a relative path, but it's not used here.
+        """
+        import string
+        valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
+        uri = ''.join(c for c in uri if c in valid_chars)
+        path = os.path.join(settings.PROJECT_DIR, 'utils', 'xhtml2pdf', uri)
+        return path
 
-    pdf = StringIO(stdout)
+    pdf = StringIO()
     pdfa = StringIO()
+    ret = "" 
 
     try:
-        pdf2pdfa(pdf, pdfa)
-        ret = pdfa.getvalue()
+        pisa.CreatePDF(html, pdf, default_css= DEFAULT_CSS, 
+            show_error_as_pdf = True, link_callback=fetch_resources)
+        pdf.seek(0)
+        #pdf2pdfa(pdf, pdfa)
+        #pdfa.seek(0)
+        ret = pdf.getvalue() # FIXME: we do NOT use pdf2pdfa after xhtml2pdf because it shredders output (pdfa.getvalue())
     finally:
         pdf.close()
         pdfa.close()
-
     return ret
 
 
