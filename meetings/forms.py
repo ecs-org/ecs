@@ -53,11 +53,6 @@ UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintF
 
 ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=True)
 
-class SubmissionSchedulingForm(forms.Form):
-    meeting = forms.ModelChoiceField(Meeting.objects.all())
-    title = forms.CharField(required=False)
-    sponsor_invited = forms.BooleanField(required=False)
-    
 
 class SubmissionReschedulingForm(forms.Form):
     from_meeting = forms.ModelChoiceField(Meeting.objects.none())

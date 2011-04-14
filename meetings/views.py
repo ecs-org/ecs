@@ -21,7 +21,7 @@ from ecs.documents.models import Document
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionSchedulingForm, SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm)
+    SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm)
 
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
@@ -295,9 +295,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             form_cls = VoteForm
         form = form_cls(request.POST or None, instance=vote)
         if form.is_valid():
-            vote = form.save(commit=False)
-            vote.top = top
-            vote.save()
+            vote = form.save(top)
             if autosave:
                 return HttpResponse('OK')
             if form.cleaned_data['close_top']:
