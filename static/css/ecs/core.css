@@ -362,7 +362,7 @@ li.TypedChoiceField ul > li label{
   margin-left: none;
 }
 .paginator {
-  margin: 5px 0 10px 10px;
+  margin: 5px 0 15px 10px;
   display: block;
 }
 .paginator img {
@@ -389,6 +389,7 @@ li.TypedChoiceField ul > li label{
   line-break: normal;
 }
 .form_main table, .form_main ol, .form_main select, .form_main option, .form_main input, .form_main textarea {
+  font-size: 12px;
 }
 .form_main ol {
   display: inline-block;
@@ -687,6 +688,9 @@ fieldset.disabled {
 .form_main .narrow {
   width: 200px;
 }
+.form_main .small {
+  width: 120px;
+}
 .form_main .textboxlist-bit {
   list-style-type: none;
   clear: none;
@@ -906,4 +910,3 @@ content ol.submission_list li .actions {
 #content .messages tr:hover {
   background-color: #eee;
 }
-

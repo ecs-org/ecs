@@ -15,9 +15,9 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}"><button>{% trans "Back to the communication overview" %}</button></a>
 {% if thread.submission %}
-    | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab"><button>{% trans "Back to the Study" %}</button></a>
 {% endif %}
 
 <ul class="thread">
@@ -38,7 +38,7 @@
 </div>
 
 {% if not thread|closed_by:user %}
-    <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
+    als erledigt markieren: <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
 {% endif %}
 
 <form class="send" method="post">
@@ -48,9 +48,9 @@
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.list_threads %}">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}"><button>{% trans "Back to the communication overview" %}</button></a>
 {% if thread.submission %}
-    | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab">{% trans "Back to the Study" %}</a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab"><button>{% trans "Back to the Study" %}</button></a>
 {% endif %}
 
 </div>

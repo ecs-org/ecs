@@ -131,7 +131,7 @@
         {% include 'submissions/tabs/involved_parties.html' %}
     </div>
     <div id="pending_notifications_tab" class="tab">
-        <h3>{% trans "Open Notifications" %}
+        <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}
             <ul>
                 {% for notification in open_notifications %}
@@ -145,11 +145,11 @@
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
         {% if submission_form.presenter == request.user %}
-            <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}"><button>{% trans "Create a new notification" %}</button></a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab">
-        <h3>{% trans "Answered Notifications" %}
+        <h3>{% trans "Answered Notifications" %}</h3>
         {% if answered_notifications %}
             <ul>
                 {% for notification in answered_notifications %}
@@ -163,7 +163,7 @@
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
         {% if submission_form.presenter == request.user %}
-            <a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans "Create a new notification" %}</a>
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}"><button>{% trans "Create a new notification" %}</button></a>
         {% endif %}
     </div>
     {% if b2_vote_review_form or vote_review_form %}
@@ -236,7 +236,7 @@
     <div id="communication_tab" class="tab">
         <div id="incoming_messages"></div>
         <div id="outgoing_messages"></div>
-        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}">{% trans "Write a new message" %}</a>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}"><button>{% trans "Write a new message" %}</button></a>
     </div>
     <div id="communication_overview_tab" class="tab">
         <div id="communication_overview_messages"></div>

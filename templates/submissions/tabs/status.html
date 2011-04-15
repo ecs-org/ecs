@@ -6,7 +6,7 @@
                 <th>Version</th>
                 <th>Eingereicht von</th>
                 <th>Eingereicht am</th>
-                <th>Versionen</th>
+                <th colspan="2">Versionen</th>
             </tr>
             {% for sf in submission_forms %}
             <tr class="version">
@@ -17,6 +17,8 @@
                     {% if sf.previous_form %}
                         <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">aktuelle Änderungen</a>
                     {% endif %}
+                </td>
+                <td>
                     {% if sf != submission_form %}
                         <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a>
                     {% endif %}
@@ -34,9 +36,9 @@
     </td></tr>
     <tr><th>Eingereicht von:</th><td colspan="3">?</td></tr>
     <tr><th>Akzeptiert:</th><td>{{ submission_form.acknowledged|yesno }}</td>
-        <th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td></tr>
-    <tr><th>Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td>
-        <th>Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
+        <th class="small">Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
+    <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td>
+        <th class="small">Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
     <tr><th>Ethikkommission:</th><td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td></tr>
     <tr><th>Sitzungen:</th><td colspan="3">
         <ul>
@@ -80,9 +82,9 @@
 {% endif %}
 
 
-<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}">Export</a>
+<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}"><button>Export</button></a>
 {% if show_reviews and befangene_review_form %}
-    | <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab">Befangene Review</a>
+<a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab"><button>Befangene Review</button></a>
 {% endif %}
 
 

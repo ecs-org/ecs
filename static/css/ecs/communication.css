@@ -34,9 +34,9 @@
 .message_display #id_subject {
   width: 400px;
 }
-.message_display #id_text {
-  width: 400px;
-  height: 300px;
+.message_display #id_text, .communication_thread #id_text {
+  width: 500px;
+  min-height: 180px;
 }
 .message_display .item {
   position: relative;
@@ -134,65 +134,66 @@ table.messages .threadstart {
  * Communication Thread
  */
 
+#communication_tab .messages li {
+  padding: 2px 5px;
+}
 ul.thread {
-    list-style-type: none;
-    margin: 20px 0px !important;
+  list-style-type: none;
+  margin: 20px 0px !important;
 }
 
 .thread > .message {
-    -moz-border-radius: 5px;
-    background: #ffffff;
-    border: 1px solid #C6C9CB;
-    /*margin: 10px;*/
-    padding: 7px;
-    margin-bottom: 2px;
+  -moz-border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #C6C9CB;
+  /*margin: 10px;*/
+  padding: 7px;
+  margin-bottom: 2px;
 }
 .thread > .message.collapsed {
-    -moz-border-radius-bottomleft: 0px;
-    -moz-border-radius-bottomright: 0px;
-    margin-bottom: -5px;
+  -moz-border-radius-bottomleft: 0px;
+  -moz-border-radius-bottomright: 0px;
+  margin-bottom: -5px;
 }
 
  /* head */
 .thread > .message > .head {
-    border-bottom: 1px solid #C6C9CB;
-    cursor: pointer;
+  border-bottom: 1px solid #C6C9CB;
+  cursor: pointer;
 }
 .thread > .message.collapsed > .head {
     border: none;
 }
 .thread > .message > .head > .preview {
-    margin-left: 5px;
-    color: #777777;
+  margin-left: 5px;
+  color: #777777;
 }
 .thread > .message > .head > .time {
-    float: right;
-    color: #777777;
+  float: right;
+  color: #777777;
 }
 .thread > .message > .head > .preview {
-    display: none;
+  display: none;
 }
 .thread > .message.collapsed > .head > .preview {
-    display: inline;
+  display: inline;
 }
 
 /* body */
 .thread > .message > .body {
-    margin-top: 10px;
-    white-space: pre-wrap;
-    overflow: hidden;
+  margin-top: 10px;
+  white-space: pre-wrap;
+  overflow: hidden;
 }
 .thread > .message.collapsed > .body {
-    display: none;
+  display: none;
 }
-
 .communication_thread form.send {
-    margin: 20px 0px;
+  margin: 20px 0px;
 }
-
 .communication_thread .expand_collapse {
-    float: right;
-    margin-top: -15px;
+  float: right;
+  margin-top: -15px;
 }
 
 

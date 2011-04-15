@@ -16,16 +16,16 @@ Liste aller Studien
 <div class="paginator">
     {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if not submissions.number == 1 %}
-        <a href="#" id="submission_list_first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+        <a href="#" id="submission_list_first_page" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" id="submission_list_prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+        <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
     {% endif %}
     {% if submissions.has_next %}
-        <a href="#" id="submission_list_next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+        <a href="#" id="submission_list_next_page" class="next_page">next</a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" id="submission_list_last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+        <a href="#" id="submission_list_last_page" class="last_page">last page</a>
     {% endif %}
 </div>
 
@@ -112,16 +112,16 @@ Liste aller Studien
 <div class="paginator">
     {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if not submissions.number == 1 %}
-        <a href="#" id="submission_list_first_page"><img src="{{ MEDIA_URL }}/images/core/control-skip-180.png" alt="first page" /></a>
+        <a href="#" id="submission_list_first_page" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" id="submission_list_prev_page"><img src="{{ MEDIA_URL }}/images/core/control-double-180.png" alt="previous page" /></a>
+        <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
     {% endif %}
     {% if submissions.has_next %}
-        <a href="#" id="submission_list_next_page"><img src="{{ MEDIA_URL }}/images/core/control-double.png" alt="next page" /></a>
+        <a href="#" id="submission_list_next_page" class="next_page">next</a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" id="submission_list_last_page"><img src="{{ MEDIA_URL }}/images/core/control-skip.png" alt="last page" /></a>
+        <a href="#" id="submission_list_last_page" class="last_page">last page</a>
     {% endif %}
 </div>
 
