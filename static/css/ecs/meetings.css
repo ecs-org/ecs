@@ -255,7 +255,7 @@
   margin-bottom: 5px;
 }
 #meeting_assistant {
-	display: inline-block;
+	display: table;
   width: 100%;
 }
 #meeting_assistant .navigation,
@@ -268,7 +268,7 @@
   margin: 5px 0;
 }
 #meeting_assistant .meeting_assistant_nav {
-  width: 180px;
+  width: 20%;
 	float: left;
   padding: 10px;
 }
@@ -284,8 +284,9 @@
   font-size: 12px;
 }
 #meeting_assistant #meeting_assistant_body {
+  display: table-row;
   float: left;
-  width: 70%;
+  width: 75%;
   padding: 5px;
   background: #fff;
   border: 1px solid #ddd;
@@ -293,24 +294,32 @@
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-#meeting_assistant_form {
-  float: left;
-  width: 70%;
-  padding-right: 10px;
+#meeting_assistant_body .column_main {
+  display: table-cell;
+  width: 55%;
+  padding-right: 1%;
   border-right: 1px solid #ccc
 }
 #meeting_assistant_form textarea {
-	border: 1px solid #ddd;
+  border: 1px solid #ddd;
 }
-#meeting_assistant_body .reviews {
-  float: left;
-  width: 25%;
+#meeting_assistant_body .column_1,
+#meeting_assistant_body .column_2 {
+  display: table-cell;
+  width: 20%;
   margin-top: 10px;
+  vertical-align: top;
+}
+#meeting_assistant_body .column_2 {
+  border-left: 1px solid #ccc
+}
+#meeting_assistant_body .reviews,
+.column_main form {
+  display: inline-block;
 }
 #meeting_assistant .buttons {
   display: block;
   float: left;
-  margin-top: 10px;
   width: 100%;
 }
 #meeting_assistant .buttons ul {
@@ -349,7 +358,8 @@
   display: block;
   font-size: 10px;
 }
-#meeting_assistant .button a, #meeting_assistant .navigation a {
+#meeting_assistant .button a, 
+#meeting_assistant .navigation a {
   display: block;
   padding: 3px;
   margin-bottom: 7px;
@@ -370,7 +380,8 @@
 #meeting_assistant .navigation a {
   font-size: 10px;
 }
-#meeting_assistant .button a:hover, #meeting_assistant .navigation a:hover {
+#meeting_assistant .button a:hover, 
+#meeting_assistant .navigation a:hover {
   text-decoration: none;
   background: #333;
 }
@@ -403,20 +414,24 @@
 }
 #meeting_assistant .search input[type=text] {
 	display: inline-block;
-  width: 110px;
-	margin-top: 2px;
+  width: 75%;
 }
 #meeting_assistant .search input[type=submit] {
-	display: inline-block;
-  width: 60px;
-  font-size: 12pxt;
-	margin: 0;
+  background: url("/static/images/icons.png?38c54595d43f") no-repeat scroll -324px -198px #CCCCCC;
+  border: 1px solid #999999;
+  border-radius: 0;
+  display: inline-block;
+  float: right;
+  height: 22px;
+  margin: 0;
+  text-indent: -9999px;
+  width: 26px;
 }
 #meeting_assistant ul li {
   list-style: none
 }
 #meeting_assistant .reviews ul {
-	margin: 0 10px 10px;
+	margin: 0 2% 10px;
 }
 #meeting_assistant .reviews li {
   display: block;

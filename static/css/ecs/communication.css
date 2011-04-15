@@ -7,7 +7,7 @@
   clear: both;
   list-style-type: none;
   margin-bottom: 10px;
-  font-size: 9pt;
+  font-size: 12px;
 }
 .form_main .message ol li label {
   display: block;
@@ -30,13 +30,18 @@
 }
 .message_display form {
   width: 100%;
+  padding: 10px 0;
 }
 .message_display #id_subject {
   width: 400px;
 }
 .message_display #id_text, .communication_thread #id_text {
+  display: block;
   width: 500px;
   min-height: 180px;
+}
+.message_display .form #id_text {
+  margin-left: 100px;
 }
 .message_display .item {
   position: relative;
@@ -60,6 +65,7 @@
   display: inline-block;
   font-weight: bolder;
   vertical-align: top;
+  min-width: 100px;
 }
 .message_display .actions {
   width: 20px;
@@ -89,6 +95,16 @@
   display: inline-block;
   margin-left: 10px;
 }
+.message_display .ecs-TextAreaToolbar {
+  display: inline-block;
+}
+#content .message_display .form ul {
+  display: inline-block;
+  margin: 0;
+}
+.message_display .form .input {
+  display: inline-block;
+}
 .thread_list_choose {
 	margin-bottom: 10px;
 }
@@ -98,7 +114,6 @@ table.messages .threadstart {
 #content .messages_header, #content .messages th, #content .messages td {
   padding: 5px;
 }
-
 
 /* icons */
 
@@ -130,9 +145,7 @@ table.messages .threadstart {
   background: url(/static/images/icons.png) -160px -48px no-repeat;
 }
 
-/*
- * Communication Thread
- */
+/* Communication Thread */
 
 #communication_tab .messages li {
   padding: 2px 5px;
@@ -143,22 +156,28 @@ ul.thread {
 }
 
 .thread > .message {
+  border-radius: 5px;
   -moz-border-radius: 5px;
-  background: #ffffff;
-  border: 1px solid #C6C9CB;
-  /*margin: 10px;*/
-  padding: 7px;
+  -webkit-border-radius: 5px;
+  background: #fff;
+  border: 1px solid #999;
+  padding: 10px;
   margin-bottom: 2px;
 }
 .thread > .message.collapsed {
+  border-radius-bottom-left: 0px;
+  border-radius-bottom-right: 0px;
+  -webkit-border-radius-bottom-left: 0px;
+  -webkit-border-radius-bottom-right: 0px;
   -moz-border-radius-bottomleft: 0px;
   -moz-border-radius-bottomright: 0px;
   margin-bottom: -5px;
 }
 
- /* head */
+/* head */
+
 .thread > .message > .head {
-  border-bottom: 1px solid #C6C9CB;
+  border-bottom: 1px solid #999;
   cursor: pointer;
 }
 .thread > .message.collapsed > .head {
@@ -166,11 +185,11 @@ ul.thread {
 }
 .thread > .message > .head > .preview {
   margin-left: 5px;
-  color: #777777;
+  color: #777;
 }
 .thread > .message > .head > .time {
   float: right;
-  color: #777777;
+  color: #777;
 }
 .thread > .message > .head > .preview {
   display: none;
@@ -180,6 +199,7 @@ ul.thread {
 }
 
 /* body */
+
 .thread > .message > .body {
   margin-top: 10px;
   white-space: pre-wrap;

@@ -7,15 +7,15 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.boilerplate.views.edit_boilerplate %}">{% trans 'New' %}</a>
+    <a href="{% url ecs.boilerplate.views.edit_boilerplate %}"><button>{% trans 'New' %}</button></a>
     {% for text in texts %}
     <div class="boilerplate">
-        <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}"><b>{{ text.slug }}</b>: {{ text.text }}</a>
-        <div>
-            Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr, 
-            Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr
-            von {{ text.author }} <a href="{% url ecs.boilerplate.views.delete_boilerplate text_pk=text.pk %}">{% trans 'Delete' %}</a>
-        </div>
+        <h4>{{ text.slug }}</h4> | <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}">edit</a>
+        <p>Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr<br />
+           Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr von {{ text.author }} 
+            | <a href="{% url ecs.boilerplate.views.delete_boilerplate text_pk=text.pk %}">{% trans 'Delete' %}</a>
+        </p>
+        <p class="boilerplate_text">{{ text.text }}</p>
     </div>
     {% endfor %}
 {% endblock %}

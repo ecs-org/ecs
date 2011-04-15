@@ -33,7 +33,7 @@
 </table>
 
 {% if user|has_flag:'executive_board_member' %}
-    <a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}">{% trans 'Add Additional Reviewers' %}</a>
+    <p><a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}"><button>{% trans 'Add Additional Reviewers' %}</button></a></p>
 {% endif %}
 
 

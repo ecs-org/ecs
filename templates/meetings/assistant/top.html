@@ -2,6 +2,7 @@
 {% load core i18n %}
 
 {% block meeting_assistant_body %}
+  <div class="column_main">
     <form id="meeting_assistant_form" action="" method="post">
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}</h3>
         {{ submission.project_title_display|default:top.title }}
@@ -29,6 +30,7 @@
     {% endif %}
 
     </form>
+  </div>
 {% endblock %}
 
 {% block meeting_assistant_navigation %}
@@ -51,6 +53,7 @@
 {% endblock %}
 
 {% block meeting_assistant_sidebar %}
+      <div class="column_1">
         <div class="reviews">
           <ul>
           {% for blueprint, checklists in checklist_review_states %}
@@ -75,22 +78,27 @@
               </li>
           {% endif %}
           </ul>
-          {% if top.submission %}
-          <div class="buttons">
-             <ul>
-                <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
-                <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
-                <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
-             </ul>
-          </div>
-          {% else %}
-          <div class="buttons">
-            <ul>
-                <li><a id="complete" href="">Fertig</a></li>
-            </ul>
-          </div>
-          {% endif %}
         </div>
+      </div>
+      <div class="column_2">
+        <div class="reviews">
+            {% if top.submission %}
+            <div class="buttons">
+               <ul>
+                  <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
+                  <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
+                  <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
+               </ul>
+            </div>
+            {% else %}
+            <div class="buttons">
+              <ul>
+                  <li><a id="complete" href="">Fertig</a></li>
+              </ul>
+            </div>
+            {% endif %}
+        </div>
+      </div>
 {% endblock %}
 
 {% block jsbottom %}

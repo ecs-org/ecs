@@ -1,41 +1,47 @@
-.boilerplate_selector{
-    display: none;
-    position: absolute;
-    width: 300px;
-    height: auto;
-    left: 240px;
-    background-color: #ffffff;
-    border: 3px solid #B7D4E5;
+.boilerplate_selector {
+  display: none;
+  position: absolute;
+  width: 300px;
+  height: auto;
+  left: 240px;
+  background-color: #fff;
+  border: 3px solid #B7D4E5;
 }
-
-.boilerplate_selector a{
-    display: block;
-    color: #000000;
-    max-height: 30px;
-    overflow: hidden;
+.boilerplate_selector a {
+  display: block;
+  color: #000;
+  max-height: 30px;
+  overflow: hidden;
 }
-
-.boilerplate_selector a:nth-child(2n){
-    background-color: #eeeeee;
+.boilerplate_selector a:nth-child(2n) {
+  background-color: #eee;
 }
-
-.boilerplate_selector a:hover{
-    text-decoration: none;
-    background-color: #B7D4E5;
+.boilerplate_selector a:hover {
+  text-decoration: none;
+  background-color: #B7D4E5;
 }
-
-.boilerplate_selector .resultlist{
-    max-height: 200px;
-    overflow: auto;
+.boilerplate_selector .resultlist {
+  max-height: 200px;
+  overflow: auto;
 }
-.boilerplate_selector input[type=text]{
-    width: 290px;
-    height: 20px;
-    padding: 5px;
-    display: block;
+.boilerplate_selector input[type=text] {
+  width: 290px;
+  height: 20px;
+  padding: 5px;
+  display: block;
 }
-
-.boilerplate{
-    margin: 20px 0;
+.boilerplate {
+  margin: 20px 0;
 }
-
+#content .boilerplate h4 {
+  display: inline-block;
+  font-size: 16px;
+}
+.boilerplate_text {
+  padding: 10px;
+  border: 1px solid #999;
+  background: #fff;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px
+}

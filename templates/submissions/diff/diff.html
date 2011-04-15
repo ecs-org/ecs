@@ -26,7 +26,7 @@
         {{ diff.html|safe }}
     </div>
 
-    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#status_tab">{% trans "Back to the Study" %}</a>
+    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#status_tab"><button>{% trans "Back to the Study" %}</button></a>
     
 {% endblock %}
 
