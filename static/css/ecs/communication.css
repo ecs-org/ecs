@@ -64,7 +64,7 @@
 .message_display label {
   display: inline-block;
   font-weight: bolder;
-  vertical-align: top;
+  vertical-align: middle;
   min-width: 100px;
 }
 .message_display .actions {

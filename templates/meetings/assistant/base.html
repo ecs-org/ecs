@@ -43,7 +43,7 @@
                     {% block meeting_assistant_navigation %}
                     <div class="search">
                         <form action="{% url ecs.meetings.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">
-                            <input type="text" name="q" />
+                            <input type="text" name="q" placeholder="in Sitzungen suchen" />
                             <input type="submit" value="Suchen" />
                         </form>
                     </div>
