@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-13 22:34+0200\n"
+"POT-Creation-Date: 2011-04-17 22:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1901,15 +1901,15 @@ msgstr "Dieses Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:342
+#: meetings/views.py:340
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:353
+#: meetings/views.py:351
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:405
+#: meetings/views.py:403
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2172,7 +2172,7 @@ msgstr "Ältere Einträge"
 msgid "Save"
 msgstr "Speichern"
 
-#: templates/boilerplate/list.html:17 templates/documents/upload_form.html:7
+#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:7
 #: templates/notifications/list.html:31 templates/submissions/list.html:45
 msgid "Delete"
 msgstr "Löschen"
@@ -2279,15 +2279,17 @@ msgid ""
 "\n"
 "        Please note: To write a message, open the read-only view of a study "
 "and change to the communication tab.\n"
-"        For general Questions write an email to the <a href=\"mailto:"
-"ethikkom@meduniwien.ac.at\">Ethics-Commission</a>.\n"
+"        For general Questions write an email to the <a href=\"http://"
+"ethikkommission.meduniwien.ac.at/ethik-kommission/kontakt/\">Ethics-"
+"Commission</a>.\n"
 "    "
 msgstr ""
 "\n"
 "        Beachten Sie: Um eine neue Nachricht zu erstellen, wechseln Sie in "
 "die betreffende Studie in den Reiter Nachrichten.\n"
 "        Für allgemeine Fragen schreiben sie eine E-Mail an die <a href="
-"\"mailto:ethikkom@meduniwien.ac.at\">Ethik-Kommission</a>.\n"
+"\"http://ethikkommission.meduniwien.ac.at/ethik-kommission/kontakt/\">Ethik-"
+"Kommission</a>.\n"
 "    "
 
 #: templates/documents/compact_list.html:30
@@ -2525,11 +2527,11 @@ msgstr "Protokoll PDF"
 msgid "Comments"
 msgstr "Kommentare"
 
-#: templates/meetings/assistant/top.html:71
+#: templates/meetings/assistant/top.html:74
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: templates/meetings/assistant/top.html:73
+#: templates/meetings/assistant/top.html:76
 msgid "copy comment"
 msgstr "Kommentar kopieren"
 
@@ -2724,6 +2726,7 @@ msgstr "Seite"
 
 #: templates/submissions/list.html:44 templates/submissions/list.html.py:69
 #: templates/submissions/readonly_form.html:15
+#: templates/submissions/tabs/involved_parties.html:47
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -2896,11 +2899,11 @@ msgstr "Zusätzlichen Gutachter hinzufügen"
 msgid "Biased Parties"
 msgstr "Befangene Parteien"
 
-#: templates/submissions/tabs/status.html:48
+#: templates/submissions/tabs/status.html:50
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:71
+#: templates/submissions/tabs/status.html:73
 #, fuzzy, python-format
 msgid ""
 "\n"
@@ -2911,12 +2914,12 @@ msgstr ""
 "        %(task_name)s (%(assigned_to)s), eingeladen am %(assigned_at)s\n"
 "    "
 
-#: templates/submissions/tabs/status.html:74
+#: templates/submissions/tabs/status.html:76
 #, fuzzy
 msgid "delete"
 msgstr "gelöscht"
 
-#: templates/submissions/tabs/status.html:77
+#: templates/submissions/tabs/status.html:79
 #, fuzzy
 msgid "No additional/external review"
 msgstr "Zusatz-Review"
