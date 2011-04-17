@@ -202,7 +202,7 @@ def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        form.save(request)
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
