@@ -176,7 +176,7 @@ INSTALLED_APPS = (
 
     'paging',
     'indexer',
-    # fixme: temporary disabled 'rosetta',
+
     'sentry',
     'sentry.client',
     'reversion',
@@ -242,6 +242,9 @@ LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 
 # directory where to store temporary files, used mostly with external utilities
 TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
+
+# ecs.help system export path
+ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
@@ -341,11 +344,13 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
     'django.contrib.sites.models.Site',
     'django.contrib.admin.models.LogEntry',
     
+    'sentry.models.*',
     'south.models.*',
     'djcelery.models.*',
     'ghettoq.models.*',
     'reversion.models.*',
     'rosetta.models.*',
+    'indexer.models.*',
     
     'ecs.utils.countries.models.*',
     'ecs.tracking.models.*',
@@ -363,11 +368,10 @@ FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
 BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 13',}
 
-# ecs.help system
-ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
-
+# if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
 # set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
 USE_TEXTBOXLIST = True
+
 
 # thirdparty settings
 ######################
@@ -385,7 +389,7 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CARROT_BACKEND = "ghettoq.taproot.Database"
 CELERY_IMPORTS = (
-    'ecs.core.task_queue',
+    'ecs.core.tasks',
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',
@@ -418,15 +422,36 @@ COMPRESS_JS_FILTERS = []
 SENTRY_TESTING = True # log exceptions when DEBUG=True
 
 
+# ### django-devserver ###
+DEVSERVER_MODULES = (
+    #'devserver.modules.sql.SQLRealTimeModule',
+    'devserver.modules.sql.SQLSummaryModule',
+    'devserver.modules.profile.ProfileSummaryModule',
+    # Modules not enabled by default
+    #'devserver.modules.ajax.AjaxDumpModule',
+    #'devserver.modules.profile.MemoryUseModule',
+    #'devserver.modules.cache.CacheSummaryModule',
+)
+
 
 # settings override 
 ###################
-
 #these are local fixes, they default to a sane value if unset
+
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
 # needs to be overriden in local_settings for eg. windows
+
 #ECS_GNUPG = "absolute path to gpg executable" # defaults to which('gpg') if empty
-# needs to be overriden in local_settings for eg. windows 
+# needs to be overriden in local_settings for eg. windows
+ 
+#ECS_DEBUGTOOLBAR = True/False defaults to False if empty
+# loads support for django-debug-toolbar
+
+#ECS_WORDING = True/False defaults to False if empty
+# activates django-rosetta 
+
+#ECS_DEVSERVER = True/False defaults to False if empty
+# activates django-devserver replacement for manage.py runserver
 
 
 # use ecsdev settings if on node ecsdev.ep3.at
@@ -464,12 +489,21 @@ try:
 except ImportError:
     ECS_VERSION = 'unknown'
 
-# debug toolbar config:
-# MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
-# INSTALLED_APPS +=('debug_toolbar',) # anywhere
-DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False}
-INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
-   
+# django rosetta activation
+if 'ECS_WORDING' in locals() and ECS_WORDING:
+    INSTALLED_APPS +=('rosetta',) # anywhere
+
+# django-devserver activation
+if 'ECS_DEVSERVER' in locals() and ECS_DEVSERVER:
+    INSTALLED_APPS +=('devserver',) # anywhere
+
+# django-debug-toolbar activation
+if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
+    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
+    INSTALLED_APPS +=('debug_toolbar',) # anywhere
+    DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False,}
+    INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
+
 # hack some settings for test and runserver    
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
@@ -480,4 +514,3 @@ elif 'testmaker' in sys.argv:
     
 import djcelery
 djcelery.setup_loader()
-
