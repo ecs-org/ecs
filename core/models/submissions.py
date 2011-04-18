@@ -306,7 +306,7 @@ class SubmissionForm(models.Model):
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
     current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
-    
+
     class Meta:
         app_label = 'core'
         
@@ -514,7 +514,7 @@ class SubmissionForm(models.Model):
     submitter_is_authorized_by_sponsor = models.BooleanField()
     
     date_of_receipt = models.DateField(null=True, blank=True)
-    
+
     def save(self, **kwargs):
         if not self.presenter_id:
             from ecs.users.utils import get_current_user
@@ -544,6 +544,24 @@ class SubmissionForm(models.Model):
     
     def get_filename_slice(self):
         return self.submission.get_ec_number_display(separator='_')
+    
+    @property
+    def amg(self):
+        if self.submission.is_amg is not None:
+            return self.submission.is_amg
+        return self.project_type_drug
+
+    @property
+    def mpg(self):
+        if self.submission.is_mpg is not None:
+            return self.submission.is_mpg
+        return self.project_type_medical_device
+
+    @property
+    def thesis(self):
+        if self.submission.thesis is not None:
+            return self.submission.thesis
+        return self.project_type_education_context is not None
 
     @property
     def multicentric(self):

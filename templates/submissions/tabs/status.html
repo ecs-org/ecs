@@ -7,6 +7,7 @@
                 <th>Eingereicht von</th>
                 <th>Eingereicht am</th>
                 <th colspan="2">Versionen</th>
+                <th></th>
             </tr>
             {% for sf in submission_forms %}
             <tr class="version">
@@ -30,40 +31,99 @@
                         {% endwith %}
                     {% endif %}
                 </td>
+                <td>
+                    {% if sf == submission_form %}
+                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}"><button>{% trans "Download PDF" %}</button></a>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </table>
     </td></tr>
-    <tr><th>Eingereicht von:</th><td colspan="3">?</td></tr>
-    <tr><th>Akzeptiert:</th><td>{{ submission_form.acknowledged|yesno }}</td>
-        <th class="small">Aktiv:</th><td>{{ submission_form.submission.is_active|yesno }}</td></tr>
-    <tr><th>Monozentrisch:</th><td>{{ submission_form.monocentric|yesno }}</td>
-        <th class="small">Multizentrisch:</th><td>{{ submission_form.multicentric|yesno }}</td></tr>
-    <tr><th>Ethikkommission:</th><td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td></tr>
-    <tr><th>Sitzungen:</th><td colspan="3">
-        <ul>
-            {% for meeting in submission_form.submission.meetings.all %}
-                <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
-            {% endfor %}
-        </ul>
-        {% if user|has_flag:'executive_board_member' %}
-            <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
-        {% endif %}
-    </td></tr>
-    <tr><th>Voten:</th><td colspan="3">
-        <ul>
-            {% for vote in submission_form.submission.votes.all %}
-                <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
-            {% endfor %}
-        </ul>
-    </td>
+    <tr>
+        <th>Eingereicht von:</th>
+        <td colspan="3">{{ submission_form.presenter }}</td>
     </tr>
-    <tr><th>Kategorien:</th><td colspan="3">
-        {% for cat in submission_form.submission.medical_categories.all %}
-            {{ cat }}{% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </td></tr>
-    <tr><th>Exedited Review:</th><td colspan="3">{{ submission_form.submission.expedited|yesno }}</td></tr>
+    <tr>
+        <th>Sponsor:</th>
+        <td colspan="3">{{ submission_form.sponsor }}</td>
+    </tr>
+    <tr>
+        <th>Rechnungsempfänger:</th>
+        <td colspan="3">{% if submission_form.invoice %}{{ submission_form.invoice }}{% else %}<em>{% trans "same as sponsor" %}</em>{% endif %}</td>
+    </tr>
+    <tr>
+        <th>Hauptprüfer:</th>
+        <td colspan="3">{% if submission_form.primary_investigator %}{{ submission_form.primary_investigator.contact.full_name }} ({{ submission_form.primary_investigator.organisation }}){% else %}<em>{% trans "No Primary Investigator" %}</em>{% endif %}</td>
+    </tr>
+    <tr>
+        <th>Phase:</th>
+        <td colspan="3">
+            {% if submission_form.submission.is_active %}
+                {% trans "Aktiv" %}
+            {% else %}
+                {% if submission_form.acknowledged %}
+                    {% trans "Akzeptiert" %}
+                {% else %}
+                    {% trans "Neu" %}
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Typ:</th>
+        <td colspan="3">
+            {{ submission_form.get_submission_type_display }}
+            {% if submission_form.amg %}{% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }}){% endif %}
+            {% if submission_form.mpg %}{% trans "MPG" %}{% endif %}
+            {% if submission_form.thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Monozentrisch:</th>
+        <td>{{ submission_form.monocentric|yesno }}</td>
+        <th class="small">Multizentrisch:</th>
+        <td>{{ submission_form.multicentric|yesno }}</td>
+    </tr>
+    <tr>
+        <th>Ethikkommission:</th>
+        <td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
+    </tr>
+    <tr>
+        <th>Sitzungen:</th>
+        <td colspan="3">
+            <ul>
+                {% for meeting in submission_form.submission.meetings.all %}
+                    <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% if user|has_flag:'executive_board_member' %}
+                <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Voten:</th>
+        <td colspan="3">
+            <ul>
+                {% for vote in submission_form.submission.votes.all %}
+                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <th>Kategorien:</th>
+        <td colspan="3">
+            {% for cat in submission_form.submission.medical_categories.all %}
+                {{ cat }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>Exedited Review:</th>
+        <td colspan="3">{{ submission_form.submission.expedited|yesno }}</td>
+    </tr>
 </table>
 
 {% if user|has_flag:'internal' %}
@@ -82,5 +142,5 @@
 {% endif %}
 
 
-<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}"><button>Export</button></a>
+<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}"><button>{% trans "Export" %}</button></a>
 
