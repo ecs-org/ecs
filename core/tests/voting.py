@@ -4,7 +4,7 @@ from django.conf import settings
 
 from ecs.communication.testcases import CommunicationTestCase
 from ecs.core.tests.submissions import create_submission_form
-from ecs.core.task_queue import send_reminder_messages
+from ecs.core.tasks import send_reminder_messages
 from ecs.meetings.models import Meeting
 from ecs.core.models import Vote
 from ecs.communication.models import Message
