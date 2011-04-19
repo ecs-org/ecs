@@ -14,13 +14,13 @@ Liste aller Studien
 {% include "submissions/filterform.inc" %}
 
 <div class="paginator">
-    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if not submissions.number == 1 %}
         <a href="#" id="submission_list_first_page" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
         <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
     {% endif %}
+		{% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
         <a href="#" id="submission_list_next_page" class="next_page">next</a>
     {% endif %}
@@ -37,7 +37,7 @@ Liste aller Studien
         {% with submission as docstash %}
         <span class="submission_inprogress"></span>
         {% if docstash.current_value.notification_type %}
-            <b>{{ docstash.current_value.notification_type }}</b> für
+            <strong>{{ docstash.current_value.notification_type }}</strong> für
         {% endif %}
         {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
         <div class="actions">
@@ -110,13 +110,13 @@ Liste aller Studien
 </ol>
 
 <div class="paginator">
-    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if not submissions.number == 1 %}
         <a href="#" id="submission_list_first_page" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
         <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
     {% endif %}
+		{% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
         <a href="#" id="submission_list_next_page" class="next_page">next</a>
     {% endif %}
