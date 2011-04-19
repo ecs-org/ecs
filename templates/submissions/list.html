@@ -11,21 +11,23 @@ Liste aller Studien
 
 {% block content %}
 
+<div class="submission_list">
+
 {% include "submissions/filterform.inc" %}
 
 <div class="paginator">
     {% if not submissions.number == 1 %}
-        <a href="#" id="submission_list_first_page" class="first_page">first</a>
+        <a href="#" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
+        <a href="#" class="prev_page">previous</a>
     {% endif %}
 		{% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
-        <a href="#" id="submission_list_next_page" class="next_page">next</a>
+        <a href="#" class="next_page">next</a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" id="submission_list_last_page" class="last_page">last page</a>
+        <a href="#" class="last_page">last page</a>
     {% endif %}
 </div>
 
@@ -111,18 +113,20 @@ Liste aller Studien
 
 <div class="paginator">
     {% if not submissions.number == 1 %}
-        <a href="#" id="submission_list_first_page" class="first_page">first</a>
+        <a href="#" class="first_page">first</a>
     {% endif %}
     {% if submissions.has_previous %}
-        <a href="#" id="submission_list_prev_page" class="prev_page">previous</a>
+        <a href="#" class="prev_page">previous</a>
     {% endif %}
 		{% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
-        <a href="#" id="submission_list_next_page" class="next_page">next</a>
+        <a href="#" class="next_page">next</a>
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" id="submission_list_last_page" class="last_page">last page</a>
+        <a href="#" class="last_page">last page</a>
     {% endif %}
+</div>
+
 </div>
 
 {% endblock %}
@@ -130,6 +134,7 @@ Liste aller Studien
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
+      var submission_list = $$('.submission_list')[0];
       window.addEvent('domready', function(){
           var form = $('submission_list_filter');
           var page_input = form.getElement('input[name="page"]');
@@ -139,28 +144,36 @@ Liste aller Studien
               });
           });
     {% if not submissions.number == 1 %}
-          $('submission_list_first_page').addEvent('click', function(){
-              page_input.value = 1;
-              form.submit();
-          });
+          submission_list.getElements('.first_page').each(function(el){
+              el.addEvent('click', function(){
+                  page_input.value = 1;
+                  form.submit();
+              });
+          }, this);
     {% endif %}
     {% if submissions.has_previous %}
-          $('submission_list_prev_page').addEvent('click', function(){
-              page_input.value = parseInt(page_input.value, 10) - 1;
-              form.submit();
-          });
+          submission_list.getElements('.prev_page').each(function(el){
+              el.addEvent('click', function(){
+                  page_input.value = parseInt(page_input.value, 10) - 1;
+                  form.submit();
+              });
+          }, this);
     {% endif %}
     {% if submissions.has_next %}
-          $('submission_list_next_page').addEvent('click', function(){
-              page_input.value = parseInt(page_input.value, 10) + 1;
-              form.submit();
-          });
+          submission_list.getElements('.next_page').each(function(el){
+              el.addEvent('click', function(){
+                  page_input.value = parseInt(page_input.value, 10) + 1;
+                  form.submit();
+              });
+          }, this);
     {% endif %}
     {% if not submissions.number == submissions.paginator.num_pages %}
-          $('submission_list_last_page').addEvent('click', function(){
-              page_input.value = {{ submissions.paginator.num_pages }};
-              form.submit();
-          });
+          submission_list.getElements('.last_page').each(function(el){
+              el.addEvent('click', function(){
+                  page_input.value = {{ submissions.paginator.num_pages }};
+                  form.submit();
+              });
+          }, this);
     {% endif %}
       });
     </script>
