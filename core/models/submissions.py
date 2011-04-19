@@ -707,7 +707,7 @@ class Investigator(models.Model):
     phone = models.CharField(max_length=30, blank=True)
     mobile = models.CharField(max_length=30, blank=True)
     fax = models.CharField(max_length=30, blank=True)
-    email = models.EmailField(blank=True)
+    email = models.EmailField(blank=False)
     jus_practicandi = models.BooleanField(default=False, blank=True)
     specialist = models.CharField(max_length=80, blank=True)
     certified = models.BooleanField(default=False, blank=True)
