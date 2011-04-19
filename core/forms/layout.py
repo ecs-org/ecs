@@ -135,7 +135,6 @@ NOTIFICATION_FORM_TABS[AmendmentNotificationForm] = [
             'comments',
         ]),
     ]),
-    (_(u'documents'), []),
     (_(u'Changes'), [])
 ]
 

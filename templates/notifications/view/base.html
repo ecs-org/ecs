@@ -27,16 +27,14 @@ User: {{ notification.user }}
             <th>Kommentare</th>
             <td>{{ notification.comments }}</td>
         </tr>
+        {% if documents %}
         <tr>
             <th>Unterlagen</th>
             <td>
-                {% if documents %}
-                    {% include "documents/compact_list.html" %}
-                {% else %}
-                    <i>keine</i>
-                {% endif %}
+                {% include "documents/compact_list.html" %}
             </td>
         </tr>
+        {% endif %}
     {% endblock %}
 </table>
 
