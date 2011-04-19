@@ -106,14 +106,15 @@ body {
   display: block;
   font-size: 14px;
 	font-weight: lighter;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 #content h5 {
   display: block;
   font-size: 12px;
   margin-bottom: 10px;
 }
-.form_main h3 {
+.form_main h3,
+.notification_list h3 {
   padding: 10px;
   margin: -10px -10px 0;
   background: #f3f3db;
@@ -240,7 +241,7 @@ input[type=submit]:active, .cancel a:active {
   border: none;
 }
 #sidebar p {
-  margin: 10px 0;
+  margin: 0 0 10px;
 }
 #sidebar a, #sidebar .togglers  {
   text-decoration: none;
