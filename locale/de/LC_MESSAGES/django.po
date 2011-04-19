@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-17 22:48+0200\n"
+"POT-Creation-Date: 2011-04-19 14:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1353,7 +1353,7 @@ msgstr "Hauptprüfer"
 msgid "Additional Review"
 msgstr "Zusatz-Review"
 
-#: core/task_queue.py:26
+#: core/tasks.py:26
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -1361,12 +1361,12 @@ msgid ""
 "abgelaufen.\n"
 msgstr ""
 
-#: core/task_queue.py:32 core/task_queue.py:49 core/task_queue.py:62
+#: core/tasks.py:32 core/tasks.py:49 core/tasks.py:62
 #, python-format
 msgid "Ablauf des Votums für die Studie EK-Nr. %s"
 msgstr ""
 
-#: core/task_queue.py:43
+#: core/tasks.py:43
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -1374,7 +1374,7 @@ msgid ""
 "drei Wochen ab.\n"
 msgstr ""
 
-#: core/task_queue.py:56
+#: core/tasks.py:56
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -1450,13 +1450,15 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:343 core/forms/forms.py:365 core/forms/forms.py:390
 #: core/forms/layout.py:64 core/forms/layout.py:66
-#: templates/tasks/tasks.inc:20 templates/tasks/tasks_full.inc:19
+#: templates/submissions/tabs/status.html:77 templates/tasks/tasks.inc:20
+#: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:344 core/forms/forms.py:366 core/forms/forms.py:391
 #: core/forms/layout.py:73 core/forms/layout.py:75
-#: templates/tasks/tasks.inc:21 templates/tasks/tasks_full.inc:20
+#: templates/submissions/tabs/status.html:78 templates/tasks/tasks.inc:21
+#: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
@@ -1600,12 +1602,12 @@ msgstr "an der Medizinischen Universität der Stadt Wien"
 msgid "other University"
 msgstr "andere Universität"
 
-#: core/models/names.py:37 core/models/submissions.py:716 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:734 users/forms.py:55
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:716 users/forms.py:55
+#: core/models/names.py:37 core/models/submissions.py:734 users/forms.py:55
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1618,11 +1620,11 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:750
+#: core/models/submissions.py:768
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:750
+#: core/models/submissions.py:768
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2571,6 +2573,7 @@ msgstr "Verteilen"
 
 #: templates/notifications/answers/view.html:6
 #: templates/submissions/list.html:71
+#: templates/submissions/tabs/status.html:36
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
 
@@ -2899,11 +2902,34 @@ msgstr "Zusätzlichen Gutachter hinzufügen"
 msgid "Biased Parties"
 msgstr "Befangene Parteien"
 
-#: templates/submissions/tabs/status.html:50
+#: templates/submissions/tabs/status.html:53
+#, fuzzy
+msgid "same as sponsor"
+msgstr "Sponsor"
+
+#: templates/submissions/tabs/status.html:57
+#, fuzzy
+msgid "No Primary Investigator"
+msgstr "Hauptprüfer"
+
+#: templates/submissions/tabs/status.html:63
+msgid "Aktiv"
+msgstr ""
+
+#: templates/submissions/tabs/status.html:66
+msgid "Akzeptiert"
+msgstr ""
+
+#: templates/submissions/tabs/status.html:68
+#, fuzzy
+msgid "Neu"
+msgstr "Neu"
+
+#: templates/submissions/tabs/status.html:101
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:73
+#: templates/submissions/tabs/status.html:133
 #, fuzzy, python-format
 msgid ""
 "\n"
@@ -2914,15 +2940,20 @@ msgstr ""
 "        %(task_name)s (%(assigned_to)s), eingeladen am %(assigned_at)s\n"
 "    "
 
-#: templates/submissions/tabs/status.html:76
+#: templates/submissions/tabs/status.html:136
 #, fuzzy
 msgid "delete"
 msgstr "gelöscht"
 
-#: templates/submissions/tabs/status.html:79
+#: templates/submissions/tabs/status.html:139
 #, fuzzy
 msgid "No additional/external review"
 msgstr "Zusatz-Review"
+
+#: templates/submissions/tabs/status.html:145
+#, fuzzy
+msgid "Export"
+msgstr "Import"
 
 #: templates/tasks/manage_task.html:5
 msgid "Show all tasks"

@@ -2,6 +2,11 @@
 
 {% with field|get_field_info as field_info %}
     <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
+        {% if field_info.help_text %}
+        <span class="help_text">
+            {{ field_info.help_text }}
+        </span>
+        {% endif %}
         <label for="{{ field|id_for_label }}">
             {{ field_info.label|default:field.label }}
             {% if field_info.number %}
@@ -11,11 +16,6 @@
         {{ field }}
         {% if field.errors and field.errors.0 != _('This field is required.') %}
             {{ field.errors }}
-        {% endif %}
-        {% if field_info.help_text %}
-        <span class="help_text">
-            {{ field_info.help_text }}
-        </span>
         {% endif %}
     </li>
 {% endwith %}

@@ -469,7 +469,7 @@ li.TypedChoiceField ul > li label{
   display: block;
 }
 .form_main ol li .help_text {
-  margin: 0 0 10px 230px;
+  margin: 0 0 3px 230px;
   display: block;
   clear: both;
   color: #666;
