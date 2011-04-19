@@ -10,11 +10,6 @@ from ecs.notifications.models import NotificationType, Notification
 from ecs.core.tests.submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):
-    
-    def test_notification_list(self):
-        response = self.client.get(reverse('ecs.notifications.views.all_notifications'))
-        self.failUnlessEqual(response.status_code, 200)
-
     def test_creation_type_selection(self):
         NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.select_notification_creation_type'))

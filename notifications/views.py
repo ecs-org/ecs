@@ -69,10 +69,6 @@ def open_notifications(request):
 def answered_notifications(request):
     return _notification_list(request, answered=True)
 
-def all_notifications(request):
-    return _notification_list(request, answered=None, stashed=True,)
-
-
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
