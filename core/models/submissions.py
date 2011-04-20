@@ -486,7 +486,8 @@ class SubmissionForm(models.Model):
     # 8.3
     study_plan_population_intention_to_treat  = models.BooleanField()
     study_plan_population_per_protocol  = models.BooleanField()
-    study_plan_abort_crit = models.CharField(max_length=265)
+    study_plan_interim_evaluation = models.BooleanField()
+    study_plan_abort_crit = models.CharField(max_length=265, null=True, blank=True)
     study_plan_planned_statalgorithm = models.TextField(null=True, blank=True)
 
     # 8.4

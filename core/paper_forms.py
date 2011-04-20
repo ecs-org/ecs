@@ -252,7 +252,8 @@ FormInfo(SubmissionForm, fields=(
     # 8.3 Geplante statistische Analyse
     FieldInfo('8.3.1', 'study_plan_population_intention_to_treat', _(u'Intention-to-treat')),
     FieldInfo('8.3.2', 'study_plan_population_per_protocol', _(u'Per Protocol')),
-    FieldInfo('8.3.3', 'study_plan_abort_crit', _(u'Interim evaluation, termination criteria')),
+    FieldInfo('8.3.3', 'study_plan_interim_evaluation', _(u'Interim evaluation')),
+    FieldInfo(None, 'study_plan_abort_crit', _(u'Termination criteria')),
     FieldInfo('8.3.4', 'study_plan_planned_statalgorithm', _(u'Planned use of statistical methods')),
     # 8.4 Dokumentationsbögen / Datenmanagement
     FieldInfo('8.4.1', 'study_plan_dataquality_checking', _(u'Information on the data quality audit')),
