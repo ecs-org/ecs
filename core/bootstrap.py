@@ -445,9 +445,19 @@ def checklist_questions():
             (u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',u''),
             (u'6. Ist die Größe der Stichprobe ausreichend begründet?',u''),
         ],
-        u'legal_review': [(u"42 ?",u''),],
-        u'insurance_review': [(u"42 ?",u''),],
-        u'boardmember_review': [(u"42 ?",u''),],
+        u'legal_review': [
+                          (u" 1. Anrede: entspricht?",u''),
+                          (u" 2. Hinweis auf Freiwilligkeit: entspricht?",u''),
+                          (u" 3. Hinweis auf jederzeitigen Abbruch: entspricht?",u''),
+                          (u" 4. Schwangerschaftspassus: entspricht?",u''),
+                          (u" 5. Versicherungspassus: entspricht?",u''),
+                          (u" 6. Name und Erreichbarkeit des Prüfarztes: entspricht?",u''),
+                          (u" 7. Hinweis auf Patientenanwaltschaft: entspricht?",u''),
+                          (u" 8. Vermeidung von Fremdwörtern: entspricht?",u''),
+                          (u" 9. Rechtschreibung und Grammatik: entspricht?",u''),
+                          (u"10. Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?",u''),
+                          ],
+        u'insurance_review': [(u" 1. Sind die Angaben zu Versicherung vollständig und adäquat?",u''),],
         u'external_review': [
             (u'1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
             (u'''1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
@@ -483,6 +493,16 @@ def checklist_questions():
             (u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',u''),
             (u'15. Anhang, wenn zutreffend?',u''),
         ],
+        u'boardmember_review': [
+                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+                                ],
+        u'expedited_review': [
+                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+                                ],
     }
 
     for slug in questions.keys():
