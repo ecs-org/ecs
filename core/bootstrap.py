@@ -457,7 +457,7 @@ def checklist_questions():
                           (u" 9. Rechtschreibung und Grammatik: entspricht?",u''),
                           (u"10. Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?",u''),
                           ],
-        u'insurance_review': [(u"42 ?",u''),],
+        u'insurance_review': [(u" 1. Sind die Angaben zu Versicherung vollständig und adäquat?",u''),],
         u'boardmember_review': [(u"42 ?",u''),],
         u'external_review': [
             (u'1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
