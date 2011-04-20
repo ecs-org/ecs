@@ -458,7 +458,6 @@ def checklist_questions():
                           (u"10. Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?",u''),
                           ],
         u'insurance_review': [(u" 1. Sind die Angaben zu Versicherung vollständig und adäquat?",u''),],
-        u'boardmember_review': [(u"42 ?",u''),],
         u'external_review': [
             (u'1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
             (u'''1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
@@ -494,6 +493,16 @@ def checklist_questions():
             (u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',u''),
             (u'15. Anhang, wenn zutreffend?',u''),
         ],
+        u'boardmember_review': [
+                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+                                ],
+        u'expedited_review': [
+                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+                                ],
     }
 
     for slug in questions.keys():
