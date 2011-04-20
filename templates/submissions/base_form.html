@@ -222,6 +222,35 @@
                 }
             });
 
+            new ecs.FormFieldController(['id_study_plan_multiple_test_correction_algorithm'], {
+                sources: ['id_study_plan_multiple_test'],
+                auto: function(values, initial){
+                    var abort_crit = $('id_study_plan_multiple_test_correction_algorithm');
+                    this.requireField(abort_crit, values[0]);
+                    this.setDisabled(!values[0]);
+                }
+            });
+
+            new ecs.FormFieldController(['id_study_plan_dataprotection_reason', 'id_study_plan_dataprotection_dvr'], {
+                sources: ['id_study_plan_dataprotection_choice'],
+                auto: function(values, initial){
+                    this.setDisabled(values[0] != 'personal');
+                    ['id_study_plan_dataprotection_reason', 'id_study_plan_dataprotection_dvr'].map($).each(function(f){
+                        this.requireField(f, values[0] == 'personal');
+                    }, this);
+                }
+            });
+
+            new ecs.FormFieldController(['id_study_plan_dataprotection_anonalgoritm'], {
+                sources: ['id_study_plan_dataprotection_choice'],
+                auto: function(values, initial){
+                    this.setDisabled(values[0] != 'non-personal');
+                    ['id_study_plan_dataprotection_anonalgoritm'].map($).each(function(f){
+                        this.requireField(f, values[0] == 'non-personal');
+                    }, this);
+                }
+            });
+
             new ecs.FormFieldController([
                     'id_invoice_name', 'id_invoice_contact_gender', 'id_invoice_contact_title', 'id_invoice_contact_first_name',
                     'id_invoice_contact_last_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',

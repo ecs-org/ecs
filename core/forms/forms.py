@@ -165,10 +165,11 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_controlled', 'study_plan_cross_over', 'study_plan_placebo', 'study_plan_factorized', 'study_plan_pilot_project', 'study_plan_equivalence_testing', 
             'study_plan_misc', 'study_plan_number_of_groups', 'study_plan_stratification', 'study_plan_sample_frequency', 'study_plan_primary_objectives', 
             'study_plan_null_hypothesis', 'study_plan_alternative_hypothesis', 'study_plan_secondary_objectives', 'study_plan_alpha', 'study_plan_power', 
-            'study_plan_statalgorithm', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio', 'study_plan_population_intention_to_treat', 
-            'study_plan_population_per_protocol', 'study_plan_interim_evaluation', 'study_plan_abort_crit', 'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
-            'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 
-            'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
+            'study_plan_statalgorithm', 'study_plan_multiple_test', 'study_plan_multiple_test_correction_algorithm', 'study_plan_dropout_ratio',
+            'study_plan_population_intention_to_treat', 'study_plan_population_per_protocol', 'study_plan_interim_evaluation', 'study_plan_abort_crit',
+            'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement', 
+            'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_choice', 'study_plan_dataprotection_reason',
+            'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
         ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
         widgets = {
@@ -207,6 +208,14 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
         if cleaned_data.get('study_plan_interim_evaluation', False):
             require_fields(self, ('study_plan_abort_crit',))
+        
+        if cleaned_data.get('study_plan_multiple_test', False):
+            require_fields(self, ('study_plan_multiple_test_correction_algorithm',))
+
+        if cleaned_data.get('study_plan_dataprotection_choice', 'personal'):
+            require_fields(self, ('study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr',))
+        else:
+            require_fields(self, ('study_plan_dataprotection_anonalgorithm',))
 
         return cleaned_data
 

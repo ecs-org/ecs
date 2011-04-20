@@ -247,13 +247,14 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.2.1', 'study_plan_alpha', _(u'Alpha'), help_text=_(u'first order error')),
     FieldInfo('8.2.2', 'study_plan_power', _(u'Power'), help_text=_(u'1 - Beta = 1 - second order error')),
     FieldInfo('8.2.3', 'study_plan_statalgorithm', _(u'statistical algorithm')),
-    FieldInfo('8.2.4', 'study_plan_multiple_test_correction_algorithm', _(u'multiple Testing, correctionalgorithm')),
+    FieldInfo('8.2.4', 'study_plan_multiple_test', _(u'multiple testing')),
+    FieldInfo('8.2.4', 'study_plan_multiple_test_correction_algorithm', _(u'correctionalgorithm')),
     FieldInfo('8.2.5', 'study_plan_dropout_ratio', _(u'Expected number of study dropouts(Drop-out-Quota)')),
     # 8.3 Geplante statistische Analyse
     FieldInfo('8.3.1', 'study_plan_population_intention_to_treat', _(u'Intention-to-treat')),
     FieldInfo('8.3.2', 'study_plan_population_per_protocol', _(u'Per Protocol')),
     FieldInfo('8.3.3', 'study_plan_interim_evaluation', _(u'Interim evaluation')),
-    FieldInfo(None, 'study_plan_abort_crit', _(u'Termination criteria')),
+    FieldInfo('8.3.3', 'study_plan_abort_crit', _(u'Termination criteria')),
     FieldInfo('8.3.4', 'study_plan_planned_statalgorithm', _(u'Planned use of statistical methods')),
     # 8.4 Dokumentationsbögen / Datenmanagement
     FieldInfo('8.4.1', 'study_plan_dataquality_checking', _(u'Information on the data quality audit')),
@@ -262,6 +263,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.5.1', 'study_plan_biometric_planning', _(u'Who did the biometric planning (if applicable, proof of qualification)?')),
     FieldInfo('8.5.2', 'study_plan_statistics_implementation', _(u'Who will conduct the statistical analysis (if applicable, proof of qualification)?')),
     # 8.6 Datenschutz
+    FieldInfo('8.6.1', 'study_plan_dataprotection_choice', _(u'Information privacy')),
     FieldInfo('8.6.2', 'study_plan_dataprotection_reason', _(u'Justification')),
     FieldInfo('8.6.2', 'study_plan_dataprotection_dvr', _(u'DPR-Nr.')),
     FieldInfo('8.6.3', 'study_plan_dataprotection_anonalgoritm', _(u'How is the anonymization done?')),

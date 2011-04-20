@@ -285,6 +285,11 @@ SUBMISSION_TYPE_CHOICES = (
     (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, ugettext_lazy('multicentric, local ethics commission')),
 )
 
+SUBMISSION_INFORMATION_PRIVACY_CHOICES = (
+    ('personal', ugettext_lazy('individual-related')), 
+    ('non-personal', ugettext_lazy('implicit individual-related')),
+)
+
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     acknowledged = models.BooleanField(default=False)
@@ -480,7 +485,8 @@ class SubmissionForm(models.Model):
     study_plan_alpha = models.CharField(max_length=80)
     study_plan_power = models.CharField(max_length=80)
     study_plan_statalgorithm = models.CharField(max_length=50)
-    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100)
+    study_plan_multiple_test = models.BooleanField()
+    study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100, null=True, blank=True)
     study_plan_dropout_ratio = models.CharField(max_length=80)
     
     # 8.3
@@ -499,6 +505,7 @@ class SubmissionForm(models.Model):
     study_plan_statistics_implementation = models.CharField(max_length=270)
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
+    study_plan_dataprotection_choice = models.CharField(max_length=15, choices=SUBMISSION_INFORMATION_PRIVACY_CHOICES, default='non-personal')
     study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
     study_plan_dataprotection_dvr = models.CharField(max_length=180, blank=True)
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
