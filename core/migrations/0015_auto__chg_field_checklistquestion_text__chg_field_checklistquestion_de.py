@@ -9,7 +9,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Truncate text, so we can convert to a CharField
         for cq in orm.ChecklistQuestion.objects.all():
-            cq.text = cq.text[:200]
+            cq.text = cq.text[:199]
             cq.save()
         
         # Changing field 'ChecklistQuestion.text'
