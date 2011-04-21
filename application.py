@@ -77,8 +77,6 @@ ghettoq:inst:all:pypi:ghettoq
 chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
-mock:inst:all:pypi:mock
-nose:inst:all:pypi:nose
 # we dont use python-daemon functionality in lamson, but lamson.utils imports daemon and fails
 # so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:all:dir:ecs/utils/fake-daemon/
@@ -116,7 +114,8 @@ xlwt:inst:all:pypi:xlwt
 
 
 # pdf generation / pisa
-# pyPDF is deprecated for ecs in favour of pdfminer, and optional for pisa:  pyPDF:inst:all:pypi:pyPDF
+# pyPDF is deprecated for ecs in favour of pdfminer, but somehow needed (optional) for pisa:
+pyPDF:inst:all:pypi:pyPDF
 html5lib:inst:all:pypi:html5lib
 reportlab:req:apt:apt-get:libfreetype6-dev
 reportlab:inst:!win:pypi:reportlab
@@ -230,6 +229,7 @@ logilab-common:inst:all:pypi:logilab-common\>=0.49.0
 logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
 #django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
+
 # django-test-utils is used for testmaker
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 django-test-utils:inst:all:pypi:django-test-utils
@@ -238,8 +238,20 @@ django-test-utils:inst:all:pypi:django-test-utils
 
 # packages needed or nice to have for development
 developer_packages=  """
-# debugging
+# debugging toolbar, switched back to robhudson original tree
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
+#django-debug-toolbar:inst:all:http://github.com/dcramer/django-debug-toolbar/tarball/master
+
+# support for django-devserver
+guppy:inst:!win:pypi:guppy
+guppy:inst:win:http://pypi.python.org/packages/2.6/g/guppy/guppy-0.1.9.win32-py2.6.exe
+sqlparse:inst:all:pypi:sqlparse
+werkzeug:inst:all:pypi:werkzeug
+django-devserver:inst:all:https://github.com/dcramer/django-devserver/tarball/master
+
+# interactive python makes your life easier
+ipython:inst:win:pypi:pyreadline
+ipython:inst:all:pypi:ipython
 
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
@@ -249,10 +261,6 @@ sfood:inst:all:pypi:snakefood
 #mutt:req:suse:zypper:mutt
 #mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
 #mutt:req:mac:macports:mutt
-
-# interactive python makes your life easier
-ipython:inst:win:pypi:pyreadline
-ipython:inst:all:pypi:ipython
 
 # FIXME: who needs simplejson, and why is it in developer packages
 simplejson:inst:all:pypi:simplejson
