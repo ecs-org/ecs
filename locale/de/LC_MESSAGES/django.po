@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-22 21:08+0200\n"
+"POT-Creation-Date: 2011-04-22 22:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1892,7 +1892,6 @@ msgid "deadline thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
 #: meetings/forms.py:27
-#, fuzzy
 msgid "comments"
 msgstr "Kommentar"
 
@@ -2005,15 +2004,15 @@ msgstr "speichern erflogreich"
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
-#: pdfviewer/models.py:22
+#: pdfviewer/models.py:28
 msgid "top"
 msgstr "oben"
 
-#: pdfviewer/models.py:24
+#: pdfviewer/models.py:30
 msgid "middle"
 msgstr "mitte"
 
-#: pdfviewer/models.py:26
+#: pdfviewer/models.py:32
 msgid "bottom"
 msgstr "unten"
 
