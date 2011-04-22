@@ -209,8 +209,9 @@ def auth_groups():
         u'EC-Thesis Executive Group',
         u'EC-Board Member',
         u'External Reviewer',
-        u'userswitcher_target',
         u'GCP Review Group',
+        u'userswitcher_target',
+        u'translators',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -313,9 +314,10 @@ def auth_user_developers():
         user.first_name = first
         user.last_name = last
         user.set_password(password)
-        user.is_staff = True
+        user.is_staff = False
         user.is_superuser = is_superuser
         user.groups.add(Group.objects.get(name="Presenter"))
+        user.groups.add(Group.objects.get(name="translators"))
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
