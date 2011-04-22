@@ -263,7 +263,7 @@ class TracRpc():
     
     def __init__(self, username, password, protocol, hostname, urlpath, debug=False, httprealm=None):
         '''
-        example: TracRpc('user', 'password', 'https', 'ecsdev.ep3.at', '/project/ecs')
+        example: TracRpc('user', 'password', 'https', 'example.org', '/url/path')
         '''
         C_TRAC_AUTH_JSON = "login/jsonrpc"
         self._url = '%s://%s:%s@%s%s/%s' % (protocol, username, password, hostname,
