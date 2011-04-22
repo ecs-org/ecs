@@ -13,13 +13,14 @@ from ecs.utils import s3utils
 def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, brand=False):
     ''' Returns tuple: Success:True/False,Response:Text '''   
     
-    if settings.CELERY_ALWAYS_EAGER:
-        # TODO: is hack to workaround urlopen of mediaserver on runserver
+    if settings.CELERY_ALWAYS_EAGER or settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.utils import MediaProvider
         m = MediaProvider()
-        result, identifier, response = m.prime_blob(uuid, mimetype, wait=True)
+        wait = True if settings.CELERY_ALWAYS_EAGER else False
+        result, identifier, response = m.prime_blob(uuid, mimetype, wait=wait)
         return result, response
     else:
+        #TODO: using urlopen and lot of data over the internet might go wrong: Add resilience
         objid_parts = ['prepare', uuid, mimetype]
         objid = '/'.join(objid_parts) + '/'
     
