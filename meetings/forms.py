@@ -9,16 +9,23 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 
+from ecs.utils.formutils import TranslatedModelForm
 
-class MeetingForm(forms.ModelForm):
-    start = DateTimeField(label=_(u'date and time'), initial=datetime.now)
-    title = forms.CharField(label=_(u'title'), required=False)
-    deadline = DateTimeField(label=_(u'deadline'), initial=datetime.now)
-    deadline_diplomathesis = DateTimeField(label=_(u'deadline thesis'), initial=datetime.now)
+class MeetingForm(TranslatedModelForm):
+    start = DateTimeField(initial=datetime.now)
+    deadline = DateTimeField(initial=datetime.now)
+    deadline_diplomathesis = DateTimeField(initial=datetime.now)
 
     class Meta:
         model = Meeting
         exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
+        labels = {
+            'start': _(u'date and time'),
+            'title': _(u'title'),
+            'deadline': _(u'deadline'),
+            'deadline_diplomathesis': _(u'deadline thesis'),
+            'comments': _('comments'),
+        }
 
 class TimetableEntryForm(forms.Form):
     duration = TimedeltaField()
