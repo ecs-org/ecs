@@ -24,6 +24,11 @@ CHANGELOG = (
     ('*', '0.1'),
     ('+', SubmissionForm, 'project_type_nursing_study', False),
     ('*', '0.2'),
+    ('+', SubmissionForm, 'study_plan_multiple_test', False),
+    ('+', SubmissionForm, 'study_plan_multiple_test', False),
+    ('+', SubmissionForm, 'study_plan_interim_evaluation', False),
+    ('+', SubmissionForm, 'study_plan_dataprotection_choice', 'non-personal'),
+    ('*', '0.3'),
 )
 
 

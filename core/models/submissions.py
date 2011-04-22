@@ -506,8 +506,8 @@ class SubmissionForm(models.Model):
 
     # 8.6 (either anonalgorith or reason or dvr may be set.)
     study_plan_dataprotection_choice = models.CharField(max_length=15, choices=SUBMISSION_INFORMATION_PRIVACY_CHOICES, default='non-personal')
-    study_plan_dataprotection_reason = models.CharField(max_length=120, blank=True)
-    study_plan_dataprotection_dvr = models.CharField(max_length=180, blank=True)
+    study_plan_dataprotection_reason = models.CharField(max_length=120, null=True, blank=True)
+    study_plan_dataprotection_dvr = models.CharField(max_length=180, null=True, blank=True)
     study_plan_dataprotection_anonalgoritm = models.TextField(null=True, blank=True)
     
     # 9.x
