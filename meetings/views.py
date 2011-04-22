@@ -27,6 +27,7 @@ from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
 
 
+
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
     if form.is_valid():
@@ -340,10 +341,10 @@ def agenda_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
     
-    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
+    pdfstring = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
         'meeting': meeting,
     })
-    return pdf_response(pdf, filename=filename)
+    return pdf_response(pdfstring, filename=filename)
 
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

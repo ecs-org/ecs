@@ -99,7 +99,9 @@ def vote_sign(request, vote_pk=None):
     context = vote_context(vote)
     
     sign_dict = {
-        'redirect_view': 'ecs.core.views.votes.vote_sign_finished',
+        'success_tasktype_close': 'Vote Signing',
+        'success_redirect_view': 'ecs.core.views.votes.vote_sign_finished',
+        'error_redirect_view': 'ecs.core.views.votes.vote_sign_error',
         'parent_name': 'ecs.core.models.Vote',
         'parent_pk': vote_pk,    
         'document_uuid': uuid4().get_hex(),

@@ -1,5 +1,5 @@
 <div style="position: absolute; top: 0; left: 0;">
-<img src="{{ MEDIA_URL }}/images/logo_big.png" alt="Ethik-Kommission der Medizinischen Universit&auml;t Wien" />
+<img src="logo_big.png" alt="Ethik-Kommission der Medizinischen Universit&auml;t Wien" />
 </div>
 <div style="font-weight: bold; font-size: large; position: absolute; top: 3cm; right: 0; text-align: right; ">
 Ethik-Kommission<br />

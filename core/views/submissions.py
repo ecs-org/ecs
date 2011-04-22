@@ -358,7 +358,7 @@ def create_submission_form(request):
 
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        half_baked_documents = bool([d for d in request.docstash['documents'] if not d.status == 'ready'])
+        # XXX: disabled, because we have a working mediaserver ;-) half_baked_documents = bool([d for d in request.docstash['documents'] if not d.status == 'ready'])
         submit_now = submit and valid and request.user.get_profile().approved_by_office and not half_baked_documents
 
         if submit_now:
@@ -427,8 +427,9 @@ def delete_docstash_entry(request):
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
 def submission_pdf(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)    
-    filename = 'ek-%s-Einreichung.pdf' % submission_form.submission.get_ec_number_display(separator='-')
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    name = 'ek-%s-Einreichung' % submission_form.submission.get_ec_number_display(separator='-')  
+    filename = name+ '.pdf'
     
     if not submission_form.pdf_document or not submission_form.pdf_document.status == 'new':
         pdf = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
@@ -438,7 +439,8 @@ def submission_pdf(request, submission_form_pk=None):
         })
         if not submission_form.pdf_document:
             doctype = DocumentType.objects.get(identifier='other')
-            doc = Document.objects.create_from_buffer(pdf, doctype=doctype, parent_object=submission_form)
+            doc = Document.objects.create_from_buffer(pdf, doctype=doctype, parent_object=submission_form,
+                name=name, version="1FIXME", original_file_name=filename)
             submission_form.pdf_document = doc
             submission_form.save()
     else:

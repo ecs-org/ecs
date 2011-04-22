@@ -52,7 +52,7 @@ django-nose:inst:all:pypi:django-nose
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 # for manage.py test_windmill we need windmill
-windmill:inst:all:https://github.com/windmill/windmill/tarball/master
+windmill:inst:all:pypi:windmill\>=1.6
 # for random text generation in windmill tests
 cicero:inst:all:pypi:cicero
 
@@ -123,7 +123,7 @@ reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-
 pisa:inst:all:pypi:pisa
 
 
-# (ecs/mediaserver): pdf validation (is_valid, pages_nr)
+# (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
 pdfminer:inst:all:pypi:pdfminer
 
 
@@ -189,12 +189,13 @@ mpmath:inst:all:pypi:mpmath
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 
 
-# logging: django-sentry
-django-indexer:inst:all:pypi:django-indexer
-django-paging:inst:all:pypi:django-paging
+# logging: django-sentry; uuid is in mainlibs since 2.3 ...
+uuid:inst:all:pypi:uuid
+django-indexer:inst:all:pypi:django-indexer==0.2.1
+django-paging:inst:all:pypi:django-paging\>=0.2.2
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
-django-sentry:inst:all:pypi:django-sentry
+django-sentry:inst:all:pypi:django-sentry\>=1.6.10
 
 # ecs.help needs reversion from now on
 django-reversion:inst:all:pypi:django-reversion
@@ -209,7 +210,7 @@ django-rosetta:inst:all:pypi:django-rosetta
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
 guitest_packages = """
-windmill:inst:all:https://github.com/windmill/windmill/tarball/master
+windmill:inst:all:pypi:windmill\>=1.6
 # for random text generation in windmill tests
 cicero:inst:all:pypi:cicero
 # Firefox and a vncserver is needed for headless gui testing
@@ -244,7 +245,7 @@ django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/t
 
 # support for django-devserver
 guppy:inst:!win:pypi:guppy
-guppy:inst:win:http://pypi.python.org/packages/2.6/g/guppy/guppy-0.1.9.win32-py2.6.exe
+guppy:instbin:win:http://pypi.python.org/packages/2.6/g/guppy/guppy-0.1.9.win32-py2.6.exe
 sqlparse:inst:all:pypi:sqlparse
 werkzeug:inst:all:pypi:werkzeug
 django-devserver:inst:all:https://github.com/dcramer/django-devserver/tarball/master

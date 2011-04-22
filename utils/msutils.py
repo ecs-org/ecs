@@ -9,12 +9,54 @@ from django.http import Http404
 
 from ecs.utils import s3utils
 
+
+def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, brand=False):
+    ''' Returns tuple: Success:True/False,Response:Text '''   
+    
+    if settings.CELERY_ALWAYS_EAGER:
+        # TODO: is hack to workaround urlopen of mediaserver on runserver
+        from ecs.mediaserver.utils import MediaProvider
+        m = MediaProvider()
+        result, identifier, response = m.prime_blob(uuid, mimetype, wait=True)
+        return result, response
+    else:
+        objid_parts = ['prepare', uuid, mimetype]
+        objid = '/'.join(objid_parts) + '/'
+    
+        key_id = settings.MS_CLIENT ["key_id"]
+        expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
+    
+        s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
+        url= s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
+
+        f = urlopen(url)
+        response = f.read()
+        f.close()
+        if not response == 'ok':
+            return False, response
+        
+
+def download_from_mediaserver(uuid, filename, personalization=None, brand=False):
+    ''' returns blob from mediaserver as data; Not used normal, 
+    except you want to get the data for further processing, eg. export submission '''
+    
+    if settings.MS_CLIENT.get('same_host_as_server', False):
+        from ecs.mediaserver.utils import MediaProvider
+        return MediaProvider().getBlob(uuid)
+    else:
+        # TODO using urlopen and lot of data over the internet might go wrong: Add resilience
+        f = urlopen(generate_media_url(uuid, filename, personalization=personalization, brand=brand))
+        return f
+
+
 def generate_media_url(uuid, filename, mimetype='application/pdf', personalization=None, brand=False):
+    ''' returns a url that will allow a user to download this blob using this url for a specific time
+    '''
     objid_parts = ['download', uuid, mimetype]
     if personalization:
-        objid_parts += ['personalize', personalization]
+        objid_parts += ['brand', personalization]
     elif brand:
-        objid_parts.append('brand')
+        objid_parts += ['brand', "True"]
     objid_parts.append(filename)
 
     objid = '/'.join(objid_parts) + '/'
@@ -25,15 +67,11 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
     s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
     return s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
 
-def get_from_mediaserver(uuid, filename, personalization=None, brand=False):
-    if settings.MS_CLIENT.get('same_host_as_server', False):
-        from ecs.mediaserver.mediaprovider import MediaProvider
-        return MediaProvider().getBlob(uuid)
-    else:
-        f = urlopen(generate_media_url(uuid, filename, personalization=personalization, brand=brand))
-        return f
 
 def generate_pages_urllist(uuid, pages):
+    ''' returns a list of ('description', 'url', 'page', 'tx', 'ty', 'width', 'height')
+    for every supported rendersize options for every page of the document with uuid
+    '''
     tiles = settings.MS_SHARED ["tiles"]
     width = settings.MS_SHARED ["resolutions"]
     aspect_ratio = settings.MS_SHARED ["aspect_ratio"]

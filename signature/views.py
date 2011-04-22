@@ -181,9 +181,10 @@ def sign_receive(request, jsessionid=None):
         original_file_name=sign_dict["document_filename"], date=datetime.now())
 
     ct = ContentType.objects.get_for_model(parent_obj.__class__)
-    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=parent_obj.id)
-    task.close()
+    if sign_dict.has_key('success_tasktype_close') and sign_dict['success_tasktype_close']:  
+        task = get_object_or_404(Task, task_type__name=sign_dict['success_tasktype_close'], content_type=ct, data_id=parent_obj.id)
+        task.close()
 
-    return HttpResponseRedirect(reverse(sign_dict['redirect_view'], kwargs={'document_pk': document.pk}))
+    return HttpResponseRedirect(reverse(sign_dict['success_redirect_view'], kwargs={'document_pk': document.pk}))
 
 

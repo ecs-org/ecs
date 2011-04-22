@@ -14,7 +14,7 @@ from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.utils import gpgutils, s3utils, msutils, pdfutils
-from ecs.mediaserver.mediaprovider import MediaProvider
+from ecs.mediaserver.utils import MediaProvider
 
 
 class MediaDisplayDownload(LoginTestCase):

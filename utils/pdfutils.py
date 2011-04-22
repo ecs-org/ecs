@@ -181,6 +181,7 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
         pagenr += 1
         yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
+
 def pdf2pdfa(real_infile, real_outfile):
     workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
 
@@ -457,6 +458,7 @@ def xhtml2pdf(html, timeoutseconds=30):
         valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
         uri = ''.join(c for c in uri if c in valid_chars)
         path = os.path.join(settings.PROJECT_DIR, 'utils', 'xhtml2pdf', uri)
+        print "uri, rel, path", uri, rel, path
         return path
 
     pdf = StringIO()

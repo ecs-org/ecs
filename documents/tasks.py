@@ -17,12 +17,12 @@ from ecs.utils import gpgutils
 
 from ecs.documents.models import Document, Page, DocumentFileStorage
 from ecs.utils.pdfutils import pdf_page_count
-from ecs.utils import s3utils
+from ecs.utils import msutils
 
 
-TO_BE_INDEXED_Q = Q(status='new', mimetype='application/pdf')
-TO_BE_UPLOADED_Q = Q(status='indexed', mimetype='application/pdf')|(Q(status='new') & ~Q(mimetype='application/pdf'))
-
+TO_BE_INDEXED_Q = Q(status='new')
+TO_BE_UPLOADED_Q = Q(status='indexed')
+TO_BE_READY_Q = Q(status='uploaded')
 
 @periodic_task(run_every=timedelta(seconds=10))
 def document_tamer(**kwargs):
@@ -30,20 +30,31 @@ def document_tamer(**kwargs):
 
     to_be_indexed_documents = Document.objects.filter(TO_BE_INDEXED_Q).values('pk')
     if len(to_be_indexed_documents):
-        logger.info('{0} new documents to be indexed'.format(len(to_be_indexed_documents)))
+        logger.info('{0} documents to be indexed'.format(len(to_be_indexed_documents)))
     for doc in to_be_indexed_documents:
         index_pdf.delay(doc['pk'])
 
     to_be_uploaded_documents = Document.objects.filter(TO_BE_UPLOADED_Q).values('pk')
     if len(to_be_uploaded_documents):
-        logger.info('{0} new documents to be uploaded'.format(len(to_be_uploaded_documents)))
+        logger.info('{0} documents to be uploaded'.format(len(to_be_uploaded_documents)))
     for doc in to_be_uploaded_documents:
         upload_to_storagevault.delay(doc['pk'])
 
-    updated = Document.objects.filter(status='uploaded').update(status='ready')
-    if updated:
-        logger.info('{0} documents are now ready'.format(updated))
-
+    to_be_ready_documents = Document.objects.filter(TO_BE_READY_Q).values('pk')
+    if len(to_be_ready_documents):
+        logger.info('{0} documents to be primed and set to ready'.format(len(to_be_ready_documents)))
+    for doc in to_be_ready_documents:
+        Document.objects.filter(pk= doc['pk']).update(status='ready')
+        t = Document.objects.get(pk = doc['pk'])
+        success, response = msutils.prime_mediaserver(t.uuid_document, t.mimetype)
+        if not success:
+            logger.warning("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid_document, response))
+        
+        #filename = t.file.name
+        #t.file = None
+        #DocumentFileStorage().delete(filename)
+        #t.save()        
+    
 
 @task()
 def upload_to_storagevault(document_pk=None, **kwargs):
@@ -76,40 +87,18 @@ def upload_to_storagevault(document_pk=None, **kwargs):
         finally:
             if os.path.isfile(tmp_name):
                 os.remove(tmp_name)
-    
-        key_id = settings.MS_CLIENT['key_id']
-        s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
-        objid_parts = ['prime', doc.uuid_document]
-        objid = '/'.join(objid_parts) + '/'
-        expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
-        url = s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
-
-        # TODO: is hack to workaround urlopen of mediaserver on runserver
-        if settings.CELERY_ALWAYS_EAGER:
-            from ecs.mediaserver.mediaprovider import MediaProvider
-            mediaprovider = MediaProvider()
-            mediaprovider.renderPages(doc.uuid_document)
-        else:        
-            f = urlopen(url)
-            response = f.read()
-            if not response == 'ok':
-                logger.error("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid_document, response))
-                return False
-            f.close()
-
+        
     except Exception as e:
         doc.status = 'aborted'
         doc.save()
         logger.error("Can't upload document with uuid={0}. Exception was {1}".format(doc.uuid_document, e))
         return False
-    else:
-        doc.status = 'uploaded'
-        filename = doc.file.name
-        doc.file = None
-        doc.save()
-        DocumentFileStorage().delete(filename)
+    
+    doc.status = 'uploaded'
+    doc.save()     
     
     return True
+    
     
 @task()
 def index_pdf(document_pk=None, **kwargs):
@@ -123,26 +112,27 @@ def index_pdf(document_pk=None, **kwargs):
         return False
 
     doc = Document.objects.get(pk=document_pk)
+    if doc.mimetype == 'application/pdf':
+              
+        try:
+            doc.pages = pdf_page_count(doc.file) # calculate number of pages
     
-    try:
-        doc.pages = pdf_page_count(doc.file) # calculate number of pages
+            for p in xrange(1, doc.pages + 1):
+                text = pdf2text(doc.file.path, p)
+                doc.page_set.create(num=p, text=text)
+            
+            index = site.get_index(Page)
+            index.backend.update(index, doc.page_set.all())
+    
+        except Exception as e:
+            doc.status = 'aborted'
+            doc.save()
+            logger.error("Can't index uploaded document with uuid={0}. Exception was {1}".format(doc.uuid_document, e))
+            return False
 
-        for p in xrange(1, doc.pages + 1):
-            text = pdf2text(doc.file.path, p)
-            doc.page_set.create(num=p, text=text)
-        
-        index = site.get_index(Page)
-        index.backend.update(index, doc.page_set.all())
-
-    except Exception as e:
-        doc.status = 'aborted'
-        doc.save()
-        logger.error("Can't index uploaded document with uuid={0}. Exception was {1}".format(doc.uuid_document, e))
-        return False
-    else:
-        doc.status = 'indexed'
-        doc.save()
-
+    doc.status = 'indexed'
+    doc.save()
+    
     return True
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, getpass, tempfile
+import os, getpass, tempfile, logging
 
 from django.conf import settings
 
@@ -8,31 +8,59 @@ from ecs.utils.pathutils import tempfilecopy
 from ecs.utils.storagevault import getVault
 from ecs.utils.diskbuckets import DiskBuckets  
 from ecs.utils.gpgutils import decrypt_verify
-from ecs.mediaserver.tasks import rerender_pages
- 
- 
+
+from ecs.mediaserver.tasks import do_rendering
+
+
 class MediaProvider(object):
     '''
-    a central document storage and retrieval facility.
+    Document loading, caching, storage and retrieval facility.
     Implements caching layers, rules, storage logic
     
     @attention: getBlob, getPage may raise KeyError in case getting of data went wrong
     '''
 
-    def __init__(self):
+    def __init__(self, allow_mkrootdir=False):
         self.render_memcache = VolatileCache()
         self.render_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["render_diskcache"], "pages"),
-            settings.MS_SERVER ["render_diskcache_maxsize"])
+            settings.MS_SERVER ["render_diskcache_maxsize"], allow_mkrootdir)
         self.doc_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["doc_diskcache"], "blobs"),
-            settings.MS_SERVER ["doc_diskcache_maxsize"])
+            settings.MS_SERVER ["doc_diskcache_maxsize"], allow_mkrootdir)
         self.vault = getVault()
 
 
     def _addBlob(self, identifier, filelike): 
         ''' this is a test function and should not be used normal '''
+        logger = logging.getLogger()
+        logger.debug("_addBlob (%s), filelike is %s" % (identifier, filelike))
         self.vault.add(identifier, filelike)
-
         
+        
+    def _cacheBlob(self, identifier, filelike):
+        ''' create/udpate a blob into the diskcache directly '''
+        self.doc_diskcache.create_or_update(identifier, filelike)
+        
+
+    def prime_blob(self, identifier=None, mimetype='application/pdf', wait=True):
+        ''' load blob from storage vault, cache blob, optional rerender pages (if application/pdf), cache pages.
+        returns success, identifier, response if wait==True else: True, identifier, ""
+        '''
+        result = do_rendering.delay(identifier, mimetype)
+        
+        if wait: # we wait for an answer, meaning rendering is async, but view waits
+            success, used_identifier, response = result.get()
+            if not success:
+                logger = logging.getLogger()
+                if str(identifier) != str(used_identifier):
+                    logger.error("prime_blob could not getBlob(%s), exception was %r" % (identifier, response))
+                else:
+                    logger.error("prime_blob of blob %s returned an IOError: %r" % (identifier, response))
+                    
+            return success, used_identifier, response
+        else:
+            return True, identifier, ""
+
+      
     def getBlob(self, identifier, try_diskcache=True, try_vault=True):
         '''get a blob (unidentified media data)
         @raise KeyError: if reading the data of the identifier went wrong 
@@ -46,7 +74,7 @@ class MediaProvider(object):
             try:
                 filelike = self.vault.get(identifier)
             except KeyError as exceptobj:
-                raise 
+                raise KeyError, "could not load blob with identifier %s, exception was %r" % (identifier, exceptobj)
             
             if hasattr(filelike, "name"):
                 inputfilename = filelike.name
@@ -67,6 +95,10 @@ class MediaProvider(object):
                 raise KeyError, "could not put decrypted blob with identifier %s into diskcache, exception was %r" %(identifier, exceptobj)
 
             filelike = self.doc_diskcache.get(identifier)
+        
+        if not filelike:
+            raise KeyError, "could not load blob with identifier %s" % (identifier)
+
         return filelike
 
 
@@ -101,9 +133,7 @@ class MediaProvider(object):
                     self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
                 else: 
                     # still not here, so we need to recache from scratch
-                    result = rerender_pages.delay(page.id)
-                    # we wait for an answer, meaning rendering is async, but view waits
-                    success, used_identifier, additional_msg = result.get()
+                    success, used_identifier, additional_msg = self.prime_blob(page.id, mimetype='application/pdf', wait=True)
                     if not success: 
                         raise KeyError, "could not load page for document %s, error was %s" % (identifier, additional_msg)
                     else:
@@ -113,8 +143,7 @@ class MediaProvider(object):
                 filelike.seek(0)
         return filelike
 
-    def renderPages(self, blob_uuid):
-        rerender_pages.delay(blob_uuid)
+
 
 class VolatileCache(object):
     '''
@@ -154,9 +183,9 @@ class DiskCache(DiskBuckets):
     '''
     Persistent cache using directory buckets which are derived from the cache identifier of storage unit
     '''
-    def __init__(self, root_dir, maxsize):
+    def __init__(self, root_dir, maxsize, allow_mkrootdir=False):
         self.maxsize = maxsize
-        super(DiskCache, self).__init__(root_dir, allow_mkrootdir=True)
+        super(DiskCache, self).__init__(root_dir, allow_mkrootdir)
 
     def add(self, identifier, filelike):
         super(DiskCache, self).add(identifier, filelike)
@@ -179,7 +208,7 @@ class DiskCache(DiskBuckets):
         cachesize = self.size()
         
         while cachesize < self.maxsize:
-            oldest = entriesByAge.next()
+            oldest = entriesByAge.remove()
             size = os.path.getsize(oldest)
             os.remove(oldest)
             cachesize -= size

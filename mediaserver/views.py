@@ -1,24 +1,27 @@
 # -*- coding: utf-8 -*-
+from tempfile import NamedTemporaryFile
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
 
 from ecs.utils import forceauth
 from ecs.utils.s3utils import S3url
-from ecs.utils.pdfutils import Page
+from ecs.utils.pdfutils import Page, pdf_barcodestamp
 
-from ecs.mediaserver.mediaprovider import MediaProvider
+from ecs.mediaserver.utils import MediaProvider
+from logging import getLogger
+
 
 @forceauth.exempt
-def prime_cache(request, uuid):
+def prime_cache(request, uuid, mimetype='application/pdf'):
     s3url = S3url(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not s3url.verifyUrlString(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
 
     mediaprovider = MediaProvider()
-    mediaprovider.renderPages(uuid)
-
+    mediaprovider.prime_blob(uuid, mimetype, wait=False)
     return HttpResponse('ok')
+
 
 @forceauth.exempt
 def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
@@ -35,35 +38,45 @@ def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
     data = f.read() if hasattr(f, 'read') else f
     return HttpResponse(data, mimetype='image/png')
         
-@forceauth.exempt
-def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None):
-    s3url = S3url(settings.MS_CLIENT['key_id'], settings.MS_CLIENT['key_secret'])
-    if not s3url.verifyUrlString(request.get_full_path()):
-        return HttpResponseBadRequest(_("Invalid expiring url"))
-
-    mediaprovider = MediaProvider()
-    try:
-        f = mediaprovider.getBlob(uuid)
-    except KeyError:
-        return HttpResponseNotFound()
-
-    #fixme: brand pdf with uuid barcode, and if branding != none with branding barcode also
-
-    response = HttpResponse(f.read(), mimetype=mimetype)
-    response['Content-Disposition'] = 'attachment;filename=%s' % (filename)
-    return response  
 
 @forceauth.exempt
 def get_pdf(request, *args, **kwargs):
     kwargs['mimetype'] = 'application/pdf'
     return get_blob(request, *args, **kwargs)
 
-@forceauth.exempt
-def prepare_branded(request, uuid, mimetype='application/pdf', brandprepare=True):
-    return prepare(request, uuid, mimetype, brandprepare)
 
 @forceauth.exempt
-def prepare(request, uuid, mimetype='application/pdf', brandprepare=False):
-    return HttpResponseBadRequest(_("sorry, unfinished"))
+def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None):
+    logger = getLogger()
+    s3url = S3url(settings.MS_CLIENT['key_id'], settings.MS_CLIENT['key_secret'])
+    if not s3url.verifyUrlString(request.get_full_path()):
+        return HttpResponseBadRequest(_("Invalid expiring url"))
 
+    mediaprovider = MediaProvider()
+    if branding is not None:
+        # TODO: look if branding is not "True" and use it as second stamp 
+        try:
+            f = mediaprovider.getBlob(uuid+uuid, try_vault=False)
+        except KeyError:
+            try:
+                inputpdf = mediaprovider.getBlob(uuid)
+            except KeyError:
+                return HttpResponseNotFound()
+            
+            with NamedTemporaryFile(suffix='.pdf') as outputpdf:
+                pdf_barcodestamp(inputpdf, outputpdf, uuid)
+                outputpdf.seek(0)
+                logger.info('barcodestamp blob %s' % uuid)
+                mediaprovider._cacheBlob(uuid+uuid, outputpdf)
+                
+            f = mediaprovider.getBlob(uuid+uuid, try_vault=False)
+    else:        
+        try:
+            f = mediaprovider.getBlob(uuid)     
+        except KeyError:
+            return HttpResponseNotFound()
+
+    response = HttpResponse(f.read(), mimetype=mimetype)
+    response['Content-Disposition'] = 'attachment;filename=%s' % (filename)
+    return response  
 

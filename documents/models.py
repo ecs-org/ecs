@@ -21,7 +21,7 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.utils.msutils import generate_media_url, get_from_mediaserver
+from ecs.utils.msutils import generate_media_url, download_from_mediaserver
 from ecs.utils.pdfutils import pdf_isvalid
 from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
@@ -74,13 +74,15 @@ class DocumentFileStorage(FileSystemStorage):
 
 class DocumentManager(AuthorizationManager): 
     def create_from_buffer(self, buf, **kwargs): 
-        tmp = tempfile.NamedTemporaryFile() 
-        tmp.write(buf) 
-        tmp.flush() 
-        tmp.seek(0) 
-        kwargs.setdefault('date', datetime.datetime.now()) 
-        doc = self.create(file=File(tmp), **kwargs) 
-        tmp.close() 
+        tmp = tempfile.NamedTemporaryFile(delete=False)
+        tmpname = tmp.name
+        tmp.write(buf)
+        tmp.flush()
+        tmp.seek(0)
+
+        kwargs.setdefault('date', datetime.datetime.now())
+        doc = self.create(file=File(open(tmpname,'rb')), **kwargs)
+        tmp.close()
         return doc
 
 
@@ -149,14 +151,14 @@ class Document(models.Model):
             brand = False
         else:
             personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-            brand = self.branding == 'b'
+            brand = self.branding == 'p' or self.branding == 'b'
 
         return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-        brand = self.branding == 'b'
-        return get_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
+        brand = self.branding == 'p' or self.branding == 'b'
+        return download_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
         
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
@@ -169,7 +171,12 @@ class Document(models.Model):
     def save(self, **kwargs):
         if not self.uuid_document: 
             self.uuid_document = uuid4().get_hex() # generate a new random uuid
-            content_type, encoding = mimetypes.guess_type(self.file.name) # look what kind of mimetype we would guess
+            print ("self.file, self.file.name, self.original_file_name, self.name", 
+                   self.file, self.file.name, self.original_file_name, self.name)
+            content_type = None
+            if self.file.name or self.original_file_name:
+                filename_to_check = self.file.name if self.file.name else self.original_file_name
+                content_type, encoding = mimetypes.guess_type(filename_to_check) # look what kind of mimetype we would guess
 
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
                 if not pdf_isvalid(self.file):
@@ -191,7 +198,10 @@ class Document(models.Model):
         if settings.CELERY_ALWAYS_EAGER:
             from documents.tasks import document_tamer
             document_tamer.delay().get()
-
+        
+        if self.status == 'deleted':
+            self.page_set.all().delete()
+            
         return rval
 
 class Page(models.Model):
