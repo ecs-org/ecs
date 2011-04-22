@@ -15,7 +15,11 @@ def shoot(request):
         except xmlrpclib.Fault:
             pass
 
-    bugshot_reporter = request.original_user.__unicode__() if hasattr(request, "original_user") else request.user.username.__unicode__()    
+    if hasattr(request, "original_user"):
+        bugshot_reporter = request.original_user.__unicode__() 
+    else:
+        bugshot_reporter = request.user.__unicode__()
+    
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
         "type":"bug", 
         "owner": request.POST.get('owner', ''),
