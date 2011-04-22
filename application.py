@@ -239,6 +239,10 @@ django-test-utils:inst:all:pypi:django-test-utils
 
 # packages needed or nice to have for development
 developer_packages=  """
+# windows needed for manage.py makemessages and compilemessages
+#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
+#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
+
 # debugging toolbar, switched back to robhudson original tree
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 #django-debug-toolbar:inst:all:http://github.com/dcramer/django-debug-toolbar/tarball/master
