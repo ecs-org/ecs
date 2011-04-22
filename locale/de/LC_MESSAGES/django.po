@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-22 19:45+0200\n"
+"POT-Creation-Date: 2011-04-22 21:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1225,8 +1225,8 @@ msgstr "Wie erfolgt die Anonymisierung?"
 msgid "salutation"
 msgstr "Anrede"
 
-#: core/paper_forms.py:272 core/paper_forms.py:310 meetings/forms.py:15
-#: meetings/forms.py:33
+#: core/paper_forms.py:272 core/paper_forms.py:310 meetings/forms.py:24
+#: meetings/forms.py:40
 msgid "title"
 msgstr "Titel"
 
@@ -1844,7 +1844,7 @@ msgstr "abgebrochen"
 msgid "deleted"
 msgstr "gelöscht"
 
-#: fastlane/forms.py:14 meetings/forms.py:14
+#: fastlane/forms.py:14 meetings/forms.py:23
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
 
@@ -1883,43 +1883,48 @@ msgstr "Sitzungstag"
 msgid "Meeting Protocol Sending"
 msgstr ""
 
-#: meetings/forms.py:16
+#: meetings/forms.py:25
 msgid "deadline"
 msgstr "Letzter Einreichtermin"
 
-#: meetings/forms.py:17
+#: meetings/forms.py:26
 msgid "deadline thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: meetings/forms.py:34
+#: meetings/forms.py:27
+#, fuzzy
+msgid "comments"
+msgstr "Kommentar"
+
+#: meetings/forms.py:41
 msgid "duration"
 msgstr "Dauer"
 
-#: meetings/forms.py:35
+#: meetings/forms.py:42
 msgid "break"
 msgstr "Pause"
 
-#: meetings/forms.py:36
+#: meetings/forms.py:43
 msgid "ideal start time (time)"
 msgstr "Ideale Startzeit (Uhrzeit)"
 
-#: meetings/forms.py:45
+#: meetings/forms.py:52
 msgid "from (time)"
 msgstr "Von (Uhrzeit)"
 
-#: meetings/forms.py:46
+#: meetings/forms.py:53
 msgid "to (time)"
 msgstr "Bis (Uhrzeit)"
 
-#: meetings/forms.py:47
+#: meetings/forms.py:54
 msgid "weighting"
 msgstr "Gewichtung"
 
-#: meetings/forms.py:47
+#: meetings/forms.py:54
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/forms.py:47
+#: meetings/forms.py:54
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -2628,6 +2633,14 @@ msgstr "Neue Version"
 #: templates/notifications/view/base.html:18
 msgid "Answer"
 msgstr "Antwort"
+
+#: templates/notifications/view/base.html:43
+msgid "Back to answered notifications"
+msgstr "Zurück zu den beantworteten Meldungen"
+
+#: templates/notifications/view/base.html:45
+msgid "Back to open notifications"
+msgstr "Zurück zu den offenen Meldungen"
 
 #: templates/pdfviewer/viewer.html:36
 msgid "Your document is not ready yet."

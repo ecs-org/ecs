@@ -39,4 +39,10 @@ User: {{ notification.user }}
     {% endblock %}
 </table>
 
+{% if notification.answer %}
+    <a href="{% url ecs.notifications.views.answered_notifications %}">{% trans "Back to answered notifications" %}</a>
+{% else %}
+    <a href="{% url ecs.notifications.views.open_notifications %}">{% trans "Back to open notifications" %}</a>
+{% endif %}
+
 {% endblock %}
