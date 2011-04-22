@@ -65,7 +65,7 @@ def copy_annotations(request):
     
 def share_annotations(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
-    annotations = DocumentAnnotation.objects.filter(user=request.user).order_by('page_number', 'y')
+    annotations = document.annotations.filter(user=request.user).order_by('page_number', 'y')
     form = AnnotationSharingForm(request.POST or None)
     
     if form.is_valid():

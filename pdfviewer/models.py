@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+
 from ecs.documents.models import Document
+from ecs.authorization import AuthorizationManager
 
 class DocumentAnnotation(models.Model):
     user = models.ForeignKey(User, related_name='document_annotations')
@@ -15,6 +19,8 @@ class DocumentAnnotation(models.Model):
     width = models.FloatField()
     height = models.FloatField()
     
+    objects = AuthorizationManager()
+
     @property
     def human_readable_location(self):
         y = self.y + self.height / 2

@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.contenttypes.models import ContentType
+
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
     ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist)
@@ -8,6 +11,7 @@ from ecs.docstash.models import DocStash
 from ecs.fastlane.models import FastLaneTop
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.pdfviewer.models import DocumentAnnotation
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -101,3 +105,9 @@ class ChecklistQFactory(authorization.QFactory):
         return q
         
 authorization.register(Checklist, factory=ChecklistQFactory)
+
+class DocumentAnnotationQFactory(authorization.QFactory):
+    def get_q(self, user):
+        return self.make_q(user=user)
+
+authorization.register(DocumentAnnotation, factory=DocumentAnnotationQFactory)
