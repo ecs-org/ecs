@@ -312,7 +312,7 @@ def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.type(text=cicero.sentences(n=1, min=6, max=6)[0], id=u'id_investigator-0-organisation')
     client.type(text=random.randint(0,999), id=u'id_investigator-0-subject_count')
     client.click(value=u'21')
-    client.select(option=u'Ethikkomission der Medizinischen Universit\xe4t Wien', id=u'id_investigator-0-ethics_commission')
+    client.select(option=u'Ethikkommission der Medizinischen Universit\xe4t Wien', id=u'id_investigator-0-ethics_commission')
     #client.click(xpath=u"//select[@id='id_investigator-0-ethics_commission']/option[2]")
     client.click(id=u'id_investigator-0-contact_gender')
     client.select(option=u'Herr', id=u'id_investigator-0-contact_gender')
