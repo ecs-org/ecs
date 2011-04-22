@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 12:46+0200\n"
+"POT-Creation-Date: 2011-04-20 19:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2644,6 +2644,10 @@ msgstr ""
 msgid "Share"
 msgstr "Teilen"
 
+#: templates/pdfviewer/annotations/sharing/success.html:3
+msgid "shared with:"
+msgstr "geteilt mit"
+
 #: templates/submissions/acknowledge_message.txt:2
 #, python-format
 msgid ""
@@ -2943,9 +2947,8 @@ msgid "Biased Parties"
 msgstr "Befangene Parteien"
 
 #: templates/submissions/tabs/status.html:53
-#, fuzzy
 msgid "same as sponsor"
-msgstr "Sponsor"
+msgstr "wie Sponsor"
 
 #: templates/submissions/tabs/status.html:57
 #, fuzzy
