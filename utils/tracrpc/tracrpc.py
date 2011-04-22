@@ -93,7 +93,6 @@ class HttpBot():
     tracproto = None
     trachost = None
     tracpath = None
-    #tracurl = "https://ecsdev.ep3.at/project/ekreq"
     tracurl = "%s://%s%s" % (tracproto, trachost, tracpath)
     ticketlinkurl = tracurl +"/links"
     

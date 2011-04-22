@@ -27,10 +27,7 @@ class Feedback(models.Model):
     @classmethod
     def _get_tracrpc(self):
         return self.tracrpc
-        #return tracrpc.TracRpc(settings.FEEDBACK_RPC_CONFIG['username'], settings.FEEDBACK_RPC_CONFIG['password'], settings.FEEDBACK_RPC_CONFIG['proto'], settings.FEEDBACK_RPC_CONFIG['host'], settings.FEEDBACK_RPC_CONFIG['urlpath'])
-        #return tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
-        #return tracrpc.TracRpc('sharing', 'uehkdkDijepo833', 'https', 'ecsdev.ep3.at', '/project/ecs')
-    
+ 
     def _create_trac_ticket(self):
         tracrpc = self._get_tracrpc()
         trac_tickettype = tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.type.get, self.feedbacktype)
