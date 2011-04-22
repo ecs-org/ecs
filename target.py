@@ -135,7 +135,7 @@ TEMPLATE_DEBUG = False
     def queuing_config(self):
         local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
         local('sudo rabbitmqctl add_vhost %s' % self.username)
-        local('sudo rabbitmqctl set_permissions -p %s %s "" ".*" ".*"' % (self.username, self.username))
+        local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))
 
     def search_config(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % self.username)
