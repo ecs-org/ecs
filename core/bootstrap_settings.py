@@ -29,7 +29,7 @@ commissions = [{
     'city': u'Wien',
     'fax': None,
     'chairperson': None,
-    'name': u'Ethikkomission der Medizinischen Universit\u00e4t Wien',
+    'name': u'Ethikkommission der Medizinischen Universit\u00e4t Wien',
     'url': None,
     'email': None,
     'phone': None,

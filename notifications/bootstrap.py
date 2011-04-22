@@ -12,10 +12,10 @@ _ = lambda s: s
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, False, u"Die Komission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
+        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
         (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, True, u""),
         (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, True, u""),
-        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, True, u"Die Komission stimmt der vorgeschlagenen Protokolländerung zu."),
+        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, True, u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu."),
     )
     
     for name, form, diff, earfa, default_response in types:
