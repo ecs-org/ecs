@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-20 19:30+0200\n"
+"POT-Creation-Date: 2011-04-22 19:45+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1812,35 +1812,35 @@ msgstr "keine Datei"
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: documents/models.py:94 templates/submissions/diff/diff.html:21
+#: documents/models.py:96 templates/submissions/diff/diff.html:21
 msgid "new"
 msgstr "neu"
 
-#: documents/models.py:95
+#: documents/models.py:97
 msgid "uploading"
 msgstr "wird hochgeladen"
 
-#: documents/models.py:96
+#: documents/models.py:98
 msgid "uploaded"
 msgstr "hochgeladen"
 
-#: documents/models.py:97
+#: documents/models.py:99
 msgid "indexing"
 msgstr "wird indiziert"
 
-#: documents/models.py:98
+#: documents/models.py:100
 msgid "indexed"
 msgstr "indiziert"
 
-#: documents/models.py:99
+#: documents/models.py:101
 msgid "ready"
 msgstr "bereit"
 
-#: documents/models.py:100
+#: documents/models.py:102
 msgid "aborted"
 msgstr "abgebrochen"
 
-#: documents/models.py:101
+#: documents/models.py:103
 msgid "deleted"
 msgstr "gelöscht"
 
@@ -1863,12 +1863,8 @@ msgid ""
 "%(meeting_title)s"
 msgstr ""
 
-#: mediaserver/views.py:16 mediaserver/views.py:27 mediaserver/views.py:42
+#: mediaserver/views.py:19 mediaserver/views.py:30 mediaserver/views.py:53
 msgid "Invalid expiring url"
-msgstr ""
-
-#: mediaserver/views.py:67
-msgid "sorry, unfinished"
 msgstr ""
 
 #: meetings/bootstrap.py:25
@@ -1927,31 +1923,31 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:227
+#: meetings/views.py:228
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:235
+#: meetings/views.py:236
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:240
+#: meetings/views.py:241
 msgid "This meeting has not yet started."
 msgstr "Dieses Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:252
+#: meetings/views.py:253
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:340
+#: meetings/views.py:341
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:351
+#: meetings/views.py:352
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:403
+#: meetings/views.py:404
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -1976,6 +1972,10 @@ msgstr "Meldungsantwort Unterschrift"
 #: notifications/bootstrap.py:53
 msgid "Distribute Notification Answer"
 msgstr "Meldungsantwort Verteilen"
+
+#: notifications/forms.py:7
+msgid "valid"
+msgstr "korrekturgelesen und gültig"
 
 #: notifications/views.py:50 templates/core.html:60
 #: templates/submissions/readonly_form.html:105
@@ -2625,6 +2625,10 @@ msgstr "Alte Version"
 msgid "New Version"
 msgstr "Neue Version"
 
+#: templates/notifications/view/base.html:18
+msgid "Answer"
+msgstr "Antwort"
+
 #: templates/pdfviewer/viewer.html:36
 msgid "Your document is not ready yet."
 msgstr "Das Dokument steht noch nicht bereit."
@@ -2646,7 +2650,7 @@ msgstr "Teilen"
 
 #: templates/pdfviewer/annotations/sharing/success.html:3
 msgid "shared with:"
-msgstr "geteilt mit"
+msgstr "geteilt mit:"
 
 #: templates/submissions/acknowledge_message.txt:2
 #, python-format
