@@ -6,9 +6,36 @@
 <h2>{% blocktrans with request.user as user %}Profile of {{ user }}{% endblocktrans %}</h2>
 
 <form action="" method="post">
+
+    <h3>{% trans "Personal details" %}</h3>
     <table>
-    {{ user_form.as_table }}
-    {{ profile_form.as_table }}
+        {% for field in form %}
+            {% if field.name == "iban" %}
+                </table>
+
+                <p>{% trans "If you work for the ethics commission as an external reviewer, you have to fill out the following fields" %}</p>
+                <table>
+            {% endif %}
+            {% if field.name == "forward_messages_after_minutes" %}
+                </table>
+
+                <h3>{% trans "Settings" %}</h3>
+                <table>
+            {% endif %}
+            <tr>
+                <th>{{ field.label }}:</th>
+                <td>
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ field }}
+                </td>
+            </tr>
+        {% endfor %}
     </table>
     <input type="submit" value="{% trans 'Save' %}" />
 </form>

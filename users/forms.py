@@ -9,6 +9,7 @@ from django.conf import settings
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget
+from ecs.utils.formutils import TranslatedModelForm
 
 
 email_length = User._meta.get_field('email').max_length
@@ -71,58 +72,64 @@ class ActivationForm(forms.Form):
 class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField()
 
-class ProfileForm(forms.ModelForm):
-    gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('Gender'))
-    title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('Title'))
-    organisation = forms.CharField(max_length=UserProfile._meta.get_field('organisation').max_length, required=False, label=_('Organisation'))
-    jobtitle = forms.CharField(max_length=UserProfile._meta.get_field('jobtitle').max_length, required=False, label=_('Job Title'))
-    swift_bic = forms.CharField(max_length=UserProfile._meta.get_field('swift_bic').max_length, required=False, label=_('SWIFT-BIC'))
-    iban = forms.CharField(max_length=UserProfile._meta.get_field('iban').max_length, required=False, label=_('IBAN'))
-
-    address1 = forms.CharField(max_length=UserProfile._meta.get_field('address1').max_length, required=False, label=_('Address'))
-    address2 = forms.CharField(max_length=UserProfile._meta.get_field('address2').max_length, required=False, label=_('Additional Address Information'))
-    zip_code = forms.CharField(max_length=UserProfile._meta.get_field('zip_code').max_length, required=False, label=_('ZIP-Code'))
-    city = forms.CharField(max_length=UserProfile._meta.get_field('city').max_length, required=False, label=_('City'))
-    phone = forms.CharField(max_length=UserProfile._meta.get_field('phone').max_length, required=False, label=_('Phone'))
-    fax = forms.CharField(max_length=UserProfile._meta.get_field('fax').max_length, required=False, label=_('Fax'))
-    social_security_number = forms.CharField(max_length=UserProfile._meta.get_field('social_security_number').max_length, required=False, label=_('Social Security Number'))
+class ProfileForm(TranslatedModelForm):
+    first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, required=False)
+    last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length)
+    forward_messages_after_minutes = forms.ChoiceField(choices=(
+        (0, _(u'Never')),
+        (5, _(u'after 5 minutes')),
+        (10, _(u'after 10 minutes')),
+        (360, _(u'after 6 hours')),
+    ), initial=0)
 
     def __init__(self, *args, **kwargs):
         rval = super(ProfileForm, self).__init__(*args, **kwargs)
 
-        forward_messages_initial = '0'
         if self.instance:
-            forward_messages_initial = str(self.instance.forward_messages_after_minutes)
-
-        self.fields['forward_messages_after_minutes'] = forms.ChoiceField(required=False, choices=(
-            ('0', _(u'Never forward unread messages')),
-            ('5', _(u'Forward unread messages after 5 minutes')),
-            ('10', _(u'Forward unread messages after 10 minutes')),
-            ('360', _(u'Forward unread messages after 6 hours')),
-        ), initial=forward_messages_initial, label=_('Forwarding of unread messages'))
+            self.fields['forward_messages_after_minutes'].initial = self.instance.forward_messages_after_minutes
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
 
         return rval
 
     def save(self, *args, **kwargs):
         instance = super(ProfileForm, self).save(*args, **kwargs)
 
-        forward_messages_minutes = self.cleaned_data.get('forward_messages_after_minutes', '0')
+        forward_messages_minutes = self.cleaned_data.get('forward_messages_after_minutes', 0)
         instance.forward_messages_after_minutes = int(forward_messages_minutes)
         instance.save()
 
+        instance.user.first_name = self.cleaned_data['first_name']
+        instance.user.last_name = self.cleaned_data['last_name']
+        instance.user.save()
+
         return instance
-        
 
     class Meta:
         model = UserProfile
-        fields = ('gender', 'title', 'organisation', 'jobtitle', 'swift_bic', 'iban',
-            'address1', 'address2', 'zip_code', 'city', 'phone', 'fax', 'social_security_number',
+        fields = ('gender', 'title', 'first_name', 'last_name', 'organisation', 'jobtitle',
+            'address1', 'address2', 'zip_code', 'city', 'phone', 'fax', 'iban', 'swift_bic',
+            'social_security_number', 'forward_messages_after_minutes',
         )
-
-class UserForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name')
+        labels = {
+            'gender': _('Gender'),
+            'first_name': _('First Name'),
+            'last_name': _('Last Name'),
+            'gender': _('Gender'),
+            'title': _('Title'),
+            'organisation': _('Organisation'),
+            'jobtitle': _('Job Title'),
+            'swift_bic': _('SWIFT-BIC'),
+            'iban': _('IBAN'),
+            'address1': _('Address'),
+            'address2': _('Additional Address Information'),
+            'zip_code': _('ZIP-Code'),
+            'city': _('City'),
+            'phone': _('Phone'),
+            'fax': _('Fax'),
+            'social_security_number': _('Social Security Number'),
+            'forward_messages_after_minutes': _('Forwarding of unread messages'),
+        }
 
 class AdministrationFilterForm(forms.Form):
     approval = forms.ChoiceField(required=False, choices=(

@@ -23,7 +23,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.mail import deliver
-from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, UserForm, ProfileForm, AdministrationFilterForm, \
+from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, ProfileDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
@@ -178,17 +178,14 @@ def profile(request):
     })
     
 def edit_profile(request):
-    user_form = UserForm(request.POST or None, prefix='user', instance=request.user)
-    profile_form = ProfileForm(request.POST or None, prefix='profile', instance=request.user.get_profile())
+    form = ProfileForm(request.POST or None, instance=request.user.get_profile())
     
-    if profile_form.is_valid() and user_form.is_valid():
-        user_form.save()
-        profile_form.save()
+    if form.is_valid():
+        form.save()
         return HttpResponseRedirect(reverse('ecs.users.views.profile'))
         
     return render(request, 'users/profile_form.html', {
-        'user_form': user_form,
-        'profile_form': profile_form,
+        'form': form,
     })
 
 
