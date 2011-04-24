@@ -21,6 +21,7 @@ def document_types():
         (_(u"Case Report Form (CRF)"), u"crf", _(u" ")),
         (_(u"EudraCT Form"), u"eudract", _(u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial")),
         (_(u"adverse reaction report"), u"adversereaction", _(u"Med Watch report, CIOMS form etc.")),
+        (_(u"Submission Form"), u"submissionform", _(u"Submission Form")),
         (_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
     )
     for name, identifier, helptext in names:

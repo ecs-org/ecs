@@ -395,6 +395,22 @@ def create_submission_form(request):
                     instance.save()
             request.docstash.delete()
 
+            # Generate PDF Version of submission_form
+            sf_doctype = DocumentType.objects.get(identifier='submissionform')
+            sf_name = 'ek' # -%s' % submission_form.submission.get_ec_number_display(separator='-')
+            sf_filename = 'ek-%s' % submission_form.submission.get_ec_number_display(separator='-')
+            sf_pdfdata = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
+                'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
+                'submission_form': submission_form,
+                'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            })
+            sf_document = Document.objects.create_from_buffer(sf_pdfdata, doctype=sf_doctype, 
+                parent_object=submission_form, name=sf_name, original_file_name=sf_filename,
+                version=str(submission_form.submission.forms.all().order_by('pk').values_list('pk', flat=True).count()),
+                date= datetime.now())
+            submission_form.pdf_document = sf_document
+            submission_form.save()
+                
             if notification_type:
                 return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
                     'submission_form_pk': submission_form.pk,
@@ -428,28 +444,12 @@ def delete_docstash_entry(request):
 
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    name = 'ek-%s-Einreichung' % submission_form.submission.get_ec_number_display(separator='-')  
-    filename = name+ '.pdf'
-    
-    if not submission_form.pdf_document or not submission_form.pdf_document.status == 'new':
-        pdf = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
-            'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-            'submission_form': submission_form,
-            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
-        })
-        if not submission_form.pdf_document:
-            doctype = DocumentType.objects.get(identifier='other')
-            doc = Document.objects.create_from_buffer(pdf, doctype=doctype, parent_object=submission_form,
-                name=name, version="1FIXME", original_file_name=filename)
-            submission_form.pdf_document = doc
-            submission_form.save()
+    url = submission_form.pdf_document.get_downloadurl()
+    if url:
+        return HttpResponseRedirect(url)
     else:
-        f = submission_form.pdf_document.get_from_mediaserver()
-        pdf = f.read()
-        f.close()
+        return HttpResponseForbidden()
     
-    return pdf_response(pdf, filename=filename)
-
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
