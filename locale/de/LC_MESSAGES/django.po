@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-26 00:32+0200\n"
+"POT-Creation-Date: 2011-04-26 01:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1597,7 +1597,7 @@ msgid "insurance"
 msgstr "Versicherung"
 
 #: core/forms/layout.py:113 core/forms/layout.py:133 core/forms/layout.py:142
-#: core/forms/layout.py:167
+#: core/forms/layout.py:167 core/forms/layout.py:187
 msgid "documents"
 msgstr "Unterlagen"
 
@@ -1616,9 +1616,21 @@ msgstr "Allgemeine Angaben"
 msgid "Changes"
 msgstr "Änderungen"
 
-#: core/forms/layout.py:156
+#: core/forms/layout.py:156 core/forms/layout.py:176
 msgid "Study status"
-msgstr "Studien-Status"
+msgstr "Studienstatus"
+
+#: core/forms/layout.py:177 templates/fastlane/detail.html:11
+#: templates/fastlane/status.html:5 templates/fastlane/status.html.py:11
+#: templates/meetings/detail.html:11 templates/meetings/status.html:6
+#: templates/meetings/status.html.py:14
+#: templates/submissions/readonly_form.html:42
+msgid "Status"
+msgstr "Status"
+
+#: core/forms/layout.py:180
+msgid "participants"
+msgstr "Teilnehmer/innen"
 
 #: core/forms/review.py:28 templates/tasks/tasks.inc:22
 #: templates/tasks/tasks_full.inc:21
@@ -2507,13 +2519,6 @@ msgstr ""
 #: templates/fastlane/detail.html:9
 msgid "Fast Lane Meeting"
 msgstr "Expedited Review"
-
-#: templates/fastlane/detail.html:11 templates/fastlane/status.html:5
-#: templates/fastlane/status.html.py:11 templates/meetings/detail.html:11
-#: templates/meetings/status.html:6 templates/meetings/status.html.py:14
-#: templates/submissions/readonly_form.html:42
-msgid "Status"
-msgstr "Status"
 
 #: templates/fastlane/detail.html:13
 msgid "Participation"

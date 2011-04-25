@@ -173,18 +173,18 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
             'submission_form', 'extension_of_vote_requested', 'comments',
         ]),
     ]),
-    (u'Study status', [
-        (u'status', [
+    (_(u'Study status'), [
+        (_(u'Status'), [
             'reason_for_not_started', 'runs_till',
         ]),
-        (u'participant', [
+        (_(u'participants'), [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',
         ]),
         (u'SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
         ]),
     ]),
-    (u'documents', []),
+    (_(u'documents'), []),
 ]
 
 def get_notification_form_tabs(form_cls):
