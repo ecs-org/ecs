@@ -112,7 +112,7 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
 # By default dbtemplates adds the current site to the database template when
 # created. The next line disables this behaviour.
-DBTEMPLATES_ADD_DEFAULT_SITE = False
+#DBTEMPLATES_ADD_DEFAULT_SITE = False
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
