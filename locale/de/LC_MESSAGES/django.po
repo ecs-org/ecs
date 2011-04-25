@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 21:24+0200\n"
+"POT-Creation-Date: 2011-04-25 22:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -201,7 +201,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:104 core/bootstrap.py:553
+#: core/bootstrap.py:104 core/bootstrap.py:563
 msgid "Additional Checklist Review"
 msgstr "Additional Review"
 
@@ -217,27 +217,27 @@ msgstr "Einstufung und Zuteilung Diplomarbeit"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:108 core/bootstrap.py:548
+#: core/bootstrap.py:108 core/bootstrap.py:558
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:109 core/bootstrap.py:549
+#: core/bootstrap.py:109 core/bootstrap.py:559
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:110 core/bootstrap.py:547
+#: core/bootstrap.py:110 core/bootstrap.py:557
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:111 core/bootstrap.py:551 core/parties.py:70
+#: core/bootstrap.py:111 core/bootstrap.py:561 core/parties.py:70
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:112 core/bootstrap.py:552
+#: core/bootstrap.py:112 core/bootstrap.py:562
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:113 core/bootstrap.py:550
+#: core/bootstrap.py:113 core/bootstrap.py:560
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -281,7 +281,7 @@ msgstr ""
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:554 templates/meetings/assistant/top.html:74
+#: core/bootstrap.py:564 templates/meetings/assistant/top.html:74
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
@@ -2233,9 +2233,9 @@ msgstr "Vorlage"
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:100
-msgid "Demo"
-msgstr "Demo"
+#: templates/core.html:101
+msgid "Developer"
+msgstr "Entwickler"
 
 #: templates/core.html:103
 msgid "Sentry ErrorLog"
@@ -3049,9 +3049,8 @@ msgid "same as sponsor"
 msgstr "wie Sponsor"
 
 #: templates/submissions/tabs/status.html:57
-#, fuzzy
 msgid "No Primary Investigator"
-msgstr "Hauptprüfer"
+msgstr "Kein Hauptprüfer"
 
 #: templates/submissions/tabs/status.html:63
 msgid "Aktiv"
@@ -3071,7 +3070,7 @@ msgid "Reschedule"
 msgstr "Neu planen"
 
 #: templates/submissions/tabs/status.html:133
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "            %(task_name)s (%(assigned_to)s), invited at %(assigned_at)s\n"
@@ -3082,9 +3081,8 @@ msgstr ""
 "    "
 
 #: templates/submissions/tabs/status.html:136
-#, fuzzy
 msgid "delete"
-msgstr "gelöscht"
+msgstr "löschen"
 
 #: templates/submissions/tabs/status.html:139
 #, fuzzy
@@ -3545,6 +3543,9 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
+#~ msgid "Demo"
+#~ msgstr "Demo"
+
 #~ msgid "Never forward unread messages"
 #~ msgstr "Ungelesene Nachrichten nicht weiterleiten"
 
@@ -3595,9 +3596,6 @@ msgstr ""
 
 #~ msgid "centres abroad"
 #~ msgstr "Auslandszentren"
-
-#~ msgid "Developer"
-#~ msgstr "Entwickler"
 
 #~ msgid "Name: %(name)s, Investigator: %(investigator)s"
 #~ msgstr "Name: %(name)s, Prüfarzt: %(investigator)s"
