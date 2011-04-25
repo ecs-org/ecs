@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-23 22:04+0200\n"
+"POT-Creation-Date: 2011-04-25 19:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,124 +164,126 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:84 core/bootstrap.py:160 meetings/bootstrap.py:24
+#: core/bootstrap.py:96 core/bootstrap.py:172 meetings/bootstrap.py:24
 #: notifications/bootstrap.py:46 users/bootstrap.py:23
 msgid "Start"
 msgstr "Start"
 
-#: core/bootstrap.py:85 core/bootstrap.py:161
+#: core/bootstrap.py:97 core/bootstrap.py:173
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:86
+#: core/bootstrap.py:98
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:87
+#: core/bootstrap.py:99
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:88
+#: core/bootstrap.py:100
 #, fuzzy
 msgid "B2 Resubmission Review"
 msgstr "Diplomarbeit Review"
 
-#: core/bootstrap.py:89 templates/submissions/list.html:78
+#: core/bootstrap.py:101 templates/submissions/list.html:78
 #, fuzzy
 msgid "B2 Vote Review"
 msgstr "B2 Voten"
 
-#: core/bootstrap.py:90 templates/submissions/readonly_form.html:66
+#: core/bootstrap.py:102 templates/submissions/readonly_form.html:66
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:91
+#: core/bootstrap.py:103
 #, fuzzy
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:92
-#, fuzzy
+#: core/bootstrap.py:104 core/bootstrap.py:553
 msgid "Additional Checklist Review"
-msgstr "Zusatz-Review"
+msgstr "Additional Review"
 
-#: core/bootstrap.py:93
+#: core/bootstrap.py:105
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:94
+#: core/bootstrap.py:106
 msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
 
-#: core/bootstrap.py:95
+#: core/bootstrap.py:107
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:96
+#: core/bootstrap.py:108 core/bootstrap.py:548
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:97
+#: core/bootstrap.py:109 core/bootstrap.py:549
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:98
+#: core/bootstrap.py:110 core/bootstrap.py:547
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:99 core/parties.py:70
+#: core/bootstrap.py:111 core/bootstrap.py:551 core/parties.py:70
 msgid "Board Member Review"
-msgstr ""
+msgstr "Board Member Review"
 
-#: core/bootstrap.py:100
+#: core/bootstrap.py:112 core/bootstrap.py:552
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:101
-#, fuzzy
+#: core/bootstrap.py:113 core/bootstrap.py:550
 msgid "GCP Review"
-msgstr "Vorschau"
+msgstr "GCP Review"
 
-#: core/bootstrap.py:102
+#: core/bootstrap.py:114
 msgid "Vote Recommendation"
 msgstr ""
 
-#: core/bootstrap.py:103
+#: core/bootstrap.py:115
 msgid "Vote Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:162
+#: core/bootstrap.py:174
 msgid "B2 Upgrade"
 msgstr ""
 
-#: core/bootstrap.py:163
+#: core/bootstrap.py:175
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: core/bootstrap.py:164
+#: core/bootstrap.py:176
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: core/bootstrap.py:165
+#: core/bootstrap.py:177
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: core/bootstrap.py:166
+#: core/bootstrap.py:178
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: core/bootstrap.py:167 core/bootstrap.py:168
+#: core/bootstrap.py:179 core/bootstrap.py:180
 msgid "Office Vote Review"
 msgstr ""
 
-#: core/bootstrap.py:169
+#: core/bootstrap.py:181
 msgid "Vote Signing"
 msgstr ""
 
-#: core/bootstrap.py:170
+#: core/bootstrap.py:182
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
+
+#: core/bootstrap.py:554 templates/meetings/assistant/top.html:74
+msgid "Expedited Review"
+msgstr "Express Gutachten"
 
 #: core/diff.py:133 core/diff.py:197 core/diff.py:198 core/diff.py:234
 #: core/diff.py:235
@@ -1796,10 +1798,15 @@ msgid "Med Watch report, CIOMS form etc."
 msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
 #: documents/bootstrap.py:24
+#, fuzzy
+msgid "Submission Form"
+msgstr "Einreichung"
+
+#: documents/bootstrap.py:25
 msgid "other"
 msgstr "Sonstige"
 
-#: documents/bootstrap.py:24
+#: documents/bootstrap.py:25
 msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
@@ -2573,10 +2580,6 @@ msgstr "Protokoll PDF"
 msgid "Comments"
 msgstr "Kommentare"
 
-#: templates/meetings/assistant/top.html:74
-msgid "Expedited Review"
-msgstr "Express Gutachten"
-
 #: templates/meetings/assistant/top.html:76
 msgid "copy comment"
 msgstr "Kommentar kopieren"
@@ -3348,28 +3351,28 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/utils.py:51
+#: users/utils.py:52
 msgid "Ms."
 msgstr "Frau"
 
-#: users/utils.py:53
+#: users/utils.py:54
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:108
+#: users/utils.py:109
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
 
-#: users/utils.py:114 users/utils.py:146
+#: users/utils.py:115 users/utils.py:149
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
 
-#: users/utils.py:124
+#: users/utils.py:125
 msgid "The email could not be delivered."
 msgstr "Die E-mail konnte nicht gesendet werden."
 
-#: users/utils.py:133
+#: users/utils.py:134
 msgid "The user has been invited."
 msgstr "Der Benutzer wurde eingeladen."
 
