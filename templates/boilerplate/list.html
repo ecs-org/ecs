@@ -3,14 +3,14 @@
 {% load i18n %}
 
 {% block headertitle %}
-    {% trans 'Boilerplate' %}
+    {% trans 'Boilerplates' %}
 {% endblock %}
 
 {% block content %}
     <a href="{% url ecs.boilerplate.views.edit_boilerplate %}"><button>{% trans 'New' %}</button></a>
     {% for text in texts %}
     <div class="boilerplate">
-        <h4>{{ text.slug }}</h4> | <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}">edit</a>
+        <h4>{{ text.slug }}</h4> | <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}">{% trans "edit" %}</a>
         <p>Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr<br />
            Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr von {{ text.author }} 
             | <a href="{% url ecs.boilerplate.views.delete_boilerplate text_pk=text.pk %}">{% trans 'Delete' %}</a>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-26 01:34+0200\n"
+"POT-Creation-Date: 2011-04-26 01:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2246,8 +2246,8 @@ msgstr "Benutzerverwaltung"
 
 #: templates/core.html:92 templates/boilerplate/form.html:6
 #: templates/boilerplate/list.html:6
-msgid "Boilerplate"
-msgstr "Vorlage"
+msgid "Boilerplates"
+msgstr "Textbausteine"
 
 #: templates/core.html:94
 msgid "Audit Trail"
@@ -2316,6 +2316,10 @@ msgstr "Ältere Einträge"
 msgid "Save"
 msgstr "Speichern"
 
+#: templates/boilerplate/list.html:13
+msgid "edit"
+msgstr "Bearbeiten"
+
 #: templates/boilerplate/list.html:16 templates/documents/upload_form.html:7
 #: templates/notifications/list.html:52 templates/submissions/list.html:47
 msgid "Delete"
@@ -2365,7 +2369,7 @@ msgstr "Anmerkungen einfügen"
 #: templates/submissions/readonly_form.html:284
 #: templates/tasks/manage_task.html:77
 msgid "Insert Boilerplate"
-msgstr "Vorlage einfügen"
+msgstr "Textbaustein einfügen"
 
 #: templates/communication/thread.html:36
 msgid "Collapse all"
@@ -3573,6 +3577,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Boilerplate"
+#~ msgstr "Textbaustein"
 
 #~ msgid "Search"
 #~ msgstr "Suche"

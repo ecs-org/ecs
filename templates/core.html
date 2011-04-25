@@ -89,7 +89,7 @@
                     <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
-                <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplate' %}</a></li>
+                <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
                 {% if user|has_flag:"executive_board_member" %}
                     <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
                 {% endif %}
