@@ -31,7 +31,7 @@ conf_dict = {
     'chipper': (4, 'doc.ecsdev.ep3.at', 8853, 'Edoij38So9js7SEiu982', 'ESDOFK934JSDFihsnu3w4SDOJFuihwi'),
 }
 
-if user in rofl.keys():
+if user in conf_dict.keys():
     site_id, domain, mailport, ms_key_id, ms_key_secret = conf_dict[user]
 
     SITE_ID = site_id
