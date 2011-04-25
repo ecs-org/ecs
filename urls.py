@@ -55,13 +55,15 @@ urlpatterns = patterns('',
     url(r'^', include('ecs.meetings.urls')),
     url(r'^', include('ecs.notifications.urls')),
 
-    url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
     url(r'^bugshot/', include('ecs.bugshot.urls')),
     url(r'^search/', include('haystack.urls')),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
+
+    url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
+    
     #url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
-    
-    url(r'^i18n/', include('django.conf.urls.i18n')),
+    url(r'^trigger500/$', lambda request: 1/0), 
 )
 
 if 'sentry' in settings.INSTALLED_APPS:
@@ -73,3 +75,10 @@ if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^rosetta/', include('rosetta.urls')),
     )
+
+if 'debug_toolbar' in settings.INSTALLED_APPS:
+    # XXX: this should be set by the debug middleware, but it doesnt work, so we hack it here
+    urlpatterns += patterns('',
+        url(r'^%s(.*)$' % "__debug__/m/", 'debug_toolbar.views.debug_media'),
+    )
+    
