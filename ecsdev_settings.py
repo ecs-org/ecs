@@ -25,30 +25,28 @@ if user in DBPWD_DICT:
     # use queueing 
     CELERY_ALWAYS_EAGER = False
 
-from ecs.utils import Args
-
-rofl = {
-    'shredder': Args(SITE_ID=2, domain='s.ecsdev.ep3.at', mailport=8833, ms_key_id='Skj45A6R2z36gVKF17i2', ms_key_secret='SfMS0teNT7E2yD6GVVK6JH0xwfkeykw'),
-    'testecs': Args(SITE_ID=3, domain='test.ecsdev.ep3.at', mailport=8843, ms_key_id='GHz36o6OJHOm8uKmYiD1', ms_key_secret='dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6'),
-    'chipper': Args(SITE_ID=4, domain='doc.ecsdev.ep3.at', mailport=8853, ms_key_id='Edoij38So9js7SEiu982', ms_key_secret='ESDOFK934JSDFihsnu3w4SDOJFuihwi'),
+conf_dict = {
+    'shredder': (2, 's.ecsdev.ep3.at', 8833, 'Skj45A6R2z36gVKF17i2', 'SfMS0teNT7E2yD6GVVK6JH0xwfkeykw'),
+    'testecs': (3, 'test.ecsdev.ep3.at', 8843, 'GHz36o6OJHOm8uKmYiD1', 'dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6'),
+    'chipper': (4, 'doc.ecsdev.ep3.at', 8853, 'Edoij38So9js7SEiu982', 'ESDOFK934JSDFihsnu3w4SDOJFuihwi'),
 }
 
 if user in rofl.keys():
-    conf = rofl[user]
+    site_id, domain, mailport, ms_key_id, ms_key_secret = conf_dict[user]
 
-    SITE_ID = conf['SITE_ID']
+    SITE_ID = site_id
     ECSMAIL_OVERRIDE = {
-        'port': conf['mailport'],
-        'authoritative_domain': conf['domain'],
+        'port': mailport,
+        'authoritative_domain': domain,
         'trusted_sources': ['127.0.0.1', '78.46.72.188'],
     }
 
     # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
     MS_CLIENT = {
-        'server': 'http://{0}'.format(conf['domain']),
+        'server': 'http://{0}'.format(domain),
         'bucket': '/mediaserver/',
-        'key_id': conf['ms_key_id'],
-        'key_secret': conf['ms_key_secret'],
+        'key_id': ms_key_id,
+        'key_secret': ms_key_secret,
     }
     
     if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver', 'testmaker'])):
