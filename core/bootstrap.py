@@ -55,8 +55,9 @@ def templates():
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
                 content = open(path, 'r').read()
-                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
+                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content, 'sites': Site.objects.all()})
                 if not created and tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                    tpl.sites = Site.objects.all()
                     tpl.content = content
                     tpl.save()
 
