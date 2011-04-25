@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 22:54+0200\n"
+"POT-Creation-Date: 2011-04-25 23:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -203,7 +203,7 @@ msgstr "Zusatz-Review"
 
 #: core/bootstrap.py:104 core/bootstrap.py:563
 msgid "Additional Checklist Review"
-msgstr "Additional Review"
+msgstr "weiteres Gutachten"
 
 #: core/bootstrap.py:105
 msgid "Initial Thesis Review"
@@ -3074,12 +3074,13 @@ msgstr "Neu planen"
 #, python-format
 msgid ""
 "\n"
-"            %(task_name)s (%(assigned_to)s), invited at %(assigned_at)s\n"
+"            %(assigned_to)s invited at %(assigned_at)s for %(task_name)s \n"
 "        "
 msgstr ""
 "\n"
-"        %(task_name)s (%(assigned_to)s), eingeladen am %(assigned_at)s\n"
-"    "
+"            %(assigned_to)s eingeladen am %(assigned_at)s für "
+"%(task_name)s \n"
+"        "
 
 #: templates/submissions/tabs/status.html:136
 msgid "delete"
