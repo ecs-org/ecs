@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 19:14+0200\n"
+"POT-Creation-Date: 2011-04-25 20:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1420,7 +1420,7 @@ msgstr "Einladung Gutachten"
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
-#: core/forms/checklist.py:14 core/models/voting.py:30
+#: core/forms/checklist.py:15 core/models/voting.py:30
 msgid "comment"
 msgstr "Kommentar"
 
@@ -1880,7 +1880,7 @@ msgstr ""
 
 #: meetings/bootstrap.py:26
 msgid "Meeting Agenda Generation"
-msgstr ""
+msgstr "Tagesordnung festlegen"
 
 #: meetings/bootstrap.py:27
 msgid "Meeting Day"
