@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 22:14+0200\n"
+"POT-Creation-Date: 2011-04-25 22:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2290,6 +2290,7 @@ msgstr "Ältere Einträge"
 #: templates/boilerplate/form.html:14
 #: templates/fastlane/assistant_recommendation.html:57
 #: templates/fastlane/participation.html:21
+#: templates/meetings/constraints/user_form.html:19
 #: templates/notifications/form.html:27 templates/submissions/form.html:13
 #: templates/users/profile_form.html:40
 msgid "Save"

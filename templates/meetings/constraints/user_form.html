@@ -16,7 +16,7 @@
         {% with constraint_formset as formset %}
             {% include "forms/tables/inline_formset.html" %}
         {% endwith %}
-        <span class="button"><input type="submit" value="Submit" name="submit"/></span>
+        <span class="button"><input type="submit" value="{% trans "Save" %}" name="submit"/></span>
     </form>
 </div>
 {% endblock %}
