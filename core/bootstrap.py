@@ -55,11 +55,12 @@ def templates():
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
                 content = open(path, 'r').read()
-                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content, 'sites': Site.objects.all()})
+                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
                 if not created and tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
-                    tpl.sites = Site.objects.all()
                     tpl.content = content
                     tpl.save()
+                tpl.sites = Site.objects.all()
+                tpl.save()
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
