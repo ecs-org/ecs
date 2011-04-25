@@ -96,14 +96,14 @@
           </ul>
         </li>
     {% endif %}
-    <li>
-      <span class="togglers">{% trans "Demo" %}</span>
-      <ul class="elements">
-      {% if user.is_superuser %}
-           <li><a href="{% url sentry.views.index %}">{% trans "Sentry ErrorLog" %}</a></li>
-      {% endif %}
-      </ul>
-    </li>
+    {% if user|has_perm:"sentry.can_view" %}
+      <li>
+        <span class="togglers">{% trans "Developer" %}</span>
+        <ul class="elements">
+             <li><a href="{% url sentry.views.index %}">{% trans "Sentry ErrorLog" %}</a></li>
+        </ul>
+      </li>
+    {% endif %} 
     {% comment %}
     <li>
       <span class="togglers">{% trans "Recent Activities" %}</span>

@@ -159,12 +159,3 @@ class Feedback(models.Model):
             self.tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
     
     
-    
-    
-    
-    
-    
-    
-    
-        
-    

@@ -19,3 +19,7 @@ def is_member_of(user, groupname):
 def formal_name(user):
     return get_formal_name(user)
 
+@register.filter
+def has_perm(user, permission):
+    return bool(user.has_perm(permission))
+

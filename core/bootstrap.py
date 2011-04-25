@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
-from django.contrib.auth.models import Group, User
+from django.contrib.auth.models import Group, User, Permission
 from django.contrib.sites.models import Site
 from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
@@ -224,10 +224,19 @@ def auth_groups():
         u'GCP Review Group',
         u'userswitcher_target',
         u'translators',
+        u'sentryusers',
+        
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
-
+    
+    try:
+        p=Permission.objects.get_by_natural_key("can_view", "sentry", "groupedmessage")
+        g=Group.objects.get(name="sentryusers")
+        g.permissions.add(p)
+    except Permission.DoesNotExist:
+        print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
+    
 
 @bootstrap.register()
 def expedited_review_categories():
@@ -318,18 +327,19 @@ def auth_user_developers():
     try:
         from ecs.core.bootstrap_settings import developers
     except ImportError:
-        # first, Last, email, password, is_supeuser
-        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', False, 'f'),)
+        # first, Last, email, password, gender (sic!)
+        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', 'f'),)
         
-    for first, last, email, password, is_superuser, gender in developers:
+    for first, last, email, password, gender in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
         user.last_name = last
         user.set_password(password)
         user.is_staff = False
-        user.is_superuser = is_superuser
+        user.is_superuser = False
         user.groups.add(Group.objects.get(name="Presenter"))
         user.groups.add(Group.objects.get(name="translators"))
+        user.groups.add(Group.objects.get(name="sentryusers"))
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
