@@ -45,7 +45,7 @@ if user in rofl.keys():
 
     # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
     MS_CLIENT = {
-        'server': 'http://{0}'.format(conf['domain'])
+        'server': 'http://{0}'.format(conf['domain']),
         'bucket': '/mediaserver/',
         'key_id': conf['ms_key_id'],
         'key_secret': conf['ms_key_secret'],
