@@ -99,7 +99,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.3.1', None, _(u'ISRCTN-Nr.')), #'isrctn_number'
     FieldInfo(None, 'external_reviewer_suggestions', None, short_label=_(u'external reviewer suggestions'), help_text=_(u'Not necessary for graduate work or retrospective or non-interventional studies')),
     # 1.5 u'Sponsor / Rechnungsempfänger/in (Kontaktperson in der Buchhaltung)'
-    FieldInfo('1.5.1', 'sponsor_name', _(u'name')),
+    FieldInfo('1.5.1', 'sponsor_name', _(u'sponsor name')),
     FieldInfo('1.5.3', 'sponsor_contact_gender', _(u'sex of contact person')),
     FieldInfo('1.5.3', 'sponsor_contact_title', _(u'title of contact person')),
     FieldInfo('1.5.3', 'sponsor_contact_first_name', _(u'first name of contact person')),

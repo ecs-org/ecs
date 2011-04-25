@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 23:56+0200\n"
+"POT-Creation-Date: 2011-04-26 00:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -396,7 +396,7 @@ msgstr "Typ"
 msgid "replace document"
 msgstr "Ersetze Dokument"
 
-#: core/paper_forms.py:74 core/paper_forms.py:102 core/paper_forms.py:113
+#: core/paper_forms.py:74 core/paper_forms.py:113
 msgid "name"
 msgstr "Name"
 
@@ -468,6 +468,10 @@ msgid ""
 msgstr ""
 "Nicht notwendig für Diplomarbeiten oder retrospektive bzw. nicht "
 "interventionelle Studien"
+
+#: core/paper_forms.py:102
+msgid "sponsor name"
+msgstr "Firma/Organisation"
 
 #: core/paper_forms.py:103 core/paper_forms.py:114
 msgid "sex of contact person"
