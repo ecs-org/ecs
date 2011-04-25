@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 23:26+0200\n"
+"POT-Creation-Date: 2011-04-25 23:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,7 +372,7 @@ msgstr "Voraussichtliches Enddatum"
 msgid "I apply for an extension of the validity of the vote"
 msgstr "Ich beantrage die Verlängerung der Gültigkeit des Votums."
 
-#: core/paper_forms.py:65
+#: core/paper_forms.py:65 core/forms/forms.py:424
 msgid "file"
 msgstr "Datei"
 
@@ -1515,6 +1515,10 @@ msgstr "Übernommen"
 #: core/forms/forms.py:416
 msgid "Other Studies"
 msgstr "Andere Studien"
+
+#: core/forms/forms.py:433
+msgid "This file is not a valid ECX archive."
+msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
 #: core/forms/layout.py:11
 msgid "Key data"

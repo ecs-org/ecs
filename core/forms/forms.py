@@ -421,7 +421,7 @@ class SubmissionListFullFilterForm(SubmissionListFilterForm):
     other_studies = forms.BooleanField(required=False)
 
 class SubmissionImportForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(label=_('file'))
 
     def clean_file(self):
         f = self.cleaned_data['file']
@@ -430,7 +430,7 @@ class SubmissionImportForm(forms.Form):
         try:
             self.submission_form = serializer.read(self.cleaned_data['file'])
         except:
-            self._errors['file'] = self.error_class([u'This file is not a valid ECX archive.'])
+            self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
         f.seek(0)
         return f
 
