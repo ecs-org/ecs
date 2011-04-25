@@ -26,11 +26,21 @@ from ecs.users.utils import get_or_create_user
 _ = lambda s: s
 
 @bootstrap.register()
-def default_site():
-    # default_site is needed for dbtemplates
-    Site.objects.get_or_create(pk=1)
+def sites():
+    sites_list = (
+        (1, 'devel', 'localhost'),
+        (2, 'shredder', 's.ecsdev.ep3.at'),
+        (3, 'testecs', 'test.ecsdev.ep3.at'),
+        (4, 'chipper', 'doc.ecsdev.ep3.at'),
+    )
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.default_site',))
+    for pk, name, domain in sites_list:
+        site, created = Site.objects.get_or_create(pk=pk)
+        site.name = name
+        site.domain = domain
+        site.save()
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
     from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')

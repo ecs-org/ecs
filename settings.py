@@ -110,8 +110,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of br
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
-# dbtemplates adds the current site (settings.SITE_ID) to the database template when it is created by default. You can disable this feature by setting DBTEMPLATES_ADD_DEFAULT_SITE to False.
-#DBTEMPLATES_ADD_DEFAULT_SITE = False
+# By default dbtemplates adds the current site to the database template when
+# created. The next line disables this behaviour.
+DBTEMPLATES_ADD_DEFAULT_SITE = False
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
@@ -322,9 +323,6 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
 # default contact person if someone sends message to "EK"
 DEFAULT_CONTACT = 'office1@example.org'
-
-# server url, so we dont have to do request hacks
-SERVER_BASE_URL = 'http://localhost:8000'
 
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
