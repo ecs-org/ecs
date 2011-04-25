@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 22:41+0200\n"
+"POT-Creation-Date: 2011-04-25 22:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3324,6 +3324,22 @@ msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
 msgstr ""
+
+#: users/forms.py:56
+msgid "gender"
+msgstr "Geschlecht"
+
+#: users/forms.py:57
+msgid "First name"
+msgstr "Vorname"
+
+#: users/forms.py:58
+msgid "Last name"
+msgstr "Nachname"
+
+#: users/forms.py:59
+msgid "email"
+msgstr "E-Mail"
 
 #: users/forms.py:69
 msgid "The two password fields didn't match."

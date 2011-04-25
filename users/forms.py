@@ -53,10 +53,10 @@ class EmailLoginForm(forms.Form):
 
 
 class RegistrationForm(forms.Form):
-    gender = forms.ChoiceField(choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-    email = forms.EmailField()
+    gender = forms.ChoiceField(label=_('gender'), choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
+    first_name = forms.CharField(label=_('First name'))
+    last_name = forms.CharField(label=_('Last name'))
+    email = forms.EmailField(label=_('email'))
 
 
 class ActivationForm(forms.Form):
