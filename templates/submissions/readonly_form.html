@@ -68,7 +68,7 @@
                 {% endif %}
                 {% if retrospective_thesis_review_form %}
                     <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#retrospective_thesis_review_tab">Thesis Review</a>
+                        <a href="#retrospective_thesis_review_tab">{% trans "Thesis Review" %}</a>
                     </li>
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}

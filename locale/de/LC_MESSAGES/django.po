@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-25 20:26+0200\n"
+"POT-Creation-Date: 2011-04-25 21:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1612,6 +1612,76 @@ msgstr "Änderungen"
 msgid "Study status"
 msgstr "Studien-Status"
 
+#: core/forms/review.py:28 templates/tasks/tasks.inc:22
+#: templates/tasks/tasks_full.inc:21
+msgid "thesis"
+msgstr "Diplomarbeit"
+
+#: core/forms/review.py:29
+msgid "retrospective"
+msgstr "Retrospektiv"
+
+#: core/forms/review.py:30
+msgid "medical_categories"
+msgstr "Medizinische Kategorien"
+
+#: core/forms/review.py:31
+msgid "expedited"
+msgstr "Expedited"
+
+#: core/forms/review.py:32
+msgid "expedited_review_categories"
+msgstr "Kategorien für Expedited Review"
+
+#: core/forms/review.py:33
+msgid "external_reviewer"
+msgstr "Externes Gutachten erforderlich"
+
+#: core/forms/review.py:34
+msgid "external_reviewer_name"
+msgstr "Externer Gutachter"
+
+#: core/forms/review.py:35
+msgid "new_external_reviewer"
+msgstr "Neuen externen Gutachter einladen (Emailadresse angeben)"
+
+#: core/forms/review.py:36
+msgid "is_amg"
+msgstr "Studie nach Arzneimittelgesetz"
+
+#: core/forms/review.py:37
+msgid "is_mpg"
+msgstr "Studie nach Medizinproduktegesetz"
+
+#: core/forms/review.py:38
+msgid "sponsor_required_for_next_meeting"
+msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
+
+#: core/forms/review.py:39
+msgid "insurance_review_required"
+msgstr "Versicherungsüberprüfung notwendig"
+
+#: core/forms/review.py:40
+msgid "gcp_review_required"
+msgstr "GCP Überprüfung notwendig"
+
+#: core/forms/review.py:41
+#, fuzzy
+msgid "remission"
+msgstr "Neueinreichung"
+
+#: core/forms/review.py:42
+msgid "keywords"
+msgstr "Schlüsselwörter"
+
+#: core/forms/review.py:43
+msgid "additional_reviewers"
+msgstr "Zusätzliche Gutachter"
+
+#: core/forms/review.py:44
+msgid "new_additional_reviewer"
+msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
+
 #: core/forms/wizard.py:50
 msgid "Empty Study"
 msgstr "Leere Studie"
@@ -2846,6 +2916,11 @@ msgstr "Beteiligte Parteien"
 msgid "Activities"
 msgstr "Tätigkeiten"
 
+#: templates/submissions/readonly_form.html:71
+#, fuzzy
+msgid "Thesis Review"
+msgstr "Formale Prüfung Diplomarbeit"
+
 #: templates/submissions/readonly_form.html:83
 msgid "Votes"
 msgstr "Voten"
@@ -2912,6 +2987,10 @@ msgstr "Schließen"
 #: templates/submissions/readonly_form.html:317
 msgid "Don't Close"
 msgstr "Nicht Schließen"
+
+#: templates/submissions/review_form.inc:19
+msgid "save"
+msgstr "Speichern"
 
 #: templates/submissions/widget.html:59
 msgid "More"
@@ -3040,10 +3119,6 @@ msgstr "Offen"
 #: templates/tasks/tasks.inc:17 templates/tasks/tasks_full.inc:16
 msgid "Proxy"
 msgstr "Vertretung"
-
-#: templates/tasks/tasks.inc:22 templates/tasks/tasks_full.inc:21
-msgid "thesis"
-msgstr "Diplomarbeit"
 
 #: templates/tasks/tasks.inc:29 templates/tasks/tasks_full.inc:28
 msgid "My Tasks"
