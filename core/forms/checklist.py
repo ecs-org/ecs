@@ -10,7 +10,8 @@ def make_checklist_form(checklist):
     blueprint = checklist.blueprint
     for i, question in enumerate(blueprint.questions.order_by('text')):
         answer = checklist.answers.get(question=question)
-        fields['q%s' % i] = forms.NullBooleanField(initial=answer.answer, label=question.text, help_text=question.description, required=False)
+        fullquestion = u'%s\n%s' % (question.text, question.description)
+        fields['q%s' % i] = forms.NullBooleanField(initial=answer.answer, label=fullquestion, help_text=fullquestion, required=False)
         fields['c%s' % i] = forms.CharField(initial=answer.comment, label=_('comment'), required=False, widget=forms.Textarea())
     form_class = type('Checklist%sForm' % blueprint.pk, (ReadonlyFormMixin, forms.BaseForm,), {'base_fields': fields})
     return form_class
