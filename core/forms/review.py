@@ -6,12 +6,15 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget
 
-class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
+from ecs.utils.formutils import TranslatedModelForm
+
+class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True), required=False)
     new_external_reviewer = forms.EmailField(required=False)
     new_additional_reviewer = forms.EmailField(required=False)
@@ -21,7 +24,26 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories', 'external_reviewer', 'external_reviewer_name', 
             'new_external_reviewer', 'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'gcp_review_required', 'remission',
             'keywords', 'additional_reviewers', 'new_additional_reviewer')
-
+        labels = {
+            'thesis': _('thesis'),
+            'retrospective': _('retrospective'),
+            'medical_categories': _('medical_categories'),
+            'expedited': _('expedited'),
+            'expedited_review_categories': _('expedited_review_categories'),
+            'external_reviewer': _('external_reviewer'),
+            'external_reviewer_name': _('external_reviewer_name'),
+            'new_external_reviewer': _('new_external_reviewer'),
+            'is_amg': _('is_amg'),
+            'is_mpg': _('is_mpg'),
+            'sponsor_required_for_next_meeting': _('sponsor_required_for_next_meeting'),
+            'insurance_review_required': _('insurance_review_required'),
+            'gcp_review_required': _('gcp_review_required'),
+            'remission': _('remission'),
+            'keywords': _('keywords'),
+            'additional_reviewers': _('additional_reviewers'),
+            'new_additional_reviewer': _('new_additional_reviewer'),
+        }
+        
     def __init__(self, *args, **kwargs):
         rval = super(CategorizationReviewForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
