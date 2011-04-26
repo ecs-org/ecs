@@ -520,12 +520,15 @@ def wizard(request):
         'form': screen_form,
     })
 
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter'):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None):
     usersettings = request.user.ecs_settings
+
+    if order_by is None:
+        order_by = ('ec_number',)
 
     filterform = filter_form(request.POST or getattr(usersettings, filtername))
     submissions = filterform.filter_submissions(submissions, request.user)
-    submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by('ec_number')
+    submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by(*order_by)
 
     if stashed_submission_forms:
         submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)
@@ -551,7 +554,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 
 
 def submission_widget(request, template='submissions/widget.html'):
-    data = dict(template='submissions/widget.html', limit=5)
+    data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
     if request.user.ecs_profile.internal:
         data['submissions'] = Submission.objects.all()
