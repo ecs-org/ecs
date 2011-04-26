@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-26 01:50+0200\n"
+"POT-Creation-Date: 2011-04-26 02:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -575,15 +575,15 @@ msgstr "Genetische Untersuchung"
 
 #: core/paper_forms.py:140
 msgid "Other, please specify"
-msgstr "Sonstiges, bitte spezifizieren"
+msgstr "Sonstige Kategorien"
 
 #: core/paper_forms.py:140
 msgid "e.g. Dietetics, epidemiology, etc."
-msgstr "z.B. Diätetik, Epidemiologie, etc."
+msgstr "z.B.: immunologische Untersuchung"
 
 #: core/paper_forms.py:141
 msgid "Dissertation / Thesis"
-msgstr "Dissertation / Diplomarbeit"
+msgstr "Diplomarbeit / Dissertation"
 
 #: core/paper_forms.py:142
 msgid "Register"
