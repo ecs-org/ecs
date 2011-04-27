@@ -7,13 +7,21 @@ from django.http import HttpResponse, HttpResponseBadRequest
 def shoot(request):
     trac = xmlrpclib.ServerProxy(settings.BUGSHOT_CONFIG['bugshoturl'])
     
+    component = ""
+    if request.POST.get('component', ''):
+        try:
+            componentnr = trac.ticket.component.get(request.POST.get('component', ''))
+            component = request.POST.get('component', '')
+        except xmlrpclib.Fault:
+            return HttpResponseBadRequest("invalid component %s" % request.POST.get('component', ''))
+
     priority = "normal"
     if request.POST.get('priority', ''):
         try:
             prioritynr = trac.ticket.priority.get(request.POST.get('priority', ''))
             priority = request.POST.get('priority', '')
         except xmlrpclib.Fault:
-            pass
+            return HttpResponseBadRequest("invalid priority %s" % request.POST.get('priority', ''))
 
     if hasattr(request, "original_user"):
         bugshot_reporter = request.original_user.__unicode__() 
@@ -24,6 +32,7 @@ def shoot(request):
         "type":"bug", 
         "owner": request.POST.get('owner', ''),
         "priority": priority,
+        "component": component,
         "milestone": settings.BUGSHOT_CONFIG['milestone'], 
         "bugshot_reporter": bugshot_reporter,
         "absoluteurl": request.POST.get('url', ''),

@@ -156,6 +156,9 @@ camera.Camera = new Class({
             data: data,
             onSuccess: (function(){
                 this.cancel();
+            }).bind(this),
+            onFailure: (function(){
+            	alert("Send failure, check for valid input");
             }).bind(this)
         });
         request.send();
