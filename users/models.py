@@ -44,7 +44,8 @@ class UserProfile(models.Model):
     
     social_security_number = models.CharField(max_length=10, blank=True)
 
-    # 0 = never send messages
+    # 0 = never send messages, is editable via profile, activate via registration sets this to 5 minutes
+    # Fixme: this should be default to 5 minutes, once we go production
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
     
     def __unicode__(self):

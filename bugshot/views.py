@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 def shoot(request):
     trac = xmlrpclib.ServerProxy(settings.BUGSHOT_CONFIG['bugshoturl'])
     
-    component = ""
+    component = "ecs"
     if request.POST.get('component', ''):
         try:
             componentnr = trac.ticket.component.get(request.POST.get('component', ''))

@@ -34,6 +34,7 @@ def sites():
         (4, 'chipper', 'doc.ecsdev.ep3.at'),
     )
 
+    # FIXME: On virtual image creation this somehow must be editable for bootstrapping with the right hostname of the target machine
     for pk, name, domain in sites_list:
         site, created = Site.objects.get_or_create(pk=pk)
         site.name = name
