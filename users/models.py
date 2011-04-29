@@ -15,6 +15,7 @@ class UserProfile(models.Model):
     phantom = models.BooleanField(default=False)
     approved_by_office = models.BooleanField(default=False)
     indisposed = models.BooleanField(default=False)
+    start_workflow = models.BooleanField(default=False)
 
     external_review = models.BooleanField(default=False)
     board_member = models.BooleanField(default=False)

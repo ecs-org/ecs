@@ -337,7 +337,7 @@ def auth_user_developers():
         developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', 'f'),)
         
     for first, last, email, password, gender in developers:
-        user, created = get_or_create_user(email)
+        user, created = get_or_create_user(email, start_workflow=False)
         user.first_name = first
         user.last_name = last
         user.set_password(password)
@@ -352,13 +352,14 @@ def auth_user_developers():
         profile.help_writer = True
         profile.forward_messages_after_minutes = 360
         profile.gender = gender
+        profile.start_workflow = True
         profile.save()
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_sentryuser():
-        user, created = get_or_create_user('sentry@example.org')
+        user, created = get_or_create_user('sentry@example.org', start_workflow=False)
         user.groups.add(Group.objects.get(name="Presenter"))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
         user.is_staff = True
@@ -366,6 +367,7 @@ def auth_user_sentryuser():
         user.save()
         profile = user.get_profile()
         profile.approved_by_office = True
+        profile.start_workflow = True
         profile.save()
 
 
@@ -402,7 +404,7 @@ def auth_user_testusers():
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
-            user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number))
+            user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
             user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(Group.objects.get(name="userswitcher_target"))
 
@@ -413,18 +415,20 @@ def auth_user_testusers():
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 profile.help_writer = True
-                
+
+            profile.start_workflow = True
             profile.save()
 
     
     for testuser, medcategories in boardtestusers:
-        user, created = get_or_create_user('{0}@example.org'.format(testuser))
+        user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
         user.groups.add(Group.objects.get(name='EC-Board Member'))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
 
         profile = user.get_profile()
         profile.board_member = True
         profile.approved_by_office = True
+        profile.start_workflow = True
         profile.save()
 
         for medcategory in medcategories:

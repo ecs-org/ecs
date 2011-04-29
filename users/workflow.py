@@ -6,8 +6,7 @@ from ecs.workflow import guard, Activity, register
 from ecs.users.models import UserProfile
 
 
-register(UserProfile)
-
+register(UserProfile, autostart_if=lambda p, created: p.start_workflow and not p.workflow)
 
 @guard(model=UserProfile)
 def is_approved(wf):

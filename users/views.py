@@ -120,9 +120,6 @@ def activate(request, token=None):
         user.ecs_profile.forward_messages_after_minutes = 5
         user.ecs_profile.save()
 
-        wf = Graph.objects.get(model=UserProfile, auto_start=True).create_workflow(data=user.ecs_profile)
-        wf.start()
-
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,
         })
