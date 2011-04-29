@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, random
 from datetime import datetime
+from copy import deepcopy
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import CommandError
@@ -25,6 +26,7 @@ from ecs.users.utils import get_or_create_user
 # getting translated later.
 _ = lambda s: s
 
+
 @bootstrap.register()
 def sites():
     sites_list = (
@@ -40,6 +42,7 @@ def sites():
         site.name = name
         site.domain = domain
         site.save()
+
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
@@ -62,6 +65,7 @@ def templates():
                     tpl.save()
                 tpl.sites = Site.objects.all()
                 tpl.save()
+
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
@@ -322,6 +326,7 @@ def medical_categories():
         medcat.name = longname
         medcat.save()
 
+
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     ''' Developer Account Creation '''
@@ -359,10 +364,8 @@ def auth_user_sentryuser():
         user.is_staff = True
         user.is_superuser = True
         user.save()
-        flags = {'approved_by_office': True}
         profile = user.get_profile()
-        for flagname, flagvalue in flags.items():
-            setattr(profile, flagname, flagvalue)
+        profile.approved_by_office = True
         profile.save()
 
 
@@ -371,30 +374,20 @@ def auth_user_sentryuser():
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        ('presenter', u'Presenter',{'approved_by_office': True}),
-        ('sponsor', u'Sponsor', {'approved_by_office': True}),
-        ('investigator', u'Investigator', {'approved_by_office': True}),
-        ('office', u'EC-Office', {'internal': True, 'approved_by_office': True}),
-        ('internal.rev', u'EC-Internal Review Group',
-            {'internal': True, 'approved_by_office': True}),
-        ('executive', u'EC-Executive Board Group',
-            {'internal': True, 'executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group',
-            {'internal': True, 'executive_board_member': True),
-        ('signing', u'EC-Signing Group',
-            {'internal': True, 'approved_by_office': True}),
-        ('statistic.rev', u'EC-Statistic Group',
-            {'internal': True, 'approved_by_office': True}),
-        ('notification.rev', u'EC-Notification Review Group',
-            {'internal': True, 'approved_by_office': True}),
-        ('insurance.rev', u'EC-Insurance Reviewer',
-            {'internal': False, 'approved_by_office': True),
-        ('thesis.rev', u'EC-Thesis Review Group',
-            {'internal': False, 'thesis_review': True),
-        ('external.reviewer', u'External Reviewer',
-            {'external_review': True, 'approved_by_office': True}),
-        ('gcp.reviewer', u'GCP Review Group',
-            {'internal': True, 'approved_by_office': True}),
+        ('presenter', u'Presenter', {}),
+        ('sponsor', u'Sponsor', {}),
+        ('investigator', u'Investigator', {}),
+        ('office', u'EC-Office', {'internal': True,}),
+        ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
+        ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': True, 'executive_board_member': True),
+        ('signing', u'EC-Signing Group', {'internal': True, }),
+        ('statistic.rev', u'EC-Statistic Group', {'internal': True, }),
+        ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
+        ('insurance.rev', u'EC-Insurance Reviewer', {'internal': False, 'insurance_review': True}),
+        ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
+        ('external.reviewer', u'External Reviewer', {'external_review': True, }),
+        ('gcp.reviewer', u'GCP Review Group', {'internal': True, }),
     )
 
     boardtestusers = (
@@ -416,6 +409,7 @@ def auth_user_testusers():
             profile = user.get_profile()
             for flagname, flagvalue in flags.items():
                 setattr(profile, flagname, flagvalue)
+            profile.approved_by_office = True
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 profile.help_writer = True
@@ -459,96 +453,15 @@ def auth_ec_staff_users():
         if changed:
             b.save()
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.checklist_blueprints',))
-def checklist_questions():
-    questions = {
-        u'statistic_review': [
-            (u'1. Ist das Studienziel ausreichend definiert?',u''),
-            (u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',u''),
-            (u'3. Ist die Studienpopulation ausreichend definiert?',u''),
-            (u'4. Sind die Zielvariablen geeignet definiert?',u''),
-            (u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',u''),
-            (u'6. Ist die Größe der Stichprobe ausreichend begründet?',u''),
-        ],
-        u'legal_review': [
-                          (u" 1. Anrede: entspricht?",u''),
-                          (u" 2. Hinweis auf Freiwilligkeit: entspricht?",u''),
-                          (u" 3. Hinweis auf jederzeitigen Abbruch: entspricht?",u''),
-                          (u" 4. Schwangerschaftspassus: entspricht?",u''),
-                          (u" 5. Versicherungspassus: entspricht?",u''),
-                          (u" 6. Name und Erreichbarkeit des Prüfarztes: entspricht?",u''),
-                          (u" 7. Hinweis auf Patientenanwaltschaft: entspricht?",u''),
-                          (u" 8. Vermeidung von Fremdwörtern: entspricht?",u''),
-                          (u" 9. Rechtschreibung und Grammatik: entspricht?",u''),
-                          (u"10. Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?",u''),
-                          ],
-        u'insurance_review': [(u" 1. Sind die Angaben zu Versicherung vollständig und adäquat?",u''),],
-        u'external_review': [
-            (u' 1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
-            (u''' 1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
-                u'Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!'),
-            (u' 2. Ist die Fragestellung des Projektes relevant/wenig relevant/bereits bearbeitet/irrelevant?',u''),
-            (u' 3. Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',u''),
-            (u' 3a. Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',u''),
-            (u' 4a. Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?',
-                    u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
-                    - durch Vorenthalten einer wirksamen Therapie
-                    - durch radioaktive Isotope
-                    - durch eine spezielle Dosierung von Medikamenten'''),
-            (u' 4b. Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',u''),
-            (u' 5a. Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',u''),
-            (u' 5b. Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
-            (u' 6. Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
-        ],
-        u'additional_review': [
-                                (u' 1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
-                                (u''' 1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
-                                    u'Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!'),
-                                (u' 2. Ist die Fragestellung des Projektes relevant/wenig relevant/bereits bearbeitet/irrelevant?',u''),
-                                (u' 3. Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',u''),
-                                (u' 3a. Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',u''),
-                                (u' 4a. Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?',
-                                        u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
-                                        - durch Vorenthalten einer wirksamen Therapie
-                                        - durch radioaktive Isotope
-                                        - durch eine spezielle Dosierung von Medikamenten'''),
-                                (u' 4b. Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',u''),
-                                (u' 5a. Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',u''),
-                                (u' 5b. Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
-                                (u' 6. Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
-                               ],
-        u'gcp_review': [
-            (u' 1. Sind die Allgemeinen Informationen ausreichend und korrekt angegeben?',u''),
-            (u' 2. Sind die Hintergrundinformationen ausreichend und korrekt angegeben?',u''),
-            (u' 3. Ist das Studienziel und der Studienzweck detailliert beschrieben?',u''),
-            (u' 4. Ist das Studiendesign ausreichend dargelegt? (Endpunkte, Studienphase, Bias-Vermeidung, Prüfpräparat, Labelling, Dauer, Beendigung, Accountability, Randomisierung, Source Daten)',u''),
-            (u' 5. Sind Patientenauswahl und Austritts- bzw. Abbruchkriterien ausreichend definiert? (Ein-/Ausschluss, Abbruch, Datenerhebung, follow up, Ersatz)',u''),
-            (u' 6. Ist die Behandlung der Studienteilnehmer, samt erlaubter/nicht erlaubter Medikation und Überprüfungsverfahren ausreichend definiert?',u''),
-            (u' 7. Sind die Efficacy Parameter sowie Methoden, zeitliche Planung und Erfassung & Analyse d. Efficacy Parameter ausreichend definiert?',u''),
-            (u' 8. Ist Safety und Safety Reporting Parameter ausreichend definiert, und adäquat?',u''),
-            (u' 9. Sind die Angaben zur statistischen Datenerhebung, -Auswertung, -Methoden ausreichend und adäquat?',u''),
-            (u'10. Ist die Qualitätskontrolle und Qualitätssicherung ausreichend beschrieben und sind diese Angaben adäquat?',u''),
-            (u'11. Sind Angaben zu ethischen Aspekten vorhanden?',u''),
-            (u'12. Sind Angaben zu Datenerhebung, Dokumentation und Verarbeitung ausreichend definiert und sind diese adäquat?',u''),
-            (u'13. Sind Angaben zu Finanzierung und Versicherung ausreichend definiert und sind diese adäquat?',u''),
-            (u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',u''),
-            (u'15. Anhang, wenn zutreffend?',u''),
-        ],
-        u'boardmember_review': [
-                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
-                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
-                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
-                                ],
-        u'expedited_review': [
-                                (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
-                                (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
-                                (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
-                                ],
-    }
+    try:
+        from ecs.core.bootstrap_settings import checklist_questions
+    except ImportError:
+        question = [(u'1. Everything fine and positive', u'this is important'),]        
+        checklist_questions = {}
+        for blueprint in blueprints:
+            checklist_questions [blueprint['slug']] = deepcopy(question)
 
-    for slug in questions.keys():
+    for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for qdtup in questions[slug]:
+        for qdtup in checklist_questions[slug]:
             cq, created = ChecklistQuestion.objects.get_or_create(text=qdtup[0], blueprint=blueprint, description=qdtup[1])
-
-

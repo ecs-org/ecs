@@ -16,9 +16,6 @@ developers = (
 
 staff_users = ()
 
-# TODO: there are insurance, thesis review group members missing (FMD2)
- = ()
-
 board_members = ()
 
 commissions = [{
@@ -373,3 +370,91 @@ commissions = [{
     'address_2': u'St.-Veiter-Strasse 45-47',
     'zip_code': u'A-9020',
 }]
+
+
+checklist_questions = {
+    u'statistic_review': [
+        (u'1. Ist das Studienziel ausreichend definiert?',u''),
+        (u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',u''),
+        (u'3. Ist die Studienpopulation ausreichend definiert?',u''),
+        (u'4. Sind die Zielvariablen geeignet definiert?',u''),
+        (u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',u''),
+        (u'6. Ist die Größe der Stichprobe ausreichend begründet?',u''),
+    ],
+    u'legal_review': [
+        (u" 1. Anrede: entspricht?",u''),
+        (u" 2. Hinweis auf Freiwilligkeit: entspricht?",u''),
+        (u" 3. Hinweis auf jederzeitigen Abbruch: entspricht?",u''),
+        (u" 4. Schwangerschaftspassus: entspricht?",u''),
+        (u" 5. Versicherungspassus: entspricht?",u''),
+        (u" 6. Name und Erreichbarkeit des Prüfarztes: entspricht?",u''),
+        (u" 7. Hinweis auf Patientenanwaltschaft: entspricht?",u''),
+        (u" 8. Vermeidung von Fremdwörtern: entspricht?",u''),
+        (u" 9. Rechtschreibung und Grammatik: entspricht?",u''),
+        (u"10. Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?",u''),
+    ],
+    u'insurance_review': [
+        (u" 1. Sind die Angaben zu Versicherung vollständig und adäquat?",u''),
+    ],
+    u'external_review': [
+        (u' 1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
+        (u''' 1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
+            u'Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!'),
+        (u' 2. Ist die Fragestellung des Projektes relevant/wenig relevant/bereits bearbeitet/irrelevant?',u''),
+        (u' 3. Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',u''),
+        (u' 3a. Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',u''),
+        (u' 4a. Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?',
+            u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
+            - durch Vorenthalten einer wirksamen Therapie
+            - durch radioaktive Isotope
+            - durch eine spezielle Dosierung von Medikamenten'''),
+        (u' 4b. Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',u''),
+        (u' 5a. Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',u''),
+        (u' 5b. Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
+        (u' 6. Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
+    ],
+    u'additional_review': [
+        (u' 1a. Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
+        (u''' 1b. Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?''',
+            u'Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!'),
+        (u' 2. Ist die Fragestellung des Projektes relevant/wenig relevant/bereits bearbeitet/irrelevant?',u''),
+        (u' 3. Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',u''),
+        (u' 3a. Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',u''),
+        (u' 4a. Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?',
+            u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
+            - durch Vorenthalten einer wirksamen Therapie
+            - durch radioaktive Isotope
+            - durch eine spezielle Dosierung von Medikamenten'''),
+        (u' 4b. Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',u''),
+        (u' 5a. Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',u''),
+        (u' 5b. Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
+        (u' 6. Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
+    ],
+    u'gcp_review': [
+        (u' 1. Sind die Allgemeinen Informationen ausreichend und korrekt angegeben?',u''),
+        (u' 2. Sind die Hintergrundinformationen ausreichend und korrekt angegeben?',u''),
+        (u' 3. Ist das Studienziel und der Studienzweck detailliert beschrieben?',u''),
+        (u' 4. Ist das Studiendesign ausreichend dargelegt? (Endpunkte, Studienphase, Bias-Vermeidung, Prüfpräparat, Labelling, Dauer, Beendigung, Accountability, Randomisierung, Source Daten)',u''),
+        (u' 5. Sind Patientenauswahl und Austritts- bzw. Abbruchkriterien ausreichend definiert? (Ein-/Ausschluss, Abbruch, Datenerhebung, follow up, Ersatz)',u''),
+        (u' 6. Ist die Behandlung der Studienteilnehmer, samt erlaubter/nicht erlaubter Medikation und Überprüfungsverfahren ausreichend definiert?',u''),
+        (u' 7. Sind die Efficacy Parameter sowie Methoden, zeitliche Planung und Erfassung & Analyse d. Efficacy Parameter ausreichend definiert?',u''),
+        (u' 8. Ist Safety und Safety Reporting Parameter ausreichend definiert, und adäquat?',u''),
+        (u' 9. Sind die Angaben zur statistischen Datenerhebung, -Auswertung, -Methoden ausreichend und adäquat?',u''),
+        (u'10. Ist die Qualitätskontrolle und Qualitätssicherung ausreichend beschrieben und sind diese Angaben adäquat?',u''),
+        (u'11. Sind Angaben zu ethischen Aspekten vorhanden?',u''),
+        (u'12. Sind Angaben zu Datenerhebung, Dokumentation und Verarbeitung ausreichend definiert und sind diese adäquat?',u''),
+        (u'13. Sind Angaben zu Finanzierung und Versicherung ausreichend definiert und sind diese adäquat?',u''),
+        (u'14. Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?',u''),
+        (u'15. Anhang, wenn zutreffend?',u''),
+    ],
+    u'boardmember_review': [
+        (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+        (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+        (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+    ],
+    u'expedited_review': [
+        (u" 1. Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+        (u" 2. Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+        (u" 3. Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+    ],
+}
