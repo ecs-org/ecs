@@ -41,13 +41,15 @@
                 <li>
                     <a href="#status_tab">{% trans 'Status' %}</a>
                 </li>
-                <li>
-                    <a href="#workflow_tab">{% trans 'Workflow' %}</a>
-                </li>
-                {% if user|has_flag:'internal' %}
-                <li>
-                    <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
-                </li>
+                {% if user.get_profile.has_explicit_workflow %}
+                    <li>
+                        <a href="#workflow_tab">{% trans 'Workflow' %}</a>
+                    </li>
+                    {% if user|has_flag:'internal' %}
+                        <li>
+                            <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
+                        </li>
+                    {% endif %}
                 {% endif %}
                 <li>
                     <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
@@ -241,13 +243,15 @@
     <div id="communication_overview_tab" class="tab">
         <div id="communication_overview_messages"></div>
     </div>
-    <div id="workflow_tab" class="tab">
-        {% include 'submissions/tabs/workflow.html' %}
-    </div>
-    {% if user|has_flag:'internal' %}
-    <div id="workflow_log" class="tab">
-        {% include 'submissions/tabs/workflow_log.html' %}
-    </div>
+    {% if user.get_profile.has_explicit_workflow %}
+        <div id="workflow_tab" class="tab">
+            {% include 'submissions/tabs/workflow.html' %}
+        </div>
+        {% if user|has_flag:'internal' %}
+            <div id="workflow_log" class="tab">
+                {% include 'submissions/tabs/workflow_log.html' %}
+            </div>
+        {% endif %}
     {% endif %}
     {{ block.super }}
 {% endblock %}
