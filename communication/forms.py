@@ -43,7 +43,7 @@ class BaseMessageForm(forms.ModelForm):
             involved_parties = User.objects.filter(pk__in=[p.user.pk for p in involved_parties if p.user])
             self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
 
-        if user.ecs_profile.internal:
+        if user.get_profile().internal:
             receiver_type_choices += [
                 ('person', _('Person'))
             ]
@@ -82,7 +82,7 @@ class ReplyDelegateForm(forms.Form):
 
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
-        if user.ecs_profile.internal:
+        if user.get_profile().internal:
             self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False, label=_('Delegate to'))
             self.fields.keyOrder = ['to', 'text']
 

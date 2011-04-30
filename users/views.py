@@ -116,9 +116,10 @@ def activate(request, token=None):
         user.save()
         user.groups = Group.objects.filter(name__in=settings.DEFAULT_USER_GROUPS)
         # the userprofile is auto-created, we only have to update some fields.
-        user.ecs_profile.gender = data['gender']
-        user.ecs_profile.forward_messages_after_minutes = 5
-        user.ecs_profile.save()
+        profile = user.get_profile()
+        profile.gender = data['gender']
+        profile.forward_messages_after_minutes = 5
+        profile.save()
 
         return render(request, 'users/registration/activation_complete.html', {
             'activated_user': user,
@@ -193,12 +194,13 @@ def edit_profile(request):
 @user_flag_required('internal')
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    if user.ecs_profile.indisposed:
-        user.ecs_profile.indisposed = False
+    profile = user.get_profile()
+    if profile.indisposed:
+        profile.indisposed = False
     else:
-        user.ecs_profile.indisposed = True
+        profile.indisposed = True
 
-    user.ecs_profile.save()
+    profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
 @user_flag_required('internal')
@@ -228,7 +230,7 @@ def toggle_active(request, user_pk=None):
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     user_form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
-    profile_form = ProfileDetailsForm(request.POST or None, instance=user.ecs_profile, prefix='profile')
+    profile_form = ProfileDetailsForm(request.POST or None, instance=user.get_profile(), prefix='profile')
     if request.method == 'POST':
         if user_form.is_valid():
             user_form.save()
@@ -326,9 +328,10 @@ def accept_invitation(request, invitation_uuid=None):
     form = PasswordChangeForm(invitation.user, request.POST or None)
     if form.is_valid():
         user = form.save()
-        user.ecs_profile.last_password_change = datetime.now()
-        user.ecs_profile.phantom = False
-        user.ecs_profile.save()
+        profile = user.get_profile()
+        profile.last_password_change = datetime.now()
+        profile.phantom = False
+        profile.save()
         invitation.accepted = True
         invitation.save()
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])

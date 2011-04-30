@@ -36,7 +36,7 @@ def forward_messages(**kwargs):
     ).select_related('receiver')
 
     now = datetime.now()
-    messages = [m for m in messages if m.timestamp + timedelta(minutes=m.receiver.ecs_profile.forward_messages_after_minutes) <= now]
+    messages = [m for m in messages if m.timestamp + timedelta(minutes=m.receiver.get_profile().forward_messages_after_minutes) <= now]
     if len(messages) == 0:
         return
 

@@ -539,9 +539,10 @@ class SubmissionForm(models.Model):
                     user.first_name = getattr(self, '{0}_contact_first_name'.format(x))
                     user.last_name = getattr(self, '{0}_contact_last_name'.format(x))
                     user.save()
-                    user.ecs_profile.title = getattr(self, '{0}_contact_title'.format(x))
-                    user.ecs_profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
-                    user.ecs_profile.save()
+                    profile = user.get_profile()
+                    profile.title = getattr(self, '{0}_contact_title'.format(x))
+                    profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
+                    profile.save()
 
                 setattr(self, x, user)
 

@@ -154,7 +154,7 @@ class UserDetailsForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         rval = super(UserDetailsForm, self).__init__(*args, **kwargs)
 
-        if self.instance and self.instance.ecs_profile.board_member:
+        if self.instance and self.instance.get_profile().board_member:
             self.fields['medical_categories'] = forms.ModelMultipleChoiceField(
                 required=False,
                 queryset=MedicalCategory.objects.all(),
@@ -170,7 +170,7 @@ class UserDetailsForm(forms.ModelForm):
             self.fields['groups'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'})
             )
-            if self.instance and self.instance.ecs_profile.board_member:
+            if self.instance and self.instance.get_profile().board_member:
                 self.fields['medical_categories'].widget = MultiselectWidget(
                     url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
                 )

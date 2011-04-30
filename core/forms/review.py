@@ -98,23 +98,24 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         self.data = self.data.copy()
         if new_external_reviewer:
             invite_user(request, new_external_reviewer)
-            u = get_user(new_external_reviewer)
-            u.ecs_profile.external_review = True
-            u.ecs_profile.save()
-            u.groups.add(Group.objects.get(name="External Reviewer"))
+            user = get_user(new_external_reviewer)
+            profile = user.get_profile()
+            profile.external_review = True
+            profile.save()
+            user.groups.add(Group.objects.get(name="External Reviewer"))
             if not instance.external_reviewer_name:
-                instance.external_reviewer_name = u
+                instance.external_reviewer_name = user
                 instance.save()
 
-            self.data['external_reviewer_name'] = str(u.pk)
+            self.data['external_reviewer_name'] = str(user.pk)
             self.data['new_external_reviewer'] = None
 
         if new_additional_reviewer:
             invite_user(request, new_additional_reviewer)
-            u = get_user(new_additional_reviewer)
-            instance.additional_reviewers.add(u)
+            user = get_user(new_additional_reviewer)
+            instance.additional_reviewers.add(user)
 
-            self.data['additional_reviewers'] += ',' + str(u.pk)
+            self.data['additional_reviewers'] += ',' + str(user.pk)
             self.data['new_additional_reviewer'] = None
 
         return instance

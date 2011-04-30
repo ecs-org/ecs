@@ -19,7 +19,7 @@ class SingleLoginMiddleware(object):
             return
 
         current_session = Session.objects.get(session_key=request.session.session_key)
-        profile = request.user.ecs_profile
+        profile = request.user.get_profile()
 
         if profile.session_key == current_session.session_key:
             return

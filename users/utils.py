@@ -57,14 +57,15 @@ def get_current_user():
         return None
 
 def get_full_name(user):
+    profile = user.get_profile()
     if user.first_name or user.last_name:
         nameparts = [user.first_name, user.last_name]
-        if user.ecs_profile.title:
-            nameparts.insert(0, user.ecs_profile.title)
-        if user.ecs_profile.gender:
-            if user.ecs_profile.gender == 'f':
+        if profile.title:
+            nameparts.insert(0, profile.title)
+        if profile.gender:
+            if profile.gender == 'f':
                 nameparts.insert(0, force_unicode(_('Ms.')))
-            if user.ecs_profile.gender == 'm':
+            if profile.gender == 'm':
                 nameparts.insert(0, force_unicode(_('Mr.')))
         return u' '.join(nameparts)
     else:
@@ -109,7 +110,7 @@ class sudo(object):
 
 
 def user_flag_required(flag):
-    return user_passes_test(lambda u: getattr(u.ecs_profile, flag, False))
+    return user_passes_test(lambda u: getattr(u.get_profile(), flag, False))
 
 def user_group_required(group):
     return user_passes_test(lambda u: bool(u.groups.filter(name=group).count()))
@@ -121,8 +122,9 @@ def invite_user(request, email):
         user, created = get_or_create_user(email)
         if not created:
             raise ValueError(_(u'There is already a user with this email address.'))
-        user.ecs_profile.phantom = True
-        user.ecs_profile.save()
+        profile = user.get_profile()
+        profile.phantom = True
+        profile.save()
 
         invitation = Invitation.objects.create(user=user)
 
@@ -153,8 +155,9 @@ def create_phantom_user(email, role=None):
     sid = transaction.savepoint()
     try:
         user = create_user(email)
-        user.ecs_profile.phantom = True
-        user.ecs_profile.save()
+        profile = user.get_profile()
+        profile.phantom = True
+        profile.save()
 
         invitation = Invitation.objects.create(user=user)
 

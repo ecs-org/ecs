@@ -166,7 +166,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
-        if request.user.ecs_profile.executive_board_member:
+        if request.user.get_profile().executive_board_member:
             from ecs.core.workflow import CategorizationReview
             tasks = Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).filter(closed_at__isnull=False).order_by('-closed_at')[:1]
             if tasks:
@@ -556,7 +556,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
-    if request.user.ecs_profile.internal:
+    if request.user.get_profile().internal:
         data['submissions'] = Submission.objects.all()
         data['filtername'] = 'submission_filter_widget_internal'
         data['filter_form'] = SubmissionWidgetFilterForm

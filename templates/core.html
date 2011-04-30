@@ -21,7 +21,7 @@
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
-  {% if user.ecs_profile.has_explicit_workflow %}
+  {% if user.get_profile.has_explicit_workflow %}
     <a href="{% url ecs.tasks.views.popup %}?url={{ request.path|urlencode }}{% if submission_form %}&amp;submission={{ submission_form.submission_id }}{% endif %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
   {% endif %}
   <a href="" id="help_button" class="help_trigger icon_help">help</a>
@@ -32,7 +32,7 @@
   <ul>
     <li class="main_item"><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
     <li class="main_item"><a href="{% url ecs.communication.views.list_threads %}">{% trans "Communication" %}</a></li>
-    {% if user.ecs_profile.has_explicit_workflow %}
+    {% if user.get_profile.has_explicit_workflow %}
         <li class="main_item"><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
     {% endif %}
     <li>
@@ -120,7 +120,7 @@
 {% endblock %}
 
 {% block headernav %}
-    {% if user.ecs_profile.indisposed %}
+    {% if user.get_profile.indisposed %}
     <div>
       {% url ecs.users.views.profile as profile_url %}
       {% blocktrans with profile_url as profile_url %}
@@ -170,7 +170,7 @@
     var accordion_items = {
       'overview': -1,
       'communication': -1,
-{% if user.ecs_profile.has_explicit_workflow %}
+{% if user.get_profile.has_explicit_workflow %}
       'tasks': -1,
 {% endif %}
     };
@@ -224,7 +224,7 @@
       feedback_triggers.addEvent('click', feedback_handler);
       
       // single login popup
-      {% if user.ecs_profile.get_single_login_enforced %}
+      {% if user.get_profile.get_single_login_enforced %}
         ecs.messages.alert('{% trans 'Single Login enforced' %}', '{% trans 'The old session is now void.' %}');
       {% endif %}
       

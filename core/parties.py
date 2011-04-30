@@ -57,7 +57,7 @@ def get_reviewing_parties(sf, include_workflow=True):
 
     parties = []
 
-    anonymous = current_user_store._previous_user and not current_user_store._previous_user.ecs_profile.internal
+    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
     if include_workflow:
         from ecs.tasks.models import Task
         for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query).select_related('task_type'):

@@ -9,7 +9,7 @@ def view_dashboard(request):
         reverse('ecs.core.views.submission_widget'),
     ]
 
-    if request.user.ecs_profile.has_explicit_workflow():
+    if request.user.get_profile().has_explicit_workflow():
         widgets.append(reverse('ecs.tasks.views.my_tasks'))
 
     return render(request, 'dashboard/dashboard.html', {

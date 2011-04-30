@@ -32,8 +32,9 @@ class ViewTests(EcsTestCase):
         inspector = create_user('inspector@example.com')
         inspector.set_password('4223')
         inspector.save()
-        inspector.ecs_profile.executive_board_member = True
-        inspector.ecs_profile.save()
+        iprofile = inspector.get_profile()
+        iprofile.executive_board_member = True
+        iprofile.save()
 
         unauthorized_user = create_user('unauthorized@example.com')
         unauthorized_user.set_password('4223')
