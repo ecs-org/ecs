@@ -7,6 +7,7 @@ from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.models import Vote
 from ecs.tasks.models import Task
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
+from ecs.users.utils import sudo
 
 def ResultField(**kwargs):
     return Vote._meta.get_field('result').formfield(widget=forms.RadioSelect(), **kwargs)
@@ -35,10 +36,11 @@ class VoteForm(SaveVoteForm):
 
         if instance.result in FINAL_VOTE_RESULTS:
             # abort all tasks
-            open_tasks = Task.objects.for_data(instance.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
-            for task in open_tasks:
-                task.deleted_at = datetime.now()
-                task.save()
+            with sudo():
+                open_tasks = Task.objects.for_data(instance.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
+                for task in open_tasks:
+                    task.deleted_at = datetime.now()
+                    task.save()
 
         return instance
         

@@ -332,10 +332,6 @@
 }
 .task_back_log tr.deleted {
   color: #ff0000;
-  text-decoration: line-through;
-}
-.task_back_log tr.deleted td {
-  color: #999;
 }
 #content #status_tab table table {
   margin: -3px 0 3px;

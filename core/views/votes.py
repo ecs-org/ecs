@@ -17,7 +17,7 @@ from ecs.core.views.utils import render, pdf_response
 
 
 
-def vote_filename(vote):
+def _vote_filename(vote):
     meeting = vote.top.meeting;
     vote_name = vote.get_ec_number()
     
@@ -64,7 +64,7 @@ def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'db/meetings/xhtml2pdf/vote.html'
     context = vote_context(vote)
-    pdf_name = vote_filename(vote)
+    pdf_name = _vote_filename(vote)
     pdf_data = xhtml2pdf(render(request, template, context).content )
     return pdf_response(pdf_data, filename=pdf_name)
 
@@ -107,7 +107,7 @@ def vote_sign(request, vote_pk=None):
         'document_uuid': uuid4().get_hex(),
         'document_name': context['ec_number'],
         'document_identifier': "votes",
-        'document_filename': vote_filename(vote),
+        'document_filename': _vote_filename(vote),
         'document_stamp': True,
         'html_preview': render(request, html_template, context).content,
         'pdf_data': xhtml2pdf(render(request, pdf_template, context).content),
