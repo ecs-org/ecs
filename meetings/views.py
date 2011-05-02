@@ -120,6 +120,7 @@ def users_by_medical_category(request):
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     return render(request, 'meetings/timetable/editor.html', {
+        'active': 'timetable',
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
     })
@@ -136,6 +137,7 @@ def expert_assignment(request, meeting_pk=None, forms=None):
             categories[cat] = None
 
     return render(request, 'meetings/timetable/medical_categories.html', {
+        'active': 'experts',
         'meeting': meeting,
         'forms': forms,
         'categories': categories,
@@ -224,6 +226,7 @@ def meeting_assistant(request, meeting_pk=None):
     if meeting.started:
         if meeting.ended:
             return render(request, 'meetings/assistant/error.html', {
+                'active': 'assistant',
                 'meeting': meeting,
                 'message': _(u'This meeting has ended.'),
             })
@@ -232,11 +235,13 @@ def meeting_assistant(request, meeting_pk=None):
             return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top_pk}))
         except IndexError:
             return render(request, 'meetings/assistant/error.html', {
+                'active': 'assistant',
                 'meeting': meeting,
                 'message': _(u'No TOPs are assigned to this meeting.'),
             })
     else:
         return render(request, 'meetings/assistant/error.html', {
+            'active': 'assistant',
             'meeting': meeting,
             'message': _('This meeting has not yet started.'),
         })
@@ -428,6 +433,7 @@ def next(request):
 def status(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     return render(request, 'meetings/status.html', {
+        'active': 'status',
         'meeting': meeting,
     })
 
@@ -445,6 +451,7 @@ def votes_signing(request, meeting_pk=None):
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
     response = render(request, 'meetings/votes_signing.html', {
+        'active': 'votes_signing',
         'meeting': meeting,
         'votes_list': votes_list,
     })
