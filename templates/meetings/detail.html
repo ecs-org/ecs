@@ -8,16 +8,26 @@
         <li>
             <a href="#" class="active">{% trans "Meeting" %}</a>
             <ul class="tab_headers">
-                <li><a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a></li>
+                <li{% ifequal active "status" %} class="active"{% endifequal %}>
+                    <a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Status" %}</a>
+                </li>
                 {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-                    <li><a href="{% url ecs.meetings.views.expert_assignment meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a></li>
-                    <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a></li>
+                    <li{% ifequal active "experts" %} class="active"{% endifequal %}>
+                        <a href="{% url ecs.meetings.views.expert_assignment meeting_pk=meeting.pk %}">{% trans "Spezialistenzuordnung" %}</a>
+                    </li>
+                    <li{% ifequal active "timetable" %} class="active"{% endifequal %}>
+                        <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{% trans "Timetable" %}</a>
+                    </li>
                 {% endif %}
                 {% if user|is_member_of:"EC-Signing Group" %}
-                    <li><a href="{% url ecs.meetings.views.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a></li>
+                    <li{% ifequal active "votes_signing" %} class="active"{% endifequal %}>
+                        <a href="{% url ecs.meetings.views.votes_signing meeting_pk=meeting.pk %}">{% trans "Signatur der Voten" %}</a>
+                    </li>
                 {% endif %}
                 {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-                    <li><a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">Sitzungsassistent</a></li>
+                    <li{% ifequal active "assistant" %} class="active"{% endifequal %}>
+                        <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">Sitzungsassistent</a>
+                    </li>
                 {% endif %}
             </ul>
         </li>
