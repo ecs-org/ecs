@@ -238,22 +238,22 @@
     {% endfor %}
     
     <div id="communication_tab" class="tab">
-        <div id="incoming_messages"></div>
-        <div id="outgoing_messages"></div>
+        <div class="widget" widgeturl="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
+        <div class="widget" widgeturl="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}"><button>{% trans "Write a new message" %}</button></a>
     </div>
     {% if user|has_flag:'internal' %}
         <div id="communication_overview_tab" class="tab">
-            <div id="communication_overview_messages"></div>
+            <div class="widget" widgeturl="{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}"></div>
         </div>
     {% endif %}
     {% if user.get_profile.has_explicit_workflow %}
         <div id="workflow_tab" class="tab">
-            {% include 'submissions/tabs/workflow.html' %}
+            <div class="widget" widgeturl="{% url ecs.tasks.views.my_tasks %}?submission={{ submission_form.submission.pk }}"></div>
         </div>
         {% if user|has_flag:'internal' %}
             <div id="workflow_log" class="tab">
-                {% include 'submissions/tabs/workflow_log.html' %}
+                <div class="widget" widgeturl="{% url ecs.tasks.views.task_backlog submission_pk=submission_form.submission.pk %}"></div>
             </div>
         {% endif %}
     {% endif %}
@@ -264,19 +264,11 @@
     {{ block.super }}
     <script type="text/javascript"> 
         window.addEvent('domready', function(){
-            new ecs.widgets.Widget('incoming_messages', {url: '{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}'});
-            new ecs.widgets.Widget('outgoing_messages', {url: '{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}'});
-            {% if user|has_flag:'internal' %}
-                new ecs.widgets.Widget('communication_overview_messages',
-                    {url: '{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}'});
-            {% endif %}
-            {% if user.get_profile.has_explicit_workflow %}
-                new ecs.widgets.Widget('submission_workflow_widget', {url: '{% url ecs.tasks.views.my_tasks %}?submission={{ submission_form.submission.pk }}'});
-                {% if user|has_flag:'internal' %}
-                    new ecs.widgets.Widget('submission_workflow_log_widget', {url: '{% url ecs.tasks.views.task_backlog submission_pk=submission_form.submission.pk %}'});
-                {% endif %}
-            {% endif %}
-            
+            $$('.widget').each(function(w){
+                var widgeturl = w.getAttribute('widgeturl');
+                new ecs.widgets.Widget(w, {url: widgeturl});
+            }, this);
+
             new ecs.FormFieldController(['id_external_reviewer', 'id_external_reviewer_name'], {
                 sources: ['id_thesis', 'id_expedited'], 
                 auto: function(values){
