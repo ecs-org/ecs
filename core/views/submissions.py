@@ -161,7 +161,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
         context['show_reviews'] = True
         context.update({
-            'retrospective_thesis_review_form': RetrospectiveThesisReviewForm(instance=submission, readonly=True),
             'categorization_review_form': CategorizationReviewForm(instance=submission, readonly=True),
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
@@ -186,15 +185,6 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     task.deleted_at = datetime.now()
     task.save()
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
-
-@user_flag_required('internal')
-def retrospective_thesis_review(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = RetrospectiveThesisReviewForm(request.POST or None, instance=submission_form.submission)
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        signals.post_thesis_review.send(submission_form.submission)
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'retrospective_thesis_review_form': form,})
 
 
 @user_flag_required('executive_board_member')

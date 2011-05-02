@@ -68,11 +68,6 @@
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
                 {% endif %}
-                {% if retrospective_thesis_review_form %}
-                    <li{% if not retrospective_thesis_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#retrospective_thesis_review_tab">{% trans "Thesis Review" %}</a>
-                    </li>
-                {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
@@ -215,15 +210,6 @@
                     <a href="{% url ecs.tasks.views.reopen_task task_pk=categorization_task.pk %}">{% trans 'Reopen' %}</a>
                 {% endif %}
                 {% with categorization_review_form as review_form %}
-                    {% include 'submissions/review_form.inc' %}
-                {% endwith %}
-            {% endblock %}
-        </div>
-    {% endif %}
-    {% if retrospective_thesis_review_form %}
-        <div id="retrospective_thesis_review_tab" class="tab">
-            {% block retrospective_thesis_review_tab_content %}
-                {% with retrospective_thesis_review_form as review_form %}
                     {% include 'submissions/review_form.inc' %}
                 {% endwith %}
             {% endblock %}
