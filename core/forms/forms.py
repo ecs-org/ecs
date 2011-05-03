@@ -213,7 +213,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         if cleaned_data.get('study_plan_multiple_test', False):
             require_fields(self, ('study_plan_multiple_test_correction_algorithm',))
 
-        if cleaned_data.get('study_plan_dataprotection_choice', 'personal') == 'personal':
+        if cleaned_data.get('study_plan_dataprotection_choice', 'non-personal') == 'personal':
             require_fields(self, ('study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr',))
         else:
             require_fields(self, ('study_plan_dataprotection_anonalgoritm',))

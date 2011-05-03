@@ -22,9 +22,9 @@ from ecs.utils.decorators import developer
 from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.meetings.models import Meeting
 
-from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, ForeignParticipatingCenterFormSet, \
-    InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, SubmissionImportForm, \
-    SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
+from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, \
+    SubmissionImportForm, SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS

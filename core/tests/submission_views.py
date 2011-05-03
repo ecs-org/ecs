@@ -24,14 +24,14 @@ VALID_SUBMISSION_FORM_DATA = {
     u'external_reviewer_suggestions': [u''], u'investigatoremployee-0-title': [u''], u'nontesteduseddrug-INITIAL_FORMS': [u'0'], u'submitter_contact_last_name': [u'Doe'], 
     u'investigatoremployee-0-sex': [u''], u'study_plan_stratification': [u''], u'sponsor_agrees_to_publishing': [u'on'], u'german_recruitment_info': [u'bla bla bla'], 
     u'investigator-1-phone': [u''], u'submitter_email': [u''], u'invoice_uid_verified_level1': [u''], u'nontesteduseddrug-0-preparation_form': [u''], 
-    u'invoice_uid_verified_level2': [u''], u'investigator-1-contact_first_name': [u'John'], u'investigator-1-email': [u''], u'german_concurrent_study_info': [u'bla bla bla'], 
+    u'invoice_uid_verified_level2': [u''], u'investigator-1-contact_first_name': [u'John'], u'investigator-1-email': [u'rofl@copter.com'], u'german_concurrent_study_info': [u'bla bla bla'], 
     u'study_plan_planned_statalgorithm': [u'log rank test'], u'document-date': [u''], u'medtech_reference_substance': [u''], u'measure-MAX_NUM_FORMS': [u''], 
     u'study_plan_statalgorithm': [u'none'], u'foreignparticipatingcenter-TOTAL_FORMS': [u'1'], u'routinemeasure-MAX_NUM_FORMS': [u''], 
     u'invoice_contact_first_name': [u''], u'investigator-0-mobile': [u''], u'submitter_is_coordinator': [u'on'], u'insurance_validity': [u'keine'], 
     u'sponsor_name': [u'sponsor'], u'sponsor_contact_last_name': [u''], u'sponsor_email': [u'johndoe@example.com'], u'subject_duration': [u'96 months'], 
     u'submitter_contact_gender': [u'f'], u'nontesteduseddrug-0-generic_name': [u''], u'medtech_ce_symbol': [u'3'], u'investigator-0-contact_gender': [u'f'], 
     u'investigator-1-contact_gender': [u'm'], u'nontesteduseddrug-MAX_NUM_FORMS': [u''], u'investigatoremployee-INITIAL_FORMS': [u'0'], u'insurance_phone': [u'1234567'], 
-    u'investigator-0-email': [u''], u'measure-TOTAL_FORMS': [u'0'], u'medtech_manufacturer': [u''], u'subject_planned_total_duration': [u'10 months'], 
+    u'investigator-0-email': [u'rofl@copter.com'], u'measure-TOTAL_FORMS': [u'0'], u'medtech_manufacturer': [u''], u'subject_planned_total_duration': [u'10 months'], 
     u'protocol_number': [u''], u'german_summary': [u'Bei diesem Projekt handelt es sich um ein sowieso bla blu'], u'document-doctype': [u''], 
     u'investigator-0-contact_first_name': [u'Jane'], u'nontesteduseddrug-0-dosage': [u''], u'insurance_contract_number': [u'2323'], u'study_plan_power': [u'0.80'], 
     u'sponsor_phone': [u'+43 1 40170'], u'subject_maxage': [u'21'], u'investigator-1-ethics_commission': [u''], u'subject_noncompetents': [u'on'], 
@@ -72,6 +72,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'investigatoremployee-0-firstname': [u''], u'german_consent_info': [u'bla bla bla'], u'document-version': [u''], u'substance_p_c_t_application_type': [u'IV in children'], 
     u'german_project_title': [u'kjkjkjk'], u'submitter_organisation': [u'submitter orga'], u'study_plan_multiple_test_correction_algorithm': [u'Keines'], 
     u'sponsor_address': [u'sponsor address 1'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'], u'submitter_email': [u'submitter@example.com'],
+    u'study_plan_dataprotection_choice': [u'non-personal'],
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
