@@ -9,7 +9,6 @@
         </div>
     {% else %}
         <div class="input">
-            {{ form.receiver_type.data }}
             <ul>
                 {% for choice in form.fields.receiver_type.choices %}
                 <li>
