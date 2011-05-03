@@ -43,6 +43,8 @@ SUBMISSION_FORM_TABS = (
             'sponsor_phone', # 1.5.4
             'sponsor_fax', # 1.5.5
             'sponsor_email', # 1.5.6
+            'sponsor_uid_verified_level1',
+            'sponsor_uid_verified_level2',
             'sponsor_agrees_to_publishing',
             'invoice_differs_from_sponsor',
         ]),
