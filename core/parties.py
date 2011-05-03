@@ -79,6 +79,7 @@ def get_meeting_parties(sf, include_workflow=True):
     from ecs.meetings.models import AssignedMedicalCategory
 
     parties = []
+    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
     
     timetable_entries_q = sf.submission.timetable_entries.all().values('pk').query
     meetings_q = sf.submission.meetings.filter(timetable_entries__in=timetable_entries_q).values('pk').query
