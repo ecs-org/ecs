@@ -327,8 +327,6 @@ DEFAULT_CONTACT = 'office1@example.org'
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
 AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
-DIFF_REVIEW_LIST = ('root',)
-
 
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True

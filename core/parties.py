@@ -74,10 +74,31 @@ def get_reviewing_parties(sf, include_workflow=True):
 
     return parties
 
+@sudo()
+def get_meeting_parties(sf, include_workflow=True):
+    from ecs.meetings.models import AssignedMedicalCategory
+
+    parties = []
+    
+    timetable_entries_q = sf.submission.timetable_entries.all().values('pk').query
+    meetings_q = sf.submission.meetings.filter(timetable_entries__in=timetable_entries_q).values('pk').query
+    meetings_q = sf.submission.meetings.all()
+    assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(
+        meeting__in=sf.submission.meetings.all(),
+        category__in=sf.submission.medical_categories.all(),
+    ).values('pk').query
+
+    # assigned to the top
+    for user in User.objects.filter(meeting_participations__entry__in=timetable_entries_q):
+        parties.append(Party(user=user, involvement=_("Meeting Participant"), anonymous=anonymous))
+
+    # assigned for medical category
+    for user in User.objects.filter(assigned_medical_categories__in=assigned_medical_categories_q):
+        parties.append(Party(user=user, involvement=_("Meeting Participant (assigned for category)"), anonymous=anonymous))
+
+    return parties
 
 def get_involved_parties(sf, include_workflow=True):
-    presenting_parties = get_presenting_parties(sf, include_workflow=include_workflow)
-    reviewing_parties = get_reviewing_parties(sf, include_workflow=include_workflow)
-
-    return presenting_parties + reviewing_parties
-
+    all_parties_f = (get_presenting_parties, get_reviewing_parties, get_meeting_parties)
+    all_parties = [f(sf, include_workflow=include_workflow) for f in all_parties_f]
+    return sum(all_parties, [])

@@ -11,10 +11,9 @@ from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models.names import NameField
-from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
+from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
-from ecs.utils.common_messages import send_submission_change, send_submission_creation, send_submission_invitation
 from ecs.users.utils import get_user, create_phantom_user
 
 MIN_EC_NUMBER = 1000
@@ -152,14 +151,6 @@ class Submission(models.Model):
         sf = self.current_submission_form
         emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
         return list(User.objects.filter(email__in=emails))
-
-    def get_creation_notification_receivers(self):
-        return [], [] # FIXME: wah! (FMD3) why is this function short-cutted?
-        sf = self.current_submission_form
-        emails = filter(None, [sf.sponsor_email] + [x.email for x in sf.investigators.all()])
-        registered = User.objects.filter(email__in=emails)
-        unregistered = emails.difference(registered)
-        return registered, unregistered
 
     def resubmission_task_for(self, user):
         from ecs.tasks.models import Task
@@ -646,6 +637,9 @@ class SubmissionForm(models.Model):
     def get_reviewing_parties(self, include_workflow=True):
         return get_reviewing_parties(self, include_workflow=include_workflow)
 
+    def get_meeting_parties(self, include_workflow=True):
+        return get_meeting_parties(self, include_workflow=include_workflow)
+
 
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor', 'invoice'):
@@ -661,48 +655,51 @@ def attach_to_submissions(user):
 
 def _post_submission_form_save(**kwargs):
     from ecs.meetings.models import Meeting, AssignedMedicalCategory
+    from ecs.communication.utils import send_system_message_template
 
     new_sf = kwargs['instance']
-    submission = new_sf.submission
-    initial = not submission.current_submission_form
     
-    if new_sf.transient:
+    if not kwargs['created'] or new_sf.transient:
         return
 
-    if new_sf == submission.current_submission_form:
-        old_sf = None
-    else:
-        old_sf = submission.current_submission_form
-        submission.current_submission_form = new_sf
+    submission = new_sf.submission
+    initial = not submission.current_submission_form
+
+    old_sf = submission.current_submission_form
+    submission.current_submission_form = new_sf
+
+    defaults = {
+        'is_amg': new_sf.project_type_drug,
+        'is_mpg': new_sf.project_type_medical_device_or_method,
+        'insurance_review_required': bool(new_sf.insurance_name),
+    }
 
     # set defaults
-    if submission.is_amg is None:
-        submission.is_amg = new_sf.project_type_drug
-    if submission.is_mpg is None:
-        submission.is_mpg = new_sf.project_type_medical_device_or_method
-    if submission.insurance_review_required is None:
-        submission.insurance_review_required = bool(new_sf.insurance_name)
+    for k, v in defaults.iteritems():
+        if getattr(submission, k) is None:
+            setattr(submission, k, v)
     submission.save(force_update=True)
-    
-    if initial:
-        registered, unregistered = submission.get_creation_notification_receivers()
-        send_submission_creation(new_sf, registered)
-        send_submission_invitation(new_sf, unregistered)
 
-    if old_sf:
-        timetable_entries_q = submission.timetable_entries.all().values('pk').query
-        meetings_q = Meeting.objects.filter(timetable_entries__in=timetable_entries_q).values('pk').query
-        assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(meeting__in=meetings_q).values('pk').query
-
-                                                                                            # filter for following users:
-        recipients_q = Q(username__in=settings.DIFF_REVIEW_LIST)                            # static reviewer list
-        recipients_q |= Q(meeting_participations__entry__in=timetable_entries_q)            # assigned to the top
-        recipients_q |= Q(assigned_medical_categories__in=assigned_medical_categories_q)    # assigned for medical category
-        recipients_q |= Q(email__in=(old_sf.sponsor_email, new_sf.sponsor_email,))          # sponsors
-
-        recipients = list(User.objects.filter(recipients_q).distinct())
-
-        send_submission_change(old_sf, new_sf, recipients);
+    if old_sf == None:   # first version of the submission
+        for p in new_sf.get_involved_parties():
+            if p.user == new_sf.presenter: continue
+            send_system_message_template(
+                p.user,
+                _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
+                'submissions/creation_message.txt',
+                {'party': p},
+                submission=submission
+            )
+    else:
+        for p in new_sf.get_involved_parties():
+            if p.user == new_sf.presenter: continue
+            send_system_message_template(
+                p.user,
+                _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),
+                'submissions/change_message.txt',
+                {'party': p},
+                submission=submission
+            )
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
