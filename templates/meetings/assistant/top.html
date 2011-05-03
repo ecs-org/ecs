@@ -20,16 +20,42 @@
         <input id="id_close_top" type="hidden" name="close_top" value="1" />
         <input id="id_simple_save" type="hidden" name="simple_save" value="" />
           <h3>Votum</h3>
-            <div>
-                {% if form.result.errors %}
-                    <span class="errors">{{ form.result.errors }}</span>
-                {% endif %}
-                {{ form.result }}
+            <div class="meeting_assistant_block">
+                          
+              <div class="block_left">
+                  {% if form.result.errors %}
+                      <span class="errors">{{ form.result.errors }}</span>
+                  {% endif %}
+                  {{ form.result }}
+              </div>
+  
+              <div class="block_right">
+      
+                {% if top.submission %}
+                <div class="buttons">
+                   <ul>
+                      <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
+                      <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
+                      <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
+                   </ul>
+                </div>
+                {% else %}
+                <div class="buttons">
+                  <ul>
+                      <li><a id="complete" href="">Fertig</a></li>
+                  </ul>
+                </div>
+                {% endif %}              
+              </div>
+              
             </div>
+            
             {{ form.text }}
+            
     {% endif %}
 
     </form>
+            
   </div>
 {% endblock %}
 
@@ -53,7 +79,7 @@
 {% endblock %}
 
 {% block meeting_assistant_sidebar %}
-      <div class="column_1">
+      <div class="column">
         <div class="reviews">
           <ul>
           {% for blueprint, checklists in checklist_review_states %}
@@ -78,25 +104,6 @@
               </li>
           {% endif %}
           </ul>
-        </div>
-      </div>
-      <div class="column_2">
-        <div class="reviews">
-            {% if top.submission %}
-            <div class="buttons">
-               <ul>
-                  <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
-                  <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
-                  <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
-               </ul>
-            </div>
-            {% else %}
-            <div class="buttons">
-              <ul>
-                  <li><a id="complete" href="">Fertig</a></li>
-              </ul>
-            </div>
-            {% endif %}
         </div>
       </div>
 {% endblock %}

@@ -906,3 +906,9 @@ content ol.submission_list li .actions {
 #content .messages tr:hover {
   background-color: #eee;
 }
+
+.submission_list_choose li {
+  background: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
