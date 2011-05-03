@@ -50,7 +50,7 @@ class Serializer(object):
 
 class PageSerializer(Serializer):
     fields = ['view', 'anchor', 'slug', 'title', 'text']
-    unique = ['view', 'anchor']
+    unique = ['slug']
     model = Page
 
     def serialize_view(self, zf, instance):

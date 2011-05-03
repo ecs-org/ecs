@@ -293,8 +293,6 @@ def export(request):
 
 @user_flag_required('help_writer')
 def load(request):
-    return HttpResponseBadRequest()
- 
     form = ImportForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         serializer.load(request.FILES['file'])

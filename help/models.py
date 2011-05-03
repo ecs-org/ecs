@@ -17,7 +17,7 @@ from ecs.help.utils import publish_parts
 class Page(models.Model):
     view = models.ForeignKey(View, null=True, blank=True)
     anchor = models.CharField(max_length=100, blank=True)
-    slug = models.CharField(max_length=100, blank=True)
+    slug = models.CharField(max_length=100, unique=True)
     title = models.CharField(max_length=150)
     text = models.TextField()
     
