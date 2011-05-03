@@ -259,16 +259,21 @@
                 new ecs.widgets.Widget(w, {url: widgeturl});
             }, this);
 
-            new ecs.FormFieldController(['id_external_reviewer', 'id_external_reviewer_name'], {
+            new ecs.FormFieldController(['id_external_reviewer'], {
                 sources: ['id_thesis', 'id_expedited'], 
                 auto: function(values){
-                    if(values.some(function(val){ return val == 2;})){
-                        this.setDisabled(true);
+                    var no_external_reviewer = values.some(function(val){ return val == 2;});
+                    this.setDisabled(no_external_reviewer);
+                    if(no_external_reviewer) {
                         this.setValues([3, ""]);
                     }
-                    else{
-                        this.setDisabled(false);
-                    }
+                }
+            });
+
+            new ecs.FormFieldController(['id_external_reviewer_name'], {
+                sources: ['id_external_reviewer'],
+                auto: function(values){
+                    this.setDisabled(values[0] == 3); /* no external reviewer required */
                 }
             });
             
