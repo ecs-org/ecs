@@ -76,6 +76,7 @@
             </ul>
         </li>
         {% endif %}
+        {% if user|has_flag:'internal' %}
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
@@ -95,6 +96,7 @@
                 <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
             </ul>
         </li>
+        {% endif %}
         <li>
             <a href="#">{% trans "Notifications" %}</a>
             <ul class="tab_headers">
@@ -165,6 +167,7 @@
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}"><button>{% trans "Create a new notification" %}</button></a>
         {% endif %}
     </div>
+    {% if user|has_flag:'internal' %}
     {% if b2_vote_review_form or vote_review_form %}
         {% if b2_vote_review_form %}
             <div id="b2vote_review_tab" class="tab">
@@ -202,6 +205,7 @@
             <p>{% trans "There are no published votes." %}</p>
         {% endif %}
     </div>
+    {% endif %}
     
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab">
