@@ -682,7 +682,7 @@ def _post_submission_form_save(**kwargs):
 
     if old_sf == None:   # first version of the submission
         for p in new_sf.get_involved_parties():
-            if p.user == new_sf.presenter: continue
+            if p.user == new_sf.presenter or not p.user: continue
             send_system_message_template(
                 p.user,
                 _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
@@ -692,7 +692,7 @@ def _post_submission_form_save(**kwargs):
             )
     else:
         for p in new_sf.get_involved_parties():
-            if p.user == new_sf.presenter: continue
+            if p.user == new_sf.presenter or not p.user: continue
             send_system_message_template(
                 p.user,
                 _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),

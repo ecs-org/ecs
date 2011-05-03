@@ -77,6 +77,7 @@ def get_reviewing_parties(sf, include_workflow=True):
 @sudo()
 def get_meeting_parties(sf, include_workflow=True):
     from ecs.meetings.models import AssignedMedicalCategory
+    from ecs.users.middleware import current_user_store
 
     parties = []
     anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
