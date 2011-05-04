@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from datetime import datetime
 
 from django.db import models
 from django.db.models import Q
@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.core.models.names import NameField
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
 from ecs.authorization import AuthorizationManager
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user
 
 MIN_EC_NUMBER = 1000
@@ -48,7 +48,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
 
     def next_meeting(self):
-        return self.filter(meetings__start__gt=datetime.datetime.now())
+        return self.filter(meetings__start__gt=datetime.now())
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
@@ -141,7 +141,7 @@ class Submission(models.Model):
 
     def get_ec_number_display(self, short=False, separator=u'/'):
         year, num = divmod(self.ec_number, 10000)
-        if short and datetime.datetime.now().year == int(year):
+        if short and datetime.now().year == int(year):
             return unicode(num)
         return u"%s%s%s" % (num, separator, year)
         
@@ -239,7 +239,7 @@ class Submission(models.Model):
         if not self.ec_number:
             from ecs.users.utils import sudo
             with sudo():
-                year = datetime.datetime.now().year
+                year = datetime.now().year
                 max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
                 if max_num is None:
                     max_num = 10000 * year + MIN_EC_NUMBER
@@ -254,7 +254,7 @@ class Submission(models.Model):
         return self.get_ec_number_display()
         
     def update_next_meeting(self):
-        next = self.meetings.filter(start__gt=datetime.datetime.now()).order_by('start')[:1]
+        next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
         if next:
             if next[0].id != self.next_meeting_id:
                 self.next_meeting = next[0]
@@ -296,7 +296,7 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField(null=True, blank=True)
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
-    created_at = models.DateTimeField(default=datetime.datetime.now)
+    created_at = models.DateTimeField(default=datetime.now)
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
@@ -517,6 +517,9 @@ class SubmissionForm(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
 
     def save(self, **kwargs):
+        from ecs.core import paper_forms
+        from ecs.utils.viewutils import render_pdf_context
+
         if not self.presenter_id:
             from ecs.users.utils import get_current_user
             user = get_current_user()
@@ -539,7 +542,26 @@ class SubmissionForm(models.Model):
 
                 setattr(self, x, user)
 
-        return super(SubmissionForm, self).save(**kwargs)
+        ret = super(SubmissionForm, self).save(**kwargs)
+
+        if not self.pdf_document and not self.transient:
+            doctype = DocumentType.objects.get(identifier='submissionform')
+            name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
+            filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
+            pdfdata = render_pdf_context('db/submissions/xhtml2pdf/view.html', {
+                'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
+                'submission_form': self,
+                'documents': self.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            })
+
+            pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype, 
+                parent_object=self, name=name, original_file_name=filename,
+                version=str(self.submission.forms.all().order_by('pk').values_list('pk', flat=True).count() + 1),
+                date= datetime.now())
+            self.pdf_document = pdf_document
+            self.save()
+
+        return ret
    
     def __unicode__(self):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)

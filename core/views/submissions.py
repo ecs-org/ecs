@@ -17,7 +17,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.viewutils import render, redirect_to_next_url, render_pdf, pdf_response
+from ecs.utils.viewutils import render, redirect_to_next_url, pdf_response
 from ecs.utils.decorators import developer
 from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
 from ecs.meetings.models import Meeting
@@ -385,22 +385,6 @@ def create_submission_form(request):
                     instance.save()
             request.docstash.delete()
 
-            # Generate PDF Version of submission_form
-            sf_doctype = DocumentType.objects.get(identifier='submissionform')
-            sf_name = 'ek' # -%s' % submission_form.submission.get_ec_number_display(separator='-')
-            sf_filename = 'ek-%s' % submission_form.submission.get_ec_number_display(separator='-')
-            sf_pdfdata = render_pdf(request, 'db/submissions/xhtml2pdf/view.html', {
-                'paper_form_fields': paper_forms.get_field_info_for_model(SubmissionForm),
-                'submission_form': submission_form,
-                'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
-            })
-            sf_document = Document.objects.create_from_buffer(sf_pdfdata, doctype=sf_doctype, 
-                parent_object=submission_form, name=sf_name, original_file_name=sf_filename,
-                version=str(submission_form.submission.forms.all().order_by('pk').values_list('pk', flat=True).count()),
-                date= datetime.now())
-            submission_form.pdf_document = sf_document
-            submission_form.save()
-                
             if notification_type:
                 return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
                     'submission_form_pk': submission_form.pk,

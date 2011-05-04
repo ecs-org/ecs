@@ -1,4 +1,4 @@
-from django.template import RequestContext, loader, Template
+from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
 from piston.handler import BaseHandler
 
@@ -37,4 +37,7 @@ def render_pdf(request, template, context):
     html = render_html(request, template, context)
     return xhtml2pdf(html)
 
-
+def render_pdf_context(template, context):
+    template = loader.get_template(template)
+    html = template.render(Context(context))
+    return xhtml2pdf(html)
