@@ -43,8 +43,7 @@ SUBMISSION_FORM_TABS = (
             'sponsor_phone', # 1.5.4
             'sponsor_fax', # 1.5.5
             'sponsor_email', # 1.5.6
-            'sponsor_uid_verified_level1',
-            'sponsor_uid_verified_level2',
+            'sponsor_uid',
             'sponsor_agrees_to_publishing',
             'invoice_differs_from_sponsor',
         ]),
@@ -53,7 +52,7 @@ SUBMISSION_FORM_TABS = (
             'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name',
             'invoice_address', 'invoice_zip_code', 
             'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
-            'invoice_uid_verified_level1', 'invoice_uid_verified_level2',
+            'invoice_uid',
         ]),
     ]),
     (_(u'applicant'), [

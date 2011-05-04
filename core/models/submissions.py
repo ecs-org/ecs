@@ -321,8 +321,7 @@ class SubmissionForm(models.Model):
     sponsor_fax = models.CharField(max_length=30, null=True, blank=True)
     sponsor_email = models.EmailField(null=True)
     sponsor_agrees_to_publishing = models.BooleanField(default=True)
-    sponsor_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
-    sponsor_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
+    sponsor_uid = models.CharField(max_length=35, null=True, blank=True)
     
     invoice = models.ForeignKey(User, null=True, related_name='charged_submission_forms')
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
@@ -334,8 +333,6 @@ class SubmissionForm(models.Model):
     invoice_fax = models.CharField(max_length=45, null=True, blank=True)
     invoice_email = models.EmailField(null=True, blank=True)
     invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
-    invoice_uid_verified_level1 = models.DateTimeField(null=True, blank=True) # can be done via EU API
-    invoice_uid_verified_level2 = models.DateTimeField(null=True, blank=True) # can be done manually via Tax Authority, local.
     
     # 2.1
     project_type_non_reg_drug = models.BooleanField()
