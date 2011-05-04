@@ -77,14 +77,14 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             except User.DoesNotExist:
                 pass
             else:
-                self._errors['new_external_reviewer'] = self.error_class([u'This user is already registered'])
+                self._errors['new_external_reviewer'] = self.error_class([_(u'This user is already registered')])
         if new_additional_reviewer:
             try:
                 get_user(new_additional_reviewer)
             except User.DoesNotExist:
                 pass
             else:
-                self._errors['new_additional_reviewer'] = self.error_class([u'This user is already registered'])
+                self._errors['new_additional_reviewer'] = self.error_class([_(u'This user is already registered')])
         return cd
 
     def save(self, request, *args, **kwargs):

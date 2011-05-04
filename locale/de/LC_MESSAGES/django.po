@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-04 17:32+0200\n"
+"POT-Creation-Date: 2011-05-04 21:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1707,6 +1707,10 @@ msgstr "Zusätzliche Gutachter"
 msgid "new_additional_reviewer"
 msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
 
+#: core/forms/review.py:80 core/forms/review.py:87
+msgid "This user is already registered"
+msgstr "Dieser Benutzer ist bereits registriert"
+
 #: core/forms/wizard.py:50
 msgid "Empty Study"
 msgstr "Leere Studie"
@@ -3117,11 +3121,11 @@ msgstr ""
 msgid "Neu"
 msgstr "Neu"
 
-#: templates/submissions/tabs/status.html:105
+#: templates/submissions/tabs/status.html:99
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:137
+#: templates/submissions/tabs/status.html:131
 #, python-format
 msgid ""
 "\n"
@@ -3133,16 +3137,16 @@ msgstr ""
 "%(task_name)s \n"
 "        "
 
-#: templates/submissions/tabs/status.html:140
+#: templates/submissions/tabs/status.html:134
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:143
+#: templates/submissions/tabs/status.html:137
 #, fuzzy
 msgid "No additional/external review"
 msgstr "Zusatz-Review"
 
-#: templates/submissions/tabs/status.html:149
+#: templates/submissions/tabs/status.html:143
 #, fuzzy
 msgid "Export"
 msgstr "Import"
