@@ -43,7 +43,7 @@ class MultiNotificationForm(NotificationForm):
         self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
 
 class SingleStudyNotificationForm(NotificationForm):
-    submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all())
+    submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
     
     def __init__(self, *args, **kwargs):
         super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)

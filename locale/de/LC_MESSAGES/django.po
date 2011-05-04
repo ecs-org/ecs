@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-04 21:12+0200\n"
+"POT-Creation-Date: 2011-05-04 21:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1451,6 +1451,10 @@ msgstr "Bitte geben Sie eine Uhrzeit im Format HH:MM ein."
 msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
+
+#: core/forms/forms.py:46
+msgid "Study"
+msgstr "Studie"
 
 #: core/forms/forms.py:130
 msgid "The account beneficiary is not the sponsor"
