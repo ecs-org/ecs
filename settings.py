@@ -225,7 +225,6 @@ ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
 
 # registration/login settings
-DEFAULT_USER_GROUPS = ('Presenter',)
 REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'

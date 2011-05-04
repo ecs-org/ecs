@@ -8,7 +8,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
@@ -114,7 +114,6 @@ def activate(request, token=None):
         user = create_user(data['email'], first_name=data['first_name'], last_name=data['last_name'])
         user.set_password(form.cleaned_data['password'])
         user.save()
-        user.groups = Group.objects.filter(name__in=settings.DEFAULT_USER_GROUPS)
         # the userprofile is auto-created, we only have to update some fields.
         profile = user.get_profile()
         profile.gender = data['gender']

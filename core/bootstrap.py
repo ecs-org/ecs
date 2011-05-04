@@ -86,7 +86,6 @@ def submission_workflow():
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
-    PRESENTER_GROUP = 'Presenter'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
     EXTERNAL_REVIEW_GROUP = 'External Reviewer'
@@ -212,9 +211,6 @@ def vote_workflow():
 @bootstrap.register()
 def auth_groups():
     groups = (
-        u'Presenter',
-        u'Sponsor',
-        u'Investigator',
         u'EC-Office',
         u'EC-Internal Review Group',
         u'EC-Executive Board Group',
@@ -343,7 +339,6 @@ def auth_user_developers():
         user.set_password(password)
         user.is_staff = False
         user.is_superuser = False
-        user.groups.add(Group.objects.get(name="Presenter"))
         user.groups.add(Group.objects.get(name="translators"))
         user.groups.add(Group.objects.get(name="sentryusers"))
         user.save()
@@ -360,7 +355,6 @@ def auth_user_developers():
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_sentryuser():
         user, created = get_or_create_user('sentry@example.org', start_workflow=False)
-        user.groups.add(Group.objects.get(name="Presenter"))
         user.groups.add(Group.objects.get(name="userswitcher_target"))
         user.is_staff = True
         user.is_superuser = True
@@ -376,9 +370,9 @@ def auth_user_sentryuser():
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        ('presenter', u'Presenter', {}),
-        ('sponsor', u'Sponsor', {}),
-        ('investigator', u'Investigator', {}),
+        ('presenter', None, {}),
+        ('sponsor', None, {}),
+        ('investigator', None, {}),
         ('office', u'EC-Office', {'internal': True,}),
         ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
         ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
@@ -405,7 +399,8 @@ def auth_user_testusers():
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
-            user.groups.add(Group.objects.get(name=testgroup))
+            if testgroup:
+                user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(Group.objects.get(name="userswitcher_target"))
 
             profile = user.get_profile()
