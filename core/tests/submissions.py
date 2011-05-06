@@ -171,6 +171,7 @@ def create_submission_form(ec_number=None, presenter=None):
     ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
     ek1.save()
     Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
+    sform.render_pdf()
     return sform
 
 
@@ -331,6 +332,7 @@ class SubmissionFormTest(EcsTestCase):
         ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
         ek1.save()
         Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
+        sform.render_pdf()
 
 
 class SubmissionAttachUserTest(EcsTestCase):

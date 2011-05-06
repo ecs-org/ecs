@@ -385,6 +385,8 @@ def create_submission_form(request):
                     instance.save()
             request.docstash.delete()
 
+            submission_form.render_pdf()
+
             if notification_type:
                 return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
                     'submission_form_pk': submission_form.pk,

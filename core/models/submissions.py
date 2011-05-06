@@ -515,9 +515,6 @@ class SubmissionForm(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
 
     def save(self, **kwargs):
-        from ecs.core import paper_forms
-        from ecs.utils.viewutils import render_pdf_context
-
         if not self.presenter_id:
             from ecs.users.utils import get_current_user
             user = get_current_user()
@@ -540,26 +537,27 @@ class SubmissionForm(models.Model):
 
                 setattr(self, x, user)
 
-        ret = super(SubmissionForm, self).save(**kwargs)
+        return super(SubmissionForm, self).save(**kwargs)
 
-        if not self.pdf_document and not self.transient:
-            doctype = DocumentType.objects.get(identifier='submissionform')
-            name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
-            filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
-            pdfdata = render_pdf_context('db/submissions/xhtml2pdf/view.html', {
-                'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
-                'submission_form': self,
-                'documents': self.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
-            })
+    def render_pdf(self):
+        from ecs.utils.viewutils import render_pdf_context
+        from ecs.core import paper_forms
 
-            pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype, 
-                parent_object=self, name=name, original_file_name=filename,
-                version=str(self.version),
-                date= datetime.now())
-            self.pdf_document = pdf_document
-            self.save()
+        doctype = DocumentType.objects.get(identifier='submissionform')
+        name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
+        filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
+        pdfdata = render_pdf_context('db/submissions/xhtml2pdf/view.html', {
+            'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
+            'submission_form': self,
+            'documents': self.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+        })
 
-        return ret
+        pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype, 
+            parent_object=self, name=name, original_file_name=filename,
+            version=str(self.version),
+            date= datetime.now())
+        self.pdf_document = pdf_document
+        self.save()
 
     @property
     def version(self):

@@ -44,6 +44,7 @@ class SerializerTest(EcsTestCase):
             investigator = Investigator.objects.create(submission_form=sf, main=bool(i), ethics_commission=ec, contact_last_name="investigator-%s" % i, subject_count=3+i)
             for j in range(2):
                 investigator.employees.create(sex='m', surname='s-%s-%s' % (i, j), firstname='s-%s-%s' % (i, j))
+        sf.render_pdf()
         return sf
         
     def compare(self, a, b):
