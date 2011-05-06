@@ -378,8 +378,8 @@ class SubmissionForm(models.Model):
     subject_count = models.IntegerField()
 
     # 2.10
-    subject_minage = models.IntegerField()
-    subject_maxage = models.IntegerField()
+    subject_minage = models.IntegerField(null=True, blank=True)
+    subject_maxage = models.IntegerField(null=True, blank=True)
     subject_noncompetents = models.BooleanField()
     subject_males = models.BooleanField()    
     subject_females = models.BooleanField()
