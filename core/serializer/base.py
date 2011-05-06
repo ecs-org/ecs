@@ -14,7 +14,7 @@ from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Invest
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.countries.models import Country
 
-CURRENT_SERIALIZER_VERSION = '0.5'
+CURRENT_SERIALIZER_VERSION = '0.6'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'
 DATA_JSON_NAME = 'data.json'
@@ -38,6 +38,8 @@ CHANGELOG = (
     ('-', SubmissionForm, 'invoice_uid_verified_level2', None),
     ('+', SubmissionForm, 'sponsor_uid', None),
     ('*', '0.5'),
+    ('+', SubmissionForm, 'insurance_not_required', False),
+    ('*', '0.6'),
 )
 
 class FieldDocs(object):

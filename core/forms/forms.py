@@ -108,7 +108,7 @@ MPG_FIELDS = (
 )
 
 INSURANCE_FIELDS = (
-    'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
+    'insurance_not_required', 'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity'
 )
 
 INVOICE_REQUIRED_FIELDS = (

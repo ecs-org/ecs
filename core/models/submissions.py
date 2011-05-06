@@ -416,6 +416,7 @@ class SubmissionForm(models.Model):
     medtech_departure_from_regulations = models.TextField(null=True, blank=True)
     
     # 5.x
+    insurance_not_required = models.BooleanField()
     insurance_name = models.CharField(max_length=125, null=True, blank=True)
     insurance_address = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
