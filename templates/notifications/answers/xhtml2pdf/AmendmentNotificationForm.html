@@ -2,7 +2,13 @@
 
 {% load core corepdf %}
 
-{% block amendment_checkbox %}{{ undefined|not|checkbox }}{% endblock %}
+{% block typeoptions %}
+    <h2>{{ undefined|not|checkbox }} 1.1 MELDUNG einer PROTOKOLLÄNDERUNG (AMENDMENT)</h2>
+    <p>
+    Begründen Sie die vorgenommenen Protokolländerungen. Legen Sie ein Exemplar, sowie eine Liste der vorgenommenen Änderungen bei.<br/>
+    Machen Sie exakte Angaben über die Bezeichnung des Amendments (falls erforderlich).
+    </p>
+{% endblock %}
 
 {% block content %}
 

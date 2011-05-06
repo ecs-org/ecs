@@ -2,4 +2,10 @@
 
 {% load core corepdf %}
 
-{% block sae_susar_checkbox %}{{ undefined|not|checkbox }}{% endblock %}
+{% block typeoptions %}
+    <h2>{{ undefined|not|checkbox }} 1.2 MELDUNG eines schwerwiegenden unerwünschten Ereignisses (SAE)</h2>
+    <p>
+    Ergeben sich daraus für Ihr Projekt Konsequenzen? Geben Sie eine Stellungnahme dazu ab!
+    Legen Sie eine Kopie der Meldung an das Bundesamt für Sicherheit im Gesundheitswesen bei (wenn zutreffend).
+    </p>
+{% endblock %}
