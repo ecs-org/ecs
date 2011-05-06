@@ -54,16 +54,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
 
     def reviewed_by_user(self, user, include_workflow=True):
-        q = self.filter(additional_reviewers=user)
+        q = models.Q(additional_reviewers=user)
         for a in user.assigned_medical_categories.all():
-            q |= a.meeting.submissions.filter(medical_categories=a.category)
+            q |= models.Q(pk__in=a.meeting.submissions.filter(medical_categories=a.category))
 
         if include_workflow:
             from ecs.tasks.models import Task
             submission_ct = ContentType.objects.get_for_model(Submission)
-            q |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+            q |= models.Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
 
-        return q.distinct()
+        return self.filter(q).distinct()
 
     def none(self):
         """ Ugly hack: per default none returne an EmptyQuerySet instance which does not have our methods """
