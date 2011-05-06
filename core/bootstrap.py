@@ -378,12 +378,12 @@ def auth_user_testusers():
         ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
         ('thesis.executive', u'EC-Thesis Executive Group', {'internal': True, 'executive_board_member': True),
         ('signing', u'EC-Signing Group', {'internal': True, }),
-        ('statistic.rev', u'EC-Statistic Group', {}),
+        ('statistic.rev', u'EC-Statistic Group', {'internal': False}),
         ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
         ('insurance.rev', u'EC-Insurance Reviewer', {'internal': False, 'insurance_review': True}),
         ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
         ('external.reviewer', u'External Reviewer', {'external_review': True, }),
-        ('gcp.reviewer', u'GCP Review Group', {}),
+        ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
     )
 
     boardtestusers = (
