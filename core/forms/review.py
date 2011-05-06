@@ -103,10 +103,8 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             profile.external_review = True
             profile.save()
             user.groups.add(Group.objects.get(name="External Reviewer"))
-            if not instance.external_reviewer_name:
-                instance.external_reviewer_name = user
-                instance.save()
-
+            instance.external_reviewer_name = user
+            instance.save()
             self.data['external_reviewer_name'] = str(user.pk)
             self.data['new_external_reviewer'] = None
 
