@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
@@ -233,14 +233,14 @@ class Token(models.Model):
     deadline = models.DateTimeField(null=True)
     locked = models.BooleanField(default=False)
     repeated = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=datetime.datetime.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     consumed_at = models.DateTimeField(null=True, blank=True, default=None)
     consumed_by = models.ForeignKey(User, null=True, blank=True)
     
     def consume(self, timestamp=None):
         if self.consumed_at:
             raise TokenAlreadyConsumed()
-        self.consumed_at = timestamp or datetime.datetime.now()
+        self.consumed_at = timestamp or datetime.now()
         self.save()
         token_consumed.send(self)
         

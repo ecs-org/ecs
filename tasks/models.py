@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User, Group
@@ -73,7 +73,7 @@ class Task(models.Model):
     data_id = models.PositiveIntegerField(null=True)
     data = GenericForeignKey(ct_field='content_type', fk_field='data_id')
     
-    created_at = models.DateTimeField(default=datetime.datetime.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, null=True, related_name='created_tasks')
 
     assigned_at = models.DateTimeField(null=True)
@@ -88,7 +88,7 @@ class Task(models.Model):
     def save(self, *args, **kwargs):
         rval = super(Task, self).save(*args, **kwargs)
         if self.workflow_token and not self.workflow_token.deadline:
-            self.workflow_token.deadline = datetime.datetime.now() + datetime.timedelta(days=30)
+            self.workflow_token.deadline = datetime.now() + timedelta(days=30)
             self.workflow_token.save()
         return rval
 
@@ -133,7 +133,7 @@ class Task(models.Model):
         return self.node_controller.get_choices()
     
     def close(self, commit=True):
-        self.closed_at = datetime.datetime.now()
+        self.closed_at = datetime.now()
         if commit:
             self.save()
         
@@ -166,7 +166,7 @@ class Task(models.Model):
         self.assigned_to = user
         self.accepted = False
         if user:
-            self.assigned_at = datetime.datetime.now()
+            self.assigned_at = datetime.now()
         else:
             self.assigned_at = None
         if commit:

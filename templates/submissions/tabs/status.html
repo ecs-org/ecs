@@ -11,7 +11,7 @@
             </tr>
             {% for sf in submission_forms %}
             <tr class="version">
-                <td>{{ forloop.revcounter }}</td>
+                <td>{{ sf.version }}</td>
                 <td>{{ sf.presenter }}</td>
                 <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                 <td>

@@ -296,7 +296,7 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField(null=True, blank=True)
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
-    created_at = models.DateTimeField(default=datetime.now)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
@@ -554,13 +554,18 @@ class SubmissionForm(models.Model):
 
             pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype, 
                 parent_object=self, name=name, original_file_name=filename,
-                version=str(self.submission.forms.all().order_by('pk').values_list('pk', flat=True).count() + 1),
+                version=str(self.version),
                 date= datetime.now())
             self.pdf_document = pdf_document
             self.save()
 
         return ret
-   
+
+    @property
+    def version(self):
+        assert self.pk is not None      # already saved
+        return self.submission.forms.filter(created_at__lte=self.created_at).count()
+
     def __unicode__(self):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
     
