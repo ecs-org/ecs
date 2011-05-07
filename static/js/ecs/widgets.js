@@ -97,6 +97,7 @@ ecs.widgets.Popup = new Class({
         if(options.height){
             this.popup.setStyle('height', options.height + 'px');
         }
+        this.keypress = this.keyHandler.bind(this);
         this.headElement = new Element('div', {'class': 'head'});
         this.popup.grab(this.headElement);
         this.popup.grab(this.element);
@@ -126,13 +127,20 @@ ecs.widgets.Popup = new Class({
             left: ((windowSize.x - popupSize.x) / 2) + 'px',
             top: ((windowSize.y - popupSize.y) / 2) + 'px'
         });
+        document.addEvent('keypress', this.keypress);
     },
     hide: function(){
         this.popup.setStyle('display', 'none');
         ecs.widgets.hideModalOverlay();
+        document.removeEvent('keypress', this.keypress);
     },
     close: function(){
         this.dispose();
+    },
+    keyHandler: function(evt){
+        if(evt.key == 'esc'){
+            this.dispose();
+        }
     },
     dispose: function(){
         this.hide();
