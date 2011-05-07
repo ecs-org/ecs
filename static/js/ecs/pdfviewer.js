@@ -628,8 +628,8 @@ ecs.pdfviewer.Popup = new Class({
     },
     show: function(){
         this.init();
-        this.onShow.apply(this, arguments);
         this.cover.setStyle('display', '');
+        this.onShow.apply(this, arguments);
         $(window).addEvent('keydown', this.escapeListener);
         this.fireEvent('show');
     },
