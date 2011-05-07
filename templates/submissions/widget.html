@@ -35,12 +35,12 @@
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% with submission.medical_categories.all as categories %}
-            {% if categories %}
+            {% if categories and user|has_flag:'internal' %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.expedited_review_categories.all as er_categories %}
-            {% if categories %}
+            {% if categories and user|has_flag:'internal' %}
                 <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
