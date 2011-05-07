@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import MultiselectWidget
+from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
 
 from ecs.utils.formutils import TranslatedModelForm
 
@@ -55,6 +55,9 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             )
             self.fields['additional_reviewers'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'users'})
+            )
+            self.fields['external_reviewer_name'].widget = SingleselectWidget(
+                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'external_reviewers'})
             )
         return rval
         

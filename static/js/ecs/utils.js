@@ -73,16 +73,17 @@ ecs.setupFormFieldHelpers = function(context){
         allowEmpty: true,
         toggleElements: context.getElements('.datepicker_toggler')
     });
-    context.getElements('.ModelMultipleChoiceField input.autocomplete').each(function(multiselect){
-        var currentValues = multiselect.value.split(',');
-        multiselect.value = '';
+
+    var setup_autocomplete = function(elm, values, max){
+        var currentValues = values;
+        elm.value = '';
         var tbl = null;
-        var active = !!multiselect.getParent('form');
+        var active = !!elm.getParent('form');
         if(active){
-            tbl = new TextboxList(multiselect, {unique: true, plugins: {autocomplete: {onlyFromValues: true}}});
+            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true}}});
             tbl.container.addClass('textboxlist-loading');
         }
-        new Request.JSON({url: multiselect.getProperty('x-autocomplete-url'), onSuccess: function(response){
+        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
             if(active){
                 tbl.plugins['autocomplete'].setValues(response);
                 tbl.container.removeClass('textboxlist-loading');
@@ -99,9 +100,16 @@ ecs.setupFormFieldHelpers = function(context){
                 }
             });
             if(!active){
-                (new Element('span', {html: labels.join(', ')})).replaces(multiselect);
+                (new Element('span', {html: labels.join(', ')})).replaces(elm);
             }
         }}).send();
+    };
+
+    context.getElements('.ModelMultipleChoiceField input.autocomplete').each(function(multiselect){
+        setup_autocomplete(multiselect, multiselect.value.split(','), null);
+    });
+    context.getElements('.ModelChoiceField input.autocomplete').each(function(select){
+        setup_autocomplete(select, [select.value], 1);
     });
     context.getElements('.CharField > textarea').each(function(textarea){
         new ecs.textarea.TextArea(textarea);

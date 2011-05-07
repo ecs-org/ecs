@@ -80,6 +80,27 @@ class MultiselectWidget(forms.TextInput):
             return []
         return val.split(',')
 
+class SingleselectWidget(forms.TextInput):
+    def __init__(self, *args, **kwargs):
+        self.url = kwargs.pop('url')
+        return super(SingleselectWidget, self).__init__(*args, **kwargs)
+
+    def render(self, name, value, attrs=None, choices=()):
+        value_list = str(value) if value else ''
+        attrs['class'] = 'autocomplete'
+        url = self.url
+        if callable(url):
+            url = url()
+        attrs['x-autocomplete-url'] = url
+        return super(SingleselectWidget, self).render(name, value_list, attrs=attrs)
+
+    def value_from_datadict(self, data, files, name):
+        val = data.get(name, '')
+        vals = val.split(',')
+        if not val:
+            return None
+        return val.split(',')[0]
+
 class StrippedTextInput(forms.TextInput):
     input_type = 'stripped_text'
 
