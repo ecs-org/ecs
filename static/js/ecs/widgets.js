@@ -98,6 +98,7 @@ ecs.widgets.Popup = new Class({
             this.popup.setStyle('height', options.height + 'px');
         }
         this.keypress = this.keyHandler.bind(this);
+        this.resize = this.resizeHandler.bind(this);
         this.headElement = new Element('div', {'class': 'head'});
         this.popup.grab(this.headElement);
         this.popup.grab(this.element);
@@ -118,21 +119,40 @@ ecs.widgets.Popup = new Class({
     setTitle: function(title){
         this.titleElement.innerHTML = title;
     },
-    show: function(){
-        ecs.widgets.showModalOverlay();
-        this.popup.setStyle('display', 'block');
+    onSuccess: function(){
+        this.parent();
+        this.resizeHandler();
+    },
+    resizeHandler: function(){
+        var parent = this.popup.getParent();
         var windowSize = window.getSize();
         var popupSize = this.popup.getSize();
         this.popup.setStyles({
-            left: ((windowSize.x - popupSize.x) / 2) + 'px',
-            top: ((windowSize.y - popupSize.y) / 2) + 'px'
+            'max-width': parent.getWidth() - 50,
+            'max-height': parent.getHeight() - 50,
+            'left': ((windowSize.x - popupSize.x) / 2) + 'px',
+            'top': ((windowSize.y - popupSize.y) / 2) + 'px',
+            'width': null,
+            'height': null
         });
+        var popupSize = this.popup.getSize();
+        this.popup.setStyles({
+            'width': popupSize.x,
+            'height': popupSize.y
+        });
+    },
+    show: function(){
+        ecs.widgets.showModalOverlay();
+        this.popup.setStyle('display', 'block');
+        this.resizeHandler();
         document.addEvent('keypress', this.keypress);
+        window.addEvent('resize', this.resize);
     },
     hide: function(){
         this.popup.setStyle('display', 'none');
         ecs.widgets.hideModalOverlay();
         document.removeEvent('keypress', this.keypress);
+        window.removeEvent('resize', this.resize);
     },
     close: function(){
         this.dispose();

@@ -32,6 +32,7 @@
   cursor: pointer;
 }
 .ecs-Popup > .ecs-Widget {
+  display: block;
   overflow: auto;
   height: 95%;
   margin: 10px;
