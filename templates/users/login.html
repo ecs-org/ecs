@@ -5,17 +5,6 @@
   {{ block.super }}
 {% endblock %}
 
-{% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript">
-  window.addEvent('domready', function(){
-      if(Browser.Engine.name != 'gecko' || Browser.Engine.version < 19){
-          $('browser_warning').show();
-      }
-  });
-  </script>
-{% endblock %}
-
 {% block htmlcss %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/login.css" />
@@ -40,7 +29,7 @@
         {% csrf_token %}
         <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
         <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
-        <p><input type="submit" value="login" /></p>
+        <p><input type="submit" value="login" id="login_button"/></p>
         <input type="hidden" name="next" value="{{ next }}" />
       </form>
     {% if form.errors %}
@@ -52,4 +41,16 @@
       <a href="{% url ecs.users.views.register %}">Registrieren</a> | <a href="{% url ecs.users.views.request_password_reset %}">Passwort Zurücksetzen</a>
     </div>
 </div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function() {
+            if(Browser.Engine.name != 'gecko' || Browser.Engine.version < 19){
+                $('browser_warning').show();
+            }
+            $('login_button').focus();
+        });
+    </script>
 {% endblock %}
