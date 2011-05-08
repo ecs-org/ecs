@@ -91,7 +91,7 @@ gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
 gnupg:req:suse:zypper:gpg2
 gnupg:req:openbsd:pkg:gnupg
-gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
+gnupg:static:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
 
 
 # search
@@ -107,7 +107,7 @@ pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
 pdftotext:req:openbsd:pkg:poppler
 pdftotext:req:openbsd:pkg:poppler-data
-pdftotext:req:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
+pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
 
 # excel generation / xlwt
 xlwt:inst:all:pypi:xlwt
@@ -122,6 +122,12 @@ reportlab:inst:!win:pypi:reportlab
 reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
 pisa:inst:all:pypi:pisa
 
+# webkit html to pdf
+wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tarbz2:wkhtmltopdf
+wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tarbz2:wkhtmltopdf
+wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tarbz2:wkhtmltopdf
+wkhtmltopdf:static:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
+
 
 # (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
 pdfminer:inst:all:pypi:pdfminer
@@ -132,7 +138,7 @@ pdfminer:inst:all:pypi:pdfminer
 
 # pdf manipulation, barcode stamping
 pdftk:req:apt:apt-get:pdftk
-pdftk:req:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
+pdftk:static:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
 # Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
 pdftk:req:suse:zypper:pdftk
 # Mac OS X: get pdftk here: http://www.pdflabs.com/docs/install-pdftk/
@@ -148,7 +154,7 @@ ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:openbsd:pkg:ghostscript--
-ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
+ghostscript:static:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
@@ -156,7 +162,7 @@ imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
-imagemagick:req:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
+imagemagick:static:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
 
 # PIL requirements for ubuntu
 libjpeg62-dev:req:apt:apt-get:libjpeg62-dev
@@ -179,7 +185,7 @@ antiword:req:mac:macports:antiword
 # antiword has to be build by hand for opensuse
 #antiword:req:suse:zypper:antiword
 antiword:req:openbsd:pkg:antiword
-antiword:req:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
+antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 # mpmath needed for massimport statistic function
@@ -264,7 +270,7 @@ sfood:inst:all:pypi:snakefood
 ## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
 #mutt:req:apt:apt-get:mutt
 #mutt:req:suse:zypper:mutt
-#mutt:req:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
+#mutt:static:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
 #mutt:req:mac:macports:mutt
 
 # FIXME: who needs simplejson, and why is it in developer packages
