@@ -123,8 +123,8 @@ reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-
 pisa:inst:all:pypi:pisa
 
 # webkit html to pdf
-wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tarbz2:wkhtmltopdf
-wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tarbz2:wkhtmltopdf
+wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tarbz2:wkhtmltopdf-amd64
+wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tarbz2:wkhtmltopdf-i386
 wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tarbz2:wkhtmltopdf
 wkhtmltopdf:req:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
 
