@@ -91,7 +91,7 @@ gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
 gnupg:req:suse:zypper:gpg2
 gnupg:req:openbsd:pkg:gnupg
-gnupg:static:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
+gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
 
 
 # search
@@ -126,7 +126,7 @@ pisa:inst:all:pypi:pisa
 wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tarbz2:wkhtmltopdf
 wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tarbz2:wkhtmltopdf
 wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tarbz2:wkhtmltopdf
-wkhtmltopdf:static:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
+wkhtmltopdf:req:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
 
 
 # (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
@@ -154,7 +154,7 @@ ghostscript:req:apt:apt-get:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:openbsd:pkg:ghostscript--
-ghostscript:static:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
+ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
