@@ -8,13 +8,14 @@ from django.template import Context, loader
 from django.utils.encoding import smart_str
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
-import ho.pisa as pisa
 
 import ecs.utils.killableprocess 
 from ecs.utils.pathutils import which
 
 MONTAGE_PATH = which('montage').next()
 GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
+WKHTMLTOPDF_PATH =  settings.ECS_WKHTMLTOPDF if hasattr(settings,"ECS_WKHTMLTOPDF") else which('wkhtmltopdf', extlist=["-amd64", "-i386"]).next()
+ 
 PDF_MAGIC = r"%PDF-"
 
 
@@ -234,213 +235,6 @@ def pdf2pdfa(real_infile, real_outfile):
     return real_outfile.tell() - offset
 
 
-DEFAULT_CSS = """
-html {
-    font-family: DejaSans; 
-    font-size: 10px; 
-    font-weight: normal;
-    color: #000000; 
-    background-color: transparent;
-    margin: 0; 
-    padding: 0;
-    line-height: 150%;
-    border: 1px none;
-    display: inline;
-    width: auto;
-    height: auto;
-    white-space: normal;    
-}
-
-b, 
-strong { 
-    font-weight: bold; 
-}
-
-i, 
-em { 
-    font-style: italic; 
-}
-
-u {
-    text-decoration: underline;
-}
-
-s,
-strike {
-    text-decoration: line-through;
-}
-
-a {
-    text-decoration: underline;
-    color: blue;
-}
-
-ins {
-    color: green;
-    text-decoration: underline;
-}
-del {
-    color: red;
-    text-decoration: line-through;
-}
-
-pre,
-code,
-kbd,
-samp,
-tt {
-    font-family: "DejaMono";
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-weight:bold;
-    -pdf-outline: true;    
-    -pdf-outline-open: false;
-}
-
-h1 {
-    /*18px via YUI Fonts CSS foundation*/
-    font-size:138.5%; 
-    -pdf-outline-level: 0;
-}
-
-h2 {
-    /*16px via YUI Fonts CSS foundation*/
-    font-size:123.1%;
-    -pdf-outline-level: 1;
-}
-
-h3 {
-    /*14px via YUI Fonts CSS foundation*/
-    font-size:108%;
-    -pdf-outline-level: 2;
-}
-
-h4 {
-    -pdf-outline-level: 3;
-}
-
-h5 {
-    -pdf-outline-level: 4;
-}
-
-h6 {
-    -pdf-outline-level: 5;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-pre,
-hr {
-    margin:1em 0;
-}
-
-address,
-blockquote,
-body,
-center,
-dl,
-dir,
-div,
-fieldset,
-form,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-hr,
-isindex,
-menu,
-noframes,
-noscript,
-ol,
-p,
-pre,
-table,
-th,
-tr,
-td,
-ul,
-li,
-dd,
-dt,
-pdftoc {
-    display: block;
-}
-
-table {
-     -pdf-keep-in-frame-mode: shrink;
-}
-
-tr,
-th,
-td {
-
-    vertical-align: middle;
-    width: auto;
-}
-
-th {
-    text-align: center;
-    font-weight: bold;
-}
-
-center {
-    text-align: center;
-}
-
-big {
-    font-size: 125%;
-}
-
-small {
-    font-size: 75%;
-}
-
-
-ul {
-    margin-left: 1.5em;
-    list-style-type: disc;
-}
-
-ul ul {
-    list-style-type: circle;
-}
-
-ul ul ul {
-    list-style-type: square;
-}
-
-ol {
-    list-style-type: decimal;
-    margin-left: 1.5em;
-}
-
-pre {
-    white-space: pre;
-}
-
-blockquote {
-    margin-left: 1.5em;
-    margin-right: 1.5em;
-}
-
-noscript {
-    display: none;
-}  
-"""
 
 def xhtml2pdf(html, timeoutseconds=30):
     '''
@@ -461,24 +255,60 @@ def xhtml2pdf(html, timeoutseconds=30):
         print "uri, rel, path", uri, rel, path
         return path
 
+    import ho.pisa as pisa
+
     pdf = StringIO()
     pdfa = StringIO()
     ret = "" 
 
     try:
-        pisa.CreatePDF(html, pdf, default_css= DEFAULT_CSS, 
-            show_error_as_pdf = True, link_callback=fetch_resources)
+        pisa.CreatePDF(html, pdf, show_error_as_pdf = True, link_callback=fetch_resources)
         pdf.seek(0)
         #pdf2pdfa(pdf, pdfa)
         #pdfa.seek(0)
-        ret = pdf.getvalue() # FIXME: we do NOT use pdf2pdfa after xhtml2pdf because it shredders output (pdfa.getvalue())
+        ret = pdf.getvalue() # FIXME: we do NOT use pdf2pdfa after xhtml2pdf because it shredders output (pdfa.getvalue()) 
     finally:
         pdf.close()
         pdfa.close()
     return ret
 
 
+def wkhtml2pdf(html, header=None, footer=None):
+    '''
+    Takes html and makes an pdf document out of it using the webkit engine
+    '''
+    
+    if isinstance(html, unicode): 
+        html = html.encode("utf-8") 
+    
+    ret = ""
+    pdfa = StringIO() 
+
+    with tempfile.NamedTemporaryFile(dir=settings.TEMPFILE_DIR) as t_in: 
+        t_in.write(html); t_in.flush(); t_in.seek(0)
+         
+        pdf_oshandle, pdf_name = tempfile.mkstemp(suffix='.pdf', dir=settings.TEMPFILE_DIR)
+        os.close(pdf_oshandle)
+        cmd = [WKHTMLTOPDF_PATH, 'page', t_in.name, pdf_name]     
+        popen = ecs.utils.killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+        stdout, stderr = popen.communicate() 
+        if popen.returncode != 0: 
+            raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
+    
+    try:
+        pdf = open(pdf_name, "rb")
+        pdf2pdfa(pdf, pdfa)
+        pdfa.seek(0)
+        ret = pdfa.getvalue()
+    finally:
+        if hasattr(pdf, 'fileno'): pdf.close()
+        pdfa.close()
+        # file pdf_name
+    return ret
+
+
 """
+DO NOT DELETE, THIS MAYBE GET RESURECTED
 def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
     takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
     raises IOError(descriptive text, returncode, stderr) in case of failure

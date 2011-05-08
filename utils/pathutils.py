@@ -3,15 +3,16 @@
 import os
 import tempfile
 
-def which(file, mode=os.F_OK | os.X_OK, path=None):
+def which(file, mode=os.F_OK | os.X_OK, path=None, extlist=[]):
     """
     Locate a file in the user's standard path, or a supplied path. The function
     yields full paths in which the given file matches a file in a directory on
-    the path. on windows it uses the PATHEXT Variable to check for file+ extension
+    the path. it uses extlist (a list of extensions) and the PATHEXT Variable 
+    (used on windows) to check for file+ extension
     """
     if not path:
         path = os.environ.get("PATH", os.defpath)
-    exts = filter(None, os.environ.get('PATHEXT', '').split(os.pathsep))
+    exts = extlist+ filter(None, os.environ.get('PATHEXT', '').split(os.pathsep))
 
     for dir in path.split(os.pathsep):
         full_path = os.path.join(dir, file)
