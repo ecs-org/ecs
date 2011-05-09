@@ -38,7 +38,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         cd = self.cleaned_data
         replaced_document = cd.get('replaces_document', None)
         if replaced_document:
-            for f in ('doctype', 'name'):
+            for f in ('doctype',):
                 cd[f] = getattr(replaced_document, f)
                 if f in self._errors.keys():
                     del self._errors[f]

@@ -347,7 +347,6 @@ ecs.setupDocumentUploadForms = function(){
             }, false);
             xhr.addEventListener('load', function(evt){
                 upload_button.setClass('loaded');
-                console.log('load')
                 var js;
                 var html = xhr.responseText.stripScripts(function(script){js = script;});
                 par.innerHTML = html;
@@ -381,7 +380,65 @@ ecs.setupDocumentUploadForms = function(){
                 errorlist.hide();
             }
         });
+
+        par.getElements('.doclist a.replace_document').each(function(link){
+            link.addEvent('click', function(){
+                var container = link.getParent('div');
+                var document_id = container.getElement('input').getAttribute('value');
+                $('id_document-replaces_document').setAttribute('value', document_id);
+
+                var replaced_document_name = $('replaced_document_name');
+                replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
+                replaced_document_name.getParent('li').show();
+
+                var document_type = $('id_document-doctype');
+                document_type.value = container.getElement('span.document_type').innerHTML;
+                document_type.setAttribute('disabled', 'disabled');
+
+                return false;
+            });
+        }, this);
+
+        par.getElements('.doclist a.delete_document').each(function(link){
+            link.addEvent('click', function(){
+                var href = link.getAttribute('href');
+
+                xhr = XMLHttpRequest();
+                xhr.addEventListener('load', function(evt){
+                    upload_button.setClass('loaded');
+                    var js;
+                    var html = xhr.responseText.stripScripts(function(script){js = script;});
+                    par.innerHTML = html;
+                    eval(js);
+                }, false);
+                xhr.addEventListener('error', function(evt){console.log('error');}, false);
+                xhr.addEventListener('abort', function(evt){console.log('abort');}, false);
+                xhr.open('GET', href);
+                xhr.send(new FormData());
+
+                return false;
+            });
+        }, this);
     }, this);
+    $$('#tabs-11 a.new_document').each(function(link){
+        link.addEvent('click', function(){
+            $('id_document-replaces_document').removeAttribute('value');
+            var replaced_document_name = $('replaced_document_name');
+            replaced_document_name.getParent('li').hide();
+
+            var document_type = $('id_document-doctype');
+            document_type.value = '';
+            document_type.removeAttribute('disabled');
+
+            return false;
+        });
+    });
+
+    var document_replaces_document = $('id_document-replaces_document');
+    if(document_replaces_document && document_replaces_document.value){
+        var link = $$('.doclist input[value='+document_replaces_document.value+']')[0].getParent('div').getElement('a.replace_document');
+        link.fireEvent('click');
+    }
 };
 
 ecs.setupForms = function(){
@@ -434,62 +491,6 @@ ecs.setupForms = function(){
             return false;
         });
     });
-    $$('.doclist a.delete_document').each(function(link){
-        link.addEvent('click', function(){
-            link.getParent('div').getElement('input').dispose();
-            if(form){
-                form.submit('upload');
-            }
-            else{
-                link.getParent('form').submit();
-            }
-            return false;
-        });
-    });
-    $$('.doclist a.replace_document').each(function(link){
-        link.addEvent('click', function(){
-            var container = link.getParent('div');
-            var document_id = container.getElement('input').getAttribute('value');
-            $('id_document-replaces_document').setAttribute('value', document_id);
-
-            var replaced_document_name = $('replaced_document_name');
-            replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
-            replaced_document_name.getParent('li').show();
-
-            var document_name = $('id_document-name');
-            document_name.value = container.getElement('span.document_name').innerHTML;
-            document_name.setAttribute('disabled', 'disabled');
-
-            var document_type = $('id_document-doctype');
-            document_type.value = container.getElement('span.document_type').innerHTML;
-            document_type.setAttribute('disabled', 'disabled');
-
-            return false;
-        });
-    });
-    $$('#tabs-11 a.new_document').each(function(link){
-        link.addEvent('click', function(){
-            $('id_document-replaces_document').removeAttribute('value');
-            var replaced_document_name = $('replaced_document_name');
-            replaced_document_name.getParent('li').hide();
-
-            var document_name = $('id_document-name');
-            document_name.value = '';
-            document_name.removeAttribute('disabled');
-
-            var document_type = $('id_document-doctype');
-            document_type.value = '';
-            document_type.removeAttribute('disabled');
-
-            return false;
-        });
-    });
-
-    var document_replaces_document = $('id_document-replaces_document');
-    if(document_replaces_document && document_replaces_document.value){
-        var link = $$('.doclist input[value='+document_replaces_document.value+']')[0].getParent('div').getElement('a.replace_document');
-        link.fireEvent('click');
-    }
     
     return setup;
 };

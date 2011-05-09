@@ -43,7 +43,7 @@ from ecs.tasks.models import Task
 from ecs.tasks.utils import has_task
 from ecs.users.utils import user_flag_required
 
-from ecs.documents.views import upload_document
+from ecs.documents.views import upload_document, delete_document
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -286,7 +286,12 @@ def b2_vote_review(request, submission_form_pk=None):
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def upload_document_for_submission(request):
-    return upload_document(request, reverse('ecs.core.views.upload_document_for_submission', kwargs={'docstash_key': request.docstash.key}))
+    return upload_document(request, 'submissions/upload_form.html')
+
+@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+def delete_document_from_submission(request):
+    delete_document(request, request.GET['document_pk'])
+    return HttpResponseRedirect(reverse('ecs.core.views.upload_document_for_submission', kwargs={'docstash_key': request.docstash.key}))
 
 @with_docstash_transaction
 def create_submission_form(request):
@@ -321,7 +326,6 @@ def create_submission_form(request):
         request.docstash.update({
             'form': form,
             'formsets': formsets,
-            'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
         })
         
         # set docstash name

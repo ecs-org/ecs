@@ -19,7 +19,7 @@ class DocumentHighlighter(Highlighter):
         best_start, best_end = super(DocumentHighlighter, self).find_window(highlight_locations)
         return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
 
-def upload_document(request, action):
+def upload_document(request, template='documents/upload_form.html'):
     form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
     if request.method == 'POST' and form.is_valid():
         documents = set(request.docstash.get('documents', []))
@@ -31,11 +31,14 @@ def upload_document(request, action):
         request.docstash['documents'] = list(documents)
         form = DocumentForm(prefix='document')
 
-    return render(request, 'documents/upload_form.html', {
+    return render(request, template, {
         'form': form,
         'documents': request.docstash.get('documents', []),
-        'action': action,
     })
+
+def delete_document(request, document_pk):
+    documents = set(request.docstash.get('documents', []))
+    request.docstash['documents'] = [d for d in documents if not d.pk == int(document_pk)]
 
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.

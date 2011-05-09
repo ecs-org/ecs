@@ -3,7 +3,7 @@
 
 {% block actions %}
     {{ block.super }}
-    <a href="" class="delete_document">{% trans "Delete" %}</a>
+    <a href="{% block delete_url %}{% endblock %}?document_pk={{ doc.pk }}" class="delete_document">{% trans "Delete" %}</a>
     | <a href="" class="replace_document">{% trans "Replace" %}</a>
     <input type="hidden" name="documents" value="{{ doc.pk }}" />
     <span class="document_display_name" style="display:none;">
@@ -21,7 +21,7 @@
 {% block document_list %}
     {{ block.super }}
     <div class="form">
-        <form action="{{ action }}" method="post" enctype="multipart/form-data" class='document_upload'>
+        <form action="{% block action %}{% endblock %}" method="post" enctype="multipart/form-data" class='document_upload'>
             <ol>
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}

@@ -22,7 +22,7 @@ from ecs.ecsmail.persil import whitewash
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm
-from ecs.documents.views import upload_document
+from ecs.documents.views import upload_document, delete_document
 
 
 def _get_notification_template(notification, pattern):
@@ -126,16 +126,20 @@ def delete_docstash_entry(request):
 
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
 def upload_document_for_notification(request):
-    return upload_document(request, reverse('ecs.notifications.views.upload_document_for_notification', kwargs={'docstash_key': request.docstash.key}))
+    return upload_document(request, 'notifications/upload_form.html')
+
+@with_docstash_transaction(group='ecs.notifications.views.create_notification')
+def delete_document_from_notification(request):
+    delete_document(request, request.GET['document_pk'])
+    return HttpResponseRedirect(reverse('ecs.notifications.views.upload_document_for_notification', kwargs={'docstash_key': request.docstash.key}))
 
 @tracking_hint(vary_on=['notification_type_pk'])
 @with_docstash_transaction
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
-    if request.method == 'GET' and request.docstash.value:
-        form = request.docstash.get('form')
-    else:
-        form = notification_type.form_cls(request.POST or None)
+    request.docstash['type_id'] = notification_type_pk
+
+    form = request.docstash.get('form') or notification_type.form_cls(request.POST or None)
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -144,8 +148,6 @@ def create_notification(request, notification_type_pk=None):
         
         request.docstash.update({
             'form': form,
-            'type_id': notification_type_pk,
-            'documents': list(Document.objects.filter(pk__in=map(int, request.POST.getlist('documents')))),
             'submission_forms': getattr(form, 'cleaned_data', {}).get('submission_forms', []),
         })
         request.docstash.name = "%s" % notification_type.name
