@@ -121,33 +121,38 @@ ecs.widgets.Popup = new Class({
     },
     onSuccess: function(){
         this.parent();
+        /* the popup content has changed, so we have to resize and recenter */
         this.resizeHandler();
     },
     resizeHandler: function(){
+        var popupSize = null;
         var parent = this.popup.getParent();
+
         this.popup.setStyles({
             'width': null,
             'height': null
         });
-        var popupSize = this.popup.getSize();
+
+        /* set size */
+        popupSize = this.popup.getSize();
         this.popup.setStyles({
             'max-width': parent.getWidth() - 50,
             'max-height': parent.getHeight() - 50,
             'width': popupSize.x,
             'height': popupSize.y
         });
-    },
-    show: function(){
-        ecs.widgets.showModalOverlay();
-        this.popup.setStyle('display', 'block');
 
+        /* center on screen */
         var windowSize = window.getSize();
-        var popupSize = this.popup.getSize();
+        popupSize = this.popup.getSize();
         this.popup.setStyles({
             'left': ((windowSize.x - popupSize.x) / 2) + 'px',
             'top': ((windowSize.y - popupSize.y) / 2) + 'px',
         });
-
+    },
+    show: function(){
+        ecs.widgets.showModalOverlay();
+        this.popup.setStyle('display', 'block');
         this.resizeHandler();
         document.addEvent('keypress', this.keypress);
         window.addEvent('resize', this.resize);
