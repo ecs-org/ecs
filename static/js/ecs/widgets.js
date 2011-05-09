@@ -125,18 +125,14 @@ ecs.widgets.Popup = new Class({
     },
     resizeHandler: function(){
         var parent = this.popup.getParent();
-        var windowSize = window.getSize();
-        var popupSize = this.popup.getSize();
         this.popup.setStyles({
-            'max-width': parent.getWidth() - 50,
-            'max-height': parent.getHeight() - 50,
-            'left': ((windowSize.x - popupSize.x) / 2) + 'px',
-            'top': ((windowSize.y - popupSize.y) / 2) + 'px',
             'width': null,
             'height': null
         });
         var popupSize = this.popup.getSize();
         this.popup.setStyles({
+            'max-width': parent.getWidth() - 50,
+            'max-height': parent.getHeight() - 50,
             'width': popupSize.x,
             'height': popupSize.y
         });
@@ -144,6 +140,14 @@ ecs.widgets.Popup = new Class({
     show: function(){
         ecs.widgets.showModalOverlay();
         this.popup.setStyle('display', 'block');
+
+        var windowSize = window.getSize();
+        var popupSize = this.popup.getSize();
+        this.popup.setStyles({
+            'left': ((windowSize.x - popupSize.x) / 2) + 'px',
+            'top': ((windowSize.y - popupSize.y) / 2) + 'px',
+        });
+
         this.resizeHandler();
         document.addEvent('keypress', this.keypress);
         window.addEvent('resize', this.resize);
