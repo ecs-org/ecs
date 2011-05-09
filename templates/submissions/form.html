@@ -67,7 +67,7 @@
                 return false;
             });
             
-            {% if valid and not half_baked_documents and user|has_flag:'approved_by_office' %}
+            {% if valid and user|has_flag:'approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
                 }, null, {
@@ -75,34 +75,9 @@
                     cancelText: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}'
                 });
             {% endif %}
-            {% if valid and half_baked_documents and user|has_flag:'approved_by_office' %}
-                new MooDialog.Error('{% trans "You cannot submit study if there are unready documents. If you want to submit the study regardless of the unready documents, delete them." %}');
-            {% endif %}
             {% if valid and not user|has_flag:'approved_by_office' %}
                 new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
-
-
-            {# document upload magic #}
-
-            var file_field = $('id_document-file');
-            var name_field = $('id_document-name');
-            file_field.addEvent('change', function() {
-                var dot_offset = file_field.value.lastIndexOf('.');
-                var name = file_field.value;
-                if (dot_offset >= 0) {
-                    name = file_field.value.substring(0, dot_offset);
-                }
-                if (!name_field.getAttribute('disabled')) {
-                    name_field.value = name;
-                }
-
-                var errorlist = file_field.getNext('.errorlist');
-                if (errorlist) {
-                    errorlist.hide();
-                }
-            });
-
         });
     </script>
 {% endblock %}

@@ -796,6 +796,15 @@ fieldset.disabled {
   content: "]";
 }
 
+.document_upload input[type="submit"].error,
+.document_upload input[type="submit"].aborted {
+  background-color: #ff0000;
+}
+.document_upload input[type="submit"].loaded {
+  background-color: #00ff00;
+}
+
+
 /* notifications */
 
 .notification_list ol {

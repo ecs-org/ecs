@@ -1,28 +1,9 @@
-{% extends 'documents/compact_list.html' %}
-{# context: documents, document_formset #}
-{% load core pdfviewer i18n %}
+{% load core i18n %}
 
-{% block actions %}
-    {{ block.super }}
-    <a href="" class="delete_document">{% trans "Delete" %}</a>
-    | <a href="" class="replace_document">{% trans "Replace" %}</a>
-    <input type="hidden" name="documents" value="{{ doc.pk }}" />
-    <span class="document_display_name" style="display:none;">
-        {% if doc.name %}
-        {{ doc.name|smart_truncate:40 }}
-        {% else %}
-        Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
-        {% endif %}
-        - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
-    </span>
-    <span class="document_name" style="display:none;">{{ doc.name }}</span>
-    <span class="document_type" style="display:none;">{{ doc.doctype.pk }}</span>
-{% endblock %}
+{% include 'documents/compact_list.html' %}
 
-{% block document_list %}
-    {{ block.super }}
-    <div class="form">
-        {% with document_form as form %}
+<div class="form">
+    <form action="{{ action }}" method="post" enctype="multipart/form-data" class='document_upload'>
         <ol>
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
@@ -37,8 +18,12 @@
                 <a href="" class="new_document">{% trans "New Document" %}</a>
             </li>
         </ol>
-        {% endwith %}
-    </div>
-    <input type="submit" id="document_upload_button" name="upload" value="Upload" />
-{% endblock %}
+        <input type="submit" name="upload" value="Upload" />
+    </form>
+</div>
 
+<script type="text/javascript"> 
+    window.addEvent('domready', function(){
+        ecs.setupDocumentUploadForms();
+    });
+</script>

@@ -328,6 +328,62 @@ ecs.InvestigatorFormset = new Class({
     }
 });
 
+ecs.setupDocumentUploadForms = function(){
+    $$('.document_upload').each(function(form){
+        var upload_button = form.getElement('input[type="submit"]');
+        var par = form.getParent('*[widgeturl]');
+        ecs.setupFormFieldHelpers(par);
+        upload_button.addEvent('click', function(){
+            if(ecs.mainForm){
+                ecs.mainForm.autosaveDisabled = true;
+            }
+            /*upload_button.hide();*/
+            upload_button.setAttribute('disabled', 'disabled');
+            var form_data = FormData(form);
+
+            xhr = XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function(evt){
+                upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
+            }, false);
+            xhr.addEventListener('load', function(evt){
+                upload_button.setClass('loaded');
+                console.log('load')
+                var js;
+                var html = xhr.responseText.stripScripts(function(script){js = script;});
+                par.innerHTML = html;
+                eval(js);
+            }, false);
+            xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
+            xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
+            xhr.open(form.getAttribute('method'), form.getAttribute('action'));
+            xhr.send(form_data);
+
+            if(ecs.mainForm){
+                ecs.mainForm.autosaveDisabled = true;
+            }
+            return false;
+        }, this);
+
+        var file_field = $('id_document-file');
+        var name_field = $('id_document-name');
+        file_field.addEvent('change', function() {
+            var dot_offset = file_field.value.lastIndexOf('.');
+            var name = file_field.value;
+            if (dot_offset >= 0) {
+                name = file_field.value.substring(0, dot_offset);
+            }
+            if (!name_field.getAttribute('disabled')) {
+                name_field.value = name;
+            }
+
+            var errorlist = file_field.getNext('.errorlist');
+            if (errorlist) {
+                errorlist.hide();
+            }
+        });
+    }, this);
+};
+
 ecs.setupForms = function(){
     var tabHeaders = $$('.tab_headers');
     var setup = {};
@@ -370,13 +426,6 @@ ecs.setupForms = function(){
     }
     
     ecs.setupFormFieldHelpers();
-
-    var uploadButton = $('document_upload_button');
-    if(uploadButton){
-        uploadButton.addEvent('click', function(){
-            form.autosaveDisabled = true;
-        });
-    }
 
     /* XXX: cleanup the following code (FMD2) */
     $$('a.submit_main_form').each(function(link){

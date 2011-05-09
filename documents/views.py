@@ -1,12 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.utils import simplejson
+from ecs.utils.viewutils import render
+
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
 from ecs.documents.models import Page, Document, C_BRANDING_CHOICES
+from ecs.documents.forms import DocumentForm
 
 
 HIGHLIGHT_PREFIX_WORD_COUNT = 3
@@ -16,6 +19,23 @@ class DocumentHighlighter(Highlighter):
         best_start, best_end = super(DocumentHighlighter, self).find_window(highlight_locations)
         return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
 
+def upload_document(request, action):
+    form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    if request.method == 'POST' and form.is_valid():
+        documents = set(request.docstash.get('documents', []))
+        documents.add(form.save())
+        replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
+        for doc in replaced_documents:  # remove replaced documents
+            if doc in documents:
+                documents.remove(doc)
+        request.docstash['documents'] = list(documents)
+        form = DocumentForm(prefix='document')
+
+    return render(request, 'documents/upload_form.html', {
+        'form': form,
+        'documents': request.docstash.get('documents', []),
+        'action': action,
+    })
 
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.

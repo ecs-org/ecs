@@ -12,7 +12,6 @@ from ecs.utils.viewutils import render, redirect_to_next_url, render_html
 from ecs.utils.pdfutils import xhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
-from ecs.documents.forms import DocumentForm
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
@@ -23,6 +22,7 @@ from ecs.ecsmail.persil import whitewash
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm
+from ecs.documents.views import upload_document
 
 
 def _get_notification_template(notification, pattern):
@@ -91,7 +91,6 @@ def select_notification_creation_type(request):
         'notification_types': NotificationType.objects.exclude(diff=True).order_by('name')
     })
     
-
 def create_diff_notification(request, submission_form_pk=None, notification_type_pk=None):
     new_submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, is_notification_update=True)
     old_submission_form = new_submission_form.submission.current_submission_form
@@ -125,6 +124,9 @@ def delete_docstash_entry(request):
     request.docstash.delete()
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
+@with_docstash_transaction(group='ecs.notifications.views.create_notification')
+def upload_document_for_notification(request):
+    return upload_document(request, reverse('ecs.notifications.views.upload_document_for_notification', kwargs={'docstash_key': request.docstash.key}))
 
 @tracking_hint(vary_on=['notification_type_pk'])
 @with_docstash_transaction
@@ -135,11 +137,6 @@ def create_notification(request, notification_type_pk=None):
     else:
         form = notification_type.form_cls(request.POST or None)
 
-    doc_post = 'document-file' in request.FILES
-    document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        prefix='document'
-    )
-    
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
         save = request.POST.get('save', False)
@@ -156,16 +153,6 @@ def create_notification(request, notification_type_pk=None):
         if save or autosave:
             return HttpResponse(_('save successful'))
         
-        if document_form.is_valid():
-            documents = set(request.docstash['documents'])
-            documents.add(document_form.save())
-            replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
-            for doc in replaced_documents:  # remove replaced documents
-                if doc in documents:
-                    documents.remove(doc)
-            request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(prefix='document')
-
         if submit and form.is_valid():
             notification = form.save(commit=False)
             notification.type = notification_type
@@ -184,8 +171,6 @@ def create_notification(request, notification_type_pk=None):
         'notification_type': notification_type,
         'form': form,
         'tabs': get_notification_form_tabs(type(form)),
-        'document_form': document_form,
-        'documents': request.docstash.get('documents', []),
     })
 
 

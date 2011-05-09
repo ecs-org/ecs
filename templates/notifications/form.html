@@ -38,7 +38,7 @@
             <div id="tabs-{{ forloop.counter }}" class="tab">
                 {% ifequal tab "Unterlagen" %}
                     <div class="field">
-                        {% include "documents/upload_form.html" %}
+                        <div class="widget" widgeturl="{% url ecs.notifications.views.upload_document_for_notification docstash_key=request.docstash.key %}"></div>
                     </div>
                 {% endifequal %}
                 
@@ -89,6 +89,11 @@
                 ecs.mainForm.submit('submit');
                 return false;
             });
+
+            $$('*[widgeturl]').each(function(w){
+                var widgeturl = w.getAttribute('widgeturl');
+                new ecs.widgets.Widget(w, {url: widgeturl});
+            }, this);
 
             var submissionFormsSelect = $('id_submission_forms');
             var submissionFormSelect = $('id_submission_form');

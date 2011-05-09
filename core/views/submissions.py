@@ -29,7 +29,6 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
-from ecs.documents.forms import DocumentForm
 
 from ecs.core import paper_forms
 from ecs.core import signals
@@ -44,6 +43,7 @@ from ecs.tasks.models import Task
 from ecs.tasks.utils import has_task
 from ecs.users.utils import user_flag_required
 
+from ecs.documents.views import upload_document
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -75,7 +75,6 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
         kwargs['extra'] = 0
     formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or [], **kwargs)
     return formsets
-
 
 def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
     from ecs.notifications.models import NotificationType
@@ -285,6 +284,10 @@ def b2_vote_review(request, submission_form_pk=None):
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}) + '#vote_review_tab')
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'b2_vote_review_form': b2_vote_review_form, 'b2_vote': vote})
 
+@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+def upload_document_for_submission(request):
+    return upload_document(request, reverse('ecs.core.views.upload_document_for_submission', kwargs={'docstash_key': request.docstash.key}))
+
 @with_docstash_transaction
 def create_submission_form(request):
     if request.method == 'GET' and request.docstash.value:
@@ -307,13 +310,8 @@ def create_submission_form(request):
                 'submitter_jobtitle': profile.jobtitle,
             })
     
-    doc_post = 'document-file' in request.FILES
-    document_form = DocumentForm(request.POST if doc_post else None, request.FILES if doc_post else None, 
-        prefix='document'
-    )
     notification_type = request.docstash.get('notification_type', None)
     valid = False
-    half_baked_documents = False
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -336,20 +334,9 @@ def create_submission_form(request):
         if save or autosave:
             return HttpResponse('save successfull')
         
-        if document_form.is_valid():
-            documents = set(request.docstash['documents'])
-            documents.add(document_form.save())
-            replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
-            for doc in replaced_documents:  # remove replaced documents
-                if doc in documents:
-                    documents.remove(doc)
-            request.docstash['documents'] = list(documents)
-            document_form = DocumentForm(prefix='document')
-
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        # XXX: disabled, because we have a working mediaserver ;-) half_baked_documents = bool([d for d in request.docstash['documents'] if not d.status == 'ready'])
-        submit_now = submit and valid and request.user.get_profile().approved_by_office and not half_baked_documents
+        submit_now = submit and valid and request.user.get_profile().approved_by_office
 
         if submit_now:
             submission_form = form.save(commit=False)
@@ -402,12 +389,9 @@ def create_submission_form(request):
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'document_form': document_form,
-        'documents': request.docstash.get('documents', []),
         'valid': valid,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
-        'half_baked_documents': half_baked_documents,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset

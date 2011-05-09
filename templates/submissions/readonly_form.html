@@ -254,7 +254,7 @@
     {{ block.super }}
     <script type="text/javascript"> 
         window.addEvent('domready', function(){
-            $$('.widget').each(function(w){
+            $$('*[widgeturl]').each(function(w){
                 var widgeturl = w.getAttribute('widgeturl');
                 new ecs.widgets.Widget(w, {url: widgeturl});
             }, this);

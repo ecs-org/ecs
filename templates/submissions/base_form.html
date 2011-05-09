@@ -55,13 +55,11 @@
                                         
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME (FMD2) #}
-                        <div class="field">
-                            {% if not readonly %}
-                                {% include "documents/upload_form.html" %}
-                            {% else %}
-                                {% include "documents/compact_list.html" %}
-                            {% endif %}
-                        </div>
+                        {% if not readonly %}
+                            <div class="widget" widgeturl="{% url ecs.core.views.upload_document_for_submission docstash_key=request.docstash.key %}"></div>
+                        {% else %}
+                            {% include "documents/compact_list.html" %}
+                        {% endif %}
                     {% endifequal %}
 
                     {% ifequal tab "Zentren" %}
@@ -174,6 +172,11 @@
     <script type="text/javascript">
         window.addEvent('domready', function(){
             var setup = ecs.setupForms();
+
+            $$('*[widgeturl]').each(function(w){
+                var widgeturl = w.getAttribute('widgeturl');
+                new ecs.widgets.Widget(w, {url: widgeturl});
+            }, this);
 
             new ecs.FormFieldController(['id_project_type_reg_drug'], {
                 disable: true,
