@@ -117,4 +117,3 @@ def additional_review(submission, user):
 @register.filter
 def get_field(form, fname):
     return form[fname]
-

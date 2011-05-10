@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-09 13:35+0200\n"
+"POT-Creation-Date: 2011-05-10 21:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1471,7 +1471,7 @@ msgid "New"
 msgstr "Neu"
 
 #: core/forms/forms.py:350 core/forms/forms.py:372 core/forms/forms.py:397
-#: templates/core.html:68
+#: templates/core.html:74
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
@@ -1481,14 +1481,14 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:354 core/forms/forms.py:376 core/forms/forms.py:401
 #: core/forms/layout.py:65 core/forms/layout.py:67
-#: templates/submissions/tabs/status.html:81 templates/tasks/tasks.inc:20
+#: templates/submissions/tabs/status.html:103 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:355 core/forms/forms.py:377 core/forms/forms.py:402
 #: core/forms/layout.py:74 core/forms/layout.py:76
-#: templates/submissions/tabs/status.html:82 templates/tasks/tasks.inc:21
+#: templates/submissions/tabs/status.html:104 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
@@ -2105,7 +2105,7 @@ msgstr "Meldungsantwort Verteilen"
 msgid "valid"
 msgstr "korrekturgelesen und gültig"
 
-#: notifications/views.py:50 templates/core.html:60
+#: notifications/views.py:50 templates/core.html:66
 #: templates/submissions/readonly_form.html:104
 #: templates/submissions/readonly_form.html:153
 msgid "Answered Notifications"
@@ -2115,16 +2115,16 @@ msgstr "Beantwortete Meldungen"
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:56 templates/core.html:59
+#: notifications/views.py:56 templates/core.html:65
 #: templates/submissions/readonly_form.html:135
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:157
+#: notifications/views.py:156
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/views.py:235
+#: notifications/views.py:222
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -2193,106 +2193,118 @@ msgstr "Alter, neuere zuerst"
 msgid "Anfrage bezüglich {0}"
 msgstr ""
 
+#: templates/core.html:29
+msgid "There is no active task."
+msgstr "Momentan wird keine Aufgabe bearbeitet."
+
 #: templates/core.html:33
+msgid "Click here to get help."
+msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
+
+#: templates/core.html:34
+msgid "Compliments, comments or complaints?"
+msgstr "Lob, Anmerkungen oder Beschwerden?"
+
+#: templates/core.html:39
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: templates/core.html:34 templates/communication/list.html:6
+#: templates/core.html:40 templates/communication/list.html:6
 #: templates/submissions/readonly_form.html:108
 msgid "Communication"
 msgstr "Nachrichten"
 
-#: templates/core.html:36 templates/tasks/list.html:6
+#: templates/core.html:42 templates/tasks/list.html:6
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: templates/core.html:39
+#: templates/core.html:45
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:42
+#: templates/core.html:48
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: templates/core.html:45
+#: templates/core.html:51
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: templates/core.html:48
+#: templates/core.html:54
 msgid "My Studies"
 msgstr "Meine Studien"
 
-#: templates/core.html:50
+#: templates/core.html:56
 msgid "New Submission"
 msgstr "Neuer Antrag"
 
-#: templates/core.html:52
+#: templates/core.html:58
 msgid "Import"
 msgstr "Import"
 
-#: templates/core.html:57
+#: templates/core.html:63
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:61 templates/notifications/form.html:9
+#: templates/core.html:67 templates/notifications/form.html:9
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:66 templates/submissions/list.html:95
+#: templates/core.html:72 templates/submissions/list.html:95
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:70
+#: templates/core.html:76
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: templates/core.html:71
+#: templates/core.html:77
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: templates/core.html:73
+#: templates/core.html:79
 msgid "New Meeting"
 msgstr "Neue Sitzung"
 
-#: templates/core.html:75
+#: templates/core.html:81
 msgid "Fast Lane Meetings"
 msgstr "Expedited Reviews"
 
-#: templates/core.html:77
+#: templates/core.html:83
 msgid "New Fast Lane Meeting"
 msgstr "Neuer Expedited Review"
 
-#: templates/core.html:85 templates/administration/detail.html:9
+#: templates/core.html:91 templates/administration/detail.html:9
 #: templates/administration/detail.html:19 templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/core.html:88 templates/administration/detail.html:11
+#: templates/core.html:94 templates/administration/detail.html:11
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
-#: templates/core.html:92 templates/boilerplate/form.html:6
+#: templates/core.html:98 templates/boilerplate/form.html:6
 #: templates/boilerplate/list.html:6
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
-#: templates/core.html:94
+#: templates/core.html:100
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:101
+#: templates/core.html:107
 msgid "Developer"
 msgstr "Entwickler"
 
-#: templates/core.html:103
+#: templates/core.html:109
 msgid "Sentry ErrorLog"
 msgstr "Sentry Fehlerprotokoll"
 
-#: templates/core.html:109
+#: templates/core.html:115
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:126
+#: templates/core.html:132
 #, python-format
 msgid ""
 "\n"
@@ -2301,15 +2313,15 @@ msgid ""
 "      "
 msgstr ""
 
-#: templates/core.html:228
+#: templates/core.html:234
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:228
+#: templates/core.html:234
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:244
+#: templates/core.html:250
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -2347,7 +2359,7 @@ msgstr "Speichern"
 msgid "edit"
 msgstr "Bearbeiten"
 
-#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:7
+#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
 #: templates/notifications/list.html:52 templates/submissions/list.html:47
 msgid "Delete"
 msgstr "Löschen"
@@ -2481,15 +2493,15 @@ msgstr "Ansicht"
 msgid "Share Annotations"
 msgstr "Anmerkungen Teilen"
 
-#: templates/documents/upload_form.html:8
+#: templates/documents/upload_form.html:7
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: templates/documents/upload_form.html:36
+#: templates/documents/upload_form.html:35
 msgid "Replaces document"
 msgstr "Ersetzt Dokument"
 
-#: templates/documents/upload_form.html:37
+#: templates/documents/upload_form.html:36
 msgid "New Document"
 msgstr "Neues Dokument"
 
@@ -2806,7 +2818,7 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:207
+#: templates/submissions/base_form.html:210
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -2906,16 +2918,6 @@ msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
 #: templates/submissions/form.html:79
-#, fuzzy
-msgid ""
-"You cannot submit study if there are unready documents. If you want to "
-"submit the study regardless of the unready documents, delete them."
-msgstr ""
-"Sie können keine Studie abschicken, die noch unfertige Dokumente beinhaltet."
-"Wenn Sie die Studie dennoch abschicken möchten. Löschen sie die unfertigen "
-"Dokumente."
-
-#: templates/submissions/form.html:82
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
@@ -3108,32 +3110,32 @@ msgstr "Zusätzlichen Gutachter hinzufügen"
 msgid "Biased Parties"
 msgstr "Befangene Parteien"
 
-#: templates/submissions/tabs/status.html:57
+#: templates/submissions/tabs/status.html:68
 msgid "same as sponsor"
 msgstr "wie Sponsor"
 
-#: templates/submissions/tabs/status.html:61
+#: templates/submissions/tabs/status.html:80
 msgid "No Primary Investigator"
 msgstr "Kein Hauptprüfer"
 
-#: templates/submissions/tabs/status.html:67
+#: templates/submissions/tabs/status.html:89
 msgid "Aktiv"
 msgstr ""
 
-#: templates/submissions/tabs/status.html:70
+#: templates/submissions/tabs/status.html:92
 msgid "Akzeptiert"
 msgstr ""
 
-#: templates/submissions/tabs/status.html:72
+#: templates/submissions/tabs/status.html:94
 #, fuzzy
 msgid "Neu"
 msgstr "Neu"
 
-#: templates/submissions/tabs/status.html:99
+#: templates/submissions/tabs/status.html:121
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:131
+#: templates/submissions/tabs/status.html:153
 #, python-format
 msgid ""
 "\n"
@@ -3145,15 +3147,15 @@ msgstr ""
 "%(task_name)s \n"
 "        "
 
-#: templates/submissions/tabs/status.html:134
+#: templates/submissions/tabs/status.html:156
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:137
+#: templates/submissions/tabs/status.html:159
 msgid "No additional/external review"
 msgstr "keine zusätzlichen/externen Gutachter"
 
-#: templates/submissions/tabs/status.html:143
+#: templates/submissions/tabs/status.html:165
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3584,6 +3586,15 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "You cannot submit study if there are unready documents. If you want to "
+#~ "submit the study regardless of the unready documents, delete them."
+#~ msgstr ""
+#~ "Sie können keine Studie abschicken, die noch unfertige Dokumente "
+#~ "beinhaltet.Wenn Sie die Studie dennoch abschicken möchten. Löschen sie "
+#~ "die unfertigen Dokumente."
 
 #~ msgid "VAT Nr verified (level1)"
 #~ msgstr "MWST Nr verifiziert (Stufe1)"
