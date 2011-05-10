@@ -242,7 +242,7 @@
   color: #800000;
 	font-size: 13px;
 }
-.icon_help, .icon_feedback, .icon_workflow, .user_icon {
+.icon_help, .icon_feedback, .icon_workflow, .icon_workflow_gray, .user_icon {
   display: inline-block;
   width: 32px;
   height: 32px;
@@ -258,6 +258,9 @@
 }
 .icon_workflow {
   background: url(/static/images/icons.png) -320px -64px no-repeat;
+}
+.icon_workflow_gray {
+  background: url(/static/images/icons.png) -320px -96px no-repeat;
 }
 .icon_diff {
   display: inline-block;
