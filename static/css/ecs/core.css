@@ -262,12 +262,20 @@
 .icon_workflow_gray {
   background: url(/static/images/icons.png) -320px -96px no-repeat;
 }
-.icon_diff {
+.icon_diff, .icon_comment {
   display: inline-block;
   width: 16px;
   height: 16px;
+  padding: 0px;
+}
+.icon_diff {
   padding-right: 5px;
   background: url(/static/images/icons.png) -80px -240px no-repeat;
+}
+.icon_comment {
+  background: url(/static/images/icons.png) 0 -80px no-repeat;
+  vertical-align: text-bottom;
+  margin-right: 5px;
 }
 .user_icon {
   background: url(/static/images/icons.png) -320px 0 no-repeat;
