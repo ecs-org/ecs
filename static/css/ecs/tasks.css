@@ -124,21 +124,21 @@
   padding: 3px 0 0;
 }
 .task_type_nr {
-	display: inline-block;
-	min-width: 30px;
-	max-width: 50px;
-	text-align: center;
-	padding: 2px;
-	font-size: 12px;
-	background: #DDD4D4;
-	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
+  display: inline-block;
+  min-width: 30px;
+  max-width: 50px;
+  text-align: center;
+  padding: 2px;
+  font-size: 12px;
+  background: #DDD4D4;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 .task_list .preview {
-	display: inline-block;
-	text-indent: -9999px;
-	background: url(/static/images/icons.png) 0 -1056px no-repeat;
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(/static/images/icons.png) 0 -1056px no-repeat;
   width: 16px;
   height: 16px;
 }
