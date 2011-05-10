@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-10 21:51+0200\n"
+"POT-Creation-Date: 2011-05-10 23:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3087,6 +3087,7 @@ msgid "Involvement"
 msgstr "Beteiligung"
 
 #: templates/submissions/tabs/involved_parties.html:6
+#: templates/tasks/log.html:14
 msgid "Name"
 msgstr "Name"
 
@@ -3159,6 +3160,38 @@ msgstr "keine zusätzlichen/externen Gutachter"
 #, fuzzy
 msgid "Export"
 msgstr "Import"
+
+#: templates/tasks/log.html:5
+msgid "Type of Task"
+msgstr "Art der Aufgabe"
+
+#: templates/tasks/log.html:6
+msgid "Accepted?"
+msgstr "Angenommen?"
+
+#: templates/tasks/log.html:7
+msgid "Locked?"
+msgstr "Gesperrt?"
+
+#: templates/tasks/log.html:8
+msgid "Created At"
+msgstr "Erstellt am"
+
+#: templates/tasks/log.html:9
+msgid "Closed At"
+msgstr "Abgeschlossen am"
+
+#: templates/tasks/log.html:10
+msgid "Assigend At"
+msgstr "Übertragen am"
+
+#: templates/tasks/log.html:11
+msgid "Assigend To"
+msgstr "Übertragen am"
+
+#: templates/tasks/log.html:15
+msgid "Groups"
+msgstr "Gruppen"
 
 #: templates/tasks/manage_task.html:5
 msgid "Show all tasks"
@@ -3588,21 +3621,6 @@ msgid "US States"
 msgstr ""
 
 #, fuzzy
-#~ msgid ""
-#~ "You cannot submit study if there are unready documents. If you want to "
-#~ "submit the study regardless of the unready documents, delete them."
-#~ msgstr ""
-#~ "Sie können keine Studie abschicken, die noch unfertige Dokumente "
-#~ "beinhaltet.Wenn Sie die Studie dennoch abschicken möchten. Löschen sie "
-#~ "die unfertigen Dokumente."
-
-#~ msgid "VAT Nr verified (level1)"
-#~ msgstr "MWST Nr verifiziert (Stufe1)"
-
-#~ msgid "VAT Nr verified (level2)"
-#~ msgstr "MWST Nr verifiziert (Stufe2)"
-
-#, fuzzy
 #~ msgid "Thesis Review"
 #~ msgstr "Formale Prüfung Diplomarbeit"
 
@@ -3640,15 +3658,6 @@ msgstr ""
 
 #~ msgid "Never forward unread messages"
 #~ msgstr "Ungelesene Nachrichten nicht weiterleiten"
-
-#~ msgid "Forward unread messages after 5 minutes"
-#~ msgstr "ungelesende ECS Nachrichten nach fünf Minuten weiterleiten"
-
-#~ msgid "Forward unread messages after 10 minutes"
-#~ msgstr "ungelesende ECS Nachrichten nach zehn Minuten weiterleiten"
-
-#~ msgid "Forward unread messages after 6 hours"
-#~ msgstr "ungelesende ECS Nachrichten nach sechs Stunden weiterleiten"
 
 #~ msgid "Edit Notification Answer"
 #~ msgstr "Meldungsantwort bearbeiten"
