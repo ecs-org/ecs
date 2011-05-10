@@ -184,7 +184,7 @@ def get_ec_user(submission=None):
     if submission is not None:
         with sudo():
             workflow_tokens = submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query
-            tasks = Task.objects.filter(workflow_token__in=workflow_tokens, assigned_to__ecs_profile__internal=True).order_by('-closed_at')
+            tasks = Task.objects.filter(workflow_token__in=workflow_tokens, assigned_to__groups__name=u'EC-Office').exclude(assigned_to=get_current_user()).order_by('-closed_at')
         try:
             task = tasks[0]
         except IndexError:
