@@ -148,6 +148,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
+    'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
 )   

@@ -22,7 +22,7 @@
     </form>
   </div>
   {% if user.get_profile.has_explicit_workflow %}
-    {% with request|get_related_tasks as related_tasks %}
+    {% with request.related_tasks as related_tasks %}
         {% if related_tasks %}
             <a href="{% url ecs.tasks.views.manage_task task_pk=related_tasks.0.pk %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
         {% else %}

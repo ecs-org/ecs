@@ -127,7 +127,7 @@ def list(request):
 def popup(request):
     return my_tasks(request, template='tasks/popup.html')
     
-def manage_task(request, task_pk=None, full=False):
+def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
     form = ManageTaskForm(request.POST or None, task=task)
     try:
@@ -160,18 +160,12 @@ def manage_task(request, task_pk=None, full=False):
                     'task': task,
                 })
 
-        if full:
-            return HttpResponseRedirect(reverse('ecs.tasks.views.list'))
-        else:
-            return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
+        return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
     return render(request, 'tasks/manage_task.html', {
         'form': form,
         'message_form': message_form,
         'task': task,
     })
-    
-def manage_task_full(request, task_pk=None):
-    return manage_task(request, task_pk=task_pk, full=True)
 
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)

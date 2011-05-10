@@ -103,12 +103,6 @@ def is_docstash(obj):
     return isinstance(obj, DocStash)
 
 @register.filter
-def get_related_tasks(request):
-    from ecs.tasks.models import Task
-    all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type')
-    return [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if request.path in t.get_final_urls()]
-
-@register.filter
 def resubmission(submission, user):
     return submission.resubmission_task_for(user)
 
