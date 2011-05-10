@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block content %}
+<div id="header_public">
+  <a href="/"><h1>Ethikkommission Wien</h1></a> 
+</div>
+
+<div id="wrapper">
+
+	<h2>Registrierungs-Link ungültig</h2>
+	<p>Die Gültigkeitsdauer Ihres Registrierungs-Link ist abgelaufen.</p>
+    <p>Beachten Sie, dass der Registrierungs-Link innerhalb von 24 Stunden verwendet werden muß.</p>
+    <p>Um einen neuen Registrierungs-Link zu erhalten klicken Sie <a href="{% url ecs.users.views.register %}">hier</a>.</p> 
+
+</div>
+
+{% endblock %}

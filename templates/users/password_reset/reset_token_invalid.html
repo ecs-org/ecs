@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
+
+{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block content %}
+<div id="header_public">
+  <a href="/"><h1>Ethikkommission Wien</h1></a> 
+</div>
+
+<div id="wrapper">
+
+	<h2>Passwort zurücksetzen fehlgeschlagen</h2>
+	<p>Die Gültigkeitsdauer Ihres Passwort Rücksetzungs-Link ist abgelaufen.</p>
+    <p>Beachten Sie, dass der Link innerhalb von einer Stunden verwendet werden muß.</p>
+    <p><a href="{% url ecs.users.request_password_reset %}">Beantragen Sie dieses Service erneut</a> wenn Sie ihr Passwort zurücksetzen wollen.</p> 
+
+</div>
+
+{% endblock %}

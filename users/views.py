@@ -47,14 +47,9 @@ class TimestampedTokenFactory(object):
             raise ValueError("token expired")
         return data, timestamp
         
-    def parse_token_or_404(self, token):
-        try:
-            return self.parse_token(token)
-        except ValueError, e:
-            raise Http404(e)
-        
 _password_reset_token_factory = TimestampedTokenFactory(extra_key=settings.REGISTRATION_SECRET)
-_registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWORD_RESET_SECRET)
+_registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWORD_RESET_SECRET, ttl=86400)
+    
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=5, key_field='username')
@@ -100,7 +95,11 @@ def register(request):
 
 @forceauth.exempt
 def activate(request, token=None):
-    data, timestamp = _registration_token_factory.parse_token_or_404(token)
+    try:
+        data, timestamp = _registration_token_factory.parse_token(token)
+    except ValueError, e:
+        return render(request, 'users/registration/registration_token_invalid.html', {})
+
     try:
         existing_user = get_user(data['email'])
         return render(request, 'users/registration/already_activated.html', {
@@ -152,7 +151,11 @@ def request_password_reset(request):
 
 @forceauth.exempt
 def do_password_reset(request, token=None):
-    email, timestamp = _password_reset_token_factory.parse_token_or_404(token)
+    try:
+        email, timestamp = _password_reset_token_factory.parse_token(token)
+    except ValueError, e:
+        return render(request, 'users/password_reset/reset_token_invalid.html', {})
+
     user = get_object_or_404(User, email=email)
     profile = user.get_profile()
     if profile.last_password_change and time.mktime(profile.last_password_change.timetuple()) > timestamp:
