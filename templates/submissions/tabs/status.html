@@ -42,23 +42,45 @@
     </td></tr>
     <tr>
         <th>Eingereicht von:</th>
-        <td colspan="3">{{ submission_form.presenter }}</td>
+        {% with submission_form.presenter.get_profile.organisation as organisation%}
+            <td colspan="3">{{ submission_form.presenter }}{% if organisation %} ({{organisation}}){% endif %}</td>
+        {% endwith %}
     </tr>
     <tr>
         <th>Antragsteller:</th>
-        <td colspan="3">{{ submission_form.submitter }}</td>
+        {% with submission_form.submitter.get_profile.organisation as organisation%}
+            <td colspan="3">{{ submission_form.submitter }}{% if organisation %} ({{organisation}}){% endif %}</td>
+        {% endwith %}
     </tr>
     <tr>
         <th>Sponsor:</th>
-        <td colspan="3">{{ submission_form.sponsor }}</td>
+        {% with submission_form.sponsor.get_profile.organisation as organisation%}
+            <td colspan="3">{{ submission_form.sponsor }}{% if organisation %} ({{organisation}}){% endif %}</td>
+        {% endwith %}
     </tr>
     <tr>
         <th>Rechnungsempfänger:</th>
-        <td colspan="3">{% if submission_form.invoice %}{{ submission_form.invoice }}{% else %}<em>{% trans "same as sponsor" %}</em>{% endif %}</td>
+        {% with submission_form.invoice.get_profile.organisation as organisation%}
+            <td colspan="3">
+            {% if submission_form.invoice %}
+                {{ submission_form.invoice }}{% if organisation %} ({{organisation}}){% endif %}
+            {% else %}
+                <em>{% trans "same as sponsor" %}</em>
+            {% endif %}
+            </td>
+        {% endwith %}
     </tr>
     <tr>
         <th>Hauptprüfer:</th>
-        <td colspan="3">{% if submission_form.primary_investigator %}{{ submission_form.primary_investigator.contact.full_name }} ({{ submission_form.primary_investigator.organisation }}){% else %}<em>{% trans "No Primary Investigator" %}</em>{% endif %}</td>
+        {% with submission_form.primary_investigator.get_profile.organisation as organisation%}
+            <td colspan="3">
+            {% if submission_form.primary_investigator %}
+                {{ submission_form.primary_investigator.contact.full_name }}{% if organisation %} ({ organisation }}){% endif %}
+            {% else %}
+                <em>{% trans "No Primary Investigator" %}</em>
+            {% endif %}
+            </td>
+        {% endwith %}
     </tr>
     <tr>
         <th>Phase:</th>
