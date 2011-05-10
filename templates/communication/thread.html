@@ -25,7 +25,7 @@
     <li class="message">
         <div class="head">
             <span class="sender">{{ message.sender }}</span>
-            <span class="preview"></span><span class="preview_text">{{ message|preview:80 }}</span>
+            <span class="preview">{{ message|preview:80 }}</span>
             <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
         </div>
         <pre class="body">{{ message.text|safe }}<pre>

@@ -183,7 +183,7 @@ ul.thread {
 .thread > .message.collapsed > .head {
     border: none;
 }
-.thread > .message > .head > .preview_text {
+.thread > .message > .head > .preview {
   margin-left: 5px;
   color: #777;
 }
@@ -191,10 +191,10 @@ ul.thread {
   float: right;
   color: #777;
 }
-.thread > .message > .head > .preview_text {
+.thread > .message > .head > .preview {
   display: none;
 }
-.thread > .message.collapsed > .head > .preview_text {
+.thread > .message.collapsed > .head > .preview {
   display: inline;
 }
 
