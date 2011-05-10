@@ -113,7 +113,13 @@ ecs.widgets.Popup = new Class({
         this.headElement.grab(this.titleElement);
         this.hide();
         document.body.appendChild(this.popup);
-        this.show();
+        if(this.url){
+            ecs.widgets.showModalOverlay();
+        } else {
+            this.show();
+        }
+        document.addEvent('keypress', this.keypress);
+        window.addEvent('resize', this.resize);
         new Drag.Move(this.popup, {handle: this.headElement});
     },
     setTitle: function(title){
@@ -121,6 +127,7 @@ ecs.widgets.Popup = new Class({
     },
     onSuccess: function(){
         this.parent();
+        this.show();
         /* the popup content has changed, so we have to resize and recenter */
         this.resizeHandler();
     },
@@ -154,8 +161,6 @@ ecs.widgets.Popup = new Class({
         ecs.widgets.showModalOverlay();
         this.popup.setStyle('display', 'block');
         this.resizeHandler();
-        document.addEvent('keypress', this.keypress);
-        window.addEvent('resize', this.resize);
     },
     hide: function(){
         this.popup.setStyle('display', 'none');

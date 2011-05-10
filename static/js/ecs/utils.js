@@ -626,14 +626,12 @@ ecs.setupMessagePopup = function(container, prefix) {
         ['ec', 'involved', 'person'].each(function(x){
             if (x == value) {
                 var el = container.getElement(receiver_prefix+x);
-                console.log(el);
                 if (el) {
                     el.removeAttribute('disabled');
                 }
                 container.getElements(receiver_prefix+x+' + .errors').show();
             } else {
                 var el = container.getElement(receiver_prefix+x);
-                console.log(el);
                 if (el) {
                     el.setAttribute('disabled', 'disabled');
                 }
