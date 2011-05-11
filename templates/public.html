@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
+
+
+{% block content_prefix %}
+<div id="header_public">
+  <a href="/"><h1></h1></a> <!-- TODO: quirks, needs to be set for logo --> 
+</div>
+{% endblock %}
+

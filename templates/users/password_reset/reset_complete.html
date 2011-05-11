@@ -1,10 +1,13 @@
-{% extends 'base.html' %}
-
-{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+{% extends 'public.html' %}
+{% load i18n %}
 
 {% block content %}
 
-<p>Ihr Passwort wurde geändert.</p>
-<p>Sie können sich nun mit dem neuen Passwort <a href="{% url ecs.users.views.login %}">einloggen</a></p>
+<div id="wrapper">
+
+    <h2>Ihr Passwort wurde geändert.</h2>
+    
+    <p>Sie können sich nun mit dem neuen Passwort <a href="{% url ecs.users.views.login %}">einloggen</a></p>
+</div>
 
 {% endblock %}

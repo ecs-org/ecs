@@ -10,12 +10,17 @@
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/login.css" />
 {% endblock %}
 
-{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+
+{% block header %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
 
 {% block content %} <!-- usertoolbar -->
 
 <div class="wrapper">
-  <h1>Ethikkommission Wien</h1>
+    <h1></h1> <!-- h1 displays the ec logo in case login.css is used -->
     <div id="browser_warning" style="display:none">
         <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser; 
         Zur korrekten Darstellung brauchen sie <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>; 
@@ -33,7 +38,7 @@
         <input type="hidden" name="next" value="{{ next }}" />
       </form>
     {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
+    <p>{% trans 'Your username and password did not match. Please try again.' %}</p>
     {{ form.errors }}
     {% endif %}
     </div>

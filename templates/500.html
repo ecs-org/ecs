@@ -1,31 +1,18 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    </head>
+    <body>
+      <div id="content">
+        <div class="innerwrap">
+          <div class="wrapper">
+              <p><strong>Ups,</p><p>ein Fehler ist aufgetreten !</strong></p>
+              <p>Eine Nachricht wurde an das Entwicklerteam geschickt.</p>
+              <p><a href="/"> Klicken Sie hier</a> um zur Hauptseite zu wechseln</p>          
+          </div>
+        </div>
+      </div>         
+    </body>
+</html>
 
-{% block jshead %} {# enqueue javasript #}
-  {{ block.super }}
-{% endblock %}
-
-{% block jsbottom %}
-  {{ block.super }}
-{% endblock %}
-
-{% block htmlcss %}
-  {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/login.css" />
-{% endblock %}
-
-{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
-{% block header %}
-{% endblock %}
-{% block sidebar %}
-{% endblock %}
-
-
-{% block content %} <!-- usertoolbar -->
-<div class="wrapper">
-  <h1></h1>
-  <p><strong>Ups,</p><p>ein Fehler ist aufgetreten !</strong></p>
-  <p>Eine Nachricht wurde an das Entwicklerteam geschickt.</p>
-  <p><a href="/"> Klicken Sie hier</a> um zur Hauptseite zu wechseln</p>
-</div>
-
-{% endblock %}

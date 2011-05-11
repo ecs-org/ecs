@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block jshead %} {# enqueue javasript #}
-  {{ block.super }}
+{% block jshead %}
 {% endblock %}
 
-{% block jsbottom %}
-  {{ block.super }}
+{% block jsbotom %}
 {% endblock %}
 
 {% block htmlcss %}
@@ -13,15 +12,18 @@
   <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/login.css" />
 {% endblock %}
 
-{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}
+{% block header %}
+{% endblock %}
 
+{% block sidebar %}
+{% endblock %}
 
-{% block content %} <!-- usertoolbar -->
+{% block content %}
 <div class="wrapper">
   <h1></h1>
   <p><strong>Seite nicht gefunden !</strong></p>
   <p>Überprüfen Sie ob sie als momentaner Benutzer die Berechtigung für diese Seite haben.</p>
   <p><a href="/"> Klicken Sie hier</a> um zur Hauptseite zu wechseln</p>
 </div>
-
 {% endblock %}
+
