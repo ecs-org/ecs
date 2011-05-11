@@ -295,11 +295,12 @@ def delete_document_from_submission(request):
 
 @with_docstash_transaction
 def create_submission_form(request):
-    if request.method == 'GET' and request.docstash.value:
-        form = request.docstash['form']
-        formsets = request.docstash['formsets']
-    else:
+    form = request.docstash.get('form', None)
+    if form is None:
         form = SubmissionFormForm(request.POST or None)
+        
+    formsets = request.docstash.get('formsets', None)
+    if formsets is None:
         formsets = get_submission_formsets(request.POST or None)
         if request.method == 'GET':
             # neither docstash nor POST data: this is a completely new submission
@@ -314,7 +315,7 @@ def create_submission_form(request):
                 'submitter_organisation': profile.organisation,
                 'submitter_jobtitle': profile.jobtitle,
             })
-    
+
     notification_type = request.docstash.get('notification_type', None)
     valid = False
 
