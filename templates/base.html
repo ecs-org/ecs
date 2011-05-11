@@ -19,8 +19,16 @@
 
     <div id="content">
       <div class="innerwrap">
+      
+        {% block content_prefix %}
+        {% endblock %}
+      
 	    {% block content %}
 	    {% endblock %}
+        
+        {% block content_postfix %}
+        {% endblock %}
+
       </div>
     </div>
 
@@ -58,7 +66,7 @@
 {% endblock %}
 
 {% block jsbottom %}
-    {{ block.super }}
+  {{ block.super }}
   <script type="text/javascript">
     window.addEvent('domready', function() {
         var sidebar = $$('#sidebar')[0];
