@@ -342,7 +342,7 @@ ecs.setupDocumentUploadForms = function(){
             var form_data = new FormData();
             form.getElements('(input)|(select)').each(function(input){
                 if(!input.name) return;
-                if(input.type == 'file'){
+                if(input.type == 'file' && input.files.length){
                     form_data.append(input.name, input.files[0]);
                 } else {
                     form_data.append(input.name, input.value);
