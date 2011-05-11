@@ -139,7 +139,9 @@ def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     request.docstash['type_id'] = notification_type_pk
 
-    form = request.docstash.get('form') or notification_type.form_cls(request.POST or None)
+    form = request.docstash.get('form')
+    if request.method == 'POST' or form is None:
+        form = notification_type.form_cls(request.POST or None)
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
