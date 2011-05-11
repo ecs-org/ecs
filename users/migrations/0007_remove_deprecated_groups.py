@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(DataMigration):
 
+    depends_on = (
+        ('tasks', '0004_remove_deprecated_groups'),
+    )
+
     def forwards(self, orm):
         "Write your forwards methods here."
         groups = orm['auth.Group'].objects.filter(name__in=[u'Presenter', u'Sponsor', u'Investigator'])
