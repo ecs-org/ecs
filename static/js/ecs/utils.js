@@ -339,7 +339,7 @@ ecs.setupDocumentUploadForms = function(){
             }
             /*upload_button.hide();*/
             upload_button.setAttribute('disabled', 'disabled');
-            var form_data = FormData(form);
+            var form_data = new FormData(form);
 
             xhr = XMLHttpRequest();
             xhr.upload.addEventListener('progress', function(evt){
