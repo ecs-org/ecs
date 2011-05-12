@@ -20,7 +20,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if sf != submission_form %}
+                    {% if sf != submission_form.submission.current_submission_form %}
                         <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a>
                     {% endif %}
                     {% if sf.is_notification_update %}
