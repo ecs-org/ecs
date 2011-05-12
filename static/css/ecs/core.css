@@ -814,7 +814,16 @@ fieldset.disabled {
 .document_upload input[type="submit"].loaded {
   background-color: #00ff00;
 }
-
+.document_upload .warning {
+  display: none;
+}
+.document_upload .icon_warning {
+  width: 16px;
+  height: 16px;
+  padding-left: 20px;
+  padding-bottom: 1px;
+  background: url(/static/images/icons.png) 0 -112px no-repeat;
+}
 
 /* notifications */
 

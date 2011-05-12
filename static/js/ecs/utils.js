@@ -339,6 +339,7 @@ ecs.setupDocumentUploadForms = function(){
             }
             /*upload_button.hide();*/
             upload_button.setAttribute('disabled', 'disabled');
+            par.getElement('.warning').show();
             var form_data = new FormData();
             form.getElements('(input)|(select)').each(function(input){
                 if(!input.name) return;
