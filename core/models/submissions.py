@@ -136,6 +136,10 @@ class Submission(models.Model):
     
     objects = SubmissionManager()
     
+    @property
+    def newest_submission_form(self):
+        return self.forms.all().order_by('-pk')[0]
+
     def get_submission(self):
         return self
 
