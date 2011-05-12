@@ -50,14 +50,14 @@ class AuditTrail(models.Model):
             return ''
 
     def _get_log_line(self):
-        line = '[%s] %s\n' % (self.created_at.strftime('%b %d %Y %H:%M:%S'), self.description)
-        line += '    User: %s %s (%s) <%s>\n' % (self.user.first_name, self.user.last_name, self.user.username, self.user.email)
-        line += '>>>> old data\n%s\n====\n%s\n<<<< new data\n' % (self.old_data, self.data)
+        line = u'[%s] %s\n' % (self.created_at.strftime('%b %d %Y %H:%M:%S'), self.description)
+        line += u'    User: %s %s (%s) <%s>\n' % (self.user.first_name, self.user.last_name, self.user.username, self.user.email)
+        line += u'>>>> old data\n%s\n====\n%s\n<<<< new data\n' % (self.old_data, self.data)
         return line
     
     def get_log_line(self):
         line = self._get_log_line()
-        line += '    Hash: %s\n' % self.hash
+        line += u'    Hash: %s\n' % self.hash
         return line
     
     def __unicode__(self):
