@@ -32,7 +32,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {% if sf == submission_form %}
+                    {% if sf == submission_form.submission.newest_submission_form %}
                         <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}"><button>{% trans "Download PDF" %}</button></a>
                     {% endif %}
                 </td>
