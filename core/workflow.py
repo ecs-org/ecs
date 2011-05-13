@@ -7,10 +7,11 @@ from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
-from ecs.users.utils import get_current_user
+from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
+from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
@@ -70,7 +71,9 @@ def has_accepted_recommendation(wf):
 
 @guard(model=Submission)
 def needs_external_review(wf):
-    return wf.data.external_reviewer
+    with sudo():
+        external_review_exists = Task.objects.for_data(wf.data).filter(assigned_to=wf.data.external_reviewer_name, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
+    return wf.data.external_reviewer and not external_review_exists
 
 @guard(model=Submission)
 def needs_insurance_review(wf):
@@ -226,6 +229,13 @@ class ExternalReviewInvitation(Activity):
     def get_url(self):
         return None # FIXME: missing feature (FMD3)
 
+@guard(model=Submission)
+def needs_external_review(wf):
+    from ecs.tasks.models import Task
+    with sudo():
+        external_review_exists = Task.objects.for_data(wf.data).filter(assigned_to=wf.data.external_reviewer_name, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
+    return wf.data.external_reviewer and not external_review_exists
+
 
 class AdditionalReviewSplit(Generic):
     class Meta:
@@ -234,6 +244,10 @@ class AdditionalReviewSplit(Generic):
     def emit_token(self, *args, **kwargs):
         tokens = []
         for user in self.workflow.data.additional_reviewers.all():
+            with sudo():
+                additional_review_exists = Task.objects.for_data(self.workflow.data).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', deleted_at__isnull=True).exists()
+            if additional_review_exists:
+                continue
             for token in super(AdditionalReviewSplit, self).emit_token(*args, **kwargs):
                 token.task.assign(user)
                 tokens.append(token)

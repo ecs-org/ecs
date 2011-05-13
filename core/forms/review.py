@@ -69,25 +69,19 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         cd = self.cleaned_data
         thesis = cd.get('thesis', None)
         expedited = cd.get('expedited', None)
-        new_external_reviewer = self.cleaned_data.get('new_external_reviewer', None)
-        new_additional_reviewer = self.cleaned_data.get('new_additional_reviewer', None)
         if thesis or expedited:
             cd['external_reviewer'] = False
             cd['external_reviewer_name'] = None
-        if new_external_reviewer:
+        for f in ('new_external_reviewer', 'new_additional_reviewer'):
+            reviewer_name = self.cleaned_data.get(f, None)
+            if not reviewer_name:
+                continue
             try:
-                get_user(new_external_reviewer)
+                get_user(reviewer_name)
             except User.DoesNotExist:
                 pass
             else:
-                self._errors['new_external_reviewer'] = self.error_class([_(u'This user is already registered')])
-        if new_additional_reviewer:
-            try:
-                get_user(new_additional_reviewer)
-            except User.DoesNotExist:
-                pass
-            else:
-                self._errors['new_additional_reviewer'] = self.error_class([_(u'This user is already registered')])
+                self._errors[f] = self.error_class([_(u'This user is already registered')])
         return cd
 
     def save(self, request, *args, **kwargs):
@@ -110,7 +104,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             instance.save()
             self.data['external_reviewer_name'] = str(user.pk)
             self.data['new_external_reviewer'] = None
-
         if new_additional_reviewer:
             invite_user(request, new_additional_reviewer)
             user = get_user(new_additional_reviewer)
@@ -118,7 +111,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
 
             self.data['additional_reviewers'] += ',' + str(user.pk)
             self.data['new_additional_reviewer'] = None
-
         return instance
 
 
@@ -140,5 +132,3 @@ class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
         fields = ('befangene',)
-
-
