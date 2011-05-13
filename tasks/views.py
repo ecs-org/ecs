@@ -72,8 +72,8 @@ def my_tasks(request, template='tasks/compact_list.html'):
             pass # XXX: how do we handle this case? (FMD2)
 
     try:
-        submission_pk = int(request.GET['submission'])
-    except (KeyError, ValueError):
+        submission_pk = int(request.GET.get('submission', None))
+    except (TypeError, ValueError):
         submission_pk = None
 
     if submission_pk:
@@ -171,10 +171,14 @@ def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
     task_accepted.send(type(task.node_controller), task=task)
-    if full:
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.list'))
+
+    submission_pk = request.GET.get('submission')
+    view = 'ecs.tasks.views.list' if full else 'ecs.tasks.views.my_tasks'
+
+    if submission_pk:
+        return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
     else:
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+        return redirect_to_next_url(request, reverse(view))
 
 def accept_task_full(request, task_pk=None):
     return accept_task(request, task_pk=task_pk, full=True)
@@ -183,10 +187,14 @@ def decline_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
     task_declined.send(type(task.node_controller), task=task)
-    if full:
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.list'))
+
+    submission_pk = request.GET.get('submission')
+    view = 'ecs.tasks.views.list' if full else 'ecs.tasks.views.my_tasks'
+
+    if submission_pk:
+        return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
     else:
-        return redirect_to_next_url(request, reverse('ecs.tasks.views.my_tasks'))
+        return redirect_to_next_url(request, reverse(view))
 
 def decline_task_full(request, task_pk=None):
     return decline_task(request, task_pk=task_pk, full=True)
