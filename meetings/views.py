@@ -58,7 +58,9 @@ def reschedule_submission(request, submission_pk=None):
         old_entries = from_meeting.timetable_entries.filter(submission=submission)
         for entry in old_entries:
             to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title)
-        old_entries.delete()
+            entry.submission = None
+            entry.save()
+            entry.delete()
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': to_meeting.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,
