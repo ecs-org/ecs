@@ -21,9 +21,7 @@
     <input type="submit" value="{% trans "Save" %}" />
 </form>
 {% if send_invitations %}
-    <div class="button">
-        <a href="{% url ecs.fastlane.views.invitations meeting_pk=meeting.pk %}">{% trans "Send Invitations" %}</a>
-    </div>
+    <a href="{% url ecs.fastlane.views.invitations meeting_pk=meeting.pk %}" class="button_submit">{% trans "Send Invitations" %}</a>
 {% endif %}
 
 </div>

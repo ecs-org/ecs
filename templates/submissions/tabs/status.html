@@ -33,7 +33,7 @@
                 </td>
                 <td>
                     {% if sf == submission_form.submission.newest_submission_form %}
-                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}"><button>{% trans "Download PDF" %}</button></a>
+                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="button_submit">{% trans "Download PDF" %}</a>
                     {% endif %}
                 </td>
             </tr>
@@ -162,5 +162,5 @@
 {% endif %}
 
 
-<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}"><button>{% trans "Export" %}</button></a>
+<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 

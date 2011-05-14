@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.boilerplate.views.edit_boilerplate %}"><button>{% trans 'New' %}</button></a>
+    <a href="{% url ecs.boilerplate.views.edit_boilerplate %}" class="button_submit">{% trans 'New' %}</a>
     {% for text in texts %}
     <div class="boilerplate">
         <h4>{{ text.slug }}</h4> | <a href="{% url ecs.boilerplate.views.edit_boilerplate text_pk=text.pk %}">{% trans "edit" %}</a>

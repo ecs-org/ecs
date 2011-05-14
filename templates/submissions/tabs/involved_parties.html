@@ -33,7 +33,7 @@
 </table>
 
 {% if user|has_flag:'executive_board_member' %}
-    <p><a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}"><button>{% trans 'Add Additional Reviewers' %}</button></a></p>
+    <p><a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}" class="button_submit">{% trans 'Add Additional Reviewers' %}</a></p>
 {% endif %}
 
 
@@ -44,7 +44,7 @@
             {% include 'submissions/review_form.inc' %}
         {% endwith %}
         {% if show_reviews and befangene_review_form and befangene_review_form.readonly %}
-            <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab"><button>{% trans "Edit" %}</button></a>
+            <a href="{% url ecs.core.views.befangene_review submission_form_pk=submission_form.pk %}#involved_parties_tab" class="button_submit">{% trans "Edit" %}</a>
         {% endif %}
     </div>
 {% endif %}

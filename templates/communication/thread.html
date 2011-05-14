@@ -15,9 +15,9 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.list_threads %}"><button>{% trans "Back to the communication overview" %}</button></a>
+<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab"><button>{% trans "Back to the Study" %}</button></a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
 {% endif %}
 
 <ul class="thread">
@@ -48,9 +48,9 @@
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.list_threads %}"><button>{% trans "Back to the communication overview" %}</button></a>
+<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab"><button>{% trans "Back to the Study" %}</button></a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
 {% endif %}
 
 </div>

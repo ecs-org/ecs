@@ -3,9 +3,7 @@
 
 {% block nav %}
     {% if not meeting.started %}
-        <div class="button">
-            <a href="{% url ecs.fastlane.views.start_assistant meeting_pk=meeting.pk%}">{% trans "Start Meeting" %}</a>
-        </div>
+       <a href="{% url ecs.fastlane.views.start_assistant meeting_pk=meeting.pk%}" class="button_submit">{% trans "Start Meeting" %}</a>
     {% endif %}
 {% endblock %}
 

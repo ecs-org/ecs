@@ -146,7 +146,7 @@
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
         {% if submission_form.presenter == request.user %}
-            <a href="{% url ecs.notifications.views.select_notification_creation_type %}"><button>{% trans "Create a new notification" %}</button></a>
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab">
@@ -164,7 +164,7 @@
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
         {% if submission_form.presenter == request.user %}
-            <a href="{% url ecs.notifications.views.select_notification_creation_type %}"><button>{% trans "Create a new notification" %}</button></a>
+            <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     {% if user|has_flag:'internal' %}
@@ -230,7 +230,7 @@
     <div id="communication_tab" class="tab">
         <div class="widget" widgeturl="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
         <div class="widget" widgeturl="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}"><button>{% trans "Write a new message" %}</button></a>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
     {% if user|has_flag:'internal' %}
         <div id="communication_overview_tab" class="tab">

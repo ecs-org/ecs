@@ -26,9 +26,7 @@
 {% endfor %}
 </ul>
 
-<div class="button">
-    <a href="{% url ecs.fastlane.views.invitations meeting_pk=meeting.pk reallysure='reallysure' %}">{% trans "Send Invitations" %}</a>
-</div>
+    <a href="{% url ecs.fastlane.views.invitations meeting_pk=meeting.pk reallysure='reallysure' %}" class="button_submit">{% trans "Send Invitations" %}</a>
 
 </div>
 {% endblock %}

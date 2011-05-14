@@ -2,9 +2,7 @@
 {% load core i18n %}
 
 {% block nav %}
-    <div class="button">
-        <a href="{% url ecs.fastlane.views.stop_assistant meeting_pk=meeting.pk%}">{% trans "Stop Meeting" %}</a>
-    </div>
+     <a href="{% url ecs.fastlane.views.stop_assistant meeting_pk=meeting.pk%}" class="button_submit">{% trans "Stop Meeting" %}</a>
     <div class="top">
         <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}">
             {{ top.submission|ec_number }}
