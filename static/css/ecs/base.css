@@ -175,7 +175,7 @@ input[type=submit] {
 }
 .cancel a,
 #content a.button_submit {
-  height: 16px;
+  min-height: 16px;
   padding: 4px 7px 2px;
 }
 input[type=submit]:active,
