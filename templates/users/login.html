@@ -32,8 +32,8 @@
     <div class="login_screen">
       <form method="post" action="">
         {% csrf_token %}
-        <p>{{ form.username.label_tag }}<br />{{ form.username }}</p>
-        <p>{{ form.password.label_tag }}<br />{{ form.password }}</p>
+        <p>{{ form.username.label_tag }}{{ form.username }}</p>
+        <p>{{ form.password.label_tag }}{{ form.password }}</p>
         <p><input type="submit" value="login" id="login_button"/></p>
         <input type="hidden" name="next" value="{{ next }}" />
       </form>

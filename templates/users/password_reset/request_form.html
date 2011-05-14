@@ -4,13 +4,15 @@
 {% block content %}
 
 <div id="wrapper">
-	<p>Wir senden Ihnen eine E-Mail zu, die einen Link enthält, mit dem Sie Ihr Passwort zurücksetzen können.</p> 
-    <form action="" method="post">
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="Passwort Zurücksetzen" />
-    </form>
+  <div class="form_public">
+      <form action="" method="post">
+        <p>Wir senden Ihnen eine E-Mail zu, die einen Link enthält, mit dem Sie Ihr Passwort zurücksetzen können.</p><br />
+      <table>
+          {{ form.as_p }}
+      </table>
+      <input type="submit" value="Passwort Zurücksetzen" />
+      </form>
+    </div>
 </div>
 
 {% endblock %}

@@ -51,7 +51,7 @@
 .login_screen {
   display: block;
   background: #D8E6EF;
-  padding: 20px 20px 40px;
+  padding: 20px 20px 50px;
   border: 1px solid #b7d4e5;
   border-radius: 10px;
   -moz-border-radius: 10px;
@@ -59,10 +59,13 @@
 }
 .login_screen p {
   display: block;
+  margin-bottom: 5px;
 }
 .login_screen label {
   font-size: 14px;
 	font-weight: bolder;
+  display: block;
+  margin-bottom: 2px;
 }
 .login_screen input {
   padding: 5px;
@@ -70,8 +73,8 @@
   width: 245px;
 }
 .login_screen input[type=submit] {
-  width: 70px;
-  margin: 5px 0 0 0;
+  width: 100%;
+  margin: 5px 0 10px 0;
   padding: 4px 7px;
   float: right;
   border-radius: 5px;

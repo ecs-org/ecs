@@ -129,7 +129,7 @@ ecs.setupFormFieldHelpers = function(context){
         }
         if(field.hasClass('required')){
             var span = field.getElement('span');
-            var star = new Element('span', {html: '*', style: 'color:red', 'class': 'star'});
+            var star = new Element('span', {html: '*', 'class': 'star'});
             if(span){
                 star.inject(span, 'before');
             }
@@ -548,7 +548,7 @@ ecs.FormFieldController = new Class({
         var label = li.getChildren('label')[0];
         if(enable && !li.hasClass('required')){
             li.addClass('required');
-            var star = new Element('span', {'class': 'star', 'style': 'color: red;'});
+            var star = new Element('span', {'class': 'star'});
             star.innerHTML = '*';
             var paperform_number = label.getChildren('.paperform_number')[0];
             if(paperform_number){

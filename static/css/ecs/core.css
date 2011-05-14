@@ -335,19 +335,33 @@
   background: #fff;
 } 
 */
-#status_tab th, #involved_parties_tab th, .messages th, .meeting_detail th, .task_back_log th, .profile th, table.notif_meta th, table.notification th {
+#status_tab th, 
+#involved_parties_tab th, 
+.messages th, 
+.meeting_detail th, 
+.task_back_log th, 
+.profile th, 
+table.notif_meta th, 
+table.notification th {
   background-color: #ebe8d0;
   border-bottom: 1px solid #eddfbf;
   border-collapse: collapse;
 }
-#status_tab td, #involved_parties_tab td, .messages td, .meeting_detail td, .task_back_log td, .profile td, table.notif_meta td, table.notification td {
+#status_tab td, 
+#involved_parties_tab td, 
+.messages td, 
+.meeting_detail td, 
+.task_back_log td, 
+.profile td, 
+table.notif_meta td, 
+table.notification td {
   border-bottom: 1px solid #eddfbf;
 }
 .task_back_log tr.closed td {
   color: #999;
 }
 .task_back_log tr.deleted {
-  color: #ff0000;
+  text-decoration: line-through;
 }
 #content #status_tab table table {
   margin: -3px 0 3px;
@@ -759,6 +773,7 @@ fieldset.disabled {
 .form_main .star {
   margin: 0 5px 0 3px;
   font-size: 14px;
+  color: red;
 }
 .form_main #id_start_1, .form_main #id_deadline_1, .form_main #id_deadline_diplomathesis_1 {
   margin-left: 30px;
