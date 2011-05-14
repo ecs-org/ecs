@@ -101,7 +101,7 @@
 #id_gender {
   width: 100px;
 }
-#wrapper .submission_list {
+.submission_list {
   float: left;
   margin: 100px 0 20px 70px;
 }
