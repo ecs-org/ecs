@@ -272,49 +272,69 @@ def xhtml2pdf(html, timeoutseconds=30):
     return ret
 
 
-def wkhtml2pdf(html, header=None, footer=None):
+def wkhtml2pdf(html, header_html=None, footer_html=None):
     '''
     Takes html and makes an pdf document out of it using the webkit engine
     '''
     
     if isinstance(html, unicode): 
-        html = html.encode("utf-8") 
+        html = html.encode('utf-8') 
+    if isinstance(header_html, unicode):
+        header_html = header_html.encode('utf-8')
+    if isinstance(footer_html, unicode):
+        footer_html = footer_html.encode('utf-8')
     
-    ret = ""
-    pdfa = StringIO() 
-    
-    t_in = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
-    t_in.write(html)
-    t_in.close()
+    cmd = [WKHTMLTOPDF_PATH,
+        '--margin-left', '2cm',
+        '--margin-top', '2cm',
+        '--margin-right', '2cm',
+        '--margin-bottom', '2cm',
+        '--page-size', 'A4',
+        '--allow', os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'),
+    ]
 
-    t_out = tempfile.NamedTemporaryFile(suffix='.pdf', dir=settings.TEMPFILE_DIR, delete=False)
-    t_out.close()
+    if header_html:
+        header_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+        header_html_file.write(header_html)
+        header_html_file.close()
+        cmd += ['--header-html', 'file://{0}'.format(header_html_file.name)]
+    if footer_html:
+        footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+        footer_html_file.write(footer_html)
+        footer_html_file.close()
+        cmd += ['--footer-html', 'file://{0}'.format(footer_html_file.name)]
+
+    html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+    html_file.write(html)
+    html_file.close()
+    cmd += ['page', 'file://{0}'.format(html_file.name)]
+
+    pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=settings.TEMPFILE_DIR, delete=False)
+    pdf_file.close()
+    cmd += [pdf_file.name]
 
     try:
-        cmd = [WKHTMLTOPDF_PATH, 'page', 'file://{0}'.format(t_in.name), t_out.name]
-        workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf')
-        popen = killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workdir)
+        popen = killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate() 
-
         if popen.returncode != 0: 
             raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
 
-        try:
-            pdf = open(t_out.name, "rb")
+        pdfa = StringIO() 
+        with open(pdf_file.name, 'rb') as pdf:
             pdf2pdfa(pdf, pdfa)
-            pdfa.seek(0)
-            ret = pdfa.getvalue()
-        finally:
-            if hasattr(pdf, 'fileno'): pdf.close()
-            pdfa.close()
-            # file pdf_name
-
-        return ret
+        pdfa.seek(0)
+        ret = pdfa.getvalue()
+        pdfa.close()
 
     finally:
-        os.remove(t_in.name)
-        os.remove(t_out.name)
+        if header_html:
+            os.remove(header_html_file.name)
+        if footer_html:
+            os.remove(footer_html_file.name)
+        os.remove(html_file.name)
+        os.remove(pdf_file.name)
 
+    return ret
 
 
 """

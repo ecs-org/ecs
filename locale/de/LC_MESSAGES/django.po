@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-12 11:05+0200\n"
+"POT-Creation-Date: 2011-05-17 17:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:79 core/models/submissions.py:148
+#: billing/views.py:79 core/models/submissions.py:152
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -1049,7 +1049,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:224 core/models/submissions.py:456
+#: core/paper_forms.py:224 core/models/submissions.py:460
 msgid "open"
 msgstr "offen"
 
@@ -1061,11 +1061,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:227 core/models/submissions.py:274
+#: core/paper_forms.py:227 core/models/submissions.py:278
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:228 core/models/submissions.py:456
+#: core/paper_forms.py:228 core/models/submissions.py:460
 msgid "blind"
 msgstr "blind"
 
@@ -1081,7 +1081,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:232 core/models/submissions.py:456
+#: core/paper_forms.py:232 core/models/submissions.py:460
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1409,27 +1409,27 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:96
+#: core/workflow.py:99
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:97
+#: core/workflow.py:100
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:107
+#: core/workflow.py:110
 msgid "Study acknowledged"
 msgstr "Studie angenommen"
 
-#: core/workflow.py:109
+#: core/workflow.py:112
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:155
+#: core/workflow.py:158
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:157
+#: core/workflow.py:160
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -1715,7 +1715,7 @@ msgstr "Zusätzliche Gutachter"
 msgid "new_additional_reviewer"
 msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
 
-#: core/forms/review.py:83 core/forms/review.py:90
+#: core/forms/review.py:84
 msgid "This user is already registered"
 msgstr "Dieser Benutzer ist bereits registriert"
 
@@ -1743,47 +1743,47 @@ msgstr "an der Medizinischen Universität der Stadt Wien"
 msgid "other University"
 msgstr "andere Universität"
 
-#: core/models/names.py:37 core/models/submissions.py:765 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:769 users/forms.py:56
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:765 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:769 users/forms.py:56
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:275
+#: core/models/submissions.py:279
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:276
+#: core/models/submissions.py:280
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:280
+#: core/models/submissions.py:284
 msgid "individual-related"
 msgstr "personenbezogen"
 
-#: core/models/submissions.py:281
+#: core/models/submissions.py:285
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:711
+#: core/models/submissions.py:715
 #, fuzzy
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. %s"
 
-#: core/models/submissions.py:721
+#: core/models/submissions.py:725
 #, fuzzy
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. %s"
 
-#: core/models/submissions.py:799
+#: core/models/submissions.py:803
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:799
+#: core/models/submissions.py:803
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2051,31 +2051,31 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:231
+#: meetings/views.py:233
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:240
+#: meetings/views.py:242
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:246
+#: meetings/views.py:248
 msgid "This meeting has not yet started."
 msgstr "Dieses Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:258
+#: meetings/views.py:260
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:346
+#: meetings/views.py:348
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:357
+#: meetings/views.py:359
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:409
+#: meetings/views.py:411
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2089,7 +2089,7 @@ msgid "Initial Amendment Review"
 msgstr "Formale Prüfung Einreichung"
 
 #: notifications/bootstrap.py:49 notifications/bootstrap.py:50
-#: templates/notifications/answers/xhtml2pdf/base.html:9
+#: templates/notifications/answers/wkhtml2pdf/base.html:9
 msgid "Notification Answer"
 msgstr "Meldungsantwort"
 
@@ -2347,7 +2347,7 @@ msgid "Older Entries"
 msgstr "Ältere Einträge"
 
 #: templates/boilerplate/form.html:14
-#: templates/fastlane/assistant_recommendation.html:57
+#: templates/fastlane/assistant_recommendation.html:55
 #: templates/fastlane/participation.html:21
 #: templates/meetings/constraints/user_form.html:19
 #: templates/notifications/form.html:27 templates/submissions/form.html:13
@@ -2507,17 +2507,19 @@ msgstr "Neues Dokument"
 
 #: templates/documents/upload_form.html:41
 msgid "Please be patient, the file is being uploaded and processed"
-msgstr "Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns weiterverarbeitet"
+msgstr ""
+"Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns "
+"weiterverarbeitet"
 
 #: templates/fastlane/assistant.html:8
 msgid "Fast Lane Assistant"
 msgstr "Expedited Review Assistent"
 
-#: templates/fastlane/assistant_main.html:7
+#: templates/fastlane/assistant_main.html:6
 msgid "Start Meeting"
 msgstr "Sitzung Starten"
 
-#: templates/fastlane/assistant_main.html:14
+#: templates/fastlane/assistant_main.html:12
 #, python-format
 msgid ""
 "\n"
@@ -2525,7 +2527,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/fastlane/assistant_main.html:18
+#: templates/fastlane/assistant_main.html:16
 #, python-format
 msgid ""
 "\n"
@@ -2533,18 +2535,18 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/fastlane/assistant_recommendation.html:6
+#: templates/fastlane/assistant_recommendation.html:5
 msgid "Stop Meeting"
 msgstr "Sitzung Beenden"
 
-#: templates/fastlane/assistant_recommendation.html:28
+#: templates/fastlane/assistant_recommendation.html:26
 #: templates/submissions/list.html:25 templates/submissions/list.html:121
 #: templates/submissions/widget.html:71 templates/users/administration.html:25
 #: templates/users/administration.html:85
 msgid "of"
 msgstr "von"
 
-#: templates/fastlane/assistant_recommendation.html:36
+#: templates/fastlane/assistant_recommendation.html:34
 #, python-format
 msgid ""
 "\n"
@@ -2552,7 +2554,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/fastlane/assistant_recommendation.html:47
+#: templates/fastlane/assistant_recommendation.html:45
 #: templates/submissions/list.html:85 templates/submissions/widget.html:39
 msgid "Categories"
 msgstr "Fachgebiete"
@@ -2579,8 +2581,8 @@ msgstr "Assistent"
 msgid "Fast Lane Invitations"
 msgstr "Expedited Review Einladungen"
 
-#: templates/fastlane/invitations.html:30
-#: templates/fastlane/participation.html:25
+#: templates/fastlane/invitations.html:29
+#: templates/fastlane/participation.html:24
 msgid "Send Invitations"
 msgstr "Einladung senden"
 
@@ -2826,11 +2828,11 @@ msgstr "Einreichung"
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
-#: templates/submissions/catalog.html:9
+#: templates/submissions/catalog.html:11
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
-#: templates/submissions/catalog.html:14
+#: templates/submissions/catalog.html:16
 msgid "Meeting from"
 msgstr "Sitzung vom"
 

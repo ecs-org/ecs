@@ -35,9 +35,12 @@ def pdf_response(pdf, filename='Unnamed.pdf'):
 
 def render_pdf(request, template, context):
     html = render_html(request, template, context)
-    return wkhtml2pdf(html)
+    footer_html = render_html(request, 'wkhtml2pdf/footer.html', context)
+    return wkhtml2pdf(html, footer_html=footer_html)
 
 def render_pdf_context(template, context):
     template = loader.get_template(template)
     html = template.render(Context(context))
-    return wkhtml2pdf(html)
+    footer_template = loader.get_template('wkhtml2pdf/footer.html')
+    footer_html = footer_template.render(Context(context))
+    return wkhtml2pdf(html, footer_html=footer_html)
