@@ -2,7 +2,7 @@ from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
 from piston.handler import BaseHandler
 
-from ecs.utils.pdfutils import xhtml2pdf
+from ecs.utils.pdfutils import xhtml2pdf, wkhtml2pdf
 
 def render_html(request, template, context):
     if isinstance(template, (tuple, list)):
@@ -35,9 +35,9 @@ def pdf_response(pdf, filename='Unnamed.pdf'):
 
 def render_pdf(request, template, context):
     html = render_html(request, template, context)
-    return xhtml2pdf(html)
+    return wkhtml2pdf(html)
 
 def render_pdf_context(template, context):
     template = loader.get_template(template)
     html = template.render(Context(context))
-    return xhtml2pdf(html)
+    return wkhtml2pdf(html)

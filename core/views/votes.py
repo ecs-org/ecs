@@ -12,9 +12,8 @@ from ecs.documents.views import download_document
 from ecs.signature.views import sign
 from ecs.users.utils import user_group_required
 
-from ecs.utils.pdfutils import xhtml2pdf
-from ecs.core.views.utils import render, pdf_response
-
+from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.viewutils import render, pdf_response
 
 
 def _vote_filename(vote):
@@ -55,17 +54,17 @@ def vote_context(vote):
 
 def show_html_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
-    template = 'db/meetings/xhtml2pdf/vote.html'
+    template = 'db/meetings/wkhtml2pdf/vote.html'
     context = vote_context(vote)
     return render(request, template, context)
 
 
 def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
-    template = 'db/meetings/xhtml2pdf/vote.html'
+    template = 'db/meetings/wkhtml2pdf/vote.html'
     context = vote_context(vote)
     pdf_name = _vote_filename(vote)
-    pdf_data = xhtml2pdf(render(request, template, context).content )
+    pdf_data = wkhtml2pdf(render(request, template, context).content )
     return pdf_response(pdf_data, filename=pdf_name)
 
     
@@ -94,8 +93,8 @@ def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     print 'vote_sign vote "%s"' % (vote_pk)
     
-    pdf_template = 'db/meetings/xhtml2pdf/vote.html'
-    html_template = 'db/meetings/xhtml2pdf/vote_preview.html'   
+    pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
+    html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'   
     context = vote_context(vote)
     
     sign_dict = {
@@ -110,7 +109,7 @@ def vote_sign(request, vote_pk=None):
         'document_filename': _vote_filename(vote),
         'document_stamp': True,
         'html_preview': render(request, html_template, context).content,
-        'pdf_data': xhtml2pdf(render(request, pdf_template, context).content),
+        'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
     }
             
     return sign(request, sign_dict)

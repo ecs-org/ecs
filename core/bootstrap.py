@@ -49,7 +49,7 @@ def templates():
     from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
     for dirpath, dirnames, filenames in os.walk(basedir):
-        if 'xhtml2pdf' not in dirpath:
+        if 'wkhtml2pdf' not in dirpath:
             continue
         for filename in filenames:
             if filename.startswith('.'):

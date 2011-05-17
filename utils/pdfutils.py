@@ -9,7 +9,7 @@ from django.utils.encoding import smart_str
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
-import ecs.utils.killableprocess 
+from ecs.utils import killableprocess
 from ecs.utils.pathutils import which
 
 MONTAGE_PATH = which('montage').next()
@@ -106,7 +106,7 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ba
     
     # render barcode template to ready to use postscript file
     template = loader.get_template_from_string("""{{barcode1}}{{barcode2}}""")
-    barcode_ps = loader.render_to_string('xhtml2pdf/barcode.ps')+ template.render(Context({
+    barcode_ps = loader.render_to_string('wkhtml2pdf/barcode.ps')+ template.render(Context({
         'barcode1': barcode1s, 'barcode2': barcode2s,}))
     
     try:
@@ -235,7 +235,6 @@ def pdf2pdfa(real_infile, real_outfile):
     return real_outfile.tell() - offset
 
 
-
 def xhtml2pdf(html, timeoutseconds=30):
     '''
     Takes custom (pisa style) xhtml and makes an pdf document out of it
@@ -251,7 +250,7 @@ def xhtml2pdf(html, timeoutseconds=30):
         import string
         valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
         uri = ''.join(c for c in uri if c in valid_chars)
-        path = os.path.join(settings.PROJECT_DIR, 'utils', 'xhtml2pdf', uri)
+        path = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf', uri)
         print "uri, rel, path", uri, rel, path
         return path
 
@@ -283,28 +282,39 @@ def wkhtml2pdf(html, header=None, footer=None):
     
     ret = ""
     pdfa = StringIO() 
+    
+    t_in = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+    t_in.write(html)
+    t_in.close()
 
-    with tempfile.NamedTemporaryFile(dir=settings.TEMPFILE_DIR) as t_in: 
-        t_in.write(html); t_in.flush(); t_in.seek(0)
-         
-        pdf_oshandle, pdf_name = tempfile.mkstemp(suffix='.pdf', dir=settings.TEMPFILE_DIR)
-        os.close(pdf_oshandle)
-        cmd = [WKHTMLTOPDF_PATH, 'page', t_in.name, pdf_name]     
-        popen = ecs.utils.killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE) 
+    t_out = tempfile.NamedTemporaryFile(suffix='.pdf', dir=settings.TEMPFILE_DIR, delete=False)
+    t_out.close()
+
+    try:
+        cmd = [WKHTMLTOPDF_PATH, 'page', 'file://{0}'.format(t_in.name), t_out.name]
+        workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf')
+        popen = killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=workdir)
         stdout, stderr = popen.communicate() 
+
         if popen.returncode != 0: 
             raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
-    
-    try:
-        pdf = open(pdf_name, "rb")
-        pdf2pdfa(pdf, pdfa)
-        pdfa.seek(0)
-        ret = pdfa.getvalue()
+
+        try:
+            pdf = open(t_out.name, "rb")
+            pdf2pdfa(pdf, pdfa)
+            pdfa.seek(0)
+            ret = pdfa.getvalue()
+        finally:
+            if hasattr(pdf, 'fileno'): pdf.close()
+            pdfa.close()
+            # file pdf_name
+
+        return ret
+
     finally:
-        if hasattr(pdf, 'fileno'): pdf.close()
-        pdfa.close()
-        # file pdf_name
-    return ret
+        os.remove(t_in.name)
+        os.remove(t_out.name)
+
 
 
 """

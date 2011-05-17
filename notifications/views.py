@@ -9,7 +9,7 @@ from django.db import models
 from django.conf import settings
 
 from ecs.utils.viewutils import render, redirect_to_next_url, render_html
-from ecs.utils.pdfutils import xhtml2pdf
+from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
@@ -36,7 +36,7 @@ def _get_notification_download_name(notification, suffix=''):
 def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context=None):
     tpl = _get_notification_template(notification, tpl_pattern)
     html = tpl.render(Context(context or {}))
-    pdf = xhtml2pdf(html)
+    pdf = wkhtml2pdf(html)
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=%s' % _get_notification_download_name(notification, suffix)
     return response
@@ -235,7 +235,7 @@ def distribute_notification_answer(request, notification_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    return _notification_pdf_response(notification, 'db/notifications/xhtml2pdf/%s.html', suffix='.pdf', context={
+    return _notification_pdf_response(notification, 'db/notifications/wkhtml2pdf/%s.html', suffix='.pdf', context={
         'notification': notification,
         'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         'url': request.build_absolute_uri(),
@@ -244,7 +244,7 @@ def notification_pdf(request, notification_pk=None):
 
 def notification_answer_pdf(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
-    return _notification_pdf_response(answer.notification, 'db/notifications/answers/xhtml2pdf/%s.html', suffix='-answer.pdf', context={
+    return _notification_pdf_response(answer.notification, 'db/notifications/answers/wkhtml2pdf/%s.html', suffix='-answer.pdf', context={
         'notification': answer.notification,
         'documents': answer.notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         'answer': answer,

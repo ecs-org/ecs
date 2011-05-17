@@ -1,10 +1,10 @@
-{% extends 'db/xhtml2pdf/skeleton.html' %}
+{% extends 'db/wkhtml2pdf/skeleton.html' %}
 {% load core %}
 
 {% block title %}Meeting Agenda{% endblock %}
 
 {% block content %}
-    {% include 'db/xhtml2pdf/ec_head.inc' %}
+    {% include 'db/wkhtml2pdf/ec_head.inc' %}
     <div align="center" style="font-weight:bold;font-size:large;">
     Sitzung der Ethik-Kommission am<br />
     {{ meeting.start|date:'d.m.Y' }}<br />

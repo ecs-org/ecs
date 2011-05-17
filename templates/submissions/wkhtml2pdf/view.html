@@ -1,4 +1,4 @@
-{% extends 'db/xhtml2pdf/skeleton.html' %}
+{% extends 'db/wkhtml2pdf/skeleton.html' %}
 {% load core corepdf %}
 
 {% block title %}Antragsformular{% endblock %}
@@ -137,65 +137,65 @@
 
 {% block content %}
 
-    {% include "db/submissions/xhtml2pdf/head.html" %}
+    {% include "db/submissions/wkhtml2pdf/head.html" %}
 
     
     {% tcwrap part %}
         <h2>Teil A</h2>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_1.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_1.html" %}
     
     {% tcwrap section %}
         <h3>2. Eckdaten der Studie</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_2_1.html" %}
-    {% include "db/submissions/xhtml2pdf/section_2_2-2_11.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_2_1.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_2_2-2_11.html" %}
     
     
     {% tcwrap section %}
         <h3>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_3a.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_3a.html" %}
 
     {% tcwrap section %}
         <h3>3b. Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind:</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_3b.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_3b.html" %}
     
     
     {% tcwrap section %}
         <h3>4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt:</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_4.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_4.html" %}
     
     {% tcwrap section %}
         <h3>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_5.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_5.html" %}
     
     {% tcwrap section %}
         <h3>6. Angaben zur durchzuführenden Therapie und Diagnostik</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_6.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_6.html" %}
     
     {% tcwrap section %}
         <h3>7. Strukturierte Kurzfassung des Projektes (<i><u>in deutscher Sprache, kein Verweis auf das Protokoll</u></i>)</h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_7.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_7.html" %}
 
     {% tcwrap section %}
             <h3>8. Biometrie, Datenschutz:</h3>
         </td><td style="text-align:right; font-style:italic">
             !!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen !!!
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_8.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_8.html" %}
 
     <pdf:nextpage/>
 
     {% tcwrap section %}
         <h3>9. Liste der eingereichten Unterlagen <span style="font-weight:normal">(wenn nicht gesondert dem Antrag beiliegend)</span></h3>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/section_9.html" %}
+    {% include "db/submissions/wkhtml2pdf/section_9.html" %}
 
 
 {% for inv in submission_form.investigators.all %}
@@ -203,7 +203,7 @@
     {% tcwrap part %}
         <h2>Teil B</h2>
     {% endtcwrap %}
-    {% include "db/submissions/xhtml2pdf/part_b.html" %}
+    {% include "db/submissions/wkhtml2pdf/part_b.html" %}
 {% endfor %}
 
 {% block footer %}

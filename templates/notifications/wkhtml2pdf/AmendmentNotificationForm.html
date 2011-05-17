@@ -1,4 +1,4 @@
-{% extends 'db/notifications/answers/xhtml2pdf/base.html' %}
+{% extends 'db/notifications/wkhtml2pdf/base.html' %}
 
 {% load core corepdf %}
 
@@ -8,6 +8,11 @@
     Begründen Sie die vorgenommenen Protokolländerungen. Legen Sie ein Exemplar, sowie eine Liste der vorgenommenen Änderungen bei.<br/>
     Machen Sie exakte Angaben über die Bezeichnung des Amendments (falls erforderlich).
     </p>
+{% endblock %}
+
+{% block doclist %}
+    <li>Liste der Änderungen</li>
+    {{ block.super }}
 {% endblock %}
 
 {% block content %}

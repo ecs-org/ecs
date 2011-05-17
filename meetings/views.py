@@ -348,7 +348,7 @@ def agenda_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
     
-    pdfstring = render_pdf(request, 'db/meetings/xhtml2pdf/agenda.html', {
+    pdfstring = render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
         'meeting': meeting,
     })
     return pdf_response(pdfstring, filename=filename)
@@ -372,7 +372,7 @@ def protocol_pdf(request, meeting_pk=None):
     submission_forms = [x.submission_form for x in b2_votes]
     b1ized = Vote.objects.filter(result__in=['1', '1a'], submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
-    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/protocol.html', {
+    pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
         'meeting': meeting,
         'tops': tops,
         'b1ized': b1ized,
@@ -411,7 +411,7 @@ def timetable_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('time slot')
     )
     
-    pdf = render_pdf(request, 'db/meetings/xhtml2pdf/timetable.html', {
+    pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
         'meeting': meeting,
         'timetable': timetable,
     })
