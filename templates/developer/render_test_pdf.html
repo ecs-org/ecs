@@ -1,0 +1,16 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block content %}
+    <ul>
+    {% for submission in submissions %}
+        <li>
+            <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">{{ submission|ec_number }}</a>
+            {{ submission.project_title_display|default:'<i>No title</i>' }}<br>
+            <a href="{% url ecs.core.views.test_pdf_html submission_pk=submission.pk %}">HTML</a>
+            | <a href="{% url ecs.core.views.test_render_pdf submission_pk=submission.pk %}">PDF</a>
+            <div style="height:10px;"></div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

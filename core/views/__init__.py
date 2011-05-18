@@ -8,3 +8,6 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
 from ecs.core.views.votes import show_html_vote, show_pdf_vote, download_signed_vote, vote_sign, vote_sign_finished
 from ecs.core.views.checklists import checklist_comments
 from ecs.core.views.autocomplete import autocomplete
+
+# remove the following lines for the final product
+from ecs.core.views.developer import developer_test_pdf, test_pdf_html, test_render_pdf

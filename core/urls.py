@@ -48,5 +48,10 @@ urlpatterns = patterns(
 
     # public
     url(r'^catalog/$', 'ecs.core.views.submissions.catalog'),
+
+    #developer
+    url(r'^developer/test_pdf/$', 'ecs.core.views.developer_test_pdf'),
+    url(r'^developer/test_pdf_html/(?P<submission_pk>\d+)/$', 'ecs.core.views.test_pdf_html'),
+    url(r'^developer/test_render_pdf/(?P<submission_pk>\d+)/$', 'ecs.core.views.test_render_pdf'),
 )
 
