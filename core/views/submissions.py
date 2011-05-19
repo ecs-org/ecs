@@ -485,7 +485,7 @@ def wizard(request):
         'form': screen_form,
     })
 
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None):
     usersettings = request.user.ecs_settings
 
     if order_by is None:
@@ -511,11 +511,14 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     setattr(usersettings, filtername, filterform.cleaned_data)
     usersettings.save()
     
-    return render(request, template, {
+    data = {
         'submissions': submissions,
         'filterform': filterform,
         'keyword': keyword,
-    })
+    }
+    data.update(extra_context or {})
+
+    return render(request, template, data)
 
 
 def submission_widget(request, template='submissions/widget.html'):
@@ -537,6 +540,7 @@ def all_submissions(request):
     keyword = request.GET.get('keyword', None)
 
     submissions = Submission.objects.all()
+    extra_context = {}
     if keyword:
         submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
         m = re.match(r'(\d+)/(\d+)', keyword)
@@ -549,8 +553,10 @@ def all_submissions(request):
             document_q = Document.objects.filter(uuid_document__icontains=keyword, content_type=ct).values('object_id').query
             submissions_q |= Q(pk__in=document_q)
             ct = ContentType.objects.get_for_model(SubmissionForm)
-            document_q = Document.objects.filter(uuid_document__icontains=keyword, content_type=ct).values('object_id').query
-            submissions_q |= Q(current_submission_form__pk__in=document_q)
+            documents = list(Document.objects.filter(uuid_document__icontains=keyword, content_type=ct))
+            if [d for d in documents if not d.parent_object == d.parent_object.submission.current_submission_form]:
+                extra_context['warning'] = _('This document is an old version.')
+            submissions_q |= Q(forms__pk__in=[d.object_id for d in documents])
 
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
@@ -558,7 +564,7 @@ def all_submissions(request):
 
         submissions = submissions.filter(submissions_q)
 
-    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm)
+    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm, extra_context=extra_context)
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)

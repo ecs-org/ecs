@@ -23,6 +23,15 @@
   list-style: none;
   margin-left: 14px;
 }
+.submission_list .warning {
+  font-size: 150%;
+  font-style: bold;
+  color: #ff0000;
+  margin: 15px 0px 15px 0px;
+  border: 1px solid #ff0000;
+  padding: 10px;
+  text-align: center;
+}
 #content ul.submission_list_choose, ul.submission_list_choose {
   position: relative;
   margin: 0 0 3px;
