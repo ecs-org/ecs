@@ -374,8 +374,8 @@ commissions = [{
 
 checklist_questions = {
     u'thesis_review': [
-        ('1', u'42?', u''),
-        ('2', u'Geben Sie eine positive Empfehlung ab?', u''),  # change this number with care
+        ('1', u'Geben Sie eine positive Empfehlung ab?', u''),  # change this number with care
+        ('2', u'42?', u''),
     ],
     u'statistic_review': [
         ('1', u'Ist das Studienziel ausreichend definiert?',u''),

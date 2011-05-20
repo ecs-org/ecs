@@ -65,7 +65,8 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def has_recommendation(wf):
-    return False # FIXME: missing feature (FMD3)
+    answer = ChecklistAnswer.objects.get(question__checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
+    return bool(answer.answer)
 
 
 @guard(model=Submission)
@@ -268,14 +269,6 @@ class AdditionalChecklistReview(ChecklistReview):
 def unlock_additional_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(AdditionalChecklistReview)
 post_save.connect(unlock_additional_review, sender=Checklist)
-
-
-class VoteRecommendation(Activity):
-    class Meta:
-        model = Submission
-
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
 
 
 class VoteRecommendationReview(Activity):

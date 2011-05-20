@@ -71,7 +71,7 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
-        ChecklistReview, ExternalChecklistReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
+        ChecklistReview, ExternalChecklistReview, VoteRecommendationReview, B2VoteReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_recommendation, has_accepted_recommendation,
         has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review)
     
@@ -119,34 +119,30 @@ def submission_workflow():
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
             'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Paper Submission Review")),
             'thesis_checklist_review': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Checklist Review"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
-            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
             ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged),
-
-            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
-            ('initial_thesis_review', 'paper_submission_review'): Args(guard=is_acknowledged),
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
             ('b2_resubmission_review', 'b2_vote_review'): None,
             ('b2_vote_review', 'resubmission'): Args(guard=has_b2vote),
 
+            # retrospective thesis lane
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
+            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
             ('thesis_categorization_review', 'thesis_checklist_review'): Args(guard=is_retrospective_thesis),
+            ('thesis_categorization_review', 'thesis_paper_submission_review'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
-
-            # TODO: remove this
-            ('thesis_checklist_review', 'thesis_vote_recommendation'): None,
-
-            ('thesis_vote_recommendation', 'vote_recommendation_review'): Args(guard=has_recommendation),
-            ('thesis_vote_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),
+            ('thesis_checklist_review', 'vote_recommendation_review'): Args(guard=has_recommendation),
+            ('thesis_checklist_review', 'categorization_review'): Args(guard=has_recommendation, negated=True),
 
             #('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
             ('vote_recommendation_review', 'categorization_review'): Args(guard=has_accepted_recommendation, negated=True),
