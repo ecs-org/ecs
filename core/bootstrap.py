@@ -470,5 +470,8 @@ def auth_ec_staff_users():
 
     for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for qdtup in checklist_questions[slug]:
-            cq, created = ChecklistQuestion.objects.get_or_create(text=qdtup[0], blueprint=blueprint, description=qdtup[1])
+        for number, text, description in checklist_questions[slug]:
+            cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
+            cq.text = text
+            cq.description = description
+            cq.save()
