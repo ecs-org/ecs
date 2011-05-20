@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
-from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
+from ecs.core.models import Submission, ChecklistBlueprint, Checklist, ChecklistAnswer, Vote
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
@@ -65,7 +65,7 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def has_recommendation(wf):
-    answer = ChecklistAnswer.objects.get(question__checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
     return bool(answer.answer)
 
 
