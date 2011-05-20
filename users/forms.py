@@ -60,8 +60,8 @@ class RegistrationForm(forms.Form):
 
 
 class ActivationForm(forms.Form):
-    password = forms.CharField(widget=forms.PasswordInput, min_length=8)
-    password_again = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(label=_('Password'), widget=forms.PasswordInput, min_length=8)
+    password_again = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput)
     
     def clean_password_again(self):
         password = self.cleaned_data.get("password", "")
