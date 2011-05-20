@@ -42,7 +42,7 @@
 .innerwrap img,
 .innerwrap a img {
   border: none;
-  margin-left: 10px;
+  margin: 0 0 10px 10px;
 }
 #content .innerwrap form {
   padding: 20px 20px 50px;
@@ -87,6 +87,9 @@
 }
 #id_gender {
   width: 100px;
+}
+.public_area {
+  margin: 0 0 5px 10px;
 }
 .pw_reg {
   margin: 5px 0 0 10px;
