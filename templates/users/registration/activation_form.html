@@ -4,17 +4,15 @@
 {% block content %}
 
 <div id="wrapper">
-	
-	<h2>Registrierung</h2>
+<h1>Ethik Kommission Wien</h1>
+  <div class="form_public">
 	<form action="" method="post">
 	    
-	    <table>
-	        <tr><th>Anrede:</th><td>{% if data.gender == 'w' %}Frau{% else %}Herr{% endif %}</td></tr>
-	        <tr><th>Vorname:</th><td>{{ data.first_name }}</td></tr>
-	        <tr><th>Nachname:</th><td>{{ data.last_name }}</td></tr>
-	        <tr><th>E-Mail:</th><td>{{ data.email }}</td></tr>
-	        {{ form.as_table }}
-	    </table>
+    <p><label>Anrede</label> {% if data.gender == 'w' %}Frau{% else %}Herr{% endif %}</p>
+	  <p><label>Vorname</label> {{ data.first_name }}</p>
+    <p><label>Nachname</label> {{ data.last_name }}</p>
+    <p><label>E-Mail</label> {{ data.email }}</p>
+	        {{ form.as_p }}
 	    <input type="submit" value="Registrieren" />
 	</form>
 

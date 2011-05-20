@@ -4,10 +4,11 @@
 {% block content %}
 
 <div id="wrapper">
-	
+<h1>Ethik Kommission Wien</h1>
+  <div class="form_public">
 	<p>Sie haben Ihre E-Mailadresse {{ existing_user.email }} bereits registriert.</p>
 	<p><a href="{% url ecs.users.views.login %}">Zum Login ..</a></p>
 	<p>Sollten sie Ihr Passwort vergessen haben, können Sie <a href="{% url ecs.users.views.request_password_reset %}">ein neues Passwort vergeben</a>.</p>
-
+  </div>
 </div>
 {% endblock %}
