@@ -72,9 +72,10 @@ def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
         ChecklistReview, ExternalChecklistReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
-    from ecs.core.workflow import (is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review,
-        needs_insurance_review, needs_gcp_review, needs_boardmember_review)
+    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_recommendation, has_accepted_recommendation,
+        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review)
     
+    thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
@@ -106,8 +107,6 @@ def submission_workflow():
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
             'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
-            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
-            'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
@@ -115,12 +114,17 @@ def submission_workflow():
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
-            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
             'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP, name=_("Vote Recommendation Review")),
+
+            # retrospective thesis lane
+            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
+            'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_checklist_review': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Checklist Review"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
-            ('start', 'initial_thesis_review'): Args(guard=is_thesis),
+            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
@@ -135,7 +139,11 @@ def submission_workflow():
             ('b2_resubmission_review', 'b2_vote_review'): None,
             ('b2_vote_review', 'resubmission'): Args(guard=has_b2vote),
 
-            ('thesis_categorization_review', 'thesis_vote_recommendation'): None,
+            ('thesis_categorization_review', 'thesis_checklist_review'): Args(guard=is_retrospective_thesis),
+            ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
+
+            # TODO: remove this
+            ('thesis_checklist_review', 'thesis_vote_recommendation'): None,
 
             ('thesis_vote_recommendation', 'vote_recommendation_review'): Args(guard=has_recommendation),
             ('thesis_vote_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),

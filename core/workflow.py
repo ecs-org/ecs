@@ -20,17 +20,20 @@ register(Vote)
 @guard(model=Submission)
 def is_acknowledged(wf):
     return wf.data.current_submission_form.acknowledged
-    
 
 @guard(model=Submission)
-def is_thesis(wf):
-    if wf.data.thesis is None:
-        return wf.data.current_submission_form.project_type_education_context is not None
-    return wf.data.thesis
+def is_retrospective_thesis(wf):
+    # information provided by the presenter
+    retrospective = bool(wf.data.current_submission_form.project_type_retrospective)
+    thesis = wf.data.current_submission_form.project_type_education_context is not None
 
-@guard(model=Submission)
-def is_expedited(wf):
-    return wf.data.expedited is True
+    # information provided by the categorization review
+    if not wf.data.retrospective is None:
+        retrospective = bool(wf.data.retrospective)
+    if not wf.data.thesis is None:
+        thesis = bool(wf.data.thesis)
+
+    return retrospective and thesis
 
 @guard(model=Submission)
 def has_b2vote(wf):
@@ -85,7 +88,7 @@ def needs_gcp_review(wf):
 
 @guard(model=Submission)
 def needs_boardmember_review(wf):
-    return is_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
+    return is_retrospective_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
 
 class InitialReview(Activity):
     class Meta:

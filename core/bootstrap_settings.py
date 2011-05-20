@@ -373,13 +373,16 @@ commissions = [{
 
 
 checklist_questions = {
+    u'thesis_review': [
+        (u' 1. 42?', u'')
+    ],
     u'statistic_review': [
-        (u'1. Ist das Studienziel ausreichend definiert?',u''),
-        (u'2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',u''),
-        (u'3. Ist die Studienpopulation ausreichend definiert?',u''),
-        (u'4. Sind die Zielvariablen geeignet definiert?',u''),
-        (u'5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',u''),
-        (u'6. Ist die Größe der Stichprobe ausreichend begründet?',u''),
+        (u' 1. Ist das Studienziel ausreichend definiert?',u''),
+        (u' 2. Ist das Design der Studie geeignet, das Studienziel zu erreichen?',u''),
+        (u' 3. Ist die Studienpopulation ausreichend definiert?',u''),
+        (u' 4. Sind die Zielvariablen geeignet definiert?',u''),
+        (u' 5. Ist die statistische Analyse beschrieben, und ist sie adäquat?',u''),
+        (u' 6. Ist die Größe der Stichprobe ausreichend begründet?',u''),
     ],
     u'legal_review': [
         (u" 1. Anrede: entspricht?",u''),
