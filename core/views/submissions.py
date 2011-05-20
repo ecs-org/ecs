@@ -229,7 +229,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         complete_task = request.POST.get('complete_task') == 'complete_task'
         really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
         if form.is_valid():
-            for i, question in enumerate(blueprint.questions.order_by('text')):
+            questions = []
+            for question in blueprint.questions.all():
+                m = re.match(r'(\d+)(\w*)', question.number)
+                questions.append(('{0:03}{1}'.format(int(m.group(1)), m.group(2)), question,))
+
+            for i, question in sorted(questions, key=lambda x: x[0]):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
                 answer.answer = form.cleaned_data['q%s' % i]
                 answer.comment = form.cleaned_data['c%s' % i]
