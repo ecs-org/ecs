@@ -31,7 +31,7 @@
   display:none !important;
 }
 .wrapper {
-  margin: 100px auto;
+  margin: 100px auto 0;
   width: 300px;
   text-align: left;
 }
@@ -66,6 +66,7 @@
 	font-weight: bolder;
   display: block;
   margin-bottom: 2px;
+  clear: both;
 }
 .login_screen input {
   padding: 5px;
@@ -84,6 +85,12 @@
 .pw_reg {
   margin: 5px 0 0 10px;
   font-size: 12px;
+}
+#content ul {
+  margin: 0;
+}
+.errorlist li {
+  margin-bottom: 5px;
 }
 
 #browser_warning{

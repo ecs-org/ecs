@@ -75,6 +75,7 @@
   font-weight: bolder;
   display: block;
   margin-bottom: 2px;
+  clear: both;
 }
 .form_public input {
   display: block;
