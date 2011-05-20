@@ -1,12 +1,23 @@
-{% extends 'public.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
 
 {% block content %}
 <div id="header_public">
-  <a href="/"><h1>Ethik Kommission Wien</h1></a>
+  <a href="/"><img src="/static/images/logo.png" /></a>
 </div>
 
-<div class="submission_list">
+<div class="catalogue_list">
 	
 	<h2>{% trans "Catalog of Approved Studies" %}</h2>
 	
@@ -23,6 +34,18 @@
 	    </ul>
 	
 	{% endfor %}
+  
+  <ul>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+    <li><a href="dies ist ein link">dies ist ein link</a></li>
+  </ul>
 
 </div>
 {% endblock %}

@@ -1,5 +1,7 @@
 /* public */
 
+/* reset base.css classes */
+
 * html body {
 	margin: 0;
 	padding: 0;
@@ -11,14 +13,17 @@
   position: absolute;
   right: 0 !important;
   top: 0 !important;
-  overflow: hidden;
+  overflow: auto;
   height: 100% !important;
   width: 100% !important;
 }
 .innerwrap {
-	margin: 0;
   background: none;
   border: none;
+  margin: 100px auto 0;
+  min-width: 340px;
+  width: 340px;
+  text-align: left;
 }
 #sidebar {
   position: relative;
@@ -31,34 +36,15 @@
 #toggle_sidebar_button {
   display:none !important;
 }
-#header_public {
-  position: absolute;
-  top: 25px;
-  left: 0;
-	height: 70px;
-	width: 100%;
-	border-bottom: 1px solid #999;
+
+/* login and register forms */
+
+.innerwrap img,
+.innerwrap a img {
+  border: none;
+  margin-left: 10px;
 }
-#header_public h1 {
-  float: left;
-  background: #fff url(../images/logo.png) 20px 10px no-repeat;
-  width: 250px;
-  height: 70px;
-  text-indent: -9999px;
-}
-#wrapper {
-  margin: 100px auto 0;
-  width: 340px;
-  text-align: left;
-}
-#wrapper h1, #content h1 {
-  background: url(../images/logo.png) no-repeat;
-  width: 200px;
-  height: 48px;
-  margin: 0 0 10px 10px;
-  text-indent: -9999px;
-}
-.form_public {
+#content .innerwrap form {
   padding: 20px 20px 50px;
   background: #D8E6EF;
   border: 1px solid #b7d4e5;
@@ -66,24 +52,24 @@
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
 }
-#content .form_public p {
+#content .innerwrap p {
   display: block;
   margin-bottom: 5px;
 }
-.form_public label {
+.innerwrap label {
   font-size: 14px;
   font-weight: bolder;
   display: block;
   margin-bottom: 2px;
   clear: both;
 }
-.form_public input {
+.innerwrap input {
   display: block;
   padding: 5px;
   font-size: 14px;
   width: 286px;
 }
-.form_public input[type=submit] {
+.innerwrap input[type=submit] {
 	display: block;
 	width: 100%;
   margin: 5px 0;
@@ -97,12 +83,34 @@
   float: none;
 }
 #content h2 {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 #id_gender {
   width: 100px;
 }
-.submission_list {
+.pw_reg {
+  margin: 5px 0 0 10px;
+  font-size: 12px;
+}
+
+/* catalogue list */
+
+#header_public {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  height: 70px;
+  width: 100%;
+  border-bottom: 1px solid #999;
+}
+#content .catalogue_list {
+  position: absolute;
+  top: 120px;
+  left: 86px;
+  min-width: 700px;
   float: left;
-  margin: 100px 0 20px 70px;
+}
+.catalogue_list li {
+  margin-bottom: 3px;
+  font-size: 14px;
 }
