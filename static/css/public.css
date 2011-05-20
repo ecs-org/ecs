@@ -95,6 +95,9 @@
   margin: 5px 0 0 10px;
   font-size: 12px;
 }
+#browser_warning {
+  margin: 10px;
+}
 
 /* catalogue list */
 
