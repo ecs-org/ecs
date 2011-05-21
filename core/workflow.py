@@ -65,13 +65,8 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def has_recommendation(wf):
-    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_recommendation', question__number='1')
     return bool(answer.answer)
-
-
-@guard(model=Submission)
-def has_accepted_recommendation(wf):
-    return False # FIXME: missing feature (FMD3)
 
 @guard(model=Submission)
 def needs_external_review(wf):
@@ -141,7 +136,7 @@ class B2VoteReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.b2_vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
-class CategorizationReview(Activity):
+class _CategorizationReviewBase(Activity):
     class Meta:
         model = Submission
         
@@ -151,6 +146,10 @@ class CategorizationReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
+class CategorizationReview(_CategorizationReviewBase):
+    class Meta:
+        model = Submission
+
     def pre_perform(self, choice):
         s = self.workflow.data
         if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0:
@@ -158,6 +157,17 @@ class CategorizationReview(Activity):
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
+        if s.external_reviewer:
+            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
+        for add_rev in s.additional_reviewers.all():
+            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
+
+class ThesisCategorizationReview(_CategorizationReviewBase):
+    class Meta:
+        model = Submission
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
         if s.external_reviewer:
             send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
         for add_rev in s.additional_reviewers.all():
@@ -225,13 +235,26 @@ def external_review_declined(sender, **kwargs):
 task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
-# remove the following activity when there is no system where it is referenced in the database
-class ExternalReviewInvitation(Activity):
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
+class ThesisRecommendationReview(ChecklistReview):
     class Meta:
         model = Submission
-        
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
+        vary_on = ChecklistBlueprint
+
+    def is_reentrant(self):
+        return True
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
+        if has_recommendation(self.workflow) and s.timetable_entries.count() == 0:
+            # schedule submission for the next schedulable meeting
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meetings.retrospective_thesis_submissions.add(s)
+
+def unlock_vote_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ThesisRecommendationChecklistReview)
+post_save.connect(unlock_vote_recommendation_review, sender=Checklist)
+
 
 @guard(model=Submission)
 def needs_external_review(wf):
@@ -269,14 +292,6 @@ class AdditionalChecklistReview(ChecklistReview):
 def unlock_additional_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(AdditionalChecklistReview)
 post_save.connect(unlock_additional_review, sender=Checklist)
-
-
-class VoteRecommendationReview(Activity):
-    class Meta:
-        model = Submission
-        
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
 
 class VoteFinalization(Activity):
     class Meta:

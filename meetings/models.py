@@ -144,6 +144,8 @@ class Meeting(models.Model):
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
 
+    retrospective_thesis_submissions = models.ManyToManyField('core.Submission', related_name='retrospective_thesis_meetings')
+
     objects = MeetingManager()
     
     def __unicode__(self):
