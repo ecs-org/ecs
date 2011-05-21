@@ -2,11 +2,8 @@
 import datetime
 
 from django import forms
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.conf import settings
 
-from ecs.core.models import Investigator
 from ecs.utils.timedelta import parse_timedelta
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")

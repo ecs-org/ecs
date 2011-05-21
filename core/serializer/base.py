@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import zipfile, os, datetime
-from StringIO import StringIO
 from uuid import uuid4
-from urllib2 import urlopen
 
 from django.utils import simplejson
 from django.db import models

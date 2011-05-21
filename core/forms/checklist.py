@@ -4,7 +4,6 @@ from django import forms
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
-from ecs.core.models import ChecklistBlueprint, Checklist, ChecklistAnswer, ChecklistQuestion
 from ecs.core.forms.utils import ReadonlyFormMixin
 
 def make_checklist_form(checklist):

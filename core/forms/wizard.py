@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import new
-
 from django.utils.translation import ugettext as _
 from django import forms
 from django.core.urlresolvers import reverse

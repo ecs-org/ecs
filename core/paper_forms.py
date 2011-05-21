@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.utils.functional import memoize
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator, InvestigatorEmployee
 from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document
-from django.utils.translation import ugettext_lazy as _
 
 _form_info = {}
 

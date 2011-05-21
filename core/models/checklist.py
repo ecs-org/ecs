@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib.contenttypes.generic import GenericForeignKey
-from django.utils.translation import ugettext_lazy as _
 
-from ecs.core.models.submissions import Submission
 from ecs.authorization import AuthorizationManager
 
 class ChecklistBlueprint(models.Model):

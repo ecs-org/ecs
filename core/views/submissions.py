@@ -5,33 +5,25 @@ import re
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.core.files import File
-from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from django.contrib import messages
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-from ecs.documents.models import Document, DocumentType
-from ecs.utils.viewutils import render, redirect_to_next_url, pdf_response
-from ecs.utils.decorators import developer
-from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
-from ecs.meetings.models import Meeting
+from ecs.documents.models import Document
+from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Checklist, ChecklistAnswer
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
-    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, \
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
     SubmissionImportForm, SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
+from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
 
-from ecs.core import paper_forms
-from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -506,7 +498,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
     try:
         submissions = paginator.page(int(filterform.cleaned_data['page']))
-    except EmptyPage, InvalidPage:
+    except (EmptyPage, InvalidPage):
         submissions = paginator.page(1)
         filterform.cleaned_data['page'] = 1
         filterform = filter_form(filterform.cleaned_data)

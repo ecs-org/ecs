@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
-from django.forms.models import modelformset_factory
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
