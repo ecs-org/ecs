@@ -65,7 +65,7 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def has_recommendation(wf):
-    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_recommendation', question__number='1')
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
     return bool(answer.answer)
 
 @guard(model=Submission)
@@ -249,10 +249,10 @@ class ThesisRecommendationReview(ChecklistReview):
         if has_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
-            meetings.retrospective_thesis_submissions.add(s)
+            meeting.retrospective_thesis_submissions.add(s)
 
 def unlock_vote_recommendation_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ThesisRecommendationChecklistReview)
+    kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
 post_save.connect(unlock_vote_recommendation_review, sender=Checklist)
 
 
