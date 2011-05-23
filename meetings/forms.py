@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
+from ecs.core.models import Submission
 
 from ecs.utils.formutils import TranslatedModelForm
 
@@ -99,4 +100,21 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         if commit:
             obj.save()
         return obj
-        
+
+class _SubmissionMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def __init__(self, *args, **kwargs):
+        super(_SubmissionMultipleChoiceField, self).__init__(Submission.objects, *args, **kwargs)
+
+    def label_from_instance(self, obj):
+        return '{0} {1}'.format(obj.get_ec_number_display(), obj.project_title_display())
+
+class RetrospectiveThesisVoteForm(forms.Form):
+    submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple, label=_('Retrospective Thesis Submissions'))
+
+    def __init__(self, *args, **kwargs):
+        from ecs.core.models import Vote
+        from ecs.core.models.voting import FINAL_VOTE_RESULTS
+        meeting = kwargs.pop('meeting')
+        super(RetrospectiveThesisVoteForm, self).__init__(*args, **kwargs)
+        self.fields['submissions'].queryset = meeting.retrospective_thesis_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
+

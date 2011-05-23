@@ -7,17 +7,21 @@
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
             {% if not meeting.started %}
-            <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
+                <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
                     <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
                 <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
+                {% if not meeting.ended and meeting.retrospective_thesis_submissions.count %}
+                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis meeting_pk=meeting.pk %}">{% trans 'Retrospective Thesis' %}</a></div>
+                {% endif %}
             {% endif %}
             <ol class="info">
                 <li>TOPs: {{ meeting|length }}</li>
                 <li>Offene TOPs: {{ open_top_count }}</li>
                 <li>Offene TOPs mit Votum: {{ meeting.open_tops_with_vote.count }}</li>
+                <li>Diplomarbeiten: {{ meeting.retrospective_thesis_submissions.count }}</li>
                 <li>&nbsp;</li>
                 <li>
                     {% if meeting.started %}
