@@ -7,7 +7,7 @@
 
 {% block htmlcss %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/login.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
 {% endblock %}
 
 
@@ -19,17 +19,16 @@
 
 {% block content %} <!-- usertoolbar -->
 
-<div class="wrapper">
-    <h1></h1> <!-- h1 displays the ec logo in case login.css is used -->
+    <img src="/static/images/logo.png" />
     <div id="browser_warning" style="display:none">
         <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser; 
         Zur korrekten Darstellung brauchen sie <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>; 
         Klicken Sie <a href="http://www.mozilla-europe.org/de/firefox/">hier</a> um eine aktuelle Version zu installieren
     </div>
-    <div id="public_area">
+    <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
     </div>
-    <div class="login_screen">
+    <div class="form_public">
       <form method="post" action="">
         {% csrf_token %}
         <p>{{ form.username.label_tag }}{{ form.username }}</p>
@@ -45,7 +44,7 @@
     <div class="pw_reg">
       <a href="{% url ecs.users.views.register %}">Registrieren</a> | <a href="{% url ecs.users.views.request_password_reset %}">Passwort vergessen</a>
     </div>
-</div>
+
 {% endblock %}
 
 {% block jsbottom %}

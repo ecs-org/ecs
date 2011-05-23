@@ -3,14 +3,9 @@
 
 {% block content %}
 
-<div id="wrapper">
-  <h1>Ethik Kommission Wien</h1>
-  <div class="form_public">
 	<h2>Passwort zurücksetzen fehlgeschlagen</h2>
 	<p>Die Gültigkeitsdauer Ihres Passwort Rücksetzungs-Link ist abgelaufen.</p>
     <p>Beachten Sie, dass der Link innerhalb von einer Stunde verwendet werden muß.</p>
-    <p><a href="{% url ecs.users.request_password_reset %}">Beantragen Sie dieses Service erneut</a> wenn Sie ihr Passwort zurücksetzen wollen.</p> 
-  </div>
-</div>
+    <p><a href="{% url ecs.users.request_password_reset %}">Beantragen Sie dieses Service erneut</a> wenn Sie ihr Passwort zurücksetzen wollen.</p>
 
 {% endblock %}
