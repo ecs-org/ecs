@@ -1,9 +1,6 @@
-import sys
-from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
 from ecs.core.models import Submission, SubmissionForm
-from ecs.core.serializer import Serializer
 from ecs.core import paper_forms
 from ecs.utils.viewutils import render_pdf_context
 

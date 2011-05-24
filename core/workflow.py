@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
-from ecs.core.models import Submission, ChecklistBlueprint, Checklist, Vote
+from ecs.core.models import Submission, ChecklistBlueprint, Checklist, ChecklistAnswer, Vote
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
@@ -20,17 +20,20 @@ register(Vote)
 @guard(model=Submission)
 def is_acknowledged(wf):
     return wf.data.current_submission_form.acknowledged
-    
 
 @guard(model=Submission)
-def is_thesis(wf):
-    if wf.data.thesis is None:
-        return wf.data.current_submission_form.project_type_education_context is not None
-    return wf.data.thesis
+def is_retrospective_thesis(wf):
+    # information provided by the presenter
+    retrospective = bool(wf.data.current_submission_form.project_type_retrospective)
+    thesis = wf.data.current_submission_form.project_type_education_context is not None
 
-@guard(model=Submission)
-def is_expedited(wf):
-    return wf.data.expedited is True
+    # information provided by the categorization review
+    if not wf.data.retrospective is None:
+        retrospective = bool(wf.data.retrospective)
+    if not wf.data.thesis is None:
+        thesis = bool(wf.data.thesis)
+
+    return retrospective and thesis
 
 @guard(model=Submission)
 def has_b2vote(wf):
@@ -57,17 +60,17 @@ def is_b2upgrade(wf):
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return bool(wf.data.expedited)
-    
+    return wf.data.expedited and wf.data.expedited_review_categories.count()
 
 @guard(model=Submission)
-def has_recommendation(wf):
-    return False # FIXME: missing feature (FMD3)
-
+def has_expedited_recommendation(wf):
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='expedited_review', question__number='1')
+    return bool(answer.answer)
 
 @guard(model=Submission)
-def has_accepted_recommendation(wf):
-    return False # FIXME: missing feature (FMD3)
+def has_thesis_recommendation(wf):
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
+    return bool(answer.answer)
 
 @guard(model=Submission)
 def needs_external_review(wf):
@@ -85,7 +88,7 @@ def needs_gcp_review(wf):
 
 @guard(model=Submission)
 def needs_boardmember_review(wf):
-    return is_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
+    return is_retrospective_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
 
 class InitialReview(Activity):
     class Meta:
@@ -137,7 +140,7 @@ class B2VoteReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.b2_vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
-class CategorizationReview(Activity):
+class _CategorizationReviewBase(Activity):
     class Meta:
         model = Submission
         
@@ -147,13 +150,28 @@ class CategorizationReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
+class CategorizationReview(_CategorizationReviewBase):
+    class Meta:
+        model = Submission
+
     def pre_perform(self, choice):
         s = self.workflow.data
-        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0:
+        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_expedited(self.workflow):
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
+        if s.external_reviewer:
+            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
+        for add_rev in s.additional_reviewers.all():
+            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
+
+class ThesisCategorizationReview(_CategorizationReviewBase):
+    class Meta:
+        model = Submission
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
         if s.external_reviewer:
             send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
         for add_rev in s.additional_reviewers.all():
@@ -221,13 +239,58 @@ def external_review_declined(sender, **kwargs):
 task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
-# remove the following activity when there is no system where it is referenced in the database
-class ExternalReviewInvitation(Activity):
+# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
+class ThesisRecommendationReview(ChecklistReview):
     class Meta:
         model = Submission
-        
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
+        vary_on = ChecklistBlueprint
+
+    def is_reentrant(self):
+        return True
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
+        if has_thesis_recommendation(self.workflow) and s.timetable_entries.count() == 0:
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.retrospective_thesis_submissions.add(s)
+
+def unlock_thesis_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
+post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
+
+class ExpeditedRecommendation(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+
+    def receive_token(self, *args, **kwargs):
+        token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
+        for cat in self.workflow.data.expedited_review_categories.all():
+            token.task.expedited_review_categories.add(cat)
+        return token
+
+def unlock_expedited_recommendation(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendation)
+post_save.connect(unlock_expedited_recommendation, sender=Checklist)
+
+class ExpeditedRecommendationReview(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+
+    def is_reentrant(self):
+        return True
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
+        if has_expedited_recommendation(self.workflow) and s.timetable_entries.count() == 0:
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.expedited_submissions.add(s)
+
+def unlock_expedited_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
+post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
+
 
 @guard(model=Submission)
 def needs_external_review(wf):
@@ -265,22 +328,6 @@ class AdditionalChecklistReview(ChecklistReview):
 def unlock_additional_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(AdditionalChecklistReview)
 post_save.connect(unlock_additional_review, sender=Checklist)
-
-
-class VoteRecommendation(Activity):
-    class Meta:
-        model = Submission
-
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
-
-
-class VoteRecommendationReview(Activity):
-    class Meta:
-        model = Submission
-        
-    def get_url(self):
-        return None # FIXME: missing feature (FMD3)
 
 class VoteFinalization(Activity):
     class Meta:

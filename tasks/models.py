@@ -82,6 +82,8 @@ class Task(models.Model):
     deleted_at = models.DateTimeField(null=True)
     
     accepted = models.BooleanField(default=False)
+
+    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory')
     
     objects = TaskManager()
 

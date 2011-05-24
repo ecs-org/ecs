@@ -8,14 +8,12 @@ from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.db import models
 from django.http import HttpRequest
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter, InvestigatorEmployee
-from ecs.documents.models import Document, DocumentType
+from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
-from ecs.audit.models import AuditTrail
 from ecs.core import paper_forms
 from ecs.utils.countries.models import Country
 

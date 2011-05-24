@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.contrib.contenttypes.generic import GenericForeignKey
-from django.utils.translation import ugettext_lazy as _
 
-from ecs.core.models.submissions import Submission
 from ecs.authorization import AuthorizationManager
 
 class ChecklistBlueprint(models.Model):
@@ -20,12 +17,14 @@ class ChecklistBlueprint(models.Model):
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
+    number = models.CharField(max_length=5) 
     text = models.CharField(max_length=200) 
     description = models.CharField(max_length=400, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         app_label = 'core'
+        unique_together = (('blueprint', 'number'),)
 
     def __unicode__(self):
         return u"%s: '%s'" % (self.blueprint, self.text)

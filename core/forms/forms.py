@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from django.contrib.auth.models import User
-from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
 from django.forms.formsets import BaseFormSet, formset_factory
-from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
@@ -11,7 +8,6 @@ from django.db.models import F
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
-from ecs.core.models import MedicalCategory
 
 from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin

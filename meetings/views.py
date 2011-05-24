@@ -21,7 +21,7 @@ from ecs.documents.models import Document
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm)
+    SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
 
 from ecs.ecsmail.mail import deliver
 from ecs.ecsmail.persil import whitewash
@@ -271,6 +271,23 @@ def meeting_assistant_comments(request, meeting_pk=None):
             return HttpResponse('OK')
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/assistant/comments.html', {
+        'meeting': meeting,
+        'form': form,
+    })
+
+def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
+    from ecs.core.models.voting import FINAL_VOTE_RESULTS
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
+    form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
+    if form.is_valid():
+        for submission in form.cleaned_data['retrospective_thesis_submissions']:
+            Vote.objects.create(submission_form=submission.current_submission_form, result='1')
+        for submission in form.cleaned_data['expedited_submissions']:
+            Vote.objects.create(submission_form=submission.current_submission_form, result='1')
+
+    return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
+        'retrospective_thesis_submissions': meeting.retrospective_thesis_submissions.filter(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number'),
+        'expedited_submissions': meeting.expedited_submissions.filter(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number'),
         'meeting': meeting,
         'form': form,
     })

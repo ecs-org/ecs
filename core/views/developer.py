@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404
-from django.template import Context, RequestContext, loader, Template
+from django.template import Context, loader
 from django.http import HttpResponse
 
 from ecs.core.models import Submission
-from ecs.core.serializer import Serializer
 from ecs.core import paper_forms
 from ecs.utils.viewutils import render, render_pdf_context, pdf_response
 from ecs.core import bootstrap

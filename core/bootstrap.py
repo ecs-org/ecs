@@ -1,22 +1,15 @@
 # -*- coding: utf-8 -*-
-import os, random
+import os
 from datetime import datetime
 from copy import deepcopy
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.management.base import CommandError
-from django.contrib.auth.models import Group, User, Permission
+from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
-from django.contrib.contenttypes.models import ContentType
-from django.core.files import File
 
 from ecs import bootstrap
-from ecs.core.models import (ExpeditedReviewCategory, Submission, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion,
-    Investigator, SubmissionForm, Checklist, ChecklistAnswer)
-from ecs.utils.countries.models import Country
+from ecs.core.models import ExpeditedReviewCategory, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion
 from ecs.utils import Args
-from ecs.users.utils import sudo
-from ecs.documents.models import Document, DocumentType
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
@@ -70,11 +63,14 @@ def templates():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
     from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit, AdditionalChecklistReview,
-        ChecklistReview, ExternalChecklistReview, VoteRecommendation, VoteRecommendationReview, B2VoteReview)
-    from ecs.core.workflow import (is_acknowledged, is_thesis, is_expedited, has_recommendation, has_accepted_recommendation, has_b2vote, needs_external_review,
-        needs_insurance_review, needs_gcp_review, needs_boardmember_review)
+    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
+        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
+        ExpeditedRecommendation, ExpeditedRecommendationReview)
+    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
+        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation)
     
+    thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
+    expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
@@ -85,6 +81,7 @@ def submission_workflow():
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
+    EXPEDITED_REVIEW_GROUP = 'Expedited Review Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
@@ -106,8 +103,6 @@ def submission_workflow():
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
             'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
-            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
-            'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
@@ -115,35 +110,46 @@ def submission_workflow():
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
-            'thesis_vote_recommendation': Args(VoteRecommendation, group=THESIS_EXECUTIVE_GROUP, name=_("Vote Recommendation")),
-            'vote_recommendation_review': Args(VoteRecommendationReview, group=EXECUTIVE_GROUP, name=_("Vote Recommendation Review")),
+
+            # retrospective thesis lane
+            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
+            'thesis_categorization_review': Args(ThesisCategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Paper Submission Review")),
+            'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
+
+            #expedited_lane
+            'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
+            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
-            ('start', 'initial_thesis_review'): Args(guard=is_thesis),
-
+            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True), 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
             ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged),
-
-            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
-            ('initial_thesis_review', 'paper_submission_review'): Args(guard=is_acknowledged),
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
             ('b2_resubmission_review', 'b2_vote_review'): None,
             ('b2_vote_review', 'resubmission'): Args(guard=has_b2vote),
 
-            ('thesis_categorization_review', 'thesis_vote_recommendation'): None,
+            # retrospective thesis lane
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
+            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
+            ('thesis_categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
+            ('thesis_categorization_review', 'thesis_paper_submission_review'): Args(guard=is_retrospective_thesis),
+            ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
+            ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
+            ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
+            ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
 
-            ('thesis_vote_recommendation', 'vote_recommendation_review'): Args(guard=has_recommendation),
-            ('thesis_vote_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),
+            # expedited lane
+            ('categorization_review', 'expedited_recommendation'): Args(guard=is_expedited),
+            ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
+            ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
+            ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
 
-            #('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
-            ('vote_recommendation_review', 'categorization_review'): Args(guard=has_accepted_recommendation, negated=True),
-
-            #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
             ('categorization_review', 'external_review'): Args(guard=needs_external_review),
             ('categorization_review', 'additional_review_split'): None,
@@ -220,6 +226,7 @@ def auth_groups():
         u'EC-Insurance Reviewer',
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
+        u'Expedited Review Group',
         u'EC-Board Member',
         u'External Reviewer',
         u'GCP Review Group',
@@ -395,6 +402,12 @@ def auth_user_testusers():
          ('b.member6.paed', ('Päd',)), 
     )
 
+    expeditedtestusers = (
+         ('expedited.klph', ('KlPh',)),
+         ('expedited.stats', ('Stats',)),
+         ('expedited.labor', ('Labor',)),
+         ('expedited.recht', ('Recht',)),
+    )
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
@@ -429,11 +442,21 @@ def auth_user_testusers():
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
-            try:
-                e= ExpeditedReviewCategory.objects.get(abbrev=medcategory)
-                e.users.add(user)
-            except ObjectDoesNotExist:
-                pass
+
+    for testuser, expcategories in expeditedtestusers:
+        user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
+        user.groups.add(Group.objects.get(name='Expedited Review Group'))
+        user.groups.add(Group.objects.get(name="userswitcher_target"))
+
+        profile = user.get_profile()
+        profile.expedited_review = True
+        profile.approved_by_office = True
+        profile.start_workflow = True
+        profile.save()
+
+        for expcategory in expcategories:
+            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
+            e.users.add(user)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():
@@ -462,5 +485,8 @@ def auth_ec_staff_users():
 
     for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for qdtup in checklist_questions[slug]:
-            cq, created = ChecklistQuestion.objects.get_or_create(text=qdtup[0], blueprint=blueprint, description=qdtup[1])
+        for number, text, description in checklist_questions[slug]:
+            cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
+            cq.text = text
+            cq.description = description
+            cq.save()

@@ -5,33 +5,25 @@ import re
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
-from django.core.files import File
-from django.template import Context, loader
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from django.contrib import messages
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
-from ecs.documents.models import Document, DocumentType
-from ecs.utils.viewutils import render, redirect_to_next_url, pdf_response
-from ecs.utils.decorators import developer
-from ecs.core.models import Submission, SubmissionForm, Investigator, ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer
-from ecs.meetings.models import Meeting
+from ecs.documents.models import Document
+from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Checklist, ChecklistAnswer
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
-    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, SubmissionEditorForm, \
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
     SubmissionImportForm, SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
-from ecs.core.forms.review import RetrospectiveThesisReviewForm, CategorizationReviewForm, BefangeneReviewForm
+from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
 
-from ecs.core import paper_forms
-from ecs.core import signals
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -208,8 +200,8 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
 
-    from ecs.core.workflow import ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview
-    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview), submission_form.submission, data=blueprint):
+    from ecs.core.workflow import ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview
+    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview), submission_form.submission, data=blueprint):
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
@@ -229,7 +221,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         complete_task = request.POST.get('complete_task') == 'complete_task'
         really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
         if form.is_valid():
-            for i, question in enumerate(blueprint.questions.order_by('text')):
+            questions = []
+            for question in blueprint.questions.all():
+                m = re.match(r'(\d+)(\w*)', question.number)
+                questions.append(('{0:03}{1}'.format(int(m.group(1)), m.group(2)), question,))
+
+            for i, question in sorted(questions, key=lambda x: x[0]):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
                 answer.answer = form.cleaned_data['q%s' % i]
                 answer.comment = form.cleaned_data['c%s' % i]
@@ -501,7 +498,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
     try:
         submissions = paginator.page(int(filterform.cleaned_data['page']))
-    except EmptyPage, InvalidPage:
+    except (EmptyPage, InvalidPage):
         submissions = paginator.page(1)
         filterform.cleaned_data['page'] = 1
         filterform = filter_form(filterform.cleaned_data)
