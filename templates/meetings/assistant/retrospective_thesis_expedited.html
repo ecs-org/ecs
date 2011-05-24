@@ -1,0 +1,34 @@
+{% extends 'meetings/assistant/base.html' %}
+{% load core i18n %}
+
+{% block meeting_assistant_body %}
+    <form action="" method="post">
+        <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
+        <h4>{% trans "Approved" %}</h4>
+        <ul>
+        {% for submission in retrospective_thesis_submissions %}
+            <li>
+                {{ submission|ec_number }}
+                {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            </li>
+        {% endfor %}
+        </ul>
+        <h4>{% trans "Not Approved" %}</h4>
+        {{ form.retrospective_thesis_submissions }}
+
+        <h3>{% trans "Expedited Submissions" %}</h3>
+        <h4>{% trans "Approved" %}</h4>
+        <ul>
+        {% for submission in expedited_submissions %}
+            <li>
+                {{ submission|ec_number }}
+                {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            </li>
+        {% endfor %}
+        </ul>
+        <h4>{% trans "Not Approved" %}</h4>
+        {{ form.expedited_submissions }}
+
+        <input type="submit" value="{% trans "Approve" %}" />
+    </form>
+{% endblock %}

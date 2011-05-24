@@ -14,7 +14,7 @@
                 {% endif %}
                 <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
                 {% if not meeting.ended and meeting.retrospective_thesis_submissions.count %}
-                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis meeting_pk=meeting.pk %}">{% trans 'Retrospective Thesis' %}</a></div>
+                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}">{% trans 'Expedited' %}</a></div>
                 {% endif %}
             {% endif %}
             <ol class="info">

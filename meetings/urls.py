@@ -30,7 +30,7 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/(?P<top_pk>\d+)/$', 'meeting_assistant_top'),
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/quickjump/$', 'meeting_assistant_quickjump'),
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/comments/$', 'meeting_assistant_comments'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/retrospective_thesis/$', 'meeting_assistant_retrospective_thesis'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/assistant/retrospective_thesis_expedited/$', 'meeting_assistant_retrospective_thesis_expedited'),
 
     url(r'^meeting/(?P<meeting_pk>\d+)/agenda_pdf/$', 'agenda_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable_pdf/$', 'timetable_pdf'),

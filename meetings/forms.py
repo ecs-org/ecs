@@ -108,13 +108,15 @@ class _SubmissionMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return '{0} {1}'.format(obj.get_ec_number_display(), obj.project_title_display())
 
-class RetrospectiveThesisVoteForm(forms.Form):
-    submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple, label=_('Retrospective Thesis Submissions'))
+class RetrospectiveThesisExpeditedVoteForm(forms.Form):
+    retrospective_thesis_submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+    expedited_submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
 
     def __init__(self, *args, **kwargs):
         from ecs.core.models import Vote
         from ecs.core.models.voting import FINAL_VOTE_RESULTS
         meeting = kwargs.pop('meeting')
-        super(RetrospectiveThesisVoteForm, self).__init__(*args, **kwargs)
-        self.fields['submissions'].queryset = meeting.retrospective_thesis_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
+        super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
+        self.fields['retrospective_thesis_submissions'].queryset = meeting.retrospective_thesis_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
+        self.fields['expedited_submissions'].queryset = meeting.expedited_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
 
