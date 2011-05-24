@@ -258,6 +258,21 @@ def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
 post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
 
+class ExpeditedRecommendation(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+
+    def receive_token(self, *args, **kwargs):
+        token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
+        for cat in self.workflow.data.expedited_review_categories.all():
+            token.task.expedited_review_categories.add(cat)
+        return token
+
+def unlock_expedited_recommendation(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendation)
+post_save.connect(unlock_expedited_recommendation, sender=Checklist)
+
 class ExpeditedRecommendationReview(ChecklistReview):
     class Meta:
         model = Submission

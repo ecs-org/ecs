@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
-    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist)
+    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist, ExpeditedReviewCategory)
 from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
@@ -84,6 +84,7 @@ authorization.register(DocStash, factory=DocstashQFactory)
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
         q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query) | self.make_q(created_by=user) | self.make_q(assigned_to=user)
+        q &= ~(self.make_q(expedited_review_categories__gt=0) & ~self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user)))
         return q
 
 authorization.register(Task, factory=TaskQFactory)

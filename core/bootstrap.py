@@ -65,7 +65,7 @@ def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
         AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
-        ExpeditedRecommendationReview)
+        ExpeditedRecommendation, ExpeditedRecommendationReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
         has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation)
     
@@ -119,7 +119,7 @@ def submission_workflow():
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
             #expedited_lane
-            'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
+            'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
             'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
         },
         edges={
