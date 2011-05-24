@@ -426,9 +426,12 @@ li.TypedChoiceField ul > li label{
 .form_main textarea {
   font-size: 12px;
 }
-.form_main ol {
+.form_main ol,
+#content ol {
   display: inline-block;
   width: 100%;
+  margin-bottom: 10px;
+  list-style: none;
 }
 .form_main ol li {
   display: block;
@@ -557,7 +560,8 @@ div.inline_formset .form a.delete_row {
   top: 0px;
   left: 0px;
 }
-.form_main a.add_row, #meeting_constraint_editor a.add_row {
+.form_main a.add_row, 
+#meeting_constraint_editor a.add_row {
   background: url(/static/images/icons.png) -240px -320px no-repeat;
   width: auto;
   height: 16px;
@@ -792,7 +796,7 @@ fieldset.disabled {
   width: 250px;
 }
 .form_main input[type=submit] {
-  margin: 20px 10px 10px 240px;
+  margin: 10px 10px 10px 240px;
 }
 .form_main input[type=submit].hidden {
   display: none;

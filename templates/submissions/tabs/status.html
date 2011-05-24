@@ -153,7 +153,7 @@
         {% blocktrans with task.task_type as task_name and task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}
             {{ assigned_to }} invited at {{ assigned_at }} for {{ task_name }} 
         {% endblocktrans %}
-        <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
+        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
     </li>
 {% empty %}
     <li><i>{% trans "No additional/external review" %}</i></li>

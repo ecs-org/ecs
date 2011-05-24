@@ -12,10 +12,10 @@ Meldungen zur laufenden Studie(n)
 
 {% block content %}
 <h2>{{ notification }} für {% for sf in notification.submission_forms.all %}{{ sf.submission }}{% if not forloop.last %}, {% endif %}{% endfor %} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
-User: {{ notification.user }}
-<a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}">Download PDF</a></li>
+<p>User: {{ notification.user }}</p>
+<a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a></li>
 {% if notification.answer %}
-| <a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}">{% trans "Answer" %}</a>
+<a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
 {% endif %}
 
 {% with notification.submission_forms.all as submission_forms %}
@@ -40,9 +40,9 @@ User: {{ notification.user }}
 </table>
 
 {% if notification.answer %}
-    <a href="{% url ecs.notifications.views.answered_notifications %}">{% trans "Back to answered notifications" %}</a>
+    <a href="{% url ecs.notifications.views.answered_notifications %}" class="button_submit">{% trans "Back to answered notifications" %}</a>
 {% else %}
-    <a href="{% url ecs.notifications.views.open_notifications %}">{% trans "Back to open notifications" %}</a>
+    <a href="{% url ecs.notifications.views.open_notifications %}" class="button_submit">{% trans "Back to open notifications" %}</a>
 {% endif %}
 
 {% endblock %}
