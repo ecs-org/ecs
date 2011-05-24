@@ -36,6 +36,8 @@
 #task_form input[type=submit] {
   position: relative;
   display: block;
+  float: right;
+  margin-right: 10px;
 }
 #task_form .task_indent {
   clear: both;
@@ -45,7 +47,8 @@
   min-height: 30px;
 }
 #task_form .task_indent label {
-  margin-right: 5px;
+  display: block;
+  margin-bottom: 5px;
 }
 #task_form .task_delegate_assign label {
   margin: 3px 5px 0 10px;
@@ -54,12 +57,22 @@
   margin-bottom: 0;
 }
 #task_form .task_indent textarea {
-  height: 150px;
+  display: inline-block;
+  float: left;
+  min-height: 60px;
+  width: 300px;
+  clear: both;
+}
+.task_message .ecs-TextAreaToolbar {
+  clear: both;
 }
 .show_all {
   margin-bottom: 10px;
 }
-.task_complete, .task_reject, .task_delegate, .task_ask {
+.task_complete, 
+.task_reject,
+.task_delegate,
+.task_ask {
   display: inline-block;
   width: 16px;
   height: 16px;

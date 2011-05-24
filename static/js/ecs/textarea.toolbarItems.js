@@ -43,7 +43,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url){
                         }
                         resultList.innerHTML = '';
                         results.each(function(text){
-                            var display = new Element('a', {html: '<b>{slug}</b>: {text}'.substitute(text)})
+                            var display = new Element('a', {html: '<strong>{slug}</strong>: {text}'.substitute(text)})
                             display.addEvent('click', function(){
                                 insert(text.text);
                                 return false;

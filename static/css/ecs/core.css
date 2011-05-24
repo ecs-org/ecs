@@ -107,28 +107,31 @@
   font-size: 12px;
   text-decoration: none;
   background: #f4f4f4;
-  border: 1px solid #999;
+  border: 1px solid #bbb;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
 }
 .header_actions a:active {
   background: #eee;
+  box-shadow: 0 0 6px #ccc;
 }
 .header_actions a:hover {
   text-decoration: none;
+  border: 1px solid #999;
+  box-shadow: 0 0 6px #ccc;
 }
 .header_actions .button_save {
   background: #f4f4f4;
-  border: 1px solid #999;  
+  border: 1px solid #bbb;  
 }
 .header_actions .button_save_change {
   background: #999;
-  border: 1px solid #666;  
+  border: 1px solid #bbb;  
 }
 .header_actions .button_validate {
   background: #f4f4f4;
-  border: 1px solid #999;
+  border: 1px solid #bbb;
 }
 .header_actions .button_validate_valid_error {
   background: #f84205;
@@ -141,6 +144,7 @@
 .header_actions .button_submit {
   background: #54aade;
   border: 1px solid #7bc4f0;
+  color: #fff;
 }
 .header_actions .button_submit_valid {
   background: #84cefb;
@@ -204,7 +208,8 @@
   margin-left: 240px;
 } 
 .readonly .checklist_review_tab textarea {
-  margin-left: 0;
+  clear: both;
+  display: inline-block;
 } 
 .checklist_review_tab input {
   display: none;
@@ -754,6 +759,10 @@ fieldset.disabled {
 }
 .textboxlist-autocomplete ul {
   margin: 0 !important;
+}
+.ecs-TextAreaToolbar {
+  display: inline-block;
+  float: left;
 }
 .ecs-TextAreaToolbar a {
 	margin-right: 10px;

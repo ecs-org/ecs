@@ -1,10 +1,16 @@
+#boilerplate textarea {
+  width: 400px;
+}
+#boilerplate input[type=submit] {
+  margin-left: 50px;
+}
 .boilerplate_selector {
   display: none;
   position: absolute;
   width: 300px;
   height: auto;
   left: 240px;
-  background-color: #fff;
+  background: #fff;
   border: 3px solid #B7D4E5;
 }
 .boilerplate_selector a {
@@ -12,13 +18,16 @@
   color: #000;
   max-height: 30px;
   overflow: hidden;
+  padding: 2px;
 }
 .boilerplate_selector a:nth-child(2n) {
-  background-color: #eee;
+  background: #eee;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 .boilerplate_selector a:hover {
   text-decoration: none;
-  background-color: #B7D4E5;
+  background: #B7D4E5;
 }
 .boilerplate_selector .resultlist {
   max-height: 200px;

@@ -11,7 +11,7 @@
 
 {% block content %}
     {% if debug %}
-        <a href="{% url ecs.billing.views.reset_submissions %}">reset</a>
+        <a href="{% url ecs.billing.views.reset_submissions %}" class="button_submit">reset</a>
     {% endif %}
     <form action="" method="post">
     {% for submission in submissions %}
@@ -23,6 +23,6 @@
             <div><span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})</div>
         </div>
     {% endfor %}
-    <input type="submit">
+    <input type="submit" />
     </form>
 {% endblock %}

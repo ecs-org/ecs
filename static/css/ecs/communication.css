@@ -35,7 +35,8 @@
 .message_display #id_subject {
   width: 400px;
 }
-.message_display #id_text, .communication_thread #id_text {
+.message_display #id_text,
+.communication_thread #id_text {
   display: block;
   width: 500px;
   min-height: 180px;
@@ -88,7 +89,8 @@
   display: inline-block;
   margin-bottom: 5px;
 }
-.message_display img, .messages_overview img {
+.message_display img, 
+.messages_overview img {
   vertical-align: middle;
 }
 .message_display select {
@@ -215,5 +217,6 @@ ul.thread {
   float: right;
   margin-top: -15px;
 }
-
-
+.communication_thread input[type=submit] {
+  margin-left: 84px;
+}
