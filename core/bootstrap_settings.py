@@ -457,8 +457,9 @@ checklist_questions = {
         ('3', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
     ],
     u'expedited_review': [
-        ('1', u"Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
-        ('2', u"Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
-        ('3', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
+        ('1', u'Geben Sie eine positive Empfehlung ab?', u''),  # change this number with care
+        ('2', u"Ist das Antragsformular korrekt und vollständig ausgefüllt?",u''),
+        ('3', u"Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
+        ('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
     ],
 }

@@ -60,11 +60,15 @@ def is_b2upgrade(wf):
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return bool(wf.data.expedited)
-    
+    return wf.data.expedited and wf.data.expedited_review_categories.count()
 
 @guard(model=Submission)
-def has_recommendation(wf):
+def has_expedited_recommendation(wf):
+    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='expedited_review', question__number='1')
+    return bool(answer.answer)
+
+@guard(model=Submission)
+def has_thesis_recommendation(wf):
     answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
     return bool(answer.answer)
 
@@ -152,7 +156,7 @@ class CategorizationReview(_CategorizationReviewBase):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0:
+        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_expedited(self.workflow):
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
@@ -246,14 +250,31 @@ class ThesisRecommendationReview(ChecklistReview):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        if has_recommendation(self.workflow) and s.timetable_entries.count() == 0:
-            # schedule submission for the next schedulable meeting
+        if has_thesis_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.retrospective_thesis_submissions.add(s)
 
-def unlock_vote_recommendation_review(sender, **kwargs):
+def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
-post_save.connect(unlock_vote_recommendation_review, sender=Checklist)
+post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
+
+class ExpeditedRecommendationReview(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+
+    def is_reentrant(self):
+        return True
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
+        if has_expedited_recommendation(self.workflow) and s.timetable_entries.count() == 0:
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.expedited_submissions.add(s)
+
+def unlock_expedited_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
+post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
 
 @guard(model=Submission)

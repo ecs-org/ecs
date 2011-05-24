@@ -64,11 +64,13 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
-        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview)
-    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_recommendation,
-        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review)
+        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
+        ExpeditedRecommendationReview)
+    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
+        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
+    expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
@@ -79,6 +81,7 @@ def submission_workflow():
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
+    EXPEDITED_REVIEW_GROUP = 'Expedited Review Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
@@ -114,6 +117,10 @@ def submission_workflow():
             'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Paper Submission Review")),
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
+
+            #expedited_lane
+            'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
+            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True), 
@@ -133,13 +140,16 @@ def submission_workflow():
             ('thesis_categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'thesis_paper_submission_review'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
-            ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_recommendation),
-            ('thesis_recommendation', 'categorization_review'): Args(guard=has_recommendation, negated=True),
+            ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
+            ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
+            ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
 
-            #('vote_recommendation_review', 'END'): Args(guard=has_accepted_recommendation),
-            ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_recommendation, negated=True),
+            # expedited lane
+            ('categorization_review', 'expedited_recommendation'): Args(guard=is_expedited),
+            ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
+            ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
+            ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
 
-            #('categorization_review', 'END'): Args(guard=is_expedited),
             ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
             ('categorization_review', 'external_review'): Args(guard=needs_external_review),
             ('categorization_review', 'additional_review_split'): None,
@@ -216,6 +226,7 @@ def auth_groups():
         u'EC-Insurance Reviewer',
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
+        u'Expedited Review Group',
         u'EC-Board Member',
         u'External Reviewer',
         u'GCP Review Group',
@@ -391,6 +402,12 @@ def auth_user_testusers():
          ('b.member6.paed', ('Päd',)), 
     )
 
+    expeditedtestusers = (
+         ('expedited.klph', ('KlPh',)),
+         ('expedited.stats', ('Stats',)),
+         ('expedited.labor', ('Labor',)),
+         ('expedited.recht', ('Recht',)),
+    )
     
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
@@ -425,11 +442,21 @@ def auth_user_testusers():
         for medcategory in medcategories:
             m= MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
-            try:
-                e= ExpeditedReviewCategory.objects.get(abbrev=medcategory)
-                e.users.add(user)
-            except ObjectDoesNotExist:
-                pass
+
+    for testuser, expcategories in expeditedtestusers:
+        user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
+        user.groups.add(Group.objects.get(name='Expedited Review Group'))
+        user.groups.add(Group.objects.get(name="userswitcher_target"))
+
+        profile = user.get_profile()
+        profile.expedited_review = True
+        profile.approved_by_office = True
+        profile.start_workflow = True
+        profile.save()
+
+        for expcategory in expcategories:
+            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
+            e.users.add(user)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_ec_staff_users():
