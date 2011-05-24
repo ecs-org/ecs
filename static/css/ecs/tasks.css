@@ -37,7 +37,7 @@
   position: relative;
   display: block;
   float: right;
-  margin-right: 10px;
+  margin: 5px 10px;
 }
 #task_form .task_indent {
   clear: both;
@@ -47,8 +47,8 @@
   min-height: 30px;
 }
 #task_form .task_indent label {
-  display: block;
-  margin-bottom: 5px;
+  display: inline-block;
+  margin-right: 5px;
 }
 #task_form .task_delegate_assign label {
   margin: 3px 5px 0 10px;

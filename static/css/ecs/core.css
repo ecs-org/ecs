@@ -114,6 +114,7 @@
 }
 .header_actions a:active {
   background: #eee;
+  color: #333;
   box-shadow: 0 0 6px #ccc;
 }
 .header_actions a:hover {
@@ -805,7 +806,7 @@ fieldset.disabled {
   width: 250px;
 }
 .form_main input[type=submit] {
-  margin: 10px 10px 10px 240px;
+  margin: 10px 10px 10px 250px;
 }
 .form_main input[type=submit].hidden {
   display: none;
@@ -905,10 +906,14 @@ content ol.submission_list h3 .ecnr {
 #content ol.submission_list li {
   padding: 10px;
 }
-content ol.submission_list li .actions {
+#content ol.submission_list li .actions {
   margin-bottom: 5px;
 }
 #content ol.submission_list li .info {
+}
+.submission_data {
+  
+  margin-left: 240px;
 }
 
 
