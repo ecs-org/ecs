@@ -251,7 +251,7 @@ def xhtml2pdf(html, timeoutseconds=30):
         valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
         uri = ''.join(c for c in uri if c in valid_chars)
         path = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf', uri)
-        print "uri, rel, path", uri, rel, path
+        # print "uri, rel, path", uri, rel, path
         return path
 
     import ho.pisa as pisa
@@ -297,24 +297,24 @@ def wkhtml2pdf(html, header_html=None, footer_html=None):
         header_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
         header_html_file.write(header_html)
         header_html_file.close()
-        cmd += ['--header-html', 'file://{0}'.format(header_html_file.name)]
+        cmd += ['--header-html', '{0}'.format(header_html_file.name)]
     if footer_html:
         footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
         footer_html_file.write(footer_html)
         footer_html_file.close()
-        cmd += ['--footer-html', 'file://{0}'.format(footer_html_file.name)]
+        cmd += ['--footer-html', '{0}'.format(footer_html_file.name)]
 
     html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
     html_file.write(html)
     html_file.close()
-    cmd += ['page', 'file://{0}'.format(html_file.name)]
+    cmd += ['page', '{0}'.format(html_file.name)]
 
     pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=settings.TEMPFILE_DIR, delete=False)
     pdf_file.close()
     cmd += [pdf_file.name]
 
     try:
-        popen = killableprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        popen = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate() 
         if popen.returncode != 0: 
             raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
