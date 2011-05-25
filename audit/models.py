@@ -71,7 +71,7 @@ class AuditTrail(models.Model):
             last_hash = ''
         
         self.created_at = datetime.now()
-        self.hash = hmac.new(str(last_hash), self._get_log_line(), hashlib.sha256).hexdigest()
+        self.hash = hmac.new(str(last_hash), self._get_log_line().encode('utf8'), hashlib.sha256).hexdigest()
         rval = super(AuditTrail, self).save(*args, **kwargs)
         # TODO: log with rsyslogd
         return rval
