@@ -35,7 +35,7 @@ def post_save_handler(**kwargs):
     if _ignored_models_rex.match(sender_path):
         return
 
-    description = '%s %s instance of %s' % (
+    description = u'%s %s instance of %s' % (
         user,
         'created' if kwargs['created'] else 'modified',
         sender.__name__,
