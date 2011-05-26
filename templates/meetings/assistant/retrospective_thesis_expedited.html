@@ -30,5 +30,6 @@
         {{ form.expedited_submissions }}
 
         <input type="submit" value="{% trans "Approve" %}" />
+        <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>
     </form>
 {% endblock %}
