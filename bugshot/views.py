@@ -49,7 +49,6 @@ def shoot(request):
             data = b64decode(data)
         except TypeError:
             return HttpResponseBadRequest("invalid base64 data")
-        print len(data), request.POST.get('url')
         trac.ticket.putAttachment(ticket, 'screenshot.%s' % format, 'bugshot', xmlrpclib.Binary(data))
 
     return HttpResponse('OK')
