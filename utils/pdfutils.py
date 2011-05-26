@@ -6,6 +6,7 @@ from cStringIO import StringIO
 from django.conf import settings
 from django.template import Context, loader
 from django.utils.encoding import smart_str
+
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
