@@ -106,7 +106,7 @@ class _SubmissionMultipleChoiceField(forms.ModelMultipleChoiceField):
         super(_SubmissionMultipleChoiceField, self).__init__(Submission.objects, *args, **kwargs)
 
     def label_from_instance(self, obj):
-        return '{0} {1}'.format(obj.get_ec_number_display(), obj.project_title_display())
+        return u'{0} {1}'.format(obj.get_ec_number_display(), obj.project_title_display())
 
 class RetrospectiveThesisExpeditedVoteForm(forms.Form):
     retrospective_thesis_submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
