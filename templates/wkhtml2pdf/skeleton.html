@@ -6,80 +6,64 @@
     <title>{% block title %}{% endblock %}</title>
     <style type="text/css">
         {% block inline_css %}
-        @page {
-            size: a4;
-            margin: 2cm;
-            margin-bottom: 3cm;
-            @frame footer {
-              -pdf-frame-content: footer;
-              bottom: 2cm;
-              margin-left: 1cm;
-              margin-right: 1cm;
-              height: 1cm;
-            }
-            @frame footerpage {
-              text-align: right;
-              -pdf-frame-content: footerpage;
-              bottom: 2cm;
-              margin-left: 1cm;
-              margin-right: 1cm;
-              height: 1cm;
-            }
-        }
-        
         /* Normal */
         @font-face {
            font-family: "DejaSans";
-           src: "DejaVuSans.ttf";
+           src: "./media/DejaVuSans.ttf";
         }
         /* Bold */
         @font-face {
            font-family: "DejaSans";
-           src: "DejaVuSans-Bold.ttf";
+           src: "./media/DejaVuSans-Bold.ttf";
            font-weight: bold;
         }
         /* Italic */
         @font-face {
            font-family: "DejaSans";
-           src: "DejaVuSans-Oblique.ttf";
+           src: "./media/DejaVuSans-Oblique.ttf";
            font-style: italic;
         }
         /* Bold and italic */
         @font-face {
            font-family: "DejaSans";
-           src: "DejaVuSans-BoldOblique.ttf";
+           src: "./media/DejaVuSans-BoldOblique.ttf";
            font-weight: bold;
            font-style: italic;
         }
         /* Normal Monospace */
         @font-face {
            font-family: "DejaMono";
-           src: "DejaVuSansMono.ttf";
+           src: "./media/DejaVuSansMono.ttf";
         }
         /* Bold Monospace*/
         @font-face {
            font-family: "DejaMono";
-           src: "DejaVuSansMono-Bold.ttf";
+           src: "./media/DejaVuSansMono-Bold.ttf";
            font-weight: bold;
         }
         
-        div.header {
-            text-align:center;
-            font-weigth: bold;
-            font-size: 170%;
-            padding-top: 10px;
-            padding-bottom: 0px;
-            width:18cm;
-            border:1px solid #000;
-            margin-bottom: 10px;
+        div.header .logo {
+            width: 7.00cm;
+            height: 1.25cm;
         }
-        
+
+        div.header .address {
+            text-align: right;
+            float: right;
+        }
+
+        div.header .spacer {
+            clear: both;
+            height: 1cm;
+        }
+
         th, td{
             padding: 2px;
         }
         
         body{
             font-family: DejaSans;
+            font-size: 10pt;
         }
         
         p{

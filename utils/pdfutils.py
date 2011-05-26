@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os, subprocess, tempfile, binascii, logging, copy
+import os, subprocess, tempfile, binascii, logging, copy, shutil
 from cStringIO import StringIO
 
 from django.conf import settings
@@ -290,26 +290,29 @@ def wkhtml2pdf(html, header_html=None, footer_html=None):
         '--margin-right', '2cm',
         '--margin-bottom', '2cm',
         '--page-size', 'A4',
-        '--allow', os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'),
+        '--zoom', '1',
     ]
 
+    tmp_dir = tempfile.mkdtemp(dir=settings.TEMPFILE_DIR)
+    shutil.copytree(os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'), os.path.join(tmp_dir, 'media'))
+
     if header_html:
-        header_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+        header_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
         header_html_file.write(header_html)
         header_html_file.close()
-        cmd += ['--header-html', '{0}'.format(header_html_file.name)]
+        cmd += ['--header-html', header_html_file.name]
     if footer_html:
-        footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+        footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
         footer_html_file.write(footer_html)
         footer_html_file.close()
-        cmd += ['--footer-html', '{0}'.format(footer_html_file.name)]
+        cmd += ['--footer-html', footer_html_file.name]
 
-    html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=settings.TEMPFILE_DIR, delete=False)
+    html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
     html_file.write(html)
     html_file.close()
-    cmd += ['page', '{0}'.format(html_file.name)]
+    cmd += ['page', html_file.name]
 
-    pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=settings.TEMPFILE_DIR, delete=False)
+    pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=tmp_dir, delete=False)
     pdf_file.close()
     cmd += [pdf_file.name]
 
@@ -327,12 +330,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None):
         pdfa.close()
 
     finally:
-        if header_html:
-            os.remove(header_html_file.name)
-        if footer_html:
-            os.remove(footer_html_file.name)
-        os.remove(html_file.name)
-        os.remove(pdf_file.name)
+        shutil.rmtree(tmp_dir)
 
     return ret
 
