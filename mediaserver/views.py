@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from tempfile import NamedTemporaryFile
+from logging import getLogger
+
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.utils.translation import ugettext as _
@@ -9,7 +11,6 @@ from ecs.utils.s3utils import S3url
 from ecs.utils.pdfutils import Page, pdf_barcodestamp
 
 from ecs.mediaserver.utils import MediaProvider
-from logging import getLogger
 
 
 @forceauth.exempt
