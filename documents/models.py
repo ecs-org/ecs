@@ -156,6 +156,7 @@ class Document(models.Model):
         return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
+        ''' load actual data from mediaserver including optional branding ; you rarely use this. '''
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
         brand = self.branding == 'p' or self.branding == 'b'
         return download_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
@@ -166,13 +167,11 @@ class Document(models.Model):
         
     def add_personalization(self, user):
         ''' Add unique id connected to a user and document download ''' 
-        return "unique id"
+        return False
 
     def save(self, **kwargs):
         if not self.uuid_document: 
             self.uuid_document = uuid4().get_hex() # generate a new random uuid
-            print ("self.file, self.file.name, self.original_file_name, self.name", 
-                   self.file, self.file.name, self.original_file_name, self.name)
             content_type = None
             if self.file.name or self.original_file_name:
                 filename_to_check = self.file.name if self.file.name else self.original_file_name
