@@ -52,15 +52,13 @@ Krankenanstalt/Institut/Abteilung: <b> {{ inv.organisation }} </b></p>
 Präklinische Qualifikation (z.B. Labordiagnostik) bzw. Name der
 Verantwortlichen: </p>
 
+    <h3>11. Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en <span class="underline">an dieser Prüfstelle</span></h3>
 {% tcwrap section %}
-        <h3>11. Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en <u>an dieser Prüfstelle</u></h3>
     </td><td width="2cm" style="text-align:right;font-size:1.5em" class="value">
         {{ inv.subject_count }}
 {% endtcwrap %}
 
-{% tcwrap section %}
     <h3>12. Verantwortliche Mitarbeiter/innen an der klinischen Studie <span style="font-weight:normal">(an Ihrer Prüfstelle)</span></h3>
-{% endtcwrap %}
 
 
 <table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
@@ -87,38 +85,31 @@ Verantwortlichen: </p>
 {% endfor %}
 </table>
 
-{% tcwrap section %}
     <h3>13. Unterschrift der Prüferin/des Prüfers</h3>
-{% endtcwrap %}
 
-<p style="margin-bottom: 0cm"> Ich bestätige hiermit, dass die in diesem Antrag
+<p> Ich bestätige hiermit, dass die in diesem Antrag
 gemachten Angaben korrekt sind und dass ich der Meinung bin, dass
 die durchführung der studie in Übereinstimmung mit dem Protokoll,
 nationalen Regelungen und mit den Prinzipien der Guten Klinischen
 Praxis möglich sein wird. </p>
 
-<pdf:spacer height="2.0cm" />
-
-<table><tr>
-    <td width="28"></td>
-    <td width="302" style="border-top:1px solid #000000">Unterschrift der Prüferin/des Prüfers</td>
-    <td width="28"></td>
-    <td width="188" style="border-top:1px solid #000000">Datum</td>
-    <td width="28"></td>
-</tr></table>
+<div class="signature_date">
+  <span class="line">Unterschrift der Prüferin/des Prüfers</span>
+  <span class="line">Datum</span>
+</div>
 
 <br>
 
-<p><i>Bei multizentrischen AMG-Studien
+<p><em>Bei multizentrischen AMG-Studien
 sind die Teile B von der Hauptprüferin/dem Hauptprüfer des
-jeweiligen Zentrums zu unterzeichen.</i></p>
+jeweiligen Zentrums zu unterzeichen.</em></p>
 
-<p><i>Alternativ zur Unterschrift auf
+<p><em>Alternativ zur Unterschrift auf
 den Teilen B können die Unterschriften der Hauptprüfer/innen auch
 auf den Unter­schriftenseiten des Protokolls oder der
 Prüfärzteverträge vorgelegt werden. Es muss jedenfalls eine
 eindeutige &nbsp; durch Unterschrift dokumentierte &nbsp;
-Zustimmung aller Hauptprüfer/innen zum Protokoll vorliegen.</i></p>
+Zustimmung aller Hauptprüfer/innen zum Protokoll vorliegen.</em></p>
 
 
 <div class="infotext">
