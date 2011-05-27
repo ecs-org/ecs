@@ -484,7 +484,7 @@ class SubmissionForm(models.Model):
     # 8.2
     study_plan_alpha = models.CharField(max_length=80)
     study_plan_power = models.CharField(max_length=80)
-    study_plan_statalgorithm = models.CharField(max_length=50)
+    study_plan_statalgorithm = models.CharField(max_length=80)
     study_plan_multiple_test = models.BooleanField()
     study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100, null=True, blank=True)
     study_plan_dropout_ratio = models.CharField(max_length=80)
