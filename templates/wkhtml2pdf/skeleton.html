@@ -1,11 +1,42 @@
-<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <title>{% block title %}{% endblock %}</title>
+    {% block inline_css %}
     <style type="text/css">
-        {% block inline_css %}
+      
+        /* Reset CSS. http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css  */
+        html{color:#000;background:#FFF;}
+        body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,
+        pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td
+        {margin:0;padding:0;}
+        table {border-collapse:collapse;border-spacing:0;}
+        fieldset,img{border:0;}
+        address,caption, cite,code,dfn,em,strong,th,var
+        {font-style:normal;font-weight:normal;}
+        li{list-style:none;}
+        caption,th {text-align:left;}
+        h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+        q:before,q:after{content:'';}
+        abbr,acronym{border:0;font-variant:normal;}
+        sup {vertical-align:text-top;}
+        sub {vertical-align:text-bottom;}
+        input,textarea, select
+        {font-family:inherit;font-size:inherit;font-weight:inherit;}
+        input,textarea, select{*font-size:100%;}
+        legend{color:#000;}
+        
+        /* Your Base Foundation */
+        strong { font-weight:900 !important; }
+        hr     { border:0; margin:0; padding:0; height:1pt; color:#000; background-color:#000; }
+        
+        /* Page Breaks */
+        .pb_before { page-break-before:always !important; }
+        .pb_after  { page-break-after:always !important; }
+        .pbi_avoid { page-break-inside:avoid !important; }
+
+
         /* Normal */
         @font-face {
            font-family: "DejaSans";
@@ -46,40 +77,42 @@
             width: 7.00cm;
             height: 1.25cm;
         }
-
         div.header .address {
             text-align: right;
             float: right;
         }
-
         div.header .spacer {
             clear: both;
             height: 1cm;
         }
-
-        th, td{
-            padding: 2px;
+        th, td {
+            padding: 2pt;
         }
-        
-        body{
-            font-family: DejaSans;
+        body, #content {
+            font-family: DejaSans, Arial;
             font-size: 10pt;
         }
-        
-        p{
-            padding: 2px 0;
+        p {
+            padding: 2pt 0;
+        }
+        .checkbox {
+            font-family: DejaMono, Arial;
         }
         
-        .checkbox{
-            font-family: DejaMono;
-        }
-        {% endblock %}
     </style>
+    {% endblock %}
   </head>
   <body>
+    <div id="content">
     {% block content %}{% endblock %}
+    </div>
     <div id="footer">
       {% block footer %}{% endblock %}
+    </div>
+    <div id="footerpage">
+      <div align="right">
+        {% block footerpage %}Seite {% endblock %}
+      </div>
     </div>
   </body>
 </html>

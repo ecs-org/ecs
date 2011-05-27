@@ -34,12 +34,10 @@
 
 <p>
     2.6 Nehmen andere Zentren an der Studie teil: 
-    {{ submission_form.multicentric|checkbox }} ja {{ submission_form.multicentric|not|checkbox }} nein. Wenn <b>ja:</b>
+    {{ submission_form.multicentric|checkbox }} ja {{ submission_form.multicentric|not|checkbox }} nein. Wenn <strong>ja:</strong>
 </p>
 
-<p>
-    {{ submission_form.multicentric|checkbox }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland
-</p>
+<p>{{ submission_form.multicentric|checkbox }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</p>
 
 <p>
     2.7 Liste der Zentren: <br/>
@@ -55,11 +53,11 @@
 
 <p>
     2.8 Liegen bereits Voten anderer Ethikkommissionen vor? <br/>
-    {{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <b>ja</b>, <b>Voten beilegen!</b>
+    {{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <strong>ja</strong>, <b>Voten beilegen!</b>
 </p>
 
 <p>
-    2.9 Geplante Anzahl der Prüfungsteilnehmer/innen gesamt (<u>Dies bezieht sich auf alle teilnehmenden Zentren</u>): 
+    2.9 Geplante Anzahl der Prüfungsteilnehmer/innen gesamt (<span class="underline">Dies bezieht sich auf alle teilnehmenden Zentren</span>): 
     <span class="value">{{ submission_form.subject_count }}</span>
 </p>
 
@@ -80,8 +78,8 @@
 
     <p>
         2.10.4 Einschließbar sind 
-        {{ submission_form.subject_females|checkbox }} <u>weibliche</u> (und/oder) 
-        {{ submission_form.subject_males|checkbox }} <u>männliche</u> Teilnehmer/innen.
+        {{ submission_form.subject_females|checkbox }} <span class="underline">weibliche</span> (und/oder) 
+        {{ submission_form.subject_males|checkbox }} <span class="underline">männliche</span> Teilnehmer/innen.
     </p>
 
     <p>

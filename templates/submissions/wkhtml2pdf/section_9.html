@@ -14,9 +14,9 @@ cellspacing="1">
 <tr>
 <td width="328" height="13"><b>{{ doc.doctype.name }}</b></td>
 </td>
-<td width="178"><b>{{ doc.version }}</b></td>
+<td width="178"><strong>{{ doc.version }}</strong></td>
 </td>
-<td width="82"><b>{{ doc.date|date:'d.m.Y' }}</b></td>
+<td width="82"><strong>{{ doc.date|date:'d.m.Y' }}</strong></td>
 </tr>
 {% endfor %}
 </table>
@@ -26,13 +26,13 @@ cellspacing="1">
 <h4>Name und Unterschrift der Antragstellerin/des Antragstellers</h4>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
- 9.1 Name: <b> {{ submission_form.submitter_contact }} </b> </p>
+ 9.1 Name: <strong> {{ submission_form.submitter_contact }} </strong> </p>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
- 9.2 Institution/ Firma: <b> {{ submission_form.submitter_organisation }} </b> </p>
+ 9.2 Institution/ Firma: <strong> {{ submission_form.submitter_organisation }} </strong> </p>
 
 <p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
- 9.3 Position: <b> {{ submission_form.submitter_jobtitle }} </b> </p>
+ 9.3 Position: <strong> {{ submission_form.submitter_jobtitle }} </strong> </p>
 
 <table>
     <tr>
@@ -63,7 +63,7 @@ cellspacing="1">
     </tr>
 </table>
 
-<p style="margin-top: 0.21cm; margin-bottom: 0cm"> Ich bestätige hiermit, dass die in diesem
+<p> Ich bestätige hiermit, dass die in diesem
 Antrag gemachten Angaben korrekt sind und dass ich der Meinung
 bin, dass die Durchführung der Studie in Übereinstimmung mit dem
 Protokoll, nationalen Regelun­gen und mit den Prinzipien der Guten
@@ -76,26 +76,10 @@ Klinischen Praxis möglich sein wird. </p>
     <i>(Im Falle der Nicht-Zustimmung bitte diesen Absatz durchzustreichen)</i>
 </p>
 
-<pdf:spacer height="2.0cm" />
 
-<table width="624" border="0" cellpadding="5" cellspacing="0">
-<col width="28">
-<col width="302">
-<col width="28">
-<col width="188">
-<col width="28">
-<tr>
-    <td width="28" height="11" valign="top">
-    </td>
-    <td width="302" style="border-top:1px solid #000000">
-        Unterschrift der Antragstellerin/des Antragstellers
-    </td>
-    <td width="28" valign="top"></td>
-    <td width="188" style="border-top:1px solid #000000">
-        Datum
-    </td>
-    <td width="28"></td>
-</tr>
-</table>
+<div class="signature_date">
+  <span class="line">Unterschrift Antragstellerin/des Antragstellers</span>
+  <span class="line">Datum</span>
+</div>
 
 <div class="infotext">!!! Achtung: Diese Unterschrift ist in jedem Fall erforderlich !!!</div>

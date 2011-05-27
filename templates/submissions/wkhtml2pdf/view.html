@@ -5,206 +5,228 @@
 
 {% block inline_css %}
     {{ block.super }}
-    <style>
-    *{
-        line-height: 1em;
-    }
-    body{
-        font-size: 11pt;
-    }
-    
-    td, th{
-        text-align: left;
-        vertical-align: top;
-        padding: 0;
-        margin: 0;
-    }
-    table, tr, h1, h2, h3, h4, h5, h6, p{
-        padding: 0;
-        margin: 0;
-    }
-    
-    h1{
-        text-align: center;
-        margin: 0cm;
-        padding: 1em;
-    }
-    
-    h2{
-        font-size: 14pt;
-    }
-    h3{
-        font-size: 11pt;
-        font-weight: bold;
-    }
-    h4{
-        font-size: 11pt;
-        font-weight: normal;
-        margin-top: 1em;
-    }
-    
-    .value{
-        font-weight: bold;
-        font-family: DejaSans;
-    }
-    .underline{
-        text-decoration: underline;
-    }
-    .small{
-        font-size: 10pt;
-    }
-    .checkbox{
-        font-family: DejaMono;
-    }
-    
+    <style type="text/css">
+*{
+  line-height: 0.5cm;
+}
+body {
+  font-size: 11pt;
+}
+td, th {
+  text-align: left;
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+}
+h1 {
+  font-size: 16pt;
+  text-align: center;
+  margin: 0cm;
+  padding: 1em;
+}
+h2 {
+  font-size: 14pt;
+  margin-bottom: 0.4cm;
+}
+h3 {
+  display: block;
+  font-size: 12pt;
+  font-weight: bold;
+  margin-bottom: 0.4cm;
+  padding: 0.5cm 0 0.1cm;
+  border-bottom: 1px solid #000;
+}
+h4 {
+  font-size: 11pt;
+  font-weight: normal;
+  margin-bottom: 0.2cm;
+  margin-top: 0.2cm;
+}
 
-    table{
-        border: none;
-    }
-    
-    table.padded td,
-    table.padded th{
-        padding: 0.1cm;
-    }
-    
-    
-    table.border1,
-    table.part{
-        border: 1px solid #000000;
-    }
-    table.border2 td{
-        margin: 3px;
-        border: 1px solid #000000;
-    }
-    
-    table.withborders td,
-    table.withborders th{
-        border: 1px solid #000000;
-    }
-    table.withborders th{
-        border-bottom: 2px solid #000000;
-    }
+.value {
+  font-weight: bold;
+  font-family: DejaSans, Arial;
+}
+.underline {
+  text-decoration: underline;
+}
+.italic_underline {
+  text-decoration: underline;
+  font-style: italic;
+}
+.small {
+  font-size: 10pt;
+}
+.checkbox {
+  font-family: DejaMono, Arial;
+}
 
-    table.withrowborders,
-    table.withrowborders tr{
-        border-bottom: 1px solid #000000;
-        border-top: 1px solid #000000;
-    }
-    
-    .infotext{
-        margin: 1em;
-        text-align: center;
-    }
-    
+table {
+  border: none;
+}
+table.padded td,
+table.padded th,
+td,
+th {
+  padding: 0.1cm;
+}
+table.border1,
+table.part {
+  border: 1pt solid #000000;
+}
+table.border2 td {
+  margin: 3px;
+  border: 1pt solid #000000;
+}
+table.withborders td,
+table.withborders th {
+  border: 1pt solid #000000;
+}
+table.withborders th{
+  border-bottom: 2pt solid #000000;
+}
+table.withrowborders,
+table.withrowborders tr{
+  border-bottom: 1pt solid #000000;
+  border-top: 1pt solid #000000;
+}
+.infotext{
+  margin: 0.5cm;
+  text-align: center;
+}
+.main_part {
+  margin: 0.5cm 0;
+  padding: 0;
+  page-break-after: avoid;
+}
+.main_part h2 {
+  display: block;
+  border: 2pt solid #000000;
+  text-align: center;
+  padding: 0.2cm;
+}
+table.section{
+  margin-top: 1cm;
+  border-top: 1pt solid #000000;
+}
+table.section td{
+  padding: 0;
+}
+table.section h3{
+  margin-top: 0.5cm;
+  border-top: 1pt solid #000000;
+  padding-top: 0.5cm;
+}
+.indented {
+  padding-left: 1cm;
+}
+.border_bottom {
+  display: block;
+  padding-bottom: 0.1cm;
+  border-bottom: 1pt solid #000;
+}
+.two_columns {
+  display: table;
+  width: 100%;
+  margin-bottom: 1cm;
+}
+.column-row {
+  display: table-row;
+}
+.column_left,
+.column_right {
+  display: block;
+  float: left;
+  width: 46%;
+  height: 4cm;
+  border: 1pt solid #000;
+  padding: 0.5%;
+}
+.column_left {
+  margin-right: 2%;
+}
+.two_columns span {
+  font-size: 7pt;
+}
 
-    table.part{
-        margin-top: 1em;
-        margin-bottom: 1em;
-        padding: 0px;
-        page-break-after: avoid;
-    }
-    table.part tr{
-        padding: 0px;
-    }
-    table.part td{
-        padding: 2px;
-    }
-    table.part h2{
-        border: 1px solid #000000;
-        text-align: center;
-        padding: 0.2cm;
-        height: 2em;
-    }
-    
-    
-    table.section{
-        margin-top: 1em;
-        border-top: 1px solid #000000;
-    }
-    table.section td{
-        padding: 0;
-    }
-    table.section h3{
-        margin-top: 5px;
-        border-top: 1px solid #000000;
-        padding-top: 0.5em;
-    }
-    
-    div.indented{
-        margin-left: 1cm;
-    }
-    </style>
-    
+.signature_date {
+  display: block;
+  padding: 3cm 0 1cm 0.5cm;
+  vertical-align: bottom;
+}
+.signature_date .line {
+  display: block;
+  float: left;
+  border-top: 1px solid #000;
+  padding-top: 0.2cm;
+  margin-right: 2cm;
+  width: 8cm;
+}
+</style>
+
 {% endblock %}
 
 {% block content %}
 
     {% include "db/submissions/wkhtml2pdf/head.html" %}
 
-    
-    {% tcwrap part %}
+    <div class="main_part">
         <h2>Teil A</h2>
-    {% endtcwrap %}
+    </div>
+    
     {% include "db/submissions/wkhtml2pdf/section_1.html" %}
     
-    {% tcwrap section %}
-        <h3>2. Eckdaten der Studie</h3>
-    {% endtcwrap %}
+    <h3>2. Eckdaten der Studie</h3>
+
     {% include "db/submissions/wkhtml2pdf/section_2_1.html" %}
     {% include "db/submissions/wkhtml2pdf/section_2_2-2_11.html" %}
+        
+     <h3>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</h3>
     
-    
-    {% tcwrap section %}
-        <h3>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</h3>
-    {% endtcwrap %}
     {% include "db/submissions/wkhtml2pdf/section_3a.html" %}
 
-    {% tcwrap section %}
-        <h3>3b. Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind:</h3>
-    {% endtcwrap %}
+
+     <h3>3b. Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind:</h3>
+
     {% include "db/submissions/wkhtml2pdf/section_3b.html" %}
     
-    
-    {% tcwrap section %}
-        <h3>4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt:</h3>
-    {% endtcwrap %}
+    <h3>4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt:</h3>
+
     {% include "db/submissions/wkhtml2pdf/section_4.html" %}
     
-    {% tcwrap section %}
-        <h3>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)</h3>
-    {% endtcwrap %}
+    <h3>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)</h3>
+
     {% include "db/submissions/wkhtml2pdf/section_5.html" %}
     
-    {% tcwrap section %}
-        <h3>6. Angaben zur durchzuführenden Therapie und Diagnostik</h3>
-    {% endtcwrap %}
+    <h3>6. Angaben zur durchzuführenden Therapie und Diagnostik</h3>
+
     {% include "db/submissions/wkhtml2pdf/section_6.html" %}
     
-    {% tcwrap section %}
-        <h3>7. Strukturierte Kurzfassung des Projektes (<i><u>in deutscher Sprache, kein Verweis auf das Protokoll</u></i>)</h3>
-    {% endtcwrap %}
+    <h3>7. Strukturierte Kurzfassung des Projektes (<em>in deutscher Sprache, kein Verweis auf das Protokoll</em>)</h3>
+    
     {% include "db/submissions/wkhtml2pdf/section_7.html" %}
 
-    {% tcwrap section %}
-            <h3>8. Biometrie, Datenschutz:</h3>
-        </td><td style="text-align:right; font-style:italic">
-            !!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen !!!
-    {% endtcwrap %}
+    
+    <h3>8. Biometrie, Datenschutz:</h3>
+
+    <center>!!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen !!!</center>
+
     {% include "db/submissions/wkhtml2pdf/section_8.html" %}
 
-    <pdf:nextpage/>
-
-    {% tcwrap section %}
-        <h3>9. Liste der eingereichten Unterlagen <span style="font-weight:normal">(wenn nicht gesondert dem Antrag beiliegend)</span></h3>
-    {% endtcwrap %}
+    <div class="pb_after"></div>
+    
+    <h3>9. Liste der eingereichten Unterlagen <span style="font-weight:normal">(wenn nicht gesondert dem Antrag beiliegend)</span></h3>
+    
     {% include "db/submissions/wkhtml2pdf/section_9.html" %}
 
 
 {% for inv in submission_form.investigators.all %}
-    <pdf:nextpage/>
-    {% tcwrap part %}
+    <div class="pb_after"></div>
+
+    <div class="main_part">
         <h2>Teil B</h2>
-    {% endtcwrap %}
+    </div>
+
     {% include "db/submissions/wkhtml2pdf/part_b.html" %}
 {% endfor %}
 
@@ -213,5 +235,3 @@
 {% endblock %}
 
 {% endblock %}
-
-

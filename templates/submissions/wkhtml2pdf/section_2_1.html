@@ -1,66 +1,64 @@
 {% load core corepdf %}
-<table><tr><td style="width:4cm">
+<table>
+  <thead>
+    <td>
     2.1 Art des Projektes:
-    </td><td>
+    </td>
+  </thead>
+
+  <tbody>
+  <tr>    
+    <td>
 
     <p>
-    {{ submission_form.project_type_non_reg_drug|checkbox }} 2.1.1 Klinische Prüfung eines nicht registrierten <b>Arzneimittels</b>
+    {{ submission_form.project_type_non_reg_drug|checkbox }} 2.1.1 Klinische Prüfung eines nicht registrierten <strong>Arzneimittels</strong>
     </p>
 
     <p>
-    {{ submission_form.project_type_reg_drug|checkbox }} 2.1.2 Klinische Prüfung eines registrierten <b>Arzneimittels</b>
+    {{ submission_form.project_type_reg_drug|checkbox }} 2.1.2 Klinische Prüfung eines registrierten <strong>Arzneimittels</strong>
     </p>
 
-    <div class="indented">
+    <div class="indented border_bottom">
         {{ submission_form.project_type_reg_drug_within_indication|checkbox }} 2.1.2.1 gemäß der Indikation 
         {{ submission_form.project_type_reg_drug_not_within_indication|checkbox }} 2.1.2.2 nicht gemäß der Indikation
     </div>
 
-    <p style=" border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0.11cm 0cm;  ">
-    {{ submission_form.project_type_medical_method|checkbox }} 2.1.3 Klinische Prüfung einer neuen <b>medizinischen Methode</b></p>
+    <p>{{ submission_form.project_type_medical_method|checkbox }} 2.1.3 Klinische Prüfung einer neuen <strong>medizinischen Methode</strong></p>
 
-    <p style="margin-top: 0.11cm;  line-height: 100%">
-    {{ submission_form.project_type_medical_device|checkbox }} 2.1.4 Klinische Prüfung eines <b>Medizinproduktes</b></p>
+    <p>{{ submission_form.project_type_medical_device|checkbox }} 2.1.4 Klinische Prüfung eines <strong>Medizinproduktes</strong></p>
 
-    <div class="indented">
+    <div class="indented border_bottom">
         {{ submission_form.project_type_medical_device_with_ce|checkbox }} 2.1.4.1 mit CE-Kennzeichnung 
         {{ submission_form.project_type_medical_device_without_ce|checkbox }} 2.1.4.2 ohne CE-Kennzeichnung
         <br/>
         {{ submission_form.project_type_medical_device_performance_evaluation|checkbox }} 2.1.4.3 Leistungsbewertungsprüfung (In-vitro-Diagnostika)
     </div>
 
-    <p style="border-top: 1px solid #000000; border-bottom: 1px solid #000000; border-left: none; border-right: none;">
-    {{ submission_form.project_type_basic_research|checkbox }} 2.1.5 <b>Nicht-therapeutische biomedizinische Forschung</b> am Menschen (Grundlagenforschung)</p>
+    <p class="border_bottom">{{ submission_form.project_type_basic_research|checkbox }} 2.1.5 <strong>Nicht-therapeutische biomedizinische Forschung</strong> am Menschen (Grundlagenforschung)</p>
 
-    <p style="margin-top: 0.11cm;  border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding-top: 0cm; padding-bottom: 0.04cm; padding-left: 0cm; padding-right: 0cm;  ">
-    {{ submission_form.project_type_genetic_study|checkbox }} 2.1.6 <b>Genetische Untersuchung</b></p>
+    <p>{{ submission_form.project_type_genetic_study|checkbox }} 2.1.6 <strong>Genetische Untersuchung</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_register|checkbox }} 2.1.10 <b>Register</b>
+    <p>{{ submission_form.project_type_register|checkbox }} 2.1.10 <strong>Register</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_biobank|checkbox }} 2.1.11 <b>Biobank</b></p>
+    <p>{{ submission_form.project_type_biobank|checkbox }} 2.1.11 <strong>Biobank</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_retrospective|checkbox }} 2.1.12 <b>Retrospektive Datenauswertung</b></p>
+    <p class="border_bottom">{{ submission_form.project_type_retrospective|checkbox }} 2.1.12 <strong>Retrospektive Datenauswertung</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_questionnaire|checkbox }} 2.1.13 <b>Fragebogen Untersuchung</b></p>
+    <p class="border_bottom">{{ submission_form.project_type_questionnaire|checkbox }} 2.1.13 <strong>Fragebogen Untersuchung</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_psychological_study|checkbox }} 2.1.14 <b>Psychologische Studie</b></p>
+    <p class="border_bottom">{{ submission_form.project_type_psychological_study|checkbox }} 2.1.14 <strong>Psychologische Studie</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_nursing_study|checkbox }} 2.1.15 <b>Pflegewissenschaftliche Studie</b></p>
+    <p class="border_bottom">{{ submission_form.project_type_nursing_study|checkbox }} 2.1.15 <strong>Pflegewissenschaftliche Studie</strong></p>
 
-    <p style="margin-top: 0.11cm;   ">
-    {{ submission_form.project_type_misc|checkbox }} 2.1.7 <b>Sonstiges</b>(z.B. Diätetik, Epidemiologie, etc.), bitte
+    <p class="border_bottom">{{ submission_form.project_type_misc|checkbox }} 2.1.7 <strong>Sonstiges</strong>(z.B. Diätetik, Epidemiologie, etc.), bitte
     spezifizieren:</p>
-    <p style="page-break-inside: avoid" class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>
+    <p class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>
 
-    <p style="margin-top: 0.11cm;  border-top: 1px solid #000000; border-bottom: none; border-left: none; border-right: none; padding-top: 0.14cm; padding-bottom: 0cm; padding-left: 0cm; padding-right: 0cm;  ">
-    <b>Zusatzinformation:</b> 
-    {{ submission_form.project_type_education_context_phd|checkbox }} 2.1.8 <b>Dissertation</b>
-    {{ submission_form.project_type_education_context_master|checkbox }} 2.1.9 <b>Diplomarbeit</b></p>
+    <p><strong>Zusatzinformation:</strong> 
+    {{ submission_form.project_type_education_context_phd|checkbox }} 2.1.8 <strong>Dissertation</strong>
+    {{ submission_form.project_type_education_context_master|checkbox }} 2.1.9 <strong>Diplomarbeit</strong></p>
 
-</td></tr></table>
+    </td>
+  </tr>
+  </tbody>
+</table>
