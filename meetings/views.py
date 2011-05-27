@@ -393,10 +393,21 @@ def protocol_pdf(request, meeting_pk=None):
     submission_forms = [x.submission_form for x in b2_votes]
     b1ized = Vote.objects.filter(result__in=['1', '1a'], submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
+    rts = list(meeting.retrospective_thesis_submissions.all())
+    es = list(meeting.expedited_submissions.all())
+    additional_submissions = []
+    for i, submission in enumerate(rts + es, len(tops) + 1):
+        try:
+            vote = Vote.objects.filter(submission_form=submission.current_submission_form)[0]
+        except IndexError:
+            vote = None
+        additional_submissions.append((i, submission, vote,))
+
     pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
         'meeting': meeting,
         'tops': tops,
         'b1ized': b1ized,
+        'additional_submissions': additional_submissions,
     })
     return pdf_response(pdf, filename=filename)
 
