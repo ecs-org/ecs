@@ -24,10 +24,14 @@ def document_types():
         (_(u"Submission Form"), u"submissionform", _(u"Submission Form")),
         (_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
     )
+    hidden = ('submissionform',)
+
     for name, identifier, helptext in names:
         d, created = DocumentType.objects.get_or_create(identifier=identifier)
         d.name = name
         d.helptext = helptext
+        if identifier in hidden:
+            d.hidden = True
         d.save()
 
 @bootstrap.register()

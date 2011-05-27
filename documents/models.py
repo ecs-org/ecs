@@ -40,6 +40,7 @@ class DocumentType(models.Model):
     name = models.CharField(max_length=100)
     identifier = models.CharField(max_length=30, db_index=True, blank=True, default= "")
     helptext = models.TextField(blank=True, default="")
+    hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name

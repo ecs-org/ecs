@@ -16,7 +16,7 @@ from ecs.utils.formutils import require_fields
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
-    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.all(), required=False)
+    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(hidden=True), required=False)
 
     def clean_file(self):
         pdf = self.cleaned_data['file']
