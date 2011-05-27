@@ -11,7 +11,6 @@
     {{ meeting.start|date:'d.m.Y, H:i' }} Uhr, sine tempore<br />
     im B&uuml;ro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
     </div>
-    <pdf:spacer height="1.5cm" />
     
     {% for entry in meeting %}
         <span style="font-weight:bold;">#{{ entry }}</span>
@@ -19,21 +18,39 @@
             <span style="font-weight:bold;">EK Nr.</span>
                 {{ entry.submission.get_ec_number_display }}<br />
             <span style="font-weight:bold;">Antragsteller:</span>
-                {% if form.submitter %}
-                    {{ entry.submission.current_submission_form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
-                {% else %}
-                    {{ entry.submission.current_submission_form.submitter_contact }}
-                {% endif %}
+                {% with entry.submission.current_submission_form.submitter as submitter %}
+                    {% if not submitter.first_name or not submitter.last_name %}
+                        {{ entry.submission.current_submission_form.submitter_contact }}
+                    {% else %}
+                        {{ submitter }}
+                    {% endif %}
+                {% endwith %}
+                <br />
             <span style="font-weight:bold;">Einreichende Institution:</span>
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
             <span style="font-weight:bold;">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
             <br />
         {% endif %}
-    
+    {% endfor %}
+
+    {% for i, submission in additional_submissions %}
+        <span style="font-weight:bold;">#TOP {{ i }}</span>
+        <span style="font-weight:bold;">EK Nr.</span>
+            {{ submission.get_ec_number_display }}<br />
+        <span style="font-weight:bold;">Antragsteller:</span>
+            {% with submission.current_submission_form.submitter as submitter %}
+                {% if not submitter.first_name or not submitter.last_name %}
+                    {{ submission.current_submission_form.submitter_contact }}
+                {% else %}
+                    {{ submitter }}
+                {% endif %}
+            {% endwith %}
+            <br />
+        <span style="font-weight:bold;">Einreichende Institution:</span>
+            {{ submission.current_submission_form.submitter_organisation }}<br />
+        <span style="font-weight:bold;">Projekttitel:</span>
+            {{ submission.project_title_display }}<br />
+        <br />
     {% endfor %}
 {% endblock %}
-
-{% block footer %}{{ meeting.title }} {{ meeting.start|date:'d.m.Y' }} TOP{% endblock %}
-
-

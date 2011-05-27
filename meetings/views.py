@@ -365,8 +365,12 @@ def agenda_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
     
+    rts = list(meeting.retrospective_thesis_submissions.all())
+    es = list(meeting.expedited_submissions.all())
+
     pdfstring = render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
         'meeting': meeting,
+        'additional_submissions': list(enumerate(rts, len(meeting)+1)) + list(enumerate(es, len(meeting)+len(rts)+1)),
     })
     return pdf_response(pdfstring, filename=filename)
 
