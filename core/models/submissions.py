@@ -271,6 +271,16 @@ class Submission(models.Model):
         elif self.next_meeting_id:
             self.next_meeting = None
             self.save()
+
+    def get_current_docstash(self):
+        from ecs.users.utils import get_current_user
+        from ecs.docstash.models import DocStash
+        return DocStash.objects.get(
+            group='ecs.core.views.submissions.create_submission_form',
+            owner=get_current_user,
+            content_type=ContentType.objects.get_for_model(self.__class__),
+            object_id=self.pk,
+        )
         
     class Meta:
         app_label = 'core'

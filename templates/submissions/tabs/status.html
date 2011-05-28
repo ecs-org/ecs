@@ -9,6 +9,18 @@
                 <th colspan="2">Versionen</th>
                 <th></th>
             </tr>
+            {% with submission_form.submission.get_current_docstash as docstash %}
+            {% if docstash %}
+                <tr class="version">
+                    <td>{% trans "New" %}</td>
+                    <td colspan="2"><i>{% trans "This form has not been submitted yet." %}</i></td>
+                    <td colspan="2"></td>
+                    <td>
+                        <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
+                    </td>
+                </tr>
+            {% endif %}
+            {% endwith %}
             {% for sf in submission_forms %}
             <tr class="version">
                 <td>{{ sf.version }}</td>

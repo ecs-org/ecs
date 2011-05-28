@@ -3,6 +3,8 @@ from django.db import models
 from django.http import QueryDict
 from django.utils.functional import wraps
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.generic import GenericForeignKey
 
 from django_extensions.db.fields.json import JSONField
 from picklefield.fields import PickledObjectField
@@ -38,6 +40,10 @@ class DocStash(models.Model):
     current_version = models.IntegerField(default=-1)
     owner = models.ForeignKey(User)
     
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    parent_object = GenericForeignKey('content_type', 'object_id')
+
     objects = AuthorizationManager()
 
     def save(self, *args, **kwargs):

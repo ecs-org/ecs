@@ -56,6 +56,9 @@ Liste aller Studien
         {% endwith %}
     {% else %}
         {% with submission.current_submission_form as submission_form %}
+        {% with submission.get_current_docstash as docstash %}
+        {% if docstash %}<span class="submission_inprogress"></span>{% endif %}
+
         {% with submission|external_review:user as external_review_task %}
         {% with submission|additional_review:user as additional_review_task %}
             {% if external_review_task %}
@@ -71,7 +74,15 @@ Liste aller Studien
             {% endif %}
         {% endwith %}
         {% endwith %}
-        {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+
+        {% if docstash and docstash.current_value.notification_type %}
+            <strong>{{ docstash.current_value.notification_type }}</strong> für
+        {% endif %}
+        {% if docstash and docstash.current_name %}
+            {{ docstash.current_name }}
+        {% else %}
+            {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+        {% endif %}
         <div class="actions">
              {% if submission_form.presenter == user and not submission_form.submission.has_final_vote %}
                 <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
@@ -106,12 +117,19 @@ Liste aller Studien
                 <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}<a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
+        {% if docstash %}
+            <div class="info">
+                Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})
+                <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
+            </div>
+        {% endif %}
         {% if submission|resubmission:user %}
             <div>
                 <span class="submission_resubmission"></span>
                 {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
             </div>
         {% endif %}
+        {% endwith %}
         {% endwith %}
     {% endif %}
     </li>
