@@ -1,47 +1,47 @@
 {% load core corepdf %}
 
-<p style="margin-bottom: 0cm; line-height: 100%; page-break-after: avoid">
+<p class="pbi_avoid">
 3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries|checkbox }} ja {{ submission_form.substance_registered_in_countries|not|checkbox }} nein.
-Wenn <b>ja</b>, geben Sie an, in welchen: <br>(bitte verwenden Sie englische Landesbezeichnungen) </p>
+Wenn <strong>ja</strong>, geben Sie an, in welchen: <br>(bitte verwenden Sie englische Landesbezeichnungen) </p>
 
-<p style="margin-left: 0.63cm; text-indent: -0.63cm; margin-bottom: 0cm">
-<b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
+<p class="pbi_avoid">
+<strong> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
 
-<p style="margin-left: 0.6cm; text-indent: -0.6cm; margin-top: 0.11cm; margin-bottom: 0cm; line-height: 100%">
+<p>
 3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
 {{ submission_form.substance_preexisting_clinical_tries|checkbox }} ja 
 {{ submission_form.substance_preexisting_clinical_tries|not|checkbox }} nein </p>
 
-<p> Wenn <b>ja</b>, bitte geben Sie folgende Daten
+<p> Wenn <strong>ja</strong>, bitte geben Sie folgende Daten
 an: </p>
 
-<p style="page-break-inside: avoid">3.2.1
+<p class="pbi_avoid">3.2.1
  In welchen Staaten wurden
-die Prüfungen durchgeführt: <b> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </b> </p>
+die Prüfungen durchgeführt: <strong> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
 
-<p style="margin-bottom: 0cm; line-height: 100%">
- 3.2.2 Phase: <b> {{ submission_form.substance_p_c_t_phase }} </b> (Wenn Studien in mehreren Phasen angeführt sind,
+<p>
+ 3.2.2 Phase: <strong> {{ submission_form.substance_p_c_t_phase }} </strong> (Wenn Studien in mehreren Phasen angeführt sind,
 die höchste Phase angeben) </p>
 
-<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
- 3.2.3 Zeitraum: <b> {{ submission_form.substance_p_c_t_period }} </b> </p>
+<p>
+ 3.2.3 Zeitraum: <strong> {{ submission_form.substance_p_c_t_period }} </strong> </p>
 
-<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm">
- 3.2.4 Anwendungsart(en): <b> {{ submission_form.substance_p_c_t_application_type }} </b> </p>
+<p>
+ 3.2.4 Anwendungsart(en): <strong> {{ submission_form.substance_p_c_t_application_type }} </strong> </p>
 
-<p style="margin-bottom: 0cm; line-height: 100%">
+<p>
 3.2.5 Wurde(n) die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt? 
 {{ submission_form.substance_p_c_t_gcp_rules|checkbox }} ja 
 {{ submission_form.substance_p_c_t_gcp_rules|not|checkbox }} nein </p>
 
-<p style="margin-bottom: 0cm; line-height: 100%">
+<p>
  3.2.6 Liegt ein Abschlußbericht vor? 
 {{ submission_form.substance_p_c_t_final_report|checkbox }} ja 
 {{ submission_form.substance_p_c_t_final_report|not|checkbox }} nein </p>
 
-<p style="margin-bottom: 0cm; line-height: 110%">
- Wenn <b>ja</b>, bitte legen
-Sie die <b>Investigator´s Brochure, relevante Daten</b> oder ein
-<b>Gutachten des Arzneimittelbeirates</b> bei. </p>
+<p>
+ Wenn <strong>ja</strong>, bitte legen
+Sie die <strong>Investigator´s Brochure, relevante Daten</strong> oder ein
+<strong>Gutachten des Arzneimittelbeirates</strong> bei. </p>
 
 

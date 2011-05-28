@@ -8,16 +8,15 @@
     Zuständige Ethikkommission: <span class="value">{{ submission_form.main_ethics_commission }}</span>
 </p>
 
-{% tcwrap section %}
-    <h3>10. Angaben zur Prüferin/zum Prüfer</h3>
-{% endtcwrap %}
+<h3>10. Angaben zur Prüferin/zum Prüfer</h3>
+
 
 <p>
     10.1 Name: <span class="value">{{ inv.contact }}</span>
 </p>
 
-<p style="page-break-after: avoid"> 10.2
-Krankenanstalt/Institut/Abteilung: <b> {{ inv.organisation }} </b></p>
+<p class="pbi_avoid"> 10.2
+Krankenanstalt/Institut/Abteilung: <strong> {{ inv.organisation }} </strong></p>
 
 
 <table width="627" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
@@ -31,10 +30,10 @@ Krankenanstalt/Institut/Abteilung: <b> {{ inv.organisation }} </b></p>
         <th width="111">10.5 Fax</th>
         <th width="241">10.6 e-mail-Adresse:</th>
     </tr><tr>
-        <td width="110"><b>{{ inv.phone }}</b></td>
-        <td width="122"><b>{{ inv.mobile }}</b></td>
-        <td width="111"><b>{{ inv.fax }}</b></td>
-        <td width="241"><b>{{ inv.email }}</b></td>
+        <td width="110"><strong>{{ inv.phone }}</strong></td>
+        <td width="122"><strong>{{ inv.mobile }}</strong></td>
+        <td width="111"><strong>{{ inv.fax }}</strong></td>
+        <td width="241"><strong>{{ inv.email }}</strong></td>
     </tr>
 </table>
 
@@ -53,10 +52,10 @@ Präklinische Qualifikation (z.B. Labordiagnostik) bzw. Name der
 Verantwortlichen: </p>
 
     <h3>11. Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en <span class="underline">an dieser Prüfstelle</span></h3>
-{% tcwrap section %}
-    </td><td width="2cm" style="text-align:right;font-size:1.5em" class="value">
+
+    <p class="value">
         {{ inv.subject_count }}
-{% endtcwrap %}
+    </p>
 
     <h3>12. Verantwortliche Mitarbeiter/innen an der klinischen Studie <span style="font-weight:normal">(an Ihrer Prüfstelle)</span></h3>
 
@@ -76,11 +75,11 @@ Verantwortlichen: </p>
 </tr>
 {% for emp in inv.employees.all %}
 <tr>
-<td width="29" valign="top"><b>{{ emp.geschlecht_string }}</b></td>
-<td width="52" valign="top"><b>{{ emp.title }}</b></th>
-<td width="89" valign="top"><b>{{ emp.firstname }}</b></td>
-<td width="106" valign="top"><b>{{ emp.surname }}</b></td>
-<td width="289" valign="top"><b>{{ emp.organisation }}</b></td>
+<td width="29" valign="top"><strong>{{ emp.geschlecht_string }}</strong></td>
+<td width="52" valign="top"><strong>{{ emp.title }}</strong></th>
+<td width="89" valign="top"><strong>{{ emp.firstname }}</strong></td>
+<td width="106" valign="top"><strong>{{ emp.surname }}</strong></td>
+<td width="289" valign="top"><strong>{{ emp.organisation }}</strong></td>
 </tr>
 {% endfor %}
 </table>

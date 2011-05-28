@@ -1,11 +1,7 @@
 {% load core corepdf %}
 
-{% tcwrap border1 %}
-    <h1>Antrag</h1>
-    {% tcwrap plain %}
-        Version 6.0 vom 03.07.2009
-    {% endtcwrap %}
-{% endtcwrap %}
+<h1>Antrag</h1>
+Version 6.0 vom 03.07.2009
 
 <div class="infotext">
     Dieses Formular soll für Einreichungen bei &ouml;sterreichischen Ethikkommissionen verwendet werden. <br/>
@@ -36,48 +32,16 @@
     </div>
   
 </div>
-<!--
-<table>
-    <colgroup>
-        <col width="49%" />
-        <col width="2%">
-        <col width="49%" />
-    </colgroup>
-    <tr>
-        <td style="border:1px solid #000000;padding:0.5mm">
-            <span style="font-size:7pt">Adresse der Ethikkommission (optional)</span>
-             FIXME: why has 'height' no effect on table cells?
-            {{ '<br/>'|repeat:8 }}
-            <br/>
-            An die<br/>
-            Ethikkommission<br/>
-            der Medizinischen Universität Wien<br/>
-            Borschkegasse 8b<br/>
-            1090 Wien<br/>
-            
-        </td>
-        <td width="2%" ></td>
-        <td style="border:1px solid #000000;padding:0.5mm">
-            {% tcwrap plain %}
-                <span style="font-size:7pt">Raum für Eingangsstempel, EK-Nummer, etc.</span>
-            </td>
-            <td style="text-align:right">
-                <span style="font-size:7pt">Bitte freilassen!</span>
-            {% endtcwrap %}
-        </td>
-    </tr>
-</table>
- -->
  
 <h2>ANTRAG AUF BEURTEILUNG EINES KLINISCHEN FORSCHUNGSPROJEKTES</h2>
 
-<div>
+<div class="infotext">
     für folgende Prüfer bei folgenden österreichischen Ethikkommissionen:<br/>
   ► Bitte alle Ethikkommissionen eintragen, an die der Antrag gesendet wird (<strong>Kurzbezeichnung!</strong>) ◄<br/>
   ► Im Falle einer multizentrischen Arzneimittelstudie ist die Leitethikkommission als erste anzuführen! ◄
 </div>
 
-<table class="padded withborders">
+<table class="withborders">
     <tr>
         <th>Zuständige Ethikkommission</th>
         <th>Zentrum</th>

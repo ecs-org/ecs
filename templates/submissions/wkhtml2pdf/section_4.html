@@ -1,14 +1,14 @@
 {% load core corepdf %}
 
 <p>
-4.1 Bezeichnung des Produktes: <b> {{ submission_form.medtech_product_name }} </b> </p>
+4.1 Bezeichnung des Produktes: <strong> {{ submission_form.medtech_product_name }} </strong> </p>
 
-<p style="margin-left: 2.5cm; text-indent: -2.5cm; margin-top: 0.11cm; margin-bottom: 0.07cm; page-break-inside: avoid">
-4.2 Hersteller: <b> {{ submission_form.medtech_manufacturer }} </b> </p>
+<p class="pbi_avoid">
+4.2 Hersteller: <strong> {{ submission_form.medtech_manufacturer }} </strong> </p>
 
-<table>
+<table class="nopadding">
     <colgroup>
-        <col width="1cm" />
+        <col/>
         <col/>
     </colgroup>
     <tr><td>
@@ -35,8 +35,8 @@
 <p>
  4.7 Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des Medizinproduktes
 herangezogen worden (Technische Sicherheit): </p>
-<p> <b>{{ submission_form.medtech_technical_safety_regulations }}</b> </p>
+<p> <strong>{{ submission_form.medtech_technical_safety_regulations }}</strong> </p>
 
 <p>
  4.8 Allfällige Abweichungen von den o.a. Bestimmungen (Normen): </p>
-<p> <b>{{ submission_form.medtech_departure_from_regulations }}</b> </p>
+<p> <strong>{{ submission_form.medtech_departure_from_regulations }}</strong> </p>

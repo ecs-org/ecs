@@ -12,7 +12,7 @@ cellspacing="1">
 </tr>
 {% for doc in submission_form.documents.all %}
 <tr>
-<td width="328" height="13"><b>{{ doc.doctype.name }}</b></td>
+<td width="328" height="13"><strong>{{ doc.doctype.name }}</strong></td>
 </td>
 <td width="178"><strong>{{ doc.version }}</strong></td>
 </td>
@@ -25,13 +25,13 @@ cellspacing="1">
 
 <h4>Name und Unterschrift der Antragstellerin/des Antragstellers</h4>
 
-<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
+<p class="pbi_avoid">
  9.1 Name: <strong> {{ submission_form.submitter_contact }} </strong> </p>
 
-<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
+<p class="pbi_avoid">
  9.2 Institution/ Firma: <strong> {{ submission_form.submitter_organisation }} </strong> </p>
 
-<p style="margin-left: 4.25cm; text-indent: -4.25cm; margin-bottom: 0.11cm; page-break-inside: avoid; page-break-after: avoid">
+<p class="pbi_avoid">
  9.3 Position: <strong> {{ submission_form.submitter_jobtitle }} </strong> </p>
 
 <table>

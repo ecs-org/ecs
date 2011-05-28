@@ -30,14 +30,14 @@ h2 {
 }
 h3 {
   display: block;
-  font-size: 12pt;
+  font-size: 13pt;
   font-weight: bold;
-  margin-bottom: 0.4cm;
-  padding: 0.5cm 0 0.1cm;
-  border-bottom: 1px solid #000;
+  margin: 0.2cm 0;
+  padding: 0.2cm 0;
+  border-top: 1px solid #000;
 }
 h4 {
-  font-size: 11pt;
+  font-size: 12pt;
   font-weight: normal;
   margin-bottom: 0.2cm;
   margin-top: 0.2cm;
@@ -70,27 +70,26 @@ td,
 th {
   padding: 0.1cm;
 }
-table.border1,
-table.part {
-  border: 1pt solid #000000;
+.nopadding td:first-child,
+.nopadding th:first-child {
+  padding-left: 0 !important;
 }
-table.border2 td {
-  margin: 3px;
-  border: 1pt solid #000000;
+.full_width {
+  width: 100%;
 }
 table.withborders td,
 table.withborders th {
   border: 1pt solid #000000;
 }
-table.withborders th{
+table.withborders th {
   border-bottom: 2pt solid #000000;
 }
 table.withrowborders,
-table.withrowborders tr{
+table.withrowborders tr {
   border-bottom: 1pt solid #000000;
   border-top: 1pt solid #000000;
 }
-.infotext{
+.infotext {
   margin: 0.5cm;
   text-align: center;
 }
@@ -105,18 +104,20 @@ table.withrowborders tr{
   text-align: center;
   padding: 0.2cm;
 }
-table.section{
+/*
+table.section {
   margin-top: 1cm;
   border-top: 1pt solid #000000;
 }
-table.section td{
+table.section td {
   padding: 0;
 }
-table.section h3{
+table.section h3 {
   margin-top: 0.5cm;
   border-top: 1pt solid #000000;
   padding-top: 0.5cm;
 }
+*/
 .indented {
   padding-left: 1cm;
 }

@@ -1,5 +1,5 @@
 {% load core corepdf %}
-<p>
+<p class="border_bottom">
     2.2 Fachgebiet: <span class="value">{{ submission_form.specialism }}</span>
 </p>
 
@@ -11,8 +11,8 @@
         <col width="157">
     </colgroup>
     <tr>
-        <td colspan="2" width="298"><b>2.3 Arzneimittelstudie</b> (wenn zutreffend)</td>
-        <td colspan="2" width="317"><b>2.4 Medizinproduktestudie</b> (wenn zutreffend)</td>
+        <td colspan="2" width="298"><strong>2.3 Arzneimittelstudie</strong> (wenn zutreffend)</td>
+        <td colspan="2" width="317"><strong>2.4 Medizinproduktestudie</strong> (wenn zutreffend)</td>
     </tr>
     <tr>
         <td width="147">2.3.1 Prüfsubstanz(en):</td>
@@ -28,7 +28,7 @@
     </tr>
 </table>
 
-<p>
+<p class="border_bottom">
     2.5 Klinische Phase: <span class="value">{{ submission_form.clinical_phase }}</span>
 </p>
 
@@ -39,7 +39,7 @@
 
 <p>{{ submission_form.multicentric|checkbox }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</p>
 
-<p>
+<p class="border_bottom">
     2.7 Liste der Zentren: <br/>
     {% for investigator in submission_form.investigators.all %}
         <div class="value">{{ investigator.organisation }}; {{ investigator.ethics_commission.zip_code }} {{ investigator.ethics_commission.city }} </div>
@@ -51,17 +51,17 @@
     {% endfor %}
 </p>
 
-<p>
+<p class="border_bottom">
     2.8 Liegen bereits Voten anderer Ethikkommissionen vor? <br/>
-    {{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <strong>ja</strong>, <b>Voten beilegen!</b>
+    {{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <strong>ja</strong>, <strong>Voten beilegen!</strong>
 </p>
 
-<p>
+<p class="border_bottom">
     2.9 Geplante Anzahl der Prüfungsteilnehmer/innen gesamt (<span class="underline">Dies bezieht sich auf alle teilnehmenden Zentren</span>): 
     <span class="value">{{ submission_form.subject_count }}</span>
 </p>
 
-<p>
+<p class="border_bottom">
     2.10 Charakterisierung der Prüfungsteilnehmer/innen : 
     2.10.1 Mindestalter: 
     <span class="value"> {{ submission_form.subject_minage }} </span> 
@@ -89,7 +89,7 @@
     </p>
 </div>
 
-<p>
+<p class="border_bottom">
     2.11 Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der Studie:
     <span class="value"> {{ submission_form.subject_duration }} </span>
 </p>

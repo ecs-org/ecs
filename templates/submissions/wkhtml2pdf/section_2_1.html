@@ -1,5 +1,5 @@
 {% load core corepdf %}
-<table>
+<table class="full_width">
   <thead>
     <td>
     2.1 Art des Projektes:
@@ -54,7 +54,7 @@
     spezifizieren:</p>
     <p class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>
 
-    <p><strong>Zusatzinformation:</strong> 
+    <p class="border_bottom"><strong>Zusatzinformation:</strong> 
     {{ submission_form.project_type_education_context_phd|checkbox }} 2.1.8 <strong>Dissertation</strong>
     {{ submission_form.project_type_education_context_master|checkbox }} 2.1.9 <strong>Diplomarbeit</strong></p>
 
