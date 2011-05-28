@@ -5,7 +5,7 @@
 
 	<form action="" method="post">
 	    
-    <p><label>Anrede</label> {% if data.gender == 'w' %}Frau{% else %}Herr{% endif %}</p>
+    <p><label>Anrede</label> {% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</p>
 	  <p><label>Vorname</label> {{ data.first_name }}</p>
     <p><label>Nachname</label> {{ data.last_name }}</p>
     <p><label>E-Mail</label> {{ data.email }}</p>

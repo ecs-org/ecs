@@ -47,6 +47,8 @@ class Vote(models.Model):
     def get_ec_number(self):
         if self.top and self.top.submission:
             return self.top.submission.get_ec_number_display()
+        elif self.submission_form:
+            return self.submission_form.submission.get_ec_number_display()
         return None
 
     def __unicode__(self):
