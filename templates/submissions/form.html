@@ -4,6 +4,8 @@
 {% block headertitle %}
     {% if notification_type %}
       {{ notification_type.name }} für {{ submission }}
+    {% else %}
+        {{ submission }}
     {% endif %}
 {% endblock %}
 

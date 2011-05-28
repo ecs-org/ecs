@@ -17,6 +17,12 @@
         <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
         {% endwith %}
     {% else %}
+        {% with submission.get_current_docstash as docstash %}
+        {% if docstash %}
+            <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}"> <span class="submission_inprogress"></span> </a>
+        {% endif %}
+        {% endwith %}
+
         {% with submission.current_submission_form as submission_form %}
         {% with submission|external_review:user as external_review_task %}
             {% if external_review_task %}

@@ -75,18 +75,36 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     else:
         notification_type = None
-    docstash = DocStash.objects.create(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+
+    if delete:
+        docstash = Docstash.objects.create(
+            group='ecs.core.views.submissions.create_submission_form',
+            owner=request.user,
+        )
+        created = True
+    else:
+        docstash, created = DocStash.objects.get_or_create(
+            group='ecs.core.views.submissions.create_submission_form',
+            owner=request.user,
+            content_type=ContentType.objects.get_for_model(Submission),
+            object_id=submission_form.submission.pk,
+        )
+
     with docstash.transaction():
         docstash.update({
-            'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
-            'formsets': get_submission_formsets(instance=submission_form),
-            'submission': submission_form.submission if not delete else None,
-            'documents': list(submission_form.documents.all().order_by('pk')),
             'notification_type': notification_type,
         })
-        docstash.name = "%s" % submission_form.project_title
-    if delete:
-        submission_form.submission.delete()
+        if created:
+            docstash.update({
+                'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
+                'formsets': get_submission_formsets(instance=submission_form),
+                'submission': submission_form.submission if not delete else None,
+                'documents': list(submission_form.documents.all().order_by('pk')),
+            })
+            docstash.name = "%s" % submission_form.project_title
+        if delete:
+            submission_form.submission.delete()
+
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
@@ -527,7 +545,7 @@ def submission_widget(request, template='submissions/widget.html'):
         data['filter_form'] = SubmissionWidgetFilterForm
     else:
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
-        data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+        data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
         data['filtername'] = 'submission_filter_widget'
         data['filter_form'] = SubmissionFilterForm
 
@@ -569,7 +587,7 @@ def assigned_submissions(request):
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
-    stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user)
+    stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm)
 
 @forceauth.exempt
