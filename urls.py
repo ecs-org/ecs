@@ -39,7 +39,6 @@ urlpatterns = patterns('',
     url(r'^audit/', include('ecs.audit.urls')),
     url(r'^core/', include('ecs.core.urls')),
     url(r'^dashboard/', include('ecs.dashboard.urls')),
-    url(r'^fastlane/', include('ecs.fastlane.urls')),
 
     url(r'^feedback/', include('ecs.feedback.urls')),
     url(r'^userswitcher/', include('ecs.userswitcher.urls')),

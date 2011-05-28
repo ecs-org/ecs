@@ -95,14 +95,6 @@
               </li>
              {% endfor %}
           {% endfor %}
-          {% if top.submission.expedited and top.submission.fast_lane_top %}
-              <li class="{{ top.submission.fast_lane_top.recommendation|yesno:"positive,negative" }} {{ top.submission.fast_lane_top.complete|yesno:"complete,incomplete"}}">
-                  {% trans "Expedited Review" %}
-                  {% if top.submission.fast_lane_top.complete %}
-                      <a class="textblock" href="{% url ecs.fastlane.views.copy_comment top_pk=top.pk %}">{% trans "copy comment" %}</a>
-                  {% endif %}
-              </li>
-          {% endif %}
           </ul>
         </div>
       </div>

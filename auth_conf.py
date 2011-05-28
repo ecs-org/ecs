@@ -8,7 +8,6 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
 from ecs.documents.models import Document
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
-from ecs.fastlane.models import FastLaneTop
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.pdfviewer.models import DocumentAnnotation
@@ -64,7 +63,6 @@ authorization.register(Measure, lookup='submission_form__submission')
 authorization.register(NonTestedUsedDrug, lookup='submission_form__submission')
 authorization.register(ForeignParticipatingCenter, lookup='submission_form__submission')
 authorization.register(Vote, lookup='submission_form__submission')
-authorization.register(FastLaneTop, lookup='submission')
 
 class DocumentQFactory(authorization.QFactory):
     def get_q(self, user):
