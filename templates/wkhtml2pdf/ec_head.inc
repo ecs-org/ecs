@@ -4,8 +4,8 @@
     <div class="address">
         Borschkegasse 8b/6<br />
         A-1090 Wien, Austria<br /><br />
-        T +43 1 404 00 – 2147, 2244<br />
-        F +43 1 404 00 – 1690<br />
+        T +43 1 40 400 – 2147, 2244<br />
+        F +43 1 40 400 – 1690<br />
         ethik-kom@meduniwien.ac.at<br />
         ethikkommission.meduniwien.ac.at
     </div>
