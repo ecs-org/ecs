@@ -61,7 +61,7 @@ FormInfo(ProgressReportNotification, fields=(
 ))
 
 FormInfo(Document, fields=(
-    FieldInfo(None, 'file', _(u'file')),
+    FieldInfo(None, 'file', _(u'PDF-file')),
     FieldInfo(None, 'original_file_name', _(u'file name')),
     FieldInfo(None, 'version', _(u'version')),
     FieldInfo(None, 'date', _(u'date')),
