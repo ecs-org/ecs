@@ -77,7 +77,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         notification_type = None
 
     if delete:
-        docstash = Docstash.objects.create(
+        docstash = DocStash.objects.create(
             group='ecs.core.views.submissions.create_submission_form',
             owner=request.user,
         )
