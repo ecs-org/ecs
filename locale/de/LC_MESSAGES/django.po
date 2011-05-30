@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-30 14:03+0200\n"
+"POT-Creation-Date: 2011-05-31 00:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2070,7 +2070,7 @@ msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
 #: meetings/views.py:248
 msgid "This meeting has not yet started."
-msgstr "Dieses Sitzung wurde noch nicht begonnen."
+msgstr "Diese Sitzung wurde noch nicht begonnen."
 
 #: meetings/views.py:260
 msgid "unfinished meetings cannot be stopped"
@@ -2317,8 +2317,8 @@ msgid ""
 "      "
 msgstr ""
 "\n"
-"          Sie sind derzeit als abwesend markiert. Um Ihre Aufgaben zurückzuholen "
-" besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
+"          Sie sind derzeit als abwesend markiert. Um Ihre Aufgaben "
+"zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
 #: templates/core.html:231
