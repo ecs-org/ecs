@@ -3,10 +3,13 @@
 import os, tempfile
 from django.conf import settings
 from ecs.utils.testcases import EcsTestCase
-from ecs.utils.gpgutils import encrypt_sign, decrypt_verify
+from ecs.utils.gpgutils import encrypt_sign, decrypt_verify, reset_keystore, gen_keypair, import_key
 
 class Gpgutilstest(EcsTestCase):
-    testdata="im very happy to be testdata"        
+    def setUp(self):
+        super(Gpgutilstest, self).setUp()
+        self.testdata="im very happy to be testdata"
+        
     
     def testConsistency(self):
         inputfilename = encryptedfilename = decryptedfilename = None

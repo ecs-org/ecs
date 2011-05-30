@@ -252,22 +252,29 @@ INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs
 
 
 # Storage Vault settings
-STORAGE_VAULT = 'ecs.utils.storagevault.LocalFileStorageVault'
+STORAGE_VAULT = 'ecs.mediaserver.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {
     'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
-    'authid': 'blu',
-    'authkey': 'bla'
+    'read_authid': 'bli',
+    'read_authkey': 'ble',
+    'write_authid': 'blu',
+    'write_authkey': 'bla',
 }
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "key": os.path.join(PROJECT_DIR, "..", "target", "encryptkey.asc"),
-    "owner": "mediaserver",
+    "encrypt_key": os.path.join(PROJECT_DIR, "..", "target", "mediaserver_public_key.asc"),
+    "encrypt_owner": "mediaserver",
+    "signing_key": os.path.join(PROJECT_DIR, "..", "target", "ecs_secret_key.asc"),
+    "signing_owner": "ecs",
 }
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-    "key": os.path.join(PROJECT_DIR, "..", "target", "decryptkey.asc"),
-    "owner": "mediaserver",
+    "decrypt_key": os.path.join(PROJECT_DIR, "..", "target", "mediaserver_secret_key.asc"),
+    "decrypt_owner": "mediaserver",
+    "verify_key":  os.path.join(PROJECT_DIR, "..", "target", "ecs_public_key.asc"),
+    "verify_owner": "ecs",
 }
+
 # Mediaserver Shared Settings
 MS_SHARED = {
     "url_expiration_sec": 6*60*60,
@@ -277,7 +284,6 @@ MS_SHARED = {
     "dpi": 96,
     "depth": 8,
 }
-
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 MS_CLIENT = {
     "server": "http://localhost:8000",
@@ -287,13 +293,12 @@ MS_CLIENT = {
     "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
     "same_host_as_server": True,
 }
-               
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
     "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
-    "doc_diskcache_maxsize" : 2**34,
+    "doc_diskcache_maxsize" :    20089166, # 2**34,
     "render_diskcache":  os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache")),
-    "render_diskcache_maxsize": 2**33,
+    "render_diskcache_maxsize": 100704077, # 2**33,
     "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
     "render_memcache_host": "127.0.0.1",    # host= localhost, 
     "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache

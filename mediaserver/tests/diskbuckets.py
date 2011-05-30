@@ -6,14 +6,14 @@ import hashlib
 import tempfile
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.utils.diskbuckets import DiskBuckets
+from ecs.mediaserver.diskbuckets import DiskBuckets
 
 
 class DiskBucketsTest(EcsTestCase):
  
     def setUp(self):
         self.root_dir = tempfile.mkdtemp()
-        self.store = DiskBuckets(self.root_dir, 4, True)
+        self.store = DiskBuckets(self.root_dir, allow_mkrootdir=True)
         self.uuids = []
         for i in range(0, 10):
             self.uuids.append(uuid.uuid4().get_hex())

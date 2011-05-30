@@ -25,5 +25,5 @@ class Command(BaseCommand):
             'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
         })
         
-        open('%s.pdf' % s.get_ec_number_display(separator='-'), 'w').write(pdf)
+        codecs.open('test.html', 'wb', "utf8").write(pdf) # % s.get_ec_number_display(separator='-'), 'w').write(pdf)
 
