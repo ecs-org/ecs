@@ -1,49 +1,80 @@
 # -*- coding: utf-8 -*-
 
-import os, getpass, tempfile, logging
+import os, getpass, logging
+
+from tempfile import NamedTemporaryFile
 
 from django.conf import settings
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
 from ecs.utils.pathutils import tempfilecopy
-from ecs.utils.storagevault import getVault
-from ecs.utils.diskbuckets import DiskBuckets  
-from ecs.utils.gpgutils import decrypt_verify
+from ecs.utils.pdfutils import pdf2pngs, pdf_barcodestamp
 
+from ecs.mediaserver.storagevault import getVault, VaultError
+from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError  
 from ecs.mediaserver.tasks import do_rendering
 
 
-class MediaProvider(object):
-    '''
-    Document loading, caching, storage and retrieval facility.
-    Implements caching layers, rules, storage logic
-    
-    @attention: getBlob, getPage may raise KeyError in case getting of data went wrong
+class MediaProvider:
+    ''' Media loading from vault, caching, rendering and retrieval Provider.
+    Implements 2 way caching, re/rendering service for application/pdf
+    @note: uses celery for tasks.do_rendering for asynchronous rendering, tasks.do_aging for asynchronous aging.
+    @raise KeyError: get_blob, get_page raise KeyError in case getting of data went wrong
     '''
 
     def __init__(self, allow_mkrootdir=False):
         self.render_memcache = VolatileCache()
-        self.render_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["render_diskcache"], "pages"),
-            settings.MS_SERVER ["render_diskcache_maxsize"], allow_mkrootdir)
-        self.doc_diskcache = DiskCache(os.path.join(settings.MS_SERVER ["doc_diskcache"], "blobs"),
-            settings.MS_SERVER ["doc_diskcache_maxsize"], allow_mkrootdir)
+        self.render_diskcache = DiskBuckets(settings.MS_SERVER ["render_diskcache"],
+            max_size= settings.MS_SERVER ["render_diskcache_maxsize"], allow_mkrootdir)
+        self.doc_diskcache = DiskBuckets(settings.MS_SERVER ["doc_diskcache"],
+            max_size= settings.MS_SERVER ["doc_diskcache_maxsize"], allow_mkrootdir)
         self.vault = getVault()
 
-
-    def _addBlob(self, identifier, filelike): 
-        ''' this is a test function and should not be used normal '''
-        logger = logging.getLogger()
-        logger.debug("_addBlob (%s), filelike is %s" % (identifier, filelike))
-        self.vault.add(identifier, filelike)
+    def _render_pages(self, identifier, filelike, private_workdir):
+        ''' Yields page, imagedata for each tiles * resolution * pages set in settings.MS_SHARED
+        @note: used by tasks.do_render to render actual data
+        '''
+        tiles = settings.MS_SHARED ["tiles"]
+        resolutions = settings.MS_SHARED ["resolutions"]
+        aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
+        dpi = settings.MS_SHARED ["dpi"]
+        depth = settings.MS_SHARED ["depth"]   
         
+        copied_file = False   
+        if hasattr(filelike,"name"):
+            tmp_sourcefilename = filelike.name
+        elif hasattr(filelike, "read"):
+            tmp_sourcefilename = tempfilecopy(filelike)
+            copied_file = True
         
-    def _cacheBlob(self, identifier, filelike):
+        try:   
+            for t in tiles:
+                for w in resolutions:
+                    for page, data in pdf2pngs(identifier, tmp_sourcefilename, private_workdir, w, t, t, aspect_ratio, dpi, depth):
+                        yield page, data
+        finally:
+            if copied_file:
+                if os.path.exists(tmp_sourcefilename):
+                    os.remove(tmp_sourcefilename)
+        
+    def _cache_blob(self, identifier, filelike):
         ''' create/udpate a blob into the diskcache directly '''
         self.doc_diskcache.create_or_update(identifier, filelike)
-        
+
+    def add_blob(self, identifier, filelike): 
+        ''' add (create or fail) a blob in the storage vault
+        @raise KeyError: if store to vault fails
+        '''
+        logger = logging.getLogger()
+        logger.debug("add_blob (%s), filelike is %s" % (identifier, filelike))
+        try:
+            self.vault.add(identifier, filelike)
+        except VaultError as e:
+            raise KeyError("adding to storage vault resulted in an exception: {1}".format(e))
 
     def prime_blob(self, identifier=None, mimetype='application/pdf', wait=True):
         ''' load blob from storage vault, cache blob, optional rerender pages (if application/pdf), cache pages.
-        returns success, identifier, response if wait==True else: True, identifier, ""
+        @return: returns success, identifier, response if wait==True else: True, identifier, ""
         '''
         result = do_rendering.delay(identifier, mimetype)
         
@@ -52,48 +83,32 @@ class MediaProvider(object):
             if not success:
                 logger = logging.getLogger()
                 if str(identifier) != str(used_identifier):
-                    logger.error("prime_blob could not getBlob(%s), exception was %r" % (identifier, response))
+                    logger.error("prime_blob could not get_blob(%s), exception was %r" % (identifier, response))
                 else:
                     logger.error("prime_blob of blob %s returned an IOError: %r" % (identifier, response))
                     
             return success, used_identifier, response
         else:
             return True, identifier, ""
-
       
-    def getBlob(self, identifier, try_diskcache=True, try_vault=True):
-        '''get a blob (unidentified media data)
+    def get_blob(self, identifier, try_diskcache=True, try_vault=True):
+        '''get a blob (unidentified media data) either from caches, or from storage vault
         @raise KeyError: if reading the data of the identifier went wrong 
         '''
         filelike=None
-        
+                
         if try_diskcache:
-            filelike = self.doc_diskcache.get(identifier)
+            filelike = self.doc_diskcache.get(identifier, touch_accesstime=True)
         
         if not filelike and try_vault and identifier:
             try:
                 filelike = self.vault.get(identifier)
-            except KeyError as exceptobj:
+                self.doc_diskcache.create_or_update(identifier, filelike)
+            except Exception as exceptobj:
                 raise KeyError, "could not load blob with identifier %s, exception was %r" % (identifier, exceptobj)
+            finally:
+                self.vault.decommission(filelike)    
             
-            if hasattr(filelike, "name"):
-                inputfilename = filelike.name
-            else:
-                inputfilename = tempfilecopy(filelike) 
-            
-            try:
-                osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
-                decrypt_verify(inputfilename, decryptedfilename, settings.STORAGE_DECRYPT["gpghome"],
-                    settings.STORAGE_DECRYPT ["owner"])
-            except IOError as exceptobj:
-                raise KeyError, "could not decrypt blob with identifier %s, exception was %r" % (identifier, exceptobj)
-    
-            try:
-                with open(decryptedfilename, "rb") as decryptedfilelike:
-                    self.doc_diskcache.create_or_update(identifier, decryptedfilelike)
-            except IOError as exceptobj:
-                raise KeyError, "could not put decrypted blob with identifier %s into diskcache, exception was %r" %(identifier, exceptobj)
-
             filelike = self.doc_diskcache.get(identifier)
         
         if not filelike:
@@ -101,22 +116,47 @@ class MediaProvider(object):
 
         return filelike
 
+    def get_branded(self, identifier, mimetype='application/pdf', branding=None):
+        ''' get a branded blob (identified by mimetype) either from caches, or from storage vault and re-render branding
+        @raise KeyError: if reading the data of the identifier went wrong 
+        '''
+        f = None
+        
+        if branding is None:
+            f = self.get_blob(identifier)     
+        else:    
+            try: # look if identifier+identifier filename is already there (file with stamp)
+                f = self.get_blob(identifier+identifier, try_vault=False)            
+            except KeyError:
+                try:
+                    # regenerate branded pdf and cache result before delivering
+                    inputpdf = self.get_blob(identifier)
+                    
+                    with NamedTemporaryFile(suffix='.pdf') as outputpdf:
+                        pdf_barcodestamp(inputpdf, outputpdf, identifier)
+                        outputpdf.seek(0)
+                        self._cache_blob(identifier+identifier, outputpdf)
+                except (EnvironmentError, KeyError) as e:
+                    raise KeyError(e)
 
-    def setPage(self, page, filelike, use_render_memcache=False, use_render_diskcache=False):
+                f = self.get_blob(identifier+identifier, try_vault=False)        
+                
+        return f
+
+    def set_page(self, page, filelike, use_render_memcache=False, use_render_diskcache=False):
         ''' set (create or update) a picture of an page of an document
         @param page: ecs.utils.pdfutils.Page Object
         '''
         identifier = str(page)
         if use_render_memcache:
-            self.render_memcache.set(identifier, filelike)
+            self.render_memcache.create_or_update(identifier, filelike)
         if use_render_diskcache:
             self.render_diskcache.create_or_update(identifier, filelike)
 
-
-    def getPage(self, page, try_memcache=True, try_diskcache=True):
+    def get_page(self, page, try_memcache=True, try_diskcache=True):
         ''' get a picture of an page of an document  
         @param page: ecs.utils.pdfutils.Page Object 
-        @raise KeyError: if page could not loaded 
+        @raise KeyError: if page could not be loaded 
         '''
         filelike = None
         identifier = str(page)
@@ -125,10 +165,10 @@ class MediaProvider(object):
             filelike = self.render_memcache.get(identifier)
         
         if filelike:
-            self.render_diskcache.touch_accesstime(identifier) # update access in page cache
+            self.render_diskcache.touch_accesstime(identifier) # update access in page diskcache
         else:
             if try_diskcache:
-                filelike = self.render_diskcache.get(identifier) 
+                filelike = self.render_diskcache.get(identifier, touch_accesstime=True) 
                 if filelike:
                     self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
                 else: 
@@ -139,15 +179,15 @@ class MediaProvider(object):
                     else:
                         filelike = self.render_diskcache.get(identifier)
                         
-                self.render_memcache.set(identifier, filelike)
+                self.render_memcache.create_or_update(identifier, filelike)
                 filelike.seek(0)
         return filelike
 
 
-
-class VolatileCache(object):
+class VolatileCache:
     '''
-    A volatile, key/value, self aging, fixedsize cache using memcache
+    volatile, key/value, self aging, fixed size cache using memcached
+    @warning: Storing values larger than 1MB requires recompiling/reconfiguring memcached and may not be supported
     '''
 
     def __init__(self):
@@ -162,64 +202,19 @@ class VolatileCache(object):
         self.mc = memcache.Client(['%s:%d' % (settings.MS_SERVER ["render_memcache_host"],
             settings.MS_SERVER ["render_memcache_port"])], debug=False)
 
-    def set(self, identifier, filelike):
-        ''' set (create_or_update) data value of identifier) '''
+    def create_or_update(self, identifier, filelike):
+        ''' create_or_update (set) data value of identifier) '''
         if hasattr(filelike,"read"):
             self.mc.set("".join((identifier, self.ns)), filelike.read())
         else:
             self.mc.set("".join((identifier, self.ns)), filelike)
         
     def get(self, identifier):
-        ''' get data value of identifier '''
+        ''' get data value of identifier 
+        @return: The value or None.
+        '''
         return self.mc.get("".join((identifier, self.ns)))
 
     def entries(self):
         ''' dump all values ''' 
         return self.mc.dictionary.values() 
-
-
-
-class DiskCache(DiskBuckets):
-    '''
-    Persistent cache using directory buckets which are derived from the cache identifier of storage unit
-    '''
-    def __init__(self, root_dir, maxsize, allow_mkrootdir=False):
-        self.maxsize = maxsize
-        super(DiskCache, self).__init__(root_dir, allow_mkrootdir)
-
-    def add(self, identifier, filelike):
-        super(DiskCache, self).add(identifier, filelike)
-    
-    def create_or_update(self, identifier, filelike):
-        super(DiskCache, self).create_or_update(identifier, filelike)
-             
-    def touch_accesstime(self, identifier):
-        os.utime(self._generate_path(identifier), None)
-
-    def get(self, identifier):
-        if self.exists(identifier):
-            self.touch_accesstime(identifier)
-            return super(DiskCache, self).get(identifier)
-        else:
-            return None
-        
-    def age(self):
-        entriesByAge = self.entries_by_age()
-        cachesize = self.size()
-        
-        while cachesize < self.maxsize:
-            oldest = entriesByAge.remove()
-            size = os.path.getsize(oldest)
-            os.remove(oldest)
-            cachesize -= size
-
-    def entries_by_age(self):
-        return list(reversed(sorted(self.entries(), key=os.path.getatime)))
-
-    def entries(self):
-        return [open(path,"rb") for path in os.walk(self.root_dir)]
-
-    def size(self):
-        return sum(os.path.getsize(entry) for entry in os.walk(self.root_dir))
-
-

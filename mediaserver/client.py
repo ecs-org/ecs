@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
 from time import time
 from urllib2 import urlopen
-from cStringIO import StringIO
+from urlparse import urlparse, parse_qs
+from urllib import urlencode
 
 from django.conf import settings
-from django.test.client import Client
-from django.http import Http404
 
-from ecs.utils import s3utils
+from ecs.utils.django_signed.signed import base64_hmac
+
+
+def add_to_storagevault(uuid, filelike): 
+    ''' add (create or fail) a blob in the storage vault
+    '''
+    from ecs.mediaserver.utils import MediaProvider
+    m = MediaProvider()
+    m.add_blob(uuid, filelike)
 
 
 def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, brand=False):
@@ -29,8 +36,8 @@ def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, br
         key_id = settings.MS_CLIENT ["key_id"]
         expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
     
-        s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
-        url= s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
+        authurl = authUrl(key_id, settings.MS_CLIENT['key_secret'])
+        url= authurl.grant(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
 
         f = urlopen(url)
         response = f.read()
@@ -46,7 +53,7 @@ def download_from_mediaserver(uuid, filename, personalization=None, brand=False)
     '''
     if settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.utils import MediaProvider
-        return MediaProvider().getBlob(uuid)
+        return MediaProvider().get_blob(uuid)
     else:
         # TODO using urlopen and lot of data over the internet might go wrong: Add resilience
         f = urlopen(generate_media_url(uuid, filename, personalization=personalization, brand=brand))
@@ -68,8 +75,8 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
     key_id = settings.MS_CLIENT ["key_id"]
     expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
 
-    s3url = s3utils.S3url(key_id, settings.MS_CLIENT['key_secret'])
-    return s3url.createUrl(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
+    authurl = authUrl(key_id, settings.MS_CLIENT['key_secret'])
+    return authurl.grant(settings.MS_CLIENT['server'], settings.MS_CLIENT['bucket'], objid, key_id, expires)
 
 
 def generate_pages_urllist(uuid, pages):
@@ -98,7 +105,7 @@ def generate_pages_urllist(uuid, pages):
                 h =  w * aspect_ratio
                 docshotData.append({
                     'description': "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w),
-                    'url': s3utils.S3url(key_id, key_secret).createUrl(baseurl, bucket, objectid, key_id, expires), 
+                    'url': authUrl(key_id, key_secret).grant(baseurl, bucket, objectid, key_id, expires), 
                     'page': pagenum, 
                     'tx': t,
                     'ty': t,
@@ -107,3 +114,47 @@ def generate_pages_urllist(uuid, pages):
                 })
                 pagenum += 1
     return docshotData
+
+
+class authUrl(object):
+    def __init__(self, KeyId, KeySecret):
+        self.keystore = {KeyId: KeySecret}    
+    
+    def _create_signature(self, bucket, objectid, keyId, expires):
+        secretKey = self.keystore [keyId]
+        signme = "GET\n\n\n%s\n%s%s" % (expires, bucket, objectid)
+        return base64_hmac(signme, secretKey)
+
+    def parse(self, urlstring):
+        parsedurl = urlparse(urlstring)
+        query_dict = parse_qs(parsedurl.query)
+        tail, sep ,head = parsedurl.path.rpartition("/")
+        bucket = tail + sep
+        objectid = head
+        keyId = query_dict["AWSAccessKeyId"].pop() if "AWSAccessKeyId" in query_dict else None
+        expires = query_dict["Expires"].pop() if "Expires" in query_dict else None
+        signature = query_dict["Signature"].pop() if "Signature" in query_dict else None
+        return (bucket, objectid, keyId, expires, signature)
+    
+    def grant(self, baseurl, bucket, objectid, keyId, expires):
+        signature = self._create_signature(bucket, objectid, keyId, expires)
+        qd = {
+            'AWSAccessKeyId': keyId,
+            'Expires': expires,
+            'Signature': signature,
+        }
+        url = '{0}{1}{2}?{3}'.format(baseurl, bucket, objectid, urlencode(qd)) 
+        #auth_header = "Authorization: AWS %s:%s" % (keyId, signature)
+        return url
+        
+    def verify_parsed(self, bucket, objectid, keyId, expires, signature):
+        if keyId not in self.keystore:
+            return False
+        else:
+            expected_signature = self._create_signature(bucket, objectid, keyId, expires)
+            return (int(expires) > int(time()) and expected_signature == signature)
+    
+    def verify(self, urlstring):
+        bucket, objectid, keyId, expires, signature = self.parse(urlstring)
+        return self.verify_parsed(bucket, objectid, keyId, expires, signature)
+    

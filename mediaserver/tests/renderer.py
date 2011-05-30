@@ -8,7 +8,7 @@ from uuid import uuid4
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.utils.pdfutils import pdf_page_count, Page
-from ecs.mediaserver.tasks import _render_pages
+from ecs.mediaserver.utils import MediaProvider
 
 
 class RendererTest(EcsTestCase):
@@ -41,7 +41,9 @@ class RendererTest(EcsTestCase):
 
         pages_real = []
         
-        for page, data in _render_pages(self.uuid, self.f_pdfdoc, self.render_dirname):
+        mp = MediaProvider()
+        
+        for page, data in mp._render_pages(self.uuid, self.f_pdfdoc, self.render_dirname):
             # check for png magic
             current_magic = data.read(len(self.png_magic))
             self.assertTrue(current_magic == self.png_magic)
@@ -50,4 +52,4 @@ class RendererTest(EcsTestCase):
             pages_real += [page]
         
         self.assertEqual(len(pages_expected), len(pages_real))
-        
+    

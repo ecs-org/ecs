@@ -2,8 +2,6 @@ from django.template import Library, TemplateSyntaxError, Node
 from django.utils import simplejson
 from django.utils.safestring import mark_safe
 
-from ecs.utils.msutils import generate_pages_urllist
-
 register = Library()
 
 class AnnotationsNode(Node):
@@ -26,7 +24,7 @@ def get_annotations(parser, token):
     
 @register.filter
 def images(document):
-    data = simplejson.dumps(generate_pages_urllist(document.uuid_document, document.pages))
+    data = simplejson.dumps(document.get_pages_list())
     return mark_safe(data)
 
 @register.filter

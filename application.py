@@ -195,13 +195,12 @@ mpmath:inst:all:pypi:mpmath
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 
 
-# logging: django-sentry; uuid is in mainlibs since 2.3 ...
-uuid:inst:all:pypi:uuid
-django-indexer:inst:all:pypi:django-indexer==0.2.1
-django-paging:inst:all:pypi:django-paging\>=0.2.2
+# logging: django-sentry; 
+# uuid:inst:all:pypi:uuid uuid is in mainlibs since 2.3 ... and was not thread safe in 2.5...
+django-indexer:inst:all:pypi:django-indexer\>=0.3.0
+django-paging:inst:all:pypi:django-paging\>=0.2.4
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
-pygooglechart:inst:all:pypi:pygooglechart
-django-sentry:inst:all:pypi:django-sentry\>=1.6.10
+django-sentry:inst:all:pypi:django-sentry\>=1.8.4
 
 # ecs.help needs reversion from now on
 django-reversion:inst:all:pypi:django-reversion
