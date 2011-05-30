@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-28 18:22+0200\n"
+"POT-Creation-Date: 2011-05-30 13:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -187,7 +187,7 @@ msgstr "Formale Prüfung Einreichung"
 msgid "B2 Resubmission Review"
 msgstr "Diplomarbeit Review"
 
-#: core/bootstrap.py:102 templates/submissions/list.html:88
+#: core/bootstrap.py:102 templates/submissions/list.html:95
 #, fuzzy
 msgid "B2 Vote Review"
 msgstr "B2 Voten"
@@ -206,7 +206,7 @@ msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
 #: core/bootstrap.py:106 core/bootstrap.py:117
-#: templates/submissions/list.html:94
+#: templates/submissions/list.html:101
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
@@ -1451,7 +1451,7 @@ msgstr "Einladung Gutachten"
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
-#: core/forms/checklist.py:22 core/models/voting.py:30
+#: core/forms/checklist.py:22 core/models/voting.py:31
 msgid "comment"
 msgstr "Kommentar"
 
@@ -1484,7 +1484,6 @@ msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
 #: core/forms/forms.py:345 core/forms/forms.py:367 core/forms/forms.py:392
 #: templates/boilerplate/list.html:10 templates/meetings/status.html:21
-#: templates/submissions/tabs/status.html:15
 msgid "New"
 msgstr "Neu"
 
@@ -1835,7 +1834,7 @@ msgstr "5a Zurückgezogen (Antragsteller)"
 msgid "5b not examined"
 msgstr "5b Nicht behandelt"
 
-#: core/models/voting.py:28
+#: core/models/voting.py:29
 msgid "vote"
 msgstr "Votum"
 
@@ -2255,7 +2254,7 @@ msgstr "Studien Meldungen"
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:72 templates/submissions/list.html:110
+#: templates/core.html:72 templates/submissions/list.html:117
 msgid "Meetings"
 msgstr "Sitzungen"
 
@@ -2349,7 +2348,7 @@ msgstr "Ältere Einträge"
 
 #: templates/boilerplate/form.html:15
 #: templates/meetings/constraints/user_form.html:19
-#: templates/notifications/form.html:27 templates/submissions/form.html:13
+#: templates/notifications/form.html:27 templates/submissions/form.html:15
 #: templates/users/profile_form.html:40
 msgid "Save"
 msgstr "Speichern"
@@ -2677,12 +2676,12 @@ msgstr ""
 msgid "No Categories."
 msgstr "Fachgebiete"
 
-#: templates/notifications/form.html:28 templates/submissions/form.html:14
+#: templates/notifications/form.html:28 templates/submissions/form.html:16
 msgid "Validate"
 msgstr "Validieren"
 
-#: templates/notifications/form.html:29 templates/submissions/form.html:23
-#: templates/submissions/form.html.py:74
+#: templates/notifications/form.html:29 templates/submissions/form.html:25
+#: templates/submissions/form.html.py:76
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -2695,7 +2694,7 @@ msgid "Distribute"
 msgstr "Verteilen"
 
 #: templates/notifications/answers/view.html:6
-#: templates/submissions/list.html:83
+#: templates/submissions/list.html:90
 #: templates/submissions/tabs/status.html:48
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
@@ -2825,48 +2824,48 @@ msgstr ""
 "Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
 "erstellen.\n"
 
-#: templates/submissions/form.html:18
+#: templates/submissions/form.html:20
 msgid "Submit Amendment"
 msgstr "Korrektur absenden"
 
-#: templates/submissions/form.html:20
+#: templates/submissions/form.html:22
 msgid "Resubmit"
 msgstr "Neu Einreichen"
 
-#: templates/submissions/form.html:42 templates/submissions/form.html.py:43
-#: templates/submissions/form.html:44
+#: templates/submissions/form.html:44 templates/submissions/form.html.py:45
+#: templates/submissions/form.html:46
 msgid "Add new measure"
 msgstr "Neue Maßnahme hinzufügen"
 
-#: templates/submissions/form.html:45
+#: templates/submissions/form.html:47
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:71
+#: templates/submissions/form.html:73
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:71
+#: templates/submissions/form.html:73
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:74
+#: templates/submissions/form.html:76
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:75
+#: templates/submissions/form.html:77
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: templates/submissions/form.html:75
+#: templates/submissions/form.html:77
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:79
+#: templates/submissions/form.html:81
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
@@ -2874,49 +2873,49 @@ msgstr ""
 "Sie können noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
 
-#: templates/submissions/list.html:25 templates/submissions/list.html:143
-#: templates/submissions/widget.html:71 templates/users/administration.html:25
+#: templates/submissions/list.html:25 templates/submissions/list.html:150
+#: templates/submissions/widget.html:77 templates/users/administration.html:25
 #: templates/users/administration.html:85 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
-#: templates/submissions/list.html:25 templates/submissions/list.html:143
-#: templates/submissions/widget.html:71 templates/users/administration.html:25
+#: templates/submissions/list.html:25 templates/submissions/list.html:150
+#: templates/submissions/widget.html:77 templates/users/administration.html:25
 #: templates/users/administration.html:85
 msgid "of"
 msgstr "von"
 
-#: templates/submissions/list.html:52 templates/submissions/list.html.py:81
+#: templates/submissions/list.html:52 templates/submissions/list.html.py:88
 #: templates/submissions/readonly_form.html:15
 #: templates/submissions/tabs/involved_parties.html:47
 #: templates/submissions/tabs/status.html:19
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/submissions/list.html:86
+#: templates/submissions/list.html:93
 #, fuzzy
 msgid "Vote Review"
 msgstr "B2 Voten"
 
-#: templates/submissions/list.html:100 templates/submissions/widget.html:39
+#: templates/submissions/list.html:107 templates/submissions/widget.html:45
 msgid "Categories"
 msgstr "Fachgebiete"
 
-#: templates/submissions/list.html:105 templates/submissions/widget.html:44
+#: templates/submissions/list.html:112 templates/submissions/widget.html:50
 msgid "ExpeditedReviewCategories"
 msgstr "Expedited Review Fachgebiete"
 
-#: templates/submissions/list.html:116
+#: templates/submissions/list.html:123
 msgid "Delete Changes"
 msgstr "Änderungen verwerfen"
 
-#: templates/submissions/list.html:122
+#: templates/submissions/list.html:129
 msgid ""
 "Die Studie wurde in der eingereichten Form von der Ethik-Kommission "
 "abgelehnt. Sie können die Studie neu einreichen."
 msgstr ""
 
-#: templates/submissions/list.html:131 templates/submissions/widget.html:54
+#: templates/submissions/list.html:138 templates/submissions/widget.html:60
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
@@ -3022,7 +3021,7 @@ msgstr "Nicht Schließen"
 msgid "save"
 msgstr "Speichern"
 
-#: templates/submissions/widget.html:60 templates/submissions/widget.html:62
+#: templates/submissions/widget.html:66 templates/submissions/widget.html:68
 msgid "More"
 msgstr "Mehr"
 
@@ -3155,7 +3154,7 @@ msgstr "Übertragen am"
 
 #: templates/tasks/log.html:11
 msgid "Assigend To"
-msgstr "Übertragen am"
+msgstr "Übertragen an"
 
 #: templates/tasks/log.html:15
 msgid "Groups"
