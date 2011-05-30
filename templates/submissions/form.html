@@ -5,7 +5,7 @@
     {% if notification_type %}
       {{ notification_type.name }} für {{ submission }}
     {% else %}
-        {{ submission }}
+        {% if submission %}{{ submission }}{% endif %}
     {% endif %}
 {% endblock %}
 
