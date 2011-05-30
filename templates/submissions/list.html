@@ -52,7 +52,7 @@ Liste aller Studien
             <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
             | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
         </div>
-        <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
+        <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr</div>
         {% endwith %}
     {% else %}
         {% with submission.current_submission_form as submission_form %}
@@ -119,7 +119,7 @@ Liste aller Studien
         {% endwith %}
         {% if docstash %}
             <div class="info">
-                Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})
+                Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ submission.forms.count|add:1 }})
                 <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
             </div>
         {% endif %}
