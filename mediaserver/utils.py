@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import os, getpass, logging
+import os, time, getpass, logging
 
 from tempfile import NamedTemporaryFile
+from urllib import urlencode
+from urlparse import urlparse, parse_qs
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
+from ecs.utils.django_signed.signed import base64_hmac
 from ecs.utils.pathutils import tempfilecopy
 from ecs.utils.pdfutils import pdf2pngs, pdf_barcodestamp
 
@@ -25,9 +28,9 @@ class MediaProvider:
     def __init__(self, allow_mkrootdir=False):
         self.render_memcache = VolatileCache()
         self.render_diskcache = DiskBuckets(settings.MS_SERVER ["render_diskcache"],
-            max_size= settings.MS_SERVER ["render_diskcache_maxsize"], allow_mkrootdir)
+            max_size= settings.MS_SERVER ["render_diskcache_maxsize"], allow_mkrootdir= allow_mkrootdir)
         self.doc_diskcache = DiskBuckets(settings.MS_SERVER ["doc_diskcache"],
-            max_size= settings.MS_SERVER ["doc_diskcache_maxsize"], allow_mkrootdir)
+            max_size= settings.MS_SERVER ["doc_diskcache_maxsize"], allow_mkrootdir= allow_mkrootdir)
         self.vault = getVault()
 
     def _render_pages(self, identifier, filelike, private_workdir):
@@ -218,3 +221,46 @@ class VolatileCache:
     def entries(self):
         ''' dump all values ''' 
         return self.mc.dictionary.values() 
+
+
+class AuthUrl:
+    def __init__(self, KeyId, KeySecret):
+        self.keystore = {KeyId: KeySecret}    
+    
+    def _create_signature(self, bucket, objectid, keyId, expires):
+        secretKey = self.keystore [keyId]
+        signme = "GET\n\n\n%s\n%s%s" % (expires, bucket, objectid)
+        return base64_hmac(signme, secretKey)
+
+    def parse(self, urlstring):
+        parsedurl = urlparse(urlstring)
+        query_dict = parse_qs(parsedurl.query)
+        tail, sep ,head = parsedurl.path.rpartition("/")
+        bucket = tail + sep
+        objectid = head
+        keyId = query_dict["AWSAccessKeyId"].pop() if "AWSAccessKeyId" in query_dict else None
+        expires = query_dict["Expires"].pop() if "Expires" in query_dict else None
+        signature = query_dict["Signature"].pop() if "Signature" in query_dict else None
+        return (bucket, objectid, keyId, expires, signature)
+    
+    def grant(self, baseurl, bucket, objectid, keyId, expires):
+        signature = self._create_signature(bucket, objectid, keyId, expires)
+        qd = {
+            'AWSAccessKeyId': keyId,
+            'Expires': expires,
+            'Signature': signature,
+        }
+        url = '{0}{1}{2}?{3}'.format(baseurl, bucket, objectid, urlencode(qd)) 
+        #auth_header = "Authorization: AWS %s:%s" % (keyId, signature)
+        return url
+        
+    def verify_parsed(self, bucket, objectid, keyId, expires, signature):
+        if keyId not in self.keystore:
+            return False
+        else:
+            expected_signature = self._create_signature(bucket, objectid, keyId, expires)
+            return (int(expires) > int(time.time()) and expected_signature == signature)
+    
+    def verify(self, urlstring):
+        bucket, objectid, keyId, expires, signature = self.parse(urlstring)
+        return self.verify_parsed(bucket, objectid, keyId, expires, signature)

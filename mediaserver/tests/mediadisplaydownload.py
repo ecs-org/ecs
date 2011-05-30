@@ -14,8 +14,8 @@ from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.utils import gpgutils, pdfutils
-from ecs.mediaserver.utils import MediaProvider
-from ecs.mediaserver.client import authUrl, generate_pages_urllist
+from ecs.mediaserver.utils import MediaProvider, AuthUrl
+from ecs.mediaserver.client import generate_pages_urllist
 
 class MediaDisplayDownload(LoginTestCase):
     filename = 'menschenrechtserklaerung.pdf'
@@ -41,7 +41,7 @@ class MediaDisplayDownload(LoginTestCase):
         
         for shot in dsdata:
             url = shot['url']
-            self.assertTrue(authUrl(key_id, key_secret).verify(url))
+            self.assertTrue(AuthUrl(key_id, key_secret).verify(url))
             
             parsed = urlparse.urlparse(url)
             dummy, uuid, tileset, width, pagenr, dummy = parsed.path.rsplit('/', 5)
@@ -59,7 +59,7 @@ class MediaDisplayDownload(LoginTestCase):
         expires = int(time()) + expiration_sec
         key_id = settings.MS_CLIENT ["key_id"]
         key_secret = settings.MS_CLIENT ["key_secret"]
-        fullurl = authUrl(key_id, key_secret).grant(baseurl, bucket, '', key_id, expires)
+        fullurl = AuthUrl(key_id, key_secret).grant(baseurl, bucket, '', key_id, expires)
         response = self.client.get(fullurl)
         self.failUnlessEqual(response.status_code, 200)
         self.assertTrue(self.pdfdata, response.content)

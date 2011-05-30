@@ -4,7 +4,6 @@ from django.utils.translation import ugettext as _
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
-from ecs.utils import gpgutils
 
 @bootstrap.register()
 def document_types():

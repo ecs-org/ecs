@@ -47,7 +47,7 @@ def do_rendering(identifier=None, mimetype='application/pdf', **kwargs):
                 result = True, str(identifier), ""
             else:
                 try:    
-                    render_dirname = tempfile.mkdtemp()
+                    render_dirname = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
                     
                     for page, data in mediaprovider._render_pages(identifier, filelike, render_dirname):
                         mediaprovider.set_page(page, data, use_render_diskcache=True)

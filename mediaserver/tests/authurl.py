@@ -4,9 +4,9 @@ from uuid import uuid4
 from time import time
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.mediaserver.client import authUrl
+from ecs.mediaserver.utils import AuthUrl
 
-class authUrlTest(EcsTestCase):
+class AuthUrlTest(EcsTestCase):
     
     baseurl =  "http://void"
     bucket = "/"
@@ -18,7 +18,7 @@ class authUrlTest(EcsTestCase):
         hasExpired = int(time())
         willExpire = hasExpired + 60
         
-        authurl = authUrl(self.keyid, self.keysecret)
+        authurl = AuthUrl(self.keyid, self.keysecret)
         url = authurl.grant(self.baseurl, self.bucket, uuid.get_hex(), self.keyid, willExpire)
         bucket, objectid, keyid, expires, signature = authurl.parse(url)
         self.assertEqual(authurl.verify_parsed(bucket, objectid, keyid, expires, signature), True)

@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.conf import settings
 
+from ecs.integration import bootstrap as integration_bootstrap
 from ecs.core import bootstrap as core_bootstrap
 from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
@@ -16,10 +17,16 @@ class EcsTestCase(TestCase):
     def setUpClass(self):
         get_or_create_user('root@example.org', is_superuser=True)
         get_or_create_user(settings.DEFAULT_CONTACT)
+        
+        integration_bootstrap.create_settings_dirs()
+        
         core_bootstrap.templates()
         documents_bootstrap.document_types()
-        mediaserver_bootstrap.import_decryption_key()
-        documents_bootstrap.import_encryption_key()
+
+        mediaserver_bootstrap.import_encryption_sign_keys()
+        mediaserver_bootstrap.import_decryption_verify_keys()
+        mediaserver_bootstrap.create_disk_caches()
+        mediaserver_bootstrap.create_local_storage_vault()
         
     @classmethod
     def teardownClass(self):

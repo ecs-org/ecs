@@ -7,13 +7,12 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils import forceauth
 
-from ecs.mediaserver.utils import MediaProvider
-from ecs.mediaserver.client import authUrl
+from ecs.mediaserver.utils import MediaProvider, AuthUrl
 
 
 @forceauth.exempt
 def prime_cache(request, uuid, mimetype='application/pdf'):
-    authurl = authUrl(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    authurl = AuthUrl(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not authurl.verify(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
 
@@ -24,7 +23,7 @@ def prime_cache(request, uuid, mimetype='application/pdf'):
 
 @forceauth.exempt
 def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
-    authurl = authUrl(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
+    authurl = AuthUrl(settings.MS_CLIENT ["key_id"], settings.MS_CLIENT ["key_secret"])
     if not authurl.verify(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
     
@@ -47,7 +46,7 @@ def get_pdf(request, *args, **kwargs):
 @forceauth.exempt
 def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None):
     logger = getLogger()
-    authurl = authUrl(settings.MS_CLIENT['key_id'], settings.MS_CLIENT['key_secret'])
+    authurl = AuthUrl(settings.MS_CLIENT['key_id'], settings.MS_CLIENT['key_secret'])
     
     if not authurl.verify(request.get_full_path()):
         return HttpResponseBadRequest(_("Invalid expiring url"))
