@@ -193,6 +193,12 @@ def edit_profile(request):
 ### User Administration ###
 ###########################
 
+def notify_return(request):
+    profile = request.user.get_profile()
+    profile.indisposed = False
+    profile.save()
+    return HttpResponseRedirect(reverse('ecs.users.views.profile'))
+
 @user_flag_required('internal')
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
