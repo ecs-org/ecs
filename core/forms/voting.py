@@ -6,7 +6,7 @@ from django import forms
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.models import Vote
 from ecs.tasks.models import Task
-from ecs.core.models.voting import FINAL_VOTE_RESULTS
+from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
 from ecs.users.utils import sudo
 
 def ResultField(**kwargs):
@@ -34,7 +34,7 @@ class VoteForm(SaveVoteForm):
     def save(self, *args, **kwargs):
         instance = super(VoteForm, self).save(*args, **kwargs)
 
-        if instance.result in FINAL_VOTE_RESULTS:
+        if instance.result in PERMANENT_VOTE_RESULTS:
             # abort all tasks
             with sudo():
                 open_tasks = Task.objects.for_data(instance.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
