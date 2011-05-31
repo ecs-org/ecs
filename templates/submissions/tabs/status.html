@@ -111,7 +111,7 @@
     <tr>
         <th>Typ:</th>
         <td colspan="3">
-            {% if submission_form.get_submission_type_display %}
+            {% if submission_form.submission_type %}
                 {{ submission_form.get_submission_type_display }}
             {% else %}
                 {% trans "Other" %}
