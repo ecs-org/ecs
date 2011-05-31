@@ -21,16 +21,10 @@ logger = logging.getLogger()
 if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
     logger.addHandler(SentryHandler())
 
-logger = logging.getLogger()
-# ensure we havent already registered the handler
-if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
-    logger.addHandler(SentryHandler())
-
-
-    # Add StreamHandler to sentry's default so you can catch missed exceptions
-    logger = logging.getLogger('sentry.errors')
-    logger.propagate = False
-    logger.addHandler(logging.StreamHandler())
+# Add StreamHandler to sentry's default so you can catch missed exceptions
+#logger = logging.getLogger('sentry.errors')
+#logger.propagate = False
+#logger.addHandler(logging.StreamHandler())
     
 # patch the user __unicode__ method, so the hash in the username field does not show up
 def _patch_user_unicode():

@@ -71,15 +71,16 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     doc = Document.objects.get(pk=document_pk)
     
     try:
-        add_to_storagevault(doc.uuid_document, doc.file.path)
+        add_to_storagevault(doc.uuid_document, doc.file)
     except Exception as e:
         if doc.retries < 5:
             doc.status = TO_BE_UPLOADED
             doc.retries += 1
         else:
             doc.status = 'aborted'
-
-        logger.error("Can't upload document with uuid={0}. Retries was {1}, exception was {2}".format(doc.uuid_document, doc.retries, e))
+        
+        logger.error("Can't upload document with uuid={0}. Retries was {1}, exception was {2}".format(
+            doc.uuid_document, doc.retries, e))
     
     else:        
         doc.status = TO_BE_READY

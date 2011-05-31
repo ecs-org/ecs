@@ -90,8 +90,8 @@ class StorageVault():
 
     def _decrypt_verify(self, inputfilepath, outputfilepath):
         try:
-            gpgutils.decrypt_verify(inputfilepath, outputfilepath, settings.STORAGE_ENCRYPT['gpghome'],
-                settings.STORAGE_ENCRYPT['decrypt_owner'], settings.STORAGE_ENCRYPT['verify_owner'])
+            gpgutils.decrypt_verify(inputfilepath, outputfilepath, settings.STORAGE_DECRYPT['gpghome'],
+                settings.STORAGE_DECRYPT['decrypt_owner'], settings.STORAGE_DECRYPT['verify_owner'])
         except EnvironmentError as e:
             raise VaultEncryptionError(e)
         
@@ -106,20 +106,36 @@ class StorageVault():
         @note: Does on the fly encryption+signing of content
         @raise KeyError, EnvironmentError, VaultError, VaultEncryptionError: if adding did not succeed. eg. key already exists, upload error, encryption error
         '''
+        tmp_name = None
+        infile = None
+        infile_name = None
         try:
-            if not hasattr(filelike, 'fileno'):
-                infile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
-                infile.write(filelike.read())
-                infile.seek(0)
-            else:
-                infile = filelike
+            try:
+                if not hasattr(filelike, 'fileno'):
+                    infile = tempfile.NamedTemporaryFile(dir=settings.TEMPFILE_DIR, delete=False)
+                    infile.write(filelike.read())
+                    infile_name = infile.name
+                    infile.close()
+                else:
+                    infile = filelike
+                    infile_name = infile.name
+            except Exception as e:
+                raise KeyError("while copying: {0}".format(e))
             
             tmp_oshandle, tmp_name = tempfile.mkstemp(); os.close(tmp_oshandle)
+            try:
+                self._encrypt_sign(infile_name, tmp_name)
+            except Exception as e:
+                raise KeyError("while encrypting: {0}".format(e))
             
-            self._encrypt_sign(infile.path, tmp_name)
             with open(tmp_name, "rb") as tmp:
                 self._add_to_vault(identifier, tmp)
+        except Exception as e:
+            raise KeyError("while adding to vault: {0}".format(e))
         finally:
+            if not hasattr(filelike, 'fileno'):
+                if os.path.isfile(infile_name):
+                    os.remove(infile_name)
             if os.path.isfile(tmp_name):
                 os.remove(tmp_name)
 
@@ -130,7 +146,7 @@ class StorageVault():
         @raise EnvironmentError, KeyError, VaultError, VaultEncryptionError: if get, or decryption fails  
         '''
         filelike = None
-        
+        tmp_name = None
         try:
             tmp_oshandle, tmp_name = tempfile.mkstemp(); os.close(tmp_oshandle)
             filelike = self._get_from_vault(identifier)
@@ -142,11 +158,17 @@ class StorageVault():
             else:
                 infile = filelike
                 
-            self._decrypt_verify(infile.path, tmp_name)
+            self._decrypt_verify(infile.name, tmp_name)
                 
         finally:
-            if hasattr(filelike, "fileno") and not filelike.closed():
+            if hasattr(filelike, "fileno") and not filelike.closed:
                 filelike.close()
+        try:
+            if os.path.isfile(tmp_name):
+                result_file= open(tmp_name, "rb")
+                return result_file
+        except EnvironmentError as e:
+            raise VaultIOError("Error opening file got from storage vault for reading; Exeption was {0}.format(e)")
     
     def decommission(self, filelike, silent=True):
         ''' decommission (close and delete if real file) a filelike copy object that was returned from get(identifer)
@@ -183,6 +205,7 @@ class LocalFileStorageVault(StorageVault):
         self.db = DiskBuckets(rootdir, max_size = 0)
     
     def _add_to_vault(self, identifier, filelike):
+        print(type(identifier), identifier, type(filelike), filelike)
         self.db.add(identifier, filelike)
         
     def _get_from_vault(self, identifier):

@@ -5,7 +5,7 @@ Diskbuckets
 ===========
 
 A read/write/overwrite/purge/age key-value store featuring
- * simple, using the filesystem builtin features to organize large number of valuesmany key support -- values can be 0 > big > 500mb 
+ * simple, using the filesystem builtin features to organize large number of items support -- values can be 0 > big > 500mb 
  * transparent encryption+signing for storing data and decryption+verify support for retrieving data
  * easy to extent base class (StorageVault) for writing other StorageVault backend connectors 
     
@@ -157,6 +157,17 @@ class DiskBuckets(object):
     
         return f 
 
+    def get_or_None(self, identifier, touch_accesstime=False):
+        ''' retrieve content of key identifier and return as file object
+        @param touch_accesstime: if True, file mtime will get touched to now; Warning: this will fail silently.
+        @return open file object for reading, or None on any error
+        '''
+        try:
+            r = self.get(identifier, touch_accesstime)
+        except BucketError as e:
+            return None
+        return r
+    
     def purge(self, identifier):
         ''' deletes data associated with identifier from disk
         @raise BucketKeyError: if identifier does not exist

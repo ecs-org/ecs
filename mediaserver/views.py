@@ -38,9 +38,8 @@ def get_page(request, uuid, tiles_x, tiles_y, width, pagenr):
         
 
 @forceauth.exempt
-def get_pdf(request, *args, **kwargs):
-    kwargs['mimetype'] = 'application/pdf'
-    return get_blob(request, *args, **kwargs)
+def get_pdf(request, uuid, filename, branding):
+    return get_blob(request, uuid, filename, mimetype='application/pdf', branding=branding)
 
 
 @forceauth.exempt

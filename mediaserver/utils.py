@@ -72,8 +72,8 @@ class MediaProvider:
         logger.debug("add_blob (%s), filelike is %s" % (identifier, filelike))
         try:
             self.vault.add(identifier, filelike)
-        except VaultError as e:
-            raise KeyError("adding to storage vault resulted in an exception: {1}".format(e))
+        except Exception as e:
+            raise KeyError("adding to storage vault resulted in an exception: {0}".format(e))
 
     def prime_blob(self, identifier=None, mimetype='application/pdf', wait=True):
         ''' load blob from storage vault, cache blob, optional rerender pages (if application/pdf), cache pages.
@@ -101,7 +101,7 @@ class MediaProvider:
         filelike=None
                 
         if try_diskcache:
-            filelike = self.doc_diskcache.get(identifier, touch_accesstime=True)
+            filelike = self.doc_diskcache.get_or_None(identifier, touch_accesstime=True)
         
         if not filelike and try_vault and identifier:
             try:
@@ -112,7 +112,7 @@ class MediaProvider:
             finally:
                 self.vault.decommission(filelike)    
             
-            filelike = self.doc_diskcache.get(identifier)
+            filelike = self.doc_diskcache.get_or_None(identifier)
         
         if not filelike:
             raise KeyError, "could not load blob with identifier %s" % (identifier)
@@ -165,13 +165,13 @@ class MediaProvider:
         identifier = str(page)
         
         if try_memcache:     
-            filelike = self.render_memcache.get(identifier)
+            filelike = self.render_memcache.get_or_None(identifier)
         
         if filelike:
             self.render_diskcache.touch_accesstime(identifier) # update access in page diskcache
         else:
             if try_diskcache:
-                filelike = self.render_diskcache.get(identifier, touch_accesstime=True) 
+                filelike = self.render_diskcache.get_or_None(identifier, touch_accesstime=True) 
                 if filelike:
                     self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
                 else: 
@@ -211,8 +211,18 @@ class VolatileCache:
             self.mc.set("".join((identifier, self.ns)), filelike.read())
         else:
             self.mc.set("".join((identifier, self.ns)), filelike)
-        
+    
     def get(self, identifier):
+        ''' get data value of identifier 
+        @raise: KeyError: if identifier not found.
+        '''
+        r = self.get_or_None(identifier)
+        if r is None:
+            raise KeyError("identifier {0} not found or content of identifier not found".format(identifier))
+    
+        return r
+    
+    def get_or_None(self, identifier):
         ''' get data value of identifier 
         @return: The value or None.
         '''
