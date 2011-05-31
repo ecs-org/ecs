@@ -57,7 +57,7 @@ def reschedule_submission(request, submission_pk=None):
         to_meeting = form.cleaned_data['to_meeting']
         old_entries = from_meeting.timetable_entries.filter(submission=submission)
         for entry in old_entries:
-            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title)
+            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=(not entry.timetable_index is None))
             entry.submission = None
             entry.save()
             entry.delete()
