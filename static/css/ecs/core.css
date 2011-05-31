@@ -762,8 +762,7 @@ fieldset.disabled {
   margin: 0 !important;
 }
 .ecs-TextAreaToolbar {
-  display: inline-block;
-  float: left;
+  display: block;
 }
 .ecs-TextAreaToolbar a {
 	margin-right: 10px;
@@ -806,7 +805,7 @@ fieldset.disabled {
   width: 250px;
 }
 .form_main input[type=submit] {
-  margin: 10px 10px 10px 250px;
+  margin: 10px 10px 10px 240px;
 }
 .form_main input[type=submit].hidden {
   display: none;

@@ -167,7 +167,7 @@ input[type=submit],
 .cancel a,
 #content a.button_submit {
   display: inline-block;
-  color: #333;
+  color: #333 !important;
   background: #ddd url(/static/images/button_bg.png) repeat-x;
   cursor: pointer;
   margin: 10px 5px 0 0;
@@ -180,17 +180,20 @@ input[type=submit] {
 	height: 26px;
 	padding: 3px 5px 5px;
 }
-.cancel a,
+#content .cancel a,
 #content a.button_submit {
   min-height: 16px;
   padding: 4px 7px 2px;
 }
 input[type=submit]:active,
-.cancel a:active,
+#content .cancel a:active,
 #content a.button_submit:active {
   background: #ddd url(/static/images/button_active_bg.png) repeat-x;
-  color: #333;
 }
+.cancel {
+  display: block;
+}
+/*
 #content .cancel a {
   color: #fff;
   font-size: 12px;
@@ -200,6 +203,7 @@ input[type=submit]:active,
   border: 1px solid #bbb;
   display: inline-block;
 }
+*/
 input[type=submit]:hover,
 #content .cancel a:hover,
 #content a.button_submit:hover {
