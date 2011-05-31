@@ -13,11 +13,11 @@
     </div>
     
     {% for entry in meeting %}
-        <span style="font-weight:bold;">#{{ entry }}</span>
+        <span>#{{ entry }}</span>
         {% if entry.submission %}
-            <span style="font-weight:bold;">EK Nr.</span>
+            <span>EK Nr.</span>
                 {{ entry.submission.get_ec_number_display }}<br />
-            <span style="font-weight:bold;">Antragsteller:</span>
+            <span>Antragsteller:</span>
                 {% with entry.submission.current_submission_form.submitter as submitter %}
                     {% if not submitter.first_name or not submitter.last_name %}
                         {{ entry.submission.current_submission_form.submitter_contact }}
@@ -26,19 +26,19 @@
                     {% endif %}
                 {% endwith %}
                 <br />
-            <span style="font-weight:bold;">Einreichende Institution:</span>
+            <span>Einreichende Institution:</span>
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
-            <span style="font-weight:bold;">Projekttitel:</span>
+            <span>Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
             <br />
         {% endif %}
     {% endfor %}
 
     {% for i, submission in additional_submissions %}
-        <span style="font-weight:bold;">#TOP {{ i }}</span>
-        <span style="font-weight:bold;">EK Nr.</span>
+        <span>#TOP {{ i }}</span>
+        <span>EK Nr.</span>
             {{ submission.get_ec_number_display }}<br />
-        <span style="font-weight:bold;">Antragsteller:</span>
+        <span>Antragsteller:</span>
             {% with submission.current_submission_form.submitter as submitter %}
                 {% if not submitter.first_name or not submitter.last_name %}
                     {{ submission.current_submission_form.submitter_contact }}
@@ -47,9 +47,9 @@
                 {% endif %}
             {% endwith %}
             <br />
-        <span style="font-weight:bold;">Einreichende Institution:</span>
+        <span>Einreichende Institution:</span>
             {{ submission.current_submission_form.submitter_organisation }}<br />
-        <span style="font-weight:bold;">Projekttitel:</span>
+        <span>Projekttitel:</span>
             {{ submission.project_title_display }}<br />
         <br />
     {% endfor %}
