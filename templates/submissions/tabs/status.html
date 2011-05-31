@@ -111,7 +111,11 @@
     <tr>
         <th>Typ:</th>
         <td colspan="3">
-            {{ submission_form.get_submission_type_display }}
+            {% if submission_form.get_submission_type_display %}
+                {{ submission_form.get_submission_type_display }}
+            {% else %}
+                {% trans "Other" %}
+            {% endif %}
             {% if submission_form.amg %}{% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }}){% endif %}
             {% if submission_form.mpg %}{% trans "MPG" %}{% endif %}
             {% if submission_form.thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
