@@ -23,7 +23,15 @@
         <span style="font-weight:bold;">#{{ top }}</span>
         {% if top.submission %}
             <span style="font-weight:bold;">EK Nr.</span> {{ top.submission|ec_number }}<br />
-            <span style="font-weight:bold;">Antragsteller:</span> {{ top.submission.current_submission_form.submitter_name }}
+            <span style="font-weight:bold;">Antragsteller:</span>
+                {% with top.submission.current_submission_form.submitter as submitter %}
+                    {% if not submitter.first_name or not submitter.last_name %}
+                        {{ top.submission.current_submission_form.submitter_contact }}
+                    {% else %}
+                        {{ submitter }}
+                    {% endif %}
+                {% endwith %}
+                <br />
             {% if top.submission.current_submission_form.sponsor_name %}
                 <span style="font-weight:bold;">Sponsor/CRO:</span> {{ top.submission.current_submission_form.sponsor_name }}
             {% endif %}<br />
@@ -43,7 +51,15 @@
     {% for i, submission, vote in additional_submissions %}
         <span style="font-weight:bold;">#TOP {{ i }}</span>
         <span style="font-weight:bold;">EK Nr.</span> {{ submission|ec_number }}<br />
-        <span style="font-weight:bold;">Antragsteller:</span> {{ submission.current_submission_form.submitter_name }}
+        <span style="font-weight:bold;">Antragsteller:</span>
+            {% with submission.current_submission_form.submitter as submitter %}
+                {% if not submitter.first_name or not submitter.last_name %}
+                    {{ submission.current_submission_form.submitter_contact }}
+                {% else %}
+                    {{ submitter }}
+                {% endif %}
+            {% endwith %}
+            <br />
         {% if submission.current_submission_form.sponsor_name %}
             <span style="font-weight:bold;">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
         {% endif %}<br />
