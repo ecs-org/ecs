@@ -5,7 +5,7 @@ import cicero
 
 from ecs.integration.windmillsupport import authenticated
 
-MENSCHENRECHTSERKLAERUNG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'tests', 'menschenrechtserklaerung.pdf')
+MENSCHENRECHTSERKLAERUNG = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf')
 
 def create_submission(client, amg=False, mpg=False, thesis=False, upload=False):
     client.click(id=u'userswitcher_input')

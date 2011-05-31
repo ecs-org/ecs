@@ -4,7 +4,6 @@ from django.utils.translation import ugettext as _
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
-from ecs.utils import gpgutils
 
 @bootstrap.register()
 def document_types():
@@ -32,9 +31,7 @@ def document_types():
         d.helptext = helptext
         if identifier in hidden:
             d.hidden = True
+        else:
+            d.hidden = False
         d.save()
 
-@bootstrap.register()
-def import_encryption_key():
-    gpgutils.reset_keystore(settings.STORAGE_ENCRYPT ["gpghome"])
-    gpgutils.import_key(settings.STORAGE_ENCRYPT ["key"], settings.STORAGE_ENCRYPT ["gpghome"])
