@@ -23,7 +23,7 @@ def is_acknowledged(wf):
 
 @guard(model=Submission)
 def is_retrospective_thesis(wf):
-    return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count())
+    return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
 
 @guard(model=Submission)
 def has_b2vote(wf):
