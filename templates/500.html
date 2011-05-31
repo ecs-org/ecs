@@ -9,6 +9,9 @@
           <div class="wrapper">
               <p><strong>Ups,</p><p>ein Fehler ist aufgetreten !</strong></p>
               <p>Eine Nachricht wurde an das Entwicklerteam geschickt.</p>
+              {% if request.sentry.id %}
+              <p>Um auf diesen Fehler Bezug zu nehmen notieren Sie sich die Nummer <strong>{{ request.sentry.id }}</strong>.</p>
+              {% endif %}
               <p><a href="/"> Klicken Sie hier</a> um zur Hauptseite zu wechseln</p>          
           </div>
         </div>
