@@ -6,27 +6,25 @@
 <p class="pbi_avoid">
 4.2 Hersteller: <strong> {{ submission_form.medtech_manufacturer }} </strong> </p>
 
-<table class="nopadding">
-    <colgroup>
-        <col/>
-        <col/>
-    </colgroup>
+<table>
+  <tbody>
     <tr><td>
         4.3 Zertifiziert für diese Indikation:
-    </td><td>
+    </td><td class="indented">
         {{ submission_form.medtech_certified_for_exact_indications|checkbox }} ja
         {{ submission_form.medtech_certified_for_exact_indications|not|checkbox }} nein
     </td></tr><tr><td>
         4.4 Zertifiziert, aber für eine andere Indikation: 
-    </td><td>
+    </td><td class="indented">
         {{ submission_form.medtech_certified_for_other_indications|checkbox }} ja 
         {{ submission_form.medtech_certified_for_other_indications|not|checkbox }} nein
     </td></tr><tr><td>
         4.5 Das Medizinprodukt trägt ein CE-Zeichen 
-    </td><td>
+    </td><td class="indented">
         {{ submission_form.medtech_ce_symbol|checkbox }} ja
         {{ submission_form.medtech_ce_symbol|not|checkbox }} nein
     </td></tr>
+  </tbody>
 </table>
 <p>
  4.6 {{ submission_form.medtech_manual_included|checkbox }} Die Produktbroschüre liegt bei.

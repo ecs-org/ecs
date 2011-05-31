@@ -4,8 +4,8 @@
     (Hier nur Kurzinformationen in Stichworten, ausführlicher - wenn erforderlich - unter Punkt 7.15 und 7.16)
 </div>
 
-<h4>8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)</h4>
-<table>
+<p>8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)</p>
+<table class="nopadding border_bottom">
     <tr>
         <td>{{ submission_form.study_plan_open|checkbox }} 8.1.1 offen </td>
         <td>{{ submission_form.study_plan_randomized|checkbox }} 8.1.2 randomisiert </td>
@@ -51,10 +51,10 @@
 <p class="pbi_avoid">
  8.1.21 Alternativhypothese(n): <strong> {{ submission_form.study_plan_alternative_hypothesis|default_if_none:"" }}</strong> </p>
 
-<p class="pbi_avoid">
+<p class="pbi_avoid border_bottom">
  8.1.22 Nebenzielgrößen: <strong> {{ submission_form.study_plan_secondary_objectives|default_if_none:"" }} </strong> </p>
 
-<h4>8.2 Studienplanung </h4>
+<p>8.2 Studienplanung </p>
 
 <p class="pbi_avoid">
 Die Fallzahlberechnung basiert auf (Alpha = Fehler 1. Art, Power = 1 – Beta = 1 –
@@ -64,14 +64,14 @@ Fehler 2. Art): </p>
 8.2.1 Alpha:  <strong> {{ submission_form.study_plan_alpha|default_if_none:"" }} </strong> 
 8.2.2 Power: <strong> {{ submission_form.study_plan_power|default_if_none:"" }} </strong> 
 8.2.3 Stat.Verfahren: <strong>  {{ submission_form.study_plan_statalgorithm|default_if_none:"" }}</strong> </p>
-<p class="pbi_avoid">
 
+<p class="pbi_avoid">
 8.2.4 Multiples
-Testen:{{ submission_form.study_plan_multiple_test_correction_algorithm|not|checkbox }} nein 
+Testen: {{ submission_form.study_plan_multiple_test_correction_algorithm|not|checkbox }} nein 
 {{ submission_form.study_plan_multiple_test_correction_algorithm|checkbox }} ja:
 Korrekturverfahren.: <strong> {{ submission_form.study_plan_multiple_test_correction_algorithm|default_if_none:"" }} </strong> </p>
 
-<p class="pbi_avoid">
+<p class="pbi_avoid border_bottom">
  8.2.5 Erwartete Anzahl von Studienabbrecher/inne/n
 (Drop-out-Quote): <strong> {{ submission_form.study_plan_dropout_ratio|default_if_none:"" }} </strong> </p>
 
@@ -83,10 +83,9 @@ Korrekturverfahren.: <strong> {{ submission_form.study_plan_multiple_test_corr
 {{ submission_form.study_plan_population_per_protocol|checkbox }} 8.3.2 Per Protocol </p>
 
 <p class="pbi_avoid">
-
 8.3.3 Zwischenauswertung: {{ submission_form.study_plan_abort_crit|not|checkbox }} nein {{ submission_form.study_plan_abort_crit|checkbox }} ja: Abbruchkriterien: <strong> {{ submission_form.study_plan_abort_crit|default_if_none:"" }} </strong> </p>
 
-<p class="pbi_avoid">
+<p class="pbi_avoid border_bottom">
  8.3.4 Geplante statistische Verfahren: 
  <strong> {{ submission_form.study_plan_planned_statalgorithm }}</strong> </p>
 
@@ -99,16 +98,14 @@ Datenmanagement </p>
 Datenqualitätsprüfung </p>
 
 <p class="pbi_avoid">
-  <strong>{{ submission_form.study_plan_dataquality_checking }}</strong>
-     </p>
+  <strong>{{ submission_form.study_plan_dataquality_checking }}</strong></p>
 
 <p class="pbi_avoid">
 8.4.2 Angaben zum
 Datenmanagement </p>
 
-<p class="pbi_avoid">
- <strong>{{ submission_form.study_plan_datamanagement }}</strong>
-      </p>
+<p class="pbi_avoid border_bottom">
+ <strong>{{ submission_form.study_plan_datamanagement }}</strong></p>
 
 <p class="pbi_avoid">
  8.5 Verantwortliche und
@@ -120,35 +117,39 @@ biometrische Planung durch (ggf. Nachweis der
 Qualifikation)? </p>
 
 <p class="pbi_avoid">
-  <strong>{{ submission_form.study_plan_biometric_planning }}</strong>
-      </p>
+  <strong>{{ submission_form.study_plan_biometric_planning }}</strong></p>
 
 <p class="pbi_avoid">
 8.5.2 Wer wird die
 statistische Auswertung durchführen (ggf. Nachweis der
 Qualifikation)? </p>
 
-<p class="pbi_avoid">
-  <strong>{{ submission_form.study_plan_statistics_implementation }}</strong>
-      </p>
+<p class="pbi_avoid border_bottom">
+  <strong>{{ submission_form.study_plan_statistics_implementation }}</strong></p>
 
-
-<h4>8.6 Datenschutz </h4>
+<p>8.6 Datenschutz </p>
 <p>
  8.6.1 Die Datenverarbeitung erfolgt 
  {{ submission_form.study_plan_dataprotection_reason|checkbox }} a) personenbezogen 
  {{ submission_form.study_plan_dataprotection_reason|not|checkbox }} b) indirekt personenbezogen </p>
 
 <table>
-    <tr><td width="2.5cm">
-        8.6.2 Wenn a): 
-    </td><td>
-        Begründung: <span class="value">{{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}</span> 
-    </td></tr><tr><td>
+    <tr>
+    <td>
+        8.6.2 Wenn a): &nbsp;
+    </td>
+    <td>
+        Begründung:<span class="value indented">{{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}</span> 
+    </td>
+    </tr>
+    <tr>
+    <td>
         <!-- empty -->
-    </td><td>
+    </td>
+    <td>
          DVR-Nummer: <span class="value">{{ submission_form.study_plan_dataprotection_dvr|default_if_none:"" }}</span>
-    </td></tr>
+    </td>
+    </tr>
 </table>
 
 <p>

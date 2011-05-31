@@ -3,13 +3,8 @@
     2.2 Fachgebiet: <span class="value">{{ submission_form.specialism }}</span>
 </p>
 
-<table width="624" border="0" cellpadding="2" cellspacing="0">
-    <colgroup>
-        <col width="147">
-        <col width="147">
-        <col width="157">
-        <col width="157">
-    </colgroup>
+<table class="full_width nopadding">
+  <tbody>
     <tr>
         <td colspan="2" width="298"><strong>2.3 Arzneimittelstudie</strong> (wenn zutreffend)</td>
         <td colspan="2" width="317"><strong>2.4 Medizinproduktestudie</strong> (wenn zutreffend)</td>
@@ -26,6 +21,7 @@
         <td width="157">2.4.2 Referenzprodukt:</td>
         <td width="157" class="value">{{ submission_form.medtech_reference_substance }}</td>
     </tr>
+  </tbody>
 </table>
 
 <p class="border_bottom">
@@ -37,7 +33,7 @@
     {{ submission_form.multicentric|checkbox }} ja {{ submission_form.multicentric|not|checkbox }} nein. Wenn <strong>ja:</strong>
 </p>
 
-<p>{{ submission_form.multicentric|checkbox }} 2.6.1 im Inland{{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</p>
+<p><span class="indented">{{ submission_form.multicentric|checkbox }} 2.6.1 im Inland {{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</span></p>
 
 <p class="border_bottom">
     2.7 Liste der Zentren: <br/>
@@ -47,13 +43,13 @@
 
     Liste der Auslandszentren: <br/>
     {% for pc in submission_form.foreignparticipatingcenter_set.all %}
-        <div class="value">{{ pc.name }}, {{ pc.investigator_name }}</div>
+        <span class="value">{{ pc.name }}, {{ pc.investigator_name }}</span>
     {% endfor %}
 </p>
 
 <p class="border_bottom">
     2.8 Liegen bereits Voten anderer Ethikkommissionen vor? <br/>
-    {{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <strong>ja</strong>, <strong>Voten beilegen!</strong>
+    <span class="indented">{{ submission_form.already_voted|checkbox }} ja {{ submission_form.already_voted|not|checkbox }} nein. Wenn <strong>ja</strong>, <strong>Voten beilegen!</strong></span>
 </p>
 
 <p class="border_bottom">
@@ -94,12 +90,12 @@
     <span class="value"> {{ submission_form.subject_duration }} </span>
 </p>
 
-<p>
+<p class="border_bottom">
     2.11.1 Aktive Phase: <span class="value"> {{ submission_form.subject_duration_active }} </span>
     2.11.2 Nachkontrollen: <span class="value"> {{ submission_form.subject_duration_controls }} </span>
 </p>
 
 <p>
-    Voraussichtliche Gesamtdauer der Studie:
+    2.12. Voraussichtliche Gesamtdauer der Studie:
     <span class="value"> {{ submission_form.subject_planned_total_duration }} </span>
 </p>

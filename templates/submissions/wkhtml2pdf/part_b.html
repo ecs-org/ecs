@@ -19,68 +19,63 @@
 Krankenanstalt/Institut/Abteilung: <strong> {{ inv.organisation }} </strong></p>
 
 
-<table width="627" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
-    <col width="110">
-    <col width="122">
-    <col width="111">
-    <col width="241">
+<table class="full_width withborders">
     <tr>
-        <th width="110">10.3 Telefon</th>
-        <th width="122">10.4 „Pieps“/Mobil</th>
-        <th width="111">10.5 Fax</th>
-        <th width="241">10.6 e-mail-Adresse:</th>
+        <th>10.3 Telefon</th>
+        <th>10.4 „Pieps“/Mobil</th>
+        <th>10.5 Fax</th>
+        <th>10.6 e-mail-Adresse:</th>
     </tr><tr>
-        <td width="110"><strong>{{ inv.phone }}</strong></td>
-        <td width="122"><strong>{{ inv.mobile }}</strong></td>
-        <td width="111"><strong>{{ inv.fax }}</strong></td>
-        <td width="241"><strong>{{ inv.email }}</strong></td>
+        <td><strong>{{ inv.phone }}</strong></td>
+        <td><strong>{{ inv.mobile }}</strong></td>
+        <td><strong>{{ inv.fax }}</strong></td>
+        <td><strong>{{ inv.email }}</strong></td>
     </tr>
 </table>
 
 
-<p style="margin-left: 10cm; text-indent: -10cm; margin-top: 0.21cm; margin-bottom: 0.11cm; page-break-inside: avoid">
+<p class="pbi_avoid">
     10.7 Jus practicandi:{{ inv.jus_practicandi|yesno_checkboxes }}
     10.8 Facharzt für: <span class="value">{{ inv.specialist }}</span>
 </p>
 
-<p style="margin-bottom: 0cm; line-height: 100%">
+<p class="pbi_avoid">
  10.9 Prüfärztekurs: {{ inv.certified|checkbox }} ja {{ inv.certified|not|checkbox }} nein </p>
 
-<p style="margin-left: 1cm; text-indent: -1cm; margin-bottom: 0cm; line-height: 100%; page-break-inside: avoid">
+<p class="pbi_avoid">
  10.10 Sofern relevant:
 Präklinische Qualifikation (z.B. Labordiagnostik) bzw. Name der
 Verantwortlichen: </p>
 
-    <h3>11. Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en <span class="underline">an dieser Prüfstelle</span></h3>
+    <h3 class="inline">11. Geplante Anzahl der Patient/inn/en bzw. Proband/inn/en <span class="underline">an dieser Prüfstelle:</span></h3>
 
-    <p class="value">
+    <span class="value inline bg_grey">
         {{ inv.subject_count }}
-    </p>
+    </span>
 
     <h3>12. Verantwortliche Mitarbeiter/innen an der klinischen Studie <span style="font-weight:normal">(an Ihrer Prüfstelle)</span></h3>
 
 
-<table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
-<col width="29">
-<col width="52">
-<col width="89">
-<col width="106">
-<col width="289">
-<tr>
-<th width="29" valign="top">Fr/Hr</th>
-<th width="52" valign="top">Titel</th>
-<th width="89" valign="top">Vorname</th>
-<th width="106" valign="top">Name</th>
-<th width="289" valign="top">Institution</th>
-</tr>
+<table class="full_width withborders">
+  <thead>
+    <tr>
+      <th>Fr/Hr</th>
+      <th>Titel</th>
+      <th>Vorname</th>
+      <th>Name</th>
+      <th>Institution</th>
+    </tr>
+  </thead>
 {% for emp in inv.employees.all %}
-<tr>
-<td width="29" valign="top"><strong>{{ emp.geschlecht_string }}</strong></td>
-<td width="52" valign="top"><strong>{{ emp.title }}</strong></th>
-<td width="89" valign="top"><strong>{{ emp.firstname }}</strong></td>
-<td width="106" valign="top"><strong>{{ emp.surname }}</strong></td>
-<td width="289" valign="top"><strong>{{ emp.organisation }}</strong></td>
-</tr>
+  <tbody>
+    <tr>
+      <td><strong>{{ emp.geschlecht_string }}</strong></td>
+      <td><strong>{{ emp.title }}</strong></td>
+      <td><strong>{{ emp.surname }}</strong></td>
+      <td><strong>{{ emp.firstname }}</strong></td>
+      <td><strong>{{ emp.organisation }}</strong></td>
+    </tr>
+  </tbody>
 {% endfor %}
 </table>
 

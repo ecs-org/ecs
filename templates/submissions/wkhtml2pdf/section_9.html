@@ -1,24 +1,21 @@
 {% load core corepdf %}
-<center>
-<table width="624" border="1" bordercolor="#000000" cellpadding="5"
-cellspacing="1">
-<col width="328">
-<col width="178">
-<col width="82">
-<tr>
-<th width="328" height="16">Dokument</th>
-<th width="178">Version/Identifikation</th>
-<th width="82">Datum</th>
-</tr>
-{% for doc in submission_form.documents.all %}
-<tr>
-<td width="328" height="13"><strong>{{ doc.doctype.name }}</strong></td>
-</td>
-<td width="178"><strong>{{ doc.version }}</strong></td>
-</td>
-<td width="82"><strong>{{ doc.date|date:'d.m.Y' }}</strong></td>
-</tr>
-{% endfor %}
+<table class="full_width withborders">
+  <tbody>
+    <tr>
+    <th>Dokument</th>
+    <th>Version/Identifikation</th>
+    <th>Datum</th>
+    </tr>
+    {% for doc in submission_form.documents.all %}
+    <tr>
+    <td><strong>{{ doc.doctype.name }}</strong></td>
+    </td>
+    <td><strong>{{ doc.version }}</strong></td>
+    </td>
+    <td><strong>{{ doc.date|date:'d.m.Y' }}</strong></td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 </center>
 

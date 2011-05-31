@@ -1,9 +1,7 @@
 {% load core corepdf %}
 
-<table width="576" border="1" bordercolor="#000000" cellpadding="5" cellspacing="0">
-    <col width="216">
-    <col width="188">
-    <col width="140">
+<table class="full_width withborders">
+  <tbody>
     <tr>
         <th>Generic Name</th>
         <th>Darreichungsform</th>
@@ -16,4 +14,5 @@
             <td class="value">{{ drug.dosage }}</td>
         </tr>
     {% endfor %}
+  </tbody>
 </table>

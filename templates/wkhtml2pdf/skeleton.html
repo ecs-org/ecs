@@ -72,21 +72,8 @@
            src: "./media/DejaVuSansMono-Bold.ttf";
            font-weight: bold;
         }
-        
-        div.header .logo {
-            width: 7.00cm;
-            height: 1.25cm;
-        }
-        div.header .address {
-            text-align: right;
-            float: right;
-        }
-        div.header .spacer {
-            clear: both;
-            height: 1cm;
-        }
-        th, td {
-            padding: 2pt;
+        *{
+          line-height: 0.5cm;
         }
         body, #content {
             font-family: DejaSans;
@@ -95,23 +82,11 @@
         p {
             padding: 2pt 0;
         }
-        .checkbox {
-            font-family: DejaMono;
-        }
-        *{
-          line-height: 0.5cm;
-        }
-        td, th {
-          text-align: left;
-          vertical-align: top;
-          padding: 0;
-          margin: 0;
-        }
         h1 {
           font-size: 16pt;
           text-align: center;
           margin: 0cm;
-          padding: 1em;
+          padding: 0.5em;
         }
         h2 {
           font-size: 14pt;
@@ -131,7 +106,29 @@
           margin-bottom: 0.2cm;
           margin-top: 0.2cm;
         }
-        
+        table {
+          border: none;
+        }
+        th, td {
+          text-align: left;
+          margin: 0;
+          vertical-align: top;
+        }
+        th {
+          font-weight: 900;
+        }
+        div.header .logo {
+            width: 7.00cm;
+            height: 1.25cm;
+        }
+        div.header .address {
+            text-align: right;
+            float: right;
+        }
+        div.header .spacer {
+            clear: both;
+            height: 1cm;
+        }
         .value {
           font-weight: bold;
           font-family: DejaSans;
@@ -146,18 +143,30 @@
         .small {
           font-size: 10pt;
         }
+        .big {
+          font-size: 11pt;
+        }
+        .indented {
+          padding-left: 1cm;
+        }
+        .inline {
+          display: inline-block;
+        }
         .checkbox {
-          font-family: DejaMono;
+          font-family: DejaSans;
+          border: 1pt solid #000;
+          font-weight: 900;
+          width: 0.3cm;
+          height: 0.3cm;
+          line-height: 10pt;
+          display: inline-block;
+          margin-bottom: 2pt;
+          text-align: center;
+          vertical-align: top;
         }
-        
-        table {
-          border: none;
-        }
-        table.padded td,
-        table.padded th,
-        td,
-        th {
-          padding: 0.1cm;
+        .nopadding th,
+        .nopadding td {
+          padding: 2pt;
         }
         .nopadding td:first-child,
         .nopadding th:first-child {
@@ -165,6 +174,10 @@
         }
         .full_width {
           width: 100%;
+        }
+        .full_width th,
+        .full_width td {
+          padding: 2pt;
         }
         table.withborders td,
         table.withborders th {
@@ -178,9 +191,17 @@
           border-bottom: 1pt solid #000000;
           border-top: 1pt solid #000000;
         }
+        .withrowborders td:first-child {
+          width: 1cm;
+        }
         .infotext {
           margin: 0.5cm;
           text-align: center;
+        }
+        .title {
+          display: block;
+          padding: 0.2cm;
+          border: 1pt solid #000;
         }
         .main_part {
           margin: 0.5cm 0;
@@ -193,35 +214,19 @@
           text-align: center;
           padding: 0.2cm;
         }
-        /*
-        table.section {
-          margin-top: 1cm;
-          border-top: 1pt solid #000000;
-        }
-        table.section td {
-          padding: 0;
-        }
-        table.section h3 {
-          margin-top: 0.5cm;
-          border-top: 1pt solid #000000;
-          padding-top: 0.5cm;
-        }
-        */
-        .indented {
-          padding-left: 1cm;
-        }
         .border_bottom {
           display: block;
           padding-bottom: 0.1cm;
           border-bottom: 1pt solid #000;
         }
+        .bg_grey {
+          background: #eee;
+          padding: 2pt;
+        }
         .two_columns {
           display: table;
           width: 100%;
           margin-bottom: 1cm;
-        }
-        .column-row {
-          display: table-row;
         }
         .column_left,
         .column_right {
@@ -249,7 +254,7 @@
           float: left;
           border-top: 1px solid #000;
           padding-top: 0.2cm;
-          margin-right: 2cm;
+          margin-right: 1.5cm;
           width: 8cm;
         }
     </style>

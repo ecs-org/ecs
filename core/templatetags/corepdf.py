@@ -5,7 +5,7 @@ register = Library()
 
 @register.filter
 def checkbox(val):
-    return mark_safe(u'<span class="checkbox">[%s]</span>' % (val and "X" or " "))
+    return mark_safe(u'<span class="checkbox">%s</span>' % (val and "X" or " "))
 checkbox.is_safe = True
 
 @register.filter
