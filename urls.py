@@ -6,22 +6,27 @@ from django.views.generic.simple import direct_to_template, redirect_to
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
 from ecs import workflow
-import django
 
 # stuff that needs called at the beginning, but not in settings.py
+admin.autodiscover()    # discover admin view enabled models
+workflow.autodiscover() # discover workflow items
 
-admin.autodiscover()
-workflow.autodiscover()
 
+# configure logging
 import logging
 from sentry.client.handlers import SentryHandler
-logging.getLogger().addHandler(SentryHandler())
+
+logger = logging.getLogger()
+# ensure we havent already registered the handler
+if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
+    logger.addHandler(SentryHandler())
 
 # Add StreamHandler to sentry's default so you can catch missed exceptions
 logger = logging.getLogger('sentry.errors')
 logger.propagate = False
 logger.addHandler(logging.StreamHandler())
 
+    
 # patch the user __unicode__ method, so the hash in the username field does not show up
 def _patch_user_unicode():
     from django.contrib.auth.models import User
@@ -30,6 +35,15 @@ def _patch_user_unicode():
     User.__unicode__ = get_full_name
 
 _patch_user_unicode()
+
+
+def handler500(request):
+    ''' 500 error handler which includes ``request`` in the context '''
+    from django.template import Context, loader
+    from django.http import HttpResponseServerError
+
+    t = loader.get_template('500.html') # You need to create a 500.html template.
+    return HttpResponseServerError(t.render(Context({'request': request,})))
 
 
 urlpatterns = patterns('',

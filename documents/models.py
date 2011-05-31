@@ -11,7 +11,6 @@ from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
-from django.utils._os import safe_join
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -21,10 +20,11 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.utils.msutils import generate_media_url, download_from_mediaserver
-from ecs.utils.pdfutils import pdf_isvalid
 from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
+from ecs.mediaserver.client import generate_media_url, generate_pages_urllist, download_from_mediaserver
+
+from ecs.utils.pdfutils import pdf_isvalid
 
 
 class DocumentPersonalization(models.Model):
@@ -113,6 +113,7 @@ class Document(models.Model):
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
     status = models.CharField(max_length=15, default='new', choices=C_STATUS_CHOICES)
+    retries = models.IntegerField(default=0, editable=False)
 
     # user supplied data
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
@@ -161,7 +162,13 @@ class Document(models.Model):
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
         brand = self.branding == 'p' or self.branding == 'b'
         return download_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
-        
+
+    def get_pages_list(self): 
+        ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height') pictures
+        for every supported rendersize options for every page of the document
+        '''
+        return generate_pages_urllist(self.uuid_document, self.pages)
+               
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
         return None

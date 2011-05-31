@@ -8,7 +8,6 @@ class Feedback(models.Model):
     FEEDBACK_TYPES=(('i', 'idea'),('q','question'),('p', 'problem'),('l','praise'))
     ftdict = dict(FEEDBACK_TYPES)
     rpc_query_base = "order=id&col=id&col=summary&col=status&col=type&col=priority&col=milestone&col=component"
-    tracrpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])     
     
     def __init__(self, *args, **kwargs):
         self.ftdict = dict(self.FEEDBACK_TYPES)
@@ -26,11 +25,11 @@ class Feedback(models.Model):
         
     @classmethod
     def _get_tracrpc(self):
-        return self.tracrpc
+        return tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])     
  
     def _create_trac_ticket(self):
-        tracrpc = self._get_tracrpc()
-        trac_tickettype = tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.type.get, self.feedbacktype)
+        rpc = self._get_tracrpc()
+        trac_tickettype = rpc._safe_rpc(rpc.jsonrpc.ticket.type.get, self.feedbacktype)
         if not trac_tickettype:
             trac_tickettype = "1"
         
@@ -46,17 +45,18 @@ class Feedback(models.Model):
                   }
         
         try:        
-            success, result = tracrpc._create_ticket(summary=self.summary, ticket=ticket, description=self.description)
+            success, result = rpc._create_ticket(summary=self.summary, ticket=ticket, description=self.description)
         except:
             raise
         return success, result
 
     @classmethod
     def get(self, tid):
-        ticket = self.tracrpc._get_ticket(tid)
+        rpc = self._get_tracrpc()
+        ticket = rpc._get_ticket(tid)
         if ticket is None:
             return None
-        ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
+        ticket = rpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
         return self.init_from_dict(ticket)
     
     @classmethod
@@ -77,6 +77,8 @@ class Feedback(models.Model):
     
     @classmethod
     def query(self, limit_from=0, limit_to=9999, feedbacktype=None, origin=None):
+        rpc = self._get_tracrpc()
+        
         fb_list = []
         query = self.rpc_query_base
         if feedbacktype is not None:
@@ -85,22 +87,22 @@ class Feedback(models.Model):
             query += "&absoluteurl=%s" % origin
         query +="&status=accepted&status=assigned&status=new&status=reopened&status=testing"
     
-        ticket_ids = self.tracrpc._safe_rpc(self.tracrpc.jsonrpc.ticket.query, query)
+        ticket_ids = rpc._safe_rpc(rpc.jsonrpc.ticket.query, query)
         if ticket_ids is None:
             return 0,[]
         
         overall_count = len(ticket_ids)
-        mc = self.tracrpc.multicall()
+        mc = rpc.multicall()
         for tid in ticket_ids[limit_from:limit_to]:
             mc.ticket.get(tid)
-        mc_results = self.tracrpc._safe_rpc(mc)
+        mc_results = rpc._safe_rpc(mc)
         
         if mc_results is None:
             return 0,[]
         
         ticket_count = len(mc_results.results['result'])
         for result in mc_results.results['result']:
-            ticket = self.tracrpc._get_ticket_from_rawticket(result['result'])
+            ticket = rpc._get_ticket_from_rawticket(result['result'])
             ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
             fb_list.append(self.init_from_dict(ticket))
         return overall_count, fb_list
@@ -142,6 +144,8 @@ class Feedback(models.Model):
         if user is None:
             return
         in_cc = False
+        rpc = self._get_tracrpc()
+        
         for email in self.me_too_emails:
             if user.email in email:
                 in_cc = True
@@ -151,11 +155,10 @@ class Feedback(models.Model):
         if add and not in_cc:
             update_ticket = {'cc': "%s,%s" % (self.me_too_emails_string, user.email)}
             comment = ''
-            self.tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
+            rpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
         
         if not add and in_cc:
             update_ticket = {'cc':','.join(self.me_too_emails)}
             comment = ''
-            self.tracrpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
-    
+            rpc._update_ticket(self.trac_ticket_id, update_ticket, action='leave', comment=comment)
     
