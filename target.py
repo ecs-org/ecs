@@ -113,7 +113,7 @@ TEMPLATE_DEBUG = False
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %s\' | true" % (self.username))
         local('dropdb %s | true' % self.username)
-        local('createdb %s' % self.username)
+        local('createdb createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %s' % self.username)
          
     def db_update(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
