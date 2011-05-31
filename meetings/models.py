@@ -473,7 +473,8 @@ class TimetableEntry(models.Model):
 
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
-    entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+    if not entry.timetable_index is None:
+        entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
     if entry.submission:
         entry.submission.update_next_meeting()
 
