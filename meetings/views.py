@@ -60,7 +60,7 @@ def reschedule_submission(request, submission_pk=None):
             to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=(not entry.timetable_index is None))
             entry.submission = None
             entry.save()
-            entry.delete()
+            entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': to_meeting.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,
