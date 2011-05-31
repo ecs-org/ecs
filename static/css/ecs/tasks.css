@@ -24,10 +24,15 @@
 #task_form .lockInfo {
   background-color: #ffff00;
 }
-#task_form label, #task_form input[type=radio], #task_form textarea, #task_form select {
+#task_form label, 
+#task_form input[type=radio], 
+#task_form textarea, 
+#task_form select {
   float: left;
 }
-#task_form input[type=radio], #task_form textarea, #task_form select {
+#task_form input[type=radio],
+#task_form textarea,
+#task_form select {
   margin-bottom: 10px;
 }
 #task_form input[type=radio] {
@@ -38,6 +43,7 @@
   display: block;
   float: right;
   margin: 5px 10px;
+  z-index: 10;
 }
 #task_form .task_indent {
   clear: both;
