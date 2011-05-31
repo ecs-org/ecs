@@ -874,12 +874,41 @@ fieldset.disabled {
 
 /* notifications */
 
+
+.notification label {
+  font-weight: bolder;
+  display: inline-block;
+  width: 120px;
+}
+.notification input[type="submit"] {
+  margin-left: 120px;
+}
+.notification textarea {
+  display: inline-block;
+}
+#content .notification ul {
+  margin: 0;
+}
+.notification ul.errorlist li {
+  margin-left: 120px;
+}
 .notification_list ol {
   list-style: none;
 }
 .notification_list li {
   padding: 5px;
   margin-bottom: 10px;
+}
+.notification_answer {
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #999;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+table.notif_meta {
+  padding-top: 10px;
 }
 .notification_list, .overview {
 

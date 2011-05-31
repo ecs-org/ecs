@@ -3,11 +3,11 @@
 
 {% block notification_answer_head %}
     {{ block.super }}
-    <a href="{% url ecs.notifications.views.notification_answer_pdf notification_pk=notification.pk %}">{% trans 'Download PDF' %}</a>
+    <a href="{% url ecs.notifications.views.notification_answer_pdf notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
 {% endblock %}
 
 {% block notification_answer_body %}
-<div>
+<div class="notification_answer">
     {{ answer.text }}
 </div>
 {% endblock %}

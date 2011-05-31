@@ -7,10 +7,11 @@
 {% endblock %}
 
 {% block content %}
+<div class="notification">
 <h2>Antwort auf <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a> für {% for sf in notification.submission_forms.all %}<a href="{% url ecs.core.views.view_submission submission_pk=sf.submission.pk %}">{{ sf.submission }}</a>{% if not forloop.last %}, {% endif %}{% endfor %} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
 
 {% block notification_answer_head %}
-    User: {{ notification.user }}
+    <strong>User: {{ notification.user }}</strong>
 {% endblock %}
 
 {% with notification.submission_forms.all as submission_forms %}
@@ -20,6 +21,7 @@
 {% block notification_answer_body %}
 {% endblock %}
 
+</div>
 {% endblock %}
 
 {% block menuSelection %}notifications{% endblock %}

@@ -98,7 +98,160 @@
         .checkbox {
             font-family: DejaMono;
         }
+        *{
+          line-height: 0.5cm;
+        }
+        td, th {
+          text-align: left;
+          vertical-align: top;
+          padding: 0;
+          margin: 0;
+        }
+        h1 {
+          font-size: 16pt;
+          text-align: center;
+          margin: 0cm;
+          padding: 1em;
+        }
+        h2 {
+          font-size: 14pt;
+          margin-bottom: 0.4cm;
+        }
+        h3 {
+          display: block;
+          font-size: 13pt;
+          font-weight: bold;
+          margin: 0.2cm 0;
+          padding: 0.2cm 0;
+          border-top: 1px solid #000;
+        }
+        h4 {
+          font-size: 12pt;
+          font-weight: normal;
+          margin-bottom: 0.2cm;
+          margin-top: 0.2cm;
+        }
         
+        .value {
+          font-weight: bold;
+          font-family: DejaSans;
+        }
+        .underline {
+          text-decoration: underline;
+        }
+        .italic_underline {
+          text-decoration: underline;
+          font-style: italic;
+        }
+        .small {
+          font-size: 10pt;
+        }
+        .checkbox {
+          font-family: DejaMono;
+        }
+        
+        table {
+          border: none;
+        }
+        table.padded td,
+        table.padded th,
+        td,
+        th {
+          padding: 0.1cm;
+        }
+        .nopadding td:first-child,
+        .nopadding th:first-child {
+          padding-left: 0 !important;
+        }
+        .full_width {
+          width: 100%;
+        }
+        table.withborders td,
+        table.withborders th {
+          border: 1pt solid #000000;
+        }
+        table.withborders th {
+          border-bottom: 2pt solid #000000;
+        }
+        table.withrowborders,
+        table.withrowborders tr {
+          border-bottom: 1pt solid #000000;
+          border-top: 1pt solid #000000;
+        }
+        .infotext {
+          margin: 0.5cm;
+          text-align: center;
+        }
+        .main_part {
+          margin: 0.5cm 0;
+          padding: 0;
+          page-break-after: avoid;
+        }
+        .main_part h2 {
+          display: block;
+          border: 2pt solid #000000;
+          text-align: center;
+          padding: 0.2cm;
+        }
+        /*
+        table.section {
+          margin-top: 1cm;
+          border-top: 1pt solid #000000;
+        }
+        table.section td {
+          padding: 0;
+        }
+        table.section h3 {
+          margin-top: 0.5cm;
+          border-top: 1pt solid #000000;
+          padding-top: 0.5cm;
+        }
+        */
+        .indented {
+          padding-left: 1cm;
+        }
+        .border_bottom {
+          display: block;
+          padding-bottom: 0.1cm;
+          border-bottom: 1pt solid #000;
+        }
+        .two_columns {
+          display: table;
+          width: 100%;
+          margin-bottom: 1cm;
+        }
+        .column-row {
+          display: table-row;
+        }
+        .column_left,
+        .column_right {
+          display: block;
+          float: left;
+          width: 46%;
+          height: 4cm;
+          border: 1pt solid #000;
+          padding: 0.5%;
+        }
+        .column_left {
+          margin-right: 2%;
+        }
+        .two_columns span {
+          font-size: 7pt;
+        }
+        
+        .signature_date {
+          display: block;
+          padding: 3cm 0 1cm 0.5cm;
+          vertical-align: bottom;
+        }
+        .signature_date .line {
+          display: block;
+          float: left;
+          border-top: 1px solid #000;
+          padding-top: 0.2cm;
+          margin-right: 2cm;
+          width: 8cm;
+        }
     </style>
     {% endblock %}
   </head>
@@ -111,7 +264,7 @@
     </div>
     <div id="footerpage">
       <div align="right">
-        {% block footerpage %}Seite {% endblock %}
+        {% block footerpage %} {% endblock %}
       </div>
     </div>
   </body>
