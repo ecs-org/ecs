@@ -23,17 +23,7 @@ def is_acknowledged(wf):
 
 @guard(model=Submission)
 def is_retrospective_thesis(wf):
-    # information provided by the presenter
-    retrospective = bool(wf.data.current_submission_form.project_type_retrospective)
-    thesis = wf.data.current_submission_form.project_type_education_context is not None
-
-    # information provided by the categorization review
-    if not wf.data.retrospective is None:
-        retrospective = bool(wf.data.retrospective)
-    if not wf.data.thesis is None:
-        thesis = bool(wf.data.thesis)
-
-    return retrospective and thesis
+    return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count())
 
 @guard(model=Submission)
 def has_b2vote(wf):
@@ -252,7 +242,7 @@ class ThesisRecommendationReview(ChecklistReview):
         s = self.workflow.data
         if has_thesis_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.retrospective_thesis_submissions.add(s)
+            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
 
 def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
@@ -285,7 +275,7 @@ class ExpeditedRecommendationReview(ChecklistReview):
         s = self.workflow.data
         if has_expedited_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.expedited_submissions.add(s)
+            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
 
 def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)

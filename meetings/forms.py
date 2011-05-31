@@ -19,7 +19,7 @@ class MeetingForm(TranslatedModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'retrospective_thesis_submissions', 'expedited_submissions')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
         labels = {
             'start': _(u'date and time'),
             'title': _(u'title'),
@@ -101,22 +101,38 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
             obj.save()
         return obj
 
-class _SubmissionMultipleChoiceField(forms.ModelMultipleChoiceField):
+class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
-        super(_SubmissionMultipleChoiceField, self).__init__(Submission.objects, *args, **kwargs)
+        super(_EntryMultipleChoiceField, self).__init__(TimetableEntry.objects, *args, **kwargs)
 
     def label_from_instance(self, obj):
-        return u'{0} {1}'.format(obj.get_ec_number_display(), obj.project_title_display())
+        s = obj.submission
+        return u'{0} {1}'.format(s.get_ec_number_display(), s.project_title_display())
 
 class RetrospectiveThesisExpeditedVoteForm(forms.Form):
-    retrospective_thesis_submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
-    expedited_submissions = _SubmissionMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+    retrospective_thesis_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
+    expedited_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
 
     def __init__(self, *args, **kwargs):
         from ecs.core.models import Vote
         from ecs.core.models.voting import FINAL_VOTE_RESULTS
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
-        self.fields['retrospective_thesis_submissions'].queryset = meeting.retrospective_thesis_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
-        self.fields['expedited_submissions'].queryset = meeting.expedited_submissions.exclude(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number')
+        self.fields['retrospective_thesis_entries'].queryset = meeting.retrospective_thesis_entries.exclude(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['expedited_entries'].queryset = meeting.expedited_entries.exclude(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
 
+    def save(self):
+        from ecs.core.models.voting import Vote, PERMANENT_VOTE_RESULTS
+        from ecs.users.utils import sudo
+        from ecs.tasks.models import Task
+        cd = self.cleaned_data
+        votes = []
+        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])):
+            vote = Vote.objects.create(top=entry, result='1')
+            with sudo():
+                open_tasks = Task.objects.for_data(vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
+                for task in open_tasks:
+                    task.deleted_at = datetime.now()
+                    task.save()
+            votes.append(vote)
+        return votes

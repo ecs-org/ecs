@@ -41,9 +41,15 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def new(self):
         return self.filter(meetings__isnull=True)
-        
+
     def thesis(self):
-        return self.filter(Q(thesis=True)|~Q(current_submission_form__project_type_education_context=None))
+        return self.filter(Q(thesis=True)|(Q(thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
+
+    def retrospective(self):
+        return self.filter(Q(retrospective=True)|Q(retrospective=None, current_submission_form__project_type_retrospective=True))
+
+    def retrospective_thesis(self):
+        return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
 
     def next_meeting(self):
         return self.filter(meetings__start__gt=datetime.now())
@@ -91,6 +97,12 @@ class SubmissionManager(AuthorizationManager):
 
     def thesis(self):
         return self.all().thesis()
+
+    def retrospective(self):
+        return self.all().retrospective()
+
+    def retrospective_thesis(self):
+        return self.all().retrospective_thesis()
 
     def next_meeting(self):
         return self.all().next_meeting()

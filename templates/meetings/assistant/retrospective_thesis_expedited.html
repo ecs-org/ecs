@@ -6,28 +6,28 @@
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         <h4>{% trans "Approved" %}</h4>
         <ul>
-        {% for submission in retrospective_thesis_submissions %}
+        {% for entry in retrospective_thesis_entries %}
             <li>
-                {{ submission|ec_number }}
-                {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                {{ entry.submission|ec_number }}
+                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
             </li>
         {% endfor %}
         </ul>
         <h4>{% trans "Not Approved" %}</h4>
-        {{ form.retrospective_thesis_submissions }}
+        {{ form.retrospective_thesis_entries }}
 
         <h3>{% trans "Expedited Submissions" %}</h3>
         <h4>{% trans "Approved" %}</h4>
         <ul>
-        {% for submission in expedited_submissions %}
+        {% for entry in expedited_entries %}
             <li>
-                {{ submission|ec_number }}
-                {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                {{ entry.submission|ec_number }}
+                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
             </li>
         {% endfor %}
         </ul>
         <h4>{% trans "Not Approved" %}</h4>
-        {{ form.expedited_submissions }}
+        {{ form.expedited_entries }}
 
         <input type="submit" value="{% trans "Approve" %}" />
         <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>

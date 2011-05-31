@@ -144,11 +144,25 @@ class Meeting(models.Model):
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
 
-    retrospective_thesis_submissions = models.ManyToManyField('core.Submission', related_name='retrospective_thesis_meetings')
-    expedited_submissions = models.ManyToManyField('core.Submission', related_name='expedited_meetings')
-
     objects = MeetingManager()
     
+
+    @property
+    def retrospective_thesis_submissions(self):
+        return self.submissions.retrospective_thesis()
+
+    @property
+    def expedited_submissions(self):
+        return self.submissions.filter(expedited=True)
+
+    @property
+    def retrospective_thesis_entries(self):
+        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.retrospective_thesis().values('pk').query)
+
+    @property
+    def expedited_entries(self):
+        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.filter(expedited=True).values('pk').query)
+
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
         
@@ -181,11 +195,15 @@ class Meeting(models.Model):
         del self.users_with_constraints
         
     def add_entry(self, **kwargs):
-        last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
-        if last_index is None:
-            kwargs['timetable_index'] = 0
+        visible = kwargs.pop('visible', True)
+        if visible:
+            last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            if last_index is None:
+                kwargs['timetable_index'] = 0
+            else:
+                kwargs['timetable_index'] = last_index + 1
         else:
-            kwargs['timetable_index'] = last_index + 1
+            kwargs['timetable_index'] = None
         duration = kwargs.pop('duration', None)
         if duration is not None:
             kwargs['duration_in_seconds'] = duration.seconds
@@ -214,7 +232,7 @@ class Meeting(models.Model):
         self._clear_caches()
         
     def __len__(self):
-        return self.timetable_entries.count()
+        return self.timetable_entries.filter(timetable_index__isnull=False).count()
 
     @property
     def users(self):
@@ -244,7 +262,7 @@ class Meeting(models.Model):
         entries = list()
         for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
             users_by_entry_id.setdefault(participation.entry_id, set()).add(users_by_id.get(participation.user_id))
-        for entry in self.timetable_entries.select_related('submission').order_by('timetable_index'):
+        for entry in self.timetable_entries.filter(timetable_index__isnull=False).select_related('submission').order_by('timetable_index'):
             entry.users = users_by_entry_id.get(entry.id, set())
             entry.start = self.start + duration
             duration += entry.duration
@@ -273,11 +291,11 @@ class Meeting(models.Model):
     
     @property
     def open_tops(self):
-        return self.timetable_entries.filter(is_open=True)
+        return self.timetable_entries.filter(timetable_index__isnull=False, is_open=True)
         
     @property
     def open_tops_with_vote(self):
-        return self.timetable_entries.filter(is_open=True, vote__result__isnull=False)
+        return self.timetable_entries.filter(timetable_index__isnull=False, is_open=True, vote__result__isnull=False)
 
     def __nonzero__(self):
         return True   # work around a django bug
@@ -286,7 +304,7 @@ class Meeting(models.Model):
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
     title = models.CharField(max_length=200, blank=True)
-    timetable_index = models.IntegerField()
+    timetable_index = models.IntegerField(null=True)
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
@@ -295,7 +313,10 @@ class TimetableEntry(models.Model):
     is_open = models.BooleanField(default=True)
     
     def __unicode__(self):
-        return "TOP %s" % (self.index + 1)
+        if self.index:
+            return "TOP %s" % (self.index + 1)
+        else:
+            return "TOP"
     
     
     def _get_duration(self):

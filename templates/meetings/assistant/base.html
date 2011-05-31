@@ -13,7 +13,7 @@
                     <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
                 <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
-                {% if not meeting.ended and meeting.retrospective_thesis_submissions.count %}
+                {% if not meeting.ended and meeting.retrospective_thesis_entries.count or not meeting.ended and meeting.expedited_entries.count %}
                     <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}">{% trans 'Ret. Thesis/Expedited' %}</a></div>
                 {% endif %}
             {% endif %}
@@ -21,8 +21,8 @@
                 <li>TOPs: {{ meeting|length }}</li>
                 <li>Offene TOPs: {{ open_top_count }}</li>
                 <li>Offene TOPs mit Votum: {{ meeting.open_tops_with_vote.count }}</li>
-                <li>Diplomarbeiten: {{ meeting.retrospective_thesis_submissions.count }}</li>
-                <li>Expedited: {{ meeting.expedited_submissions.count }}</li>
+                <li>Diplomarbeiten: {{ meeting.retrospective_thesis_entries.count }}</li>
+                <li>Expedited: {{ meeting.expedited_entries.count }}</li>
                 <li>&nbsp;</li>
                 <li>
                     {% if meeting.started %}

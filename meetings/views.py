@@ -280,14 +280,14 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
     if form.is_valid():
-        for submission in form.cleaned_data['retrospective_thesis_submissions']:
-            Vote.objects.create(submission_form=submission.current_submission_form, result='1')
-        for submission in form.cleaned_data['expedited_submissions']:
-            Vote.objects.create(submission_form=submission.current_submission_form, result='1')
+        form.save()
+        form = RetrospectiveThesisExpeditedVoteForm(None, meeting=meeting)
+    else:
+        print form.errors
 
     return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
-        'retrospective_thesis_submissions': meeting.retrospective_thesis_submissions.filter(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number'),
-        'expedited_submissions': meeting.expedited_submissions.filter(current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('ec_number'),
+        'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
+        'expedited_entries': meeting.expedited_entries.filter(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'meeting': meeting,
         'form': form,
     })
@@ -380,7 +380,7 @@ def protocol_pdf(request, meeting_pk=None):
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('protocol')
     )
     
-    timetable_entries = meeting.timetable_entries.all().order_by('timetable_index')
+    timetable_entries = meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
     tops = []
     for top in timetable_entries:
         try:
