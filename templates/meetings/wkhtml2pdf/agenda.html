@@ -5,7 +5,7 @@
 
 {% block content %}
     {% include 'db/wkhtml2pdf/ec_head.inc' %}
-    <div align="center" style="font-weight:bold;font-size:12pt;margin-bottom:0.5cm;">
+    <div class="center_bold">
     Tagesordnung<br />
     f&uuml;r die Sitzung der Ethik-Kommission am<br />
     {{ meeting.start|date:'d.m.Y, H:i' }} Uhr, sine tempore<br />
@@ -13,11 +13,11 @@
     </div>
     
     {% for entry in meeting %}
-        <span>#{{ entry }}</span>
+        <span class="bold">#{{ entry }}</span>
         {% if entry.submission %}
-            <span>EK Nr.</span>
+            <span class="bold">EK Nr.</span>
                 {{ entry.submission.get_ec_number_display }}<br />
-            <span>Antragsteller:</span>
+            <span class="bold">Antragsteller:</span>
                 {% with entry.submission.current_submission_form.submitter as submitter %}
                     {% if not submitter.first_name or not submitter.last_name %}
                         {{ entry.submission.current_submission_form.submitter_contact }}
@@ -26,19 +26,19 @@
                     {% endif %}
                 {% endwith %}
                 <br />
-            <span>Einreichende Institution:</span>
+            <span class="bold">Einreichende Institution:</span>
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
-            <span>Projekttitel:</span>
+            <span class="bold">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
             <br />
         {% endif %}
     {% endfor %}
 
     {% for i, submission in additional_submissions %}
-        <span>#TOP {{ i }}</span>
-        <span>EK Nr.</span>
+        <span class="bold">#TOP {{ i }}</span>
+        <span class="bold">EK Nr.</span>
             {{ submission.get_ec_number_display }}<br />
-        <span>Antragsteller:</span>
+        <span class="bold">Antragsteller:</span>
             {% with submission.current_submission_form.submitter as submitter %}
                 {% if not submitter.first_name or not submitter.last_name %}
                     {{ submission.current_submission_form.submitter_contact }}
@@ -47,9 +47,9 @@
                 {% endif %}
             {% endwith %}
             <br />
-        <span>Einreichende Institution:</span>
+        <span class="bold">Einreichende Institution:</span>
             {{ submission.current_submission_form.submitter_organisation }}<br />
-        <span>Projekttitel:</span>
+        <span class="bold">Projekttitel:</span>
             {{ submission.project_title_display }}<br />
         <br />
     {% endfor %}

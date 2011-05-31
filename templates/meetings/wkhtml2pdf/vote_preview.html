@@ -3,35 +3,31 @@
 {% block title %}Votum{% endblock %}
 
 {% block content %}
-  <div align="center" style="font-weight: bold; font-size: large;">
+  <div class="center_bold">
     Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:
     <br />
   </div>
 
-<span style="font-weight: bold;">EK Nr: {{ ec_number }}</span> <br/>
-<span style="font-weight: bold;">Antragsteller:</span> 
+<p><span class="bold">EK Nr: {{ ec_number }}</span></p>
+<p><span class="bold">Antragsteller:</span></p>
 {% if form.submitter %}
     {{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
 {% else %}
     {{ form.submitter_contact }} <br/>
 {% endif %}
-<span style="font-weight: bold;">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
-<span style="font-weight: bold;">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
-<span style="font-weight: bold;">Projekttitel:</span> {{ form.project_title_display }} <br/>
+<span class="bold">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
+<span class="bold">Einreichende Institution:</span> {{ form.submitter_organisation }}<br/>
+<span class="bold">Projekttitel:</span> {{ form.project_title_display }} <br/>
 
 
-<pdf:spacer height="0.5cm" />
-
-Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:
-
-<pdf:spacer height="0.5cm" />
+<p>Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:</p>
 
 
-<table border="1px">
+<table class="withborders">
 <tr>
-  <td><span style="font-weight: bold;">Dokument</span></td>
-  <td><span style="font-weight: bold;">Version/Nr</span></td>
-  <td><span style="font-weight: bold;">Datiert</span></td>
+  <td><span class="bold">Dokument</span></td>
+  <td><span class="bold">Version/Nr</span></td>
+  <td><span class="bold">Datiert</span></td>
 </tr>
 {% for document in documents %}
 <tr>
@@ -46,13 +42,7 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 {% endfor %}
 </table>
 
-
-<pdf:spacer height="0.5cm" />
-
-<div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss:</div>
-
-
-<pdf:spacer height="0.5cm" />
+<div class="bold">Die Kommission fasst folgenden Beschluss:</div>
 
 {% if vote.result == '1' or vote.result == '1a' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
@@ -74,35 +64,28 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
     Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)
 {% endif %}
 
-<pdf:spacer height="1.0cm" />
-
 {% if submission.current_submission_form.current_published_vote %}
-    <pdf:spacer height="0.5cm" />
-    <span style="font-weight:bold;">Letzte:</span><br />
+    <span class="bold">Letzte:</span><br />
     {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
 {% endif %}
 
 {% if vote.text %}
-    <pdf:spacer height="0.5cm" />
-    <span style="font-weight:bold;">Kommentar:</span><br />
+    <span class="bold">Kommentar:</span><br />
     {{ vote.text|linebreaksbr}}
 {% endif %}
 
 
 {% if submission.is_amg %}
-<pdf:spacer height="0.5cm" />
-<span style="font-weight:bold;">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
+<span class="bold">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
 </span><br />
 {% endif %}
 
 {% if submission.is_amg or submission.is_mpg %}
-<pdf:spacer height="1.0cm" />
-<span style="font-weight:bold;">
+<span class="bold">
     Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
 </span><br />
 {% endif %}
 
-<pdf:spacer height="0.5cm" />
 <span>
     Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben:  
     {% for bef in submission.get_befangene %}    
@@ -111,7 +94,6 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
         <b>keine</b>    
     {% endfor %}
 </span><br />
-<pdf:spacer height="0.5cm" />
     
 {% endblock %}
 

@@ -20,10 +20,10 @@
     {% endif %}
 
     {% for top, vote in tops %}
-        <span style="font-weight:bold;">#{{ top }}</span>
+        <span class="bold">#{{ top }}</span>
         {% if top.submission %}
-            <span style="font-weight:bold;">EK Nr.</span> {{ top.submission|ec_number }}<br />
-            <span style="font-weight:bold;">Antragsteller:</span>
+            <span class="bold">EK Nr.</span> {{ top.submission|ec_number }}<br />
+            <span class="bold">Antragsteller:</span>
                 {% with top.submission.current_submission_form.submitter as submitter %}
                     {% if not submitter.first_name or not submitter.last_name %}
                         {{ top.submission.current_submission_form.submitter_contact }}
@@ -33,10 +33,10 @@
                 {% endwith %}
                 <br />
             {% if top.submission.current_submission_form.sponsor_name %}
-                <span style="font-weight:bold;">Sponsor/CRO:</span> {{ top.submission.current_submission_form.sponsor_name }}
+                <span class="bold">Sponsor/CRO:</span> {{ top.submission.current_submission_form.sponsor_name }}
             {% endif %}<br />
-            <span style="font-weight:bold;">Einreichende Institut:</span> {{ top.submission.current_submission_form.submitter_organisation }}<br />
-            <span style="font-weight:bold;">Projekttitel:</span> {{ top.submission.project_title_display }}<br />
+            <span class="bold">Einreichende Institut:</span> {{ top.submission.current_submission_form.submitter_organisation }}<br />
+            <span class="bold">Projekttitel:</span> {{ top.submission.project_title_display }}<br />
         {% else %}
             <br />
         {% endif %}
@@ -49,9 +49,9 @@
     {% endfor %}
 
     {% for i, submission, vote in additional_submissions %}
-        <span style="font-weight:bold;">#TOP {{ i }}</span>
-        <span style="font-weight:bold;">EK Nr.</span> {{ submission|ec_number }}<br />
-        <span style="font-weight:bold;">Antragsteller:</span>
+        <span class="bold">#TOP {{ i }}</span>
+        <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
+        <span class="bold">Antragsteller:</span>
             {% with submission.current_submission_form.submitter as submitter %}
                 {% if not submitter.first_name or not submitter.last_name %}
                     {{ submission.current_submission_form.submitter_contact }}
@@ -61,19 +61,19 @@
             {% endwith %}
             <br />
         {% if submission.current_submission_form.sponsor_name %}
-            <span style="font-weight:bold;">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
+            <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
         {% endif %}<br />
-        <span style="font-weight:bold;">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
-        <span style="font-weight:bold;">Projekttitel:</span> {{ submission.project_title_display }}<br />
+        <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+        <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
 
         {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
     {% endfor %}
 
     {% if b1ized.count %}
-        <span style="font-weight:bold;">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
+        <span class="bold">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
 
         {% for b1 in b1ized.all %}
-            <span style="font-weight:bold;">EK-Nr.: {{ b1.submission|ec_number }} {{ b1.submission.project_title_display }} ({{ b1.submission.current_submission_form.submitter_name }})
+            <span class="bold">EK-Nr.: {{ b1.submission|ec_number }} {{ b1.submission.project_title_display }} ({{ b1.submission.current_submission_form.submitter_name }})
         {% endfor %}
     {% endif %}
 

@@ -1,6 +1,6 @@
 <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
 
-<table border="1px">
+<table class="withborders">
     <tr>
         <td width="3%">[X]</td>
         <td>{% include 'db/meetings/wkhtml2pdf/protocol_vote.inc' %}</td>
@@ -8,18 +8,18 @@
 </table> 
 
 {% if vote.text %}
-    <span style="font-weight:bold;">Kommentar:</span><br />
+    <span class="bold">Kommentar:</span><br />
     {{ vote.text|escape}}
 {% endif %}
 
 {% if submission.is_mpg %}
-    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß MPG handelt</span><br />
+    <span class="bold">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß MPG handelt</span><br />
 {% endif %}
 {% if submission.is_amg %}
-    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß AMG handelt</span><br />
+    <span class="bold">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß AMG handelt</span><br />
 {% endif %}
 {% if not submission.is_mpg and not submission.is_amg %}
-    <span style="font-weight:bold;">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um keine klinische Prüfung gemäß AMG/MPG handelt</span><br />
+    <span class="bold">Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um keine klinische Prüfung gemäß AMG/MPG handelt</span><br />
 {% endif %}
 
 

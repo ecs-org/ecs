@@ -1,48 +1,54 @@
 {% load core corepdf %}
 
-<h4>6.1. Welche Maßnahmen bzw. Behandlungen werden <b>ausschließlich studienbezogen</b> durchgeführt? </h4>
+<p>6.1. Welche Maßnahmen bzw. Behandlungen werden <b>ausschließlich studienbezogen</b> durchgeführt? </p>
 
 <center>
 <table class="full_width withborders">
+  <thead>
+    <tr>
+      <th width="30%">Art</th>
+      <th width="20%">Anzahl/Dosis</th>
+      <th width="25%">Zeitraum</th>
+      <th width="25%">Insgesamt</th>
+    </tr>
+  </thead>
+  {% for m in submission_form.measures_study_specific %}
   <tbody>
     <tr>
-      <th width="169">Art</th>
-      <th width="217">Anzahl/Dosis</th>
-      <th width="120">Zeitraum</th>
-      <th width="76">Insgesamt</th>
+      <td><strong>{{ m.type }}</strong></td>
+      <td><strong>{{ m.count }}</strong></td>
+      <td><strong>{{ m.period }}</strong></td>
+      <td><strong>{{ m.total }}</strong></td>
     </tr>
-    {% for m in submission_form.measures_study_specific %}
-    <tr>
-      <td width="169"><strong>{{ m.type }}</strong></td>
-      <td width="217"><strong>{{ m.count }}</strong></td>
-      <td width="120"><strong>{{ m.period }}</strong></td>
-      <td width="76"><strong>{{ m.total }}</strong></td>
-    </tr>
+  </tbody>
 {% endfor %}
-</tbody>
 </table>
 </center>
 
-<h4>6.2. Welche speziellen Untersuchungen (<strong>nur invasive und strahlenbelastende</strong>) werden während des Studienzeitraumes <strong>zu Routinezwecken</strong> durchgeführt: </h4>
+<p>6.2. Welche speziellen Untersuchungen (<strong>nur invasive und strahlenbelastende</strong>) werden während des Studienzeitraumes <strong>zu Routinezwecken</strong> durchgeführt: </p>
 
 <table class="full_width withborders">
+  <thead>
+    <tr>
+      <th width="30%">Art</th>
+      <th width="20%">Anzahl/Dosis</th>
+      <th width="25%">Zeitraum</th>
+      <th width="25%">Insgesamt</th>
+    </tr>
+  </thead>
+  {% for m in submission_form.measures_nonspecific %}
   <tbody>
     <tr>
-    <th width="169">Art</th>
-    <th width="217">Anzahl/Dosis</th>
-    <th width="120">Zeitraum</th>
-    <th width="76">Insgesamt</th></tr>
-    {% for m in submission_form.measures_nonspecific %}
-    <tr>
-    <td width="169"><strong>{{ m.type }}</strong></td>
-    <td width="217"><strong>{{ m.count }}</strong></td>
-    <td width="120"><strong>{{ m.period }}</strong></td>
-    <td width="76"><strong>{{ m.total }}</strong></td></tr>
-    {% endfor %}
+      <td><strong>{{ m.type }}</strong></td>
+      <td><strong>{{ m.count }}</strong></td>
+      <td><strong>{{ m.period }}</strong></td>
+      <td><strong>{{ m.total }}</strong></td>
+    </tr>
   </tbody>
+  {% endfor %}
 </table>
 
-<h4> 6.3. Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </h4>
+<p> 6.3. Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>
 
 <div class="value">
     {{ submission_form.additional_therapy_info }}
