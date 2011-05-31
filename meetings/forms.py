@@ -118,8 +118,8 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
         from ecs.core.models.voting import FINAL_VOTE_RESULTS
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
-        self.fields['retrospective_thesis_entries'].queryset = meeting.retrospective_thesis_entries.exclude(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
-        self.fields['expedited_entries'].queryset = meeting.expedited_entries.exclude(submission__current_submission_form__votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['retrospective_thesis_entries'].queryset = meeting.retrospective_thesis_entries.exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['expedited_entries'].queryset = meeting.expedited_entries.exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
 
     def save(self):
         from ecs.core.models.voting import Vote, PERMANENT_VOTE_RESULTS
