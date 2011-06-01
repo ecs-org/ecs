@@ -44,16 +44,39 @@ def document_tamer(**kwargs):
     if len(to_be_ready_documents):
         logger.info('{0} documents to be primed and set to ready'.format(len(to_be_ready_documents)))
     for doc in to_be_ready_documents:
-        Document.objects.filter(pk= doc['pk']).update(status='ready')
-        t = Document.objects.get(pk = doc['pk'])
-        success, response = prime_mediaserver(t.uuid_document, t.mimetype)
-        if not success:
-            logger.warning("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid_document, response))    
-
+        do_prime_mediaserver.delay(doc['pk'])
+        
     #filename = t.file.name
     #t.file = None
     #DocumentFileStorage().delete(filename)
     #t.save()        
+
+
+@task()
+def do_prime_mediaserver(document_pk=None, **kwargs):
+    logger = do_prime_mediaserver.get_logger(**kwargs)
+    logger.info('prime mediaserver with document pk={0}'.format(document_pk))
+    result = False
+
+    # atomic operation
+    updated = Document.objects.filter(TO_BE_READY_Q, pk=document_pk).update(status='prime')
+    if not updated:
+        logger.warning('Document with pk={0} and status=uploaded does not exist'.format(document_pk))
+        return result
+
+    doc = Document.objects.get(pk=document_pk)
+    doc.status = 'ready'
+    doc.retries = 0
+    try:
+        success, response = prime_mediaserver(doc.uuid_document, doc.mimetype)
+        if not success:
+            logger.warning("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid_document, response))    
+        else:
+            logger.info('prime cachen for document with uuid={0} was successful'.format(doc.uuid_document))
+    finally:
+        doc.save()
+
+    result = True
 
 
 @task()

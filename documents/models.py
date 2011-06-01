@@ -99,6 +99,7 @@ C_STATUS_CHOICES = (
     ('uploaded', _('uploaded')),
     ('indexing', _('indexing')),
     ('indexed', _('indexed')),
+    ('prime', _('prime')),
     ('ready', _('ready')),
     ('aborted', _('aborted')),
     ('deleted', _('deleted')),
