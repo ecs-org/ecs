@@ -10,7 +10,7 @@ from celery.task.schedules import crontab
 from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError
 
 LOCK_EXPIRE = 60 * 10 # rendering lock expires in 10 minutes
-
+"""
 from celery.signals import task_failure  
 from sentry.client.handlers import SentryHandler 
  
@@ -33,6 +33,8 @@ def process_failure_signal(exception, traceback, sender, task_id,
     )
   
 task_failure.connect(process_failure_signal)  
+
+"""
 
 
 @task(track_started=True)
