@@ -205,7 +205,6 @@ class LocalFileStorageVault(StorageVault):
         self.db = DiskBuckets(rootdir, max_size = 0)
     
     def _add_to_vault(self, identifier, filelike):
-        print(type(identifier), identifier, type(filelike), filelike)
         self.db.add(identifier, filelike)
         
     def _get_from_vault(self, identifier):

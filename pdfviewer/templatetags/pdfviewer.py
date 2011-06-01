@@ -11,7 +11,7 @@ class AnnotationsNode(Node):
 
     def render(self, context):
         doc = self.docvar.resolve(context)
-        print doc, doc.annotations.filter(user=context['request'].user).order_by('page_number', 'y')
+        #print doc, doc.annotations.filter(user=context['request'].user).order_by('page_number', 'y')
         context[self.varname] = doc.annotations.filter(user=context['request'].user).order_by('page_number', 'y')
         return u""
 

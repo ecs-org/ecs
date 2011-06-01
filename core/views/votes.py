@@ -91,7 +91,7 @@ def vote_sign_finished(request, document_pk=None):
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
-    print 'vote_sign vote "%s"' % (vote_pk)
+    #print 'vote_sign vote "%s"' % (vote_pk)
     
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'   

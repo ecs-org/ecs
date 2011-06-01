@@ -59,7 +59,7 @@ def sign(request, sign_dict):
     }
     data = urllib.urlencode(values)
     redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
-    print 'sign: redirect to [%s]' % redirect
+    #print 'sign: redirect to [%s]' % redirect
 
     if not PDFAS_SERVICE == 'mock:':
         return HttpResponseRedirect(redirect)

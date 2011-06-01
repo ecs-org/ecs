@@ -136,7 +136,7 @@ def invite_user(request, email):
         transferlist = deliver(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
         try:
             msgid, rawmail = transferlist[0]
-            print rawmail
+            #print rawmail
         except IndexError:
             raise ValueError(_(u'The email could not be delivered.'))
     except ValueError, e:
@@ -170,7 +170,7 @@ def create_phantom_user(email, role=None):
             'link': link,
         }))
         msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
-        print rawmail
+        #print rawmail
     except Exception, e:
         transaction.savepoint_rollback(sid)
         raise e
