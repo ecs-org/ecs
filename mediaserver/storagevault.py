@@ -205,7 +205,11 @@ class LocalFileStorageVault(StorageVault):
         self.db = DiskBuckets(rootdir, max_size = 0)
     
     def _add_to_vault(self, identifier, filelike):
-        self.db.add(identifier, filelike)
+        # FIXME: instead of db.add we do db.create_or_update to workaround ecs.documents issue
+        #self.db.add(identifier, filelike)
+        if self.db.exists(identifier):
+            print("WARNING: you are overwriting the identifier {0} in storage vault (and this is not good)".format(identifier))
+        self.db.create_or_update(identifier, filelike)
         
     def _get_from_vault(self, identifier):
         return self.db.get(identifier)
