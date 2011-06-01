@@ -178,6 +178,7 @@ class Document(models.Model):
         return False
 
     def save(self, **kwargs):
+        print self.uuid_document, self.hash, self.get_filename(), self.mimetype, self.name, self.status, self.retries
         if not self.uuid_document: 
             self.uuid_document = uuid4().get_hex() # generate a new random uuid
             content_type = None
@@ -201,16 +202,17 @@ class Document(models.Model):
 
         rval = super(Document, self).save(**kwargs)
 
-        # hack for situations where there is no celerybeat
-        if settings.CELERY_ALWAYS_EAGER:
-            from documents.tasks import document_tamer
-            document_tamer.delay().get()
-        
         if self.status == 'deleted':
             self.page_set.all().delete()
             
         return rval
 
+def _post_document_save(sender, **kwargs):
+    # hack for situations where there is no celerybeat
+    if settings.CELERY_ALWAYS_EAGER:
+        from documents.tasks import document_tamer
+        document_tamer.delay().get()
+    
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
@@ -221,4 +223,4 @@ def _post_page_delete(sender, **kwargs):
     site.get_index(Page).remove_object(kwargs['instance'])
 
 post_delete.connect(_post_page_delete, sender=Page)
-
+post_save.connect(_post_document_save, sender=Document)

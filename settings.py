@@ -169,7 +169,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djcelery',
-    'ghettoq', 
+    #'ghettoq', 
 
     'ecs.utils.countries',
     'compressor',
@@ -381,14 +381,16 @@ USE_TEXTBOXLIST = True
 SOUTH_TESTS_MIGRATE = False
 
 
-# ### celery ### configuration defaults, uses local loopback via qhettoq and always eager
-# production environments should clear CARROT_BACKEND (sets to default of rabbitmq), set BROKER_USER, PASSWORD, VHOST 
+# ### celery ### configuration defaults, uses memory transport and always eager
+# production environments should:
+#   clear BROKER_BACKEND (which defaults to "kombu.transport.pyamqplib.Transport"), 
+#   set BROKER_USER, PASSWORD, VHOST 
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-CARROT_BACKEND = "ghettoq.taproot.Database"
+BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
     'ecs.core.tasks',
     'ecs.core.tests.tasks',

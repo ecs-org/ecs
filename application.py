@@ -57,20 +57,22 @@ windmill:inst:all:pypi:windmill\>=1.6
 cicero:inst:all:pypi:cicero
 
 # queuing: celery 
-amqplib:inst:all:pypi:amqplib\>=0.6
-carrot:inst:all:pypi:carrot\>=0.10.7
-importlib:inst:all:pypi:importlib
-python-dateutil:inst:all:pypi:python-dateutil
-anyjson:inst:all:pypi:anyjson
-pyparsing:inst:all:pypi:pyparsing
-celery:inst:all:pypi:celery\>=2.1.2
-
-django-picklefield:inst:all:pypi:django-picklefield
-django-celery:inst:all:pypi:django-celery\>=2.1.2
-
+#carrot:inst:all:pypi:carrot\>=0.10.7
 # use ghettoq if development instead rabbitmq
-odict:inst:all:pypi:odict
-ghettoq:inst:all:pypi:ghettoq
+#odict:inst:all:pypi:odict
+#ghettoq:inst:all:pypi:ghettoq
+
+importlib:inst:all:pypi:importlib
+python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
+anyjson:inst:all:pypi:anyjson\>=0.3.1
+amqplib:inst:all:pypi:amqplib\>=0.6
+kombu:inst:all:pypi:kombu\>=1.1.2
+#django-kombu:inst:all:pypi:django-kombu\>=0.9.2
+pyparsing:inst:all:pypi:pyparsing\<2.0.0
+celery:inst:all:pypi:celery==2.2.6
+django-picklefield:inst:all:pypi:django-picklefield
+django-celery:inst:all:pypi:django-celery==2.2.4
+
 
 
 # mail: ecsmail, communication: lamson mail server
