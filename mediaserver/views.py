@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.utils.translation import ugettext as _
 
 from ecs.utils import forceauth
-
+from ecs.utils.pdfutils import Page
 from ecs.mediaserver.utils import MediaProvider, AuthUrl
 
 
