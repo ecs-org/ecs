@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
 from ecs.communication.models import Message
-from ecs.ecsmail.mail import deliver
+from ecs.ecsmail.utils import deliver
 from ecs.utils.datastructures import OrderedSet
 
 class Command(BaseCommand):

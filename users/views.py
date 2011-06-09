@@ -22,7 +22,7 @@ from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
-from ecs.ecsmail.mail import deliver
+from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, ProfileDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation

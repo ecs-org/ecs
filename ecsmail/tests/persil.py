@@ -3,7 +3,7 @@ Created on Oct 6, 2010
 
 @author: amir
 '''
-from ecs.ecsmail.persil import whitewash
+from ecs.ecsmail.utils import whitewash
 from ecs.utils.testcases import EcsTestCase
 
 class PersilTest(EcsTestCase):

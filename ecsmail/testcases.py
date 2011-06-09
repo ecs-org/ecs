@@ -14,8 +14,8 @@ from lamson import routing
 from lamson.mail import MailRequest
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.ecsmail.mail import deliver as ecsmail_deliver
-from ecs.ecsmail.mail import create_mail
+from ecs.ecsmail.utils import deliver as ecsmail_deliver
+from ecs.ecsmail.utils import create_mail
 
 
 class MailTestCase(EcsTestCase):
@@ -28,7 +28,7 @@ class MailTestCase(EcsTestCase):
     def setUpClass(self):          
         super(MailTestCase, self).setUpClass()      
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
-        import ecs.ecsmail.mailconf as lamson_settings
+        from ecs.ecsmail import lamson_settings
 
     @classmethod
     def teardownClass(self):

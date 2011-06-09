@@ -17,8 +17,7 @@ from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
 from ecs.core.parties import get_involved_parties
 from ecs.documents.models import Document
-from ecs.ecsmail.mail import deliver
-from ecs.ecsmail.persil import whitewash
+from ecs.ecsmail.utils import deliver, whitewash
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm

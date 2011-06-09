@@ -16,8 +16,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 from ecs.communication.models import Message
-from ecs.ecsmail.persil import whitewash
-from ecs.ecsmail.mail import deliver_to_recipient
+from ecs.ecsmail.utils import deliver_to_recipient, whitewash
 
 @route(".+")
 def SOFT_BOUNCE(message):
@@ -137,7 +136,7 @@ def __checkConstraints(message):
 @bounce_to(soft=SOFT_BOUNCE, hard=HARD_BOUNCE)
 @stateless
 def START(message, address=None, host=None):
-    from ecs.ecsmail.mailconf import relay
+    from ecs.ecsmail.lamson_settings import relay
     __checkConstraints(message)
 
     if host == settings.ECSMAIL['authoritative_domain']: # we acccept mail for this address

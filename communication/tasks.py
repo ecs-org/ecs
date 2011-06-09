@@ -12,7 +12,7 @@ from django.utils.translation import ugettext as _
 from django.core.mail import make_msgid
 
 from ecs.communication.models import Message
-from ecs.ecsmail.mail import deliver_to_recipient
+from ecs.ecsmail.utils import deliver_to_recipient
 from ecs.users.utils import get_full_name
 
 

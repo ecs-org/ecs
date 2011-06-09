@@ -13,8 +13,7 @@ from ecs.utils.decorators import developer
 from ecs.core.models import Submission
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
-from ecs.ecsmail.mail import deliver
-from ecs.ecsmail.persil import whitewash
+from ecs.ecsmail.utils import deliver, whitewash
 
 from ecs.billing.models import Price
 from ecs.billing.stats import collect_submission_billing_stats

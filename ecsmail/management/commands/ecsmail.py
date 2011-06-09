@@ -18,7 +18,7 @@ class Command(BaseCommand):
             logfile = args[1] if len(args) >= 2 else None
             setLogging(logfile)
 
-            from ecs.ecsmail import mailconf as lamson_settings
+            from ecs.ecsmail import lamson_settings
             import asyncore
             print("starting ecsmail server, Listen: %s:%s, Relay: %s" % 
                 (lamson_settings.receiver.host, lamson_settings.receiver.port, str(lamson_settings.relay)))

@@ -13,7 +13,7 @@ from django.contrib.sites.models import Site
 
 from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
-from ecs.ecsmail.mail import deliver, deliver_to_recipient
+from ecs.ecsmail.utils import deliver, deliver_to_recipient
 from ecs.utils.viewutils import render_html
 
 # Do not import models here which depend on the AuthorizationManager, because

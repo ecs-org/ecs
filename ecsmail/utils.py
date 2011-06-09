@@ -3,13 +3,56 @@
 import os
 import logging
 import mimetypes
+import re
+import copy
 
 from django.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
 
-from ecs.ecsmail.persil import whitewash
+import BeautifulSoup
+from BeautifulCleaner.bc import Cleaner, removeElement
+
 from ecs.ecsmail.tasks import queued_mail_send
    
+
+
+class TotalCleaner(Cleaner):
+    style = True
+    whitelist_tags = set([])
+
+# http://code.activestate.com/recipes/148061/
+def _wrap(text, width):
+    return reduce(lambda line, word, width=width: '%s%s%s' %
+                  (line,
+                   ' \n'[(len(line)-line.rfind('\n')-1
+                         + len(word.split('\n',1)[0]
+                              ) >= width)],
+                   word),
+                  text.split(' ')
+                 )
+
+def whitewash(htmltext, puretext=True):
+    ''' cleans htmltext into harmless pure text '''
+    if puretext:
+        hexentityMassage = copy.copy(BeautifulSoup.BeautifulSoup.MARKUP_MASSAGE)
+        hexentityMassage = [(re.compile('&#x([^;]+);'), 
+            lambda m: '&#%d' % int(m.group(1), 16))]
+
+        doc = BeautifulSoup.BeautifulSoup(htmltext,
+            convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES,
+            markupMassage=hexentityMassage)        
+    else:
+        doc = BeautifulSoup.BeautifulSoup(htmltext)
+        
+    TotalCleaner()(doc) # to kill the really bad tags first.
+    for el in doc.findAll():
+        removeElement(el)
+    string = unicode(doc)
+    string = '\n\n'.join(re.split(r'\s*\n\s*\n\s*', string))
+    string = re.sub('\s\s\s+', ' ', string)
+    string = _wrap(string, 70)
+    return string
+
 
 def create_mail(subject, message, from_email, recipient, message_html=None, attachments= None, msgid=None, **kwargs):
     '''
@@ -70,6 +113,7 @@ def deliver(recipient_list, *args, **kwargs):
         sentids.append(deliver_to_recipient(recipient, *args, **kwargs))
 
     return sentids
+
 
 def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, **kwargs):
     if msgid is None:

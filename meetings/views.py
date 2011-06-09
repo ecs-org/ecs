@@ -23,9 +23,6 @@ from ecs.meetings.models import Meeting, Participation, TimetableEntry, Assigned
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
 
-from ecs.ecsmail.mail import deliver
-from ecs.ecsmail.persil import whitewash
-
 
 
 def create_meeting(request):

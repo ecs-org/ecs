@@ -46,7 +46,7 @@ class _LogFormatter(logging.Formatter):
 
 def setLogging(logfile=None, loglevel=None):
     if not loglevel:
-        loglevel = logging.DEBUG
+        loglevel = logging.INFO
 
     logging.getLogger().setLevel(loglevel)
     color = False
