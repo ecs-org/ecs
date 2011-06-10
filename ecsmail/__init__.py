@@ -9,7 +9,7 @@ skinparam sequenceLifeLineBackgroundColor #FFBBBB
 actor alice
 alice -> comm...message: save()\nstate: NEW
 activate comm...message 
-comm...message -> ecsmail.mail: deliver
+comm...message -> ecsmail.utils: deliver
 activate ecsmail.mail 
 ecsmail.mail -->> ecsmail.tasks: queue_send
 activate ecsmail.tasks 
