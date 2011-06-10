@@ -1,5 +1,15 @@
 # -*- coding: utf-8 -*-
+'''
+========
+pdfutils
+========
 
+- identification (is valid pdf, number of pages), 
+- manipulation (barcode stamp)
+- conversion (to PDF/A, to text, to png)
+- creation (from html)
+
+'''
 import os, subprocess, tempfile, binascii, logging, copy, shutil
 from cStringIO import StringIO
 
