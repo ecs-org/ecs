@@ -341,7 +341,11 @@ class SubmissionSerializer(ModelSerializer):
     def load(self, data, zf, version, commit=False):
         return Submission.objects.create(transient=True)
         
-class CountrySerializer(object):
+class CountrySerializer(ModelSerializer):
+    def __init__(self, **kwargs):
+        super(CountrySerializer, self).__init__(Country, **kwargs)
+
+    # FIXME: to use ModelSerializer does fix the generation, but it would need a correct, docs() function instead
     def dump(self, obj, zf):
         return obj.iso
         
