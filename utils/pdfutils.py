@@ -283,7 +283,7 @@ def xhtml2pdf(html, timeoutseconds=30):
     return ret
 
 
-def wkhtml2pdf(html, header_html=None, footer_html=None):
+def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     '''
     Takes html and makes an pdf document out of it using the webkit engine
     '''
@@ -317,6 +317,9 @@ def wkhtml2pdf(html, header_html=None, footer_html=None):
         footer_html_file.write(footer_html)
         footer_html_file.close()
         cmd += ['--footer-html', footer_html_file.name]
+
+    if param_list:
+        cmd += param_list
 
     html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
     html_file.write(html)
