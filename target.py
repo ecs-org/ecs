@@ -68,7 +68,7 @@ DATABASES_OVERRIDE['default'] = {
 BROKER_USER = '%(username)s'
 BROKER_PASSWORD = '%(queuing_password)s'
 BROKER_VHOST = '%(username)s'
-CARROT_BACKEND = ''
+BROKER_BACKEND = ''
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings
