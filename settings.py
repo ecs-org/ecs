@@ -416,7 +416,7 @@ CELERY_ALWAYS_EAGER = True
 # ### haystack ### fulltext search engine
 HAYSTACK_SITECONF = 'ecs.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "whoosh_index")
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "..", "..", "ecs-whoosh")
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only used if HAYSTACK_SEARCH_ENGINE = 'solr'
 
 
