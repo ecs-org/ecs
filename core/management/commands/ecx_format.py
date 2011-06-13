@@ -7,6 +7,7 @@ from django.template import Context
 
 from ecs.core.serializer import Serializer
 from ecs.utils.viewutils import render_pdf_context
+from ecs.utils.pdfutils import wkhtml2pdf
 
 
 class Command(BaseCommand):
@@ -24,19 +25,16 @@ class Command(BaseCommand):
             raise CommandError('Error: Outputfile "-o filename" must be specified')
         
         ecxf = Serializer()
-        
-        if options['output_type'] == "html":
-            tpl = get_template('docs/ecx/base.html')
+        tpl = get_template('docs/ecx/base.html')
+        html = tpl.render(Context({
+            'version': ecxf.version,
+            'fields': ecxf.docs(),
+            })).encode('utf-8')
             
-            with open(options['outfile'], 'wb') as f:
-                f.write(tpl.render(Context({
-                    'version': ecxf.version,
-                    'fields': ecxf.docs(),
-                    })).encode('utf-8'))
-        
-        else:
-            with open(options['outfile'], 'wb') as f:                
-                f.write(render_pdf_context('docs/ecx/base.html', {
-                    'version': ecxf.version,
-                    'fields': ecxf.docs(),
-                    }))
+        with open(options['outfile'], 'wb') as f:                    
+            if options['output_type'] == "html":
+                f.write(html)
+            else:
+                f.write(wkhtml2pdf(html))
+
+    
