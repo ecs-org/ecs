@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from celery.decorators import task, periodic_task
-from celery.task.schedules import crontab
+from celery.schedules import crontab
 
 from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError
 
