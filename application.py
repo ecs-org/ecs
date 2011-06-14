@@ -203,7 +203,7 @@ django-indexer:inst:all:pypi:django-indexer\>=0.3.0
 django-paging:inst:all:pypi:django-paging\>=0.2.4
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
-django-sentry:inst:all:pypi:django-sentry\>=1.8.5
+django-sentry:inst:all:pypi:django-sentry==1.8.5
 
 # ecs.help needs reversion from now on
 django-reversion:inst:all:pypi:django-reversion
