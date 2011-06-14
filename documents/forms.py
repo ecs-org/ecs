@@ -59,5 +59,5 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
 
     class Meta:
         model = Document
-        fields = ('file', 'doctype', 'name', 'version', 'date', 'replaces_document')
+        fields = ('file', 'name', 'doctype', 'version', 'date', 'replaces_document')
         widgets = {'replaces_document': forms.HiddenInput()}

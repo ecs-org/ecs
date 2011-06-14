@@ -118,8 +118,8 @@ class Document(models.Model):
 
     # user supplied data
     file = models.FileField(null=True, upload_to=incoming_document_to, storage=DocumentFileStorage(), max_length=250)
-    doctype = models.ForeignKey(DocumentType)
     name = models.CharField(max_length=250)
+    doctype = models.ForeignKey(DocumentType)
     version = models.CharField(max_length=250)
     date = models.DateTimeField()
     replaces_document = models.ForeignKey('Document', null=True, blank=True)
