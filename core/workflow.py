@@ -53,6 +53,10 @@ def is_expedited(wf):
     return wf.data.expedited and wf.data.expedited_review_categories.count()
 
 @guard(model=Submission)
+def is_expedited_or_retrospective_thesis(wf):
+    return is_expedited(wf) or is_retrospective_thesis(wf)
+
+@guard(model=Submission)
 def has_expedited_recommendation(wf):
     answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='expedited_review', question__number='1')
     return bool(answer.answer)

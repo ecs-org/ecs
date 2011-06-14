@@ -67,7 +67,8 @@ def submission_workflow():
         AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation)
+        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation,
+        is_expedited_or_retrospective_thesis)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
@@ -143,6 +144,7 @@ def submission_workflow():
             ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
             ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
+            ('categorization_review', 'thesis_categorization_review'): Args(guard=is_retrospective_thesis),
 
             # expedited lane
             ('categorization_review', 'expedited_recommendation'): Args(guard=is_expedited),
@@ -150,7 +152,7 @@ def submission_workflow():
             ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
             ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
 
-            ('categorization_review', 'generic_review'): Args(guard=is_expedited, negated=True),
+            ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
             ('categorization_review', 'external_review'): Args(guard=needs_external_review),
             ('categorization_review', 'additional_review_split'): None,
             
