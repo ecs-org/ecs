@@ -99,7 +99,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
                 'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
                 'formsets': get_submission_formsets(instance=submission_form),
                 'submission': submission_form.submission if not delete else None,
-                'documents': list(submission_form.documents.all().order_by('pk')),
+                'document_pks': submission_form.documents.all().order_by('pk').values_list('pk', flat=True)
             })
             docstash.name = "%s" % submission_form.project_title
         if delete:
