@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-14 19:01+0200\n"
+"POT-Creation-Date: 2011-06-14 20:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,142 +164,142 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:97 core/bootstrap.py:182 meetings/bootstrap.py:24
+#: core/bootstrap.py:98 core/bootstrap.py:184 meetings/bootstrap.py:24
 #: notifications/bootstrap.py:46 users/bootstrap.py:23
 msgid "Start"
 msgstr "Start"
 
-#: core/bootstrap.py:98 core/bootstrap.py:183
+#: core/bootstrap.py:99 core/bootstrap.py:185
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:99
+#: core/bootstrap.py:100
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:100
+#: core/bootstrap.py:101
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:101
+#: core/bootstrap.py:102
 #, fuzzy
 msgid "B2 Resubmission Review"
 msgstr "Diplomarbeit Review"
 
-#: core/bootstrap.py:102 templates/submissions/list.html:95
+#: core/bootstrap.py:103 templates/submissions/list.html:95
 #, fuzzy
 msgid "B2 Vote Review"
 msgstr "B2 Voten"
 
-#: core/bootstrap.py:103 templates/submissions/readonly_form.html:68
+#: core/bootstrap.py:104 templates/submissions/readonly_form.html:68
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:104
+#: core/bootstrap.py:105
 #, fuzzy
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:105 core/bootstrap.py:619
+#: core/bootstrap.py:106 core/bootstrap.py:621
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
-#: core/bootstrap.py:106 core/bootstrap.py:117
+#: core/bootstrap.py:107 core/bootstrap.py:118
 #: templates/submissions/list.html:101
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:107 core/bootstrap.py:614
+#: core/bootstrap.py:108 core/bootstrap.py:616
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:108 core/bootstrap.py:615
+#: core/bootstrap.py:109 core/bootstrap.py:617
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:109 core/bootstrap.py:613
+#: core/bootstrap.py:110 core/bootstrap.py:615
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:110 core/bootstrap.py:617 core/parties.py:70
+#: core/bootstrap.py:111 core/bootstrap.py:619 core/parties.py:70
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:111 core/bootstrap.py:618
+#: core/bootstrap.py:112 core/bootstrap.py:620
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:112 core/bootstrap.py:616
+#: core/bootstrap.py:113 core/bootstrap.py:618
 msgid "GCP Review"
 msgstr "GCP Review"
 
-#: core/bootstrap.py:115
+#: core/bootstrap.py:116
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:116
+#: core/bootstrap.py:117
 msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
 
-#: core/bootstrap.py:118
+#: core/bootstrap.py:119
 #, fuzzy
 msgid "Thesis Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:119
+#: core/bootstrap.py:120
 #, fuzzy
 msgid "Thesis Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:122
+#: core/bootstrap.py:123
 #, fuzzy
 msgid "Expedited Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:123
+#: core/bootstrap.py:124
 #, fuzzy
 msgid "Expedited Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:184
+#: core/bootstrap.py:186
 msgid "B2 Upgrade"
 msgstr ""
 
-#: core/bootstrap.py:185
+#: core/bootstrap.py:187
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: core/bootstrap.py:186
+#: core/bootstrap.py:188
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: core/bootstrap.py:187
+#: core/bootstrap.py:189
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: core/bootstrap.py:188
+#: core/bootstrap.py:190
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: core/bootstrap.py:189 core/bootstrap.py:190
+#: core/bootstrap.py:191 core/bootstrap.py:192
 msgid "Office Vote Review"
 msgstr ""
 
-#: core/bootstrap.py:191
+#: core/bootstrap.py:193
 msgid "Vote Signing"
 msgstr ""
 
-#: core/bootstrap.py:192
+#: core/bootstrap.py:194
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:611
+#: core/bootstrap.py:613
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:612
+#: core/bootstrap.py:614
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
@@ -1427,27 +1427,27 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:92
+#: core/workflow.py:96
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:93
+#: core/workflow.py:97
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:103
+#: core/workflow.py:107
 msgid "Study acknowledged"
 msgstr "Studie angenommen"
 
-#: core/workflow.py:105
+#: core/workflow.py:109
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:155 core/workflow.py:166
+#: core/workflow.py:159 core/workflow.py:170
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:157 core/workflow.py:168
+#: core/workflow.py:161 core/workflow.py:172
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -2064,6 +2064,14 @@ msgstr "ungünstig"
 #: meetings/forms.py:55
 msgid "impossible"
 msgstr "unmöglich"
+
+#: meetings/forms.py:66
+msgid "From meeting"
+msgstr "Von Sitzung"
+
+#: meetings/forms.py:67
+msgid "To meeting"
+msgstr "Nach Sitzung"
 
 #: meetings/views.py:230
 msgid "This meeting has ended."
