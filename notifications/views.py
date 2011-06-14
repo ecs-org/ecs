@@ -164,7 +164,7 @@ def create_notification(request, notification_type_pk=None):
                 setattr(notification, key, value)
             notification.save()
             form.save_m2m()
-            notification.documents = request.docstash.get('documents', [])
+            notification.documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             notification.save() # send another post_save signal (required to properly start the workflow)
 
             request.docstash.delete()

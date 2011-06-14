@@ -21,24 +21,27 @@ class DocumentHighlighter(Highlighter):
 
 def upload_document(request, template='documents/upload_form.html'):
     form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
+    documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
     if request.method == 'POST' and form.is_valid():
-        documents = set(request.docstash.get('documents', []))
+        documents = set(documents)
         documents.add(form.save())
         replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
-        for doc in replaced_documents:  # remove replaced documents
+        for doc in replaced_documents:
             if doc in documents:
                 documents.remove(doc)
-        request.docstash['documents'] = list(documents)
+        request.docstash['document_pks'] = [d.pk for d in documents]
         form = DocumentForm(prefix='document')
 
     return render(request, template, {
         'form': form,
-        'documents': request.docstash.get('documents', []),
+        'documents': documents,
     })
 
 def delete_document(request, document_pk):
-    documents = set(request.docstash.get('documents', []))
-    request.docstash['documents'] = [d for d in documents if not d.pk == int(document_pk)]
+    document_pks = set(request.docstash.get('document_pks', []))
+    if document_pk in document_pks:
+        document_pks.remove(document_pk)
+    request.docstash['document_pks'] = document_pks
 
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
