@@ -308,8 +308,8 @@ FormInfo(Investigator, fields=(
 FormInfo(InvestigatorEmployee, fields=(
     FieldInfo(None, 'sex', _(u'Ms/Mr')),
     FieldInfo(None, 'title', _(u'title')),
-    FieldInfo(None, 'surname', _(u'first name')),
-    FieldInfo(None, 'firstname', _(u'last name')),
+    FieldInfo(None, 'firstname', _(u'first name')),
+    FieldInfo(None, 'surname', _(u'last name')),
     FieldInfo(None, 'organisation', _(u'Institution')),
 ))
 
