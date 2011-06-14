@@ -324,7 +324,7 @@ class SubmissionForm(models.Model):
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
     protocol_number = models.CharField(max_length=60, blank=True)
-    external_reviewer_suggestions = models.TextField(null=True, blank=True)
+    external_reviewer_suggestions = models.TextField()
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
     created_at = models.DateTimeField(auto_now_add=True)

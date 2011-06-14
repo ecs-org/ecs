@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-31 00:16+0200\n"
+"POT-Creation-Date: 2011-06-14 19:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,51 +71,51 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:46
+#: billing/views.py:45
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:79 billing/views.py:146
+#: billing/views.py:78 billing/views.py:145
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:79 core/models/submissions.py:150
+#: billing/views.py:78 core/models/submissions.py:162
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:79
+#: billing/views.py:78
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:79
+#: billing/views.py:78
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:79 core/forms/layout.py:58 core/forms/layout.py:59
+#: billing/views.py:78 core/forms/layout.py:58 core/forms/layout.py:59
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:79
+#: billing/views.py:78
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:79 billing/views.py:146
+#: billing/views.py:78 billing/views.py:145
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:107
+#: billing/views.py:106
 msgid "Billing request"
 msgstr ""
 
-#: billing/views.py:146
+#: billing/views.py:145
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:146
+#: billing/views.py:145
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:175
+#: billing/views.py:174
 msgid "Payment request"
 msgstr ""
 
@@ -481,11 +481,11 @@ msgstr "Vorschläge für Externe Gutachter (Nicht aus dem AKH Wien)"
 
 #: core/paper_forms.py:99
 msgid ""
-"Not necessary for graduate work or retrospective or non-interventional "
-"studies"
+"for graduate work or retrospective or non-interventional studies specify "
+"\"not applicable\""
 msgstr ""
-"Nicht notwendig für Diplomarbeiten oder retrospektive bzw. nicht "
-"interventionelle Studien"
+"bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
+"\"nicht zutreffend\" angeben"
 
 #: core/paper_forms.py:101
 msgid "sponsor name"
@@ -1067,7 +1067,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:223 core/models/submissions.py:475
+#: core/paper_forms.py:223 core/models/submissions.py:487
 msgid "open"
 msgstr "offen"
 
@@ -1079,11 +1079,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:226 core/models/submissions.py:293
+#: core/paper_forms.py:226 core/models/submissions.py:305
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:227 core/models/submissions.py:475
+#: core/paper_forms.py:227 core/models/submissions.py:487
 msgid "blind"
 msgstr "blind"
 
@@ -1099,7 +1099,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:475
+#: core/paper_forms.py:231 core/models/submissions.py:487
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1427,27 +1427,27 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:102
+#: core/workflow.py:92
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:103
+#: core/workflow.py:93
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:113
+#: core/workflow.py:103
 msgid "Study acknowledged"
 msgstr "Studie angenommen"
 
-#: core/workflow.py:115
+#: core/workflow.py:105
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:165 core/workflow.py:176
+#: core/workflow.py:155 core/workflow.py:166
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:167 core/workflow.py:178
+#: core/workflow.py:157 core/workflow.py:168
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -1498,14 +1498,14 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:350 core/forms/forms.py:372 core/forms/forms.py:397
 #: core/forms/layout.py:65 core/forms/layout.py:67
-#: templates/submissions/tabs/status.html:115 templates/tasks/tasks.inc:20
+#: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:351 core/forms/forms.py:373 core/forms/forms.py:398
 #: core/forms/layout.py:74 core/forms/layout.py:76
-#: templates/submissions/tabs/status.html:116 templates/tasks/tasks.inc:21
+#: templates/submissions/tabs/status.html:120 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
@@ -1516,7 +1516,8 @@ msgid "Thesis"
 msgstr "Diplomarbeit"
 
 #: core/forms/forms.py:353 core/forms/forms.py:375 core/forms/forms.py:400
-#: templates/tasks/tasks.inc:23 templates/tasks/tasks_full.inc:22
+#: templates/submissions/tabs/status.html:117 templates/tasks/tasks.inc:23
+#: templates/tasks/tasks_full.inc:22
 msgid "Other"
 msgstr "Andere"
 
@@ -1762,47 +1763,47 @@ msgstr "an der Medizinischen Universität der Stadt Wien"
 msgid "other University"
 msgstr "andere Universität"
 
-#: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:796 users/forms.py:56
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:796 users/forms.py:56
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:294
+#: core/models/submissions.py:306
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:295
+#: core/models/submissions.py:307
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:299
+#: core/models/submissions.py:311
 msgid "individual-related"
 msgstr "personenbezogen"
 
-#: core/models/submissions.py:300
+#: core/models/submissions.py:312
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:730
+#: core/models/submissions.py:742
 #, fuzzy
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. %s"
 
-#: core/models/submissions.py:740
+#: core/models/submissions.py:752
 #, fuzzy
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. %s"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:830
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:830
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1850,24 +1851,24 @@ msgstr "Ja"
 msgid "no"
 msgstr "Nein"
 
-#: core/views/submissions.py:573
+#: core/views/submissions.py:574
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: documents/bootstrap.py:12
+#: documents/bootstrap.py:11
 msgid "Covering Letter"
 msgstr "Covering Letter"
 
-#: documents/bootstrap.py:12
+#: documents/bootstrap.py:11
 msgid "Cover letter / covering letter to the Ethics Commission"
 msgstr "Anschreiben / Begleitschreiben an die Ethikkommission"
 
-#: documents/bootstrap.py:13
+#: documents/bootstrap.py:12
 msgid "patient information"
 msgstr "Patienteninformation"
 
-#: documents/bootstrap.py:14
+#: documents/bootstrap.py:13
 msgid ""
 "Patients / subjects / children / youths / parents / genetic information, "
 "information for non competent patients"
@@ -1875,79 +1876,79 @@ msgstr ""
 "Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- "
 "Information, Information für nicht einwilligungsfähige Patienten"
 
-#: documents/bootstrap.py:15
+#: documents/bootstrap.py:14
 msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
 
-#: documents/bootstrap.py:15 documents/bootstrap.py:17
-#: documents/bootstrap.py:21
+#: documents/bootstrap.py:14 documents/bootstrap.py:16
+#: documents/bootstrap.py:20
 msgid " "
 msgstr ""
 
-#: documents/bootstrap.py:16
+#: documents/bootstrap.py:15
 msgid "study protocol"
 msgstr "Studienprotokoll"
 
-#: documents/bootstrap.py:17
+#: documents/bootstrap.py:16
 msgid "Investigator's Brochure"
 msgstr ""
 
-#: documents/bootstrap.py:18
+#: documents/bootstrap.py:17
 msgid "Amendment"
 msgstr ""
 
-#: documents/bootstrap.py:18
+#: documents/bootstrap.py:17
 msgid "Protocol changes"
 msgstr "Protokolländerungen"
 
-#: documents/bootstrap.py:19
+#: documents/bootstrap.py:18
 msgid "Curriculum Vitae (CV)"
 msgstr "Lebenslauf (CV)"
 
-#: documents/bootstrap.py:19
+#: documents/bootstrap.py:18
 msgid "CV"
 msgstr "Lebenslauf"
 
-#: documents/bootstrap.py:20
+#: documents/bootstrap.py:19
 msgid "Conflict of Interest"
 msgstr "Interessenkonflikt"
 
-#: documents/bootstrap.py:20
+#: documents/bootstrap.py:19
 msgid "can also be a Financial Disclosure Form"
 msgstr "kann auch ein Financial Disclosure Form sein"
 
-#: documents/bootstrap.py:21
+#: documents/bootstrap.py:20
 msgid "Case Report Form (CRF)"
 msgstr "Fallbericht-Formular (CRF)"
 
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:21
 msgid "EudraCT Form"
 msgstr "EudraCT-Formular"
 
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:21
 msgid ""
 "Request for Authorisation, Notification of Amendment Form, Declaration of "
 "the end of the clinical trial"
 msgstr ""
 
-#: documents/bootstrap.py:23
+#: documents/bootstrap.py:22
 msgid "adverse reaction report"
 msgstr ""
 
-#: documents/bootstrap.py:23
+#: documents/bootstrap.py:22
 msgid "Med Watch report, CIOMS form etc."
 msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
-#: documents/bootstrap.py:24
+#: documents/bootstrap.py:23
 #, fuzzy
 msgid "Submission Form"
 msgstr "Einreichung"
 
-#: documents/bootstrap.py:25
+#: documents/bootstrap.py:24
 msgid "other"
 msgstr "Sonstige"
 
-#: documents/bootstrap.py:25
+#: documents/bootstrap.py:24
 msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
@@ -1981,18 +1982,22 @@ msgid "indexed"
 msgstr "indiziert"
 
 #: documents/models.py:102
+msgid "prime"
+msgstr ""
+
+#: documents/models.py:103
 msgid "ready"
 msgstr "bereit"
 
-#: documents/models.py:103
+#: documents/models.py:104
 msgid "aborted"
 msgstr "abgebrochen"
 
-#: documents/models.py:104
+#: documents/models.py:105
 msgid "deleted"
 msgstr "gelöscht"
 
-#: mediaserver/views.py:20 mediaserver/views.py:31 mediaserver/views.py:54
+#: mediaserver/views.py:17 mediaserver/views.py:28 mediaserver/views.py:51
 msgid "Invalid expiring url"
 msgstr ""
 
@@ -2060,31 +2065,31 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:233
+#: meetings/views.py:230
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:242
+#: meetings/views.py:239
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:248
+#: meetings/views.py:245
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:260
+#: meetings/views.py:257
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:365
+#: meetings/views.py:362
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:380
+#: meetings/views.py:377
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:443
+#: meetings/views.py:440
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2113,26 +2118,26 @@ msgstr "Meldungsantwort Verteilen"
 msgid "valid"
 msgstr "korrekturgelesen und gültig"
 
-#: notifications/views.py:50 templates/core.html:66
+#: notifications/views.py:49 templates/core.html:66
 #: templates/submissions/readonly_form.html:104
 #: templates/submissions/readonly_form.html:153
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: notifications/views.py:53
+#: notifications/views.py:52
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:56 templates/core.html:65
+#: notifications/views.py:55 templates/core.html:65
 #: templates/submissions/readonly_form.html:135
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:158
+#: notifications/views.py:157
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/views.py:224
+#: notifications/views.py:223
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -3107,11 +3112,11 @@ msgstr ""
 msgid "Neu"
 msgstr "Neu"
 
-#: templates/submissions/tabs/status.html:133
+#: templates/submissions/tabs/status.html:137
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:165
+#: templates/submissions/tabs/status.html:169
 #, python-format
 msgid ""
 "\n"
@@ -3123,15 +3128,15 @@ msgstr ""
 "%(task_name)s \n"
 "        "
 
-#: templates/submissions/tabs/status.html:168
+#: templates/submissions/tabs/status.html:172
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:171
+#: templates/submissions/tabs/status.html:175
 msgid "No additional/external review"
 msgstr "keine zusätzlichen/externen Gutachter"
 
-#: templates/submissions/tabs/status.html:177
+#: templates/submissions/tabs/status.html:181
 #, fuzzy
 msgid "Export"
 msgstr "Import"
