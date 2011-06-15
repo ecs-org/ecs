@@ -1,7 +1,6 @@
 # Django settings for ecs project.
 
-import os.path, platform, sys
-#from django.core.exceptions import ImproperlyConfigured
+import os, sys, platform
 from copy import deepcopy
 
 # root dir of project
@@ -212,7 +211,7 @@ INSTALLED_APPS = (
     'ecs.boilerplate',
 )
 
-# authenticate with email
+# authenticate with email address
 AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 
 
@@ -243,13 +242,14 @@ LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 
 # directory where to store temporary files, used mostly with external utilities
 TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
+TEMPFILE_DIR_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
 
 # ecs.help system export path
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
 # incoming filestore of user uploaded documents 
 INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
-
+INCOMING_FILESTORE_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
 
 # Storage Vault settings
 STORAGE_VAULT = 'ecs.mediaserver.storagevault.LocalFileStorageVault'
@@ -514,9 +514,13 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 # hack some settings for test and runserver    
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-elif any(word in sys.argv for word in set(['runserver','runconcurrentserver','tesmaker'])):
+    # FIXME: disabled because singleton dont work STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
+    
+elif any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-elif 'testmaker' in sys.argv:
+
+# testmaker workaround
+if 'testmaker' in sys.argv:
     INSTALLED_APPS += ('test_utils',)
     
 import djcelery
