@@ -375,10 +375,16 @@ ecs.setupDocumentUploadForms = function(){
         var file_field = $('id_document-file');
         var name_field = $('id_document-name');
         file_field.addEvent('change', function() {
-            var dot_offset = file_field.value.lastIndexOf('.');
             var name = file_field.value;
+
+            var backslash_offset = name.lastIndexOf('\\');
+            if (backslash_offset >= 0) {
+                name = name.substring(backslash_offset + 1);
+            }
+
+            var dot_offset = name.lastIndexOf('.');
             if (dot_offset >= 0) {
-                name = file_field.value.substring(0, dot_offset);
+                name = name.substring(0, dot_offset);
             }
             if (!name_field.getAttribute('disabled')) {
                 name_field.value = name;
