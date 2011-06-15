@@ -19,7 +19,8 @@ def add_to_storagevault(uuid, filelike):
 
 def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, brand=False):
     ''' pokes mediaserver to ready cache for media with uuid
-    @return: tuple: Success:True/False,Response:Text
+    
+    :return: tuple: Success:True/False,Response:Text
     '''
     if settings.CELERY_ALWAYS_EAGER or settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.utils import MediaProvider
@@ -46,9 +47,10 @@ def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, br
         
 
 def download_from_mediaserver(uuid, filename, personalization=None, brand=False):
-    ''' returns blob from mediaserver as data; seldom usage.
-    @see: generate_media_url() if you just want to pass access safely through the media server temporary urls
-    @note: you may want this if you need the data for further processing, eg. export submission
+    ''' :returns: blob from mediaserver as data; seldom usage.
+    
+    :see: generate_media_url() if you just want to pass access safely through the media server temporary urls
+    :note: you may want this if you need the data for further processing, eg. export submission
     '''
     if settings.MS_CLIENT.get('same_host_as_server', False):
         from ecs.mediaserver.utils import MediaProvider
@@ -60,7 +62,7 @@ def download_from_mediaserver(uuid, filename, personalization=None, brand=False)
 
 
 def generate_media_url(uuid, filename, mimetype='application/pdf', personalization=None, brand=False):
-    ''' @return:  url that will allow a user to download this blob by using this url for a specific time period
+    ''' :returns:  url that will allow a user to download this blob by using this url for a specific time period
     '''
     objid_parts = ['download', uuid, mimetype]
     if personalization:
@@ -79,7 +81,8 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
 
 
 def generate_pages_urllist(uuid, pages):
-    ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height')
+    ''' :returns: a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height')
+    
     for every supported rendersize options for every page of the document with uuid
     '''
     tiles = settings.MS_SHARED ["tiles"]

@@ -20,9 +20,11 @@ from ecs.mediaserver.tasks import do_rendering
 
 class MediaProvider:
     ''' Media loading from vault, caching, rendering and retrieval Provider.
+    
     Implements 2 way caching, re/rendering service for application/pdf
-    @note: uses celery for tasks.do_rendering for asynchronous rendering, tasks.do_aging for asynchronous aging.
-    @raise KeyError: get_blob, get_page raise KeyError in case getting of data went wrong
+    
+    :note: uses celery for tasks.do_rendering for asynchronous rendering, tasks.do_aging for asynchronous aging.
+    :raise KeyError: get_blob, get_page raise KeyError in case getting of data went wrong
     '''
 
     def __init__(self, allow_mkrootdir=False):
@@ -35,7 +37,8 @@ class MediaProvider:
 
     def _render_pages(self, identifier, filelike, private_workdir):
         ''' Yields page, imagedata for each tiles * resolution * pages set in settings.MS_SHARED
-        @note: used by tasks.do_render to render actual data
+    
+        :note: used by tasks.do_render to render actual data
         '''
         tiles = settings.MS_SHARED ["tiles"]
         resolutions = settings.MS_SHARED ["resolutions"]
@@ -66,7 +69,7 @@ class MediaProvider:
 
     def add_blob(self, identifier, filelike): 
         ''' add (create or fail) a blob in the storage vault
-        @raise KeyError: if store to vault fails
+        :raise KeyError: if store to vault fails
         '''
         logger = logging.getLogger()
         logger.debug("add_blob (%s), filelike is %s" % (identifier, filelike))
@@ -77,7 +80,8 @@ class MediaProvider:
 
     def prime_blob(self, identifier=None, mimetype='application/pdf', wait=True):
         ''' load blob from storage vault, cache blob, optional rerender pages (if application/pdf), cache pages.
-        @return: returns success, identifier, response if wait==True else: True, identifier, ""
+    
+        :return: returns success, identifier, response if wait==True else: True, identifier, ""
         '''
         result = do_rendering.delay(identifier, mimetype)
         
@@ -96,7 +100,8 @@ class MediaProvider:
       
     def get_blob(self, identifier, try_diskcache=True, try_vault=True):
         '''get a blob (unidentified media data) either from caches, or from storage vault
-        @raise KeyError: if reading the data of the identifier went wrong 
+    
+        :raise KeyError: if reading the data of the identifier went wrong 
         '''
         filelike=None
                 
@@ -121,7 +126,8 @@ class MediaProvider:
 
     def get_branded(self, identifier, mimetype='application/pdf', branding=None):
         ''' get a branded blob (identified by mimetype) either from caches, or from storage vault and re-render branding
-        @raise KeyError: if reading the data of the identifier went wrong 
+    
+        :raise KeyError: if reading the data of the identifier went wrong 
         '''
         f = None
         
@@ -148,7 +154,8 @@ class MediaProvider:
 
     def set_page(self, page, filelike, use_render_memcache=False, use_render_diskcache=False):
         ''' set (create or update) a picture of an page of an document
-        @param page: ecs.utils.pdfutils.Page Object
+    
+        :param page: ecs.utils.pdfutils.Page Object
         '''
         identifier = str(page)
         if use_render_memcache:
@@ -158,8 +165,9 @@ class MediaProvider:
 
     def get_page(self, page, try_memcache=True, try_diskcache=True):
         ''' get a picture of an page of an document  
-        @param page: ecs.utils.pdfutils.Page Object 
-        @raise KeyError: if page could not be loaded 
+    
+        :param page: ecs.utils.pdfutils.Page Object 
+        :raise KeyError: if page could not be loaded 
         '''
         filelike = None
         identifier = str(page)
@@ -188,9 +196,9 @@ class MediaProvider:
 
 
 class VolatileCache:
-    '''
-    volatile, key/value, self aging, fixed size cache using memcached
-    @warning: Storing values larger than 1MB requires recompiling/reconfiguring memcached and may not be supported
+    ''' volatile, key/value, self aging, fixed size cache using memcached
+    
+    :warning: Storing values larger than 1MB requires recompiling/reconfiguring memcached and may not be supported
     '''
 
     def __init__(self):
@@ -214,7 +222,7 @@ class VolatileCache:
     
     def get(self, identifier):
         ''' get data value of identifier 
-        @raise: KeyError: if identifier not found.
+        :raise KeyError: if identifier not found.
         '''
         r = self.get_or_None(identifier)
         if r is None:
@@ -224,7 +232,8 @@ class VolatileCache:
     
     def get_or_None(self, identifier):
         ''' get data value of identifier 
-        @return: The value or None.
+     
+        :return: The value or None.
         '''
         return self.mc.get("".join((identifier, self.ns)))
 
