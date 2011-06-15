@@ -1,4 +1,5 @@
 import sys, os
+import re
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.template.defaultfilters import slugify
@@ -36,7 +37,12 @@ class Command(BaseCommand):
                     for line in page.text.splitlines():
                         if ":doc:`" in line:
                             doc = u"ecs-oha/_from_database/src/%s" % line[line.find("`")+1:line.find(" ",line.find("`")+1)]
-                            doclist.append(doc)
+                            docindent = re.match(r'^\s+', line)
+                            if not docindent:
+                                docindent = 0
+                            else:
+                                docindent = docindent.end()
+                            doclist.append((doc,docindent))
                     fulltext = pagetitle+page.text
                     intro=u"""##################
 Inhaltsverzeichnis
@@ -50,7 +56,7 @@ Inhaltsverzeichnis
    
    """                 
                     indent = '%s   ' % os.linesep
-                    toctree = indent.join(doclist)
+                    toctree = indent.join(["%s%s" % (' '*indent, doc) for doc,indent in doclist])
                     fulltext = intro + toctree 
                     f.write(linker.link(fulltext).encode('utf-8'))
                 else:
