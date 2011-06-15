@@ -118,8 +118,8 @@ ecs.widgets.Popup = new Class({
         } else {
             this.show();
         }
-        document.addEvent('keypress', this.keypress);
-        window.addEvent('resize', this.resize);
+        $(window).addEvent('keyup', this.keypress);
+        $(window).addEvent('resize', this.resize);
         new Drag.Move(this.popup, {handle: this.headElement});
     },
     setTitle: function(title){
@@ -165,8 +165,8 @@ ecs.widgets.Popup = new Class({
     hide: function(){
         this.popup.setStyle('display', 'none');
         ecs.widgets.hideModalOverlay();
-        document.removeEvent('keypress', this.keypress);
-        window.removeEvent('resize', this.resize);
+        $(window).removeEvent('keyup', this.keypress);
+        $(window).removeEvent('resize', this.resize);
     },
     close: function(){
         this.dispose();
