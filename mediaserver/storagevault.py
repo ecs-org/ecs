@@ -5,10 +5,11 @@ StorageVault
 ============
 
 A Write Once, read many times key/value store featuring
- * big value support -- values can be 1MB > big > 500mb 
- * transparent encryption+signing for storing data, decryption+verify support for retrieving data
- * easy to extent base class (StorageVault) for writing other StorageVault backend connectors 
- * simple local machine implementation (LocalFileStorageVault) using diskbuckets
+
+* big value support -- values can be 1MB > big > 500mb 
+* transparent encryption+signing for storing data, decryption+verify support for retrieving data
+* easy to extent base class (StorageVault) for writing other StorageVault backend connectors 
+* simple local machine implementation (LocalFileStorageVault) using diskbuckets
 
 .. warning::
     TODO: because its not checked where potential all value data is read in memory, usage should be limited to something memory can support (eg. 500mb)
@@ -17,6 +18,7 @@ Usage
 =====
 
 .. code-block:: python
+
     vault = getVault() # get configured vault
 
     vault.add(identifier, filelike) 
@@ -31,7 +33,6 @@ Usage
     vault.decommission(filelike)
     # safely remove access to temporary copy
 
-
 '''
 
 import os, tempfile
@@ -41,9 +42,13 @@ from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
 from ecs.utils import gpgutils
+from ecs.utils.decorators import singleton
 
 from ecs.mediaserver.diskbuckets import DiskBuckets
 
+
+__all__ = ['getVault', 'StorageVault', 'LocalFileStorageVault', 'TemporaryStorageVault', 'S3StorageVault',
+    'VaultError', 'VaultKeyError', 'VaultIOError', 'VaultEncryptionError', ]
 
 class VaultError(Exception):
     ''' Base class for exceptions for StorageVault; Derived from Exception'''
@@ -64,7 +69,7 @@ class VaultEncryptionError(VaultIOError):
 
 def getVault():
     ''' get the default vault implementation
-    @raise ImproperlyConfigured: if settings.STORAGE_VAULT contains invalid storagevault implementation
+    :raise ImproperlyConfigured: if settings.STORAGE_VAULT contains invalid storagevault implementation
     '''
     module, class_name = settings.STORAGE_VAULT.rsplit('.', 1)
     try:
@@ -103,8 +108,9 @@ class StorageVault():
     
     def add(self, identifier, filelike):
         ''' add a filelike binary data using identifier as key to vault
-        @note: Does on the fly encryption+signing of content
-        @raise KeyError, EnvironmentError, VaultError, VaultEncryptionError: if adding did not succeed. eg. key already exists, upload error, encryption error
+
+        :note: Does on the fly encryption+signing of content
+        :raise KeyError, EnvironmentError, VaultError, VaultEncryptionError: if adding did not succeed. eg. key already exists, upload error, encryption error
         '''
         tmp_name = None
         infile = None
@@ -141,9 +147,11 @@ class StorageVault():
 
     def get(self, identifier):
         ''' get a filelike content of key identifier from the vault
-        @attention: implementers: this filelike object should **always** a temporary copy, and never the original (even in case of localstoragevault)
-        @note: you should close the filelike object and remove it from disk (if real file) once done with it, using decommission(filelike)
-        @raise EnvironmentError, KeyError, VaultError, VaultEncryptionError: if get, or decryption fails  
+
+        :warn:implementers: this filelike object should **always** a temporary copy, and never the original (even in case of localstoragevault)
+        :note: you should close the filelike object and remove it from disk (if real file) once done with it, using decommission(filelike)
+
+        :raise EnvironmentError, KeyError, VaultError, VaultEncryptionError: if get, or decryption fails  
         '''
         filelike = None
         tmp_name = None
@@ -172,9 +180,10 @@ class StorageVault():
     
     def decommission(self, filelike, silent=True):
         ''' decommission (close and delete if real file) a filelike copy object that was returned from get(identifer)
-        @param silent: if True (default) it will not raise EnvironmentError in case file deletion fails
-        @raise EnvironmentError: if os.remove fails and silent=False
-        @note: storagevault **never** deletes or gives access to real storage data, instead a copy is served
+
+        :param silent: if True (default) it will not raise EnvironmentError in case file deletion fails
+        :raise EnvironmentError: if os.remove fails and silent=False
+        :note: storagevault **never** deletes or gives access to real storage data, instead a copy is served
         '''
         isrealfile = hasattr(filelike, "fileno") and hasattr(filelike, "name")
         
@@ -198,7 +207,9 @@ class StorageVault():
     
     
 class LocalFileStorageVault(StorageVault):
-    ''' StorageVault implementation using a local file storage (based on diskbuckets) 
+    ''' StorageVault implementation using a local file storage (based on diskbuckets)
+
+    :requires: settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir'] 
     '''
     def __init__(self):
         rootdir = settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir']
@@ -216,10 +227,31 @@ class LocalFileStorageVault(StorageVault):
  
     def exists(self, identifier):
         return self.db.exists(identifier)
+
+
+@singleton
+class _TempStorageDir:
+    def __new__(cls):
+        cls.tempdir = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
+        return object.__new__(cls)
+    def __init__(self):
+        pass
+    def __repr__(self):
+        return self.tempdir
+    
+class TemporaryStorageVault(LocalFileStorageVault):
+    ''' StorageVault implementation using a temporary storage inside tempdir (for unittests only)
+    '''
+    
+    def __init__(self):
+        rootdir = _TempStorageDir()
+        print("root temporary storagevault dir {0}".format(rootdir))
+        self.db = DiskBuckets(rootdir, max_size = 0)
+    
     
 
 class S3StorageVault(StorageVault):
-    ''' a s3 file storage (based on boto) implementation of StorageVault
+    ''' a s3 (based on boto) file storage implementation of StorageVault
     '''
     
     def __init__(self):
