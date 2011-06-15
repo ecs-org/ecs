@@ -31,8 +31,7 @@ PDF_MAGIC = r"%PDF-"
 
 
 class Page(object):
-    '''
-    Properties of a image of an page of an pageable media (id, tiles_x, tiles_y, width, pagenr)
+    ''' Properties of a image of an page of an pageable media (id, tiles_x, tiles_y, width, pagenr)
     '''
     def __init__(self, id, tiles_x, tiles_y, width, pagenr):
         self.id = id
@@ -47,7 +46,8 @@ class Page(object):
         
 def pdf_isvalid(filelike):
     ''' returns True if valid pdf, else False
-    @param filelike: filelike object, seekable
+    
+    :param filelike: filelike object, seekable
     '''
     logger = logging.getLogger()
     isvalid = False    
@@ -87,9 +87,9 @@ def pdf_page_count(filelike):
 
 
 def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, barcodetype="qrcode", timeoutseconds=30):
-    '''
-    takes source pdf, stamps a barcode into it and output it to dest
-    raises IOError if something goes wrong (including exit errorcode and stderr output attached)
+    ''' takes source pdf, stamps a barcode into it and output it to dest
+    
+    :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
     ''' 
     S_BARCODE_TEMPLATE = """
         gsave 
@@ -146,8 +146,8 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ba
 
   
 def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
-    '''
-    Extract Text from an pdf, you can extract the whole text, or only text from one page of an document. 
+    ''' Extract Text from an pdf, you can extract the whole text, or only text from one page of an document. 
+    
     Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
     if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
     '''
@@ -164,9 +164,10 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
 
 def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):
     ''' renders a pdf to multiple png pictures placed in render_dirname
-    @return: iterator yielding tuples of Page(id, tiles_x, tiles_y, width, pagenr), filelike
-    @raise IOError: ghostscript/montage conversion error 
-    @attention: you should close returned filelike objects if they have a .close() method after usage
+    
+    :return: iterator yielding tuples of Page(id, tiles_x, tiles_y, width, pagenr), filelike
+    :raise IOError: ghostscript/montage conversion error 
+    :attention: you should close returned filelike objects if they have a .close() method after usage
     '''
     margin_x = 0
     margin_y = 0   
@@ -195,6 +196,8 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
 
 
 def pdf2pdfa(real_infile, real_outfile):
+    ''' converts a pdf file into a PDF/A 1b file
+    '''
     workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
 
     gs = [GHOSTSCRIPT_PATH,
@@ -247,10 +250,11 @@ def pdf2pdfa(real_infile, real_outfile):
 
 
 def xhtml2pdf(html, timeoutseconds=30):
-    '''
-    Takes custom (pisa style) xhtml and makes an pdf document out of it
-    returns pdf data or makes error pdf data if something went wrong
+    ''' Takes custom (pisa style) xhtml and makes an pdf document out of it
+    
     takes fonts from ecs.utils.xhtml2pdf directory via callback fetch_resources
+    
+    :returns: pdf data or makes error pdf data if something went wrong
     '''
     def fetch_resources(uri, rel):
         """
@@ -284,8 +288,7 @@ def xhtml2pdf(html, timeoutseconds=30):
 
 
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
-    '''
-    Takes html and makes an pdf document out of it using the webkit engine
+    ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
     
     if isinstance(html, unicode): 

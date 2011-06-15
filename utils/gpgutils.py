@@ -7,6 +7,7 @@ ecs.utils.gpgutils
 Encryption/Signing, Decryption/Verifying modul.
 
 - This module uses Gnu Privacy Guard for the actual encryption work
+
   - The GNU Privacy Guard -- a free implementation of the OpenPGP standard as defined by RFC4880 
   - GnuPG is GPL licensed 
   - Usage in ecs: via commandline wrapper
@@ -27,7 +28,10 @@ GPG_EXECUTABLE =  settings.ECS_GNUPG if hasattr(settings,"ECS_GNUPG") else which
 
 
 def reset_keystore(gpghome):
-    ''' wipes out keystore under directory gpghome; Warning: deletes every file in this directory ''' 
+    ''' wipes out keystore under directory gpghome
+    
+    :warn: deletes every file in this directory
+    ''' 
     if not os.path.isdir(gpghome):
         os.makedirs(gpghome)
     for f in os.listdir(gpghome):
@@ -86,10 +90,11 @@ def secretkey_list(gpghome):
 
 def encrypt_sign(sourcefile, destfile, gpghome, encrypt_owner, signer_owner=None):
     ''' read sourcefile, encrypt and optional sign and write destfile
-    @note: booth sourcefile and destfile should already exist (destfile should be zero length)
-    @param gpghome: directory where the .gpg files are
-    @param encrypt_owner: owner name of key for encryption using his/her public key 
-    @param signer_owner: if not None: owner name of key for signing using his/her secret key 
+    
+    :note: booth sourcefile and destfile should already exist (destfile should be zero length)
+    :param gpghome: directory where the .gpg files are
+    :param encrypt_owner: owner name of key for encryption using his/her public key 
+    :param signer_owner: if not None: owner name of key for signing using his/her secret key 
     '''
     args = [GPG_EXECUTABLE, '--homedir', gpghome, '--batch', '--yes', '--always-trust', 
             '--recipient', encrypt_owner, '--output', destfile]
@@ -105,11 +110,12 @@ def encrypt_sign(sourcefile, destfile, gpghome, encrypt_owner, signer_owner=None
     
 
 def decrypt_verify(sourcefile, destfile, gpghome, decrypt_owner, verify_owner=None):
-    '''
-    @param decrypt_owner: owner name of key used for decryption using his/her secret key
-    @param verify_owner: owner name of key used for verifying that it was signed using his/her public key
-    @raise IOError: on gnupg error, with detailed info
-    @raise KeyError: if key owner could not be verified
+    ''' read sourcefile, decrypt and optional verify if signer is verify_owner
+    
+    :param decrypt_owner: owner name of key used for decryption using his/her secret key
+    :param verify_owner: owner name of key used for verifying that it was signed using his/her public key
+    :raise IOError: on gnupg error, with detailed info
+    :raise KeyError: if key owner could not be verified
     '''
     args = [GPG_EXECUTABLE, '--homedir', gpghome, '--batch', '--yes', '--always-trust', 
             '--recipient', decrypt_owner, 
