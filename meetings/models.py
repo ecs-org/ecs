@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 from django.db import models, transaction
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
@@ -492,12 +493,17 @@ class Participation(models.Model):
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
     
 
+WEIGHT_CHOICES = (
+    (0.5, _('unfavorable')),
+    (1.0, _('impossible')),
+)
+
 class Constraint(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='constraints')
     user = models.ForeignKey(User, related_name='meeting_constraints')
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
-    weight = models.FloatField(default=0.5)
+    weight = models.FloatField(default=0.5, choices=WEIGHT_CHOICES)
 
     @property
     def duration(self):
