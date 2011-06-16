@@ -67,7 +67,7 @@
                     {% if user.constraints %}
                         <ul class="constraints">
                             {% for constraint in user.constraints %}
-                                <li><span class="constraint_status">{{ meeting.metrics.constraint_violations|getitem:constraint|yesno:'1,0' }}</span>{{ constraint.start_time|time:"H:i" }} - {{ constraint.end_time|time:"H:i" }} ({{ constraint.weight }})</li>
+                                <li><span class="constraint_status">{{ meeting.metrics.constraint_violations|getitem:constraint|yesno:'1,0' }}</span>{{ constraint.start_time|time:"H:i" }} - {{ constraint.end_time|time:"H:i" }} ({{ constraint.get_weight_display }})</li>
                             {% endfor %}
                         </ul>
                     {% endif %}

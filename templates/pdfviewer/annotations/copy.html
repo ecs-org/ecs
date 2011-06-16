@@ -3,7 +3,7 @@
 {% for annotation in annotations %}
     {% ifchanged annotation.document %}
         <div class="document">
-            {{ annotation.document }} ({{ annotation.document.original_file_name }})
+            {{ annotation.document }} {% if annotation.document.original_file_name %}({{ annotation.document.original_file_name }}){% endif %}
             <a href="{% url pdf_show annotation.document.pk %}" target="_blank">{% trans "View" %}</a>
         </div>
     {% endifchanged %}
@@ -13,5 +13,8 @@
             <a href="{% url pdf_show annotation.document.pk %}#{{ annotation.page_number }}" target="_blank">Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}</a>
         </span>
         <pre class="text">{{ annotation.text }}</pre>
+        <pre class="copytext">{{ annotation.document }} {% if annotation.document.original_file_name %}({{ annotation.document.original_file_name }}){% endif %}
+Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}:
+{{ annotation.text }}</pre>
     </div>
 {% endfor %}

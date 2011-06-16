@@ -6,7 +6,7 @@ from django.forms.models import BaseModelFormSet, inlineformset_factory, modelfo
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory
+from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 from ecs.core.models import Submission
 
@@ -52,7 +52,7 @@ class BaseConstraintFormSet(BaseModelFormSet):
 class ConstraintForm(forms.ModelForm):
     start_time = TimeField(label=_(u'from (time)'), required=True)
     end_time = TimeField(label=_(u'to (time)'), required=True)
-    weight = forms.ChoiceField(label=_(u'weighting'), choices=((0.5, _(u'unfavorable')), (1.0, _(u'impossible'))))
+    weight = forms.ChoiceField(label=_(u'weighting'), choices=WEIGHT_CHOICES)
 
     class Meta:
         model = Constraint
