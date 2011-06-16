@@ -87,7 +87,7 @@ ecs.textarea.toolbarItems.annotations = function(label, url){
                     popup.element.getElements('input[type=checkbox]').each(function(checkbox){
                         if(checkbox.checked){
                             var a = checkbox.getParent('.annotation');
-                            text += a.getPrevious('.document').innerHTML + ", " + a.getElement('.text').innerHTML + "\n\n";
+                            text += a.getElement('.copytext').innerHTML + '\n\n';
                         }
                     });
                     textarea.insertAtCursor(text);
