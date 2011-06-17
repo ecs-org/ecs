@@ -34,7 +34,7 @@ def upload_document(request, template='documents/upload_form.html'):
 
     return render(request, template, {
         'form': form,
-        'documents': documents,
+        'documents': list(documents),
     })
 
 def delete_document(request, document_pk):

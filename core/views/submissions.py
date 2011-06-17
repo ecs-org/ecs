@@ -356,9 +356,7 @@ def create_submission_form(request):
         
         valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
 
-        submit_now = submit and valid and request.user.get_profile().approved_by_office
-
-        if submit_now:
+        if submit and valid and request.user.get_profile().approved_by_office:
             submission_form = form.save(commit=False)
             submission = request.docstash.get('submission')
             if submission:   # refetch submission object because it could have changed

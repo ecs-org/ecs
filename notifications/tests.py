@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 
 from django.core.urlresolvers import reverse
 
@@ -83,6 +84,7 @@ class NotificationFormTest(LoginTestCase):
         
     def test_document_upload(self):
         url = self._setup_POST_url()
+        upload_url = re.sub(r'new/\d+/', 'doc/upload/', url)    # XXX: ugly
         data = self._create_POST_data()
         doctype = DocumentType.objects.create(name='foo doctype')
         f = open(os.path.join(os.path.dirname(__file__), '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf'), 'rb')
@@ -93,7 +95,7 @@ class NotificationFormTest(LoginTestCase):
             'document-version': '3.1415',
             'document-date': '17.03.2010',
         })
-        response = self.client.post(url, data)
+        response = self.client.post(upload_url, data)
         f.close()
         self.failUnless('<form' in response.content)
         documents = response.context['documents']
@@ -111,6 +113,7 @@ class NotificationFormTest(LoginTestCase):
     def test_incomplete_upload(self):
         """ Regression test for the KeyError bug fixed in r729:b022598f8e55"""
         url = self._setup_POST_url()
+        upload_url = re.sub(r'new/\d+/', 'doc/upload/', url)    # XXX: ugly
         data = self._create_POST_data()
         doctype = DocumentType.objects.create(name='regression doctype')
         data.update({
@@ -118,7 +121,7 @@ class NotificationFormTest(LoginTestCase):
            'document-0-version': '3.1415',
            'document-0-date': '30.03.2010',
         })
-        response = self.client.post(url, data)
+        response = self.client.post(upload_url, data)
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless('<form' in response.content)
 
