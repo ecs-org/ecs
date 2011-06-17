@@ -761,7 +761,7 @@ post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
     ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
-    main = models.BooleanField(default=False, blank=True)
+    main = models.BooleanField(default=True, blank=True)
 
     user = models.ForeignKey(User, null=True, related_name='investigations')
     contact = NameField(required=('first_name', 'last_name',))
