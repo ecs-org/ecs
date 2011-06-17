@@ -1,5 +1,5 @@
-import sys, os
-import re
+import os, re
+
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.template.defaultfilters import slugify
@@ -43,11 +43,11 @@ class Inserter:
 
 
 def page_title(title):
-    #write title of the page into the rst file, otherwise information is lost
     pagetitle = u"%s%s" % (len(title)*"#", os.linesep)
     pagetitle += u"%s%s" % (title, os.linesep)
     pagetitle += u"%s%s%s%s" % (len(title)*"#", os.linesep, os.linesep, os.linesep)
     return pagetitle
+
 
 def write_page(slug, include_header, output_dir):
     linker = Linker(
@@ -67,6 +67,7 @@ def write_page(slug, include_header, output_dir):
         fulltext = title+ page.text if include_header else page.text
         f.write(linker.link(fulltext).encode('utf-8'))
 
+
 def write_toctree(slug, toctree, output_dir):
     linker = Linker(
             image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
@@ -81,82 +82,56 @@ def write_toctree(slug, toctree, output_dir):
     with open(os.path.join(output_dir, name), 'w') as f:
         fulltext = title+ toctree
         f.write(linker.link(fulltext).encode('utf-8'))
+  
 
-    
-def make_doctree(node, output_dir, depth = 0):
-    #print '%s%s' % ('  ' * depth, node.title)
-    content = ""
+def process_toctree(node, output_dir, depth = 0):
     toctree = []
     
     if len(node.children) == 0:
-        #print '%s%s' % ('  ' * depth, node.title)
-        write_page(node.title, True, output_dir)
         print "write_page(%s) and header" % node.title
-        #write title into document, no further children
-    
+        write_page(node.title, True, output_dir)
+        
     else:
-        #print '%sfake_%s' % ('  ' * depth, node.title)
-        #if depth > 0
-        #create fake document, add node title to this document, include "real" document
-        write_page(node.title, False, output_dir)
         print "write_page(%s) none header" % node.title
+        write_page(node.title, False, output_dir)
         toctree.append(node.title)
         
         for child in node.children:
             if len(child.children) > 0:
-                #print '%schild fake_%s' % ('  ' * depth, child.title)
                 toctree.append("fake_%s" % child.title)
             else:
-                #print '%schild %s' % ('  ' * depth, child.title)
                 toctree.append("%s" % child.title)
             
-            make_doctree(child, output_dir, depth= depth + 1)
+            process_toctree(child, output_dir, depth= depth + 1)
                 
-        write_toctree(node.title, toctree, output_dir)
         print "write_page(%s) with header and toctree (%s)" % ("fake_"+node.title, toctree)
-       
+        write_toctree(node.title, toctree, output_dir)
+        
 
-def parse_index_list(text, output_dir):
+def parse_index(text, output_dir):
     ''' gets every line with "[space]*\* :doc:" at the beginning
     :return: list ((indent,target)*)
     '''
     
     MAGIC_REF_RE = re.compile(r'([ ]*)\*[ ]+:doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
-
     tree = Node("index")
     inserter = Inserter(tree)
     
-    pagelist = []
-
     for match in MAGIC_REF_RE.finditer(text):
         indent = len(match.group(1))
         target = match.group(3) or match.group(2)
-        #print("Target: {0}, indent {1}".format(target,indent))
-        inserter(target, (indent/2+1))
+        inserter(target, (indent/2+1)) # TODO: fails on indent != 2
 
-    make_doctree(tree, output_dir)
-
+    process_toctree(tree, output_dir)
 
 
-def generate_sphinx_doctree():
-    ''' write the index and doctree pages with glamor '''
-    
-    fulltext = pagetitle+page.text
-    intro=u"""##################
-    Inhaltsverzeichnis
-    ##################
-    
+"""    
     .. include:: ../../../_latex_head.rst
     .. include:: ../../../_latex_tail.rst
     
     .. toctree::
     :maxdepth: 2
-    
-    """                 
-    indent = '%s   ' % os.linesep
-    toctree = indent.join(["%s%s" % (' '*indent, doc) for doc,indent in doclist])
-    fulltext = intro + toctree 
-    f.write(linker.link(fulltext).encode('utf-8'))
+"""    
                     
 
 
@@ -171,9 +146,7 @@ class Command(BaseCommand):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
-        pagelist = parse_index_list(Page.objects.get(slug='index').text, output_dir)
-        
-        #generate_sphinx_doctree(pagelist, output_dir)
+        parse_index(Page.objects.get(slug='index').text, output_dir)
         
         
         
