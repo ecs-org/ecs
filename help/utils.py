@@ -31,7 +31,16 @@ class Linker(object):
             for page in Page.objects.filter(slug__in=self.targets.keys()):
                 self.targets[page.slug] = page
             source = DOC_REF_RE.sub(self._replace_ref, source)
-
+        else:
+            #non default case for printed version of help
+            #this will replace :doc:'name' with :doc:'name <docname>'
+            for match in DOC_REF_RE.finditer(source):
+                target = match.group(2) or match.group(1)
+                self.targets[target] = None
+            for page in Page.objects.filter(slug__in=self.targets.keys()):
+                self.targets[page.slug] = page
+            source = DOC_REF_RE.sub(self._replace_ref4print, source)
+            
         for match in IMAGE_RE.finditer(source):
             self.images[match.group('target')] = None
         for image in Attachment.objects.filter(slug__in=self.images.keys()):
@@ -51,6 +60,22 @@ class Linker(object):
             return "**bad reference: '{0}'**".format(target)
 
         return u'`{0} <{1}>`_'.format(text or page.title, self.page_url(page))
+    
+    def _replace_ref4print(self, match):
+        #we need to leave the :doc: refs as is, but supply them with a title,
+        #since not all docs have a title in the generated documentation.
+        #see ecs_help2sphinx
+        if not match.group(2):
+            text = None
+            target = match.group(1)
+        else:
+            text = match.group(1)
+            target = match.group(2)
+        page = self.targets[target]
+        if not page:
+            return "**bad reference: '{0}'**".format(target)
+
+        return u':doc:`{0} <{1}>`'.format(text or page.title, page.slug)
         
     def _replace_image(self, match):
         ref = match.group('ref')
