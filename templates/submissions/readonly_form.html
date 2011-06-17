@@ -310,11 +310,11 @@
                 new MooDialog.Error('{% trans "Your review is incomplete." %}');
             {% endif %}
             {% if review_complete %}
-                new MooDialog.Confirm('{{ _("Do you want to close the review?")|escapejs }}', function(){
+                new MooDialog.Confirm('{{ _("Do you want to close the review and send it to the EC?")|escapejs }}', function(){
                     $('checklist_{{ review_complete }}_review_form').getElement('input[type="submit"][name="really_complete_task"]').click();
                 }, null, {
-                    okText: '{{ _("Close")|escapejs }}',
-                    cancelText: '{{ _("Don't Close")|escapejs }}'
+                    okText: '{{ _("Send")|escapejs }}',
+                    cancelText: '{{ _("Don't send")|escapejs }}'
                 })
             {% endif %}
         });
