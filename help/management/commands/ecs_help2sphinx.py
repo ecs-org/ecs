@@ -78,7 +78,7 @@ def write_toctree(slug, toctree, output_dir):
     title = page_title(page.title)
     sep = "%s%s"%(os.linesep,'  ')
     toctree = '  ' + sep.join(toctree)
-    toctree = '.. toctree:%s%s%s' % (os.linesep*2,toctree,os.linesep*2)
+    toctree = '.. toctree::%s%s%s' % (os.linesep*2,toctree,os.linesep*2)
     with open(os.path.join(output_dir, name), 'w') as f:
         fulltext = title+ toctree
         f.write(linker.link(fulltext).encode('utf-8'))
