@@ -94,7 +94,9 @@ def process_toctree(node, output_dir, depth = 0):
     else:
         print "write_page(%s) none header" % node.title
         write_page(node.title, False, output_dir)
-        toctree.append(node.title)
+        if node.title != 'index':
+            # xxx we do not write the real root index to be included in the fake index 
+            toctree.append(node.title)
         
         for child in node.children:
             if len(child.children) > 0:
