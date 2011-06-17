@@ -3,6 +3,7 @@ import re
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from django.template.defaultfilters import slugify
+from django.core.exceptions import ObjectDoesNotExist
 
 from ecs.help.models import Page
 from ecs.help.utils import Linker
@@ -49,7 +50,16 @@ def page_title(title):
     return pagetitle
 
 def write_page(slug, include_header, output_dir):
-    page = Page.objects.get(slug = slug)
+    linker = Linker(
+            image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
+            doc_roles=False,
+        )
+    try:
+        page = Page.objects.get(slug = slug)
+    except ObjectDoesNotExist:
+        print "missing page %s" % slug
+        return
+        
     name = slug + '.rst' 
     title = page_title(page.title)
     
@@ -58,11 +68,15 @@ def write_page(slug, include_header, output_dir):
         f.write(linker.link(fulltext).encode('utf-8'))
 
 def write_toctree(slug, toctree, output_dir):
+    linker = Linker(
+            image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
+            doc_roles=False,
+        )
     page = Page.objects.get(slug = slug)
     name = "fake_"+slug + '.rst' 
     title = page_title(page.title)
     sep = "%s%s"%(os.linesep,'  ')
-    toctree = sep.join(toctree)
+    toctree = '  ' + sep.join(toctree)
     toctree = '.. toctree:%s%s%s' % (os.linesep*2,toctree,os.linesep*2)
     with open(os.path.join(output_dir, name), 'w') as f:
         fulltext = title+ toctree
@@ -157,27 +171,9 @@ class Command(BaseCommand):
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
-        pagelist = parse_index_list(Page.objects.get(slug='index'), output_dir)
-
-
-
-
-
-
-         
-        for page in Page.objects.all():
-            if page.slug.lower() != 'index':    
-                #use the slug as filename, that way the :doc: directives work
-                name = page.slug + '.rst'
-                with open(os.path.join(output_dir, name), 'w') as f:
-                    #write title of the page into the rst file, otherwise information is lost
-                    pagetitle = u"%s%s" % (len(page.title)*"#", os.linesep)
-                    pagetitle += u"%s%s" % (page.title, os.linesep)
-                    pagetitle += u"%s%s%s%s" % (len(page.title)*"#", os.linesep, os.linesep, os.linesep)
-                    
-                    #generate toc tree directive for sphinx:
-                    #FIXME some paths are hardcoded here and this is not really nicely done
-                    fulltext = pagetitle+page.text
-                    f.write(linker.link(fulltext).encode('utf-8'))
+        pagelist = parse_index_list(Page.objects.get(slug='index').text, output_dir)
         
-        generate_sphinx_doctree(pagelist, output_dir)
+        #generate_sphinx_doctree(pagelist, output_dir)
+        
+        
+        
