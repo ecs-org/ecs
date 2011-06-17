@@ -88,11 +88,9 @@ def process_toctree(node, output_dir, depth = 0):
     toctree = []
     
     if len(node.children) == 0:
-        print "write_page(%s) and header" % node.title
         write_page(node.title, True, output_dir)
         
     else:
-        print "write_page(%s) none header" % node.title
         write_page(node.title, False, output_dir)
         if node.title != 'index':
             # xxx we do not write the real root index to be included in the fake index 
@@ -105,8 +103,7 @@ def process_toctree(node, output_dir, depth = 0):
                 toctree.append("%s" % child.title)
             
             process_toctree(child, output_dir, depth= depth + 1)
-                
-        print "write_page(%s) with header and toctree (%s)" % ("fake_"+node.title, toctree)
+        
         write_toctree(node.title, toctree, output_dir)
         
 
@@ -125,15 +122,6 @@ def parse_index(text, output_dir):
         inserter(target, (indent/2+1)) # TODO: fails on indent != 2
 
     process_toctree(tree, output_dir)
-
-
-"""    
-    .. include:: ../../../_latex_head.rst
-    .. include:: ../../../_latex_tail.rst
-    
-    .. toctree::
-    :maxdepth: 2
-"""    
                     
 
 
