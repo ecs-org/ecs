@@ -13,7 +13,6 @@
     {{ block.super }}
     <div class="header_actions">
       <a href="" id="save-button" class="button_save">{% trans "Save" %}</a>
-      <a href="" id="validate-button" class="button_validate">{% trans "Validate" %}</a>
       <a href="" id="submit-button" class="button_submit">
         {% if submission and submission.current_submission_form %}
             {% if notification_type %}
@@ -58,10 +57,6 @@
             
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.save();
-                return false;
-            });
-            $('validate-button').addEvent('click', function(){
-                ecs.mainForm.submit('validate');
                 return false;
             });
             $('submit-button').addEvent('click', function(){
