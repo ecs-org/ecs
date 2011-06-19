@@ -9,24 +9,13 @@ from ecs.help.models import Page
 from ecs.help.utils import Linker
 
 
-class Node:
-    def __init__(self, title):
-        self.title = title
-        self.parent = None
-        self.children = []
-
-    def add(self, child):
-        self.children.append(child)
-        child.parent = self
-
-
 class Inserter:
     def __init__(self, node, depth = 0):
         self.node = node
         self.depth = depth
 
-    def __call__(self, title, depth):
-        newNode = Node(title)
+    def __call__(self, slug, depth):
+        newNode = HelpNode(slug)
         if (depth > self.depth):
             self.node.add(newNode)
             self.depth = depth
@@ -42,101 +31,122 @@ class Inserter:
         self.node = newNode
 
 
-def page_title(title):
-    pagetitle = u"%s%s" % (len(title)*"#", os.linesep)
-    pagetitle += u"%s%s" % (title, os.linesep)
-    pagetitle += u"%s%s%s%s" % (len(title)*"#", os.linesep, os.linesep, os.linesep)
-    return pagetitle
-
-
-def write_page(slug, include_header, output_dir):
-    linker = Linker(
-            image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
-            doc_roles=False,
-        )
-    try:
-        page = Page.objects.get(slug = slug)
-    except ObjectDoesNotExist:
-        print "missing page %s" % slug
-        return
-        
-    name = slug + '.rst' 
-    title = page_title(page.title)
+class HelpNode:
+    def __init__(self, slug, virtual= False):
+        self.slug = slug
+        self.parent = None
+        self.children = []
+        self.title = ''
+        self.text = ''
     
-    with open(os.path.join(output_dir, name), 'w') as f:
-        fulltext = title+ page.text if include_header else page.text
-        f.write(linker.link(fulltext).encode('utf-8'))
-
-
-def write_toctree(slug, toctree, output_dir):
-    linker = Linker(
-            image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
-            doc_roles=False,
-        )
-    page = Page.objects.get(slug = slug)
-    name = "fake_"+slug + '.rst' 
-    title = page_title(page.title)
-    sep = "%s%s"%(os.linesep,'  ')
-    toctree = '  ' + sep.join(toctree)
-    toctree = '.. toctree::%s%s%s' % (os.linesep*2,toctree,os.linesep*2)
-    with open(os.path.join(output_dir, name), 'w') as f:
-        fulltext = title+ toctree
-        f.write(linker.link(fulltext).encode('utf-8'))
-  
-
-def process_toctree(node, output_dir, depth = 0):
-    toctree = []
-    
-    if len(node.children) == 0:
-        write_page(node.title, True, output_dir)
-        
-    else:
-        write_page(node.title, False, output_dir)
-        if node.title != 'index':
-            # xxx we do not write the real root index to be included in the fake index 
-            toctree.append(node.title)
-        
-        for child in node.children:
-            if len(child.children) > 0:
-                toctree.append("fake_%s" % child.title)
+        if virtual:
+            self.title = 'virtual object: {0}'.format(slug)
+        else:
+            try:
+                page = Page.objects.get(slug = slug)
+            except ObjectDoesNotExist:
+                self.title = 'missing object: {0}'.format(slug)
             else:
-                toctree.append("%s" % child.title)
-            
-            process_toctree(child, output_dir, depth= depth + 1)
-        
-        write_toctree(node.title, toctree, output_dir)
-        
+                self.title = page.title
+                self.text = page.text
+                 
+    @classmethod
+    def create_root(cls, slug, virtual, linker, output_dir):
+        obj = cls(slug, virtual= virtual)
+        obj.linker = linker
+        obj.output_dir = output_dir
+        return obj
 
-def parse_index(text, output_dir):
-    ''' gets every line with "[space]*\* :doc:" at the beginning
-    :return: list ((indent,target)*)
+    def __iter__(self): 
+        yield self
+        for child in self.children:
+            for node in child.__iter__().next():
+                yield node
+        
+    def root(self):
+        node = self
+        while node.parent is not None:
+            node = node.parent
+        return node
+        
+    def add(self, child):
+        self.children.append(child)
+        child.parent = self
+
+    def _page_title(self):
+        title = unicode(self.title)
+        heading = u''.ljust(len(title), '#')
+        pagetitle = u'{heading}\n{title}\n{heading}\n\n\n'.format(heading= heading, title= title)
+        return pagetitle
+
+    def _write_file(self, filename, data):
+        with open(os.path.join(self.root().output_dir, filename), 'w') as f:
+            f.write(data.encode('utf-8'))
+
+    def _write_page(self, include_header):
+        linked_text = self.root().linker.link(self.text) 
+        fulltext = self._page_title()+ linked_text if include_header else linked_text
+        self._write_file('{0}.rst'.format(self.slug), fulltext)
+        
+    def process_tree(self, depth = 0):
+        if len(self.children) == 0:
+            self._write_page(True)
+            return
+
+        toctree = []
+        
+        if self.slug == self.root().slug:
+            # we do not include the original root index in the fake index
+            # we do not write the original root index to disk, and we name our generated one like the original
+            filename = '{0}.rst'.format(self.slug)    
+        else:
+            self._write_page(False)
+            toctree.append(self.slug)
+            filename = 'fake_{0}.rst'.format(self.slug)
+
+        for child in self.children:
+            if len(child.children) > 0:
+                toctree.append('fake_{0}'.format(child.slug))
+            else:
+                toctree.append(child.slug)
+            
+            child.process_tree(depth= depth + 1)
+
+        toctree = u'.. toctree::\n\n  '+ u'\n  '.join(toctree)+ u'\n\n'
+        self._write_file(filename, self._page_title()+ toctree)
+
+
+def parse_docpages(indexslug, exclude_slugs, output_dir, warn_missing=True):
+    ''' takes a slug doc-page as index, include every doc-page that is referenced using line "[space]*\* :doc:" at the beginning
     '''
-    
     MAGIC_REF_RE = re.compile(r'([ ]*)\*[ ]+:doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
-    tree = Node("index")
+    linker = Linker(
+        image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
+        doc_roles=False,
+    )
+    tree = HelpNode.create_root(indexslug, virtual= False, linker= linker, output_dir= output_dir)
     inserter = Inserter(tree)
     
-    for match in MAGIC_REF_RE.finditer(text):
+    for match in MAGIC_REF_RE.finditer(tree.text):
         indent = len(match.group(1))
         target = match.group(3) or match.group(2)
-        inserter(target, (indent/2+1)) # TODO: fails on indent != 2
+        inserter(target, (indent/2+1)) # TODO: fails on indent stepping != 2
 
-    process_toctree(tree, output_dir)
-                    
-
+    tree.process_tree()
+    
+    if warn_missing:
+        processed = set(node.slug for node in tree)
+        all = set(val_list[0] for val_list in Page.objects.values_list('slug'))
+        
+        for x in all- processed:
+            print('Warning: not included docpage: {0}'.format(x))
+    
 
 class Command(BaseCommand):
     def handle(self, targetdir=None, **options):
-        linker = Linker(
-            image_url=lambda img: '../images/%s' % os.path.split(img.file.name)[1],
-            doc_roles=False,
-        )
         targetdir = settings.ECSHELP_ROOT if targetdir is None else targetdir
         output_dir = os.path.join(targetdir, 'src')
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
-        parse_index(Page.objects.get(slug='index').text, output_dir)
-        
-        
-        
+        parse_docpages('index', [], output_dir)
