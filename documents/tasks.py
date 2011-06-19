@@ -2,18 +2,20 @@
 
 from datetime import timedelta
 
+from django.conf import settings
 from django.utils.encoding import smart_str
 from django.db.models import Q
 
 from celery.decorators import task, periodic_task
+from celery.schedules import crontab
 
 from haystack import site
 
 from ecs.utils.pdfutils import pdf2text, pdf_page_count
+from ecs.documents.models import Document, Page
 
 from ecs.mediaserver.client import prime_mediaserver, add_to_storagevault
-
-from ecs.documents.models import Document, Page
+from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError, ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
 
 
 TO_BE_INDEXED = 'new' 
@@ -168,58 +170,23 @@ def index_pdf(document_pk=None, **kwargs):
 
     
 
-
-def clean_older_than(dry_run=False, **kwargs):
-    ''' runs every night at 3:38, and ages render_diskcache and doc_diskcache
+#@periodic_task(track_started=True, run_every=crontab(hour=3, minute=48, day_of_week="*"))
+@task()
+def age_incoming(dry_run=False, **kwargs):
+    ''' runs every night at 3:48, and ages settings.INCOMING_FILESTORE with files older than 14 days
     '''
-    logger = logging.getLogger() #do_aging.get_logger(**kwargs)
-    
-    render_diskcache = DiskBuckets(settings.MS_SERVER ["render_diskcache"],
-        max_size= settings.MS_SERVER ["render_diskcache_maxsize"])
-    doc_diskcache = DiskBuckets(settings.MS_SERVER ["doc_diskcache"],
-        max_size = settings.MS_SERVER ["doc_diskcache_maxsize"])
-
-    ifunc = ignorefunc if not dry_run else dryrun_ignorefunc
-    efunc = errorfunc
+    logger = logging.getLogger() #age_incoming.get_logger(**kwargs)
+    db = DiskBuckets(settings.INCOMING_FILESTORE, max_size= 0)
+    ifunc = ignore_none if not dry_run else ignore_all
     
     try:
-        logger.debug("start aging render_diskcache")    
-        afunc = abortfuncgetter(settings.MS_SERVER ["render_diskcache_maxsize"])
-        render_diskcache.age(ignorefunc= ifunc, errorfunc= efunc, abortfunc= afunc)
+        logger.debug("start aging INCOMING_FILESTORE")    
+        db.age(ignoreitem= ifunc, onerror= onerror_log, 
+            satisfied= satisfied_on_newer_then(settings.INCOMING_FILESTORE_MAXAGE))
+
     except BucketError as e:
-        logger.warning("aging render_diskcache was not successful, until end of list reached; Exception Details {0}".format(e)) 
+        logger.warning("aging INCOMING_FILESTORE was not successful, until end of list reached; Exception Details {0}".format(e)) 
+    
     else:
-        logger.info("aging render_diskcache was successful")
+        logger.info("aging INCOMING_FILESTORE was successful")
 
-    try:
-        logger.debug("start aging doc_diskcache") 
-        afunc = abortfuncgetter(settings.MS_SERVER ["doc_diskcache_maxsize"])   
-        doc_diskcache.age(ignorefunc= ifunc, errorfunc= efunc, abortfunc= afunc)
-    except BucketError as e:
-        logger.warning("aging doc_diskcache was not successful, until end of list reached; Exception Details {0}".format(e)) 
-    else:
-        logger.info("aging doc_diskcache was successful")
-
-
-def abortfuncgetter(max_size):
-    saved_max_size = max_size
-    def abortfunc(current_size, filename, filesize, accesstime):
-        #print("max size {0}, current size {1}, filesize {2}, accesstime {3}, filename {4}".format(
-        #    saved_max_size, current_size, filesize, time.ctime(accesstime), filename))
-        saved_current_size = current_size
-        return current_size < saved_max_size
-    return abortfunc
-
-def dryrun_ignorefunc(filename, filesize, accesstime):
-    logger = logging.getLogger() #do_aging.get_logger(**kwargs)
-    logger.debug("dry_run: would remove file (date= {0}): {1}".format(time.ctime(accesstime), filename))
-    return True
-
-def ignorefunc(filename, filesize, accesstime):
-    logger = logging.getLogger() #do_aging.get_logger(**kwargs)
-    logger.debug("remove file (date= {0}): {1}".format(time.ctime(accesstime), filename))
-    return False
-
-def errorfunc(filename, filesize, accesstime, exception):
-    logger = logging.getLogger() #do_aging.get_logger(**kwargs)
-    logger.info("removing of file %s failed. Exception was: %s" % (filename, exception))

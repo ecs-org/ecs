@@ -50,6 +50,7 @@ from ecs.mediaserver.diskbuckets import DiskBuckets
 __all__ = ['getVault', 'StorageVault', 'LocalFileStorageVault', 'TemporaryStorageVault', 'S3StorageVault',
     'VaultError', 'VaultKeyError', 'VaultIOError', 'VaultEncryptionError', ]
 
+
 class VaultError(Exception):
     ''' Base class for exceptions for StorageVault; Derived from Exception'''
     pass
@@ -69,6 +70,7 @@ class VaultEncryptionError(VaultIOError):
 
 def getVault():
     ''' get the default vault implementation
+    
     :raise ImproperlyConfigured: if settings.STORAGE_VAULT contains invalid storagevault implementation
     '''
     module, class_name = settings.STORAGE_VAULT.rsplit('.', 1)
@@ -81,6 +83,7 @@ def getVault():
 
 class StorageVault():
     ''' base class for a write once, read many times storage vault
+    
     Features: on the fly Encryption+Signing, Decryption+Verifying
     '''
     def __init__(self):
@@ -148,7 +151,7 @@ class StorageVault():
     def get(self, identifier):
         ''' get a filelike content of key identifier from the vault
 
-        :warn:implementers: this filelike object should **always** a temporary copy, and never the original (even in case of localstoragevault)
+        :warning: implementers, this filelike object should **always** a temporary copy, and never the original (even in case of localstoragevault)
         :note: you should close the filelike object and remove it from disk (if real file) once done with it, using decommission(filelike)
 
         :raise EnvironmentError, KeyError, VaultError, VaultEncryptionError: if get, or decryption fails  
@@ -227,29 +230,25 @@ class LocalFileStorageVault(StorageVault):
  
     def exists(self, identifier):
         return self.db.exists(identifier)
-
-
-@singleton
-class _TempStorageDir:
-    def __new__(cls):
-        cls.tempdir = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
-        return object.__new__(cls)
-    def __init__(self):
-        pass
-    def __repr__(self):
-        return self.tempdir
     
 class TemporaryStorageVault(LocalFileStorageVault):
     ''' StorageVault implementation using a temporary storage inside tempdir (for unittests only)
+    
+    makes a temporary storagevault under a subdir of settings.TEMPFILE_DIR
+    
+    :requirements: to be used, settings.STORAGE_VAULT need to be set to "ecs.mediaserver.storagevault.TemporaryStorageVault"
     '''
     
+    # we initialize _TempStorageDir here, so we should become the same directory on each instantiation (vulgo borg pattern)
+    __TempStorageDir = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
+    
     def __init__(self):
-        rootdir = _TempStorageDir()
+        rootdir = self.__TempStorageDir
         print("root temporary storagevault dir {0}".format(rootdir))
         self.db = DiskBuckets(rootdir, max_size = 0)
     
-    
 
+    
 class S3StorageVault(StorageVault):
     ''' a s3 (based on boto) file storage implementation of StorageVault
     '''
