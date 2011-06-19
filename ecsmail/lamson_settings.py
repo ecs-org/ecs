@@ -28,5 +28,5 @@ receiver = SMTPReceiver(settings.ECSMAIL ['listen'], settings.ECSMAIL ['port'])
 Router.defaults(host= '.+')
 Router.load(settings.ECSMAIL ['handlers'])
 Router.RELOAD = False
-Router.UNDELIVERABLE_QUEUE = queue.Queue(settings.ECSMAIL ['queue_dir'])
+Router.UNDELIVERABLE_QUEUE = queue.Queue(settings.ECSMAIL ['undeliverable_queue_dir'])
 
