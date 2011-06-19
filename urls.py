@@ -99,7 +99,7 @@ if 'sentry' in settings.INSTALLED_APPS:
         # redirect sentry login/logout pages to standard pages because we dont want sentry handle login
         #url(r'^sentry/login$', 'django.views.generic.simple.redirect_to', {'url': reverse("ecs.users.views.login")}),
         #url(r'^sentry/logout$', 'django.views.generic.simple.redirect_to', {'url': reverse("ecs.users.views.logout")}),
-        url(r'^sentry/', include('sentry.urls')),
+        url(r'^sentry/', include('sentry.web.urls')),
     )
     
 if 'rosetta' in settings.INSTALLED_APPS:
