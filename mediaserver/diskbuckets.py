@@ -22,7 +22,7 @@ Usage
 __all__ = ['BucketError', 'BucketKeyError', 'BucketIOError', 'DiskBuckets', 
            'satisfied_on_less_then', 'satisfied_on_newer_then', 'ignore_all', 'ignore_none', 'onerror_log']
 
-import os, datetime, time
+import os, datetime, time, logging
 from operator import itemgetter
 
 
@@ -227,6 +227,7 @@ class DiskBuckets(object):
         :raise BucketError: if aging could not satisfy satisfied until end of entry list
         :raise BucketError: if satisfied == None (equals use default) and self.max_size == 0 (equals unlimited)
         '''
+        logger = logging.getLogger()
         if satisfied == None and self.max_size == 0:
             raise BucketError("no aging satisfied criteria and self.max_size == 0 (unlimited); can not age")
     
@@ -263,7 +264,8 @@ class DiskBuckets(object):
         if not aging_success:
             raise BucketError("aging abort_criteria could not be satisfied")
         else:
-            print ("self.maxsize = {0}, current_size = {1}, last_accesstime_aged = {2}".format(self.max_size, bucket_size, time.ctime(accesstime)))
+            logger.info("success: self.maxsize = {0}, current_size = {1}, last_accesstime = {2}".format(
+                self.max_size, bucket_size, accesstime))
 
 
 def satisfied_on_less_then(max_size):
@@ -272,34 +274,31 @@ def satisfied_on_less_then(max_size):
     def satisfied_func(current_size, filename, filesize, accesstime):
         #print("max size {0}, current size {1}, filesize {2}, accesstime {3}, filename {4}".format(
         #    saved_max_size, current_size, filesize, accesstime, filename))
-        saved_current_size = current_size
         return current_size < saved_max_size
     return satisfied_func
 
 def satisfied_on_newer_then(days_from_now):
     ''' Satisfied function for Diskbuckets.age on accesstime < newer_then'''
     saved_newer_then= datetime.datetime.today() - datetime.timedelta(days= days_from_now)
-    print(saved_newer_then)
     def satisfied_func(current_size, filename, filesize, accesstime):
-        print("max size {0}, current size {1}, filesize {2}, accesstime {3}, filename {4}".format(
-            saved_max_size, current_size, filesize, accesstime, filename))
-        return accesstime < saved_newer_then
+        #print("newer then {0}, accesstime {1}, current size {2}, filesize {3}, , filename {4}".format(
+        #    saved_newer_then, accesstime, current_size, filesize, filename))
+        return accesstime > saved_newer_then
     return satisfied_func
 
 def ignore_all(filename, filesize, accesstime):
     ''' Ignore Function for Diskbuckets.age that ignores all entries, (eg. doing a dry_run) '''
     logger = logging.getLogger()
-    logger.debug("dry_run: would remove file (date= {0}): {1}".format(time.ctime(accesstime), filename))
+    logger.debug("dry_run: would remove file (date= {0}): {1}".format(accesstime, filename))
     return True
 
 def ignore_none(filename, filesize, accesstime):
     ''' Ignore Function for Diskbuckets.age that ignores none of the entries, meaning allow "wipe them all" '''
     logger = logging.getLogger()
-    logger.debug("remove file (date= {0}): {1}".format(time.ctime(accesstime), filename))
+    logger.debug("remove file (date= {0}): {1}".format(accesstime, filename))
     return False
 
 def onerror_log(filename, filesize, accesstime, exception):
     ''' On Error Function for Diskbuckets.age that just logs the error and continues '''
     logger = logging.getLogger() #do_aging.get_logger(**kwargs)
     logger.warn("removing of file %s failed. Exception was: %s" % (filename, exception))
-    

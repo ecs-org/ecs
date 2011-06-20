@@ -70,6 +70,11 @@ if user in ['testecs', 'chipper']:
     DEBUG = False                               # do not show django debug messages
     TEMPLATE_DEBUG = True                       # but sentry does show template errors
     CELERY_SEND_TASK_ERROR_EMAILS = True        # send errors of tasks via email to admins
+else:
+    # smaller ms caches on everything except testecs and chipper
+    MS_SERVER_OVERRIDE["doc_diskcache_maxsize"] = 2**26 # 64mb 
+    MS_SERVER_OVERRIDE["render_diskcache_maxsize"] = 2**25 # 32Mb
+
 
 if user == 'testecs':
     # fulltext search engine override (testecs uses solr instead of whoosh)

@@ -1,6 +1,6 @@
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-from ecs.mediaserver.tasks import do_aging
+from ecs.documents.tasks import age_incoming
 import logging
 
 
@@ -14,5 +14,5 @@ class Command(BaseCommand):
             format = '%(asctime)s %(levelname)s %(message)s',
             )
         
-        do_aging(options['dryrun']) # .delay().get()
+        age_incoming(options['dryrun']) # .delay().get()
         

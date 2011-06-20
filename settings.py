@@ -1,6 +1,6 @@
 # Django settings for ecs project.
 
-import os, sys, platform
+import os, sys, platform, logging
 from copy import deepcopy
 
 # root dir of project
@@ -296,9 +296,9 @@ MS_CLIENT = {
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
     "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
-    "doc_diskcache_maxsize" :    20089166, # 2**34,
+    "doc_diskcache_maxsize" :     2**34,    # equals 4 Gigabyte
     "render_diskcache":  os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache")),
-    "render_diskcache_maxsize": 100704077, # 2**33,
+    "render_diskcache_maxsize":   2**33,    # equals 2 Gigabyte
     "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
     "render_memcache_host": "127.0.0.1",    # host= localhost, 
     "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
@@ -514,11 +514,15 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 # hack some settings for test and runserver    
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-    # FIXME: disabled because singleton dont work STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
+    STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
     
 elif any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+    logging.basicConfig(
+            level = logging.DEBUG,
+            format = '%(asctime)s %(levelname)s %(message)s',
+            )
+        
 # testmaker workaround
 if 'testmaker' in sys.argv:
     INSTALLED_APPS += ('test_utils',)

@@ -231,6 +231,7 @@ class LocalFileStorageVault(StorageVault):
     def exists(self, identifier):
         return self.db.exists(identifier)
     
+
 class TemporaryStorageVault(LocalFileStorageVault):
     ''' StorageVault implementation using a temporary storage inside tempdir (for unittests only)
     
@@ -239,14 +240,13 @@ class TemporaryStorageVault(LocalFileStorageVault):
     :requirements: to be used, settings.STORAGE_VAULT need to be set to "ecs.mediaserver.storagevault.TemporaryStorageVault"
     '''
     
-    # we initialize _TempStorageDir here, so we should become the same directory on each instantiation (vulgo borg pattern)
+    # we initialize _TempStorageDir here, so we should become the same directory on each instantiation 
     __TempStorageDir = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
     
     def __init__(self):
         rootdir = self.__TempStorageDir
         print("root temporary storagevault dir {0}".format(rootdir))
-        self.db = DiskBuckets(rootdir, max_size = 0)
-    
+        self.db = DiskBuckets(rootdir, max_size = 0, allow_mkrootdir=True)
 
     
 class S3StorageVault(StorageVault):

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from datetime import timedelta
 
 from django.conf import settings
@@ -180,7 +182,8 @@ def age_incoming(dry_run=False, **kwargs):
     ifunc = ignore_none if not dry_run else ignore_all
     
     try:
-        logger.debug("start aging INCOMING_FILESTORE")    
+        logger.debug("start aging INCOMING_FILESTORE {0}, INCOMING_FILESTORE_MAXAGE {1}".format(
+            settings.INCOMING_FILESTORE, settings.INCOMING_FILESTORE_MAXAGE))
         db.age(ignoreitem= ifunc, onerror= onerror_log, 
             satisfied= satisfied_on_newer_then(settings.INCOMING_FILESTORE_MAXAGE))
 
