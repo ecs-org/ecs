@@ -15,12 +15,13 @@ DOC_REF_RE = re.compile(r':doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
 IMAGE_RE = re.compile(r'\.\.\s+(\|(?P<ref>([^|]+))\|\s+)?image::\s+(?P<target>[a-zA-Z0-9._-]+)', re.UNICODE)
 
 class Linker(object):
-    def __init__(self, image_url=None, page_url=None, doc_roles=True):
+    def __init__(self, image_url=None, page_url=None, doc_roles=True, slugdict = None):
         self.targets = {}
         self.images = {}
         self.image_url = image_url or (lambda image: reverse('ecs.help.views.download_attachment', kwargs={'attachment_pk': image.pk}))
         self.page_url = page_url or (lambda page: reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
         self.doc_roles = doc_roles
+        self.slug2target_dict = slugdict
 
     def link(self, source):
         from ecs.help.models import Page, Attachment
@@ -74,7 +75,10 @@ class Linker(object):
         page = self.targets[target]
         if not page:
             return "**bad reference: '{0}'**".format(target)
-
+        #replace target of the link with knowledge from outside...
+        if self.slug2target_dict and self.slug2target_dict.has_key(page.slug):
+            if self.slug2target_dict[page.slug] != page.slug:
+                page.slug = self.slug2target_dict[page.slug]
         return u':doc:`{0} <{1}>`'.format(text or page.title, page.slug)
         
     def _replace_image(self, match):

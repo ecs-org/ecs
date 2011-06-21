@@ -32,13 +32,16 @@ class Inserter:
 
 
 class HelpNode:
+    
+    slugdict = {}
+    
     def __init__(self, slug, virtual= False):
         self.slug = slug
         self.parent = None
         self.children = []
         self.title = ''
         self.text = ''
-    
+        
         if virtual:
             self.title = 'virtual object: {0}'.format(slug)
         else:
@@ -88,9 +91,12 @@ class HelpNode:
         fulltext = self._page_title()+ linked_text if include_header else linked_text
         self._write_file('{0}.rst'.format(self.slug), fulltext)
         
-    def process_tree(self, depth = 0):
+    def process_tree(self, depth = 0, dryrun=False):
         if len(self.children) == 0:
-            self._write_page(True)
+            if dryrun:
+                self.slugdict[self.slug] = self.slug
+            else:
+                self._write_page(True)
             return
 
         toctree = []
@@ -98,11 +104,13 @@ class HelpNode:
         if self.slug == self.root().slug:
             # we do not include the original root index in the fake index
             # we do not write the original root index to disk, and we name our generated one like the original
-            filename = '{0}.rst'.format(self.slug)    
+            filename = '{0}.rst'.format(self.slug)
+            slugname = self.slug 
         else:
             self._write_page(False)
             toctree.append(self.slug)
             filename = 'fake_{0}.rst'.format(self.slug)
+            slugname = 'fake_{0}'.format(self.slug)
 
         for child in self.children:
             if len(child.children) > 0:
@@ -110,10 +118,13 @@ class HelpNode:
             else:
                 toctree.append(child.slug)
             
-            child.process_tree(depth= depth + 1)
+            child.process_tree(depth= depth + 1, dryrun=dryrun)
 
         toctree = u'.. toctree::\n\n  '+ u'\n  '.join(toctree)+ u'\n\n'
-        self._write_file(filename, self._page_title()+ toctree)
+        if dryrun:
+            self.slugdict[self.slug] = slugname
+        else:
+            self._write_file(filename=filename, data=self._page_title()+ toctree)
 
 
 def parse_docpages(indexslug, exclude_slugs, output_dir, warn_missing=True):
@@ -132,7 +143,12 @@ def parse_docpages(indexslug, exclude_slugs, output_dir, warn_missing=True):
         target = match.group(3) or match.group(2)
         inserter(target, (indent/2+1)) # TODO: fails on indent stepping != 2
 
-    tree.process_tree()
+    #magic:
+    #a dryrun is needed to build a dict with all slugs, so when doing writing .rst the linker can look up the _real_ targetfile for each slug (fake_bla or bla)
+    tree.process_tree(dryrun=True)
+    #TODO this could be done much more elegantly:
+    tree.linker.slug2target_dict = tree.slugdict
+    tree.process_tree(dryrun=False)
     
     if warn_missing:
         processed = set(node.slug for node in tree)
