@@ -29,6 +29,19 @@
         <h4>{% trans "Not Approved" %}</h4>
         {{ form.expedited_entries }}
 
+        <h3>{% trans "Local-EC Submissions" %}</h3>
+        <h4>{% trans "Approved" %}</h4>
+        <ul>
+        {% for entry in localec_entries %}
+            <li>
+                {{ entry.submission|ec_number }}
+                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            </li>
+        {% endfor %}
+        </ul>
+        <h4>{% trans "Not Approved" %}</h4>
+        {{ form.localec_entries }}
+
         <input type="submit" value="{% trans "Approve" %}" />
         <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>
     </form>

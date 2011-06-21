@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
+from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
 
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
@@ -163,6 +164,10 @@ class Meeting(models.Model):
     @property
     def expedited_entries(self):
         return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.filter(expedited=True).values('pk').query)
+
+    @property
+    def localec_entries(self):
+        return self.timetable_entries.filter(timetable_index__isnull=True, submission__current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
 
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)

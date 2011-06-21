@@ -13,6 +13,7 @@ from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
+from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -22,8 +23,28 @@ def is_acknowledged(wf):
     return wf.data.current_submission_form.acknowledged
 
 @guard(model=Submission)
+def is_acknowledged_and_localec(wf):
+    return is_acknowledged(wf) and is_localec(wf)
+
+@guard(model=Submission)
+def is_acknowledged_and_not_localec(wf):
+    return is_acknowledged(wf) and not is_localec(wf)
+
+@guard(model=Submission)
 def is_retrospective_thesis(wf):
     return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
+
+@guard(model=Submission)
+def is_expedited(wf):
+    return wf.data.expedited and wf.data.expedited_review_categories.count()
+
+@guard(model=Submission)
+def is_localec(wf):
+    return wf.data.current_submission_form.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+
+@guard(model=Submission)
+def is_expedited_or_retrospective_thesis(wf):
+    return is_expedited(wf) or is_retrospective_thesis(wf)
 
 @guard(model=Submission)
 def has_b2vote(wf):
@@ -47,14 +68,6 @@ def is_final(wf):
 def is_b2upgrade(wf):
     previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
     return wf.data.activates and previous_vote and previous_vote[0].result == '2'
-
-@guard(model=Submission)
-def is_expedited(wf):
-    return wf.data.expedited and wf.data.expedited_review_categories.count()
-
-@guard(model=Submission)
-def is_expedited_or_retrospective_thesis(wf):
-    return is_expedited(wf) or is_retrospective_thesis(wf)
 
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
@@ -285,6 +298,23 @@ def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
 post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
+class LocalEcRecommendationReview(ChecklistReview):
+    class Meta:
+        model = Submission
+        vary_on = ChecklistBlueprint
+
+    def is_reentrant(self):
+        return True
+
+    def pre_perform(self, choice):
+        s = self.workflow.data
+        if s.timetable_entries.count() == 0:
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
+
+def unlock_expedited_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
+post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
 @guard(model=Submission)
 def needs_external_review(wf):

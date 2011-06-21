@@ -112,14 +112,18 @@ class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
 class RetrospectiveThesisExpeditedVoteForm(forms.Form):
     retrospective_thesis_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
     expedited_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
+    localec_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
 
     def __init__(self, *args, **kwargs):
         from ecs.core.models import Vote
         from ecs.core.models.voting import FINAL_VOTE_RESULTS
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
-        self.fields['retrospective_thesis_entries'].queryset = meeting.retrospective_thesis_entries.exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
-        self.fields['expedited_entries'].queryset = meeting.expedited_entries.exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+
+        for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
+            q = getattr(meeting, k).exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+            self.fields[k].queryset = q
+            self.fields[k].initial = [x.pk for x in q.all()]
 
     def save(self):
         from ecs.core.models.voting import Vote, PERMANENT_VOTE_RESULTS
@@ -127,7 +131,7 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
         from ecs.tasks.models import Task
         cd = self.cleaned_data
         votes = []
-        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])):
+        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', []) + list(cd.get('localec_entries', []))):
             vote = Vote.objects.create(top=entry, result='1')
             with sudo():
                 open_tasks = Task.objects.for_data(vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)

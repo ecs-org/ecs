@@ -285,6 +285,7 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
         'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'expedited_entries': meeting.expedited_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
+        'localec_entries': meeting.localec_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'meeting': meeting,
         'form': form,
     })

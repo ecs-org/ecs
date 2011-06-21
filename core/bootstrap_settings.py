@@ -461,4 +461,7 @@ checklist_questions = {
         ('3', u"Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?",u''),
         ('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
     ],
+    u'localec_review': [
+        ('1', u'Blabla?', u''),
+    ],
 }

@@ -19,6 +19,14 @@ from ecs.users.utils import get_or_create_user
 # getting translated later.
 _ = lambda s: s
 
+def _update_instance(instance, d):
+    changed = False
+    for k,v in d.iteritems():
+        if not getattr(instance, k) == v:
+            setattr(instance, k, v)
+            changed = True
+    if changed:
+        instance.save()
 
 @bootstrap.register()
 def sites():
@@ -65,13 +73,14 @@ def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
         AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview)
+        ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
         has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation,
-        is_expedited_or_retrospective_thesis)
+        is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec, is_acknowledged_and_not_localec)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
+    localec_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='localec_review')
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
@@ -83,6 +92,7 @@ def submission_workflow():
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
     EXPEDITED_REVIEW_GROUP = 'Expedited Review Group'
+    LOCALEC_REVIEW_GROUP = 'Local-EC Review Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
@@ -119,15 +129,19 @@ def submission_workflow():
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
-            #expedited_lane
+            # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
             'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
+
+            # local ec lane
+            'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
+            'localec_recommendation_review': Args(LocalEcRecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True), 
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged),
-            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged),
+            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
+            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_not_localec),
             
             ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
             ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
@@ -151,6 +165,10 @@ def submission_workflow():
             ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
             ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
             ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
+
+            # local ec lane
+            ('initial_review', 'localec_recommendation'): Args(guard=is_acknowledged_and_localec),
+            ('localec_recommendation', 'localec_recommendation_review'): None,
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
             ('categorization_review', 'external_review'): Args(guard=needs_external_review),
@@ -229,6 +247,7 @@ def auth_groups():
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
         u'Expedited Review Group',
+        u'Local-EC Review Group',
         u'EC-Board Member',
         u'External Reviewer',
         u'GCP Review Group',
@@ -328,8 +347,9 @@ def medical_categories():
     )
     for shortname, longname in categories:
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
-        medcat.name = longname
-        medcat.save()
+        if not medcat.name == longname:
+            medcat.name = longname
+            medcat.save()
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
@@ -393,6 +413,7 @@ def auth_user_testusers():
         ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
         ('external.reviewer', u'External Reviewer', {'external_review': True, }),
         ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
+        ('localec.rev', u'Local-EC Review Group', {'internal': True}),
     )
 
     boardtestusers = (
@@ -411,12 +432,16 @@ def auth_user_testusers():
          ('expedited.recht', ('Recht',)),
     )
     
+    userswitcher_group = Group.objects.get(name="userswitcher_target")
+    boardmember_group = Group.objects.get(name='EC-Board Member')
+    expedited_review_group = Group.objects.get(name='Expedited Review Group')
+
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
             if testgroup:
                 user.groups.add(Group.objects.get(name=testgroup))
-            user.groups.add(Group.objects.get(name="userswitcher_target"))
+            user.groups.add(userswitcher_group)
 
             profile = user.get_profile()
             for flagname, flagvalue in flags.items():
@@ -432,8 +457,8 @@ def auth_user_testusers():
     
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
-        user.groups.add(Group.objects.get(name='EC-Board Member'))
-        user.groups.add(Group.objects.get(name="userswitcher_target"))
+        user.groups.add(boardmember_group)
+        user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
         profile.board_member = True
@@ -447,8 +472,8 @@ def auth_user_testusers():
 
     for testuser, expcategories in expeditedtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
-        user.groups.add(Group.objects.get(name='Expedited Review Group'))
-        user.groups.add(Group.objects.get(name="userswitcher_target"))
+        user.groups.add(expedited_review_group)
+        user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
         profile.expedited_review = True
@@ -469,13 +494,7 @@ def auth_ec_staff_users():
     
     for blueprint in blueprints:
         b, created = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
-        changed = False
-        for name, value in blueprint.items():
-            if getattr(b, name) != value:
-                setattr(b, name, value)
-                changed = True
-        if changed:
-            b.save()
+        _update_instance(b, blueprint)
 
     try:
         from ecs.core.bootstrap_settings import checklist_questions
