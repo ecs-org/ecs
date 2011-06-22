@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load i18n userutils core %}
+{% load i18n userutils core scratchpad %}
 
 {% block account %}
   <div class="user_data">
@@ -21,6 +21,9 @@
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
+  {% get_scratchpad as scratchpad %}
+  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad %} ({% trans "Empty" %}){% endif %}">S</a>
+
   {% if user.get_profile.has_explicit_workflow %}
     {% with request.related_tasks as related_tasks %}
         {% if related_tasks %}

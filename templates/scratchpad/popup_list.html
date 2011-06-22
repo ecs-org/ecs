@@ -1,0 +1,27 @@
+{% load i18n core %}
+
+<div id="scratchpad">
+    <h3>{% trans "List of scratchpads" %}</h3>
+
+    <ul>
+    {% for scratchpad in scratchpads %}
+        <li>
+            <a href="{% url ecs.scratchpad.views.popup scratchpad_pk=scratchpad.pk %}" class="open-in-widget">
+            {% if scratchpad.submission %}
+                {% blocktrans with scratchpad.submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}
+            {% else %}
+                {% trans "Global scratchpad" %}
+            {% endif %}
+            </a>
+            <br>
+            <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
+        </li>
+    {% empty %}
+        <li><i>{% trans "No scratchpad" %}</i></li>
+    {% endfor %}
+    </ul>
+
+    <form id="scratchpad_form" action="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
+        {{ form.text }}
+    </form>
+</div>

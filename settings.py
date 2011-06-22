@@ -209,6 +209,7 @@ INSTALLED_APPS = (
     'ecs.integration',
     'ecs.fastlane',
     'ecs.boilerplate',
+    'ecs.scratchpad',
 )
 
 # authenticate with email address
