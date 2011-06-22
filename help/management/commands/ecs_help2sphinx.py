@@ -1,4 +1,5 @@
 import os, re
+from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
@@ -159,9 +160,16 @@ def parse_docpages(indexslug, exclude_slugs, output_dir, warn_missing=True):
     
 
 class Command(BaseCommand):
-    def handle(self, targetdir=None, **options):
-        targetdir = settings.ECSHELP_ROOT if targetdir is None else targetdir
-        output_dir = os.path.join(targetdir, 'src')
+    
+    option_list = BaseCommand.option_list + (
+            make_option('-t', '--targetdir', action='store', dest='targetdir', help='target dir', default=None),
+        )
+    
+    def handle(self, **options):
+        if not options['targetdir']: 
+            raise CommandError('Error: targetdir "-t path" must be specified')
+        targetdir = settings.ECSHELP_ROOT if options['targetdir'] is None else options['targetdir']
+        output_dir = os.path.join(options['targetdir'], 'src')
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         
