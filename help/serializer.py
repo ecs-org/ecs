@@ -66,6 +66,13 @@ class AttachmentSerializer(Serializer):
 
     def serialize_file(self, zf, instance):
         zip_name = u'attachments/{0}'.format(instance.slug)
+        
+#        if instance.mimetype.startswith("image/"):
+#            suffix = instance.mimetype.split("image/")[1]
+#            zip_name = u'attachments/{0}.{1}'.format(instance.slug,suffix)
+#        else:
+#            zip_name = u'attachments/{0}'.format(instance.slug)
+        
         zf.writestr(zip_name, instance.file.read())
         return zip_name
 
@@ -101,12 +108,12 @@ def export(file_like):
     attachment_serializer = AttachmentSerializer()
     for a in Attachment.objects.all():
         data['attachments'].append(attachment_serializer.serialize(zf, a))
-
+    
     data['pages'] = {}
     page_serializer = PageSerializer()
     for p in Page.objects.all():
         data['pages'][str(p.pk)] = page_serializer.serialize(zf, p)
-
+    
     zf.writestr('data.json', simplejson.dumps(data))
 
 def load(file_like):
