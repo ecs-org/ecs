@@ -1,0 +1,43 @@
+{% load i18n core %}
+
+<div id="scratchpad">
+    {% if submission %}
+        <h3>{% blocktrans with submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}</h3>
+    {% else %}
+        <h3>{% trans "Scratchpad" %}</h3>
+    {% endif %}
+
+    <a href="{% url ecs.scratchpad.views.popup_list %}" class="open-in-widget">{% trans "Show all my scratchpads" %}</a>
+
+    <form id="scratchpad_form" action="{% url ecs.scratchpad.views.popup scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
+        {{ form.text }}
+    </form>
+
+    <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
+    <a href="#" class="save_close">{% trans "Save and close" %}</a>
+    <a href="#" class="save">{% trans "Save" %}</a>
+</div>
+
+<script type="text/javascript">
+    function save_scratchpad(success_callback) {
+        var form = $('scratchpad_form');
+        var request = new Request({
+            url: form.getAttribute('action'),
+            data: form.toQueryString().parseQueryString(),
+            onSuccess: success_callback
+        });
+        request.send();
+    }
+
+    var scratchpad = $('scratchpad');
+    scratchpad.getElement('.save').addEvent('click', function(){
+        save_scratchpad(null);
+        return false;
+    });
+    scratchpad.getElement('.save_close').addEvent('click', function(){
+        save_scratchpad((function(){
+            scratchpad.getParent('.ecs-Popup').retrieve('ecs.widgets.Popup').close();
+        }).bind(this));
+        return false;
+    });
+</script>

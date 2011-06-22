@@ -154,6 +154,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'tabs': SUBMISSION_FORM_TABS,
         'documents': documents,
         'readonly': True,
+        'submission': submission,
         'submission_form': submission_form,
         'submission_forms': submission_forms,
         'vote': vote,
