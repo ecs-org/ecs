@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-'''
-Created on Sep 27, 2010
-
-@author: amir
-'''
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
