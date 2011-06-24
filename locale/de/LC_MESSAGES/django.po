@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-22 21:44+0200\n"
+"POT-Creation-Date: 2011-06-24 12:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -694,19 +694,20 @@ msgstr "Höchstalter"
 
 #: core/paper_forms.py:160
 msgid "Study includes non competent participants"
-msgstr "Studie beinhaltet auch Nicht-persönlich-Einwilligungsfähige"
+msgstr ""
+"In die Studie werden Nicht-persönlich-Einwilligungsfähige eingeschlossen"
 
 #: core/paper_forms.py:161
 msgid "Study includes male participants"
-msgstr "Studie beinhaltet männliche Teilnehmer"
+msgstr "In die Studie werden männliche Teilnehmer eingeschlossen"
 
 #: core/paper_forms.py:162
 msgid "Study includes female participants"
-msgstr "Studie beinhaltet weibliche Teilnehmer"
+msgstr "In die Studie werden weibliche Teilnehmer eingeschlossen"
 
 #: core/paper_forms.py:163
 msgid "Study includes women of childbearing age"
-msgstr "Studie beinhaltet gebärfähige Frauen"
+msgstr "In die Studie werden gebärfähige Frauen eingeschlossen"
 
 #: core/paper_forms.py:164
 msgid ""
