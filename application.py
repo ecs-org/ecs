@@ -156,7 +156,7 @@ mockcache:inst:all:pypi:mockcache
 
 # mediaserver: needs ghostscript for rendering
 ghostscript:req:apt:apt-get:ghostscript
-ghostscript:req:mac:homebrew:ghostscript
+#ghostscript:req:mac:homebrew:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:openbsd:pkg:ghostscript--
