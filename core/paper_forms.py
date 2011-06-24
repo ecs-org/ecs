@@ -157,10 +157,12 @@ FormInfo(SubmissionForm, fields=(
     # 2.10 Charakterisierung der Prüfungsteilnehmer/innen
     FieldInfo('2.10.1', 'subject_minage', _(u'minimum age')),
     FieldInfo('2.10.2', 'subject_maxage', _(u'maximum age')),
-    FieldInfo('2.10.3', 'subject_noncompetents', _(u'Study includes non competent participants')),
-    FieldInfo('2.10.4', 'subject_males', _(u'Study includes male participants')),
-    FieldInfo('2.10.4', 'subject_females', _(u'Study includes female participants')),
-    FieldInfo('2.10.5', 'subject_childbearing', _(u'Study includes women of childbearing age')),
+    
+    FieldInfo('2.10.3', 'subject_noncompetents', _(u'non competent participants'), help_text=_(u'The study includes:')),
+    FieldInfo('2.10.4', 'subject_males', _(u'male participants')),
+    FieldInfo('2.10.4', 'subject_females', _(u'female participants')),
+    FieldInfo('2.10.5', 'subject_childbearing', _(u'women of childbearing age')),
+    
     FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study'), help_text=_(u'If specifying the Duration of the participation in the study is not reasonable(e.g. archived material) specify "not applicable".')),
     FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase'), help_text=_(u'If specifying the duration of the active phase is not reasonable(e.g. archived material) specify "not applicable".')),
     FieldInfo('2.11.2', 'subject_duration_controls', _(u'Follow-up inspections')),
