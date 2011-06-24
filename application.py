@@ -11,6 +11,7 @@ main_packages = """
 
 # postgresql database bindings
 psycopg2:req:apt:apt-get:libpq-dev
+psycopg2:req:mac:homebrew:postgresql
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:req:openbsd:pkg:postgresql-server
@@ -20,6 +21,7 @@ psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psyc
 
 # sqlite database bindings
 pysqlite:req:apt:apt-get:libsqlite3-dev
+pysqlite:req:mac:homebrew:sqlite
 pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:req:openbsd:pkg:sqlite3
@@ -105,6 +107,7 @@ pysolr:inst:all:pypi:pysolr
 django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
 # pdf text extract
 pdftotext:req:apt:apt-get:poppler-utils
+pdftotext:req:mac:homebrew:poppler
 pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
 pdftotext:req:openbsd:pkg:poppler
@@ -153,6 +156,7 @@ mockcache:inst:all:pypi:mockcache
 
 # mediaserver: needs ghostscript for rendering
 ghostscript:req:apt:apt-get:ghostscript
+ghostscript:req:mac:homebrew:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:openbsd:pkg:ghostscript--
@@ -160,6 +164,7 @@ ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.e
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
+imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:openbsd:pkg:ImageMagick--
@@ -183,8 +188,9 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 # deployment: manage.py massimport
 antiword:req:apt:apt-get:antiword
+antiword:req:mac:homebrew:antiword
 antiword:req:mac:macports:antiword
-# antiword has to be build by hand for opensuse
+# antiword has to be built by hand for opensuse
 #antiword:req:suse:zypper:antiword
 antiword:req:openbsd:pkg:antiword
 antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
