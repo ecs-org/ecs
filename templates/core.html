@@ -22,7 +22,7 @@
     </form>
   </div>
   {% get_scratchpad as scratchpad %}
-  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad %} ({% trans "Empty" %}){% endif %}">S</a>
+  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
 
   {% if user.get_profile.has_explicit_workflow %}
     {% with request.related_tasks as related_tasks %}
