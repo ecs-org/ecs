@@ -1,8 +1,3 @@
-'''
-Created on Oct 6, 2010
-
-@author: amir
-'''
 from ecs.ecsmail.utils import whitewash
 from ecs.utils.testcases import EcsTestCase
 

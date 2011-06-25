@@ -12,11 +12,11 @@ from django.db.models import Count
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
-from ecs.utils.decorators import developer
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, user_group_required
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
+from ecs.communication.utils import send_system_message_template
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
@@ -124,25 +124,7 @@ def timetable_editor(request, meeting_pk=None):
         'running_optimization': bool(meeting.optimization_task_id),
     })
     
-def expert_assignment(request, meeting_pk=None, forms=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
-
-    categories = SortedDict()
-    for cat in required_categories:
-        try:
-            categories[cat] = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat).board_member
-        except AssignedMedicalCategory.DoesNotExist:
-            categories[cat] = None
-
-    return render(request, 'meetings/timetable/medical_categories.html', {
-        'active': 'experts',
-        'meeting': meeting,
-        'forms': forms,
-        'categories': categories,
-    })
-
-def expert_assignment_edit(request, meeting_pk=None):
+def expert_assignment(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
 
@@ -163,7 +145,19 @@ def expert_assignment_edit(request, meeting_pk=None):
                 for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
                     Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
 
-    return expert_assignment(request, meeting_pk=meeting_pk, forms=forms)
+    categories = SortedDict()
+    for cat in required_categories:
+        try:
+            categories[cat] = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat).board_member
+        except AssignedMedicalCategory.DoesNotExist:
+            categories[cat] = None
+
+    return render(request, 'meetings/timetable/medical_categories.html', {
+        'active': 'experts',
+        'meeting': meeting,
+        'forms': forms,
+        'categories': categories,
+    })
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -371,6 +365,15 @@ def agenda_pdf(request, meeting_pk=None):
         'additional_submissions': list(enumerate(rts, len(meeting)+1)) + list(enumerate(es, len(meeting)+len(rts)+1)),
     })
     return pdf_response(pdfstring, filename=filename)
+
+@user_group_required('EC-Office')
+def send_agenda_to_board(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    for recipient in settings.AGENDA_RECIPIENT_LIST:
+        send_system_message_template(recipient, _('Invitation to meeting'), 'meetings/boardmember_invitation.txt', {'meeting': meeting})
+
+    return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
 
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

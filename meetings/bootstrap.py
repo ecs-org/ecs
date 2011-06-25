@@ -8,35 +8,7 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.workflow.patterns import Generic
 
 
-# for marking the task names translatable
-_ = lambda s: s
-
-@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
-def meeting_workflow():
-    from ecs.meetings.models import Meeting
-    from ecs.meetings.workflow import MeetingAgendaPreparation, MeetingDay, MeetingProtocolSending, MeetingExpertAssignment
-
-    OFFICE_GROUP = 'EC-Office'
-
-    setup_workflow_graph(Meeting, 
-        auto_start=True, 
-        nodes={
-            'start': Args(Generic, start=True, name=_("Start")),
-            'meeting_expert_assignment': Args(MeetingExpertAssignment, group=OFFICE_GROUP, name=_('Meeting Expert Assignment')),
-            'meeting_agenda_generation': Args(MeetingAgendaPreparation, group=OFFICE_GROUP, name=_("Meeting Agenda Generation")),
-            'meeting_day': Args(MeetingDay, group=OFFICE_GROUP, name=_("Meeting Day")),
-            'meeting_protocol_sending': Args(MeetingProtocolSending, group=OFFICE_GROUP, end=True, name=_("Meeting Protocol Sending")),
-        }, 
-        edges={
-            ('start', 'meeting_expert_assignment'): None,
-            ('meeting_expert_assignment', 'meeting_agenda_generation'): None,
-            ('meeting_agenda_generation', 'meeting_day'): None,
-            ('meeting_day', 'meeting_protocol_sending'): None,
-        }
-    )
-
-
-@bootstrap.register(depends_on=('ecs.meetings.bootstrap.meeting_workflow',))
+@bootstrap.register()
 def meetings_create():
     from ecs.meetings.models import AssignedMedicalCategory
     from ecs.meetings.models import Meeting
