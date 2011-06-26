@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-24 18:04+0200\n"
+"POT-Creation-Date: 2011-06-27 00:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,12 +164,12 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:108 core/bootstrap.py:202 meetings/bootstrap.py:24
-#: notifications/bootstrap.py:46 users/bootstrap.py:23
+#: core/bootstrap.py:108 core/bootstrap.py:201 notifications/bootstrap.py:46
+#: users/bootstrap.py:23
 msgid "Start"
 msgstr "Start"
 
-#: core/bootstrap.py:109 core/bootstrap.py:203
+#: core/bootstrap.py:109 core/bootstrap.py:202
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
@@ -201,7 +201,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:116 core/bootstrap.py:647
+#: core/bootstrap.py:116 core/bootstrap.py:646
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -210,27 +210,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:118 core/bootstrap.py:642
+#: core/bootstrap.py:118 core/bootstrap.py:641
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:119 core/bootstrap.py:643
+#: core/bootstrap.py:119 core/bootstrap.py:642
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:120 core/bootstrap.py:641
+#: core/bootstrap.py:120 core/bootstrap.py:640
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:121 core/bootstrap.py:645 core/parties.py:70
+#: core/bootstrap.py:121 core/bootstrap.py:644 core/parties.py:70
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:122 core/bootstrap.py:646
+#: core/bootstrap.py:122 core/bootstrap.py:645
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:123 core/bootstrap.py:644
+#: core/bootstrap.py:123 core/bootstrap.py:643
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -272,48 +272,48 @@ msgstr "Empfehlungsgutachten"
 msgid "Local EC Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:204
+#: core/bootstrap.py:203
 msgid "B2 Upgrade"
 msgstr ""
 
-#: core/bootstrap.py:205
+#: core/bootstrap.py:204
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: core/bootstrap.py:206
+#: core/bootstrap.py:205
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: core/bootstrap.py:207
+#: core/bootstrap.py:206
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: core/bootstrap.py:208
+#: core/bootstrap.py:207
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: core/bootstrap.py:209 core/bootstrap.py:210
+#: core/bootstrap.py:208 core/bootstrap.py:209
 msgid "Office Vote Review"
 msgstr ""
 
-#: core/bootstrap.py:211
+#: core/bootstrap.py:210
 msgid "Vote Signing"
 msgstr ""
 
-#: core/bootstrap.py:212
+#: core/bootstrap.py:211
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:638
+#: core/bootstrap.py:637
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:639
+#: core/bootstrap.py:638
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:640
+#: core/bootstrap.py:639
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
@@ -1480,27 +1480,27 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:109
+#: core/workflow.py:105
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:110
+#: core/workflow.py:106
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:120
+#: core/workflow.py:116
 msgid "Study acknowledged"
 msgstr "Studie angenommen"
 
-#: core/workflow.py:122
+#: core/workflow.py:118
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:172 core/workflow.py:183
+#: core/workflow.py:168 core/workflow.py:179
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:174 core/workflow.py:185
+#: core/workflow.py:170 core/workflow.py:181
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -2054,22 +2054,6 @@ msgstr "gelöscht"
 msgid "Invalid expiring url"
 msgstr ""
 
-#: meetings/bootstrap.py:25
-msgid "Meeting Expert Assignment"
-msgstr "Spezialistenzuordnung"
-
-#: meetings/bootstrap.py:26
-msgid "Meeting Agenda Generation"
-msgstr "Tagesordnung festlegen"
-
-#: meetings/bootstrap.py:27
-msgid "Meeting Day"
-msgstr "Sitzungstag"
-
-#: meetings/bootstrap.py:28
-msgid "Meeting Protocol Sending"
-msgstr ""
-
 #: meetings/forms.py:24
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -2126,37 +2110,41 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:230
+#: meetings/views.py:179
+msgid "Meeting on {date}"
+msgstr "Sitzung am {date}"
+
+#: meetings/views.py:260
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:239
+#: meetings/views.py:269
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:245
+#: meetings/views.py:275
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:257
+#: meetings/views.py:287
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:363
+#: meetings/views.py:393
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:378
+#: meetings/views.py:410
+msgid "Invitation to meeting"
+msgstr "Einladung zur Sitzung"
+
+#: meetings/views.py:417
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:441
+#: meetings/views.py:480
 msgid "time slot"
 msgstr "Zeitfenster"
-
-#: meetings/workflow.py:24
-msgid "Invitation to meeting"
-msgstr "Einladung zur Sitzung"
 
 #: notifications/bootstrap.py:47
 msgid "Initial Amendment Review"
@@ -2635,13 +2623,30 @@ msgstr "Sitzung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/detail.html:19 templates/meetings/status.html:39
+#: templates/meetings/detail.html:19 templates/meetings/status.html:42
 msgid "Timetable"
 msgstr "Zeitplanung"
 
 #: templates/meetings/detail.html:24
 msgid "Signatur der Voten"
 msgstr ""
+
+#: templates/meetings/expert_notification.txt:2
+#, python-format
+msgid ""
+"\n"
+"You have been assigned as the expert of \"%(category)s\" for the\n"
+"meeting on %(date)s.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Sie wurden als Experte für \"%(category)s\" für die Situng\n"
+"am %(date)s ausgewählt.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/meetings/form.html:8 templates/meetings/timetable/view.html:8
 msgid "new meeting"
@@ -2699,15 +2704,19 @@ msgstr "Tagesordnung"
 msgid "Agenda PDF"
 msgstr "Tagesordnung PDF"
 
-#: templates/meetings/status.html:40
+#: templates/meetings/status.html:37
+msgid "Send agenda to board"
+msgstr ""
+
+#: templates/meetings/status.html:43
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/status.html:43
+#: templates/meetings/status.html:46
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/status.html:44
+#: templates/meetings/status.html:47
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
@@ -2850,7 +2859,7 @@ msgstr "Notizblock"
 msgid "Show all my scratchpads"
 msgstr "Zur Liste der Notizblöcke"
 
-#: templates/scratchpad/popup.html:16 templates/scratchpad/popup_list.html:17
+#: templates/scratchpad/popup.html:16 templates/scratchpad/popup_list.html:16
 #, python-format
 msgid "Last Change: %(modified_at)s"
 msgstr "Letzte Änderung: %(modified_at)s"
@@ -2867,7 +2876,7 @@ msgstr "Liste der Notizblöcke"
 msgid "Global scratchpad"
 msgstr "Allgemeiner Notizblock"
 
-#: templates/scratchpad/popup_list.html:20
+#: templates/scratchpad/popup_list.html:19
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
@@ -3713,6 +3722,12 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Meeting Expert Assignment"
+#~ msgstr "Spezialistenzuordnung"
+
+#~ msgid "Meeting Agenda Generation"
+#~ msgstr "Tagesordnung festlegen"
 
 #~ msgid "No text inside"
 #~ msgstr "Kein Text"

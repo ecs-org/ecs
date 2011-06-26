@@ -222,9 +222,9 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
         ExternalChecklistReview, ThesisRecommendationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview,
-        LocalEcRecommendationReview)
+        LocalEcRecommendationReview, BoardMemberReview)
 
-    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview), submission_form.submission, data=blueprint):
+    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview), submission_form.submission, data=blueprint):
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
