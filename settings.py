@@ -331,7 +331,7 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 DEFAULT_CONTACT = 'office1@example.org'
 
 # FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
-AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net', 'amir@viel-zu.org',)
+AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
 BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
 
 # enable the audit trail

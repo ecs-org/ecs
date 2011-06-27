@@ -13,7 +13,6 @@
                 {% trans "Global scratchpad" %}
             {% endif %}
             </a>
-            <br>
             <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
         </li>
     {% empty %}

@@ -12,11 +12,12 @@ from django.db.models import Count
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
-from ecs.utils.decorators import developer
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
+from ecs.communication.utils import send_system_message_template
+from ecs.tasks.models import Task, TaskType
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
@@ -124,9 +125,61 @@ def timetable_editor(request, meeting_pk=None):
         'running_optimization': bool(meeting.optimization_task_id),
     })
     
-def expert_assignment(request, meeting_pk=None, forms=None):
+def expert_assignment(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
+
+    forms = SortedDict()
+    for cat in required_categories:
+        forms[cat] = AssignedMedicalCategoryForm(request.POST or None, meeting=meeting, category=cat, prefix='cat%s' % cat.pk)
+
+    if request.method == 'POST':
+        for cat, form in forms.iteritems():
+            if not form.is_valid():
+                continue
+
+            old_amc = None
+            try:
+                old_amc = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat)
+            except AssignedMedicalCategory.DoesNotExist:
+                old_amc = None
+
+            amc = form.save()
+
+            if old_amc and old_amc.board_member and old_amc.board_member == form.cleaned_data['board_member']:
+                continue
+
+            entries = list(meeting.timetable_entries.filter(submission__medical_categories=cat).distinct())
+
+            if old_amc and old_amc.board_member:
+                # remove all participations for a previous selected board member.
+                # XXX: this may delete manually entered data. (FMD2)
+                Participation.objects.filter(medical_category=cat, entry__meeting=meeting).delete()
+
+                # delete obsolete board member review tasks
+                for entry in entries:
+                    with sudo():
+                        tasks = list(Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True))
+                    for task in tasks:
+                        task.deleted_at = datetime.now()
+                        task.save()
+
+            amc = form.save()
+            if amc.board_member:
+                task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
+                for entry in entries:
+                    # add participations for all timetable entries with matching categories.
+                    # this assumes that all submissions have already been added to the meeting.
+                    Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
+
+                    # create board member review task
+                    token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
+                    token.task.assign(amc.board_member)
+
+                send_system_message_template(amc.board_member, _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')), 'meetings/expert_notification.txt', {
+                    'category': cat,
+                    'meeting': meeting,
+                })
 
     categories = SortedDict()
     for cat in required_categories:
@@ -141,29 +194,6 @@ def expert_assignment(request, meeting_pk=None, forms=None):
         'forms': forms,
         'categories': categories,
     })
-
-def expert_assignment_edit(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
-
-    forms = SortedDict()
-    for cat in required_categories:
-        forms[cat] = AssignedMedicalCategoryForm(request.POST or None, meeting=meeting, category=cat, prefix='cat%s' % cat.pk)
-
-    if request.method == 'POST':
-        for cat, form in forms.iteritems():
-            if form.is_valid():
-                if form.instance and form.instance.board_member:
-                    # remove all participations for a previous selected board member.
-                    # XXX: this may delete manually entered data. (FMD2)
-                    Participation.objects.filter(medical_category=cat, entry__meeting=meeting).delete()
-                amc = form.save()
-                # add participations for all timetable entries with matching categories.
-                # this assumes that all submissions have already been added to the meeting.
-                for entry in meeting.timetable_entries.filter(submission__medical_categories=cat).distinct():
-                    Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
-
-    return expert_assignment(request, meeting_pk=meeting_pk, forms=forms)
 
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -371,6 +401,15 @@ def agenda_pdf(request, meeting_pk=None):
         'additional_submissions': list(enumerate(rts, len(meeting)+1)) + list(enumerate(es, len(meeting)+len(rts)+1)),
     })
     return pdf_response(pdfstring, filename=filename)
+
+@user_group_required('EC-Office')
+def send_agenda_to_board(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    for recipient in settings.AGENDA_RECIPIENT_LIST:
+        send_system_message_template(recipient, _('Invitation to meeting'), 'meetings/boardmember_invitation.txt', {'meeting': meeting})
+
+    return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
 
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

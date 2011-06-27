@@ -1,0 +1,8 @@
+{% load i18n core %}
+{% blocktrans with category.name as category and meeting.start|date:"d.m.Y" as date %}
+You have been assigned as the expert of "{{ category }}" for the
+meeting on {{ date }}.
+
+Sincerly yours,
+    The Team of the Ethics Commission
+{% endblocktrans %}

@@ -21,9 +21,6 @@
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
-  {% get_scratchpad as scratchpad %}
-  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad %} ({% trans "Empty" %}){% endif %}">S</a>
-
   {% if user.get_profile.has_explicit_workflow %}
     {% with request.related_tasks as related_tasks %}
         {% if related_tasks %}
@@ -35,6 +32,8 @@
   {% endif %}
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   <a href="" id="feedback_button" class="feedback_trigger icon_feedback" title="{% trans "Compliments, comments or complaints?" %}">feedback</a>
+  {% get_scratchpad as scratchpad %}
+  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
 {% endblock %}
         
 {% block usermenu %}

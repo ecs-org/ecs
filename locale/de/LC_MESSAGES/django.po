@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-24 18:20+0200\n"
+"POT-Creation-Date: 2011-06-27 13:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,12 +164,12 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:108 core/bootstrap.py:202 meetings/bootstrap.py:24
-#: notifications/bootstrap.py:46 users/bootstrap.py:23
+#: core/bootstrap.py:108 core/bootstrap.py:201 notifications/bootstrap.py:46
+#: users/bootstrap.py:23
 msgid "Start"
 msgstr "Start"
 
-#: core/bootstrap.py:109 core/bootstrap.py:203
+#: core/bootstrap.py:109 core/bootstrap.py:202
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
@@ -201,7 +201,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:116 core/bootstrap.py:647
+#: core/bootstrap.py:116 core/bootstrap.py:646
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -210,27 +210,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:118 core/bootstrap.py:642
+#: core/bootstrap.py:118 core/bootstrap.py:641
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:119 core/bootstrap.py:643
+#: core/bootstrap.py:119 core/bootstrap.py:642
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:120 core/bootstrap.py:641
+#: core/bootstrap.py:120 core/bootstrap.py:640
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:121 core/bootstrap.py:645 core/parties.py:70
+#: core/bootstrap.py:121 core/bootstrap.py:644 core/parties.py:70
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:122 core/bootstrap.py:646
+#: core/bootstrap.py:122 core/bootstrap.py:645
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:123 core/bootstrap.py:644
+#: core/bootstrap.py:123 core/bootstrap.py:643
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -272,48 +272,48 @@ msgstr "Empfehlungsgutachten"
 msgid "Local EC Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:204
+#: core/bootstrap.py:203
 msgid "B2 Upgrade"
 msgstr ""
 
-#: core/bootstrap.py:205
+#: core/bootstrap.py:204
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: core/bootstrap.py:206
+#: core/bootstrap.py:205
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: core/bootstrap.py:207
+#: core/bootstrap.py:206
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: core/bootstrap.py:208
+#: core/bootstrap.py:207
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: core/bootstrap.py:209 core/bootstrap.py:210
+#: core/bootstrap.py:208 core/bootstrap.py:209
 msgid "Office Vote Review"
 msgstr ""
 
-#: core/bootstrap.py:211
+#: core/bootstrap.py:210
 msgid "Vote Signing"
 msgstr ""
 
-#: core/bootstrap.py:212
+#: core/bootstrap.py:211
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:638
+#: core/bootstrap.py:637
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:639
+#: core/bootstrap.py:638
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:640
+#: core/bootstrap.py:639
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
@@ -1483,27 +1483,27 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:109
+#: core/workflow.py:105
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:110
+#: core/workflow.py:106
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:120
+#: core/workflow.py:116
 msgid "Study acknowledged"
 msgstr "Studie angenommen"
 
-#: core/workflow.py:122
+#: core/workflow.py:118
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:172 core/workflow.py:183
+#: core/workflow.py:168 core/workflow.py:179
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:174 core/workflow.py:185
+#: core/workflow.py:170 core/workflow.py:181
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
@@ -1544,7 +1544,7 @@ msgid "New"
 msgstr "Neu"
 
 #: core/forms/forms.py:346 core/forms/forms.py:368 core/forms/forms.py:393
-#: templates/core.html:77
+#: templates/core.html:76
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
@@ -2057,22 +2057,6 @@ msgstr "gelöscht"
 msgid "Invalid expiring url"
 msgstr ""
 
-#: meetings/bootstrap.py:25
-msgid "Meeting Expert Assignment"
-msgstr "Spezialistenzuordnung"
-
-#: meetings/bootstrap.py:26
-msgid "Meeting Agenda Generation"
-msgstr "Tagesordnung festlegen"
-
-#: meetings/bootstrap.py:27
-msgid "Meeting Day"
-msgstr "Sitzungstag"
-
-#: meetings/bootstrap.py:28
-msgid "Meeting Protocol Sending"
-msgstr ""
-
 #: meetings/forms.py:24
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -2129,37 +2113,41 @@ msgstr "ungünstig"
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:230
+#: meetings/views.py:179
+msgid "Meeting on {date}"
+msgstr "Sitzung am {date}"
+
+#: meetings/views.py:260
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:239
+#: meetings/views.py:269
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:245
+#: meetings/views.py:275
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:257
+#: meetings/views.py:287
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:363
+#: meetings/views.py:393
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:378
+#: meetings/views.py:410
+msgid "Invitation to meeting"
+msgstr "Einladung zur Sitzung"
+
+#: meetings/views.py:417
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:441
+#: meetings/views.py:480
 msgid "time slot"
 msgstr "Zeitfenster"
-
-#: meetings/workflow.py:24
-msgid "Invitation to meeting"
-msgstr "Einladung zur Sitzung"
 
 #: notifications/bootstrap.py:47
 msgid "Initial Amendment Review"
@@ -2182,7 +2170,7 @@ msgstr "Meldungsantwort Verteilen"
 msgid "valid"
 msgstr "korrekturgelesen und gültig"
 
-#: notifications/views.py:49 templates/core.html:69
+#: notifications/views.py:49 templates/core.html:68
 #: templates/submissions/readonly_form.html:104
 #: templates/submissions/readonly_form.html:153
 msgid "Answered Notifications"
@@ -2192,7 +2180,7 @@ msgstr "Beantwortete Meldungen"
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:55 templates/core.html:68
+#: notifications/views.py:55 templates/core.html:67
 #: templates/submissions/readonly_form.html:135
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
@@ -2270,127 +2258,127 @@ msgstr "Alter, neuere zuerst"
 msgid "Anfrage bezüglich {0}"
 msgstr ""
 
-#: templates/core.html:25
+#: templates/core.html:29
+msgid "There is no active task."
+msgstr "Momentan wird keine Aufgabe bearbeitet."
+
+#: templates/core.html:33
+msgid "Click here to get help."
+msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
+
+#: templates/core.html:34
+msgid "Compliments, comments or complaints?"
+msgstr "Lob, Anmerkungen oder Beschwerden?"
+
+#: templates/core.html:36
 #, python-format
 msgid "Show my scratchpad for submission %(ec_number)s"
 msgstr "Notizblock für die Studie %(ec_number)s aufschlagen"
 
-#: templates/core.html:25
+#: templates/core.html:36
 msgid "Show my scratchpad"
 msgstr "Notizblock aufschlagen"
 
-#: templates/core.html:25
+#: templates/core.html:36
 msgid "Empty"
 msgstr "Leer"
 
-#: templates/core.html:32
-msgid "There is no active task."
-msgstr "Momentan wird keine Aufgabe bearbeitet."
-
-#: templates/core.html:36
-msgid "Click here to get help."
-msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
-
-#: templates/core.html:37
-msgid "Compliments, comments or complaints?"
-msgstr "Lob, Anmerkungen oder Beschwerden?"
-
-#: templates/core.html:42
+#: templates/core.html:41
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: templates/core.html:43 templates/communication/list.html:6
+#: templates/core.html:42 templates/communication/list.html:6
 #: templates/submissions/readonly_form.html:108
 msgid "Communication"
 msgstr "Nachrichten"
 
-#: templates/core.html:45 templates/tasks/list.html:6
+#: templates/core.html:44 templates/tasks/list.html:6
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: templates/core.html:48
+#: templates/core.html:47
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:51
+#: templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: templates/core.html:54
+#: templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: templates/core.html:57
+#: templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
-#: templates/core.html:59
+#: templates/core.html:58
 msgid "New Submission"
 msgstr "Neuer Antrag"
 
-#: templates/core.html:61
+#: templates/core.html:60
 msgid "Import"
 msgstr "Import"
 
-#: templates/core.html:66
+#: templates/core.html:65
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:70 templates/notifications/form.html:9
+#: templates/core.html:69 templates/notifications/form.html:9
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:75 templates/submissions/list.html:117
+#: templates/core.html:74 templates/submissions/list.html:117
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: templates/core.html:79
+#: templates/core.html:78
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: templates/core.html:80
+#: templates/core.html:79
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: templates/core.html:82
+#: templates/core.html:81
 msgid "New Meeting"
 msgstr "Neue Sitzung"
 
-#: templates/core.html:90 templates/administration/detail.html:9
+#: templates/core.html:89 templates/administration/detail.html:9
 #: templates/administration/detail.html:19 templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/core.html:93 templates/administration/detail.html:11
+#: templates/core.html:92 templates/administration/detail.html:11
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
-#: templates/core.html:97 templates/boilerplate/form.html:6
+#: templates/core.html:96 templates/boilerplate/form.html:6
 #: templates/boilerplate/list.html:6
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
-#: templates/core.html:99
+#: templates/core.html:98
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:106
+#: templates/core.html:105
 msgid "Developer"
 msgstr "Entwickler"
 
-#: templates/core.html:108
+#: templates/core.html:107
 msgid "Sentry ErrorLog"
 msgstr "Sentry Fehlerprotokoll"
 
-#: templates/core.html:109
+#: templates/core.html:108
 msgid "Render Test PDF"
 msgstr ""
 
-#: templates/core.html:115
+#: templates/core.html:114
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:132
+#: templates/core.html:131
 #, python-format
 msgid ""
 "\n"
@@ -2403,15 +2391,15 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:234
+#: templates/core.html:233
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:234
+#: templates/core.html:233
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:250
+#: templates/core.html:249
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -2638,13 +2626,30 @@ msgstr "Sitzung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/detail.html:19 templates/meetings/status.html:39
+#: templates/meetings/detail.html:19 templates/meetings/status.html:42
 msgid "Timetable"
 msgstr "Zeitplanung"
 
 #: templates/meetings/detail.html:24
 msgid "Signatur der Voten"
 msgstr ""
+
+#: templates/meetings/expert_notification.txt:2
+#, python-format
+msgid ""
+"\n"
+"You have been assigned as the expert of \"%(category)s\" for the\n"
+"meeting on %(date)s.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Sie wurden als Experte für \"%(category)s\" für die Situng\n"
+"am %(date)s ausgewählt.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/meetings/form.html:8 templates/meetings/timetable/view.html:8
 msgid "new meeting"
@@ -2702,15 +2707,19 @@ msgstr "Tagesordnung"
 msgid "Agenda PDF"
 msgstr "Tagesordnung PDF"
 
-#: templates/meetings/status.html:40
+#: templates/meetings/status.html:37
+msgid "Send agenda to board"
+msgstr ""
+
+#: templates/meetings/status.html:43
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/status.html:43
+#: templates/meetings/status.html:46
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/status.html:44
+#: templates/meetings/status.html:47
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
@@ -2853,7 +2862,7 @@ msgstr "Notizblock"
 msgid "Show all my scratchpads"
 msgstr "Zur Liste der Notizblöcke"
 
-#: templates/scratchpad/popup.html:16 templates/scratchpad/popup_list.html:17
+#: templates/scratchpad/popup.html:16 templates/scratchpad/popup_list.html:16
 #, python-format
 msgid "Last Change: %(modified_at)s"
 msgstr "Letzte Änderung: %(modified_at)s"
@@ -2870,7 +2879,7 @@ msgstr "Liste der Notizblöcke"
 msgid "Global scratchpad"
 msgstr "Allgemeiner Notizblock"
 
-#: templates/scratchpad/popup_list.html:20
+#: templates/scratchpad/popup_list.html:19
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
@@ -3717,8 +3726,14 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
+#~ msgid "Meeting Expert Assignment"
+#~ msgstr "Spezialistenzuordnung"
+
 #~ msgid "Study includes male participants"
 #~ msgstr "In die Studie werden männliche Teilnehmer eingeschlossen"
+
+#~ msgid "Meeting Agenda Generation"
+#~ msgstr "Tagesordnung festlegen"
 
 #~ msgid "Study includes female participants"
 #~ msgstr "In die Studie werden weibliche Teilnehmer eingeschlossen"

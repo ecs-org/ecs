@@ -93,10 +93,6 @@ def needs_insurance_review(wf):
 def needs_gcp_review(wf):
     return wf.data.gcp_review_required
 
-@guard(model=Submission)
-def needs_boardmember_review(wf):
-    return is_retrospective_thesis(wf) or is_expedited(wf) or wf.data.medical_categories.count()
-
 class InitialReview(Activity):
     class Meta:
         model = Submission
@@ -221,12 +217,16 @@ def unlock_checklist_review(sender, **kwargs):
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
+class BoardMemberReview(ChecklistReview):
+    def is_reentrant(self):
+        return True
+
+def unlock_boardmember_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(BoardMemberReview)
+post_save.connect(unlock_boardmember_review, sender=Checklist)
+
+# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class ExternalChecklistReview(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-        
     def is_reentrant(self):
         return True
 
@@ -246,12 +246,8 @@ def external_review_declined(sender, **kwargs):
 task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
+# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class ThesisRecommendationReview(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-
     def is_reentrant(self):
         return True
 
@@ -266,10 +262,6 @@ def unlock_thesis_recommendation_review(sender, **kwargs):
 post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
 
 class ExpeditedRecommendation(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-
     def receive_token(self, *args, **kwargs):
         token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
         for cat in self.workflow.data.expedited_review_categories.all():
@@ -281,10 +273,6 @@ def unlock_expedited_recommendation(sender, **kwargs):
 post_save.connect(unlock_expedited_recommendation, sender=Checklist)
 
 class ExpeditedRecommendationReview(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-
     def is_reentrant(self):
         return True
 
@@ -299,10 +287,6 @@ def unlock_expedited_recommendation_review(sender, **kwargs):
 post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
 class LocalEcRecommendationReview(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-
     def is_reentrant(self):
         return True
 
@@ -340,12 +324,8 @@ class AdditionalReviewSplit(Generic):
                 tokens.append(token)
         return tokens
 
-# XXX: This could be done without a Meta-class and without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
+# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
 class AdditionalChecklistReview(ChecklistReview):
-    class Meta:
-        model = Submission
-        vary_on = ChecklistBlueprint
-        
     def is_reentrant(self):
         return True
 

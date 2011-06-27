@@ -73,9 +73,9 @@ def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
         AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview)
+        ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, needs_boardmember_review, has_expedited_recommendation,
+        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, has_expedited_recommendation,
         is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec, is_acknowledged_and_not_localec)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
@@ -118,7 +118,7 @@ def submission_workflow():
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
-            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
+            'board_member_review': Args(BoardMemberReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
             'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
 
@@ -176,7 +176,6 @@ def submission_workflow():
             
             ('additional_review_split', 'additional_review'): None,
 
-            ('generic_review', 'board_member_review'): Args(guard=needs_boardmember_review),
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): None,
             ('generic_review', 'legal_and_patient_review'): None,

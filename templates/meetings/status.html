@@ -1,5 +1,5 @@
 {% extends 'meetings/detail.html' %}
-{% load core i18n %}
+{% load core i18n userutils %}
 
 {% block meeting_detail %}
 
@@ -33,6 +33,9 @@
         <th>{% trans "Agenda" %}:</th>
         <td>
             <a href="{% url ecs.meetings.views.agenda_pdf meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
+            {% if user|is_member_of:'EC-Office' %}
+                | <a href="{% url ecs.meetings.views.send_agenda_to_board meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
+            {% endif %}
         </td>
     </tr>
     <tr>
