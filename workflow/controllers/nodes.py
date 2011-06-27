@@ -23,7 +23,13 @@ class NodeControllerOptions(object):
             def _unlock(sender, **kwargs):
                 kwargs[unlock_kwarg].workflow.unlock()
             unlock_signal.connect(_unlock, sender=self.model)
-        
+
+    def copy(self, meta, cls):
+        new = NodeControllerOptions(None, cls)
+        for k in ('model', 'vary_on', 'auto', 'update_lock'):
+            setattr(new, k, getattr(meta, k, None) or getattr(self, k, None))
+        return new
+
     @cached_property
     def node_type(self):
         from ecs.workflow.models import NodeType
@@ -38,16 +44,15 @@ class NodeControllerOptions(object):
 
 class NodeControllerBase(type):
     def __new__(cls, name, bases, attrs):
-        meta = attrs.pop('Meta', None)
-        parents = [b for b in bases if isinstance(b, NodeControllerBase)]
+        attr_meta = attrs.pop('Meta', None)
         newcls = super(NodeControllerBase, cls).__new__(cls, name, bases, attrs)
+        parents = [b for b in bases if isinstance(b, NodeControllerBase)]
         if not parents:
             return newcls
-        newcls._meta = NodeControllerOptions(meta, newcls)
+        old_meta = getattr(newcls, '_meta', None)
+        newcls._meta = old_meta.copy(attr_meta, newcls) if old_meta else NodeControllerOptions(attr_meta, newcls)
         newcls._meta.name = add_controller(newcls)
         return newcls
-
-
 
 class NodeController(object):
     __metaclass__ = NodeControllerBase

@@ -15,22 +15,22 @@ class TranslatedModelFormOptions(ModelFormOptions):
 
 class TranslatedModelFormMetaclass(ModelFormMetaclass):
     def __new__(cls, name, bases, attrs):
-        new_class = super(TranslatedModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
+        newcls = super(TranslatedModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
 
         try:
             parents = [b for b in bases if issubclass(b, TranslatedModelForm)]
         except NameError:
             parents = None
         if not parents:
-            return new_class
+            return newcls
 
-        opts = new_class._meta = TranslatedModelFormOptions(getattr(new_class, 'Meta', None))
+        opts = newcls._meta = TranslatedModelFormOptions(getattr(newcls, 'Meta', None))
 
         if opts.labels:
             for name, label in opts.labels.iteritems():
-                new_class.base_fields[name].label = label
+                newcls.base_fields[name].label = label
 
-        return new_class
+        return newcls
 
 class TranslatedModelForm(ModelForm):
     __metaclass__ = TranslatedModelFormMetaclass
