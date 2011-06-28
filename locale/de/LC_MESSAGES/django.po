@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-27 13:29+0200\n"
+"POT-Creation-Date: 2011-06-28 12:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2254,7 +2254,7 @@ msgstr "Alter, ältere zuerst"
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
-#: tasks/views.py:149
+#: tasks/views.py:154
 msgid "Anfrage bezüglich {0}"
 msgstr ""
 
@@ -3327,41 +3327,49 @@ msgstr "Offen"
 msgid "Proxy"
 msgstr "Vertretung"
 
-#: templates/tasks/tasks.inc:29 templates/tasks/tasks_full.inc:28
+#: templates/tasks/tasks.inc:29 templates/tasks/tasks_full.inc:29
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
-#: templates/tasks/tasks.inc:46 templates/tasks/tasks_full.inc:45
+#: templates/tasks/tasks.inc:46 templates/tasks/tasks_full.inc:46
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
 #: templates/tasks/tasks.inc:55 templates/tasks/tasks.inc.py:78
-#: templates/tasks/tasks.inc:101 templates/tasks/tasks_full.inc:52
-#: templates/tasks/tasks_full.inc.py:70 templates/tasks/tasks_full.inc:87
+#: templates/tasks/tasks.inc:101 templates/tasks/tasks_full.inc:53
+#: templates/tasks/tasks_full.inc.py:71 templates/tasks/tasks_full.inc:88
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:58 templates/tasks/tasks_full.inc:53
+#: templates/tasks/tasks.inc:58 templates/tasks/tasks_full.inc:54
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:68 templates/tasks/tasks_full.inc:63
+#: templates/tasks/tasks.inc:68 templates/tasks/tasks_full.inc:64
 msgid "Open Tasks"
 msgstr "Offen"
 
-#: templates/tasks/tasks.inc:91 templates/tasks/tasks_full.inc:80
+#: templates/tasks/tasks.inc:91 templates/tasks/tasks_full.inc:81
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:113 templates/tasks/tasks_full.inc:96
+#: templates/tasks/tasks.inc:113 templates/tasks/tasks_full.inc:97
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_js.inc:22
+#: templates/tasks/tasks_full.inc:24
+msgid "ECS Tasks"
+msgstr "ECS Aufgaben"
+
+#: templates/tasks/tasks_full.inc:24
+msgid "Bookmark me!"
+msgstr "Lesezeichen setzen!"
+
+#: templates/tasks/tasks_js.inc:29
 msgid "Collapse"
 msgstr "weniger"
 
-#: templates/tasks/tasks_js.inc:26
+#: templates/tasks/tasks_js.inc:33
 msgid "Expand"
 msgstr "mehr"
 

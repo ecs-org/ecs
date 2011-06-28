@@ -12,6 +12,13 @@
               $('{{ form_id }}').submit();
           });
       });
+      $$('#{{ form_id }} a[bookmarktitle]').each(function(a){
+          a.addEvent('click', function(){
+              var title = a.getAttribute('bookmarktitle');
+              var url = a.getAttribute('href');
+              return !ecs.bookmark(url, title);
+          });
+      });
 
       var threshold = 7;
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import random
+from urllib import urlencode
 
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -48,12 +49,15 @@ def my_tasks(request, template='tasks/compact_list.html'):
     for key in ('amg', 'mpg', 'thesis', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 
-    filterdict = request.POST or usersettings.task_filter or filter_defaults
+    filterdict = request.POST or request.GET or usersettings.task_filter or filter_defaults
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
     usersettings.task_filter = filterform.cleaned_data
     usersettings.save()
+
+    if len(request.GET.values()) > 0:
+        return HttpResponseRedirect(request.path)
     
     sortings = {
         'deadline': 'workflow_token__deadline',
@@ -106,6 +110,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
         'submission': submission,
         'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
+        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(filterform.cleaned_data)),
     }
 
     task_flavors = {
@@ -115,9 +120,9 @@ def my_tasks(request, template='tasks/compact_list.html'):
         'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__indisposed=True).order_by(*order_by),
     }
 
-    for key, func in task_flavors.items():
-        context_key = '%s_tasks' % key
-        data[context_key] = func(tasks) if filterform.cleaned_data[key] else tasks.none()
+    for k, f in task_flavors.iteritems():
+        ck = '%s_tasks' % k
+        data[ck] = f(tasks) if filterform.cleaned_data[k] else tasks.none()
 
     return render(request, template, data)
 

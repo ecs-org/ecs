@@ -662,7 +662,7 @@ ecs.setupMessagePopup = function(container, prefix) {
             show_selected_receiver();
         });
     }, this);
-}
+};
 
 /* windmill helper stuff*/
 ecs.windmill_upload = function(filename) {
@@ -674,6 +674,15 @@ ecs.windmill_upload = function(filename) {
     var evt = document.createEvent('Events');
     evt.initEvent('UploadAssistantSetValue', true, false);
     element.dispatchEvent(evt);
-}
+};
 
-
+ecs.bookmark = function(url, title) {
+    if (window.external && window.external.AddFavorite) {       /* ie */
+        window.external.AddFavorite(url, title);
+    } else if (window.sidebar && window.sidebar.addPanel) {     /* firefox */
+        window.sidebar.addPanel(title, url, "");
+    } else {
+        return false;
+    }
+    return true;
+};

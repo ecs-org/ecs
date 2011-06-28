@@ -21,6 +21,7 @@
         {{ filterform.thesis }} <li><label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
         {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
+    <a href="{{ bookmarklink }}" bookmarktitle="{% trans "ECS Tasks" %}">{% trans "Bookmark me!" %}</a>
 </form>
 
 {% if mine_tasks %}
