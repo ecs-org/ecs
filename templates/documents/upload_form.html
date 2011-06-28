@@ -8,11 +8,11 @@
     <input type="hidden" name="documents" value="{{ doc.pk }}" />
     <span class="document_display_name" style="display:none;">
         {% if doc.name %}
-        {{ doc.name|smart_truncate:40 }}
+        {{ doc.name|smart_truncate:100 }}
         {% else %}
-        Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
+        Dateiname: {{ doc.original_file_name|smart_truncate:100 }}
         {% endif %}
-        - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+        - {{ doc.version|smart_truncate:100 }} vom {{ doc.date|date:'d.m.Y' }}
     </span>
     <span class="document_name" style="display:none;">{{ doc.name }}</span>
     <span class="document_type" style="display:none;">{{ doc.doctype.pk }}</span>

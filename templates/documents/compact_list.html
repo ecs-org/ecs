@@ -13,11 +13,11 @@
             {% get_annotations for doc as annotations %}
             <span>
                 {% if doc.name %}
-                {{ doc.name|smart_truncate:40 }}
+                {{ doc.name }}
                 {% else %}
-                Dateiname: {{ doc.original_file_name|smart_truncate:40 }}
+                Dateiname: {{ doc.original_file_name }}
                 {% endif %} 
-                - {{ doc.version|smart_truncate:40 }} vom {{ doc.date|date:'d.m.Y' }}
+                - {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
                 {% if not doc|is_ready %}
                     <span class="status">
                         {{ doc.get_status_display }}
@@ -32,7 +32,6 @@
                     {% if annotations %}
                         | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
                     {% endif %}
-                    |
                 {% endif %}
             {% endblock %}
             {% if annotations %}
