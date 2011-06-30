@@ -3,8 +3,10 @@
 <form id="submission_list_filter" action="{{ request.path }}" method="post" class="open-in-widget">
     {% for row in filterform.layout %}
     <ul class="submission_list_choose">
-        {% for fname, flabel in row %}
-            {{ filterform|get_field:fname }} <li><label for="id_{{ fname }}"><span class="submission_{{ fname }}"></span>{{ flabel }}</label></li>
+        {% for name in row %}
+            {% with filterform|get_field:name as field %}
+                {{ field }} <li><label for="id_{{ name }}"><span class="submission_{{ name }}"></span>{{ field.label }}</label></li>
+            {% endwith %}
         {% endfor %}
     </ul>
     {% endfor %}

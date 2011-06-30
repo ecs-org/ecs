@@ -46,18 +46,18 @@ def my_tasks(request, template='tasks/compact_list.html'):
     submission_ct = ContentType.objects.get_for_model(Submission)
 
     filter_defaults = dict(sorting='deadline')
-    for key in ('amg', 'mpg', 'thesis', 'other', 'mine', 'assigned', 'open', 'proxy'):
+    for key in ('amg', 'mpg', 'thesis', 'expedited', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 
     filterdict = request.POST or request.GET or usersettings.task_filter or filter_defaults
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
-    usersettings.task_filter = filterform.cleaned_data
-    usersettings.save()
-
-    if len(request.GET.values()) > 0:
-        return HttpResponseRedirect(request.path)
+    if request.method == 'POST':
+        usersettings.task_filter = filterform.cleaned_data
+        usersettings.save()
+        if len(request.GET.values()) > 0:
+            return HttpResponseRedirect(request.path)
     
     sortings = {
         'deadline': 'workflow_token__deadline',
@@ -88,23 +88,27 @@ def my_tasks(request, template='tasks/compact_list.html'):
         amg = filterform.cleaned_data['amg']
         mpg = filterform.cleaned_data['mpg']
         thesis = filterform.cleaned_data['thesis']
+        expedited = filterform.cleaned_data['expedited']
         other = filterform.cleaned_data['other']
-        if amg and mpg and thesis and other:
+        if amg and mpg and thesis and expedited and other:
             tasks = all_tasks
         else:
             tasks = all_tasks.exclude(content_type=submission_ct)
             amg_q = Q(data_id__in=Submission.objects.amg().values('pk').query)
             mpg_q = Q(data_id__in=Submission.objects.mpg().values('pk').query)
-            thesis_q = Q(data_id__in=Submission.objects.thesis().values('pk').query)
+            retrospective_thesis_q = Q(data_id__in=Submission.objects.retrospective_thesis().values('pk').query)
+            expedited_q = Q(expedited=True)
             submission_tasks = all_tasks.filter(content_type=submission_ct)
             if amg:
                 tasks |= submission_tasks.filter(amg_q)
             if mpg:
                 tasks |= submission_tasks.filter(mpg_q)
             if thesis:
-                tasks |= submission_tasks.filter(thesis_q)
+                tasks |= submission_tasks.filter(retrospective_thesis_q)
+            if expedited:
+                tasks |= submission_tasks.filter(expedited_q)
             if other:
-                tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~thesis_q)
+                tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q)
 
     data = {
         'submission': submission,

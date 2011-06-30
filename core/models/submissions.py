@@ -70,7 +70,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(q).distinct()
 
     def none(self):
-        """ Ugly hack: per default none returne an EmptyQuerySet instance which does not have our methods """
+        """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
         return self.extra(where=['1=0']) 
         
 class SubmissionManager(AuthorizationManager):

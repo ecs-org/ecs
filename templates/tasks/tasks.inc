@@ -20,6 +20,7 @@
         {{ filterform.amg }} <li><label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
         {{ filterform.mpg }} <li><label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
         {{ filterform.thesis }} <li><label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
+        {{ filterform.expedited }} <li><label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
         {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
 </form>
