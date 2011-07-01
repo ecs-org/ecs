@@ -1113,3 +1113,6 @@ content ol.submission_list h3 .ecnr {
  .form_main.readonly li.BooleanField {
     padding-left: 20px;
  }
+ .form_main.readonly .icon_comment {
+    cursor: pointer;
+ }
