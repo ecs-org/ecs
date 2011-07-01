@@ -2,7 +2,7 @@
 
 {% with field|get_field_info as field_info %}
     <li class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
-        {% if field_info.help_text %}
+        {% if not readonly and field_info.help_text %}
         <span class="help_text">
             {{ field_info.help_text }}
         </span>

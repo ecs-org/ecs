@@ -1071,3 +1071,45 @@ content ol.submission_list h3 .ecnr {
   border-radius: 3px;
   float: right;
 }
+
+/*****************
+ *    Readonly   *
+ ****************/
+ .form_main.readonly li label {
+    text-align: left;
+    vertical-align: baseline;
+    min-width: 220px;
+    max-width: 700px;
+    width: auto;
+ }
+ .form_main.readonly li pre,
+ .form_main.readonly td pre {
+    border: 1px solid #999999;
+    background-color: #ffffff;
+    font-style: normal;
+    line-height: 1.5;
+ }
+ .form_main.readonly li pre.empty {
+    background-color: #dddddd;
+ }
+ .form_main.readonly li pre.oneline,
+ .form_main.readonly td pre {
+    padding: 4px;
+    display: inline-block;
+    margin: 0px 0px 10px 10px;
+    position: relative;
+    top: -7px;
+    white-space: pre-wrap;
+ }
+ .form_main.readonly li pre.multiline {
+    padding: 5px;
+    display: block;
+    clear: both;
+    margin: 0px 0px 20px 20px;
+ }
+ .form_main.readonly li pre em {
+    color: #333333;
+ }
+ .form_main.readonly li.BooleanField {
+    padding-left: 20px;
+ }

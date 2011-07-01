@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block content %}
-      <div class="form_main">
+      <div class="form_main{% if readonly %} readonly{% endif %}">
         <div id="tabs">
           {% block tabs %}
             {% for tab, fieldsets in tabs %}

@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db.models import F
+from django.core.urlresolvers import reverse
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
-from ecs.core.forms.fields import DateField, NullBooleanField, MultiselectWidget, StrippedTextInput
-from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
-from ecs.utils.formutils import require_fields
+from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget
+from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
 
@@ -89,7 +88,6 @@ class SubmissionEditorForm(forms.ModelForm):
     class Meta:
         model = Submission
 
-
 AMG_REQUIRED_FIELDS = (
     'substance_preexisting_clinical_tries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
     'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report', 'submission_type', 'eudract_number', 
@@ -111,8 +109,7 @@ INVOICE_REQUIRED_FIELDS = (
     'invoice_name', 'invoice_address', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email'
 )
 
-class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
-
+class SubmissionFormForm(NewReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
@@ -167,12 +164,6 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 'submitter_email', 'protocol_number',
         ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
-        widgets = {
-            'sponsor_email': StrippedTextInput(),
-            'invoice_email': StrippedTextInput(),
-            'submitter_email': StrippedTextInput(),
-        }
-
     def __init__(self, *args, **kwargs):
         rval = super(SubmissionFormForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
@@ -182,6 +173,11 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             self.fields['substance_p_c_t_countries'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})
             )
+        for field in self.fields.itervalues():
+            if isinstance(field, (forms.EmailField,)):
+                field.widget = StrippedTextInput()
+                if self.readonly:
+                    field.widget.mark_readonly()
         return rval
     
     def clean(self):
@@ -213,6 +209,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             require_fields(self, ('study_plan_dataprotection_anonalgoritm',))
 
         return cleaned_data
+
 
 ## ##
 
@@ -254,7 +251,7 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseMeasureFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
@@ -271,7 +268,7 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
             'email': StrippedTextInput(),
         }
 
-class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-28 12:17+0200\n"
+"POT-Creation-Date: 2011-07-01 12:03+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1530,88 +1530,92 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/forms.py:42
+#: core/forms/fields.py:126
+msgid "No information given"
+msgstr "Keine Angaben"
+
+#: core/forms/forms.py:41
 msgid "Study"
 msgstr "Studie"
 
-#: core/forms/forms.py:126
+#: core/forms/forms.py:123
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:345 core/forms/forms.py:367 core/forms/forms.py:392
-#: templates/boilerplate/list.html:10 templates/meetings/status.html:21
+#: core/forms/forms.py:310 templates/boilerplate/list.html:10
+#: templates/meetings/status.html:21
 msgid "New"
 msgstr "Neu"
 
-#: core/forms/forms.py:346 core/forms/forms.py:368 core/forms/forms.py:393
-#: templates/core.html:76
+#: core/forms/forms.py:311 templates/core.html:76
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:347 core/forms/forms.py:369 core/forms/forms.py:394
+#: core/forms/forms.py:312
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:350 core/forms/forms.py:372 core/forms/forms.py:397
-#: core/forms/layout.py:65 core/forms/layout.py:67
+#: core/forms/forms.py:313 core/forms/layout.py:65 core/forms/layout.py:67
 #: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:351 core/forms/forms.py:373 core/forms/forms.py:398
-#: core/forms/layout.py:74 core/forms/layout.py:76
+#: core/forms/forms.py:314 core/forms/layout.py:74 core/forms/layout.py:76
 #: templates/submissions/tabs/status.html:120 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:352 core/forms/forms.py:374 core/forms/forms.py:399
-#: core/forms/wizard.py:49
+#: core/forms/forms.py:315 core/forms/wizard.py:49
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:353 core/forms/forms.py:375 core/forms/forms.py:400
-#: templates/submissions/tabs/status.html:117 templates/tasks/tasks.inc:23
-#: templates/tasks/tasks_full.inc:22
+#: core/forms/forms.py:316
+#, fuzzy
+msgid "Expedited"
+msgstr "Expedited"
+
+#: core/forms/forms.py:317 templates/submissions/tabs/status.html:117
+#: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:378 core/forms/forms.py:403
+#: core/forms/forms.py:318
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:379 core/forms/forms.py:404
+#: core/forms/forms.py:319
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:380 core/forms/forms.py:405
+#: core/forms/forms.py:320
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:381 core/forms/forms.py:406
+#: core/forms/forms.py:321
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:409 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:322 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:410 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:323 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:411
+#: core/forms/forms.py:324
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:419
+#: core/forms/forms.py:391
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:430
+#: core/forms/forms.py:402
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1734,7 +1738,8 @@ msgstr "Retrospektiv"
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:29
+#: core/forms/review.py:29 templates/tasks/tasks.inc:23
+#: templates/tasks/tasks_full.inc:22
 msgid "expedited"
 msgstr "Expedited"
 
@@ -2242,19 +2247,19 @@ msgstr ""
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:71
+#: tasks/forms.py:72
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:72
+#: tasks/forms.py:73
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:73
+#: tasks/forms.py:74
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
-#: tasks/views.py:154
+#: tasks/views.py:158
 msgid "Anfrage bezüglich {0}"
 msgstr ""
 
@@ -3327,41 +3332,41 @@ msgstr "Offen"
 msgid "Proxy"
 msgstr "Vertretung"
 
-#: templates/tasks/tasks.inc:29 templates/tasks/tasks_full.inc:29
+#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:30
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
-#: templates/tasks/tasks.inc:46 templates/tasks/tasks_full.inc:46
+#: templates/tasks/tasks.inc:47 templates/tasks/tasks_full.inc:47
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
-#: templates/tasks/tasks.inc:55 templates/tasks/tasks.inc.py:78
-#: templates/tasks/tasks.inc:101 templates/tasks/tasks_full.inc:53
-#: templates/tasks/tasks_full.inc.py:71 templates/tasks/tasks_full.inc:88
+#: templates/tasks/tasks.inc:56 templates/tasks/tasks.inc.py:79
+#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:54
+#: templates/tasks/tasks_full.inc.py:72 templates/tasks/tasks_full.inc:89
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:58 templates/tasks/tasks_full.inc:54
+#: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:55
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:68 templates/tasks/tasks_full.inc:64
+#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:65
 msgid "Open Tasks"
 msgstr "Offen"
 
-#: templates/tasks/tasks.inc:91 templates/tasks/tasks_full.inc:81
+#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:82
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:113 templates/tasks/tasks_full.inc:97
+#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:98
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_full.inc:24
+#: templates/tasks/tasks_full.inc:25
 msgid "ECS Tasks"
 msgstr "ECS Aufgaben"
 
-#: templates/tasks/tasks_full.inc:24
+#: templates/tasks/tasks_full.inc:25
 msgid "Bookmark me!"
 msgstr "Lesezeichen setzen!"
 

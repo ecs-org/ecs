@@ -98,13 +98,51 @@ class SingleselectWidget(forms.TextInput):
             return None
         return val.split(',')[0]
 
-class StrippedTextInput(forms.TextInput):
-    input_type = 'stripped_text'
+from django.utils.safestring import mark_safe
+from django.forms.util import flatatt
+from django.utils.html import conditional_escape
+from django.utils.encoding import force_unicode
 
+class ReadonlyTextMixin(object):
+    def __init__(self, *args, **kwargs):
+        super(ReadonlyTextMixin, self).__init__(*args, **kwargs)
+        if 'cols' in self.attrs:
+            self.attrs.pop('cols')
+        if 'rows' in self.attrs:
+            self.attrs.pop('rows')
+        self.readonly = False
+
+    def mark_readonly(self):
+        self.readonly = True
+
+    def render(self, name, value, attrs=None):
+        if not self.readonly:
+            return super(ReadonlyTextMixin, self).render(name, value, attrs=attrs)
+        else:
+            if value is None: value = ''
+            if not value:
+                attrs['class'] += ' empty'
+            final_attrs = self.build_attrs(attrs, name=name)
+            empty_str = u'<em>-- {0} --</em>'.format(_(u'No information given'))
+            return mark_safe(u'<pre{0}>{1}</pre>'.format(flatatt(final_attrs), conditional_escape(force_unicode(value)) or empty_str))
+
+class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
+    def render(self, name, value, attrs=None):
+        if attrs is None: attrs = {}
+        attrs['class'] = 'oneline'
+        return super(ReadonlyTextInput, self).render(name, value, attrs=attrs)
+
+class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
+    def render(self, name, value, attrs=None):
+        if attrs is None: attrs = {}
+        attrs['class'] = 'multiline'
+        if not 'cols' in attrs or 'cols' in self.attrs:
+            attrs['cols'] = 100
+        return super(ReadonlyTextarea, self).render(name, value, attrs=attrs)
+
+class StrippedTextInput(ReadonlyTextInput):
     def value_from_datadict(self, *args, **kwargs):
         v = super(StrippedTextInput, self).value_from_datadict(*args, **kwargs)
         if v is not None:
             v = v.strip()
         return v
-
-
