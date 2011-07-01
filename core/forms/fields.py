@@ -106,10 +106,6 @@ from django.utils.encoding import force_unicode
 class ReadonlyTextMixin(object):
     def __init__(self, *args, **kwargs):
         super(ReadonlyTextMixin, self).__init__(*args, **kwargs)
-        if 'cols' in self.attrs:
-            self.attrs.pop('cols')
-        if 'rows' in self.attrs:
-            self.attrs.pop('rows')
         self.readonly = False
 
     def mark_readonly(self):
@@ -120,6 +116,7 @@ class ReadonlyTextMixin(object):
             return super(ReadonlyTextMixin, self).render(name, value, attrs=attrs)
         else:
             if value is None: value = ''
+            if attrs is None: attrs = {}
             if not value:
                 attrs['class'] += ' empty'
             final_attrs = self.build_attrs(attrs, name=name)
@@ -129,15 +126,17 @@ class ReadonlyTextMixin(object):
 class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
     def render(self, name, value, attrs=None):
         if attrs is None: attrs = {}
-        attrs['class'] = 'oneline'
+        if self.readonly:
+            attrs['class'] = 'oneline'
         return super(ReadonlyTextInput, self).render(name, value, attrs=attrs)
 
-class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
+class ReadonlyTextarea(ReadonlyTextMixin, forms.TextInput):
     def render(self, name, value, attrs=None):
         if attrs is None: attrs = {}
-        attrs['class'] = 'multiline'
-        if not 'cols' in attrs or 'cols' in self.attrs:
-            attrs['cols'] = 100
+        if self.readonly:
+            attrs['class'] = 'multiline'
+            if not 'cols' in attrs and not 'cols' in self.attrs:
+                attrs['cols'] = 100
         return super(ReadonlyTextarea, self).render(name, value, attrs=attrs)
 
 class StrippedTextInput(ReadonlyTextInput):

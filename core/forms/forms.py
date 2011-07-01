@@ -9,7 +9,8 @@ from django.core.urlresolvers import reverse
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
-from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget
+from ecs.utils.formutils import require_fields
+from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput
 from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
@@ -217,8 +218,12 @@ class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = ForeignParticipatingCenter
         exclude = ('submission_form',)
+        widgets = {
+            'name': ReadonlyTextInput(attrs={'cols': 30}),
+            'investigator_name': ReadonlyTextInput(attrs={'cols': 30}),
+        }
 
-class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseForeignParticipatingCenterFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
@@ -228,8 +233,13 @@ class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = NonTestedUsedDrug
         exclude = ('submission_form',)
+        widgets = {
+            'generic_name': ReadonlyTextInput(attrs={'cols': 30}),
+            'preparation_form': ReadonlyTextInput(attrs={'cols': 30}),
+            'dosage': ReadonlyTextInput(attrs={'cols': 30}),
+        }
 
-class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseNonTestedUsedDrugFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
@@ -242,10 +252,10 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
         model = Measure
         exclude = ('submission_form',)
         widgets = {
-            'type': forms.Textarea(),
-            'count': forms.Textarea(),
-            'period': forms.Textarea(),
-            'total': forms.Textarea(),
+            'type': ReadonlyTextarea(attrs={'cols': 30}),
+            'count': ReadonlyTextarea(attrs={'cols': 30}),
+            'period': ReadonlyTextarea(attrs={'cols': 30}),
+            'total': ReadonlyTextarea(attrs={'cols': 30}),
         }
         
 class RoutineMeasureForm(MeasureForm):
@@ -280,8 +290,14 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = InvestigatorEmployee
         exclude = ('investigator',)
+        widgets = {
+            'title': ReadonlyTextInput(attrs={'cols': 25}),
+            'firstname': ReadonlyTextInput(attrs={'cols': 20}),
+            'surname': ReadonlyTextInput(attrs={'cols': 20}),
+            'organisation': ReadonlyTextInput(attrs={'cols': 50}),
+        }
 
-class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorEmployeeFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 

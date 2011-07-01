@@ -317,6 +317,16 @@
                     cancelText: '{{ _("Don't send")|escapejs }}'
                 })
             {% endif %}
+
+            $$('.form_main')[0].getElements('input[type="checkbox"]').each(function(input){
+                if (!input.getAttribute('checked')) {
+                    input.getParent('li.BooleanField').hide();
+                }
+            });
+
+            if (!$('id_invoice_differs_from_sponsor').getAttribute('checked')) {
+                $('tabs-4').getElement('.fieldset_2').hide();
+            }
         });
     </script>
 {% endblock %}
