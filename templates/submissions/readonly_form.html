@@ -298,10 +298,13 @@
                 })
             {% endif %}
 
-            $$('.form_main')[0].getElements('input[type="checkbox"]').each(function(input){
-                if (!input.getAttribute('checked')) {
-                    input.getParent('li.BooleanField').hide();
-                }
+            $('submission_headers').getElements('a').each(function(a){
+                var container = a.getAttribute('href').split('#', 2)[1];
+                $(container).getElements('input[type="checkbox"]').each(function(input){
+                    if (!input.getAttribute('checked')) {
+                        input.getParent('li.BooleanField').hide();
+                    }
+                });
             });
 
             if (!$('id_invoice_differs_from_sponsor').getAttribute('checked')) {
