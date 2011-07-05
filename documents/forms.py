@@ -42,8 +42,12 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         pdf.close()
         pdfa.seek(0)
         """
-        pdfa = pdf
 
+        while pdf.read(1024):
+            pass
+        size = pdf.tell()
+        pdf.seek(0)
+        pdfa = pdf
 
         self.cleaned_data['file'] = pdfa        # XXX: do we need this?
 
