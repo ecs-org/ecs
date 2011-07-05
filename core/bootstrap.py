@@ -72,10 +72,10 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
-        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, B2VoteReview, ThesisRecommendationReview, ThesisCategorizationReview,
+        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        has_b2vote, needs_external_review, needs_insurance_review, needs_gcp_review, has_expedited_recommendation,
+        needs_external_review, needs_insurance_review, needs_gcp_review, has_expedited_recommendation,
         is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec, is_acknowledged_and_not_localec)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
@@ -109,8 +109,6 @@ def submission_workflow():
             'generic_review': Args(Generic, name=_("Review Split")),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
-            'b2_resubmission_review': Args(InitialReview, name=_("B2 Resubmission Review"), group=INTERNAL_REVIEW_GROUP),
-            'b2_vote_review': Args(B2VoteReview, group=OFFICE_GROUP, name=_("B2 Vote Review")),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
             'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
@@ -142,11 +140,7 @@ def submission_workflow():
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
             ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_not_localec),
-            
-            ('resubmission', 'start'): Args(guard=has_b2vote, negated=True),
-            ('resubmission', 'b2_resubmission_review'): Args(guard=has_b2vote),
-            ('b2_resubmission_review', 'b2_vote_review'): None,
-            ('b2_vote_review', 'resubmission'): Args(guard=has_b2vote),
+            ('resubmission', 'start'): None,
 
             # retrospective thesis lane
             ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
@@ -187,20 +181,21 @@ def submission_workflow():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
     from ecs.core.models import Vote
-    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication
-    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2upgrade
+    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication, VoteB2Review
+    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade, is_b2_or_b2upgrade
     
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
     SIGNING_GROUP = 'EC-Signing Group'
+    B2_REVIEW_GROUP = 'EC-B2 Review Group'
 
     setup_workflow_graph(Vote, 
         auto_start=True, 
         nodes={
             'start': Args(Generic, start=True, name=_("Start")),
             'review': Args(Generic, name=_("Review Split")),
-            'b2upgrade': Args(Generic, name=_("B2 Upgrade"), end=True),
+            'b2_review': Args(VoteB2Review, name=_("B2 Review"), group=B2_REVIEW_GROUP),
             'executive_vote_finalization': Args(VoteReview, name=_("Executive Vote Finalization"), group=EXECUTIVE_GROUP),
             'executive_vote_review': Args(VoteReview, name=_("Executive Vote Review"), group=EXECUTIVE_GROUP),
             'internal_vote_review': Args(VoteReview, name=_("Internal Vote Review"), group=INTERNAL_REVIEW_GROUP),
@@ -211,8 +206,9 @@ def vote_workflow():
             'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP, name=_("Vote Publication")),
         }, 
         edges={
-            ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
-            ('start', 'b2upgrade'): Args(guard=is_b2upgrade),
+            ('start', 'review'): Args(guard=is_b2_or_b2upgrade, negated=True),
+            ('start', 'b2_review'): Args(guard=is_b2),
+            ('start', 'office_vote_finalization'): Args(guard=is_b2upgrade),
             ('review', 'executive_vote_finalization'): Args(guard=is_executive_vote_review_required),
             ('review', 'office_vote_finalization'): Args(guard=is_executive_vote_review_required, negated=True),
             ('executive_vote_finalization', 'office_vote_review'): None,
@@ -245,6 +241,7 @@ def auth_groups():
         u'EC-Insurance Reviewer',
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
+        u'EC-B2 Review Group',
         u'Expedited Review Group',
         u'Local-EC Review Group',
         u'EC-Board Member',
@@ -259,8 +256,8 @@ def auth_groups():
         Group.objects.get_or_create(name=group)
     
     try:
-        p=Permission.objects.get_by_natural_key("can_view", "sentry", "groupedmessage")
-        g=Group.objects.get(name="sentryusers")
+        p = Permission.objects.get_by_natural_key("can_view", "sentry", "groupedmessage")
+        g = Group.objects.get(name="sentryusers")
         g.permissions.add(p)
     except Permission.DoesNotExist:
         print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
@@ -413,6 +410,7 @@ def auth_user_testusers():
         ('external.reviewer', u'External Reviewer', {'external_review': True, }),
         ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
         ('localec.rev', u'Local-EC Review Group', {'internal': True}),
+        ('b2.rev', u'EC-B2 Review Group', {'internal': True}),
     )
 
     boardtestusers = (
