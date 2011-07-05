@@ -17,37 +17,40 @@ from ecs.utils.viewutils import render, pdf_response
 
 
 def _vote_filename(vote):
-    meeting = vote.top.meeting;
-    vote_name = vote.get_ec_number()
-    
-    if vote_name is None:
-        vote_name = 'id_%s' % vote.pk
-    top = str(vote.top)
-    filename = '%s-%s-%s-Vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
+    vote_name = vote.get_ec_number() or 'id_%s' % vote.pk
+    if vote.top:
+        top = str(vote.top)
+        meeting = vote.top.meeting
+        filename = '%s-%s-%s-Vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
+    else:
+        filename = 'Vote_%s.pdf' % (vote_name)
     return filename.replace(' ', '_')
 
 
 def vote_context(vote):
     top = vote.top
-    submission = None
+    submission = vote.submission_form.submission
     form = None
     documents = None
+    vote_date = None
+    meeting = None
     if top:
         submission = top.submission
+        vote_data = top.meeting.start.strftime('%d.%m.%Y')
+        meeting = top.meeting
     if submission and submission.forms.count() > 0:
         form = submission.forms.all()[0]
     if form:
         documents = form.documents.all()
-    vote_date = top.meeting.start.strftime('%d.%m.%Y')
     
     context = {
-        'meeting': top.meeting,
+        'meeting': meeting,
         'vote': vote,
         'submission': submission,
         'form': form,
         'documents': documents,
         'vote_date': vote_date,
-        'ec_number': submission.get_ec_number_display(),
+        'ec_number': vote.get_ec_number(),
     }
     return context
 
@@ -85,8 +88,7 @@ def vote_sign_finished(request, document_pk=None):
     vote = document.parent_object
 
     return HttpResponseRedirect(reverse(
-        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + 
-        ('#b2_vote_review_tab' if vote.result == '2' else '#vote_review_tab'))
+        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):

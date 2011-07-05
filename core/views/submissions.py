@@ -22,7 +22,7 @@ from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFor
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.core.forms.voting import VoteReviewForm, B2VoteReviewForm
+from ecs.core.forms.voting import VoteReviewForm
 
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
@@ -285,24 +285,6 @@ def vote_review(request, submission_form_pk=None):
         vote_review_form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
 
-
-@user_flag_required('internal')
-def b2_vote_review(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    vote = submission_form.current_vote
-    if not vote or not vote.result == '2':
-        raise Http404("This SubmissionForm has no B2-Vote")
-    b2_vote_review_form = B2VoteReviewForm(request.POST or None, initial={
-        'text': vote.text,
-    })
-    if request.method == 'POST' and b2_vote_review_form.is_valid():
-        v = b2_vote_review_form.save(commit=False)
-        v.result = '1'
-        v.text = b2_vote_review_form.cleaned_data['text']
-        v.submission_form = submission_form
-        v.save()
-        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}) + '#vote_review_tab')
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'b2_vote_review_form': b2_vote_review_form, 'b2_vote': vote})
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def upload_document_for_submission(request):

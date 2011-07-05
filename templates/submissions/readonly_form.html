@@ -80,18 +80,10 @@
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                {% if show_reviews %}
-                {% if vote_review_form or b2_vote_review_form %}
-                    {% if b2_vote_review_form %}
-                        <li class="active">
-                            <a href="#b2vote_review_tab">B2 Votum</a>
-                        </li>
-                    {% else %}
-                        <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-                            <a href="#vote_review_tab">Votum</a>
-                        </li>
-                    {% endif %}
-                {% endif %}
+                {% if show_reviews and vote_review_form %}
+                    <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
+                        <a href="#vote_review_tab">Votum</a>
+                    </li>
                 {% endif %}
                 <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
             </ul>
@@ -168,29 +160,17 @@
         {% endif %}
     </div>
     {% if user|has_flag:'internal' %}
-    {% if b2_vote_review_form or vote_review_form %}
-        {% if b2_vote_review_form %}
-            <div id="b2vote_review_tab" class="tab">
-                <h3>B2 Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}</h3>
-                <h4>Upgrade auf B1</h4>
+    {% if vote_review_form %}
+        <div id="vote_review_tab" class="tab">
+            {% block vote_review_tab_content %}
+                <h3>Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
                 <form action="" method="post">
-                    {% with b2_vote_review_form as review_form %}
+                    {% with vote_review_form as review_form %}
                         {% include 'submissions/review_form.inc' %}
                     {% endwith %}
                 </form>
-            </div>
-        {% else %}
-            <div id="vote_review_tab" class="tab">
-                {% block vote_review_tab_content %}
-                    <h3>Votum der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}</h3>
-                    <form action="" method="post">
-                        {% with vote_review_form as review_form %}
-                            {% include 'submissions/review_form.inc' %}
-                        {% endwith %}
-                    </form>
-                {% endblock %}
-            </div>
-        {% endif %}
+            {% endblock %}
+        </div>
     {% endif %}
     <div id="published_votes_tab" class="tab">
         <h3>{% trans "Published Votes" %}</h3>
@@ -318,10 +298,13 @@
                 })
             {% endif %}
 
-            $$('.form_main')[0].getElements('input[type="checkbox"]').each(function(input){
-                if (!input.getAttribute('checked')) {
-                    input.getParent('li.BooleanField').hide();
-                }
+            $('submission_headers').getElements('a').each(function(a){
+                var container = a.getAttribute('href').split('#', 2)[1];
+                $(container).getElements('input[type="checkbox"]').each(function(input){
+                    if (!input.getAttribute('checked')) {
+                        input.getParent('li.BooleanField').hide();
+                    }
+                });
             });
 
             if (!$('id_invoice_differs_from_sponsor').getAttribute('checked')) {

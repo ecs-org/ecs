@@ -46,15 +46,6 @@ def is_localec(wf):
 def is_expedited_or_retrospective_thesis(wf):
     return is_expedited(wf) or is_retrospective_thesis(wf)
 
-@guard(model=Submission)
-def has_b2vote(wf):
-    sf = wf.data.current_submission_form
-    if sf.current_pending_vote:
-        return sf.current_pending_vote.result == '2'
-    if sf.current_published_vote:
-        return sf.current_published_vote.result == '2'
-    return False
-
 @guard(model=Vote)
 def is_executive_vote_review_required(wf):
     return wf.data.executive_review_required
@@ -63,11 +54,19 @@ def is_executive_vote_review_required(wf):
 @guard(model=Vote)
 def is_final(wf):
     return wf.data.is_final
+
+@guard(model=Vote)
+def is_b2(wf):
+    return wf.data.result == '2'
     
 @guard(model=Vote)
 def is_b2upgrade(wf):
     previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
     return wf.data.activates and previous_vote and previous_vote[0].result == '2'
+
+@guard(model=Vote)
+def is_b2_or_b2upgrade(wf):
+    return is_b2(wf) or is_b2upgrade(wf)
 
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
@@ -134,14 +133,6 @@ class Resubmission(Activity):
         token = super(Resubmission, self).receive_token(*args, **kwargs)
         token.task.assign(self.workflow.data.current_submission_form.presenter)
         return token
-
-
-class B2VoteReview(Activity):
-    class Meta:
-        model = Submission
-        
-    def get_url(self):
-        return reverse('ecs.core.views.b2_vote_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
 class _CategorizationReviewBase(Activity):
     class Meta:
@@ -366,3 +357,26 @@ class VotePublication(Activity):
         vote.published_at = datetime.now()
         vote.save()
 
+class VoteB2Review(Activity):
+    class Meta:
+        model = Vote
+    
+    def get_url(self):
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
+        
+    def get_choices(self):
+        return (
+            ('1', _('B1')),
+            ('3', _('B3')),
+        )
+        
+    def pre_perform(self, choice):
+        from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
+        new_vote = Vote.objects.create(submission_form=self.workflow.data.submission_form, result=choice)
+        if new_vote.result in PERMANENT_VOTE_RESULTS:
+            # abort all tasks
+            with sudo():
+                open_tasks = Task.objects.for_data(new_vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
+                for task in open_tasks:
+                    task.deleted_at = datetime.now()
+                    task.save()
