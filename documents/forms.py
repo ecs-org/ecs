@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
 import tempfile
 from cStringIO import StringIO
+import os
 
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import UploadedFile
+from django.conf import settings
 
 from ecs.core.forms.forms import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import pdf_isvalid, pdf2pdfa
 from ecs.utils.formutils import require_fields
+from ecs.utils.pathutils import tempfilecopy
 
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
@@ -22,6 +25,10 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         pdf = self.cleaned_data['file']
         if not pdf:
             raise ValidationError(_(u'no file'))
+
+        # make a copy for introspection on user errors (or system errors)
+        tmp_dir = os.path.join(settings.TEMPFILE_DIR, 'incoming-copy'
+        tempfilecopy(pdf, tmp_dir=tmp_dir, mkdir=True, suffix='.pdf')
 
         if not pdf_isvalid(pdf):
             pdf.seek(0)
