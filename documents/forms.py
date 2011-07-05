@@ -27,7 +27,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
             raise ValidationError(_(u'no file'))
 
         # make a copy for introspection on user errors (or system errors)
-        tmp_dir = os.path.join(settings.TEMPFILE_DIR, 'incoming-copy'
+        tmp_dir = os.path.join(settings.TEMPFILE_DIR, 'incoming-copy')
         tempfilecopy(pdf, tmp_dir=tmp_dir, mkdir=True, suffix='.pdf')
 
         if not pdf_isvalid(pdf):
