@@ -36,10 +36,58 @@ class Command(BaseCommand):
                 cases[cname] = {}
                 cases[cname]['tests'] = []
             
-            case = {}
+            case = {'failed':False,
+                    'errors': [],
+                    }
+            
             for k in testcase.attributes.keys():
                 case[k] = testcase.attributes.getNamedItem(k).value
+            
+            
+            #TODO
+            #check if testcase has child nodes "error" or "failure"
+            if testcase.hasChildNodes():
+                for child in testcase.childNodes:
+                    if child.tagName == 'error':
+                        derror = {}
+                        for k in child.attributes.keys():
+                            derror[k] = child.attributes.getNamedItem(k).value
+                        derror['traceback'] = child.childNodes[0].wholeText
+                        case['errors'].append(derror)
+                    elif child.tagName == 'failure':
+                        dfailure = {}
+                        for k in child.attributes.keys():
+                            dfailure[k] = child.attributes.getNamedItem(k).value
+                        dfailure['traceback'] = child.childNodes[0].wholeText
+                        case['failure'] = dfailure
+                        case['failed'] = True
+                    else:
+                        print "unhandled testcase child tag in",cname, case['name']
+            
+            
             cases[cname]['tests'].append(case)
+               
+            """< error type="exceptio
+ameError" message="global name 'bla' is not defined"><![CDATA[Traceback (most recent call last):
+  File "/usr/lib/python2.6/unittest.py", line 279, in run
+    testMethod()
+  File "/scratch/wuxxin/src/ecs/../ecs/utils/tests/gpgutils.py", line 84, in testError
+    blu = bla
+NameError: global name 'bla' is not defined
+]]></error>"""
+            
+            """<failure typ
+xceptions.AssertionError" message="1 != 0"><![CDATA[Traceback (most recent call last):
+  File "/usr/lib/python2.6/unittest.py", line 279, in run
+    testMethod()
+  File "/scratch/wuxxin/src/ecs/../ecs/utils/tests/gpgutils.py", line 82, in testFail
+    self.assertEqual(1,0)
+  File "/usr/lib/python2.6/unittest.py", line 350, in failUnlessEqual
+    (msg or '%r != %r' % (first, second))
+AssertionError: 1 != 0
+]]></failure>"""
+            
+            
         
         
         for pclassname, casedict in cases.iteritems():
@@ -120,7 +168,7 @@ def testcases2rst(cases, outfile, one_case_per_page=True):
         out.append("")
         out.append("")
         for test in tests:
-            out.append(' - {0}.{1}, {2}, failed?/passed?, {3}sec'.format(pclassname,test['name'], test['docstring'], test['time']))
+            out.append(' - {0}.{1}, {2}, {3}, {4}sec'.format(pclassname,test['name'], test['docstring'], 'FAILED' if test['failed'] else 'PASSED', test['time']))
         out.append("")
         out.append("")
         if one_case_per_page:
