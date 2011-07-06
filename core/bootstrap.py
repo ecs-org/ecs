@@ -182,7 +182,7 @@ def submission_workflow():
 def vote_workflow():
     from ecs.core.models import Vote
     from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication, VoteB2Review
-    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade, is_b2_or_b2upgrade
+    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade
     
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
@@ -206,8 +206,7 @@ def vote_workflow():
             'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP, name=_("Vote Publication")),
         }, 
         edges={
-            ('start', 'review'): Args(guard=is_b2_or_b2upgrade, negated=True),
-            ('start', 'b2_review'): Args(guard=is_b2),
+            ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
             ('start', 'office_vote_finalization'): Args(guard=is_b2upgrade),
             ('review', 'executive_vote_finalization'): Args(guard=is_executive_vote_review_required),
             ('review', 'office_vote_finalization'): Args(guard=is_executive_vote_review_required, negated=True),
@@ -225,6 +224,7 @@ def vote_workflow():
             
             ('final_office_vote_review', 'executive_vote_review'): None,
             ('vote_signing', 'vote_publication'): None
+            ('vote_publication', 'b2_review'): Args(guard=is_b2),
         }
     )
 

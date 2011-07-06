@@ -64,10 +64,6 @@ def is_b2upgrade(wf):
     previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
     return wf.data.activates and previous_vote and previous_vote[0].result == '2'
 
-@guard(model=Vote)
-def is_b2_or_b2upgrade(wf):
-    return is_b2(wf) or is_b2upgrade(wf)
-
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
     answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='expedited_review', question__number='1')
