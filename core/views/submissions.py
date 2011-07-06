@@ -177,8 +177,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         })
         if request.user.get_profile().executive_board_member:
             from ecs.core.workflow import CategorizationReview
-            tasks = Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).filter(closed_at__isnull=False).order_by('-closed_at')[:1]
-            if tasks:
+
+            tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
+            if tasks and not [t for t in tasks if not t.closed_at]:
                 context['categorization_task'] = tasks[0]
     
     if extra_context:
