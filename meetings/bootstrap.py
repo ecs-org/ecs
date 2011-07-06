@@ -28,9 +28,5 @@ def meetings_create():
         meeting.title = m[0]
         meeting.deadline = datetime.datetime(*m[2])
         meeting.deadline_diplomathesis = datetime.datetime(*m[3])
-        meeting.optimization_task_id = None
-        meeting.started = None
-        meeting.ended = None
-        meeting.comments = None
         meeting.save()
 
