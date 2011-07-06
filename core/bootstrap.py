@@ -203,7 +203,7 @@ def vote_workflow():
             'office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
             'final_office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
             'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
-            'vote_publication': Args(VotePublication, end=True, group=OFFICE_GROUP, name=_("Vote Publication")),
+            'vote_publication': Args(VotePublication, group=OFFICE_GROUP, name=_("Vote Publication")),
         }, 
         edges={
             ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
