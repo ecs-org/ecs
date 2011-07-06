@@ -223,7 +223,7 @@ def vote_workflow():
             ('executive_vote_review', 'vote_signing'): Args(guard=is_final),
             
             ('final_office_vote_review', 'executive_vote_review'): None,
-            ('vote_signing', 'vote_publication'): None
+            ('vote_signing', 'vote_publication'): None,
             ('vote_publication', 'b2_review'): Args(guard=is_b2),
         }
     )
