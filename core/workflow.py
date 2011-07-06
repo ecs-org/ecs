@@ -31,6 +31,10 @@ def is_acknowledged_and_not_localec(wf):
     return is_acknowledged(wf) and not is_localec(wf)
 
 @guard(model=Submission)
+def is_thesis(wf):
+    return bool(Submission.objects.thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
+
+@guard(model=Submission)
 def is_retrospective_thesis(wf):
     return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
 
