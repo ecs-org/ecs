@@ -394,7 +394,8 @@ td.TypedChoiceField select {
   width: 6em;
 }
 li.TypedChoiceField select {
-  width: 12em;
+  min-width: 10em;
+  max-width: 22em;
 }
 li.NullBooleanField select {
   width: 8em;
@@ -1079,7 +1080,6 @@ content ol.submission_list h3 .ecnr {
   min-width: 220px;
   max-width: 700px;
   width: auto;
-  font-size: 14px;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {
