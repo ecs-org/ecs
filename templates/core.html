@@ -17,7 +17,7 @@
 {% block usertoolbar %}
   <div class="searchbox">
     <form action="{% url ecs.core.views.all_submissions %}" method="get" enctype="multipart/form-data">
-      <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Schnellsuche" />
+      <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
