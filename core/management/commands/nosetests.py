@@ -1,4 +1,4 @@
-import sys
+import os, sys, datetime
 import importlib
 from xml.dom.minidom import parse
 from optparse import make_option
@@ -26,17 +26,22 @@ class Command(BaseCommand):
         #FIXME
         print "DEBUG FIXME for workflow model to import 'test' must be in sys.argv at import time:"
         print "test in sys.argv:", 'test' in sys.argv
-        #parse it
         
+        fstat = os.stat(options['infile'])
+        print "modification time:", fstat.st_mtime
+        print "creation time or metadata change time:", fstat.st_ctime
+        
+        #parse xml:
         dom1 = parse(options['infile'])
         
         headerinfo = {}
+        headerinfo['date'] = datetime.datetime.fromtimestamp(fstat.st_mtime).strftime('%Y.%m.%d %H:%M:%S')
         headerinfo['tests'] = dom1.firstChild.attributes.getNamedItem('tests').value
         headerinfo['failures'] = dom1.firstChild.attributes.getNamedItem('failures').value
         headerinfo['errors'] = dom1.firstChild.attributes.getNamedItem('errors').value
         headerinfo['name'] = dom1.firstChild.attributes.getNamedItem('name').value
         headerinfo['skip'] = dom1.firstChild.attributes.getNamedItem('skip').value
-        
+         
         cases = {}
         for testcase in dom1.firstChild.childNodes:
             cname = testcase.attributes.getNamedItem('classname').value
@@ -51,8 +56,6 @@ class Command(BaseCommand):
             for k in testcase.attributes.keys():
                 case[k] = testcase.attributes.getNamedItem(k).value
             
-            
-            #TODO
             #check if testcase has child nodes "error" or "failure"
             if testcase.hasChildNodes():
                 for child in testcase.childNodes:
@@ -74,26 +77,7 @@ class Command(BaseCommand):
             
             
             cases[cname]['tests'].append(case)
-               
-            """< error type="exceptio
-ameError" message="global name 'bla' is not defined"><![CDATA[Traceback (most recent call last):
-  File "/usr/lib/python2.6/unittest.py", line 279, in run
-    testMethod()
-  File "/scratch/wuxxin/src/ecs/../ecs/utils/tests/gpgutils.py", line 84, in testError
-    blu = bla
-NameError: global name 'bla' is not defined
-]]></error>"""
             
-            """<failure typ
-xceptions.AssertionError" message="1 != 0"><![CDATA[Traceback (most recent call last):
-  File "/usr/lib/python2.6/unittest.py", line 279, in run
-    testMethod()
-  File "/scratch/wuxxin/src/ecs/../ecs/utils/tests/gpgutils.py", line 82, in testFail
-    self.assertEqual(1,0)
-  File "/usr/lib/python2.6/unittest.py", line 350, in failUnlessEqual
-    (msg or '%r != %r' % (first, second))
-AssertionError: 1 != 0
-]]></failure>"""
             
         #get all docstring via importing
         for pclassname, casedict in cases.iteritems():
@@ -149,26 +133,12 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_tabl
     if not cases:
         print "no testcase data to dump"
         return
-    """
-    header:
-      execution date, time
-      Summary: total tests, total tests failed
-      
-        for each xml entry:
-      * while classname is same:
-        * write "General Testdescription: " part of uit-tmp-1 (Module, Description (=.__doc__)
-          e.g.: module=ecs.integration.tests.BootstrapTestCase, description = eval(ecs.integration.tests.BootstrapTestCase.__doc__)
-        * for each test:
-          * write TestcaseID, docstring, failed/passed, time
-        """
     
     hlines = []
-    out = []
-    
     if headerinfo:
         hlines.append("")
         hlines.append("")
-        hlines.append("Execution Date: FIXME")
+        hlines.append("Execution Date: {0}".format(headerinfo['date']))
         hlines.append("")
         hlines.append("")
         hlines.append("total tests: {0}".format(headerinfo['tests']))
@@ -182,68 +152,40 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_tabl
         hlines.append("")
     
     
-    if not write_table:
-        for pclassname, casedict in cases.iteritems():
+    writer = RstTable(maxwidth=200)
+    
+    for pclassname, casedict in cases.iteritems():
+        tests = casedict['tests']
+        writer.out.append("{0}".format(pclassname) )
+        writer.out.append("#"*len(pclassname) )
+        writer.out.append("")
+        writer.out.append("General description")
+        writer.out.append("-------------------")
+        writer.out.append("")
+        writer.out.append("Tested Module: {0}".format(pclassname))
+        writer.out.append("")
+        writer.out.append("Description: {0}".format(casedict['docstring']))
+        writer.out.append("")
+        writer.out.append("Tests")
+        writer.out.append("-----")
+        writer.out.append("")
+        writer.table_line_multi([('Testcase-ID',34), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
+        for test in tests:
+            failstring = 'FAILED' if test['failed'] else 'PASSED'
+            writer.table_line_multi([(test['name'],34), (test['docstring'],40), (failstring, 7), (test['time'],4)])
+        writer.out.append("")
+        if one_case_per_page:
+            writer.out.append(".. raw:: latex")
+            writer.out.append("")
+            writer.out.append("   \pagebreak")
+            writer.out.append("   \\newpage")
+            writer.out.append("")
+            writer.out.append("")
             
-            tests = casedict['tests']
-            
-            out.append("{0}".format(pclassname) )
-            out.append("#"*len(pclassname) )
-            out.append("")
-            out.append("General Testdescription:")
-            out.append("")
-            out.append("Tested Module: {0}".format(pclassname))
-            out.append("")
-            out.append("Description: {0}".format(casedict['docstring']))
-            out.append("")
-            out.append("")
-            for test in tests:
-                out.append(' - {0}.{1}, {2}, {3}, {4}sec'.format(pclassname,test['name'], test['docstring'], 'FAILED' if test['failed'] else 'PASSED', test['time']))
-            out.append("")
-            out.append("")
-            if one_case_per_page:
-                out.append(".. raw:: latex")
-                out.append("")
-                out.append("   \pagebreak")
-                out.append("   \\newpage")
-                out.append("")
-                out.append("")
-    else:
-        writer = RstTable(maxwidth=200)
-        
-        for pclassname, casedict in cases.iteritems():
-            tests = casedict['tests']
-            writer.out.append("{0}".format(pclassname) )
-            writer.out.append("#"*len(pclassname) )
-            writer.out.append("")
-            writer.out.append("General description")
-            writer.out.append("-------------------")
-            writer.out.append("")
-            writer.out.append("Tested Module: {0}".format(pclassname))
-            writer.out.append("")
-            writer.out.append("Description: {0}".format(casedict['docstring']))
-            writer.out.append("")
-            writer.out.append("Tests")
-            writer.out.append("-----")
-            writer.out.append("")
-            writer.table_line_multi([('Testcase-ID',34), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
-            for test in tests:
-                failstring = 'FAILED' if test['failed'] else 'PASSED'
-                writer.table_line_multi([(test['name'],34), (test['docstring'],40), (failstring, 7), (test['time'],4)])
-            writer.out.append("")
-            if one_case_per_page:
-                writer.out.append(".. raw:: latex")
-                writer.out.append("")
-                writer.out.append("   \pagebreak")
-                writer.out.append("   \\newpage")
-                writer.out.append("")
-                writer.out.append("")
-            
-        out = writer.out
-            
+    
     fd = codecs.open(outfile, 'wb', encoding='utf-8')
     fd.write('\n'.join(hlines))
-    fd.write('\n'.join(out))
+    fd.write('\n'.join(writer.out))
     fd.close()
     
 class RstTable():
