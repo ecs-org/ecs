@@ -180,6 +180,17 @@
 {% endif %}
     };
 
+    /* prevent "Error calling method on NPObject." exception in chromium + java plugin */
+    var selectors_utils_filter = Selectors.Utils.filter;
+    Selectors.Utils.filter = function(item, parsed, local){
+        try {
+            return selectors_utils_filter(item, parsed, local);
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+    };
+
     for(var i=0; i < accordion_choices.length; i++) {
         accordion_items[accordion_choices[i]] = i;
     }
