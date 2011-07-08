@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 
 from StringIO import StringIO
 
-
+from textwrap import wrap
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
@@ -105,7 +105,7 @@ AssertionError: 1 != 0
                     cases[pclassname]['docstring'] = c.__doc__
                     for test in tests:
                         t=getattr(c, test['name'])
-                        test['docstring'] = t.__doc__
+                        test['docstring'] = t.__doc__ if t.__doc__ else "" 
                     
                     
                 except AttributeError,ae:
@@ -137,7 +137,7 @@ AssertionError: 1 != 0
         print "done"
 
         
-def testcases2rst(cases, outfile, one_case_per_page=True):
+def testcases2rst(cases, outfile, one_case_per_page=True, write_table=True):
     '''dumps testcase data from hudson mixed in with docstrings to a single file'''
     import codecs
     if not cases:
@@ -152,38 +152,173 @@ def testcases2rst(cases, outfile, one_case_per_page=True):
           * write TestcaseID, docstring, failed/passed, time
         """
     
-    out = []
-    for pclassname, casedict in cases.iteritems():
-        
-        tests = casedict['tests']
-        
-        out.append("{0}".format(pclassname) )
-        out.append("#"*len(pclassname) )
-        out.append("")
-        out.append("General Testdescription:")
-        out.append("")
-        out.append("Tested Module: {0}".format(pclassname))
-        out.append("")
-        out.append("Description: {0}".format(casedict['docstring']))
-        out.append("")
-        out.append("")
-        for test in tests:
-            out.append(' - {0}.{1}, {2}, {3}, {4}sec'.format(pclassname,test['name'], test['docstring'], 'FAILED' if test['failed'] else 'PASSED', test['time']))
-        out.append("")
-        out.append("")
-        if one_case_per_page:
-            out.append(".. raw:: latex")
-            out.append("")
-            out.append("   \pagebreak")
-            out.append("   \\newpage")
-            out.append("")
-            out.append("")
     
+    out = []
+    if not write_table:
+        for pclassname, casedict in cases.iteritems():
+            
+            tests = casedict['tests']
+            
+            out.append("{0}".format(pclassname) )
+            out.append("#"*len(pclassname) )
+            out.append("")
+            out.append("General Testdescription:")
+            out.append("")
+            out.append("Tested Module: {0}".format(pclassname))
+            out.append("")
+            out.append("Description: {0}".format(casedict['docstring']))
+            out.append("")
+            out.append("")
+            for test in tests:
+                out.append(' - {0}.{1}, {2}, {3}, {4}sec'.format(pclassname,test['name'], test['docstring'], 'FAILED' if test['failed'] else 'PASSED', test['time']))
+            out.append("")
+            out.append("")
+            if one_case_per_page:
+                out.append(".. raw:: latex")
+                out.append("")
+                out.append("   \pagebreak")
+                out.append("   \\newpage")
+                out.append("")
+                out.append("")
+    else:
+        writer = RstTable()
+        
+        for pclassname, casedict in cases.iteritems():
+            tests = casedict['tests']
+            writer.out.append("{0}".format(pclassname) )
+            writer.out.append("#"*len(pclassname) )
+            writer.out.append("")
+            writer.out.append("General Testdescription:")
+            writer.out.append("")
+            writer.out.append("Tested Module: {0}".format(pclassname))
+            writer.out.append("")
+            writer.out.append("Description: {0}".format(casedict['docstring']))
+            writer.out.append("")
+            writer.out.append("")
+            writer.table_line_multi([('Testcase-ID',20), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
+            for test in tests:
+                failstring = 'FAILED' if test['failed'] else 'PASSED'
+                writer.table_line_multi([(test['name'],20), (test['docstring'],40), (failstring, 7), (test['time'],4)])
+            writer.out.append("")
+            if one_case_per_page:
+                writer.out.append(".. raw:: latex")
+                writer.out.append("")
+                writer.out.append("   \pagebreak")
+                writer.out.append("   \\newpage")
+                writer.out.append("")
+                writer.out.append("")
+            
+        out = writer.out
+            
     fd = codecs.open(outfile, 'wb', encoding='utf-8')
     fd.write('\n'.join(out))
     fd.close()
     
+class RstTable():
     
+    def __init__(self, maxwidth=164):
+        self.out = []
+        self.maxwidth = maxwidth
+        
+    
+    
+    def table_header(self, line):
+        self.out.append("%s%s%s" % ("+","-"*(self.maxwidth-2),"+"))
+        nline = "| %s" % line
+        nline2 = " "*(maxwidth-len(nline)-1)
+        self.out.append("%s%s|"  % (nline,nline2))
+        self.out.append("%s%s%s" % ("+","="*(self.maxwidth-2),"+"))
+    
+    def table_sep(self):
+        self.out.append("%s%s%s" % ("+","-"*(self.maxwidth-2),"+"))
+    
+    def table_emptyline(self):
+        self.out.append("")
+    
+    def table_line(self, line):
+        lines = []
+        if len(line)+4 > self.maxwidth:
+            for extraline in wrap(line, self.maxwidth-4):
+                nline = "| %s" % extraline
+                nline2 = " "*(self.maxwidth-len(nline)-1)
+                self.out.append("%s%s|"  % (nline,nline2))
+             
+        else:
+            nline = "| %s" % line
+            nline2 = " "*(self.maxwidth-len(nline)-1)
+            self.out.append("%s%s|"  % (nline,nline2))
+    
+    def table_line_multi(self, valuelist=None, tableheader=False):
+        if not valuelist:
+            return
+        if tableheader:
+            linemarker = u'-'
+            i = 0
+            for tup in valuelist:
+                maxw = tup[1]
+                if i == 0:
+                    line = u'%s' % ("%s%s%s" % ("+",linemarker*(maxw+3),"+"))
+                elif i == len(valuelist)-1:
+                    line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
+                else:
+                    line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
+                i +=1
+            self.out.append(line)
+        tmpout = {}
+        i = 0
+        for tup in valuelist:
+            tmpout[i] = []
+            i += 1
+        i = 0
+        for tup in valuelist:
+            maxw = tup[1]
+            fval = tup[0]
+            if len(fval) > maxw:
+                for extraline in wrap(fval, maxw):
+                    if len(extraline) != maxw:
+                        tmpout[i].append(u'%s%s' % (extraline, u' '*(maxw-len(extraline))))
+                    else:
+                        tmpout[i].append(extraline)
+                    #tmpout[i].append(extraline)
+            else:
+                if len(fval) != maxw:
+                    tmpout[i].append(u'%s%s' % (fval, u' '*(maxw-len(fval))))
+                else:
+                    tmpout[i].append(fval)
+            i +=1
+        
+        maxlines = 0
+        for pos,lines in tmpout.iteritems():
+            if len(lines) > maxlines:
+                maxlines = len(lines)
+         
+        for i in xrange(0,maxlines):
+            line = u''
+            for pos,flist in tmpout.iteritems():
+                if pos == 0:
+                    line = u'| %s ' % ( flist[i] if i < len(flist) else u' '*(valuelist[pos][1]))
+                elif pos == len(tmpout.keys())-1:
+                    line = u'%s | %s |' % (line, flist[i] if i < len(flist) else u' '*(valuelist[pos][1]))
+                else:
+                    line = u'%s | %s' % (line, flist[i] if i < len(flist) else u' '*(valuelist[pos][1]))
+                
+            self.out.append(line)
+        
+        line = ''
+        i = 0
+        linemarker = '-'
+        if tableheader:
+            linemarker = '='
+        for tup in valuelist:
+            maxw = tup[1]
+            if i == 0:
+                line = u'%s' % ("%s%s%s" % ("+",linemarker*(maxw+3),"+"))
+            elif i == len(valuelist)-1:
+                line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
+            else:
+                line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
+            i +=1
+        self.out.append(line)
     
     
     
