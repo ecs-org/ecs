@@ -286,10 +286,6 @@ input[type=submit]:hover,
   display: block;
   text-indent: -9999px;
 	background: url(/static/images/icons.png) -324px -135px no-repeat;
-	border: 1px solid #666;
-	border-radius: 5px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
 }
 
 

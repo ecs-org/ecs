@@ -253,7 +253,13 @@
   color: #800000;
 	font-size: 13px;
 }
-.icon_help, .icon_feedback, .icon_workflow, .icon_workflow_gray, .user_icon {
+.icon_help,
+.icon_feedback,
+.icon_workflow,
+.icon_workflow_gray,
+.user_icon,
+#scratchpad_button,
+#scratchpad_button.empty {
   display: inline-block;
   width: 32px;
   height: 32px;
@@ -272,6 +278,12 @@
 }
 .icon_workflow_gray {
   background: url(/static/images/icons.png) -320px -96px no-repeat;
+}
+#scratchpad_button {
+  background: url(/static/images/icons.png) -320px -288px no-repeat;
+}
+#scratchpad_button.empty {
+  background: url(/static/images/icons.png) -320px -256px no-repeat;
 }
 .icon_diff, .icon_comment {
   display: inline-block;
@@ -953,10 +965,8 @@ content ol.submission_list h3 .ecnr {
 #content ol.submission_list li .info {
 }
 .submission_data {
-  
   margin-left: 240px;
 }
-
 
 .checklist_field { 
   visibility: visible; 
@@ -1035,30 +1045,7 @@ content ol.submission_list h3 .ecnr {
   border-bottom: none !important;
 }
 
-/*
- * ScratchPad
- */
-
-#scratchpad_button {
-  height: 22px;
-  width: 22px;
-  padding: 5px;
-  font-size: 20px;
-  font-weight: bold;
-  display: inline-block;
-  margin: 0px;
-  padding: 0px;
-  background-color: #00ff00;
-  color: #0000ff !important;
-  border-radius: 11px;
-  text-align: center;
-  margin: 5px 8px 5px 5px;
-  vertical-align: bottom;
-}
-
-#scratchpad_button.empty {
-  background-color: #ff0000;
-}
+/* ScratchPad  */
 
 #scratchpad h3 {
   text-align: center;
@@ -1088,44 +1075,44 @@ content ol.submission_list h3 .ecnr {
 /*****************
  *    Readonly   *
  ****************/
- .form_main.readonly li label {
-    text-align: left;
-    vertical-align: baseline;
-    min-width: 220px;
-    max-width: 700px;
-    width: auto;
- }
- .form_main.readonly li pre,
- .form_main.readonly td pre {
-    border: 1px solid #999999;
-    background-color: #ffffff;
-    font-style: normal;
-    line-height: 1.5;
- }
- .form_main.readonly li pre.empty {
-    background-color: #dddddd;
- }
- .form_main.readonly li pre.oneline,
- .form_main.readonly td pre {
-    padding: 4px;
-    display: inline-block;
-    margin-bottom: 4px;
-    position: relative;
-    top: -4px;
-    white-space: pre-wrap;
- }
- .form_main.readonly li pre.multiline {
-    padding: 5px;
-    display: block;
-    clear: both;
-    margin: 0px 0px 20px 20px;
- }
- .form_main.readonly li pre em {
-    color: #333333;
- }
- .form_main.readonly li.BooleanField {
-    padding-left: 20px;
- }
- .form_main.readonly .icon_comment {
-    cursor: pointer;
- }
+.form_main.readonly li label {
+  text-align: left;
+  vertical-align: baseline;
+  min-width: 220px;
+  max-width: 700px;
+  width: auto;
+}
+.form_main.readonly li pre,
+.form_main.readonly td pre {
+  border: 1px solid #999999;
+  background-color: #ffffff;
+  font-style: normal;
+  line-height: 1.5;
+}
+.form_main.readonly li pre.empty {
+  background-color: #dddddd;
+}
+.form_main.readonly li pre.oneline,
+.form_main.readonly td pre {
+  padding: 4px;
+  display: inline-block;
+  margin-bottom: 4px;
+  position: relative;
+  top: -4px;
+  white-space: pre-wrap;
+}
+.form_main.readonly li pre.multiline {
+  padding: 5px;
+  display: block;
+  clear: both;
+  margin: 0px 0px 20px 20px;
+}
+.form_main.readonly li pre em {
+  color: #333333;
+}
+.form_main.readonly li.BooleanField {
+  padding-left: 20px;
+}
+.form_main.readonly .icon_comment {
+  cursor: pointer;
+}
