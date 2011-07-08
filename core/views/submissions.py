@@ -293,7 +293,7 @@ def upload_document_for_submission(request):
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def delete_document_from_submission(request):
-    delete_document(request, request.GET['document_pk'])
+    delete_document(request, int(request.GET['document_pk']))
     return HttpResponseRedirect(reverse('ecs.core.views.upload_document_for_submission', kwargs={'docstash_key': request.docstash.key}))
 
 @with_docstash_transaction

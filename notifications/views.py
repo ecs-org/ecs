@@ -129,7 +129,7 @@ def upload_document_for_notification(request):
 
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
 def delete_document_from_notification(request):
-    delete_document(request, request.GET['document_pk'])
+    delete_document(request, int(request.GET['document_pk']))
     return HttpResponseRedirect(reverse('ecs.notifications.views.upload_document_for_notification', kwargs={'docstash_key': request.docstash.key}))
 
 @tracking_hint(vary_on=['notification_type_pk'])

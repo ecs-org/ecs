@@ -328,113 +328,129 @@ ecs.InvestigatorFormset = new Class({
     }
 });
 
-ecs.setupDocumentUploadForms = function(){
-    $$('.document_upload').each(function(form){
-        var upload_button = form.getElement('input[type="submit"]');
-        var par = form.getParent('*[widgeturl]');
-        ecs.setupFormFieldHelpers(par);
-        upload_button.addEvent('click', function(){
-            if(ecs.mainForm){
-                ecs.mainForm.autosaveDisabled = true;
+ecs.setupDocumentUploadIframe = function(){
+    var upload_iframe = $$('iframe.upload')[0];
+    if (upload_iframe) {
+        setInterval(function(){
+            var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
+            var height = container_size.y;
+            var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
+            if (datepicker && datepicker.isVisible()) {
+                height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
             }
-            /*upload_button.hide();*/
-            upload_button.setAttribute('disabled', 'disabled');
-            par.getElement('.warning').show();
-            var form_data = new FormData();
-            form.getElements('(input)|(select)').each(function(input){
-                if(!input.name) return;
-                if(input.type == 'file' && input.files.length){
-                    form_data.append(input.name, input.files[0]);
-                } else {
-                    form_data.append(input.name, input.value);
-                }
-            }, this);
+            upload_iframe.setStyle('height', height + 'px');
+        }, 500);
+    }
+};
+
+ecs.setupDocumentUploadForms = function(){
+    document.body.setStyle('background-color', $$('.document_container')[0].getStyle('background-color'));
+
+    var form = document.getElement('.document_upload form');
+    var upload_button = form.getElement('input[type="submit"]');
+    ecs.setupFormFieldHelpers(document);
+    upload_button.addEvent('click', function(){
+        if(ecs.mainForm){
+            ecs.mainForm.autosaveDisabled = true;
+        }
+        /*upload_button.hide();*/
+        upload_button.setAttribute('disabled', 'disabled');
+        document.getElement('.warning').show();
+        var form_data = new FormData();
+        form.getElements('(input)|(select)').each(function(input){
+            if(!input.name) return;
+            if(input.type == 'file' && input.files.length){
+                form_data.append(input.name, input.files[0]);
+            } else {
+                form_data.append(input.name, input.value);
+            }
+        }, this);
+
+        xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function(evt){
+            upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
+        }, false);
+        xhr.addEventListener('load', function(evt){
+            upload_button.setClass('loaded');
+            /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
+            var body_html = RegExp.$1;;
+            document.getElement('body').innerHTML = body_html;
+            ecs.setupDocumentUploadForms();
+        }, false);
+        xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
+        xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
+        xhr.open('POST', window.location.pathname);
+        xhr.send(form_data);
+
+        if(ecs.mainForm){
+            ecs.mainForm.autosaveDisabled = true;
+        }
+        return false;
+    }, this);
+
+    var file_field = $('id_document-file');
+    var name_field = $('id_document-name');
+    file_field.addEvent('change', function() {
+        var name = file_field.value;
+
+        var backslash_offset = name.lastIndexOf('\\');
+        if (backslash_offset >= 0) {
+            name = name.substring(backslash_offset + 1);
+        }
+
+        var dot_offset = name.lastIndexOf('.');
+        if (dot_offset >= 0) {
+            name = name.substring(0, dot_offset);
+        }
+        if (!name_field.getAttribute('disabled')) {
+            name_field.value = name;
+        }
+
+        var errorlist = file_field.getNext('.errorlist');
+        if (errorlist) {
+            errorlist.hide();
+        }
+    });
+
+    $$('.doclist a.replace_document').each(function(link){
+        link.addEvent('click', function(){
+            var container = link.getParent('div');
+            var document_id = container.getElement('input').getAttribute('value');
+            $('id_document-replaces_document').setAttribute('value', document_id);
+
+            var replaced_document_name = $('replaced_document_name');
+            replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
+            replaced_document_name.getParent('li').show();
+
+            var document_type = $('id_document-doctype');
+            document_type.value = container.getElement('span.document_type').innerHTML;
+            document_type.setAttribute('disabled', 'disabled');
+
+            return false;
+        });
+    }, this);
+
+    $$('.doclist a.delete_document').each(function(link){
+        link.addEvent('click', function(){
+            var href = link.getAttribute('href');
 
             xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', function(evt){
-                upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
-            }, false);
             xhr.addEventListener('load', function(evt){
                 upload_button.setClass('loaded');
-                var js;
-                var html = xhr.responseText.stripScripts(function(script){js = script;});
-                par.innerHTML = html;
-                eval(js);
+                /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
+                var body_html = RegExp.$1;;
+                document.getElement('body').innerHTML = body_html;
+                ecs.setupDocumentUploadForms();
             }, false);
-            xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
-            xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
-            xhr.open(form.getAttribute('method'), form.getAttribute('action'));
-            xhr.send(form_data);
+            xhr.addEventListener('error', function(evt){console.log('error');}, false);
+            xhr.addEventListener('abort', function(evt){console.log('abort');}, false);
+            xhr.open('GET', href);
+            xhr.send(new FormData());
 
-            if(ecs.mainForm){
-                ecs.mainForm.autosaveDisabled = true;
-            }
             return false;
-        }, this);
-
-        var file_field = $('id_document-file');
-        var name_field = $('id_document-name');
-        file_field.addEvent('change', function() {
-            var name = file_field.value;
-
-            var backslash_offset = name.lastIndexOf('\\');
-            if (backslash_offset >= 0) {
-                name = name.substring(backslash_offset + 1);
-            }
-
-            var dot_offset = name.lastIndexOf('.');
-            if (dot_offset >= 0) {
-                name = name.substring(0, dot_offset);
-            }
-            if (!name_field.getAttribute('disabled')) {
-                name_field.value = name;
-            }
-
-            var errorlist = file_field.getNext('.errorlist');
-            if (errorlist) {
-                errorlist.hide();
-            }
         });
-
-        par.getElements('.doclist a.replace_document').each(function(link){
-            link.addEvent('click', function(){
-                var container = link.getParent('div');
-                var document_id = container.getElement('input').getAttribute('value');
-                $('id_document-replaces_document').setAttribute('value', document_id);
-
-                var replaced_document_name = $('replaced_document_name');
-                replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
-                replaced_document_name.getParent('li').show();
-
-                var document_type = $('id_document-doctype');
-                document_type.value = container.getElement('span.document_type').innerHTML;
-                document_type.setAttribute('disabled', 'disabled');
-
-                return false;
-            });
-        }, this);
-
-        par.getElements('.doclist a.delete_document').each(function(link){
-            link.addEvent('click', function(){
-                var href = link.getAttribute('href');
-
-                xhr = new XMLHttpRequest();
-                xhr.addEventListener('load', function(evt){
-                    upload_button.setClass('loaded');
-                    var js;
-                    var html = xhr.responseText.stripScripts(function(script){js = script;});
-                    par.innerHTML = html;
-                    eval(js);
-                }, false);
-                xhr.addEventListener('error', function(evt){console.log('error');}, false);
-                xhr.addEventListener('abort', function(evt){console.log('abort');}, false);
-                xhr.open('GET', href);
-                xhr.send(new FormData());
-
-                return false;
-            });
-        }, this);
     }, this);
+
     $$('#tabs-11 a.new_document').each(function(link){
         link.addEvent('click', function(){
             $('id_document-replaces_document').removeAttribute('value');

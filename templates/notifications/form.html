@@ -37,7 +37,7 @@
             <div id="tabs-{{ forloop.counter }}" class="tab">
                 {% ifequal tab "Unterlagen" %}
                     <div class="field">
-                        <div class="widget" widgeturl="{% url ecs.notifications.views.upload_document_for_notification docstash_key=request.docstash.key %}"></div>
+                        <iframe class="upload" src="{% url ecs.notifications.views.upload_document_for_notification docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
                     </div>
                 {% endifequal %}
                 
@@ -122,6 +122,7 @@
                 submissionFormSelect.fireEvent('change');
             }
 
+            ecs.setupDocumentUploadIframe();
         });
     </script>
 {% endblock %}
