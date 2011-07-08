@@ -37,11 +37,13 @@
         <p>{{ form.password.label_tag }}{{ form.password }}</p>
         <p><input type="submit" value="login" id="login_button"/></p>
         <input type="hidden" name="next" value="{{ next }}" />
+          {% if form.errors %}
+          <div class="login_error">
+            <p>{% trans 'Your username and password did not match. Please try again.' %}</p>
+            {{ form.errors }}
+          </div>
+          {% endif %}
       </form>
-    {% if form.errors %}
-    <p>{% trans 'Your username and password did not match. Please try again.' %}</p>
-    {{ form.errors }}
-    {% endif %}
     </div>
     <div class="pw_reg">
       <a href="{% url ecs.users.views.register %}">Registrieren</a> | <a href="{% url ecs.users.views.request_password_reset %}">Passwort vergessen</a>
