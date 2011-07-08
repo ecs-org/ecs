@@ -45,7 +45,7 @@
   margin: 0 0 10px 10px;
 }
 #content .innerwrap form {
-  padding: 20px 20px 50px;
+  padding: 20px 20px;
   background: #D8E6EF;
   border: 1px solid #b7d4e5;
   border-radius: 10px;
@@ -70,11 +70,10 @@
   width: 286px;
 }
 .innerwrap input[type=submit] {
-	display: block;
+	display: inline-block;
 	width: 100%;
-  margin: 5px 0;
+  margin: 10px 0 0;
   padding: 4px 7px;
-  float: right;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -99,16 +98,40 @@
   margin: 10px;
 }
 .reg_detail {
-  padding: 5px 7px;
-  border-top: 1px solid #C9DBE5;
-  border-left: 1px solid #C9DBE5;
-  border-right: 1px solid #BCD3E0;
+  padding: 4px 0;
   border-bottom: 1px solid #BCD3E0;
   background: #E1EBF2;
 }
 .reg_detail label {
   font-size: 12px;
-  display: inline;
+  display: inline-block;
+  width: 80px;
+  border-right: 1px solid #C9DBE5;
+  margin-right: 10px;
+}
+.login_error {
+  display: inline-block;
+  margin-top: 20px;
+  color: red;
+}
+.login_error p{
+  margin: 0 6px;
+}
+#content .login_error ul {
+  background: none repeat scroll 0 0 #F7E3E3;
+  display: inline-block;
+  margin: 10px 0;
+}
+#content .login_error ul ul {
+  margin: 0;
+}
+#content .login_error ul li {
+  padding: 5px;
+  max-width: 286px;
+}
+#content .login_error ul ul li {
+  border: none;
+  padding: 8px 0;
 }
 
 /* catalogue list */
