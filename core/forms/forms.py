@@ -312,7 +312,7 @@ _queries = {
     'mpg':              lambda s,u: s.mpg(),
     'thesis':           lambda s,u: s.retrospective_thesis(),
     'expedited':        lambda s,u: s.filter(expedited=True),
-    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.thesis().values('pk').query),
+    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.retrospective_thesis().values('pk').query).exclude(expedited=True),
     'b2':               lambda s,u: s.b2(),
     'b3':               lambda s,u: s.b3(),
     'b4':               lambda s,u: s.b4(),
