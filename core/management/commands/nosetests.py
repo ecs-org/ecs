@@ -13,29 +13,34 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-o', action='store', dest='outfile', help='output file', default=None),
         make_option('-i', action='store', dest='infile', help='input file', default=None),
+        make_option('-d', action='store', dest='cdate', help='cdate', default=None),
     )
     def handle(self, test, **options):
         
+        cdate = None
         if not options['outfile']:
             print "no output file specified!"
             return
         if not options['infile']:
             print "no input file specified!"
             return
+        if not options['cdate']:
+            cdate = datetime.datetime.now()
+            print "Warning! no cdate specified. Using now()"
+        
+        cdate = datetime.datetime.strptime(options['cdate'].replace(' +0000', ''), '%a, %d %b %Y %H:%M:%S')
         
         #FIXME
         print "DEBUG FIXME for workflow model to import 'test' must be in sys.argv at import time:"
         print "test in sys.argv:", 'test' in sys.argv
         
-        fstat = os.stat(options['infile'])
-        print "modification time:", fstat.st_mtime
-        print "creation time or metadata change time:", fstat.st_ctime
+        
         
         #parse xml:
         dom1 = parse(options['infile'])
         
         headerinfo = {}
-        headerinfo['date'] = datetime.datetime.fromtimestamp(fstat.st_mtime).strftime('%Y.%m.%d %H:%M:%S')
+        headerinfo['date'] = cdate.strftime('%Y.%m.%d %H:%M:%S')
         headerinfo['tests'] = dom1.firstChild.attributes.getNamedItem('tests').value
         headerinfo['failures'] = dom1.firstChild.attributes.getNamedItem('failures').value
         headerinfo['errors'] = dom1.firstChild.attributes.getNamedItem('errors').value
