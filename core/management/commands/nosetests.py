@@ -29,6 +29,14 @@ class Command(BaseCommand):
         #parse it
         
         dom1 = parse(options['infile'])
+        
+        headerinfo = {}
+        headerinfo['tests'] = dom1.firstChild.attributes.getNamedItem('tests').value
+        headerinfo['failures'] = dom1.firstChild.attributes.getNamedItem('failures').value
+        headerinfo['errors'] = dom1.firstChild.attributes.getNamedItem('errors').value
+        headerinfo['name'] = dom1.firstChild.attributes.getNamedItem('name').value
+        headerinfo['skip'] = dom1.firstChild.attributes.getNamedItem('skip').value
+        
         cases = {}
         for testcase in dom1.firstChild.childNodes:
             cname = testcase.attributes.getNamedItem('classname').value
@@ -87,9 +95,7 @@ xceptions.AssertionError" message="1 != 0"><![CDATA[Traceback (most recent call 
 AssertionError: 1 != 0
 ]]></failure>"""
             
-            
-        
-        
+        #get all docstring via importing
         for pclassname, casedict in cases.iteritems():
             tests = casedict['tests'] 
             module_doc = ""
@@ -132,18 +138,22 @@ AssertionError: 1 != 0
                 pass
 
         
-        testcases2rst(cases, outfile=options['outfile'])
+        testcases2rst(headerinfo, cases, outfile=options['outfile'])
         print ""
         print "done"
 
         
-def testcases2rst(cases, outfile, one_case_per_page=True, write_table=True):
+def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_table=True):
     '''dumps testcase data from hudson mixed in with docstrings to a single file'''
     import codecs
     if not cases:
         print "no testcase data to dump"
         return
     """
+    header:
+      execution date, time
+      Summary: total tests, total tests failed
+      
         for each xml entry:
       * while classname is same:
         * write "General Testdescription: " part of uit-tmp-1 (Module, Description (=.__doc__)
@@ -152,8 +162,26 @@ def testcases2rst(cases, outfile, one_case_per_page=True, write_table=True):
           * write TestcaseID, docstring, failed/passed, time
         """
     
-    
+    hlines = []
     out = []
+    
+    if headerinfo:
+        hlines.append("")
+        hlines.append("")
+        hlines.append("Execution Date: FIXME")
+        hlines.append("")
+        hlines.append("")
+        hlines.append("total tests: {0}".format(headerinfo['tests']))
+        hlines.append("total failed tests: {0}".format(headerinfo['failures']))
+        hlines.append("")
+        hlines.append(".. raw:: latex")
+        hlines.append("")
+        hlines.append("   \pagebreak")
+        hlines.append("   \\newpage")
+        hlines.append("")
+        hlines.append("")
+    
+    
     if not write_table:
         for pclassname, casedict in cases.iteritems():
             
@@ -181,24 +209,27 @@ def testcases2rst(cases, outfile, one_case_per_page=True, write_table=True):
                 out.append("")
                 out.append("")
     else:
-        writer = RstTable()
+        writer = RstTable(maxwidth=200)
         
         for pclassname, casedict in cases.iteritems():
             tests = casedict['tests']
             writer.out.append("{0}".format(pclassname) )
             writer.out.append("#"*len(pclassname) )
             writer.out.append("")
-            writer.out.append("General Testdescription:")
+            writer.out.append("General description")
+            writer.out.append("-------------------")
             writer.out.append("")
             writer.out.append("Tested Module: {0}".format(pclassname))
             writer.out.append("")
             writer.out.append("Description: {0}".format(casedict['docstring']))
             writer.out.append("")
+            writer.out.append("Tests")
+            writer.out.append("-----")
             writer.out.append("")
-            writer.table_line_multi([('Testcase-ID',20), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
+            writer.table_line_multi([('Testcase-ID',34), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
             for test in tests:
                 failstring = 'FAILED' if test['failed'] else 'PASSED'
-                writer.table_line_multi([(test['name'],20), (test['docstring'],40), (failstring, 7), (test['time'],4)])
+                writer.table_line_multi([(test['name'],34), (test['docstring'],40), (failstring, 7), (test['time'],4)])
             writer.out.append("")
             if one_case_per_page:
                 writer.out.append(".. raw:: latex")
@@ -211,6 +242,7 @@ def testcases2rst(cases, outfile, one_case_per_page=True, write_table=True):
         out = writer.out
             
     fd = codecs.open(outfile, 'wb', encoding='utf-8')
+    fd.write('\n'.join(hlines))
     fd.write('\n'.join(out))
     fd.close()
     
