@@ -10,7 +10,11 @@ from ecs.users.utils import get_user, create_user
 
 
 class RegistrationTest(MailTestCase, WorkflowTestCase):
+    '''class for testing the registration process'''
+    
     def test_registration(self):
+        '''tests the registration process'''
+        
         from ecs.core.bootstrap import auth_groups
         from ecs.users.bootstrap import user_workflow
 
@@ -46,7 +50,11 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         
 
 class PasswordChangeTest(MailTestCase):
+    ''' password changing test class'''
+    
     def test_password_reset(self):
+        '''Tests that a user can reset his password'''
+        
         user = create_user('new.user@example.org')
         user.set_password('password')
         user.save()
@@ -77,6 +85,8 @@ class PasswordChangeTest(MailTestCase):
         self.failIf('form' in response.context)
         
     def test_password_change(self):
+        '''Tests the password changing functionality'''
+        
         user = create_user('foobar@example.com')
         user.set_password('test')
         user.save()
@@ -98,6 +108,8 @@ class PasswordChangeTest(MailTestCase):
         self.failUnless(user.check_password('1234'))
         
 class MiddlewareTest(EcsTestCase):
+    '''User Middleware Testing class'''
+    
     def setUp(self, *args, **kwargs):
         testuser = create_user('testuser@example.com')
         testuser.set_password('4223')
@@ -106,6 +118,9 @@ class MiddlewareTest(EcsTestCase):
         return super(MiddlewareTest, self).setUp(*args, **kwargs)
 
     def test_single_login(self):
+        '''makes sure that a single user can only be logged in
+        with one single client at any given time.
+        '''
         c1 = Client()
         c2 = Client()
 
