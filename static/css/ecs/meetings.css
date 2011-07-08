@@ -297,7 +297,8 @@
 }
 #meeting_assistant_body .column_main {
   display: table-cell;
-  width: 75%;
+  min-width: 300px;
+  width: 450px;
   padding-right: 1%;
   border-right: 1px solid #ccc
 }
@@ -310,7 +311,8 @@
   display: table-cell;
   margin-top: 10px;
   vertical-align: top;
-  max-width: 200px;
+  max-width: 250px;
+  min-width: 200px;
 }
 #meeting_assistant_body .reviews,
 .column_main form {
