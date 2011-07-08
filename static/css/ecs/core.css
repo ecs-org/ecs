@@ -852,12 +852,22 @@ fieldset.disabled {
   padding: 10px;
 }
 .doclist h4 {
+  display: block;
   background-repeat: no-repeat;
+  font-weight: normal;
+  font-size: 14px;
+  padding-bottom: 1px;
+  margin-bottom: 2px !important;
+  border-bottom: 1px solid #ccc;
 }
 .doclist .list_item {
   display: block;
-  margin: 0 0 10px 5px;
-  background-repeat: no-repeat; 
+  margin-bottom: 5px;
+  padding-bottom: 2px
+  background: #ddd; 
+}
+.doclist .list_item span.doc_name:before {
+  content: " | ";
 }
 .doclist .list_item .status:before {
   content: "[";
@@ -1052,7 +1062,6 @@ content ol.submission_list h3 .ecnr {
   margin-bottom: 10px;
   color: #333333;
 }
-
 #scratchpad .modified_at {
   color: #666666;
   display: inline-block;
@@ -1060,27 +1069,17 @@ content ol.submission_list h3 .ecnr {
   padding: 3px;
 }
 
-#scratchpad .save, #scratchpad .save_close {
-  border: 1px solid #bbbbbb;
-  background-color: #f4f4f4;
-  color: #333333;
-  padding: 3px;
-  margin: 3px;
-  display: inline-block;
-  cursor: pointer;
-  border-radius: 3px;
-  float: right;
-}
-
 /*****************
  *    Readonly   *
  ****************/
+
 .form_main.readonly li label {
   text-align: left;
   vertical-align: baseline;
   min-width: 220px;
   max-width: 700px;
   width: auto;
+  font-size: 14px;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {

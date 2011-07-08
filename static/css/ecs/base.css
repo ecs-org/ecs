@@ -165,6 +165,7 @@ textarea:focus,
 }
 input[type=submit], 
 .cancel a,
+a.button_submit,
 #content a.button_submit {
   display: inline-block;
   color: #333 !important;
@@ -181,12 +182,14 @@ input[type=submit] {
 	padding: 3px 5px 5px;
 }
 #content .cancel a,
+a.button_submit,
 #content a.button_submit {
   min-height: 16px;
   padding: 4px 7px 2px;
 }
 input[type=submit]:active,
 #content .cancel a:active,
+a.button_submit:active,
 #content a.button_submit:active {
   background: #ddd url(/static/images/button_active_bg.png) repeat-x;
 }
@@ -206,6 +209,7 @@ input[type=submit]:active,
 */
 input[type=submit]:hover,
 #content .cancel a:hover,
+a.button_submit:hover,
 #content a.button_submit:hover {
   text-decoration: none;
   border: 1px solid #999;
