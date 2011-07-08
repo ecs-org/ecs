@@ -41,7 +41,7 @@ class TextDiffNode(DiffNode):
     differ = diff_match_patch()
 
     def html(self):
-        diff = self.differ.diff_main(self.old, self.new)
+        diff = self.differ.diff_main(self.old.replace('\r\n', '\n').strip(), self.new.replace('\r\n', '\n').strip())
         self.differ.diff_cleanupSemantic(diff)
         result = []
         for op, bit in diff:
@@ -139,7 +139,7 @@ def _render_value(val):
         return val.strftime(DATE_FORMAT)
     elif isinstance(val, datetime.date):
         return val.strftime(DATETIME_FORMAT)
-    return unicode(val).strip()
+    return unicode(val)
 
 
 class ModelDiffer(object):
@@ -196,7 +196,7 @@ class ModelDiffer(object):
             new_val = unicode(dict(field.choices)[new_val]) if new_val else _('No Information')
             return AtomicDiffNode(old_val, new_val, **kwargs)
         elif isinstance(field, (models.CharField, models.TextField)) and old_val and new_val:
-            return TextDiffNode(old_val.strip(), new_val.strip(), **kwargs)
+            return TextDiffNode(old_val, new_val, **kwargs)
         else:
             return AtomicDiffNode(_render_value(old_val), _render_value(new_val), **kwargs)
             
