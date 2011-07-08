@@ -79,8 +79,3 @@ class Gpgutilstest(EcsTestCase):
                 if i is not None and os.path.exists(i):
                     os.remove(i)
     
-    def testError(self):
-        pass
-        
-    def testFail(self):
-        pass
