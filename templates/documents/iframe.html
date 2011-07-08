@@ -1,5 +1,7 @@
 {# context: documents #}
+{% extends 'shell.html' %}
 {% load core pdfviewer i18n %}
+{% block htmlbody %}
 <div class="document_container">
 {% block document_list %}
 <div class="doclist">
@@ -55,3 +57,4 @@
 </div>
 {% endblock %}
 </div>
+{% endblock %}

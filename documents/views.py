@@ -41,7 +41,7 @@ def delete_document(request, document_pk):
     document_pks = set(request.docstash.get('document_pks', []))
     if document_pk in document_pks:
         document_pks.remove(document_pk)
-    request.docstash['document_pks'] = document_pks
+    request.docstash['document_pks'] = list(document_pks)
 
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.

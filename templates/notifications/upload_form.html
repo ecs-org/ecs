@@ -1,3 +1,2 @@
 {% extends 'documents/upload_form.html' %}
-{% block action %}{% url ecs.notifications.views.upload_document_for_notification docstash_key=request.docstash.key %}{% endblock %}
 {% block delete_url %}{% url ecs.notifications.views.delete_document_from_notification docstash_key=request.docstash.key %}{% endblock %}

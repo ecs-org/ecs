@@ -854,6 +854,19 @@ fieldset.disabled {
   content: "]";
 }
 
+.document_container {
+  background-color: #f8f8ef;
+}
+iframe.upload {
+  border-width: 0px;
+  width: 100%;
+  height: 100%; /* dummy - we set the height via javascript */
+}
+.document_upload {
+}
+.document_upload ol {
+  margin: 10px 0px;
+}
 .document_upload input[type="submit"].error,
 .document_upload input[type="submit"].aborted {
   background-color: #ff0000;
