@@ -60,7 +60,7 @@ def get_reviewing_parties(sf, include_workflow=True):
     anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
     if include_workflow:
         from ecs.tasks.models import Task
-        for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query).select_related('task_type'):
+        for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.all().values('pk').query, assigned_to__isnull=False, deleted_at__isnull=True).select_related('task_type'):
             if task.assigned_to == sf.submission.external_reviewer_name:
                 parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
             else:
