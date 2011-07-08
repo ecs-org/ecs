@@ -14,13 +14,22 @@
     {% for doc in doctype.list %}
         <div class="list_item">
             {% get_annotations for doc as annotations %}
-            <span>
+            {% block actions %}
+                {% if doc.status == 'ready' %}
+                    <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
+                    | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a> | 
+                    {% if annotations %}
+                        | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
+                    {% endif %}
+                {% endif %}
+            {% endblock %}
+            <span class="doc_name">
                 {% if doc.name %}
                 {{ doc.name }}
                 {% else %}
                 Dateiname: {{ doc.original_file_name }}
                 {% endif %} 
-                - {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
+                -  <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
                 {% if not doc|is_ready %}
                     <span class="status">
                         {{ doc.get_status_display }}
@@ -28,15 +37,6 @@
                 {% endif %}
                 {% if doc.original_file_name %}{% endif %}
             </span><br />
-            {% block actions %}
-                {% if doc.status == 'ready' %}
-                    <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
-                    | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
-                    {% if annotations %}
-                        | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
-                    {% endif %}
-                {% endif %}
-            {% endblock %}
             {% if annotations %}
                 <ul>
                 {% for annotation in annotations %}
