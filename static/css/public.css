@@ -99,16 +99,16 @@
   margin: 10px;
 }
 .reg_detail {
-  padding: 5px 7px;
-  border-top: 1px solid #C9DBE5;
-  border-left: 1px solid #C9DBE5;
-  border-right: 1px solid #BCD3E0;
+  padding: 4px 0;
   border-bottom: 1px solid #BCD3E0;
   background: #E1EBF2;
 }
 .reg_detail label {
   font-size: 12px;
-  display: inline;
+  display: inline-block;
+  width: 80px;
+  border-right: 1px solid #C9DBE5;
+  margin-right: 10px;
 }
 
 /* catalogue list */
