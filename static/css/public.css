@@ -112,6 +112,10 @@
 .login_error {
   display: inline-block;
   margin-top: 20px;
+  color: red;
+}
+.login_error p{
+  margin: 0 6px;
 }
 #content .login_error ul {
   background: none repeat scroll 0 0 #F7E3E3;
