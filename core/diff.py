@@ -41,7 +41,7 @@ class TextDiffNode(DiffNode):
     differ = diff_match_patch()
 
     def html(self):
-        diff = self.differ.diff_main(self.old.replace('\r\n', '\n').strip(), self.new.replace('\r\n', '\n').strip())
+        diff = self.differ.diff_main(self.old, self.new)
         self.differ.diff_cleanupSemantic(diff)
         result = []
         for op, bit in diff:
