@@ -949,6 +949,11 @@ table.notif_meta {
 .notification_list, .overview {
 
 }
+.notification .item {
+  border-top: 1px solid #CCCCCC;
+  margin: 2px 0;
+  padding: 2px 0;
+}
 
 #content ol.submission_list {
   list-style: none;
@@ -1079,12 +1084,14 @@ content ol.submission_list h3 .ecnr {
  *    Readonly   *
  ****************/
 
-.form_main.readonly .field li label {
+.form_main.readonly .field li label,
+.form_main.readonly ol li label {
   text-align: left;
   vertical-align: baseline;
-  min-width: 220px;
+  min-width: 240px;
   max-width: 700px;
   width: auto;
+  float: left;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {
@@ -1114,9 +1121,15 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly li pre em {
   color: #333333;
 }
-.form_main.readonly li.BooleanField {
-  padding-left: 20px;
+.form_main.readonly ol li.BooleanField {
+  padding-left: 0;
 }
 .form_main.readonly .icon_comment {
   cursor: pointer;
+}
+.form_main.readonly .version td {
+  vertical-align: middle;
+}
+.form_main.readonly .version a {
+  vertical-align: top;
 }

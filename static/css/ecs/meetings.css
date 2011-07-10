@@ -485,9 +485,9 @@
 }
 #meeting_comments_form textarea {
   float: left;
-  clear: both;
   width: 400px;
 }
 #meeting_comments_form input[type="submit"] {
   float: left;
+  clear: both;
 }
