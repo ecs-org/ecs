@@ -11,7 +11,7 @@
     {{ block.super }}
     <div class="header_actions">
     {% if submission_form.presenter == request.user and submission_form.submission.current_submission_form == submission_form %}
-        {% if not submission_form.submission.has_final_vote %}
+        {% if not submission_form.submission.has_permanent_vote %}
             <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
         {% else %}
             {% for notification_type in diff_notification_types %}
@@ -76,11 +76,10 @@
             </ul>
         </li>
         {% endif %}
-        {% if user|has_flag:'internal' %}
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                {% if show_reviews and vote_review_form %}
+                {% if user|has_flag:'internal' and show_reviews and vote_review_form %}
                     <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#vote_review_tab">Votum</a>
                     </li>
@@ -88,7 +87,6 @@
                 <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
             </ul>
         </li>
-        {% endif %}
         <li>
             <a href="#">{% trans "Notifications" %}</a>
             <ul class="tab_headers">
@@ -159,8 +157,7 @@
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    {% if user|has_flag:'internal' %}
-    {% if vote_review_form %}
+    {% if user|has_flag:'internal' and vote_review_form %}
         <div id="vote_review_tab" class="tab">
             {% block vote_review_tab_content %}
                 <h3>Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
@@ -172,6 +169,7 @@
             {% endblock %}
         </div>
     {% endif %}
+
     <div id="published_votes_tab" class="tab">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
@@ -185,7 +183,6 @@
             <p>{% trans "There are no published votes." %}</p>
         {% endif %}
     </div>
-    {% endif %}
     
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab">

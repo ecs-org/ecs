@@ -250,11 +250,11 @@ class Submission(models.Model):
             return None
         return self.current_submission_form.primary_investigator
 
-    def has_final_vote(self):
+    def has_permanent_vote(self):
         from ecs.core.models import Vote
-        from ecs.core.models.voting import FINAL_VOTE_RESULTS
+        from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
         #print Vote.objects.filter(submission_form__submission=self)
-        return Vote.objects.filter(submission_form__submission=self, result__in=FINAL_VOTE_RESULTS).count() > 0
+        return Vote.objects.filter(submission_form__submission=self, result__in=PERMANENT_VOTE_RESULTS).count() > 0
         
     def save(self, **kwargs):
         if not self.ec_number:
