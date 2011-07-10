@@ -1074,7 +1074,7 @@ content ol.submission_list h3 .ecnr {
  *    Readonly   *
  ****************/
 
-.form_main.readonly li label {
+.form_main.readonly .field li label {
   text-align: left;
   vertical-align: baseline;
   min-width: 220px;
