@@ -43,7 +43,7 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     })
 
 
-def my_tasks(request, template='tasks/compact_list.html'):
+def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
 
@@ -76,11 +76,6 @@ def my_tasks(request, template='tasks/compact_list.html'):
             return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
         elif related_tasks:
             pass # XXX: how do we handle this case? (FMD2)
-
-    try:
-        submission_pk = int(request.GET.get('submission', None))
-    except (TypeError, ValueError):
-        submission_pk = None
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -132,11 +127,9 @@ def my_tasks(request, template='tasks/compact_list.html'):
 
     return render(request, template, data)
 
-def task_list(request):
-    return my_tasks(request, template='tasks/list.html')
-
-def popup(request):
-    return my_tasks(request, template='tasks/popup.html')
+def task_list(request, **kwargs):
+    kwargs.setdefault('template', 'tasks/list.html')
+    return my_tasks(request, **kwargs)
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
@@ -185,11 +178,7 @@ def accept_task(request, task_pk=None, full=False):
 
     submission_pk = request.GET.get('submission')
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
-
-    if submission_pk:
-        return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
-    else:
-        return redirect_to_next_url(request, reverse(view))
+    return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
 
 def accept_task_full(request, task_pk=None):
     return accept_task(request, task_pk=task_pk, full=True)
@@ -201,11 +190,7 @@ def decline_task(request, task_pk=None, full=False):
 
     submission_pk = request.GET.get('submission')
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
-
-    if submission_pk:
-        return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
-    else:
-        return redirect_to_next_url(request, reverse(view))
+    return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
 
 def decline_task_full(request, task_pk=None):
     return decline_task(request, task_pk=task_pk, full=True)

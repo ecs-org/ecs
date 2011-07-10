@@ -219,7 +219,7 @@
     {% endif %}
     {% if user.get_profile.has_explicit_workflow %}
         <div id="workflow_tab" class="tab">
-            <div class="widget" widgeturl="{% url ecs.tasks.views.my_tasks %}?submission={{ submission_form.submission.pk }}"></div>
+            <div class="widget" widgeturl="{% url ecs.tasks.views.my_tasks submission_pk=submission_form.submission.pk %}"></div>
         </div>
         {% if user|has_flag:'internal' %}
             <div id="workflow_log" class="tab">
