@@ -1070,6 +1070,11 @@ content ol.submission_list h3 .ecnr {
   padding: 3px;
 }
 
+#scratchpad .save, #scratchpad .save_close {
+  float: right;
+  display: inline-block;
+}
+
 /*****************
  *    Readonly   *
  ****************/
