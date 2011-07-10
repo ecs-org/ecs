@@ -20,3 +20,15 @@
     Include /etc/apache2/ecs/apache.conf/*.conf
 </VirtualHost>
 
+<VirtualHost %(hostname)s:80>
+    ServerName %(hostname)s
+    ServerAdmin admin@%(hostname)s
+
+    DocumentRoot %(home)s/public_html
+    <Directory "%(home)s/public_html">
+        Options FollowSymLinks
+        AllowOverride Authconfig FileInfo Indexes Limit Options=Indexes
+    </Directory>
+    
+    Redirect permanent / https://%(hostname)s/
+</VirtualHost>

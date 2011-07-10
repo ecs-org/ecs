@@ -14,6 +14,7 @@ class SetupTarget(SetupTargetObject):
         # FIXME: some of SetupApplication methods dont honor dry=True
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.appname = 'ecs'
+        self.dirname = os.path.dirname(__file__)
         self.queuing_password = uuid4().get_hex()
 
     def help(self, *args, **kwargs):
@@ -36,15 +37,16 @@ targets:
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
         self.sslcert_config()
-        self.upstart_install()
         self.apache_config()
         """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
         self.env_baseline()
         self.local_settings_config()
         self.db_clear()
         self.queuing_config()
+        self.signing_config()
         self.db_update()
         self.search_config()
+        self.upstart_install() # because upstart_install re/starts service at end, we put it last
  
     def homedir_config(self):   
         os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
@@ -96,7 +98,21 @@ TEMPLATE_DEBUG = False
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
             )
         
-    
+    def signing_config(self):
+        TOMCAT_DIR = os.path.join(os.path.dirname(env.real_fabfile), '..', 'ecs-signing')
+        local('tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(TOMCAT_DIR))
+        local('cp \'{0}\' \'{1}\' \'{2}\''.format(
+            os.path.join(self.dirname, 'signature', 'pdf-as.war'),
+            os.path.join(self.dirname, 'signature', 'bkuonline.war'),
+            os.path.join(TOMCAT_DIR, 'webapps')
+        ))
+        local('cp -a \'{0}\' \'{1}\''.format(os.path.join(self.dirname, 'pdf-as'), os.path.join(TOMCAT_DIR, 'conf')))
+        write_template(
+            os.path.join(self.dirname, 'templates', 'pdf-as_config.properties'),
+            os.path.join(TOMCAT_DIR, 'conf', 'pdf-as', 'cfg', 'config.properties'),
+            {'hostname': self.hostname}
+        )
+
     def apache_restart(self):
         pass
     

@@ -162,6 +162,11 @@ ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:openbsd:pkg:ghostscript--
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
+# mediaserver: new rendering may use mupdf
+#mupdf:static32:apt|suse:http://mupdf.googlecode.com/files/mupdf-0.8.165-linux-i386.tar.gz:targzflat:pdfdraw
+#mupdf:static64:apt|suse:http://mupdf.googlecode.com/files/mupdf-0.8.165-linux-amd64.tar.gz:targzflat:pdfdraw
+#mupdf:static:win:http://mupdf.googlecode.com/files/mupdf-0.8.165-windows.zip:unzipflat:pdfdraw
+
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
 imagemagick:req:mac:homebrew:imagemagick
@@ -300,6 +305,9 @@ system_packages = """
 apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 
+# tomcat 6 is used as a user installation for pdf-as and mocca
+tomcat:req:apt:apt-get:tomcat6-user
+
 # postgresql is used as primary database
 postgresql:req:apt:apt-get:postgresql
 
@@ -324,21 +332,6 @@ memcached:req:apt:apt-get:memcached
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 """
 
-"""
-# should install exim4 and config it instead of postfix; Later
-# needs mod_wsgi enabled
-a2enmod wsgi #should be automatic active because is extra package
-# modify /etc/apache2/mods-enabled/wsgi.conf (is symlink, delete that, copy file from ../mods-available, edit it)
- # where the empty python environment is taken from: For this server it is at user ecsdev directory baseline
- WSGIPythonHome /home/ecsdev/baseline
- # create a baseline python environment (this is a minimal virtual env)
- ./bootstrap.py --baseline /home/ecsdev/baseline
-# needs apache config snippet (see apache.conf)
-# needs apache wsgi snippet (see main.wsgi)
-# these should not be generated inside the sourcedir, because main.wsgi is restarted if file is touched
-# needs ecs-main application celeryd upstart.conf
-# needs mediaserver application celeryd upstart.conf
-"""
 
 
 # target bundles
@@ -368,9 +361,10 @@ logrotate_targets = {
 }
 
 upstart_targets = {
-    'celeryd': './manage.py celeryd -l warning -L ../../ecs-log/celeryd.log',
-    'celerybeat': './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -L ../../ecs-log/celerybeat.log',
-    'ecsmail': './manage.py ecsmail server ../../ecs-log/ecsmail.log', 
+    'celeryd': (None, './manage.py celeryd -l warning -L ../../ecs-log/celeryd.log'),    
+    'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -L ../../ecs-log/celerybeat.log'),
+    'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'), 
+    'signing': ('upstart-tomcat.conf', ''),
 }
 
 test_flavors = {
