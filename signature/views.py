@@ -25,7 +25,7 @@ from ecs.signature.utils import SigningDepot
 
 def sign(request, sign_dict):
     '''
-    takes a sign_dict, optionaly stamps pdf_data, signs content, upload it to documents and redirect to redirect_view 
+    takes a sign_dict, optionally stamps pdf_data, signs content, upload it to documents and redirect to redirect_view 
     '''
 
     if sign_dict['document_stamp']:

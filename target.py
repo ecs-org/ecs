@@ -99,8 +99,16 @@ TEMPLATE_DEBUG = False
             )
         
     def signing_config(self):
-        TOMCAT_DIR = os.path.join(os.path.dirname(env.real_fabfile), '..', 'ecs-signing')
+        TOMCAT_DIR = os.path.join(self.dirname, '..', '..', 'ecs-signing')
         local('tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(TOMCAT_DIR))
+        #patch pdf-as.war
+        #mkdir patch_pdfas
+        #cd patch_pdfas
+        #unzip ../pdf-as.war.original
+        #patch -p0 < ../pdf-as.patch
+        #zip -r ../pdf-as.war *
+        #cd ..
+        #rm -r patch_pdfas
         local('cp \'{0}\' \'{1}\' \'{2}\''.format(
             os.path.join(self.dirname, 'signature', 'pdf-as.war'),
             os.path.join(self.dirname, 'signature', 'bkuonline.war'),
