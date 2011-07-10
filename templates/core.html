@@ -41,7 +41,7 @@
     <li class="main_item"><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
     <li class="main_item"><a href="{% url ecs.communication.views.list_threads %}">{% trans "Communication" %}</a></li>
     {% if user.get_profile.has_explicit_workflow %}
-        <li class="main_item"><a href="{% url ecs.tasks.views.list %}">{% trans "Tasks" %}</a></li>
+        <li class="main_item"><a href="{% url ecs.tasks.views.task_list %}">{% trans "Tasks" %}</a></li>
     {% endif %}
     <li>
       <span class="togglers">{% trans "Studies" %}</span>

@@ -24,7 +24,7 @@ from ecs.tasks.signals import task_accepted, task_declined
 @user_flag_required('internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     with sudo():
-        tasks = Task.objects.order_by('created_at')
+        tasks = Task.objects.all()
         if submission_pk:
             submission = get_object_or_404(Submission, pk=submission_pk)
             submission_ct = ContentType.objects.get_for_model(Submission)
@@ -36,6 +36,8 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
             notification_ct = ContentType.objects.get_for_model(Notification)
             q |= Q(content_type=notification_ct, data_id__in=Notification.objects.filter(submission_forms__submission=submission).values('pk').query)
             tasks = tasks.filter(q)
+        tasks = list(tasks.order_by('created_at'))
+
     return render(request, template, {
         'tasks': tasks,
     })
@@ -130,7 +132,7 @@ def my_tasks(request, template='tasks/compact_list.html'):
 
     return render(request, template, data)
 
-def list(request):
+def task_list(request):
     return my_tasks(request, template='tasks/list.html')
 
 def popup(request):
@@ -182,7 +184,7 @@ def accept_task(request, task_pk=None, full=False):
     task_accepted.send(type(task.node_controller), task=task)
 
     submission_pk = request.GET.get('submission')
-    view = 'ecs.tasks.views.list' if full else 'ecs.tasks.views.my_tasks'
+    view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
 
     if submission_pk:
         return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
@@ -198,7 +200,7 @@ def decline_task(request, task_pk=None, full=False):
     task_declined.send(type(task.node_controller), task=task)
 
     submission_pk = request.GET.get('submission')
-    view = 'ecs.tasks.views.list' if full else 'ecs.tasks.views.my_tasks'
+    view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
 
     if submission_pk:
         return redirect_to_next_url(request, '{0}?submission={1}'.format(reverse(view), submission_pk))
