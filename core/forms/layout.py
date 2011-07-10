@@ -27,7 +27,7 @@ SUBMISSION_FORM_TABS = (
     ]),
     (_(u'outline'), [
         (_(u'outline'), [
-            'project_title', 'german_project_title', 'protocol_number',
+            'german_project_title', 'project_title', 'protocol_number',
             'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
             'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
             'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
