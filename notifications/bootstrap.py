@@ -12,56 +12,54 @@ _ = lambda s: s
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, True, u""),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, True, u""),
-        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, True, u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu."),
+        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
+        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, u""),
+        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, u""),
+        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu."),
     )
     
-    for name, form, diff, earfa, default_response in types:
+    for name, form, diff, default_response in types:
         t, created = NotificationType.objects.get_or_create(name=name, form=form, diff=diff)
-        changed = False
-        if t.executive_answer_required_for_amg != earfa:
-            t.executive_answer_required_for_amg = earfa
-            changed = True
         if t.default_response != default_response:
             t.default_response = default_response
-            changed = True
-        if changed:
             t.save()
-
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
-    from ecs.notifications.workflow import (EditNotificationAnswer, DistributeNotificationAnswer, SignNotificationAnswer, 
-        needs_executive_answer, is_amendment, is_valid_amendment)
+    from ecs.notifications.workflow import (InitialNotificationReview, EditNotificationAnswer, DistributeNotificationAnswer, SignNotificationAnswer, 
+        needs_executive_review, is_susar, is_report, is_amendment)
 
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     NOTIFICATION_REVIEW_GROUP = 'EC-Notification Review Group'
+    SIGNING_GROUP = 'EC-Signing Group'
 
     setup_workflow_graph(Notification,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True, name=_("Start")),
-            'initial_amendment_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_("Initial Amendment Review")),
-            'regular_review': Args(Generic, name="Regular Review"),
-            'notification_answer': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Notification Answer")),
-            'executive_notification_answer': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Notification Answer")),
-            'sign_notification_answer': Args(SignNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_("Sign Notification Answer")),
-            'sign_executive_notification_answer': Args(SignNotificationAnswer, group=EXECUTIVE_GROUP, name=_("Sign Notification Answer")),
-            'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, end=True, name=_("Distribute Notification Answer")),
+            'start': Args(Generic, start=True, name=_('Start')),
+            'susar_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Susar Review')),
+            'initial_notification_review': Args(InitialNotificationReview, group=OFFICE_GROUP, name=_('Initial Notification Review')),
+            'initial_amendment_review': Args(InitialNotificationReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
+            'notification_group_review': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_('Notification Review')),
+            'executive_group_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
+            'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
+            'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, name=_('Distribute Notification Answer')),
         },
         edges={
+            ('start', 'susar_review'): Args(guard=is_susar),
+            ('start', 'initial_notification_review'): Args(guard=is_report),
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),
-            ('start', 'regular_review'): Args(guard=is_amendment, negated=True),
-            ('initial_amendment_review', 'regular_review'): Args(guard=is_valid_amendment),
-            ('initial_amendment_review', 'sign_notification_answer'): Args(guard=is_valid_amendment, negated=True),
-            ('regular_review', 'notification_answer'): Args(guard=needs_executive_answer, negated=True),
-            ('regular_review', 'executive_notification_answer'): Args(guard=needs_executive_answer),
-            ('notification_answer', 'sign_notification_answer'): None,
-            ('executive_notification_answer', 'sign_executive_notification_answer'): None,
-            ('sign_notification_answer', 'distribute_notification_answer'): None,
-            ('sign_executive_notification_answer', 'distribute_notification_answer'): None,
+
+            ('initial_notification_review', 'notification_group_review'): Args(guard=needs_executive_review, negated=True),
+            ('initial_notification_review', 'executive_group_review'): Args(guard=needs_executive_review),
+            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_review, negated=True),
+            ('initial_amendment_review', 'executive_group_review'): Args(guard=needs_executive_review),
+
+            ('executive_group_review', 'notification_answer_signing'): None,
+
+            ('susar_review', 'distribute_notification_answer'): None,
+            ('notification_group_review', 'distribute_notification_answer'): None,
+            ('notification_answer_signing', 'distribute_notification_answer'): None,
         }
     )

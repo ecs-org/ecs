@@ -11,7 +11,6 @@ class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
     diff = models.BooleanField(default=False)
-    executive_answer_required_for_amg = models.BooleanField(default=False)
     default_response = models.TextField(blank=True)
     
     @property
@@ -50,6 +49,8 @@ class Notification(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     user = models.ForeignKey('auth.User', null=True)
+
+    needs_executive_review = models.BooleanField(default=False)
     
     objects = AuthorizationManager()
     
