@@ -27,15 +27,7 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
         tasks = Task.objects.all()
         if submission_pk:
             submission = get_object_or_404(Submission, pk=submission_pk)
-            submission_ct = ContentType.objects.get_for_model(Submission)
-            q = Q(content_type=submission_ct, data_id=submission.pk)
-            vote_ct = ContentType.objects.get_for_model(Vote)
-            q |= Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
-            meeting_ct = ContentType.objects.get_for_model(Meeting)
-            q |= Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
-            notification_ct = ContentType.objects.get_for_model(Notification)
-            q |= Q(content_type=notification_ct, data_id__in=Notification.objects.filter(submission_forms__submission=submission).values('pk').query)
-            tasks = tasks.filter(q)
+            tasks = tasks.for_submission(submission)
         tasks = list(tasks.order_by('created_at'))
 
     return render(request, template, {
@@ -79,7 +71,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
-        tasks = all_tasks.filter(content_type=submission_ct, data_id=submission_pk)
+        tasks = all_tasks.for_submission(submission)
     else:
         submission = None
         amg = filterform.cleaned_data['amg']

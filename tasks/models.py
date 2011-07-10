@@ -11,6 +11,8 @@ from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
 from ecs.core.models import Submission, Vote
+from ecs.meetings.models import Meeting
+from ecs.notifications.models import Notification
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -50,6 +52,19 @@ class TaskQuerySet(models.query.QuerySet):
         not_for_widget = ['resubmission', 'additional_review', 'external_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
+    def for_submission(self, submission, related=True):
+        tasks = Task.objects.all()
+        submission_ct = ContentType.objects.get_for_model(Submission)
+        q = models.Q(content_type=submission_ct, data_id=submission.pk)
+        if related:
+            vote_ct = ContentType.objects.get_for_model(Vote)
+            q |= models.Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
+            meeting_ct = ContentType.objects.get_for_model(Meeting)
+            q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
+            notification_ct = ContentType.objects.get_for_model(Notification)
+            q |= models.Q(content_type=notification_ct, data_id__in=Notification.objects.filter(submission_forms__submission=submission).values('pk').query)
+        return self.filter(q)
+
 class TaskManager(AuthorizationManager):
     def get_base_query_set(self):
         return TaskQuerySet(self.model).distinct()
@@ -65,6 +80,9 @@ class TaskManager(AuthorizationManager):
 
     def for_widget(self, user):
         return self.all().for_widget(user)
+
+    def for_submission(self, submission, related=True):
+        return self.all().for_submission(submission, related=related)
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')
