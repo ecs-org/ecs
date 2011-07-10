@@ -10,19 +10,41 @@ for cls in (Notification, CompletionReportNotification, ProgressReportNotificati
 
 
 @guard(model=Notification)
-def needs_executive_answer(wf):
-    return Submission.objects.filter(forms__notifications=wf.data, is_amg=True).exists() and wf.data.type.executive_answer_required_for_amg
+def needs_executive_review(wf):
+    return wf.data.needs_executive_review
 
+@guard(model=Notification)
+def is_susar(wf):
+    return wf.data.type.name == u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)"
+
+@guard(model=Notification)
+def is_report(wf):
+    return wf.data.type.name == u"Zwischenbericht" or wf.data.type.name == u"Abschlussbericht"
 
 @guard(model=Notification)
 def is_amendment(wf):
-    return wf.data.type.diff
-    
+    return wf.data.type.name == u"Amendment"
 
-@guard(model=Notification)
-def is_valid_amendment(wf):
-    return wf.data.type.diff and wf.data.answer.valid
+class InitialNotificationReview(Activity):
+    class Meta:
+        model = Notification
 
+    def get_url(self):
+        return reverse('ecs.notifications.views.edit_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
+
+    def get_final_urls(self):
+        return super(InitialNotificationReview, self).get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
+
+    def get_choices(self):
+        return (
+            (False, _('Notification Group Review')),
+            (True, _('Executive Review')),
+        )
+
+    def pre_perform(self, choice):
+        n = self.workflow.data
+        n.needs_executive_review = choice
+        n.save()
 
 class EditNotificationAnswer(Activity):
     class Meta:
@@ -33,13 +55,6 @@ class EditNotificationAnswer(Activity):
         
     def get_final_urls(self):
         return super(EditNotificationAnswer, self).get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
-        
-    def is_locked(self):
-        try:
-            return bool(self.workflow.data.answer)
-        except NotificationAnswer.DoesNotExist:
-            return False
-
 
 class SignNotificationAnswer(Activity):
     class Meta:
