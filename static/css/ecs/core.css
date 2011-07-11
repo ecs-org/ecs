@@ -467,7 +467,7 @@ li.TypedChoiceField ul > li label{
 .form_main ol li select {
   float: left;
   display: block;
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .form_main ol li.focus {
   background-color: #eeeeff;
@@ -1093,6 +1093,12 @@ content ol.submission_list h3 .ecnr {
   max-width: 700px;
   width: auto;
   float: left;
+}
+.form_main.readonly .review ol li label,
+.form_main.readonly .checklist_review_tab ol li label {
+  min-width: 220px;
+  width: 220px;
+  text-align: right;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {
