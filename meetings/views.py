@@ -177,7 +177,7 @@ def expert_assignment(request, meeting_pk=None):
 
                     # create board member review task
                     token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
-                    token.task.assign(amc.board_member)
+                    token.task.accept(user=amc.board_member)
 
                 send_system_message_template(amc.board_member, _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')), 'meetings/expert_notification.txt', {
                     'category': cat,
