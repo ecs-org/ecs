@@ -27,6 +27,11 @@ class EcsTestCase(TestCase):
         mediaserver_bootstrap.import_decryption_verify_keys()
         mediaserver_bootstrap.create_disk_caches()
         mediaserver_bootstrap.create_local_storage_vault()
+
+        integration_bootstrap.workflow_sync()
+        core_bootstrap.auth_groups()
+        core_bootstrap.checklist_blueprints()
+        core_bootstrap.submission_workflow()
         
     @classmethod
     def teardownClass(self):
