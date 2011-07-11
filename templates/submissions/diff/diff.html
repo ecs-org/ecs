@@ -1,7 +1,7 @@
 {% extends "core.html" %}
 {% load core i18n %}
 
-{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
+{% block htmltitle %}{{ submission|ec_number }} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
     EK-Nr. {{ submission|ec_number }}

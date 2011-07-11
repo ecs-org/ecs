@@ -35,16 +35,19 @@ def create_meeting(request):
         'form': form,
     })
     
-def meeting_list(request, meetings):
+def meeting_list(request, meetings, title=None):
+    if not title:
+        title = _('Meetings')
     return render(request, 'meetings/list.html', {
-        'meetings': meetings.order_by('start')
+        'meetings': meetings.order_by('start'),
+        'title': title,
     })
     
 def upcoming_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()))
+    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()), title=_('Upcoming Meetings'))
 
 def past_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()))
+    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()), title=_('Past Meetings'))
 
 @user_flag_required('executive_board_member')
 def reschedule_submission(request, submission_pk=None):

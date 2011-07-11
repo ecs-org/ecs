@@ -1,8 +1,7 @@
 {% extends 'core.html' %}
-{% load core %}
-{% load i18n %}
+{% load i18n core %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
+{% block htmltitle %}{{ meeting.title }} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
     {% trans "new meeting" %}

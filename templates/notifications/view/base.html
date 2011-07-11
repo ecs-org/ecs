@@ -1,11 +1,11 @@
 {% extends 'core.html' %}
 {% load i18n %}
 
-{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
-
+{% block htmltitle %}{{ notification }} | {{ block.super }}{% endblock %}
 {% block headertitle %}
 Meldungen zur laufenden Studie(n)
 {% endblock %}
+{% block menuSelection %}notifications{% endblock %}
 
 {% block headernav %}
 {% endblock %}

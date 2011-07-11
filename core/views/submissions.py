@@ -459,35 +459,9 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
         'diff': diff,
     })
 
-@with_docstash_transaction
-def wizard(request):
-    from ecs.core.forms.wizard import get_wizard_form
-    if request.method == 'GET' and request.docstash.value:
-        form = request.docstash['form']
-        screen_form = get_wizard_form('start')(prefix='wizard')
-    else:
-        form = SubmissionFormForm(request.POST or None)
-        name = request.POST.get('wizard-name', 'start')
-        screen_form = get_wizard_form(name)(request.POST or None, prefix='wizard')
-        if screen_form.is_valid():
-            if screen_form.is_terminal():
-                request.docstash.group = 'ecs.core.views.submissions.create_submission_form'
-                request.docstash.save()
-                return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': request.docstash.key}))
-
-            typ, obj = screen_form.get_next()
-            if typ == 'wizard':
-                screen_form = obj(prefix='wizard')
-            elif typ == 'redirect':
-                return HttpResponseRedirect(obj)
-            else:
-                raise ValueError
-
-    return render(request, 'submissions/wizard.html', {
-        'form': screen_form,
-    })
-
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
+    if not title:
+        title = _('Submissions')
     usersettings = request.user.ecs_settings
 
     if order_by is None:
@@ -517,6 +491,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         'submissions': submissions,
         'filterform': filterform,
         'keyword': keyword,
+        'title': title,
     }
     data.update(extra_context or {})
 
@@ -543,7 +518,9 @@ def all_submissions(request):
 
     submissions = Submission.objects.all()
     extra_context = {}
+    title = _('All Studies')
     if keyword:
+        title = _('Study Search')
         submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
@@ -566,16 +543,16 @@ def all_submissions(request):
 
         submissions = submissions.filter(submissions_q)
 
-    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm, extra_context=extra_context)
+    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm, extra_context=extra_context, title=title)
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
-    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=SubmissionListFilterForm)
+    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=SubmissionListFilterForm, title=_('Assigned Studies'))
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
     stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
-    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm)
+    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
 
 @forceauth.exempt
 def catalog(request):

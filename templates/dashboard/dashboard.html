@@ -1,12 +1,11 @@
 {% extends "core.html" %}
+{% load i18n %}
 
 {% block menuSelection %}overview{% endblock %}
 
-{% block htmltitle %}ECS Dashboard{% endblock %}
+{% block htmltitle %}{% trans "Dashboard" %} | {{ block.super }}{% endblock %}
 
-{% block headertitle %}
-    Dashboard
-{% endblock %}
+{% block headertitle %}{% trans "Dashboard" %}{% endblock %}
       
 {% block content %}
     <div id="dashboard">

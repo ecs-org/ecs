@@ -1,11 +1,9 @@
 {% extends 'core.html' %}
 {% load core i18n %}
 
-{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+{% block htmltitle %}{{ title }} | {{ block.super }}{% endblock %}
 
-{% block headertitle %}
-Liste aller Meldungen
-{% endblock %}
+{% block headertitle %}{{ title }}{% endblock %}
 
 {% block headernav %}
 {% endblock %}
@@ -13,7 +11,6 @@ Liste aller Meldungen
 {% block content %}
 
 <div class="notification_list">
-    <h3>{{ title }}</h3>
     {% if notifs %}
         <ol>
         {% for notification in notifs %}

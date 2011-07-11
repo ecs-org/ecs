@@ -1,11 +1,19 @@
 {% extends "submissions/base_form.html" %}
 {% load core i18n userutils %} 
 
+{% block htmltitle %}
+    {% if notification_type %}
+      {{ notification_type.name }} für {{ submission|ec_number }}
+    {% else %}
+        {% if submission %}{{ submission|ec_number }}{% else %}{% trans "New Submission" %}{% endif %}
+    {% endif %}
+    | {{ block.super }}
+{% endblock %}
 {% block headertitle %}
     {% if notification_type %}
-      {{ notification_type.name }} für {{ submission }}
+      {{ notification_type.name }} für {{ submission|ec_number }}
     {% else %}
-        {% if submission %}{{ submission }}{% endif %}
+        {% if submission %}{{ submission|ec_number }}{% endif %}
     {% endif %}
 {% endblock %}
 

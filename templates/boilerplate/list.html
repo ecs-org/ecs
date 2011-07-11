@@ -2,9 +2,9 @@
 
 {% load i18n %}
 
-{% block headertitle %}
-    {% trans 'Boilerplates' %}
-{% endblock %}
+{% block htmltitle %}{% trans 'Boilerplates' %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans 'Boilerplates' %}{% endblock %}
+{% block menuSelection %}administration{% endblock %}
 
 {% block content %}
     <a href="{% url ecs.boilerplate.views.edit_boilerplate %}" class="button_submit">{% trans 'New' %}</a>
@@ -23,6 +23,3 @@
     </div>
     {% endfor %}
 {% endblock %}
-
-
-

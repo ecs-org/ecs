@@ -1,6 +1,8 @@
 {% extends 'core.html' %}
 {% load i18n %}
 
+{% block htmltitle %}{% trans "User Administration" %} | {{ block.super }}{% endblock %}
+
 {% block content %}
 <div class="profile">
 <a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a>

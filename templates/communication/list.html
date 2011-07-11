@@ -3,6 +3,7 @@
 
 {% block menuSelection %}communication{% endblock %}
 
+{% block htmltitle %}{% trans "Communication" %} | {{ block.super }}{% endblock %}
 {% block headertitle %}{% trans "Communication" %} ({{ page.paginator.count }}){% endblock %}
 
 {% block content %}

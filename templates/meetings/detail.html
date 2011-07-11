@@ -1,8 +1,6 @@
 {% extends 'core.html' %}
 {% load core i18n userutils %}
 
-{% block title %}{% trans "ECS Elektronische Einreichung" %}{% endblock %}
-
 {% block headernav %}
     <ul class="tab_header_groups">
         <li>
@@ -35,9 +33,8 @@
     {{ block.super }}
 {% endblock %}
 
-{% block headertitle %}
-    {{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title|default:"<em>Unbenannt</em>" }}
-{% endblock %}
+{% block htmltitle %}{{ meeting.title|default:"<em>Unbenannte Sitzung</em>" }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{{ meeting.start|date:'d.m.Y H:i' }} {{ meeting.title|default:"<em>Unbenannt</em>" }}{% endblock %}
 
 {% block content %}
 <div id="meeting_main">

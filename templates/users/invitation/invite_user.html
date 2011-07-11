@@ -1,6 +1,8 @@
 {% extends 'administration/detail.html' %}
 {% load i18n %}
 
+{% block htmltitle %}{% trans "Invite User" %} | {{ block.super }}{% endblock %}
+
 {% block administration_detail %}
 <h2>{% trans "Invite User" %}</h2>
 

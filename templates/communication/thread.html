@@ -3,6 +3,7 @@
 
 {% block menuSelection %}communication{% endblock %}
 
+{% block htmltitle %}{{ thread|remote:user }} - "{{ thread.subject }}" | {{ block.super }}{% endblock %}
 {% block headertitle %}
     {{ thread|remote:user }} -
     {% if thread.submission %}

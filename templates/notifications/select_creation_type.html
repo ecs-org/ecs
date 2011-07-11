@@ -1,6 +1,7 @@
 {% extends 'core.html' %}
+{% load i18n %}
 
-{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
+{% block htmltitle %}{% trans "New Notification" %} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
   Neue Meldung zur laufenden Studie(n)

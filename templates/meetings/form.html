@@ -2,11 +2,8 @@
 {% load core %}
 {% load i18n %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-    {% trans "new meeting" %}
-{% endblock %}
+{% block htmltitle %}{% trans "new meeting" %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans "new meeting" %}{% endblock %}
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data" class="form_main">

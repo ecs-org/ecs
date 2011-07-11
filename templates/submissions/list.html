@@ -1,11 +1,8 @@
 {% extends 'core.html' %}
 {% load i18n core userutils %}
 
-{% block htmltitle %}ECS Elektronische Einreichung{% endblock %}
-
-{% block headertitle %}
-Liste aller Studien
-{% endblock %}
+{% block htmltitle %}{{ title }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{{ title }}{% endblock %}
 
 {% block quicksearch_keyword %}{{ keyword|default:'' }}{% endblock %}
 

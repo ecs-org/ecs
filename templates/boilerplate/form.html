@@ -2,9 +2,9 @@
 
 {% load i18n %}
 
-{% block headertitle %}
-    {% trans 'Boilerplates' %}
-{% endblock %}
+{% block htmltitle %}{% trans 'New Boilerplate' %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans 'New Boilerplate' %}{% endblock %}
+{% block menuSelection %}administration{% endblock %}
 
 {% block content %}
 <div id="boilerplate">

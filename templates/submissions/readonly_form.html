@@ -2,6 +2,7 @@
 {% load core i18n userutils %} 
 
 
+{% block htmltitle %}{{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
 {% block headertitle %}
   {{ submission_form.submission|ec_number }} {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
 {% endblock %}

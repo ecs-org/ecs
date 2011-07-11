@@ -1,7 +1,7 @@
 {% extends 'core.html' %}
 {% load core i18n %}
 
-{% block title %}ECS Elektronische Einreichung{% endblock %}
+{% block htmltitle %}{{ meeting.title }} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
     Einschränken für {{ participant }} für die Sitzung am {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
