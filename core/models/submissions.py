@@ -553,7 +553,7 @@ class SubmissionForm(models.Model):
             user = get_current_user()
             if user:
                 self.presenter = user
-        for x in ('submitter', 'sponsor', 'invoice'):
+        for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name'), ('invoice', 'invoice_name')):
             email = getattr(self, '{0}_email'.format(x))
             if email:
                 try:
@@ -566,6 +566,7 @@ class SubmissionForm(models.Model):
                     profile = user.get_profile()
                     profile.title = getattr(self, '{0}_contact_title'.format(x))
                     profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
+                    profile.organisation = getattr(self, org)
                     profile.save()
 
                 setattr(self, x, user)

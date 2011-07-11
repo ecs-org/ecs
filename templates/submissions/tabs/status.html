@@ -119,6 +119,7 @@
             {% if submission_form.amg %}{% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }}){% endif %}
             {% if submission_form.mpg %}{% trans "MPG" %}{% endif %}
             {% if submission_form.thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+            {% if submission_form.subject_minage > 0 and submission_form.subject_minage < 18 %}{% trans "minors" %}{% endif %}
         </td>
     </tr>
     <tr>
