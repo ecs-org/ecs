@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 15:57+0200\n"
+"POT-Creation-Date: 2011-07-11 20:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -182,7 +182,7 @@ msgstr "Neueinreichung"
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:112 templates/submissions/readonly_form.html:68
+#: core/bootstrap.py:112 templates/submissions/readonly_form.html:69
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
@@ -196,7 +196,7 @@ msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
 #: core/bootstrap.py:115 core/bootstrap.py:126
-#: templates/submissions/list.html:98
+#: templates/submissions/list.html:95
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
@@ -1549,7 +1549,7 @@ msgstr "Studie"
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:326 templates/boilerplate/list.html:9
+#: core/forms/forms.py:326 templates/boilerplate/list.html:10
 #: templates/meetings/status.html:21
 msgid "New"
 msgstr "Neu"
@@ -1574,7 +1574,7 @@ msgstr "AMG"
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:331 core/forms/wizard.py:49
+#: core/forms/forms.py:331
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
@@ -1722,9 +1722,9 @@ msgstr "Änderungen"
 msgid "Study status"
 msgstr "Studienstatus"
 
-#: core/forms/layout.py:179 templates/meetings/detail.html:12
+#: core/forms/layout.py:179 templates/meetings/detail.html:10
 #: templates/meetings/status.html:6 templates/meetings/status.html.py:14
-#: templates/submissions/readonly_form.html:42
+#: templates/submissions/readonly_form.html:43
 msgid "Status"
 msgstr "Status"
 
@@ -1806,30 +1806,6 @@ msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
 #: core/forms/review.py:82
 msgid "This user is already registered"
 msgstr "Dieser Benutzer ist bereits registriert"
-
-#: core/forms/wizard.py:48
-msgid "Empty Study"
-msgstr "Leere Studie"
-
-#: core/forms/wizard.py:50
-msgid "AMG-Study"
-msgstr "AMG-Studie"
-
-#: core/forms/wizard.py:51
-msgid "MPG-Study"
-msgstr "MPG-Studie"
-
-#: core/forms/wizard.py:52
-msgid "Import Submission"
-msgstr "Einreichung importieren"
-
-#: core/forms/wizard.py:60
-msgid "at Medical University Vienna"
-msgstr "an der Medizinischen Universität der Stadt Wien"
-
-#: core/forms/wizard.py:61
-msgid "other University"
-msgstr "andere Universität"
 
 #: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:56
 #: users/models.py:32
@@ -1919,10 +1895,32 @@ msgstr "Ja"
 msgid "no"
 msgstr "Nein"
 
-#: core/views/submissions.py:560
+#: core/views/submissions.py:464
+#, fuzzy
+msgid "Submissions"
+msgstr "Einreichung"
+
+#: core/views/submissions.py:521 templates/core.html:50
+msgid "All Studies"
+msgstr "Alle Studien"
+
+#: core/views/submissions.py:523
+#, fuzzy
+msgid "Study Search"
+msgstr "Suche"
+
+#: core/views/submissions.py:537
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
+
+#: core/views/submissions.py:550 templates/core.html:53
+msgid "Assigned Studies"
+msgstr "Mir zugeordnete Studien"
+
+#: core/views/submissions.py:555 templates/core.html:56
+msgid "My Studies"
+msgstr "Meine Studien"
 
 #: documents/bootstrap.py:11
 msgid "Covering Letter"
@@ -2117,47 +2115,64 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:502
+#: meetings/models.py:219
+msgid "Submission {submission} added to Meeting on {date}"
+msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
+
+#: meetings/models.py:526
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:503
+#: meetings/models.py:527
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:179
+#: meetings/views.py:40 templates/core.html:74
+#: templates/submissions/list.html:111
+msgid "Meetings"
+msgstr "Sitzungen"
+
+#: meetings/views.py:47 templates/core.html:78
+msgid "Upcoming Meetings"
+msgstr "Kommende Sitzungen"
+
+#: meetings/views.py:50 templates/core.html:79
+msgid "Past Meetings"
+msgstr "Vergangene Sitzungen"
+
+#: meetings/views.py:173
 msgid "Meeting on {date}"
 msgstr "Sitzung am {date}"
 
-#: meetings/views.py:260
+#: meetings/views.py:254
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:269
+#: meetings/views.py:263
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:275
+#: meetings/views.py:269
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:287
+#: meetings/views.py:281
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:393
+#: meetings/views.py:387
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:410
+#: meetings/views.py:404
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:417
+#: meetings/views.py:411
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:480
+#: meetings/views.py:474
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2167,9 +2182,8 @@ msgid "Susar Review"
 msgstr "Gutachten Statistik"
 
 #: notifications/bootstrap.py:42
-#, fuzzy
 msgid "Initial Notification Review"
-msgstr "Formale Prüfung Einreichung"
+msgstr "Formale Prüfung Studienmeldung"
 
 #: notifications/bootstrap.py:43
 msgid "Initial Amendment Review"
@@ -2194,8 +2208,8 @@ msgid "valid"
 msgstr "korrekturgelesen und gültig"
 
 #: notifications/views.py:49 templates/core.html:68
-#: templates/submissions/readonly_form.html:94
-#: templates/submissions/readonly_form.html:143
+#: templates/submissions/readonly_form.html:95
+#: templates/submissions/readonly_form.html:144
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
@@ -2204,7 +2218,7 @@ msgid "All Notifications"
 msgstr "Alle Meldungen"
 
 #: notifications/views.py:55 templates/core.html:67
-#: templates/submissions/readonly_form.html:125
+#: templates/submissions/readonly_form.html:126
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -2323,11 +2337,12 @@ msgstr "Übersicht"
 
 #: templates/core.html:42 templates/communication/list.html:6
 #: templates/communication/list.html:7
-#: templates/submissions/readonly_form.html:98
+#: templates/submissions/readonly_form.html:99
 msgid "Communication"
 msgstr "Nachrichten"
 
 #: templates/core.html:44 templates/tasks/list.html:6
+#: templates/tasks/list.html.py:7
 msgid "Tasks"
 msgstr "Aufgaben"
 
@@ -2335,23 +2350,12 @@ msgstr "Aufgaben"
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:50
-msgid "All Studies"
-msgstr "Alle Studien"
-
-#: templates/core.html:53
-msgid "Assigned Studies"
-msgstr "Mir zugeordnete Studien"
-
-#: templates/core.html:56
-msgid "My Studies"
-msgstr "Meine Studien"
-
-#: templates/core.html:58
+#: templates/core.html:58 templates/submissions/form.html:8
 msgid "New Submission"
 msgstr "Neuer Antrag"
 
-#: templates/core.html:60
+#: templates/core.html:60 templates/submissions/import.html:4
+#: templates/submissions/import.html:5
 msgid "Import"
 msgstr "Import"
 
@@ -2364,18 +2368,6 @@ msgstr "Studien Meldungen"
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:74 templates/submissions/list.html:114
-msgid "Meetings"
-msgstr "Sitzungen"
-
-#: templates/core.html:78
-msgid "Upcoming Meetings"
-msgstr "Kommende Sitzungen"
-
-#: templates/core.html:79
-msgid "Past Meetings"
-msgstr "Vergangene Sitzungen"
-
 #: templates/core.html:81
 msgid "New Meeting"
 msgstr "Neue Sitzung"
@@ -2386,7 +2378,8 @@ msgid "Administration"
 msgstr "Verwaltung"
 
 #: templates/core.html:92 templates/administration/detail.html:9
-#: templates/users/administration.html:4
+#: templates/users/administration.html:4 templates/users/approve.html:4
+#: templates/users/details.html:4
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
@@ -2462,23 +2455,23 @@ msgstr "Ältere Einträge"
 msgid "New Boilerplate"
 msgstr "Neuer Textbaustein"
 
-#: templates/boilerplate/form.html:14
+#: templates/boilerplate/form.html:15
 #: templates/meetings/constraints/user_form.html:19
 #: templates/notifications/form.html:24 templates/scratchpad/popup.html:19
-#: templates/submissions/form.html:15 templates/users/profile_form.html:40
+#: templates/submissions/form.html:23 templates/users/profile_form.html:40
 msgid "Save"
 msgstr "Speichern"
 
-#: templates/boilerplate/list.html:12
+#: templates/boilerplate/list.html:13
 msgid "edit"
 msgstr "Bearbeiten"
 
-#: templates/boilerplate/list.html:15 templates/documents/upload_form.html:6
-#: templates/notifications/list.html:49 templates/submissions/list.html:53
+#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
+#: templates/notifications/list.html:49 templates/submissions/list.html:50
 msgid "Delete"
 msgstr "Löschen"
 
-#: templates/boilerplate/list.html:21
+#: templates/boilerplate/list.html:22
 msgid "No boilerplate yet!"
 msgstr "Es gibt nocht keinen Textbaustein!"
 
@@ -2503,41 +2496,41 @@ msgid "New Message"
 msgstr "Neue Nachricht"
 
 #: templates/communication/send.html:15 templates/communication/send.html:66
-#: templates/communication/thread.html:21
-#: templates/communication/thread.html:54
+#: templates/communication/thread.html:19
+#: templates/communication/thread.html:52
 msgid "Back to the communication overview"
 msgstr "Zurück zur Nachrichtenübersicht"
 
 #: templates/communication/send.html:17 templates/communication/send.html:68
-#: templates/communication/thread.html:23
-#: templates/communication/thread.html:56
+#: templates/communication/thread.html:21
+#: templates/communication/thread.html:54
 #: templates/submissions/diff/diff.html:17
 #: templates/submissions/diff/diff.html:29
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
-#: templates/communication/send.html:83 templates/communication/thread.html:76
-#: templates/submissions/readonly_form.html:258
+#: templates/communication/send.html:83 templates/communication/thread.html:74
+#: templates/submissions/readonly_form.html:259
 #: templates/tasks/manage_task.html:73
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
-#: templates/communication/send.html:87 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:261
+#: templates/communication/send.html:87 templates/communication/thread.html:78
+#: templates/submissions/readonly_form.html:262
 #: templates/tasks/manage_task.html:77
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
 
-#: templates/communication/thread.html:39
+#: templates/communication/thread.html:37
 msgid "Collapse all"
 msgstr "Alle einklappen"
 
-#: templates/communication/thread.html:40
+#: templates/communication/thread.html:38
 msgid "Expand all"
 msgstr "Alle ausklappen"
 
-#: templates/communication/thread.html:51
-#: templates/submissions/readonly_form.html:293
+#: templates/communication/thread.html:49
+#: templates/submissions/readonly_form.html:294
 msgid "Send"
 msgstr "Abschicken"
 
@@ -2599,7 +2592,7 @@ msgstr ""
 "    "
 
 #: templates/documents/compact_list.html:17 templates/documents/iframe.html:19
-#: templates/submissions/readonly_form.html:179
+#: templates/submissions/readonly_form.html:180
 msgid "Download"
 msgstr "Download"
 
@@ -2656,23 +2649,19 @@ msgid ""
 "    Ethik-Kommission der MedUni Wien\n"
 msgstr ""
 
-#: templates/meetings/detail.html:4 templates/submissions/diff/diff.html:4
-msgid "ECS Elektronische Einreichung"
-msgstr ""
-
-#: templates/meetings/detail.html:9
+#: templates/meetings/detail.html:7
 msgid "Meeting"
 msgstr "Sitzung"
 
-#: templates/meetings/detail.html:16
+#: templates/meetings/detail.html:14
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/detail.html:19 templates/meetings/status.html:42
+#: templates/meetings/detail.html:17 templates/meetings/status.html:42
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/detail.html:24
+#: templates/meetings/detail.html:22
 msgid "Signatur der Voten"
 msgstr ""
 
@@ -2693,11 +2682,37 @@ msgstr ""
 "Mit freundlichen Grüßen,\n"
 "    Das Team der Ethik-Kommission\n"
 
-#: templates/meetings/form.html:8 templates/meetings/timetable/view.html:8
+#: templates/meetings/expert_notification_submission_added.txt:2
+#, python-format
+msgid ""
+"\n"
+"As stated in a previous message, you have been assigned as the export of\n"
+"\"%(category)s\" for meeting on %(date)s.\n"
+"\n"
+"Please note, that a new submission has been added to the meeting.\n"
+"The submission in question is: %(ec_number)s %(project_title)s\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Wie ihnen bereits in einer vorherigen Nachricht mitgeteilt wurde, wurden Sie "
+"als\n"
+"Experte für \"%(category)s\" für die Sitzung am %(date)s ausgewählt.\n"
+"\n"
+"Bitte beachten Sie, dass der Situng eine neue Einreichung hinzugefügt "
+"wurde.\n"
+"Die fragliche Einreichung lautet: %(ec_number)s %(project_title)s\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
+#: templates/meetings/form.html:5 templates/meetings/form.html.py:6
+#: templates/meetings/timetable/view.html:7
 msgid "new meeting"
 msgstr "Neue Sitzung"
 
-#: templates/meetings/list.html:20
+#: templates/meetings/list.html:16
 msgid "Ansehen"
 msgstr ""
 
@@ -2829,8 +2844,8 @@ msgstr ""
 msgid "No Categories."
 msgstr "Fachgebiete"
 
-#: templates/notifications/form.html:25 templates/submissions/form.html:24
-#: templates/submissions/form.html.py:71
+#: templates/notifications/form.html:25 templates/submissions/form.html:32
+#: templates/submissions/form.html.py:79
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -2848,7 +2863,7 @@ msgid "Distribute"
 msgstr "Verteilen"
 
 #: templates/notifications/answers/view.html:6
-#: templates/submissions/list.html:90
+#: templates/submissions/list.html:87
 #: templates/submissions/tabs/status.html:48
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
@@ -3016,48 +3031,48 @@ msgstr ""
 "Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
 "erstellen.\n"
 
-#: templates/submissions/form.html:19
+#: templates/submissions/form.html:27
 msgid "Submit Amendment"
 msgstr "Korrektur absenden"
 
-#: templates/submissions/form.html:21
+#: templates/submissions/form.html:29
 msgid "Resubmit"
 msgstr "Neu Einreichen"
 
-#: templates/submissions/form.html:43 templates/submissions/form.html.py:44
-#: templates/submissions/form.html:45
+#: templates/submissions/form.html:51 templates/submissions/form.html.py:52
+#: templates/submissions/form.html:53
 msgid "Add new measure"
 msgstr "Neue Maßnahme hinzufügen"
 
-#: templates/submissions/form.html:46
+#: templates/submissions/form.html:54
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:68
+#: templates/submissions/form.html:76
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:68
+#: templates/submissions/form.html:76
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:71
+#: templates/submissions/form.html:79
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:72
+#: templates/submissions/form.html:80
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: templates/submissions/form.html:72
+#: templates/submissions/form.html:80
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:76
+#: templates/submissions/form.html:84
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."
@@ -3065,143 +3080,143 @@ msgstr ""
 "Sie können noch keine Studien abschicken, da ihr Account noch nicht "
 "bestaetigt wurde "
 
-#: templates/submissions/list.html:25 templates/submissions/list.html:147
+#: templates/submissions/list.html:22 templates/submissions/list.html:144
 #: templates/submissions/widget.html:77 templates/users/administration.html:27
 #: templates/users/administration.html:87 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
-#: templates/submissions/list.html:25 templates/submissions/list.html:147
+#: templates/submissions/list.html:22 templates/submissions/list.html:144
 #: templates/submissions/widget.html:77 templates/users/administration.html:27
 #: templates/users/administration.html:87
 msgid "of"
 msgstr "von"
 
-#: templates/submissions/list.html:52 templates/submissions/list.html.py:88
-#: templates/submissions/readonly_form.html:15
+#: templates/submissions/list.html:49 templates/submissions/list.html.py:85
+#: templates/submissions/readonly_form.html:16
 #: templates/submissions/tabs/involved_parties.html:47
 #: templates/submissions/tabs/status.html:19
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/submissions/list.html:93
+#: templates/submissions/list.html:90
 #, fuzzy
 msgid "Vote Review"
 msgstr "B2 Voten"
 
-#: templates/submissions/list.html:104 templates/submissions/widget.html:45
+#: templates/submissions/list.html:101 templates/submissions/widget.html:45
 msgid "Categories"
 msgstr "Fachgebiete"
 
-#: templates/submissions/list.html:109 templates/submissions/widget.html:50
+#: templates/submissions/list.html:106 templates/submissions/widget.html:50
 msgid "ExpeditedReviewCategories"
 msgstr "Expedited Review Fachgebiete"
 
-#: templates/submissions/list.html:120
+#: templates/submissions/list.html:117
 msgid "Delete Changes"
 msgstr "Änderungen verwerfen"
 
-#: templates/submissions/list.html:126
+#: templates/submissions/list.html:123
 msgid ""
 "Die Studie wurde in der eingereichten Form von der Ethik-Kommission "
 "abgelehnt. Sie können die Studie neu einreichen."
 msgstr ""
 
-#: templates/submissions/list.html:135 templates/submissions/widget.html:60
+#: templates/submissions/list.html:132 templates/submissions/widget.html:60
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
-#: templates/submissions/readonly_form.html:24
+#: templates/submissions/readonly_form.html:25
 #, python-format
 msgid "save %(review)s"
 msgstr "%(review)s speichern"
 
-#: templates/submissions/readonly_form.html:26
+#: templates/submissions/readonly_form.html:27
 #, python-format
 msgid "complete %(review)s"
 msgstr "%(review)s abschließen"
 
-#: templates/submissions/readonly_form.html:39
+#: templates/submissions/readonly_form.html:40
 msgid "General"
 msgstr "Generell"
 
-#: templates/submissions/readonly_form.html:46
+#: templates/submissions/readonly_form.html:47
 msgid "Workflow"
 msgstr ""
 
-#: templates/submissions/readonly_form.html:50
+#: templates/submissions/readonly_form.html:51
 msgid "Workflow Log"
 msgstr "Workflow Protokoll"
 
-#: templates/submissions/readonly_form.html:55
+#: templates/submissions/readonly_form.html:56
 #: templates/submissions/tabs/involved_parties.html:2
 msgid "Involved Parties"
 msgstr "Beteiligte Parteien"
 
-#: templates/submissions/readonly_form.html:64
+#: templates/submissions/readonly_form.html:65
 msgid "Activities"
 msgstr "Tätigkeiten"
 
-#: templates/submissions/readonly_form.html:80
+#: templates/submissions/readonly_form.html:81
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:87
-#: templates/submissions/readonly_form.html:174
+#: templates/submissions/readonly_form.html:88
+#: templates/submissions/readonly_form.html:175
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:91
+#: templates/submissions/readonly_form.html:92
 msgid "Notifications"
 msgstr "Meldungen"
 
-#: templates/submissions/readonly_form.html:93
+#: templates/submissions/readonly_form.html:94
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:100
+#: templates/submissions/readonly_form.html:101
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:102
+#: templates/submissions/readonly_form.html:103
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:136
+#: templates/submissions/readonly_form.html:137
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine offenen Meldungen."
 
-#: templates/submissions/readonly_form.html:139
-#: templates/submissions/readonly_form.html:157
+#: templates/submissions/readonly_form.html:140
+#: templates/submissions/readonly_form.html:158
 msgid "Create a new notification"
 msgstr "Eine neue Meldung erstellen"
 
-#: templates/submissions/readonly_form.html:154
+#: templates/submissions/readonly_form.html:155
 msgid "There are no answered notifications."
 msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 
-#: templates/submissions/readonly_form.html:183
+#: templates/submissions/readonly_form.html:184
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:191
+#: templates/submissions/readonly_form.html:192
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:210
+#: templates/submissions/readonly_form.html:211
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:287
+#: templates/submissions/readonly_form.html:288
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:290
+#: templates/submissions/readonly_form.html:291
 #, fuzzy
 msgid "Do you want to close the review and send it to the EC?"
 msgstr "Wollen sie das Gutachten abschicken und beenden?"
 
-#: templates/submissions/readonly_form.html:294
+#: templates/submissions/readonly_form.html:295
 msgid "Don't send"
 msgstr "Nicht abschicken"
 
@@ -3212,18 +3227,6 @@ msgstr "Speichern"
 #: templates/submissions/widget.html:66 templates/submissions/widget.html:68
 msgid "More"
 msgstr "Mehr"
-
-#: templates/submissions/wizard.html:5
-msgid "ECS Submission Wizard"
-msgstr "ECS Einreichungs-Helfer"
-
-#: templates/submissions/wizard.html:8
-msgid "Submission Wizard"
-msgstr "Einreichungs-Helfer"
-
-#: templates/submissions/wizard.html:14
-msgid "Next"
-msgstr ""
 
 #: templates/submissions/diff/diff.html:20
 msgid "old"
@@ -3501,17 +3504,13 @@ msgstr "Aktivieren"
 msgid "No Users."
 msgstr "Keine Benutzer."
 
-#: templates/users/approve.html:6 templates/users/details.html:12
+#: templates/users/approve.html:8 templates/users/details.html:12
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
 #: templates/users/base_profile.inc:28
 msgid "Reset"
 msgstr "Zurücksetzen"
-
-#: templates/users/details.html:4
-msgid "ECS Administration"
-msgstr "ECS Verwaltung"
 
 #: templates/users/login.html:31
 msgid "Public Catalog"
@@ -3793,6 +3792,33 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
+#~ msgid "Empty Study"
+#~ msgstr "Leere Studie"
+
+#~ msgid "AMG-Study"
+#~ msgstr "AMG-Studie"
+
+#~ msgid "MPG-Study"
+#~ msgstr "MPG-Studie"
+
+#~ msgid "Import Submission"
+#~ msgstr "Einreichung importieren"
+
+#~ msgid "at Medical University Vienna"
+#~ msgstr "an der Medizinischen Universität der Stadt Wien"
+
+#~ msgid "other University"
+#~ msgstr "andere Universität"
+
+#~ msgid "ECS Submission Wizard"
+#~ msgstr "ECS Einreichungs-Helfer"
+
+#~ msgid "Submission Wizard"
+#~ msgstr "Einreichungs-Helfer"
+
+#~ msgid "ECS Administration"
+#~ msgstr "ECS Verwaltung"
+
 #~ msgid "Message"
 #~ msgstr "Nachricht"
 
@@ -3910,9 +3936,6 @@ msgstr ""
 
 #~ msgid "Changes were made to study EC-Nr. %s.\n"
 #~ msgstr "An der Studie EK-Nr. %s wurden Änderungen durchgeführt.\n"
-
-#~ msgid "Search"
-#~ msgstr "Suche"
 
 #~ msgid "Demo"
 #~ msgstr "Demo"

@@ -1,0 +1,11 @@
+{% load i18n core %}
+{% blocktrans with category.name as category and meeting.start|date:"d.m.Y" as date and submission.get_ec_number_display as ec_number and submission.project_title_display|default:'<i>Unbenannt</i>' as project_title %}
+As stated in a previous message, you have been assigned as the export of
+"{{ category }}" for meeting on {{ date }}.
+
+Please note, that a new submission has been added to the meeting.
+The submission in question is: {{ ec_number }} {{ project_title }}
+
+Sincerly yours,
+    The Team of the Ethics Commission
+{% endblocktrans %}

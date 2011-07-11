@@ -17,7 +17,7 @@ from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprin
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.communication.utils import send_system_message_template
-from ecs.tasks.models import Task, TaskType
+from ecs.tasks.models import Task
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
@@ -169,16 +169,7 @@ def expert_assignment(request, meeting_pk=None):
 
             amc = form.save()
             if amc.board_member:
-                task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
-                for entry in entries:
-                    # add participations for all timetable entries with matching categories.
-                    # this assumes that all submissions have already been added to the meeting.
-                    Participation.objects.get_or_create(medical_category=cat, entry=entry, user=amc.board_member)
-
-                    # create board member review task
-                    token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
-                    token.task.accept(user=amc.board_member)
-
+                meeting.create_boardmember_reviews(send_messages=False)
                 send_system_message_template(amc.board_member, _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')), 'meetings/expert_notification.txt', {
                     'category': cat,
                     'meeting': meeting,

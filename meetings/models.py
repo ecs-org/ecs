@@ -199,7 +199,30 @@ class Meeting(models.Model):
         del self.duration
         del self.timetable
         del self.users_with_constraints
-        
+
+    def create_boardmember_reviews(self, send_messages=True):
+        from ecs.tasks.models import TaskType
+        from ecs.communication.utils import send_system_message_template
+
+        task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
+        for amc in self.medical_categories.all():
+            if not amc.board_member:
+                continue
+            for entry in self.timetable_entries.filter(submission__medical_categories=amc.category).distinct():
+                # add participations for all timetable entries with matching categories.
+                participation, created = Participation.objects.get_or_create(medical_category=amc.category, entry=entry, user=amc.board_member)
+                if created:
+                    # create board member review task
+                    token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
+                    token.task.accept(user=amc.board_member)
+                    if send_messages:
+                        subject = _('Submission {submission} added to Meeting on {date}').format(submission=entry.submission.get_ec_number_display(), date=self.start.strftime('%d.%m.%Y'))
+                        send_system_message_template(amc.board_member, subject, 'meetings/expert_notification_submission_added.txt', {
+                            'category': amc.category,
+                            'meeting': self,
+                            'submission': entry.submission,
+                        })
+            
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
         if visible:
@@ -215,6 +238,7 @@ class Meeting(models.Model):
             kwargs['duration_in_seconds'] = duration.seconds
         entry = self.timetable_entries.create(**kwargs)
         self._clear_caches()
+        self.create_boardmember_reviews()
         return entry
 
     def add_break(self, **kwargs):
