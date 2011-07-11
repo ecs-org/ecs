@@ -17,6 +17,10 @@
         </p>
         <p class="boilerplate_text">{{ text.text }}</p>
     </div>
+    {% empty %}
+    <div class="boilerplate">
+        <em>{% trans "No boilerplate yet!" %}</em>
+    </div>
     {% endfor %}
 {% endblock %}
 
