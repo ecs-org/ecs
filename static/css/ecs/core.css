@@ -146,6 +146,7 @@
   background: #54aade;
   border: 1px solid #7bc4f0;
   color: #fff;
+  margin: 0px;
 }
 .header_actions .button_submit_valid {
   background: #84cefb;
@@ -1078,6 +1079,7 @@ content ol.submission_list h3 .ecnr {
 #scratchpad .save, #scratchpad .save_close {
   float: right;
   display: inline-block;
+  margin-right: 10px;
 }
 
 /*****************
