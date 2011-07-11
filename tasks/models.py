@@ -10,7 +10,7 @@ from django.utils.translation import ugettext as _
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission, Vote
+from ecs.core.models import Submission
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification
 from ecs.authorization.managers import AuthorizationManager
@@ -53,6 +53,7 @@ class TaskQuerySet(models.query.QuerySet):
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
     def for_submission(self, submission, related=True):
+        from ecs.core.models import Vote
         tasks = Task.objects.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
         q = models.Q(content_type=submission_ct, data_id=submission.pk)
@@ -113,6 +114,7 @@ class Task(models.Model):
         return rval
 
     def get_preview_url(self):
+        from ecs.core.models import Vote
         submission_form = None
         if self.content_type == ContentType.objects.get_for_model(Submission):
             submission_form = self.data.current_submission_form
