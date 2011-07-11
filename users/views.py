@@ -52,7 +52,7 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
     
 
 @forceauth.exempt
-@ratelimit_post(minutes=5, requests=5, key_field='username')
+@ratelimit_post(minutes=5, requests=15, key_field='username')
 def login(request, *args, **kwargs):
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
@@ -74,7 +74,7 @@ def change_password(request):
 
 
 @forceauth.exempt
-@ratelimit_post(minutes=5, requests=5, key_field='email')
+@ratelimit_post(minutes=5, requests=15, key_field='email')
 def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
@@ -130,7 +130,7 @@ def activate(request, token=None):
 
 
 @forceauth.exempt
-@ratelimit_post(minutes=5, requests=5, key_field='email')
+@ratelimit_post(minutes=5, requests=15, key_field='email')
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
