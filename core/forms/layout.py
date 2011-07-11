@@ -14,7 +14,7 @@ SUBMISSION_FORM_TABS = (
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_nursing_study',
-            'project_type_misc', 'project_type_education_context',
+            'project_type_non_interventional_study', 'project_type_gender_medicine', 'project_type_misc', 'project_type_education_context',
             'specialism', 'clinical_phase', 'external_reviewer_suggestions', 'already_voted',
         ]),
     ]),

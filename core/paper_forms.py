@@ -144,6 +144,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.13', 'project_type_questionnaire', _(u'Questionnaire investigation')), # new
     FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=_(u'Psychological study')), # new
     FieldInfo('2.1.15', 'project_type_nursing_study', _(u'Nursing Scientific Study')), # new
+    FieldInfo('2.1.16', 'project_type_non_interventional_study', _(u'Non-interventional Study (NIS)')), # new
+    FieldInfo('2.1.17', 'project_type_gender_medicine', _(u'Gender medicine')), # new
     FieldInfo('2.2', 'specialism', _(u'special field')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _(u'Test substances')),

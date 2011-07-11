@@ -50,6 +50,10 @@
 
     <p class="border_bottom">{{ submission_form.project_type_nursing_study|checkbox }} 2.1.15 <strong>Pflegewissenschaftliche Studie</strong></p>
 
+    <p class="border_bottom">{{ submission_form.project_type_non_interventional_study|checkbox }} 2.1.16 <strong>Nicht-interventionelle Studie</strong></p>
+
+    <p class="border_bottom">{{ submission_form.project_type_gender_medicine|checkbox }} 2.1.17 <strong>Gendermedizin</strong></p>
+
     <p class="border_bottom">{{ submission_form.project_type_misc|checkbox }} 2.1.7 <strong>Sonstiges</strong>(z.B. Diätetik, Epidemiologie, etc.), bitte
     spezifizieren:</p>
     <p class="value">{{ submission_form.project_type_misc|default_if_none:"" }}</p>

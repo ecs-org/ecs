@@ -385,6 +385,8 @@ class SubmissionForm(models.Model):
     project_type_misc = models.TextField(null=True, blank=True)
     project_type_psychological_study = models.BooleanField()
     project_type_nursing_study = models.BooleanField()
+    project_type_non_interventional_study = models.BooleanField()
+    project_type_gender_medicine = models.BooleanField()
     
     # 2.2
     specialism = models.TextField(null=True)
