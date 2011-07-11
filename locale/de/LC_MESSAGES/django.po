@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-11 22:01+0200\n"
+"POT-Creation-Date: 2011-07-11 22:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -315,10 +315,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:133 core/forms/fields.py:52
+#: templates/submissions/readonly_form.html:294
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:135 core/forms/fields.py:52
+#: templates/submissions/readonly_form.html:295
 msgid "No"
 msgstr "Nein"
 
@@ -2534,7 +2536,6 @@ msgid "Expand all"
 msgstr "Alle ausklappen"
 
 #: templates/communication/thread.html:49
-#: templates/submissions/readonly_form.html:294
 msgid "Send"
 msgstr "Abschicken"
 
@@ -3216,13 +3217,9 @@ msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
 #: templates/submissions/readonly_form.html:291
-#, fuzzy
 msgid "Do you want to close the review and send it to the EC?"
-msgstr "Wollen sie das Gutachten abschicken und beenden?"
-
-#: templates/submissions/readonly_form.html:295
-msgid "Don't send"
-msgstr "Nicht abschicken"
+msgstr ""
+"Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
 
 #: templates/submissions/review_form.inc:19
 msgid "save"
@@ -3816,6 +3813,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Don't send"
+#~ msgstr "Nicht abschicken"
 
 #~ msgid "Empty Study"
 #~ msgstr "Leere Studie"

@@ -291,8 +291,8 @@
                 new MooDialog.Confirm('{{ _("Do you want to close the review and send it to the EC?")|escapejs }}', function(){
                     $('checklist_{{ review_complete }}_review_form').getElement('input[type="submit"][name="really_complete_task"]').click();
                 }, null, {
-                    okText: '{{ _("Send")|escapejs }}',
-                    cancelText: '{{ _("Don't send")|escapejs }}'
+                    okText: '{{ _("Yes")|escapejs }}',
+                    cancelText: '{{ _("No")|escapejs }}'
                 })
             {% endif %}
 
