@@ -14,6 +14,8 @@ class AuthUrlTest(EcsTestCase):
     keysecret = "7GEVGvImpCIxidINqA3MEOU5zBJDeCf"
         
     def testConsistency(self):
+        '''Tests the Expiration of URLs for media.'''
+        
         uuid = uuid4()
         hasExpired = int(time())
         willExpire = hasExpired + 60

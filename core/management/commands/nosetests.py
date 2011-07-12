@@ -82,8 +82,9 @@ class Command(BaseCommand):
             
             
             cases[cname]['tests'].append(case)
-            
-            
+        
+        
+        undoc_count = 0
         #get all docstring via importing
         for pclassname, casedict in cases.iteritems():
             tests = casedict['tests'] 
@@ -100,7 +101,9 @@ class Command(BaseCommand):
                     cases[pclassname]['docstring'] = c.__doc__
                     for test in tests:
                         t=getattr(c, test['name'])
-                        test['docstring'] = t.__doc__ if t.__doc__ else "" 
+                        test['docstring'] = t.__doc__ if t.__doc__ else ""
+                        if not t.__doc__:
+                            undoc_count += 1 
                     
                     
                 except AttributeError,ae:
@@ -127,9 +130,14 @@ class Command(BaseCommand):
                 pass
 
         
-        testcases2rst(headerinfo, cases, outfile=options['outfile'])
+        sortedcases = []
+        for key in sorted(cases.iterkeys()):
+            cases[key]['pclassname'] = key
+            sortedcases.append(cases[key])
+        testcases2rst(headerinfo, sortedcases, outfile=options['outfile'])
         print ""
         print "done"
+        print "debug: {0} undocumented tests".format(undoc_count)
 
         
 def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_table=True):
@@ -159,8 +167,12 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_tabl
     
     writer = RstTable(maxwidth=200)
     
-    for pclassname, casedict in cases.iteritems():
-        tests = casedict['tests']
+    
+    for case in cases:
+        pclassname = case['pclassname']
+        tests = case['tests']
+        casedict = case
+        
         writer.out.append("{0}".format(pclassname) )
         writer.out.append("#"*len(pclassname) )
         writer.out.append("")

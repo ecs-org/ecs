@@ -15,6 +15,8 @@ from ecs.mediaserver.client import generate_pages_urllist, generate_media_url
 
 
 class MediaDisplayDownload(EcsTestCase):
+    '''Class for testing the capabilities of the system for displaying media and providing download links for media.'''
+    
     filename = 'menschenrechtserklaerung.pdf'
     pdfdocname = os.path.join(os.path.dirname(__file__), filename)
     png_magic = binascii.a2b_hex('89504E470D0A1A0A')
@@ -31,6 +33,8 @@ class MediaDisplayDownload(EcsTestCase):
             self.mediaprovider.add_blob(self.identifier, input)
 
     def testPdfPages(self):
+        '''FIXME check if correct: Tests that pages rendered as png images are valid png images and that the urls generated for viewing single pdf pages as png images are correct.'''
+        
         dsdata = generate_pages_urllist(self.identifier, self.pages)
         key_id = settings.MS_CLIENT ["key_id"]
         key_secret = settings.MS_CLIENT ["key_secret"]
@@ -49,6 +53,8 @@ class MediaDisplayDownload(EcsTestCase):
                 self.assertTrue(current_magic == self.png_magic);
 
     def testPdfDownload(self):
+        '''Tests that the produced download links for pdf documents by the system are correct and also tests that the data of the source documents matches the data of the pdf files that then reside in the system.'''
+        
         fullurl = generate_media_url(self.identifier, self.filename, 'application/pdf', None, False)
         response = self.client.get(fullurl)
         self.failUnlessEqual(response.status_code, 200)
