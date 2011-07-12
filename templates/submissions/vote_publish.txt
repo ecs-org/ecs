@@ -1,9 +1,0 @@
-{% load i18n core %}
-{% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title and party.involvement as involvement and vote.get_result_display as vote_result %}
-The Vote for the study {{ ec_number }} "{{ project_title }}" (Your involvement: {{ involvement }}) has been published.
-
-The result of the voting is: {{ vote_result }}
-
-Sincerly yours,
-    The Team of the Ethics Commission
-{% endblocktrans %}

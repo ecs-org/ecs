@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 13:43+0200\n"
+"POT-Creation-Date: 2011-07-12 14:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:65
@@ -1508,15 +1508,15 @@ msgstr "Einladung Gutachten"
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
-#: core/workflow.py:368
+#: core/workflow.py:369
 msgid "B1"
 msgstr ""
 
-#: core/workflow.py:369
+#: core/workflow.py:370
 msgid "B3"
 msgstr ""
 
-#: core/forms/checklist.py:22 core/models/voting.py:34
+#: core/forms/checklist.py:22 core/models/voting.py:31
 msgid "comment"
 msgstr "Kommentar"
 
@@ -1853,45 +1853,41 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/models/voting.py:12
+#: core/models/voting.py:9
 msgid "1 positive"
 msgstr "1 Positiv"
 
-#: core/models/voting.py:13
+#: core/models/voting.py:10
 msgid "1a positive - with corrections"
 msgstr "1a Positiv - mit Ausbesserungen"
 
-#: core/models/voting.py:14
+#: core/models/voting.py:11
 msgid "2 positive under reserve"
 msgstr "2 Vorbehaltich positiv"
 
-#: core/models/voting.py:15
+#: core/models/voting.py:12
 msgid "3 recessed (objections)"
 msgstr "3 Vertagt (Einwände)"
 
-#: core/models/voting.py:16
+#: core/models/voting.py:13
 msgid "4 negative"
 msgstr "4 Negativ"
 
-#: core/models/voting.py:17
+#: core/models/voting.py:14
 msgid "5 recessed (applicant)"
 msgstr "5 Vertagt (Antragsteller)"
 
-#: core/models/voting.py:18
+#: core/models/voting.py:15
 msgid "5a withdrawn (applicant)"
 msgstr "5a Zurückgezogen (Antragsteller)"
 
-#: core/models/voting.py:19
+#: core/models/voting.py:16
 msgid "5b not examined"
 msgstr "5b Nicht behandelt"
 
-#: core/models/voting.py:32
+#: core/models/voting.py:29
 msgid "vote"
 msgstr "Votum"
-
-#: core/models/voting.py:77
-msgid "Publication of {vote}"
-msgstr "Veröffentlichung von {vote}"
 
 #: core/templatetags/corepdf.py:13
 msgid "yes"
@@ -2967,8 +2963,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You have been invited to make an additional review for the study "
-"%(ec_number)s.\n"
+"You have been invited to make an additional review for the study %(ec_number)"
+"s.\n"
 msgstr ""
 "\n"
 "Sie wurden eingeladen ein Zusatz-Gutachten für die Studie %(ec_number)s zu "
@@ -3029,8 +3025,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You have been invited to make an external review for the study "
-"%(ec_number)s.\n"
+"You have been invited to make an external review for the study %(ec_number)"
+"s.\n"
 msgstr ""
 "\n"
 "Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
@@ -3225,27 +3221,6 @@ msgstr ""
 msgid "save"
 msgstr "Speichern"
 
-#: templates/submissions/vote_publish.txt:2
-#, python-format
-msgid ""
-"\n"
-"The Vote for the study %(ec_number)s \"%(project_title)s\" (Your "
-"involvement: %(involvement)s) has been published.\n"
-"\n"
-"The result of the voting is: %(vote_result)s\n"
-"\n"
-"Sincerly yours,\n"
-"    The Team of the Ethics Commission\n"
-msgstr ""
-"\n"
-"Das Votum für die Studie  %(ec_number)s \"%(project_title)s\" (Ihre "
-"Beteiligung: %(involvement)s) ist Ihnen nun zugänglich.\n"
-"\n"
-"Das Votum lautet: %(vote_result)s\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission\n"
-
 #: templates/submissions/widget.html:66 templates/submissions/widget.html:68
 msgid "More"
 msgstr "Mehr"
@@ -3328,8 +3303,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            %(assigned_to)s eingeladen am %(assigned_at)s für "
-"%(task_name)s \n"
+"            %(assigned_to)s eingeladen am %(assigned_at)s für %(task_name)"
+"s \n"
 "        "
 
 #: templates/submissions/tabs/status.html:173
@@ -3813,6 +3788,28 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Publication of {vote}"
+#~ msgstr "Veröffentlichung von {vote}"
+
+#~ msgid ""
+#~ "\n"
+#~ "The Vote for the study %(ec_number)s \"%(project_title)s\" (Your "
+#~ "involvement: %(involvement)s) has been published.\n"
+#~ "\n"
+#~ "The result of the voting is: %(vote_result)s\n"
+#~ "\n"
+#~ "Sincerly yours,\n"
+#~ "    The Team of the Ethics Commission\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Das Votum für die Studie  %(ec_number)s \"%(project_title)s\" (Ihre "
+#~ "Beteiligung: %(involvement)s) ist Ihnen nun zugänglich.\n"
+#~ "\n"
+#~ "Das Votum lautet: %(vote_result)s\n"
+#~ "\n"
+#~ "Mit freundlichen Grüßen,\n"
+#~ "    Das Team der Ethik-Kommission\n"
 
 #~ msgid "Don't send"
 #~ msgstr "Nicht abschicken"

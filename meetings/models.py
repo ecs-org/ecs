@@ -221,7 +221,7 @@ class Meeting(models.Model):
                             'category': amc.category,
                             'meeting': self,
                             'submission': entry.submission,
-                        }, submission=entry.submission, task=token.task)
+                        })
             
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
