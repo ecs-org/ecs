@@ -10,9 +10,11 @@ from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
 class SubmissionAuthTestCase(EcsTestCase):
+    '''Class for testing the Authorization of certain users regarding a submission'''
+    
     BASE_EC_NUMBER = 9742
     EC_NUMBER = 20100000 + BASE_EC_NUMBER
-
+    
     def _create_test_user(self, name, **profile_attrs):
         email = '{0}@example.com'.format(name)
         user = create_user(email)
@@ -65,6 +67,8 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.sf = sf
         
     def test_submission_auth(self):
+        '''Makes sure that each type of user only sees a submission/study if his role matches the status and type of the submission/study'''
+        
         with sudo(self.unapproved_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
         with sudo(self.anyone):
@@ -131,6 +135,8 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, expect404, self.another_board_member_user, url)
 
     def test_views(self):
+        '''Tests that viewing all views related to a submission works for authorized users and is denied for unauthorized users depending on the role of the users.'''
+        
         self._check_view(False, 'ecs.core.views.all_submissions')
         self._check_view(False, 'ecs.core.views.readonly_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
