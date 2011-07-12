@@ -133,7 +133,7 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
         from ecs.tasks.models import Task
         cd = self.cleaned_data
         votes = []
-        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', []) + list(cd.get('localec_entries', []))):
+        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])) + list(cd.get('localec_entries', [])):
             vote = Vote.objects.create(top=entry, result='1')
             with sudo():
                 open_tasks = Task.objects.for_data(vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
