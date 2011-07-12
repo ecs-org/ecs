@@ -462,6 +462,7 @@ checklist_questions = {
         ('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?",u''),
     ],
     u'localec_review': [
-        ('1', u'Blabla?', u''),
+        ('1', u'Die Ethik-Kommissio bestätigt als lokale Ethik-Kommission im Sinne des §41b (5) die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.', u''),
+        
     ],
 }
