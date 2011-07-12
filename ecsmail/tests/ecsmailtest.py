@@ -28,14 +28,19 @@ class ecsmailIncomingTest(MailTestCase):
 
 
 class ecsmailOutgoingTest(MailTestCase):
-
+    '''A Class for testing the facilities for sending mail from the system'''
+    
     def test_hello_world(self):
+        '''tests if an email can be sent from the system'''
+        
         self.deliver("some subject", "some body, first message")
         eq_(self.queue_count(), 1)
         ok_(self.is_delivered("first message"))
     
     
     def test_text_and_html(self):
+        '''Tests that creation and sending of html and text-only messages works.'''
+        
         self.deliver("another subject", "second message", 
             message_html= "<html><head></head><body><b>this is bold</b></body>")
         x = self.is_delivered("second message")
@@ -47,6 +52,8 @@ class ecsmailOutgoingTest(MailTestCase):
     
     
     def test_attachments(self):
+        '''A Test for making sure that files can be attached to messages and that data attached is not altered.'''
+        
         attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()
         
@@ -64,6 +71,8 @@ class ecsmailOutgoingTest(MailTestCase):
         
         
     def test_text_and_html_and_attachment(self):
+        '''Makes sure that a message can consist of text and html and also has an attachment. Further checks that attached data is not altered during sending.'''
+        
         attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()
         
