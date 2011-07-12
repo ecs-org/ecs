@@ -10,6 +10,8 @@ from ecs.communication.testcases import CommunicationTestCase
 
 
 class CommunicationTest(CommunicationTestCase):        
+    '''Class for testing the communication facilities of the system'''
+    
     
     """
     def test_from_ecs_to_outside_and_back_to_us(self):
@@ -29,6 +31,8 @@ class CommunicationTest(CommunicationTestCase):
 
         
     def test_new_thread(self):
+        ''' '''
+        
         self.client.login(email='alice@example.com', password='password')
 
         response = self.client.get(reverse('ecs.communication.views.new_thread'))
@@ -68,6 +72,8 @@ class CommunicationTest(CommunicationTestCase):
         self.client.logout()
 
     def test_new_thread_invalid_submission(self):
+        ''' '''
+        
         self.client.login(email='alice@example.com', password='password')
         try:
             non_existing_pk = Submission.objects.all().order_by('-pk')[0].pk+1
@@ -81,6 +87,8 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(response.status_code, 404)
 
     def test_reply_message(self):
+        ''' '''
+        
         message = self.last_message
         self.client.login(email='bob@example.com', password='password')
 
