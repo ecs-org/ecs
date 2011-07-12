@@ -4,41 +4,47 @@
 {% block meeting_assistant_body %}
     <form action="" method="post">
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
-        <h4>{% trans "Approved" %}</h4>
-        <ul>
-        {% for entry in retrospective_thesis_entries %}
-            <li>
-                {{ entry.submission|ec_number }}
-                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
-            </li>
-        {% endfor %}
-        </ul>
+        {% if retrospective_thesis_entries %}
+            <h4>{% trans "Approved" %}</h4>
+            <ul>
+            {% for entry in retrospective_thesis_entries %}
+                <li>
+                    {{ entry.submission|ec_number }}
+                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
         <h4>{% trans "Not Approved" %}</h4>
         {{ form.retrospective_thesis_entries }}
 
         <h3>{% trans "Expedited Submissions" %}</h3>
-        <h4>{% trans "Approved" %}</h4>
-        <ul>
-        {% for entry in expedited_entries %}
-            <li>
-                {{ entry.submission|ec_number }}
-                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
-            </li>
-        {% endfor %}
-        </ul>
+        {% if expedited_entries %}
+            <h4>{% trans "Approved" %}</h4>
+            <ul>
+            {% for entry in expedited_entries %}
+                <li>
+                    {{ entry.submission|ec_number }}
+                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
         <h4>{% trans "Not Approved" %}</h4>
         {{ form.expedited_entries }}
 
         <h3>{% trans "Local-EC Submissions" %}</h3>
-        <h4>{% trans "Approved" %}</h4>
-        <ul>
-        {% for entry in localec_entries %}
-            <li>
-                {{ entry.submission|ec_number }}
-                {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
-            </li>
-        {% endfor %}
-        </ul>
+        {% if localec_entries %}
+            <h4>{% trans "Approved" %}</h4>
+            <ul>
+            {% for entry in localec_entries %}
+                <li>
+                    {{ entry.submission|ec_number }}
+                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
         <h4>{% trans "Not Approved" %}</h4>
         {{ form.localec_entries }}
 
