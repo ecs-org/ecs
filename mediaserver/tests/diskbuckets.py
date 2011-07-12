@@ -10,7 +10,8 @@ from ecs.mediaserver.diskbuckets import DiskBuckets
 
 
 class DiskBucketsTest(EcsTestCase):
- 
+    '''Class for testing the DiskBuckets'''
+    
     def setUp(self):
         self.root_dir = tempfile.mkdtemp()
         self.store = DiskBuckets(self.root_dir, allow_mkrootdir=True)
@@ -25,6 +26,7 @@ class DiskBucketsTest(EcsTestCase):
         shutil.rmtree(self.root_dir)
     
     def testConsistency(self):
+        '''Tests that data stored in a diskbucket equals the original data.'''
         
         for u in self.uuids: 
             self.assertEquals(self.store.get(u).read(), hashlib.md5(u).hexdigest())
