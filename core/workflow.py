@@ -354,7 +354,8 @@ class VotePublication(Activity):
 
     def pre_perform(self, choice):
         vote = self.workflow.data
-        vote.publish()
+        vote.published_at = datetime.now()
+        vote.save()
 
 class VoteB2Review(Activity):
     class Meta:
