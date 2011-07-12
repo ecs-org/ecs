@@ -358,7 +358,7 @@ def create_submission_form(request):
             submission_form.save()
             form.save_m2m()
 
-            documents = Document.objects.filter(pk__in=request.docstash['document_pks'])
+            documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             submission_form.documents = documents
             for doc in documents:
                 doc.parent_object = submission_form
