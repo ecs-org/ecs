@@ -7,6 +7,7 @@ Service WSGI Script
 
 import cStringIO
 import os
+import sys
 
 def application(environ, start_response):
     headers = []
@@ -14,7 +15,7 @@ def application(environ, start_response):
     write = start_response('200 OK', headers)
     input = environ['wsgi.input']
     output = cStringIO.StringIO()
-    print >> output ("<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>")
+    print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
     print >> output
     output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     return [output.getvalue()]
