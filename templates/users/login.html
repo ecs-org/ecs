@@ -65,7 +65,8 @@
 
             if (!is_browser(/Firefox[\/\s](\d+\.\d+)/, 4) &&
                 !is_browser(/Chrome[\/\s](\d+)/, 12) &&
-                !is_browser(/Version[\/\s](\d+\.\d+).*Safari/, 5)) {
+                !is_browser(/Version[\/\s](\d+\.\d+).*Safari/, 5) &&
+                !is_browser(/MSIE[\/\s](\d+\.\d+)/, 9)) {
                 $('browser_warning').show();
                 $('login_button').hide();
             } else {
