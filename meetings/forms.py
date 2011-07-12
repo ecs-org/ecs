@@ -117,11 +117,13 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
         from ecs.core.models import Vote
         from ecs.core.models.voting import FINAL_VOTE_RESULTS
+        from django.db.models import Q
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
 
         for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
-            q = getattr(meeting, k).exclude(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+            tops = getattr(meeting, k)
+            q = tops.filter(Q(vote__isnull=True) | ~Q(vote__result__in=FINAL_VOTE_RESULTS)).order_by('submission__ec_number')
             self.fields[k].queryset = q
             self.fields[k].initial = [x.pk for x in q.all()]
 
