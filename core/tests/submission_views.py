@@ -76,7 +76,7 @@ VALID_SUBMISSION_FORM_DATA = {
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
-    ''' '''
+    '''Several tests for different views of a submission form.'''
     
     def setUp(self):
         super(SubmissionViewsTestCase, self).setUp()
