@@ -9,9 +9,11 @@ from lamson.server import SMTPError
 from ecs.ecsmail.testcases import MailTestCase
 
 class ecsmailIncomingTest(MailTestCase):
-
+    '''Various Tests for the mail system.'''
+    
     def test_relay(self):
-        ''' test relaying ''' 
+        '''test relaying'''
+         
         assert_raises(SMTPError, self.receive,
             "some subject", "some body",
             "".join(("ecs-123@", settings.ECSMAIL ['authoritative_domain'])),
@@ -19,7 +21,8 @@ class ecsmailIncomingTest(MailTestCase):
 
 
     def test_to_us_unknown(self):
-        ''' mail to us, but unknown recipient address at our site '''
+        '''mail to us, but unknown recipient address at our site'''
+        
         assert_raises(SMTPError, self.receive,
             "some subject", "some body",
             "from.nobody@notexisting.loc",

@@ -5,6 +5,8 @@ from django.contrib.auth.middleware import AuthenticationMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 
 class SignedCookiesTest(TestCase):
+    '''Tests for Signed Cookies'''
+    
     def setUp(self):
         self.middleware = SignedCookiesMiddleware()
         self.auth_middleware = AuthenticationMiddleware()
@@ -20,6 +22,8 @@ class SignedCookiesTest(TestCase):
         self.session_middleware.process_response(request, response)
         
     def test_middleware(self):
+        '''Tests if signing of cookie values works correctly.'''
+        
         request = HttpRequest()
         
         request.COOKIES['key'] = 'foo'

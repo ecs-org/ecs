@@ -11,7 +11,11 @@ from ecs.notifications.models import NotificationType, Notification
 from ecs.core.tests.submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):
+    '''Various tests for Notifications(forms).'''
+    
     def test_creation_type_selection(self):
+        '''Tests if a notification type can be created and if the view for its selection is accessible.'''
+        
         NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.select_notification_creation_type'))
         self.failUnlessEqual(response.status_code, 200)
@@ -25,6 +29,8 @@ class NotificationFormTest(LoginTestCase):
         return data
         
     def test_notification_form(self):
+        '''Tests notification creation and autosave mode. Further tests if notification can be saved, submited with incomplete data and finally if the correct redirect happens if submitted with complete data. '''
+        
         notification_type = NotificationType.objects.create(name='foo notif')
 
         # GET the form and expect a docstash transactions redirect, then follow this redirect
@@ -64,6 +70,8 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(obj.submission_forms.all()[0], submission_form)
 
     def test_submission_data_for_notification(self):
+        '''Tests if the submission_data_for_notification view is accessible for a created notification for a submission.'''
+        
         notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
         notification = Notification.objects.create(type=notification_type)
         submission_form = create_submission_form()
@@ -71,6 +79,8 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(response.status_code, 200)
 
     def test_notification_pdf(self):
+        '''Tests if a pdf is produced if a Notification is created.'''
+        
         notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
         notification = Notification.objects.create(type=notification_type)
         response = self.client.get(reverse('ecs.notifications.views.notification_pdf', kwargs={'notification_pk': notification.pk}))
@@ -83,6 +93,8 @@ class NotificationFormTest(LoginTestCase):
         return response['Location']
         
     def test_document_upload(self):
+        '''Tests if a pdf file can be uploaded. Further tests if meta data of the document is stored correctly and if the resuting download link contains a PDF file.'''
+        
         url = self._setup_POST_url()
         upload_url = re.sub(r'new/\d+/', 'doc/upload/', url)    # XXX: ugly
         data = self._create_POST_data()
@@ -111,7 +123,9 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(response.content[:4], '%PDF')
    
     def test_incomplete_upload(self):
-        """ Regression test for the KeyError bug fixed in r729:b022598f8e55"""
+        '''Tests an incomplete document upload. Regression test for the KeyError bug fixed in r729:b022598f8e55'''
+        
+        
         url = self._setup_POST_url()
         upload_url = re.sub(r'new/\d+/', 'doc/upload/', url)    # XXX: ugly
         data = self._create_POST_data()

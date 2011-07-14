@@ -13,6 +13,8 @@ from ecs.tasks.models import Task, TaskType
 
 
 class WorkflowIntegrationTest(WorkflowTestCase):
+    '''Tests for the workflow model.'''
+    
     def setUp(self):
         super(WorkflowIntegrationTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
@@ -26,11 +28,15 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         self.graph = g
         
     def test_task_types(self):
+        '''Makes sure that only the correct task types exist.'''
+        
         self.failUnless(TaskType.objects.get(workflow_node=self.n_a))
         self.failUnless(TaskType.objects.get(workflow_node=self.n_b))
         self.assertRaises(TaskType.DoesNotExist, TaskType.objects.get, workflow_node=self.n_x)
         
     def test_task_creation(self):
+        '''FIXME check if ok: Tests if the end of a workflow is reached via workflow.'''
+        
         obj = Foo.objects.create()
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
@@ -44,6 +50,8 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         self.assertRaises(Task.DoesNotExist, tasks.get, task_type__workflow_node=self.n_a)
 
     def test_task_done(self):
+        '''Tests if a task can be done via the workflow model.'''
+        
         obj = Foo.objects.create()
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
@@ -55,6 +63,8 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_b)
 
     def test_task_trail(self):
+        '''Makes sure that task trail works correctly.'''
+        
         obj = Foo.objects.create()
         a_task = Task.objects.filter(closed_at=None).get()
         obj.workflow.do(decl.A)

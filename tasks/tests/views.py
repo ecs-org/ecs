@@ -4,7 +4,11 @@ from django.core.urlresolvers import reverse
 from ecs.tasks.models import Task, TaskType
 
 class ViewTestCase(LoginTestCase, WorkflowTestCase):
+    '''Task workflow tests.'''
+    
     def test_common_workflow(self):
+        '''Tests task list, task list filter, accepting of a task, task management view task delegation back to the task pool, task reassignment and completion of a task.'''
+        
         task_type = TaskType.objects.create(name="TestTask")
         task = Task.objects.create(task_type=task_type)
         refetch = lambda: Task.objects.get(pk=task.pk)

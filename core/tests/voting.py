@@ -10,12 +10,14 @@ from ecs.core.models import Vote
 from ecs.communication.models import Message
 
 class VoteRemindersTest(CommunicationTestCase):
+    ''' '''
+    
     def setUp(self, *args, **kwargs):
         rval = super(VoteRemindersTest, self).setUp(*args, **kwargs)
 
         # alice is the submitter and bob is the postmaster
         settings.ECSMAIL['postmaster'] = 'bob@example.com'
-
+        
         # there has to be a test submission
         self.submission_form = create_submission_form()
         self.submission_form.submission.thesis = False
@@ -50,6 +52,8 @@ class VoteRemindersTest(CommunicationTestCase):
         return rval
 
     def test_expiry(self):
+        '''Tests that reminder messages actually get sent to submission participants.'''
+        
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=(self.april_meeting.deadline+timedelta(days=1)).date())
@@ -57,6 +61,8 @@ class VoteRemindersTest(CommunicationTestCase):
         self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_expiry_diplomathesis(self):
+        '''Tests that reminder messages actually get sent to submission participants in a diploma thesis submission.'''
+        
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis+timedelta(days=1)).date())
@@ -64,21 +70,29 @@ class VoteRemindersTest(CommunicationTestCase):
         self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office(self):
+        '''FIXME check if ok: Tests that messages get sent to the postmaster before the deadline of a submission meeting.'''
+        
         message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=(self.april_meeting.deadline-timedelta(days=7)).date())
         self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office_diplomathesis(self):
+        '''FIXME check if ok: Tests that messages get sent to the postmaster before the deadline of a diploma thesis submission meeting.'''
+        
         message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis-timedelta(days=7)).date())
         self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_submitter(self):
+        '''Tests if the submitter of a study gets a reminder message.'''
+        
         message_count = Message.objects.filter(receiver=self.alice).count()
         send_reminder_messages(today=(self.april_meeting.deadline-timedelta(days=21)).date())
         self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())
 
     def test_reminder_submitter_diplomathesis(self):
+        '''Tests if the submitter of a diploma thesis gets a reminder message.'''
+        
         message_count = Message.objects.filter(receiver=self.alice).count()
         send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis-timedelta(days=21)).date())
         self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())

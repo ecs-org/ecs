@@ -4,7 +4,11 @@ from django.test import TestCase
 from ecs.utils.genetic_sort import GeneticSorter, swap_mutation
 
 class GeneticSorterTest(TestCase):
+    '''Tests for the Genetic Sorter.'''
+    
     def test_list_sort(self):
+        '''Tests if the GeneticSorter works correctly for a supplied list.'''
+        
         N = 20
         data = random.sample(xrange(N), N)
         f = lambda p: sum(1.0 / (abs(i-x) + 1) for i, x in enumerate(p))

@@ -11,11 +11,15 @@ from ecs.workflow.models import Foo
 from ecs.workflow.tests import deadline_declarations
 
 class DeadlineTest(WorkflowTestCase):
+    '''Tests the workflow model'''
+    
     def setUp(self):
         super(DeadlineTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_simple_deadline(self):
+        '''Tests that activities of a workflownode contain no items after a deadline was reached.'''
+        
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(deadline_declarations.A, start=True)
         n_b = g.create_node(deadline_declarations.B, end=True)

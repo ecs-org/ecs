@@ -8,6 +8,8 @@ from ecs.users.utils import get_user
 
 
 class CleanupTest(EcsTestCase):
+    ''' '''
+    
     def setUp(self):
         super(CleanupTest, self).setUp()
         self._original_max_requests = tasks.MAX_REQUESTS_PER_USER
@@ -18,6 +20,8 @@ class CleanupTest(EcsTestCase):
         tasks.MAX_REQUESTS_PER_USER = self._original_max_requests
     
     def test_cleanup(self):
+        '''Tests that tracking the number of requests per user works.'''
+        
         users = ('alice@example.com', 'bob@example.com',)
         N = tasks.MAX_REQUESTS_PER_USER + 2
         for user in users:

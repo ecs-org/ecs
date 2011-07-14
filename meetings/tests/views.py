@@ -12,6 +12,8 @@ def _get_datetime_inputs(name, dt):
     }
 
 class ViewTestCase(LoginTestCase):
+    '''Tests for timetable and meetingassistant.'''
+    
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
@@ -20,6 +22,8 @@ class ViewTestCase(LoginTestCase):
         return obj.__class__.objects.get(pk=obj.pk)
 
     def test_timetable(self):
+        '''Tests if timetable durations are correct, if meeting entries are correctly stored in the timetable.'''
+        
         create_meeting_url = reverse('ecs.meetings.views.create_meeting')
         response = self.client.get(create_meeting_url)
         self.failUnlessEqual(response.status_code, 200)
@@ -57,6 +61,8 @@ class ViewTestCase(LoginTestCase):
         
 
     def test_meeting_assistant(self):
+        '''Makes sure that the meeting assistant is fully functional. Tests that it starts and stops meetings correctly.'''
+        
         meeting = Meeting.objects.create(start=self.start)
         submission = create_submission_form().submission
         e0 = meeting.add_entry(duration_in_seconds=42, submission=submission)
@@ -99,6 +105,8 @@ class ViewTestCase(LoginTestCase):
         self.failUnless(meeting.ended)
 
     def test_meeting_assistant_quickjump(self):
+        '''Tests that the quickjump view is accessible and that it returns the right url.'''
+        
         meeting = Meeting.objects.create(start=self.start, started=self.start)
         e0 = meeting.add_entry(duration_in_seconds=42)
         e1 = meeting.add_entry(duration_in_seconds=42*42)
