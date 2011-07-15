@@ -517,7 +517,7 @@ if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
     
-elif any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
+if any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
     logging.basicConfig(
             level = logging.DEBUG,
