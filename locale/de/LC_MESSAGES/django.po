@@ -8,14 +8,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-12 14:16+0200\n"
+"POT-Creation-Date: 2011-07-15 15:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: settings.py:65
@@ -462,8 +462,8 @@ msgstr "Dosis"
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:94 core/tests/submission_diffs.py:26
-#: core/tests/submission_diffs.py:27
+#: core/paper_forms.py:94 core/tests/submission_diffs.py:30
+#: core/tests/submission_diffs.py:31
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
@@ -1734,80 +1734,68 @@ msgstr "Status"
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: core/forms/review.py:26 templates/tasks/tasks.inc:22
+#: core/forms/review.py:24 templates/tasks/tasks.inc:22
 #: templates/tasks/tasks_full.inc:21
 msgid "thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/review.py:27
+#: core/forms/review.py:25
 msgid "retrospective"
 msgstr "Retrospektiv"
 
-#: core/forms/review.py:28
+#: core/forms/review.py:26
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:29 templates/tasks/tasks.inc:23
+#: core/forms/review.py:27 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
 msgid "expedited"
 msgstr "Expedited"
 
-#: core/forms/review.py:30
+#: core/forms/review.py:28
 msgid "expedited_review_categories"
 msgstr "Kategorien für Expedited Review"
 
-#: core/forms/review.py:31
+#: core/forms/review.py:29
 msgid "external_reviewer"
 msgstr "Externes Gutachten erforderlich"
 
-#: core/forms/review.py:32
+#: core/forms/review.py:30
 msgid "external_reviewer_name"
 msgstr "Externer Gutachter"
 
-#: core/forms/review.py:33
-msgid "new_external_reviewer"
-msgstr "Neuen externen Gutachter einladen (Emailadresse angeben)"
-
-#: core/forms/review.py:34
+#: core/forms/review.py:31
 msgid "is_amg"
 msgstr "Studie nach Arzneimittelgesetz"
 
-#: core/forms/review.py:35
+#: core/forms/review.py:32
 msgid "is_mpg"
 msgstr "Studie nach Medizinproduktegesetz"
 
-#: core/forms/review.py:36
+#: core/forms/review.py:33
 msgid "sponsor_required_for_next_meeting"
 msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
 
-#: core/forms/review.py:37
+#: core/forms/review.py:34
 msgid "insurance_review_required"
 msgstr "Versicherungsüberprüfung notwendig"
 
-#: core/forms/review.py:38
+#: core/forms/review.py:35
 msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
-#: core/forms/review.py:39
+#: core/forms/review.py:36
 #, fuzzy
 msgid "remission"
 msgstr "Neueinreichung"
 
-#: core/forms/review.py:40
+#: core/forms/review.py:37
 msgid "keywords"
 msgstr "Schlüsselwörter"
 
-#: core/forms/review.py:41
+#: core/forms/review.py:38
 msgid "additional_reviewers"
 msgstr "Zusätzliche Gutachter"
-
-#: core/forms/review.py:42
-msgid "new_additional_reviewer"
-msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
-
-#: core/forms/review.py:82
-msgid "This user is already registered"
-msgstr "Dieser Benutzer ist bereits registriert"
 
 #: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:56
 #: users/models.py:32
@@ -2795,36 +2783,36 @@ msgstr "Expedited"
 msgid "Retrospective Thesis Submissions"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:7
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:20
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:33
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:8
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:23
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:38
 #: users/forms.py:137
 msgid "Approved"
 msgstr "Bestätigt"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:16
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:29
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:42
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:18
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:33
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:48
 #: users/forms.py:138
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:19
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:21
 #, fuzzy
 msgid "Expedited Submissions"
 msgstr "Einreichungen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:32
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:36
 #, fuzzy
 msgid "Local-EC Submissions"
 msgstr "Keine Einreichung."
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:45
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:51
 #: templates/users/administration.html:57
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:46
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:52
 msgid "Go Back"
 msgstr ""
 
@@ -2963,8 +2951,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You have been invited to make an additional review for the study %(ec_number)"
-"s.\n"
+"You have been invited to make an additional review for the study "
+"%(ec_number)s.\n"
 msgstr ""
 "\n"
 "Sie wurden eingeladen ein Zusatz-Gutachten für die Studie %(ec_number)s zu "
@@ -3025,8 +3013,8 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"You have been invited to make an external review for the study %(ec_number)"
-"s.\n"
+"You have been invited to make an external review for the study "
+"%(ec_number)s.\n"
 msgstr ""
 "\n"
 "Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
@@ -3303,8 +3291,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            %(assigned_to)s eingeladen am %(assigned_at)s für %(task_name)"
-"s \n"
+"            %(assigned_to)s eingeladen am %(assigned_at)s für "
+"%(task_name)s \n"
 "        "
 
 #: templates/submissions/tabs/status.html:173
@@ -3509,11 +3497,11 @@ msgstr "Zurück zur Benutzer-Liste"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: templates/users/login.html:31
+#: templates/users/login.html:32
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
-#: templates/users/login.html:42
+#: templates/users/login.html:43
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
@@ -3788,6 +3776,15 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "new_external_reviewer"
+#~ msgstr "Neuen externen Gutachter einladen (Emailadresse angeben)"
+
+#~ msgid "new_additional_reviewer"
+#~ msgstr "Neuen zusätzlichen Gutachter einladen (Emailadresse angeben)"
+
+#~ msgid "This user is already registered"
+#~ msgstr "Dieser Benutzer ist bereits registriert"
 
 #~ msgid "Publication of {vote}"
 #~ msgstr "Veröffentlichung von {vote}"
