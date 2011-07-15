@@ -9,9 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
-from django.contrib.auth import views as auth_views
 from django.conf import settings
-from django.contrib.auth.decorators import user_passes_test
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django import forms
@@ -56,11 +54,11 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
 def login(request, *args, **kwargs):
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
-    return auth_views.login(request, *args, **kwargs)
+    return auth.views.login(request, *args, **kwargs)
 
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
-    return auth_views.logout(request, *args, **kwargs)
+    return auth.views.logout(request, *args, **kwargs)
 
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
@@ -318,7 +316,30 @@ def administration(request, limit=20):
 @user_flag_required('internal')
 def invite(request):
     form = InvitationForm(request.POST or None)
-    comment = invite_user(request, form.cleaned_data['email']) if form.is_valid() else None
+    comment = None
+
+    if request.method == 'POST' and form.is_valid():
+        from django.db import transaction
+        sid = transaction.savepoint()
+        try:
+            user = form.save()
+
+            invitation = Invitation.objects.create(user=user)
+
+            subject = _(u'ECS account creation')
+            link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+            htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
+                'invitation_text': form.cleaned_data['invitation_text'],
+                'link': link,
+            }))
+            transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
+            msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
+        except Exception, e:
+            transaction.savepoint_rollback(sid)
+            comment = _(u'Failed to invite user.')
+        else:
+            transaction.savepoint_commit(sid)
+            comment = _(u'The user has been invited.')
 
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,

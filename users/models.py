@@ -101,5 +101,3 @@ class Invitation(models.Model):
     accepted = models.BooleanField(default=False)
 
     objects = InvitationManager()
-
-

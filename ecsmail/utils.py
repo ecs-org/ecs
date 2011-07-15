@@ -122,4 +122,3 @@ def deliver_to_recipient(recipient, subject, message, from_email, message_html=N
     msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
     queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
     return (msgid, msg.message(),)
-

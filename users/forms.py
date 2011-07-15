@@ -10,13 +10,11 @@ from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget
 from ecs.utils.formutils import TranslatedModelForm
-
-
-email_length = User._meta.get_field('email').max_length
+from ecs.users.utils import get_user, create_user
 
 class EmailLoginForm(forms.Form):
     # Note: This has to be called "username", so we can use the django login view
-    username = forms.EmailField(label=_('Email'), max_length=email_length)
+    username = forms.EmailField(label=_('Email'), max_length=User._meta.get_field('email').max_length)
     password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
 
     def __init__(self, request=None, *args, **kwargs):
@@ -113,10 +111,9 @@ class ProfileForm(TranslatedModelForm):
         )
         labels = {
             'gender': _('Gender'),
+            'title': _('Title'),
             'first_name': _('First Name'),
             'last_name': _('Last Name'),
-            'gender': _('Gender'),
-            'title': _('Title'),
             'organisation': _('Organisation'),
             'jobtitle': _('Job Title'),
             'swift_bic': _('SWIFT-BIC'),
@@ -193,5 +190,26 @@ class ProfileDetailsForm(forms.ModelForm):
         fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal', 'help_writer')
 
 class InvitationForm(forms.Form):
-    email = forms.EmailField()
+    email = forms.EmailField(label=_('email'))
+    gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
+    title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
+    first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
+    last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
+    invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            user = get_user(email)
+            raise forms.ValidationError(_(u'There is already a user with this email address.'))
+        except User.DoesNotExist:
+            pass
+        return email
+
+    def save(self):
+        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
+        profile = user.get_profile()
+        profile.gender = self.cleaned_data['gender']
+        profile.title = self.cleaned_data['title']
+        profile.save()
+        return user

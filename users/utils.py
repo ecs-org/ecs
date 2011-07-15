@@ -193,5 +193,3 @@ def get_ec_user(submission=None):
             return task.assigned_to
     else:
         return get_user(settings.DEFAULT_CONTACT)
-
-
