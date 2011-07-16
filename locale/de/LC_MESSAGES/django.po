@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-16 16:08+0200\n"
+"POT-Creation-Date: 2011-07-16 16:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1307,7 +1307,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:276 core/paper_forms.py:314 meetings/forms.py:25
-#: meetings/forms.py:41 users/forms.py:195
+#: meetings/forms.py:41 users/forms.py:148 users/forms.py:194
 msgid "title"
 msgstr "Titel"
 
@@ -3333,7 +3333,7 @@ msgstr "Übertragen am"
 msgid "Assigend To"
 msgstr "Übertragen an"
 
-#: templates/tasks/log.html:14 users/forms.py:198
+#: templates/tasks/log.html:14 users/forms.py:197
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -3506,6 +3506,21 @@ msgstr "Öffentliches Register"
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
+#: templates/users/new_signing_user.txt:2
+#, python-format
+msgid ""
+"\n"
+"A new Signing User has been created: %(name)s\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ein neuer Zeichnungberechtigter wurde hinzugefügt: %(name)s\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
 #: templates/users/profile.html:9
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
@@ -3585,19 +3600,19 @@ msgid ""
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:54 users/forms.py:194
+#: users/forms.py:54 users/forms.py:147 users/forms.py:193
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:55 users/forms.py:196
+#: users/forms.py:55 users/forms.py:195
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:56 users/forms.py:197
+#: users/forms.py:56 users/forms.py:196
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:57 users/forms.py:193
+#: users/forms.py:57 users/forms.py:192
 msgid "email"
 msgstr "E-Mail"
 
@@ -3697,27 +3712,27 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:199
+#: users/forms.py:149 users/forms.py:198
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:200
+#: users/forms.py:150 users/forms.py:199
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:201
-msgid "Invitation Text"
-msgstr "Einladungstext"
-
-#: users/forms.py:202
+#: users/forms.py:151 users/forms.py:200
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:203
+#: users/forms.py:152 users/forms.py:201
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:216
+#: users/forms.py:202
+msgid "Invitation Text"
+msgstr "Einladungstext"
+
+#: users/forms.py:215
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
 
@@ -3729,23 +3744,26 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:130 users/views.py:330
+#: users/utils.py:130 users/views.py:326
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
 
-#: users/views.py:86
+#: users/views.py:87
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:141
+#: users/views.py:142
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort vergessen"
 
-#: users/views.py:340
-#, fuzzy
+#: users/views.py:336
 msgid "Failed to deliver invitation"
-msgstr "Expedited Review Einladungen"
+msgstr "Die Einladung konnte nicht zugestellt werden"
+
+#: users/views.py:344
+msgid "New Signing User"
+msgstr "Neuer Zeichnungsberechtigter"
 
 #: userswitcher/forms.py:12
 msgid "user"

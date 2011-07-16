@@ -30,6 +30,7 @@ from ecs.users.utils import user_flag_required
 from ecs.users.forms import EmailLoginForm
 from ecs.users.utils import get_user, create_user
 from ecs.workflow.models import Graph
+from ecs.communication.utils import send_system_message_template
 
 
 class TimestampedTokenFactory(object):
@@ -338,6 +339,9 @@ def invite(request):
             raise
         else:
             transaction.savepoint_commit(sid)
+            if user.groups.filter(name=u'EC-Signing Group').exists():
+                for u in User.objects.filter(groups__name=u'EC-Signing Group'):
+                    send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
             return HttpResponseRedirect(reverse('ecs.users.views.details', kwargs={'user_pk': user.pk}))
 
     return render(request, 'users/invitation/invite_user.html', {

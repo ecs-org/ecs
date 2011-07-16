@@ -1,0 +1,7 @@
+{% load i18n core userutils %}
+{% blocktrans with user|formal_name as name  %}
+A new Signing User has been created: {{ name }}
+
+Sincerly yours,
+    The Team of the Ethics Commission
+{% endblocktrans %}
