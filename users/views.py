@@ -237,9 +237,14 @@ def toggle_active(request, user_pk=None):
 @user_flag_required('internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
+    was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
     if request.method == 'POST' and form.is_valid():
-        form.save()
+        user = form.save()
+        is_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
+        if is_signing_user and not was_signing_user:
+            for u in User.objects.filter(groups__name=u'EC-Signing Group'):
+                send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
 
     return render(request, 'users/details.html', {
         'form': form,
