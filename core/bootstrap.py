@@ -250,7 +250,6 @@ def auth_groups():
         u'userswitcher_target',
         u'translators',
         u'sentryusers',
-        
     )
     for group in groups:
         Group.objects.get_or_create(name=group)

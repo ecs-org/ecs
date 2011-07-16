@@ -7,16 +7,13 @@
 
 {% block content %}
 <div class="administration_detail form_main">
-<h2>{{ user_form.instance }}</h2>
+<h2>{{ form.instance }}</h2>
 
 <p><a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a></p>
 <form action="" method="post">
     <div>
     <ol>
-        {% for field in user_form %}
-            {% include "forms/field.html" %}
-        {% endfor %}
-        {% for field in profile_form %}
+        {% for field in form %}
             {% include "forms/field.html" %}
         {% endfor %}
     </ol>

@@ -144,50 +144,49 @@ class AdministrationFilterForm(forms.Form):
     keyword = forms.CharField(required=False)
 
 class UserDetailsForm(forms.ModelForm):
+    gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
+    title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
+    medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
+    expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
+    internal = forms.BooleanField(required=False, label=_('Internal'))
+    help_writer = forms.BooleanField(required=False, label=_('Help writer'))
+
     class Meta:
         model = User
-        fields = ('groups',)
+        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'internal', 'help_writer')
 
     def __init__(self, *args, **kwargs):
-        rval = super(UserDetailsForm, self).__init__(*args, **kwargs)
-
-        if self.instance and self.instance.get_profile().board_member:
-            self.fields['medical_categories'] = forms.ModelMultipleChoiceField(
-                required=False,
-                queryset=MedicalCategory.objects.all(),
-                initial=[x.pk for x in self.instance.medical_categories.all()],
-            )
-            self.fields['expedited_review_categories'] = forms.ModelMultipleChoiceField(
-                required=False,
-                queryset=ExpeditedReviewCategory.objects.all(),
-                initial=[x.pk for x in self.instance.expedited_review_categories.all()],
-            )
-
+        super(UserDetailsForm, self).__init__(*args, **kwargs)
+        profile = self.instance.get_profile()
+        self.fields['gender'].initial = profile.gender
+        self.fields['title'].initial = profile.title
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'})
-            )
-            if self.instance and self.instance.get_profile().board_member:
-                self.fields['medical_categories'].widget = MultiselectWidget(
-                    url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
-                )
-                self.fields['expedited_review_categories'].widget = MultiselectWidget(
-                    url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
-                )
-
-        return rval
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
+        self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
+        self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
+        self.fields['internal'].initial = profile.internal
+        self.fields['help_writer'].initial = profile.help_writer
 
     def save(self, *args, **kwargs):
-        instance = super(UserDetailsForm, self).save(*args, **kwargs)
-        instance.medical_categories = self.cleaned_data.get('medical_categories', ())
-        instance.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', ())
-        instance.save()
-        return instance
-
-class ProfileDetailsForm(forms.ModelForm):
-    class Meta:
-        model = UserProfile
-        fields = ('external_review', 'board_member', 'executive_board_member', 'thesis_review', 'insurance_review', 'expedited_review', 'internal', 'help_writer')
+        user = super(UserDetailsForm, self).save(*args, **kwargs)
+        user.medical_categories = self.cleaned_data.get('medical_categories', ())
+        user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', ())
+        user.save()
+        profile = user.get_profile()
+        profile.gender = self.cleaned_data['gender']
+        profile.title = self.cleaned_data['title']
+        profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
+        profile.board_member = user.groups.filter(name=u'EC-Board Member').exists()
+        profile.executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
+        profile.thesis_review = user.groups.filter(name=u'EC-Thesis Review Group').exists()
+        profile.insurance_review = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
+        profile.expedited_review = user.groups.filter(name=u'Expedited Review Group').exists()
+        for k in ('internal', 'help_writer'):
+            setattr(profile, k, self.cleaned_data.get(k, False))
+        profile.save()
+        return user
 
 class InvitationForm(forms.Form):
     email = forms.EmailField(label=_('email'))
@@ -195,7 +194,19 @@ class InvitationForm(forms.Form):
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
     first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
     last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
+    groups = forms.ModelMultipleChoiceField(required=False, queryset=Group.objects.all(), label=_('Groups'))
+    medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
+    expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
+    internal = forms.BooleanField(required=False, label=_('Internal'))
+    help_writer = forms.BooleanField(required=False, label=_('Help writer'))
     invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))
+
+    def __init__(self, *args, **kwargs):
+        super(InvitationForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -207,9 +218,22 @@ class InvitationForm(forms.Form):
         return email
 
     def save(self):
-        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
+        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'], start_workflow=False)
+        user.groups = self.cleaned_data.get('groups', [])
+        user.medical_categories = self.cleaned_data.get('medical_categories', [])
+        user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
+        user.save()
         profile = user.get_profile()
+        profile.approved_by_office = True
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
+        profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
+        profile.board_member = user.groups.filter(name=u'EC-Board Member').exists()
+        profile.executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
+        profile.thesis_review = user.groups.filter(name=u'EC-Thesis Review Group').exists()
+        profile.insurance_review = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
+        profile.expedited_review = user.groups.filter(name=u'Expedited Review Group').exists()
+        for k in ('internal', 'help_writer'):
+            setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user

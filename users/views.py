@@ -23,10 +23,10 @@ from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
-    UserDetailsForm, ProfileDetailsForm, InvitationForm
+    UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
-from ecs.users.utils import user_flag_required, invite_user
+from ecs.users.utils import user_flag_required
 from ecs.users.forms import EmailLoginForm
 from ecs.users.utils import get_user, create_user
 from ecs.workflow.models import Graph
@@ -236,17 +236,12 @@ def toggle_active(request, user_pk=None):
 @user_flag_required('internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    user_form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
-    profile_form = ProfileDetailsForm(request.POST or None, instance=user.get_profile(), prefix='profile')
-    if request.method == 'POST':
-        if user_form.is_valid():
-            user_form.save()
-        if profile_form.is_valid():
-            profile_form.save()
+    form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
+    if request.method == 'POST' and form.is_valid():
+        form.save()
 
     return render(request, 'users/details.html', {
-        'user_form': user_form,
-        'profile_form': profile_form,
+        'form': form,
     })
 
 @user_flag_required('internal')
@@ -335,12 +330,15 @@ def invite(request):
             }))
             transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
             msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
-        except Exception, e:
+        except IndexError, e:
             transaction.savepoint_rollback(sid)
-            comment = _(u'Failed to invite user.')
+            form._errors['email'] = form.error_class([_('Failed to deliver invitation')])
+        except:
+            transaction.savepoint_rollback(sid)
+            raise
         else:
             transaction.savepoint_commit(sid)
-            comment = _(u'The user has been invited.')
+            return HttpResponseRedirect(reverse('ecs.users.views.details', kwargs={'user_pk': user.pk}))
 
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,

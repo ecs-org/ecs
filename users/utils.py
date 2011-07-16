@@ -115,42 +115,6 @@ def user_flag_required(flag):
 def user_group_required(group):
     return user_passes_test(lambda u: bool(u.groups.filter(name=group).count()))
 
-def invite_user(request, email):
-    comment = None
-    sid = transaction.savepoint()
-    try:
-        user, created = get_or_create_user(email)
-        if not created:
-            raise ValueError(_(u'There is already a user with this email address.'))
-        profile = user.get_profile()
-        profile.phantom = True
-        profile.save()
-
-        invitation = Invitation.objects.create(user=user)
-
-        subject = _(u'ECS account creation')
-        link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-        htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
-            'link': link,
-        }))
-        transferlist = deliver(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
-        try:
-            msgid, rawmail = transferlist[0]
-            #print rawmail
-        except IndexError:
-            raise ValueError(_(u'The email could not be delivered.'))
-    except ValueError, e:
-        transaction.savepoint_rollback(sid)
-        comment = unicode(e)
-    except Exception, e:
-        transaction.savepoint_rollback(sid)
-        raise e
-    else:
-        transaction.savepoint_commit(sid)
-        comment = _(u'The user has been invited.')
-
-    return comment
-
 def create_phantom_user(email, role=None):
     sid = transaction.savepoint()
     try:

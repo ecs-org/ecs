@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-15 15:19+0200\n"
+"POT-Creation-Date: 2011-07-16 16:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,7 +191,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:114 core/bootstrap.py:644
+#: core/bootstrap.py:114 core/bootstrap.py:643
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -200,27 +200,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:116 core/bootstrap.py:639
+#: core/bootstrap.py:116 core/bootstrap.py:638
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:117 core/bootstrap.py:640
+#: core/bootstrap.py:117 core/bootstrap.py:639
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:118 core/bootstrap.py:638
+#: core/bootstrap.py:118 core/bootstrap.py:637
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:119 core/bootstrap.py:642 core/parties.py:70
+#: core/bootstrap.py:119 core/bootstrap.py:641 core/parties.py:70
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:120 core/bootstrap.py:643
+#: core/bootstrap.py:120 core/bootstrap.py:642
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:121 core/bootstrap.py:641
+#: core/bootstrap.py:121 core/bootstrap.py:640
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -295,16 +295,16 @@ msgstr ""
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:635
+#: core/bootstrap.py:634
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:636
+#: core/bootstrap.py:635
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:637
+#: core/bootstrap.py:636
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
@@ -1307,7 +1307,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:276 core/paper_forms.py:314 meetings/forms.py:25
-#: meetings/forms.py:41
+#: meetings/forms.py:41 users/forms.py:195
 msgid "title"
 msgstr "Titel"
 
@@ -1797,12 +1797,12 @@ msgstr "Schlüsselwörter"
 msgid "additional_reviewers"
 msgstr "Zusätzliche Gutachter"
 
-#: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:799 users/forms.py:54
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
@@ -2425,7 +2425,7 @@ msgstr "Neue Nachrichten"
 
 #: templates/administration/detail.html:10
 #: templates/users/invitation/invite_user.html:4
-#: templates/users/invitation/invite_user.html:7
+#: templates/users/invitation/invite_user.html:9
 msgid "Invite User"
 msgstr "Benutzer einladen"
 
@@ -2508,6 +2508,7 @@ msgstr "Anmerkungen einfügen"
 #: templates/communication/send.html:87 templates/communication/thread.html:78
 #: templates/submissions/readonly_form.html:262
 #: templates/tasks/manage_task.html:77
+#: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
 
@@ -2713,7 +2714,7 @@ msgstr "Sitzung verlegen"
 msgid "Save and return to study"
 msgstr "Speichern und zurück zur Studie"
 
-#: templates/meetings/status.html:9 users/forms.py:119
+#: templates/meetings/status.html:9 users/forms.py:114
 msgid "Title"
 msgstr "Titel"
 
@@ -2786,14 +2787,14 @@ msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:8
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:23
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:38
-#: users/forms.py:137
+#: users/forms.py:134
 msgid "Approved"
 msgstr "Bestätigt"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:18
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:33
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:48
-#: users/forms.py:138
+#: users/forms.py:135
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
@@ -3332,7 +3333,7 @@ msgstr "Übertragen am"
 msgid "Assigend To"
 msgstr "Übertragen an"
 
-#: templates/tasks/log.html:14
+#: templates/tasks/log.html:14 users/forms.py:198
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -3534,7 +3535,7 @@ msgstr ""
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: templates/users/invitation/invitation_email.html:7
+#: templates/users/invitation/invitation_email.html:8
 #, python-format
 msgid ""
 "\n"
@@ -3543,7 +3544,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/users/invitation/invite_user.html:15
+#: templates/users/invitation/invite_user.html:19
 msgid "Invite"
 msgstr "Einladen"
 
@@ -3560,141 +3561,165 @@ msgstr "Benutzer bestätigen"
 msgid "End"
 msgstr "Beendet"
 
-#: users/forms.py:19
+#: users/forms.py:17
 msgid "Email"
 msgstr "E-mail"
 
-#: users/forms.py:20 users/forms.py:63
+#: users/forms.py:18 users/forms.py:61
 msgid "Password"
 msgstr "Passwort"
 
-#: users/forms.py:34
+#: users/forms.py:32
 msgid ""
 "Please enter a correct email and password. Note that the password is case-"
 "sensitive."
 msgstr ""
 
-#: users/forms.py:36
+#: users/forms.py:34
 msgid "This account is inactive."
 msgstr "Dieser Zugang ist deaktiviert."
 
-#: users/forms.py:43
+#: users/forms.py:41
 msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:56
+#: users/forms.py:54 users/forms.py:194
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:57
+#: users/forms.py:55 users/forms.py:196
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:58
+#: users/forms.py:56 users/forms.py:197
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:59
+#: users/forms.py:57 users/forms.py:193
 msgid "email"
 msgstr "E-Mail"
 
-#: users/forms.py:64
+#: users/forms.py:62
 msgid "Password (again)"
 msgstr "Passwort wiederholen"
 
-#: users/forms.py:69
+#: users/forms.py:67
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: users/forms.py:79
+#: users/forms.py:77
 msgid "Never"
 msgstr "nie"
 
-#: users/forms.py:80
+#: users/forms.py:78
 msgid "after 5 minutes"
 msgstr "nach fünf Minuten"
 
-#: users/forms.py:81
+#: users/forms.py:79
 msgid "after 10 minutes"
 msgstr "nach zehn Minuten"
 
-#: users/forms.py:82
+#: users/forms.py:80
 msgid "after 6 hours"
 msgstr "nach sechs Stunden"
 
-#: users/forms.py:115 users/forms.py:118
+#: users/forms.py:113
 msgid "Gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:116
+#: users/forms.py:115
 msgid "First Name"
 msgstr "Vorname"
 
-#: users/forms.py:117
+#: users/forms.py:116
 msgid "Last Name"
 msgstr "Nachname"
 
-#: users/forms.py:120
+#: users/forms.py:117
 msgid "Organisation"
 msgstr "Organisation"
 
-#: users/forms.py:121
+#: users/forms.py:118
 msgid "Job Title"
 msgstr "Berufsbezeichnung"
 
-#: users/forms.py:122
+#: users/forms.py:119
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: users/forms.py:123
+#: users/forms.py:120
 msgid "IBAN"
 msgstr "IBAN"
 
-#: users/forms.py:124
+#: users/forms.py:121
 msgid "Address"
 msgstr "Adresse"
 
-#: users/forms.py:125
+#: users/forms.py:122
 msgid "Additional Address Information"
 msgstr "Zusätzliche Adressinformationen"
 
-#: users/forms.py:126
+#: users/forms.py:123
 msgid "ZIP-Code"
 msgstr "Postleitzahl"
 
-#: users/forms.py:127
+#: users/forms.py:124
 msgid "City"
 msgstr "Ort"
 
-#: users/forms.py:128
+#: users/forms.py:125
 msgid "Phone"
 msgstr "Telefon"
 
-#: users/forms.py:129
+#: users/forms.py:126
 msgid "Fax"
 msgstr "Fax"
 
-#: users/forms.py:130
+#: users/forms.py:127
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
-#: users/forms.py:131
+#: users/forms.py:128
 msgid "Forwarding of unread messages"
 msgstr "Weiterleitung von ungelesenen Nachrichten"
 
-#: users/forms.py:136 users/forms.py:141
+#: users/forms.py:133 users/forms.py:138
 msgid "Both"
 msgstr "Beide"
 
-#: users/forms.py:142
+#: users/forms.py:139
 msgid "active"
 msgstr "aktiv"
 
-#: users/forms.py:143
+#: users/forms.py:140
 msgid "inactive"
 msgstr "inaktiv"
+
+#: users/forms.py:199
+msgid "Board Member Categories"
+msgstr "Medizinische Kategorien für Board Member Review"
+
+#: users/forms.py:200
+msgid "Expedited Categories"
+msgstr "Fachgebiete für Expedited Review"
+
+#: users/forms.py:201
+msgid "Invitation Text"
+msgstr "Einladungstext"
+
+#: users/forms.py:202
+msgid "Internal"
+msgstr "Intern"
+
+#: users/forms.py:203
+msgid "Help writer"
+msgstr "Hilfeseiten-Schreiber/in"
+
+#: users/forms.py:216
+msgid "There is already a user with this email address."
+msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
 
 #: users/utils.py:67
 msgid "Ms."
@@ -3704,30 +3729,23 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:124
-msgid "There is already a user with this email address."
-msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
-
-#: users/utils.py:131 users/utils.py:166
+#: users/utils.py:130 users/views.py:330
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
 
-#: users/utils.py:141
-msgid "The email could not be delivered."
-msgstr "Die E-mail konnte nicht gesendet werden."
-
-#: users/utils.py:150
-msgid "The user has been invited."
-msgstr "Der Benutzer wurde eingeladen."
-
-#: users/views.py:87
+#: users/views.py:86
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:142
+#: users/views.py:141
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort vergessen"
+
+#: users/views.py:340
+#, fuzzy
+msgid "Failed to deliver invitation"
+msgstr "Expedited Review Einladungen"
 
 #: userswitcher/forms.py:12
 msgid "user"
@@ -3776,6 +3794,12 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "The email could not be delivered."
+#~ msgstr "Die E-mail konnte nicht gesendet werden."
+
+#~ msgid "The user has been invited."
+#~ msgstr "Der Benutzer wurde eingeladen."
 
 #~ msgid "new_external_reviewer"
 #~ msgstr "Neuen externen Gutachter einladen (Emailadresse angeben)"
@@ -3914,9 +3938,6 @@ msgstr ""
 
 #~ msgid "Assistant"
 #~ msgstr "Assistent"
-
-#~ msgid "Fast Lane Invitations"
-#~ msgstr "Expedited Review Einladungen"
 
 #~ msgid "Send Invitations"
 #~ msgstr "Einladung senden"

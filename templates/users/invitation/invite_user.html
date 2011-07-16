@@ -4,15 +4,33 @@
 {% block htmltitle %}{% trans "Invite User" %} | {{ block.super }}{% endblock %}
 
 {% block administration_detail %}
-<h2>{% trans "Invite User" %}</h2>
 
-{% if comment %}
-    <p>{{ comment }}</p>
-{% endif %}
+<div class="form_main">
+    <h2>{% trans "Invite User" %}</h2>
 
-<form action="" method="post">
-    {{ form.as_p }}
-    <input type="submit" value="{% trans "Invite" %}" />
-</form>
+    <form action="" method="post">
+        <div>
+            <ol>
+                {% for field in form %}
+                    {% include "forms/field.html" %}
+                {% endfor %}
+            </ol>
+        </div>
+        <input type="submit" value="{% trans "Invite" %}" />
+    </form>
+</div>
 {% endblock %}
 
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+      window.addEvent('domready', function(){
+        var messageToolbarItems = [ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}")];
+        var textarea = $('id_invitation_text');
+        new ecs.textarea.TextArea(textarea);
+        ecs.textarea.installToolbar(textarea, messageToolbarItems);
+
+        ecs.setupFormFieldHelpers();
+      });
+    </script>
+{% endblock %}
