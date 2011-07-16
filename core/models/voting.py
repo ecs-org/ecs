@@ -43,6 +43,8 @@ class Vote(models.Model):
     
     @property
     def result_text(self):
+        if self.result is None:
+            return _('No Result')
         return dict(VOTE_RESULT_CHOICES)[self.result]
 
     def get_ec_number(self):

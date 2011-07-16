@@ -139,16 +139,20 @@
             {% endif %}
         </td>
     </tr>
+    {% if user|has_flag:'internal' %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
             <ul>
                 {% for vote in submission_form.submission.votes.all %}
+                    {% if vote.result %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </td>
     </tr>
+    {% endif %}
     <tr>
         <th>Kategorien:</th>
         <td colspan="3">
