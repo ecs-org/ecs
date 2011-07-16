@@ -14,6 +14,7 @@ from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django import forms
 from django.contrib import auth
+from django.contrib.auth import views as auth_views
 from django.db.models import Q
 
 from ecs.utils.django_signed import signed
@@ -54,11 +55,11 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
 def login(request, *args, **kwargs):
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
-    return auth.views.login(request, *args, **kwargs)
+    return auth_views.login(request, *args, **kwargs)
 
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
-    return auth.views.logout(request, *args, **kwargs)
+    return auth_views.logout(request, *args, **kwargs)
 
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
