@@ -201,6 +201,9 @@
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
+        {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
+            <p><a href="{% url ecs.tasks.views.reopen_task task_pk=checklist_review_form.reopen_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
+        {% endif %}
         {% with checklist_review_form as review_form %}
             {% include 'submissions/review_form.inc' %}
         {% endwith %}

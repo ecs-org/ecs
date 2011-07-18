@@ -129,12 +129,23 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote = submission_form.current_vote
     submission = submission_form.submission
 
+    from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
+        ExternalChecklistReview, ThesisRecommendationReview,
+        ExpeditedRecommendation, ExpeditedRecommendationReview,
+        LocalEcRecommendationReview, BoardMemberReview)
+
     checklist_reviews = []
     for checklist in Checklist.objects.filter(submission=submission).select_related('blueprint'):
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
-            checklist_form = make_checklist_form(checklist)(readonly=True)
+            try:
+                reopen_tasks = get_obj_tasks(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview), submission_form.submission, data=checklist.blueprint)
+                reopen_task = reopen_tasks.order_by('-created_at')[0]
+            except IndexError:
+                checklist_form = make_checklist_form(checklist)(readonly=True)
+            else:
+                checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
     
     submission_forms = list(submission_form.submission.forms.order_by('created_at'))
@@ -219,11 +230,6 @@ def befangene_review(request, submission_form_pk=None):
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
-
-    from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
-        ExternalChecklistReview, ThesisRecommendationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview,
-        LocalEcRecommendationReview, BoardMemberReview)
 
     try:
         # XXX: there really should not be another task for this url

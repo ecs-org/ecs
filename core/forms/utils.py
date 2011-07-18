@@ -16,6 +16,7 @@ class ReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
         self.related_task = kwargs.pop('related_task', None)
+        self.reopen_task = kwargs.pop('reopen_task', None)
         super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             mark_readonly(self)
@@ -24,6 +25,7 @@ class NewReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
         self.related_task = kwargs.pop('related_task', None)
+        self.reopen_task = kwargs.pop('reopen_task', None)
         super(NewReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             for field in self.fields.itervalues():

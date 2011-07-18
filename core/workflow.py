@@ -184,8 +184,11 @@ class ChecklistReview(Activity):
         model = Submission
         vary_on = ChecklistBlueprint
         
+    def is_repeatable(self):
+        return True
+        
     def is_reentrant(self):
-        return False
+        return True
         
     def is_locked(self):
         blueprint = self.node.data
@@ -207,6 +210,16 @@ def unlock_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ChecklistReview)
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
+class NonRepeatableChecklistReview(ChecklistReview):
+    def is_repeatable(self):
+        return False
+
+    def is_reentrant(self):
+        return False
+
+def unlock_non_repeatable_checklist_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(NonRepeatableChecklistReview)
+post_save.connect(unlock_checklist_review, sender=Checklist)
 
 class BoardMemberReview(ChecklistReview):
     def is_reentrant(self):
@@ -238,7 +251,7 @@ task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
 # XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
-class ThesisRecommendationReview(ChecklistReview):
+class ThesisRecommendationReview(NonRepeatableChecklistReview):
     def is_reentrant(self):
         return True
 
@@ -252,7 +265,7 @@ def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
 post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
 
-class ExpeditedRecommendation(ChecklistReview):
+class ExpeditedRecommendation(NonRepeatableChecklistReview):
     def receive_token(self, *args, **kwargs):
         token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
         for cat in self.workflow.data.expedited_review_categories.all():
@@ -263,7 +276,7 @@ def unlock_expedited_recommendation(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendation)
 post_save.connect(unlock_expedited_recommendation, sender=Checklist)
 
-class ExpeditedRecommendationReview(ChecklistReview):
+class ExpeditedRecommendationReview(NonRepeatableChecklistReview):
     def is_reentrant(self):
         return True
 
@@ -277,7 +290,8 @@ def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
 post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
-class LocalEcRecommendationReview(ChecklistReview):
+
+class LocalEcRecommendationReview(NonRepeatableChecklistReview):
     def is_reentrant(self):
         return True
 
@@ -287,9 +301,9 @@ class LocalEcRecommendationReview(ChecklistReview):
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
 
-def unlock_expedited_recommendation_review(sender, **kwargs):
+def unlock_localec_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
-post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
+post_save.connect(unlock_localec_recommendation_review, sender=Checklist)
 
 @guard(model=Submission)
 def needs_external_review(wf):
