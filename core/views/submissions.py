@@ -32,7 +32,7 @@ from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
-from ecs.tasks.utils import has_task
+from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import user_flag_required
 
 from ecs.documents.views import upload_document, delete_document
@@ -225,7 +225,10 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         ExpeditedRecommendation, ExpeditedRecommendationReview,
         LocalEcRecommendationReview, BoardMemberReview)
 
-    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview), submission_form.submission, data=blueprint):
+    try:
+        # XXX: there really should not be another task for this url
+        related_task = request.related_tasks[0]
+    except IndexError:
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
@@ -238,7 +241,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-    form = make_checklist_form(checklist)(request.POST or None, complete_task=(blueprint.slug in ['additional_review', 'external_review']))
+    form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
     extra_context = {}
 
     if request.method == 'POST':
@@ -258,18 +261,13 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
             checklist.save() # touch the checklist instance to trigger the post_save signal
 
-            if complete_task and checklist.is_complete:
-                extra_context['review_complete'] = checklist.pk
-            elif (complete_task or really_complete_task) and not checklist.is_complete:
+            if (complete_task or really_complete_task) and not checklist.is_complete:
                 extra_context['review_incomplete'] = True
             elif really_complete_task and checklist.is_complete:
-                additional_review_task = submission_form.submission.additional_review_task_for(request.user)
-                external_review_task = submission_form.submission.external_review_task_for(request.user)
-                if blueprint.slug == 'additional_review' and additional_review_task:
-                    additional_review_task.done(request.user)
-                elif blueprint.slug == 'external_review' and external_review_task:
-                    external_review_task.done(request.user)
+                related_task.done(request.user)
                 return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+            elif complete_task and checklist.is_complete:
+                extra_context['review_complete'] = checklist.pk
 
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)

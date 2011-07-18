@@ -22,9 +22,11 @@
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
         {% if not checklist_review_form.readonly %}
-            <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
-            {% if checklist_review_form.complete_task %}
-                <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}complete {{ review }}{% endblocktrans %}</a>
+            {% if checklist_review_form.related_task %}
+                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
+                <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
+            {% else %}
+                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
             {% endif %}
         {% endif %}
     {% endfor %}
