@@ -227,7 +227,6 @@ class InvitationForm(forms.Form):
         profile.approved_by_office = True
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
         profile.board_member = user.groups.filter(name=u'EC-Board Member').exists()
         profile.executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
         profile.thesis_review = user.groups.filter(name=u'EC-Thesis Review Group').exists()

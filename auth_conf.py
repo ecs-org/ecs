@@ -24,15 +24,13 @@ class SubmissionQFactory(authorization.QFactory):
         q = self.make_q(forms__presenter=user)
 
         ### rules that apply until a final vote has been published.
-        until_vote_q = self.make_q(additional_reviewers=user)
+        until_vote_q = self.make_q(external_reviewers=user)
         if profile.thesis_review:
             until_vote_q |= self.make_q(thesis=True)
         if profile.board_member:
             until_vote_q |= self.make_q(timetable_entries__participations__user=user)
         if profile.expedited_review:
             until_vote_q |= self.make_q(expedited=True)
-        if profile.external_review:
-            until_vote_q |= self.make_q(external_reviewer_name=user)
         if profile.insurance_review:
             until_vote_q |= self.make_q(insurance_review_required=True)
         q |= until_vote_q & (

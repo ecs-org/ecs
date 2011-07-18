@@ -61,16 +61,13 @@ def get_reviewing_parties(sf, include_workflow=True):
     if include_workflow:
         from ecs.tasks.models import Task
         for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.all().values('pk').query, assigned_to__isnull=False, deleted_at__isnull=True).select_related('task_type'):
-            if task.assigned_to == sf.submission.external_reviewer_name:
-                parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
-            else:
-                parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name))
+            parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name))
 
     for user in User.objects.filter(meeting_participations__entry__submission=sf.submission):
         parties.append(Party(user=user, involvement=_("Board Member Review")))
 
-    for user in sf.submission.additional_reviewers.all():
-        parties.append(Party(user=user, involvement=_("Additional Review"), anonymous=anonymous))
+    for user in sf.submission.external_reviewers.all():
+        parties.append(Party(user=user, involvement=_("External Review"), anonymous=anonymous))
 
     return parties
 

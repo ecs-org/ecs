@@ -416,23 +416,6 @@ checklist_questions = {
         ('5b', u'Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
         ('6',  u'Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
     ],
-    u'additional_review': [
-        ('1a', u'Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?',u''),
-        ('1b', u'Ist das Projekt vollständig (inkl. Angaben über Nebenwirkungen etc.)?',
-            u'Bitte beurteilen Sie in diesem Zusammenhang auch die Vollständigkeit und Richtigkeit der in der Kurzfassung enthaltenen Aufstellung der studienbezogenen Maßnahmen!'),
-        ('2',  u'Ist die Fragestellung des Projektes relevant?',u''),
-        ('3',  u'Ist die angewandte Methodik geeignet, die Fragestellung zu beantworten?',u''),
-        ('3a', u'Findet sich im Protokoll eine Begründung der gewählten Fallzahl und eine Angabe über die geplante statistische Auswertung?',u''),
-        ('4a', u'Werden den Patienten/Probanden durch das Projekt besondere Risken zugemutet?',
-            u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
-            - durch Vorenthalten einer wirksamen Therapie
-            - durch radioaktive Isotope
-            - durch eine spezielle Dosierung von Medikamenten'''),
-        ('4b', u'Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?',u''),
-        ('5b', u'Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?',u''),
-        ('5b', u'Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?',u''),
-        ('6',  u'Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?',u''),
-    ],
     u'gcp_review': [
         ( '1', u'Sind die Allgemeinen Informationen ausreichend und korrekt angegeben?',u''),
         ( '2', u'Sind die Hintergrundinformationen ausreichend und korrekt angegeben?',u''),

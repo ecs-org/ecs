@@ -58,16 +58,14 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
 
     def reviewed_by_user(self, user, include_workflow=True):
-        q = models.Q(additional_reviewers=user)
+        submissions = self.none()
         for a in user.assigned_medical_categories.all():
-            q |= models.Q(pk__in=a.meeting.submissions.filter(medical_categories=a.category))
-
+            submissions |= self.filter(pk__in=a.meeting.submissions.filter(medical_categories=a.category).values('pk').query)
         if include_workflow:
             from ecs.tasks.models import Task
             submission_ct = ContentType.objects.get_for_model(Submission)
-            q |= models.Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
-
-        return self.filter(q).distinct()
+            submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+        return submissions.distinct()
 
     def none(self):
         """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
@@ -124,11 +122,8 @@ class Submission(models.Model):
     retrospective = models.NullBooleanField()
     expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
-    external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     remission = models.NullBooleanField()
-    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
+    external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     insurance_review_required = models.NullBooleanField()
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
@@ -177,13 +172,6 @@ class Submission(models.Model):
         from ecs.tasks.models import Task
         try:
             return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
-        except IndexError:
-            return None
-    
-    def additional_review_task_for(self, user):
-        from ecs.tasks.models import Task
-        try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
     

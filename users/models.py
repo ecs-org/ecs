@@ -17,7 +17,6 @@ class UserProfile(models.Model):
     indisposed = models.BooleanField(default=False)
     start_workflow = models.BooleanField(default=False)
 
-    external_review = models.BooleanField(default=False)
     board_member = models.BooleanField(default=False)
     executive_board_member = models.BooleanField(default=False)
     thesis_review = models.BooleanField(default=False)
@@ -28,27 +27,27 @@ class UserProfile(models.Model):
 
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
-    
+
     gender = models.CharField(max_length=1, choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
     title = models.CharField(max_length=30, blank=True)
     organisation = models.CharField(max_length=180, blank=True)
     jobtitle = models.CharField(max_length=130, blank=True)
     swift_bic = models.CharField(max_length=11, blank=True)
     iban = models.CharField(max_length=40, blank=True)
-    
+
     address1 = models.CharField(max_length=60, blank=True)
     address2 = models.CharField(max_length=60, blank=True)
     zip_code = models.CharField(max_length=10, blank=True)
     city = models.CharField(max_length=80, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     fax = models.CharField(max_length=45, blank=True)
-    
+
     social_security_number = models.CharField(max_length=10, blank=True)
 
     # 0 = never send messages, is editable via profile, activate via registration sets this to 5 minutes
     # Fixme: this should be default to 5 minutes, once we go production
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
-    
+
     def __unicode__(self):
         return unicode(self.user)
 
@@ -62,7 +61,7 @@ class UserProfile(models.Model):
 
     def has_explicit_workflow(self):
         return self.user.groups.exclude(name__in=[u'External Reviewer', u'userswitcher_target', u'translators', u'sentryusers']).count() > 0
-    
+
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
     submission_filter_all = JSONField()
@@ -80,7 +79,7 @@ def _post_user_save(sender, **kwargs):
     if kwargs['created'] and not kwargs.get('raw'):
         UserProfile.objects.create(user=kwargs['instance'])
         UserSettings.objects.create(user=kwargs['instance'])
-    
+
 post_save.connect(_post_user_save, sender=User)
 
 
@@ -91,7 +90,7 @@ class InvitationQuerySet(models.query.QuerySet):
 class InvitationManager(models.Manager):
     def get_query_set(self):
         return InvitationQuerySet(self.model).distinct()
-    
+
     def new(self):
         return self.all().new()
 

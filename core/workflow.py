@@ -62,7 +62,7 @@ def is_final(wf):
 @guard(model=Vote)
 def is_b2(wf):
     return wf.data.result == '2'
-    
+
 @guard(model=Vote)
 def is_b2upgrade(wf):
     previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
@@ -79,12 +79,6 @@ def has_thesis_recommendation(wf):
     return bool(answer.answer)
 
 @guard(model=Submission)
-def needs_external_review(wf):
-    with sudo():
-        external_review_exists = Task.objects.for_data(wf.data).filter(assigned_to=wf.data.external_reviewer_name, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
-    return wf.data.external_reviewer and not external_review_exists
-
-@guard(model=Submission)
 def needs_insurance_review(wf):
     return wf.data.insurance_review_required
 
@@ -95,16 +89,16 @@ def needs_gcp_review(wf):
 class InitialReview(Activity):
     class Meta:
         model = Submission
-    
+
     def get_url(self):
         return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
-        
+
     def get_choices(self):
         return (
             (True, _('Acknowledge')),
             (False, _('Reject')),
         )
-        
+
     def pre_perform(self, choice):
         s = self.workflow.data
         sf = s.current_submission_form
@@ -119,16 +113,16 @@ class InitialReview(Activity):
 class Resubmission(Activity):
     class Meta:
         model = Submission
-        
+
     def get_url(self):
         return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data.pk})
-        
+
     def get_final_urls(self):
         return super(Resubmission, self).get_final_urls() + [
             reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf})
             for sf in self.workflow.data.forms.values_list('pk', flat=True)
         ]
-        
+
     def receive_token(self, *args, **kwargs):
         token = super(Resubmission, self).receive_token(*args, **kwargs)
         token.task.assign(self.workflow.data.current_submission_form.presenter)
@@ -137,10 +131,10 @@ class Resubmission(Activity):
 class _CategorizationReviewBase(Activity):
     class Meta:
         model = Submission
-        
+
     def is_repeatable(self):
         return True
-        
+
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
@@ -155,10 +149,8 @@ class CategorizationReview(_CategorizationReviewBase):
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
-        if s.external_reviewer:
-            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
-        for add_rev in s.additional_reviewers.all():
-            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
+        for add_rev in s.external_reviewers.all():
+            send_system_message_template(add_rev, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
 
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
@@ -166,15 +158,13 @@ class ThesisCategorizationReview(_CategorizationReviewBase):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        if s.external_reviewer:
-            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
-        for add_rev in s.additional_reviewers.all():
-            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
+        for add_rev in s.external_reviewers.all():
+            send_system_message_template(add_rev, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
 
 class PaperSubmissionReview(Activity):
     class Meta:
         model = Submission
-        
+
     def get_url(self):
         return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
@@ -183,10 +173,10 @@ class ChecklistReview(Activity):
     class Meta:
         model = Submission
         vary_on = ChecklistBlueprint
-        
+
     def is_reentrant(self):
         return False
-        
+
     def is_locked(self):
         blueprint = self.node.data
         lookup_kwargs = {'blueprint': blueprint}
@@ -197,7 +187,7 @@ class ChecklistReview(Activity):
         except Checklist.DoesNotExist:
             return False
         return not checklist.is_complete
-        
+
     def get_url(self):
         blueprint = self.node.data
         submission_form = self.workflow.data.current_submission_form
@@ -215,26 +205,6 @@ class BoardMemberReview(ChecklistReview):
 def unlock_boardmember_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(BoardMemberReview)
 post_save.connect(unlock_boardmember_review, sender=Checklist)
-
-# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
-class ExternalChecklistReview(ChecklistReview):
-    def is_reentrant(self):
-        return True
-
-    def receive_token(self, *args, **kwargs):
-        token = super(ExternalChecklistReview, self).receive_token(*args, **kwargs)
-        token.task.assign(self.workflow.data.external_reviewer_name)
-        return token
-
-def unlock_external_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ExternalChecklistReview)
-post_save.connect(unlock_external_review, sender=Checklist)
-
-# treat declined external review tasks as if the deadline was reached
-def external_review_declined(sender, **kwargs):
-    task = kwargs['task']
-    task.node_controller.progress(task.workflow_token, deadline=True)
-task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 
 # XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
@@ -291,43 +261,41 @@ def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
 post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
 
-@guard(model=Submission)
-def needs_external_review(wf):
-    from ecs.tasks.models import Task
-    with sudo():
-        external_review_exists = Task.objects.for_data(wf.data).filter(assigned_to=wf.data.external_reviewer_name, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
-    return wf.data.external_reviewer and not external_review_exists
-
-
-class AdditionalReviewSplit(Generic):
+class ExternalReviewSplit(Generic):
     class Meta:
         model = Submission
 
     def emit_token(self, *args, **kwargs):
         tokens = []
-        for user in self.workflow.data.additional_reviewers.all():
+        for user in self.workflow.data.external_reviewers.all():
             with sudo():
-                additional_review_exists = Task.objects.for_data(self.workflow.data).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', deleted_at__isnull=True).exists()
-            if additional_review_exists:
+                external_review_exists = Task.objects.for_data(self.workflow.data).filter(assigned_to=user, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
+            if external_review_exists:
                 continue
-            for token in super(AdditionalReviewSplit, self).emit_token(*args, **kwargs):
+            for token in super(ExternalReviewSplit, self).emit_token(*args, **kwargs):
                 token.task.assign(user)
                 tokens.append(token)
         return tokens
 
 # XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
-class AdditionalChecklistReview(ChecklistReview):
+class ExternalChecklistReview(ChecklistReview):
     def is_reentrant(self):
         return True
 
-def unlock_additional_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(AdditionalChecklistReview)
-post_save.connect(unlock_additional_review, sender=Checklist)
+def unlock_external_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(ExternalChecklistReview)
+post_save.connect(unlock_external_review, sender=Checklist)
+
+# treat declined external review tasks as if the deadline was reached
+def external_review_declined(sender, **kwargs):
+    task = kwargs['task']
+    task.node_controller.progress(task.workflow_token, deadline=True)
+task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
 
 class VoteFinalization(Activity):
     class Meta:
         model = Vote
-    
+
     def get_url(self):
         return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
@@ -335,7 +303,7 @@ class VoteFinalization(Activity):
 class VoteReview(Activity):
     class Meta:
         model = Vote
-        
+
     def get_url(self):
         return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
@@ -343,7 +311,7 @@ class VoteReview(Activity):
 class VoteSigning(Activity):
     class Meta:
         model = Vote
-        
+
     def get_url(self):
         return reverse('ecs.core.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})
 
@@ -360,16 +328,16 @@ class VotePublication(Activity):
 class VoteB2Review(Activity):
     class Meta:
         model = Vote
-    
+
     def get_url(self):
         return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
-        
+
     def get_choices(self):
         return (
             ('1', _('B1')),
             ('3', _('B3')),
         )
-        
+
     def pre_perform(self, choice):
         from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
         new_vote = Vote.objects.create(submission_form=self.workflow.data.submission_form, result=choice)

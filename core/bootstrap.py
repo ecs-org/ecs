@@ -71,11 +71,11 @@ def templates():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
     from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
-        AdditionalChecklistReview, ChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
+    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, ExternalReviewSplit,
+        ExternalChecklistReview, ChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        needs_external_review, needs_insurance_review, needs_gcp_review, has_expedited_recommendation, is_thesis,
+        needs_insurance_review, needs_gcp_review, has_expedited_recommendation, is_thesis,
         is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec, is_acknowledged_and_not_localec)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
@@ -86,7 +86,6 @@ def submission_workflow():
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
     external_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='external_review')
-    additional_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='additional_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
@@ -96,7 +95,6 @@ def submission_workflow():
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
-    EXTERNAL_REVIEW_GROUP = 'External Reviewer'
     INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
     STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
@@ -110,14 +108,13 @@ def submission_workflow():
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
-            'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
-            'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
+            'external_review_split': Args(ExternalReviewSplit, name=_("External Review Split")),
+            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(BoardMemberReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
 
             # retrospective thesis lane
@@ -165,10 +162,9 @@ def submission_workflow():
             ('localec_recommendation', 'localec_recommendation_review'): None,
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
-            ('categorization_review', 'external_review'): Args(guard=needs_external_review),
-            ('categorization_review', 'additional_review_split'): None,
-            
-            ('additional_review_split', 'additional_review'): None,
+            ('categorization_review', 'external_review_split'): None,
+
+            ('external_review_split', 'external_review'): None,
 
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): None,
@@ -176,7 +172,7 @@ def submission_workflow():
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
         }
     )
-    
+
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
@@ -245,7 +241,6 @@ def auth_groups():
         u'Expedited Review Group',
         u'Local-EC Review Group',
         u'EC-Board Member',
-        u'External Reviewer',
         u'GCP Review Group',
         u'userswitcher_target',
         u'translators',
@@ -406,7 +401,7 @@ def auth_user_testusers():
         ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
         ('insurance.rev', u'EC-Insurance Reviewer', {'internal': False, 'insurance_review': True}),
         ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
-        ('external.reviewer', u'External Reviewer', {'external_review': True, }),
+        ('external.reviewer', None, {}),
         ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
         ('localec.rev', u'Local-EC Review Group', {'internal': True}),
         ('b2.rev', u'EC-B2 Review Group', {'internal': True}),
