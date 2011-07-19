@@ -6,7 +6,7 @@ from ecs.notifications.models import Notification, CompletionReportNotification,
 from ecs.core.models import Submission
 
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
-    register(cls, autostart_if=lambda n, created: n.submission_forms.exists())
+    register(cls, autostart_if=lambda n, created: n.submission_forms.exists() and not n.workflow.workflows.exists())
 
 
 @guard(model=Notification)
@@ -67,4 +67,3 @@ class DistributeNotificationAnswer(Activity):
         
     def get_url(self):
         return reverse('ecs.notifications.views.distribute_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
-
