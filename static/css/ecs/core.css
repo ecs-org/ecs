@@ -844,9 +844,6 @@ fieldset.disabled {
 .form_main input#id_title {
   width: 350px;
 }
-.form_main td.15em textarea {
-  width: 250px;
-}
 .form_main input[type=submit] {
   margin: 10px 10px 10px 240px;
 }
@@ -894,7 +891,7 @@ fieldset.disabled {
 .doclist .list_item {
   display: block;
   margin-bottom: 5px;
-  padding-bottom: 2px
+  padding-bottom: 2px;
   background: #ddd; 
 }
 .doclist .list_item span.doc_name:before {
@@ -1153,6 +1150,7 @@ content ol.submission_list h3 .ecnr {
   display: block;
   clear: both;
   margin: 0px 0px 20px 20px;
+  white-space: pre-wrap;
 }
 .form_main.readonly li pre em {
   color: #333333;
