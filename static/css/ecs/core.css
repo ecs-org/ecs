@@ -24,7 +24,7 @@
   padding: 4px 7px;
   background: #f4f4f4;
   color: #2b558e;
-	font-weight: bolder;
+  font-weight: bolder;
   margin-right: 3px;
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
@@ -37,7 +37,7 @@
   border: 1px solid #b7d4e5;
   background: #e2eaf0;
   color: #2b558e;
-	font-weight: normal;
+  font-weight: normal;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -215,6 +215,35 @@
 } 
 .checklist_review_tab input {
   display: none;
+}
+
+#checklist_summary_tab .checklist {
+  font-size: 120%;
+  margin-bottom: 5px;
+}
+
+#checklist_summary_tab ol > li > ol {
+  margin-left: 10px;
+}
+
+#checklist_summary_tab > ol > li {
+  padding-bottom: 15px;
+}
+
+#checklist_summary_tab .answer > .positive {
+  color: #00ff00;
+}
+
+#checklist_summary_tab .answer > .negative {
+  color: #ff0000;
+}
+
+#checklist_summary_tab .comment {
+  margin-left: 10px;
+  color: #000000;
+  background-color: #ffffff;
+  font-family: monospace;
+  font-size: 110%;
 }
 
 /* sidebar */

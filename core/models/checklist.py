@@ -59,6 +59,9 @@ class Checklist(models.Model):
     def get_answers_with_comments(self, answer=None):
         return self.answers.exclude(comment=None).exclude(comment="").filter(answer=answer).order_by('question')
         
+    def get_all_answers_with_comments(self):
+        return self.answers.exclude(comment=None).exclude(comment="").order_by('question')
+        
     @property
     def has_positive_comments(self):
         return self.get_answers_with_comments(True).exists()

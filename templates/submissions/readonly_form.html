@@ -62,10 +62,13 @@
 
         {{ block.super }}
 
-        {% if show_reviews %}
+        {% if show_reviews or user|has_flag:'internal' %}
         <li>
             <a href="#">{% trans "Activities" %}</a>
             <ul class="tab_headers">
+                {% if user|has_flag:'internal' %}
+                    <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
+                {% endif %}
                 {% if categorization_review_form %}
                     <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
@@ -186,7 +189,13 @@
             <p>{% trans "There are no published votes." %}</p>
         {% endif %}
     </div>
-    
+
+    {% if user|has_flag:'internal' %}
+        <div id="checklist_summary_tab" class="tab">
+            {% include 'submissions/checklist_summary.inc' %}
+        </div>
+    {% endif %}
+
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}

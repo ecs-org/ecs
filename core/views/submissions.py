@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
@@ -23,6 +24,11 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm
+
+from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
+    ExternalChecklistReview, ThesisRecommendationReview,
+    ExpeditedRecommendation, ExpeditedRecommendationReview,
+    LocalEcRecommendationReview, BoardMemberReview)
 
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
@@ -119,6 +125,8 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
+CHECKLIST_ACTIVITIES = (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview,
+    ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
@@ -129,25 +137,23 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote = submission_form.current_vote
     submission = submission_form.submission
 
-    from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
-        ExternalChecklistReview, ThesisRecommendationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview,
-        LocalEcRecommendationReview, BoardMemberReview)
-
     checklist_reviews = []
     for checklist in Checklist.objects.filter(submission=submission).select_related('blueprint'):
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
             try:
-                reopen_tasks = get_obj_tasks(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview), submission_form.submission, data=checklist.blueprint)
+                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission_form.submission, data=checklist.blueprint)
                 reopen_task = reopen_tasks.order_by('-created_at')[0]
             except IndexError:
                 checklist_form = make_checklist_form(checklist)(readonly=True)
             else:
                 checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
-    
+
+    checklists = submission.checklists.order_by('blueprint__name')
+    checklists = [(c, c.answers.filter(Q(answer=False) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
+
     submission_forms = list(submission_form.submission.forms.order_by('created_at'))
     previous_form = None
     for sf in submission_forms:
@@ -155,7 +161,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         previous_form = sf
 
     submission_forms = reversed(submission_forms)
-    
+
     with sudo():
         cancelable_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid__in=['additional_review', 'external_review'], closed_at=None)
 
@@ -170,6 +176,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission_forms': submission_forms,
         'vote': vote,
         'checklist_reviews': checklist_reviews,
+        'checklists': checklists,
         'show_reviews': any(checklist_reviews),
         'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
         'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False),

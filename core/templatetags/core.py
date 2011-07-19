@@ -2,6 +2,7 @@
 import re
 from django.template import Library
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
@@ -121,3 +122,12 @@ def paper_submission_review(submission, user):
 @register.filter
 def get_field(form, fname):
     return form[fname]
+
+@register.filter
+def yes_no_unknown(v):
+    if v is True:
+        return _('yes')
+    elif v is False:
+        return _('no')
+    else:
+        return _('Unknown')
