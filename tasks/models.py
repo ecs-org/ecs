@@ -12,7 +12,7 @@ from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
 from ecs.core.models import Submission, Vote
 from ecs.meetings.models import Meeting
-from ecs.notifications.models import Notification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -61,9 +61,10 @@ class TaskQuerySet(models.query.QuerySet):
             q |= models.Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
             meeting_ct = ContentType.objects.get_for_model(Meeting)
             q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
-            notification_ct = ContentType.objects.get_for_model(Notification)
-            q |= models.Q(content_type=notification_ct, data_id__in=Notification.objects.filter(submission_forms__submission=submission).values('pk').query)
-        return self.filter(q)
+            for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+                notification_ct = ContentType.objects.get_for_model(notification_model)
+                q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
+        return self.filter(q).distinct()
 
 class TaskManager(AuthorizationManager):
     def get_base_query_set(self):
