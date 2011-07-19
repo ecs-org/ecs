@@ -129,7 +129,7 @@ def submission_workflow():
 
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
-            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
+            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
 
             # local ec lane
             'localec_recommendation': Args(NonRepeatableChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
@@ -167,7 +167,7 @@ def submission_workflow():
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
             ('categorization_review', 'external_review'): Args(guard=needs_external_review),
             ('categorization_review', 'additional_review_split'): None,
-            
+
             ('additional_review_split', 'additional_review'): None,
 
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
@@ -176,7 +176,7 @@ def submission_workflow():
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
         }
     )
-    
+
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
