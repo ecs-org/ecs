@@ -92,6 +92,14 @@ def needs_insurance_review(wf):
 def needs_gcp_review(wf):
     return wf.data.gcp_review_required
 
+@guard(model=Submission)
+def needs_legal_and_patient_review(wf):
+    return wf.data.legal_and_patient_review_required
+
+@guard(model=Submission)
+def needs_statistical_review(wf):
+    return wf.data.statistical_review_required
+
 class InitialReview(Activity):
     class Meta:
         model = Submission

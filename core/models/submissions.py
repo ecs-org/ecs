@@ -130,12 +130,15 @@ class Submission(models.Model):
     remission = models.NullBooleanField()
     additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
-    insurance_review_required = models.NullBooleanField()
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     transient = models.BooleanField(default=False)
     valid_until = models.DateField(null=True, blank=True)
-    gcp_review_required = models.NullBooleanField()
+    insurance_review_required = models.NullBooleanField()
+    gcp_review_required = models.NullBooleanField(default=False)
+    legal_and_patient_review_required = models.NullBooleanField(default=True)
+    statistical_review_required = models.NullBooleanField(default=True)
+
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
@@ -729,6 +732,8 @@ def _post_submission_form_save(**kwargs):
         'is_amg': new_sf.project_type_drug,
         'is_mpg': new_sf.project_type_medical_device_or_method,
         'insurance_review_required': bool(new_sf.insurance_name),
+        'thesis': new_sf.project_type_education_context is not None,
+        'retrospective': new_sf.project_type_retrospective,
     }
 
     # set defaults
