@@ -238,6 +238,10 @@
   color: #ff0000;
 }
 
+#checklist_summary_tab .answer > .unanswered {
+  color: #333333;
+}
+
 #checklist_summary_tab .comment {
   margin-left: 10px;
   color: #000000;

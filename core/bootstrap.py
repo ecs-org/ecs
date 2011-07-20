@@ -503,8 +503,10 @@ def auth_ec_staff_users():
 
     for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for number, text, description in checklist_questions[slug]:
+        for question in checklist_questions[slug]:
+            number, text = question
             cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
             cq.text = text
-            cq.description = description
+            cq.description = question.pop('description', u'')
+            cq.inverted = question.pop('inverted', False)
             cq.save()
