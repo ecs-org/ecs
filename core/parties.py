@@ -1,5 +1,6 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.users.utils import sudo
 
@@ -28,7 +29,7 @@ class Party(object):
         return unicode(name)
 
 @sudo()
-def get_presenting_parties(sf, include_workflow=True):
+def get_presenting_parties(sf):
     parties = [Party(organization=sf.sponsor_name, name=sf.sponsor_contact.full_name, user=sf.sponsor, email=sf.sponsor_email, involvement=_("Sponsor"))]
 
     if sf.invoice:
@@ -41,7 +42,7 @@ def get_presenting_parties(sf, include_workflow=True):
     parties.append(Party(organization=sf.submitter_organisation, 
         name=sf.submitter_contact.full_name, 
         email=sf.submitter_email,
-        user=sf.submitter, 
+        user=sf.submitter,
         involvement=_("Submitter"),
     ))
     parties.append(Party(user=sf.presenter, involvement=_("Presenter")))
@@ -52,30 +53,23 @@ def get_presenting_parties(sf, include_workflow=True):
     return parties
 
 @sudo()
-def get_reviewing_parties(sf, include_workflow=True):
+def get_reviewing_parties(sf):
     from ecs.users.middleware import current_user_store
 
     parties = []
 
     anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
-    if include_workflow:
-        from ecs.tasks.models import Task
-        for task in Task.objects.filter(workflow_token__in=sf.submission.workflow.tokens.all().values('pk').query, assigned_to__isnull=False, deleted_at__isnull=True).select_related('task_type'):
-            if task.assigned_to == sf.submission.external_reviewer_name:
-                parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
-            else:
-                parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name))
-
-    for user in User.objects.filter(meeting_participations__entry__submission=sf.submission):
-        parties.append(Party(user=user, involvement=_("Board Member Review")))
-
-    for user in sf.submission.additional_reviewers.all():
-        parties.append(Party(user=user, involvement=_("Additional Review"), anonymous=anonymous))
+    from ecs.tasks.models import Task
+    for task in Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).order_by('created_at').select_related('task_type').distinct():
+        if task.assigned_to == sf.submission.external_reviewer_name:
+            parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
+        else:
+            parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name))        
 
     return parties
 
 @sudo()
-def get_meeting_parties(sf, include_workflow=True):
+def get_meeting_parties(sf):
     from ecs.meetings.models import AssignedMedicalCategory
     from ecs.users.middleware import current_user_store
 
@@ -100,7 +94,7 @@ def get_meeting_parties(sf, include_workflow=True):
 
     return parties
 
-def get_involved_parties(sf, include_workflow=True):
+def get_involved_parties(sf):
     all_parties_f = (get_presenting_parties, get_reviewing_parties, get_meeting_parties)
-    all_parties = [f(sf, include_workflow=include_workflow) for f in all_parties_f]
+    all_parties = [f(sf) for f in all_parties_f]
     return sum(all_parties, [])

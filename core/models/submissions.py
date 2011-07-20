@@ -57,15 +57,14 @@ class SubmissionQuerySet(models.query.QuerySet):
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
 
-    def reviewed_by_user(self, user, include_workflow=True):
+    def reviewed_by_user(self, user):
         q = models.Q(additional_reviewers=user)
         for a in user.assigned_medical_categories.all():
             q |= models.Q(pk__in=a.meeting.submissions.filter(medical_categories=a.category))
 
-        if include_workflow:
-            from ecs.tasks.models import Task
-            submission_ct = ContentType.objects.get_for_model(Submission)
-            q |= models.Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+        from ecs.tasks.models import Task
+        submission_ct = ContentType.objects.get_for_model(Submission)
+        q |= models.Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
 
         return self.filter(q).distinct()
 
@@ -110,8 +109,8 @@ class SubmissionManager(AuthorizationManager):
     def mine(self, user):
         return self.all().mine(user)
 
-    def reviewed_by_user(self, user, include_workflow=True):
-        return self.all().reviewed_by_user(user, include_workflow=include_workflow)
+    def reviewed_by_user(self, user):
+        return self.all().reviewed_by_user(user)
 
     def none(self):
         return self.all().none()
@@ -688,17 +687,17 @@ class SubmissionForm(models.Model):
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
         
-    def get_involved_parties(self, include_workflow=True):
-        return get_involved_parties(self, include_workflow=include_workflow)
+    def get_involved_parties(self):
+        return get_involved_parties(self)
 
-    def get_presenting_parties(self, include_workflow=True):
-        return get_presenting_parties(self, include_workflow=include_workflow)
+    def get_presenting_parties(self):
+        return get_presenting_parties(self)
 
-    def get_reviewing_parties(self, include_workflow=True):
-        return get_reviewing_parties(self, include_workflow=include_workflow)
+    def get_reviewing_parties(self):
+        return get_reviewing_parties(self)
 
-    def get_meeting_parties(self, include_workflow=True):
-        return get_meeting_parties(self, include_workflow=include_workflow)
+    def get_meeting_parties(self):
+        return get_meeting_parties(self)
 
 
 def attach_to_submissions(user):

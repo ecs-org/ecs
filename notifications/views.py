@@ -15,7 +15,7 @@ from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Investigator, Submission
-from ecs.core.parties import get_involved_parties
+from ecs.core.parties import get_presenting_parties
 from ecs.documents.models import Document
 from ecs.ecsmail.utils import deliver, whitewash
 from ecs.tracking.decorators import tracking_hint
@@ -210,7 +210,7 @@ def distribute_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
     if request.method == 'POST':
         for submission in Submission.objects.filter(forms__in=notification.submission_forms.values('pk').query):
-            for party in get_involved_parties(submission.current_submission_form, include_workflow=False):
+            for party in get_presenting_parties(submission.current_submission_form):
                 if party.email:
                     htmlmail = unicode(render_html(request, 'notifications/answers/email.html', {
                         'notification': notification,
