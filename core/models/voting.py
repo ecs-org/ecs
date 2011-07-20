@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
@@ -62,6 +64,16 @@ class Vote(models.Model):
         if not self.submission_form_id and self.top_id:
             self.submission_form = self.top.submission.current_submission_form
         return super(Vote, self).save(**kwargs)
+
+    def publish(self):
+        from ecs.communication.utils import send_system_message_template
+        self.published_at = datetime.now()
+        self.save()
+        if self.submission_form:
+            for p in self.submission_form.get_presenting_parties():
+                if not p.user: continue
+                send_system_message_template(p.user, _('Publication of {vote}').format(vote=unicode(self)), 'submissions/vote_publish.txt',
+                    {'vote': self, 'party': p}, submission=self.submission_form.submission)
         
     @property
     def positive(self):
