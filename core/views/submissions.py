@@ -152,7 +152,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         checklist_reviews.append((checklist, checklist_form))
 
     checklists = submission.checklists.order_by('blueprint__name')
-    checklists = [(c, c.answers.filter(Q(answer=False) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
+    checklists = [(c, c.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
 
     submission_forms = list(submission_form.submission.forms.order_by('created_at'))
     previous_form = None
@@ -238,11 +238,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
 
-    try:
-        # XXX: there really should not be another task for this url
-        related_task = request.related_tasks[0]
-    except IndexError:
+    user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True, assigned_to=request.user, deleted_at=None)
+    related_tasks = [t for t in user_tasks if request.path in t.get_final_urls()]
+    if not related_tasks:
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    # XXX: there really should not be another task for this url
+    related_task = related_tasks[0]
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
     if blueprint.multiple:
