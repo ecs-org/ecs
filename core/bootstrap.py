@@ -401,7 +401,7 @@ def auth_user_testusers():
         ('office', u'EC-Office', {'internal': True,}),
         ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
         ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': True, 'executive_board_member': True),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': False, 'executive_board_member': False),
         ('signing', u'EC-Signing Group', {'internal': True, }),
         ('statistic.rev', u'EC-Statistic Group', {'internal': False}),
         ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),

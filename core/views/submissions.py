@@ -39,7 +39,7 @@ from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, user_group_required
 
 from ecs.documents.views import upload_document, delete_document
 
@@ -216,7 +216,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
-@user_flag_required('executive_board_member')
+@user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
