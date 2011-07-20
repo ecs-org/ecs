@@ -1,4 +1,4 @@
-{% if vote.result == '1' or vote.result == '1a' %}
+{% if vote.result == '1' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
 {% endif %}
 {% if vote.result == '2' %}

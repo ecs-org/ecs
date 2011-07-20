@@ -422,7 +422,7 @@ def protocol_pdf(request, meeting_pk=None):
 
     b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
     submission_forms = [x.submission_form for x in b2_votes]
-    b1ized = Vote.objects.filter(result__in=['1', '1a'], submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
+    b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
     rts = list(meeting.retrospective_thesis_submissions.all())
     es = list(meeting.expedited_submissions.all())

@@ -568,7 +568,7 @@ def my_submissions(request):
 @forceauth.exempt
 def catalog(request):
     with sudo():
-        votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
 
     return render(request, 'submissions/catalog.html', {
         'votes': votes,

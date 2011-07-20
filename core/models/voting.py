@@ -7,20 +7,18 @@ from ecs import authorization
 
 VOTE_RESULT_CHOICES = (
     ('1', _(u'1 positive')),
-    ('1a', _(u'1a positive - with corrections')),
     ('2', _(u'2 positive under reserve')),
     ('3', _(u'3 recessed (objections)')),
     ('4', _(u'4 negative')),
     ('5', _(u'5 recessed (applicant)')),
     ('5a', _(u'5a withdrawn (applicant)')),
     ('5b', _(u'5b not examined')),
-    #('5c', _(u'5c Lokale EK')),
 )
 
-POSITIVE_VOTE_RESULTS = ('1', '1a', '2')
+POSITIVE_VOTE_RESULTS = ('1', '2')
 NEGATIVE_VOTE_RESULTS = ('4', '5a')
 FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
-PERMANENT_VOTE_RESULTS = ('1', '1a') + NEGATIVE_VOTE_RESULTS
+PERMANENT_VOTE_RESULTS = ('1',) + NEGATIVE_VOTE_RESULTS
 
 
 class Vote(models.Model):
@@ -83,8 +81,7 @@ class Vote(models.Model):
         
     @property
     def activates(self):
-        return self.result in ('1', '1a')
-
+        return self.result == '1'
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
