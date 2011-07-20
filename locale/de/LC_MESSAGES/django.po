@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-20 16:45+0200\n"
+"POT-Creation-Date: 2011-07-20 18:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:78 core/models/submissions.py:165
+#: billing/views.py:78 core/models/submissions.py:164
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -212,7 +212,7 @@ msgstr "Überprüfung Versicherung"
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:120 core/bootstrap.py:642 core/parties.py:70
+#: core/bootstrap.py:120 core/bootstrap.py:642
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -1124,7 +1124,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:227 core/models/submissions.py:492
+#: core/paper_forms.py:227 core/models/submissions.py:491
 msgid "open"
 msgstr "offen"
 
@@ -1136,11 +1136,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:230 core/models/submissions.py:308
+#: core/paper_forms.py:230 core/models/submissions.py:307
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:492
+#: core/paper_forms.py:231 core/models/submissions.py:491
 msgid "blind"
 msgstr "blind"
 
@@ -1156,7 +1156,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:492
+#: core/paper_forms.py:235 core/models/submissions.py:491
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1422,36 +1422,32 @@ msgstr "Institution"
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
-#: core/parties.py:32
+#: core/parties.py:33
 msgid "Sponsor"
 msgstr ""
 
-#: core/parties.py:39
+#: core/parties.py:40
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: core/parties.py:45
+#: core/parties.py:46
 msgid "Submitter"
 msgstr ""
 
-#: core/parties.py:47
+#: core/parties.py:48
 msgid "Presenter"
 msgstr "Präsentator"
 
-#: core/parties.py:50
+#: core/parties.py:51
 msgid "Primary Investigator"
 msgstr "Hauptprüfer"
 
-#: core/parties.py:73
-msgid "Additional Review"
-msgstr "Zusatz-Review"
-
-#: core/parties.py:95
+#: core/parties.py:89
 #, fuzzy
 msgid "Meeting Participant"
 msgstr "Prüfungsteilnehmer"
 
-#: core/parties.py:99
+#: core/parties.py:93
 msgid "Meeting Participant (assigned for category)"
 msgstr ""
 
@@ -1807,47 +1803,45 @@ msgstr "Schlüsselwörter"
 msgid "additional_reviewers"
 msgstr "Zusätzliche Gutachter"
 
-#: core/models/names.py:37 core/models/submissions.py:804 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:792 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:804 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:792 users/forms.py:54
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:309
+#: core/models/submissions.py:308
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:310
+#: core/models/submissions.py:309
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:314
+#: core/models/submissions.py:313
 msgid "individual-related"
 msgstr "personenbezogen"
 
-#: core/models/submissions.py:315
+#: core/models/submissions.py:314
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:750
-#, fuzzy
+#: core/models/submissions.py:747
 msgid "Creation of study EC-Nr. {0}"
-msgstr "Änderungen an Studie EK-Nr. %s"
+msgstr "Erstellung der Studie EK-Nr. %s"
 
-#: core/models/submissions.py:760
-#, fuzzy
+#: core/models/submissions.py:751
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. %s"
 
-#: core/models/submissions.py:838
+#: core/models/submissions.py:826
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:838
+#: core/models/submissions.py:826
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -3016,11 +3010,15 @@ msgstr "Formale Prüfung Diplomarbeit"
 msgid ""
 "\n"
 "The study \"%(project_title)s\" (%(ec_number)s) has been created.\n"
-"You have been selected as %(involvement)s.\n"
 "\n"
 "Sincerly yours,\n"
 "    The Team of the Ethics Commission\n"
 msgstr ""
+"\n"
+"Die Studie \"%(project_title)s\" (%(ec_number)s) wurde erstellt.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/submissions/decline_message.txt:2
 #, python-format
@@ -3863,6 +3861,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Additional Review"
+#~ msgstr "Zusatz-Review"
 
 #~ msgid "1a positive - with corrections"
 #~ msgstr "1a Positiv - mit Ausbesserungen"
