@@ -297,9 +297,9 @@
 }
 #meeting_assistant_body .column_main {
   display: table-cell;
-  min-width: 300px;
+  min-width: 350px;
   width: 450px;
-  padding-right: 1%;
+  padding-right: 5px;
   border-right: 1px solid #ccc
 }
 #meeting_assistant_form textarea {
@@ -330,10 +330,7 @@
   float: left;
 }
 .meeting_assistant_block .block_left {
-  margin-right: 40px;
-}
-.meeting_assistant_block .block_right {
-  margin-top: 10px;
+  margin-right: 10px;
 }
 #meeting_assistant .buttons {
   display: block;
@@ -446,7 +443,7 @@
   list-style: none
 }
 #meeting_assistant .reviews ul {
-	margin: 0 2% 10px;
+	margin: 5px;
 }
 #meeting_assistant .reviews li {
   display: block;
@@ -479,7 +476,29 @@
 #meeting_assistant_body .reviews a:hover {
   text-decoration: none;
 }
-
+#meeting_assistant_body .inline_element {
+  display: block;
+  margin: 5px 10px;
+  padding: 5px;
+}
+#meeting_assistant_body .odd {
+  background: #EFEFDD;
+}
+#meeting_assistant_body .even {
+  background: #E8E8D8;
+}
+#meeting_assistant_body h3 {
+  margin-bottom: 5px;
+}
+#meeting_assistant_body .inline_element ul {
+  margin: 0 0 0 5px;
+}
+#meeting_assistant_body .inline_element li {
+  padding: 2px 0;
+}
+#meeting_assistant_body input[type=submit] {
+  margin: 10px;
+}
 #meeting_comments_form {
   padding: 10px;
 }

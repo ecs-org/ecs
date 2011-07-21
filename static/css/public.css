@@ -118,7 +118,6 @@
   margin: 0 6px;
 }
 #content .login_error ul {
-  background: none repeat scroll 0 0 #F7E3E3;
   display: inline-block;
   margin: 10px 0;
 }
@@ -126,12 +125,15 @@
   margin: 0;
 }
 #content .login_error ul li {
+  background: #F7E3E3;
   padding: 5px;
+  margin-bottom: 5px;
   max-width: 286px;
 }
 #content .login_error ul ul li {
   border: none;
   padding: 8px 0;
+  margin-left: 6px;
 }
 
 /* catalogue list */

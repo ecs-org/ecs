@@ -77,7 +77,9 @@ body {
 }
 
 /* content-specific */
-
+h1, h2, h3, h4, h5 {
+  font-weight: normal;
+}
 body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
@@ -87,26 +89,22 @@ body {
   font-size: 20px;
   letter-spacing: 1px;  
   margin-bottom: 20px;
-  font-weight: lighter;
 }
 #content h2, #task_main h2 {
   display: block;
   font-size: 18px;
   letter-spacing: 1px;  
   margin-bottom: 15px;
-  font-weight: lighter;
 }
 #content h3, #task_main h3 {
   position: relative;
   display: block;
   font-size: 16px;
-  font-weight: lighter;
   margin-bottom: 10px;
 }
 #content h4 {
   display: block;
   font-size: 14px;
-	font-weight: lighter;
   margin-bottom: 10px;
 }
 #content h5 {
@@ -136,7 +134,7 @@ a {
 	cursor: pointer;
 }
 #content ul {
-  margin: 0 0 20px 20px;
+  margin: 0 0 12px 20px;
 }
 input, 
 input[type=file], 

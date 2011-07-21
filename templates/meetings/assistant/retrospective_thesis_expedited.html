@@ -5,6 +5,7 @@
     <form action="" method="post">
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         {% if retrospective_thesis_entries %}
+          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
             <ul>
             {% for entry in retrospective_thesis_entries %}
@@ -14,12 +15,16 @@
                 </li>
             {% endfor %}
             </ul>
+          </div>
         {% endif %}
+        <div class="inline_element even">
         <h4>{% trans "Not Approved" %}</h4>
-        {{ form.retrospective_thesis_entries }}
+          {{ form.retrospective_thesis_entries }}
+        </div>
 
         <h3>{% trans "Expedited Submissions" %}</h3>
         {% if expedited_entries %}
+          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
             <ul>
             {% for entry in expedited_entries %}
@@ -29,12 +34,16 @@
                 </li>
             {% endfor %}
             </ul>
+          </div>
         {% endif %}
+        <div class="inline_element even">
         <h4>{% trans "Not Approved" %}</h4>
-        {{ form.expedited_entries }}
+          {{ form.expedited_entries }}
+        </div>
 
         <h3>{% trans "Local-EC Submissions" %}</h3>
         {% if localec_entries %}
+          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
             <ul>
             {% for entry in localec_entries %}
@@ -44,9 +53,12 @@
                 </li>
             {% endfor %}
             </ul>
+          </div>
         {% endif %}
+        <div class="inline_element even">
         <h4>{% trans "Not Approved" %}</h4>
-        {{ form.localec_entries }}
+          {{ form.localec_entries }}
+        </div>
 
         <input type="submit" value="{% trans "Approve" %}" />
         <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>

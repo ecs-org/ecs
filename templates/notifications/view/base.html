@@ -26,7 +26,7 @@ Meldungen zur laufenden Studie(n)
     {% block table_rows %}
         <tr>
             <th>Kommentare</th>
-            <td>{{ notification.comments }}</td>
+            <td>{{ notification.comments|linebreaks }}</td>
         </tr>
         {% if documents %}
         <tr>

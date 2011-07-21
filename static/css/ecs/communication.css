@@ -65,8 +65,11 @@
 .message_display label {
   display: inline-block;
   font-weight: bolder;
-  vertical-align: middle;
+  vertical-align: top;
   min-width: 100px;
+}
+.message_display .input label {
+  vertical-align: middle;
 }
 .message_display .actions {
   width: 20px;
@@ -218,5 +221,9 @@ ul.thread {
   margin-top: -15px;
 }
 .communication_thread input[type=submit] {
-  margin-left: 84px;
+  margin-left: 74px;
+}
+.communication_thread label {
+  display: inline-block;
+  width: 60px;
 }

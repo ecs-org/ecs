@@ -422,7 +422,7 @@ table.notification td {
 /* content */
 
 li.ModelChoiceField select {
-  width: 20em;
+  width: 35em;
 }
 td.TypedChoiceField select {
   width: 6em;
@@ -1111,15 +1111,13 @@ content ol.submission_list h3 .ecnr {
   margin-right: 10px;
 }
 
-/*****************
- *    Readonly   *
- ****************/
+/*  Readonly  */
 
 .form_main.readonly .field li label,
 .form_main.readonly ol li label {
   text-align: left;
   vertical-align: baseline;
-  min-width: 240px;
+  min-width: 220px;
   max-width: 700px;
   width: auto;
   float: left;

@@ -33,7 +33,7 @@
                 </td>
                 <td>
                     {% if sf != submission_form.submission.newest_submission_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a><br>
                     {% endif %}
                     {% if sf.is_notification_update %}
                         {% with sf.new_for_notification.all.0 as notif %}
