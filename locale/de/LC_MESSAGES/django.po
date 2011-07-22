@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-20 18:18+0200\n"
+"POT-Creation-Date: 2011-07-22 16:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1333,7 +1333,7 @@ msgstr "koordinierende/r Prüfer/in (multizentrische Studie)"
 
 #: core/paper_forms.py:285
 msgid "Principal investigator (monocentric study)"
-msgstr "Hauptprüfer/in (monozentrische Studie)"
+msgstr "Koordinierende/r Prüfärztin/arzt (monozentrische Studie)"
 
 #: core/paper_forms.py:286
 msgid "sponsor / representative of the sponsor"
@@ -1355,7 +1355,7 @@ msgid ""
 msgstr ""
 "Der Sponsor stimmt zu, dass die folgenden Daten des Antrags ggf. durch die "
 "Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt "
-"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, Hauptprüfer, "
+"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, Koordinierende/r Prüfärztin/arzt, "
 "Sponsor/CRO und weitere Zentren"
 
 #: core/paper_forms.py:294
@@ -1368,7 +1368,7 @@ msgstr "Ethik-Kommission"
 
 #: core/paper_forms.py:296
 msgid "principal investigator"
-msgstr "Hauptprüfer"
+msgstr "Koordinierende/r Prüfärztin/arzt"
 
 #: core/paper_forms.py:297
 msgid "salutation of the Investigator"
@@ -1440,7 +1440,7 @@ msgstr "Präsentator"
 
 #: core/parties.py:51
 msgid "Primary Investigator"
-msgstr "Hauptprüfer"
+msgstr "Koordinierende/r Prüfärztin/arzt"
 
 #: core/parties.py:89
 #, fuzzy
@@ -1547,80 +1547,85 @@ msgstr "Studie"
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:326 templates/boilerplate/list.html:10
+#: core/forms/forms.py:289
+#, fuzzy
+msgid "At lease one centre is required."
+msgstr "Eine Versicherung ist nicht erforderlich"
+
+#: core/forms/forms.py:332 templates/boilerplate/list.html:10
 #: templates/meetings/status.html:21
 msgid "New"
 msgstr "Neu"
 
-#: core/forms/forms.py:327 templates/core.html:76
+#: core/forms/forms.py:333 templates/core.html:76
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:328
+#: core/forms/forms.py:334
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:329 core/forms/layout.py:65 core/forms/layout.py:67
+#: core/forms/forms.py:335 core/forms/layout.py:65 core/forms/layout.py:67
 #: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:330 core/forms/layout.py:74 core/forms/layout.py:76
+#: core/forms/forms.py:336 core/forms/layout.py:74 core/forms/layout.py:76
 #: templates/submissions/tabs/status.html:120 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:331
+#: core/forms/forms.py:337
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:332
+#: core/forms/forms.py:338
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:333 templates/submissions/tabs/status.html:117
+#: core/forms/forms.py:339 templates/submissions/tabs/status.html:117
 #: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:334
+#: core/forms/forms.py:340
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:335
+#: core/forms/forms.py:341
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:336
+#: core/forms/forms.py:342
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:337
+#: core/forms/forms.py:343
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:338 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:344 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:339 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:345 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:340
+#: core/forms/forms.py:346
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:407
+#: core/forms/forms.py:413
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:418
+#: core/forms/forms.py:424
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1897,30 +1902,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:475
+#: core/views/submissions.py:476
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:532 templates/core.html:50
+#: core/views/submissions.py:533 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:534
+#: core/views/submissions.py:535
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:548
+#: core/views/submissions.py:549
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:561 templates/core.html:53
+#: core/views/submissions.py:562 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:566 templates/core.html:56
+#: core/views/submissions.py:567 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2796,36 +2801,36 @@ msgstr "Expedited"
 msgid "Retrospective Thesis Submissions"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:8
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:23
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:38
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:9
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:28
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:47
 #: users/forms.py:134
 msgid "Approved"
 msgstr "Bestätigt"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:18
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:33
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:48
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:21
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:40
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:59
 #: users/forms.py:135
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:21
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:25
 #, fuzzy
 msgid "Expedited Submissions"
 msgstr "Einreichungen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:36
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:44
 #, fuzzy
 msgid "Local-EC Submissions"
 msgstr "Keine Einreichung."
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:51
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:63
 #: templates/users/administration.html:57
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:52
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:64
 msgid "Go Back"
 msgstr ""
 
@@ -2975,7 +2980,7 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:210
+#: templates/submissions/base_form.html:220
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -3310,7 +3315,7 @@ msgstr "wie Sponsor"
 
 #: templates/submissions/tabs/status.html:92
 msgid "No Primary Investigator"
-msgstr "Kein Hauptprüfer"
+msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 
 #: templates/submissions/tabs/status.html:101
 msgid "Aktiv"
@@ -3612,7 +3617,7 @@ msgstr ""
 msgid "Invite"
 msgstr "Einladen"
 
-#: templates/users/invitation/set_password_form.html:9
+#: templates/users/invitation/set_password_form.html:13
 msgid "Set Password"
 msgstr "Passwort setzen"
 
