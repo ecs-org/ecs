@@ -140,7 +140,7 @@ class Command(BaseCommand):
         print "debug: {0} undocumented tests".format(undoc_count)
 
         
-def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_table=True):
+def testcases2rst(headerinfo, cases, outfile, one_case_per_page=False, write_table=True):
     '''dumps testcase data from hudson mixed in with docstrings to a single file'''
     import codecs
     if not cases:
@@ -179,23 +179,35 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_tabl
         writer.out.append("General description")
         writer.out.append("-------------------")
         writer.out.append("")
-        writer.out.append("Tested Module: {0}".format(pclassname))
-        writer.out.append("")
-        writer.out.append("Description: {0}".format(casedict['docstring']))
+        writer.out.append("{0}".format(casedict['docstring']))
         writer.out.append("")
         writer.out.append("Tests")
         writer.out.append("-----")
         writer.out.append("")
-        writer.table_line_multi([('Testcase-ID',34), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
+        #writer.table_line_multi([('Testcase-ID',34), ('description',40), ('failed/passed', 7), ('time',4)], tableheader=True)
+        writer.table_line_multi([('Testcase-ID',34), ('failed/passed', 7), ('time',5)], tableheader=True)
         for test in tests:
             failstring = 'FAILED' if test['failed'] else 'PASSED'
-            writer.table_line_multi([(test['name'],34), (test['docstring'],40), (failstring, 7), (test['time'],4)])
+            #writer.table_line_multi([(test['name'],34), (test['docstring'],40), (failstring, 7), (test['time'],5)])
+            writer.table_line_multi([(test['name'],34), (failstring, 7), (test['time'],5)])
+            
         writer.out.append("")
+        writer.out.append("")
+        writer.out.append("")
+        for test in tests:
+            writer.out.append("{0}".format(test['name']))
+            writer.out.append("    {0}".format(test['docstring']))
+            writer.out.append("")
+        writer.out.append("")
+        
         if one_case_per_page:
             writer.out.append(".. raw:: latex")
             writer.out.append("")
             writer.out.append("   \pagebreak")
             writer.out.append("   \\newpage")
+            writer.out.append("")
+            writer.out.append("")
+        else:
             writer.out.append("")
             writer.out.append("")
             
@@ -239,10 +251,10 @@ class RstTable():
             nline2 = " "*(self.maxwidth-len(nline)-1)
             self.out.append("%s%s|"  % (nline,nline2))
     
-    def table_line_multi(self, valuelist=None, tableheader=False):
+    def table_line_multi(self, valuelist=None, tableheader=False, tablefooter=False):
         if not valuelist:
             return
-        if tableheader:
+        if tableheader or tablefooter:
             linemarker = u'-'
             i = 0
             for tup in valuelist:
@@ -255,6 +267,7 @@ class RstTable():
                     line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
                 i +=1
             self.out.append(line)
+        
         tmpout = {}
         i = 0
         for tup in valuelist:
@@ -300,6 +313,10 @@ class RstTable():
         linemarker = '-'
         if tableheader:
             linemarker = '='
+        #overrules
+        if tablefooter:
+            linemarker = '-'
+        
         for tup in valuelist:
             maxw = tup[1]
             if i == 0:
