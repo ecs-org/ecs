@@ -145,8 +145,8 @@ ecs.widgets.Popup = new Class({
         this.popup.setStyles({
             'max-width': parent.getWidth() - 50,
             'max-height': parent.getHeight() - 50,
-            'width': popupSize.x,
-            'height': popupSize.y
+            'width': Math.max(popupSize.x, 300),
+            'height': Math.max(popupSize.y, 200)
         });
 
         /* center on screen */

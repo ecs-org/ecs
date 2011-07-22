@@ -43,13 +43,9 @@
 {% endif %}
 
 <form class="send" method="post">
-    <ol>
-    {% for field_name in form.fields %}
-        {% with form|getitem:field_name as field %}
-            {% include "forms/field.html" %}
-        {% endwith %}
-    {% endfor %}
-    </ol>
+    <table>
+        {{ form.as_table }}
+    </table>
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
@@ -85,8 +81,7 @@
         var textarea = communication_thread.getElement('textarea[name="text"]');
         new ecs.textarea.TextArea(textarea);
         ecs.textarea.installToolbar(textarea, messageToolbarItems);
-
-        ecs.setupFormFieldHelpers();
+        ecs.setupAutocomplete();
       });
     </script>
 {% endblock %}

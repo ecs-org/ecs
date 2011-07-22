@@ -22,6 +22,9 @@
         {{ filterform.expedited }} <li><label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
         {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
+    <div class="task_list_choose">
+        <label class="task_types">{% trans "Type" %}:</label> {{ filterform.task_types }}
+    </div>
     <a href="{{ bookmarklink }}" bookmarktitle="{% trans "ECS Tasks" %}">{% trans "Bookmark me!" %}</a>
 </form>
 

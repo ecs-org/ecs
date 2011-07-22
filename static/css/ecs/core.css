@@ -1169,3 +1169,11 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly .version a {
   vertical-align: top;
 }
+
+#task_form .textboxlist-bits {
+  width: auto;
+}
+#task_form .textboxlist-bit {
+  width: auto;
+  clear: none;
+}

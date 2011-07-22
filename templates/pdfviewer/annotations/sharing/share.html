@@ -1,5 +1,6 @@
 {% load core i18n %}
 
+<div id="annotation_share">
 <form action="{% url ecs.pdfviewer.views.share_annotations document.pk %}" method="post" class="open-in-widget">
     {{ form.user }}
     {% for annotation in annotations %}
@@ -10,3 +11,10 @@
     {% endfor %}
     <input type="submit" value="{% trans 'Share' %}" />
 </form>
+</div>
+
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        ecs.setupAutocomplete($('annotation_share'));
+    });
+</script>

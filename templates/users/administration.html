@@ -10,7 +10,7 @@
     <ul class="useradministration_choose">
         <li><label for="id_approval">{% trans "Approval" %}:</label> {{ filterform.approval }}</li>
         <li><label for="id_approval">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
-        <li><label for="id_group">{% trans "Group" %}:</label> {{ filterform.group }}</li>
+        <li><label for="id_groups">{% trans "Groups" %}:</label> {{ filterform.groups }}</li>
         <li><label for="id_keyword">{% trans "Name/Email" %}:</label> {{ filterform.keyword }}</li>
         <li><input type="submit" value="suchen" title="suchen" /></li>
     </ul>
@@ -100,6 +100,8 @@
         window.addEvent('domready', function(){
             var form = $('{{ form_id }}');
             var page_input = form.getElement('input[name="page"]');
+
+            ecs.setupAutocomplete(form);
 
             form.getElements('input').each(function(input){
                 input.addEvent('change', function(){

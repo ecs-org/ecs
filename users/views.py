@@ -254,9 +254,11 @@ def details(request, user_pk=None):
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
+    print usersettings.useradministration_filter
+
     filter_defaults = {
         'page': '1',
-        'group': '',
+        'groups': '',
         'approval': 'both',
         'activity': 'active',
         'keyword': '',
@@ -279,8 +281,8 @@ def administration(request, limit=20):
     elif filterform.cleaned_data['activity'] == 'inactive':
         users = users.filter(is_active=False)
 
-    if filterform.cleaned_data['group']:
-        users = users.filter(groups=filterform.cleaned_data['group'])
+    if filterform.cleaned_data['groups']:
+        users = users.filter(groups__in=filterform.cleaned_data['groups'])
 
     keyword = filterform.cleaned_data['keyword']
     if keyword:
@@ -305,7 +307,7 @@ def administration(request, limit=20):
         filterform.is_valid()
 
     userfilter = filterform.cleaned_data
-    userfilter['group'] = userfilter['group'].pk if userfilter['group'] else ''
+    userfilter['groups'] = ','.join([str(g.pk) for g in userfilter['groups']]) if userfilter['groups'] else ''
     usersettings.useradministration_filter = userfilter
     usersettings.save()
 

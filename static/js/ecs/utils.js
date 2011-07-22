@@ -74,43 +74,8 @@ ecs.setupFormFieldHelpers = function(context){
         toggleElements: context.getElements('.datepicker_toggler')
     });
 
-    var setup_autocomplete = function(elm, values, max){
-        var currentValues = values;
-        elm.value = '';
-        var tbl = null;
-        var active = !!elm.getParent('form');
-        if(active){
-            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true}}});
-            tbl.container.addClass('textboxlist-loading');
-        }
-        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
-            if(active){
-                tbl.plugins['autocomplete'].setValues(response);
-                tbl.container.removeClass('textboxlist-loading');
-            }
-            var labels = [];
-            response.each(function(item){
-                if(currentValues.contains(item[0])){
-                    if(active){
-                        tbl.add(item[1], item[0], item[2]);
-                    }
-                    else{
-                        labels.push(item[1]);
-                    }
-                }
-            });
-            if(!active){
-                (new Element('span', {html: labels.join(', ')})).replaces(elm);
-            }
-        }}).send();
-    };
+    ecs.setupAutocomplete(context);
 
-    context.getElements('.ModelMultipleChoiceField input.autocomplete').each(function(multiselect){
-        setup_autocomplete(multiselect, multiselect.value.split(','), null);
-    });
-    context.getElements('.ModelChoiceField input.autocomplete').each(function(select){
-        setup_autocomplete(select, [select.value], 1);
-    });
     context.getElements('.CharField > textarea').each(function(textarea){
         new ecs.textarea.TextArea(textarea);
     });
@@ -169,6 +134,56 @@ ecs.setupFormFieldHelpers = function(context){
         });
     });
     */
+};
+
+ecs.setupAutocomplete = function(context){
+    context = $(context || document.body);
+
+    var setup_autocomplete = function(elm){
+        var type = elm.getProperty('x-autocomplete-type');
+        if (type == 'single') {
+            var currentValues = [elm.value];
+            var max = 1;
+        } else if (type == 'multi') {
+            var currentValues = elm.value.split(',');
+            var max = null;
+        } else {
+            return;
+        }
+        elm.value = '';
+        var tbl = null;
+        var active = !!elm.getParent('form');
+        if(active){
+            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true}}});
+            tbl.container.addClass('textboxlist-loading');
+        }
+        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
+            if(active){
+                tbl.plugins['autocomplete'].setValues(response);
+                tbl.container.removeClass('textboxlist-loading');
+            }
+            var labels = [];
+            response.each(function(item){
+                if(currentValues.contains(item[0])){
+                    if(active){
+                        tbl.add(item[1], item[0], item[2]);
+                    } else {
+                        labels.push(item[1]);
+                    }
+                }
+            });
+            if(!active){
+                (new Element('span', {html: labels.join(', ')})).replaces(elm);
+            }
+        }}).send();
+        return tbl;
+    };
+
+    var tbls = [];
+    context.getElements('input.autocomplete').each(function(input){
+        tbls.push(setup_autocomplete(input));
+    });
+    return tbls;
 };
 
 ecs.InvestigatorFormset = new Class({
@@ -539,9 +554,9 @@ ecs.setupForms = function(){
     return setup;
 };
 
-ecs.setupWidgets = function(container){
-    container = $(container || document.body);
-    container.getElements('*[x-widget-url]').each(function(w){
+ecs.setupWidgets = function(context){
+    context = $(context || document.body);
+    context.getElements('*[x-widget-url]').each(function(w){
         var widgeturl = w.getAttribute('x-widget-url');
         new ecs.widgets.Widget(w, {url: widgeturl});
     }, this);

@@ -3,7 +3,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+from django.conf import settings
 
+from ecs.tasks.models import TaskType
+from ecs.core.forms.fields import MultiselectWidget
 
 class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
@@ -74,3 +78,9 @@ class TaskListFilterForm(forms.Form):
         ('newest', _('Newest')),
     ))
 
+    task_types = forms.ModelMultipleChoiceField(required=False, queryset=TaskType.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super(TaskListFilterForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'task_types'}))
