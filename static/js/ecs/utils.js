@@ -330,7 +330,9 @@ ecs.InvestigatorFormset = new Class({
 
 ecs.setupDocumentUploadIframe = function(){
     var upload_iframe = $$('iframe.upload')[0];
-    if (upload_iframe) {
+    if (!upload_iframe) return;
+
+    upload_iframe.addEvent('load', function(){
         setInterval(function(){
             var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
             var height = container_size.y;
@@ -340,7 +342,7 @@ ecs.setupDocumentUploadIframe = function(){
             }
             upload_iframe.setStyle('height', height + 'px');
         }, 500);
-    }
+    });
 };
 
 ecs.setupDocumentUploadForms = function(){
