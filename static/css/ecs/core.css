@@ -1113,20 +1113,21 @@ content ol.submission_list h3 .ecnr {
 
 /*  Readonly  */
 
+.form_main.readonly ol li {
+  display: block;
+  float: left;
+  margin-bottom: 10px;
+} 
 .form_main.readonly .field li label,
 .form_main.readonly ol li label {
   text-align: left;
   vertical-align: baseline;
-  min-width: 220px;
-  max-width: 700px;
-  width: auto;
+  width: 260px;
   float: left;
 }
 .form_main.readonly .review ol li label,
 .form_main.readonly .checklist_review_tab ol li label {
-  min-width: 220px;
-  width: 220px;
-  text-align: right;
+  width: 240px;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {
@@ -1140,8 +1141,9 @@ content ol.submission_list h3 .ecnr {
 }
 .form_main.readonly li pre.oneline,
 .form_main.readonly td pre {
+  float: left;
   padding: 4px;
-  display: inline-block;
+  display: block;
   margin-bottom: 4px;
   position: relative;
   top: -4px;
@@ -1150,9 +1152,9 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly li pre.multiline {
   padding: 5px;
   display: block;
-  clear: both;
-  margin: 0px 0px 20px 20px;
+  float: left;
   white-space: pre-wrap;
+  max-width: 700px;
 }
 .form_main.readonly li pre em {
   color: #333333;
@@ -1168,4 +1170,10 @@ content ol.submission_list h3 .ecnr {
 }
 .form_main.readonly .version a {
   vertical-align: top;
+}
+.form_main.readonly table pre {
+  margin-left: 0;
+}
+.form_main.readonly table td:first-child {
+  display: none;
 }

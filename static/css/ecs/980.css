@@ -1,0 +1,48 @@
+/* these styles are meant to serve css media queries on browser widths 
+ * with lower screen resolutions than 1024 px */ 
+
+/* submission readonly */
+
+.form_main.readonly .field li label,
+.form_main.readonly ol li label {
+  text-align: left;
+  vertical-align: baseline;
+  width: 100%;
+  float: left;
+  clear: both;
+  padding: 0;
+}
+.form_main.readonly .review ol li label,
+.form_main.readonly .checklist_review_tab ol li label {
+  width: 240px;
+}
+.readonly pre,
+.readonly input[disabled], 
+.readonly textarea[disabled], 
+.readonly select[disabled], 
+.readonly .rte_display {
+  display: block;
+  clear: both;
+  margin-left: 10px;
+}
+#content .form_main.readonly .BooleanField label,
+#content .form_main.readonly .NullBooleanField label,
+#content .form_main.readonly .TypedChoiceField label,
+#content .form_main.readonly .IntegerField label {
+  clear: none;
+  display: inline-block;
+  width: auto;
+}
+#content .form_main.readonly .BooleanField input[type=checkbox],
+#content .form_main.readonly .TypedChoiceField select,
+#content .form_main.readonly .NullBooleanField select {
+  clear: none;
+}
+.form_main.readonly li pre.oneline {
+  display: inline-block;
+  float: none;
+}
+#content .form_main.readonly .CharField label {
+  clear: none;
+  width: auto;
+}
