@@ -330,19 +330,22 @@ ecs.InvestigatorFormset = new Class({
 
 ecs.setupDocumentUploadIframe = function(){
     var upload_iframe = $$('iframe.upload')[0];
-    if (!upload_iframe) return;
 
-    upload_iframe.addEvent('load', function(){
-        setInterval(function(){
-            var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
-            var height = container_size.y;
-            var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
-            if (datepicker && datepicker.isVisible()) {
-                height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
-            }
-            upload_iframe.setStyle('height', height + 'px');
-        }, 500);
-    });
+    function resize_iframe() {
+        if (typeof(upload_iframe.contentWindow.document.body.getElement) === 'undefined') return;
+        if (!upload_iframe.isVisible()) return;
+
+        var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
+        var height = container_size.y + 20;
+        var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
+        if (datepicker && datepicker.isVisible()) {
+            height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
+        }
+        upload_iframe.setStyle('height', height + 'px');
+    }
+
+    upload_iframe.setStyle('height', '200px');
+    setInterval(resize_iframe, 500);
 };
 
 ecs.setupDocumentUploadForms = function(){
@@ -352,42 +355,49 @@ ecs.setupDocumentUploadForms = function(){
     var upload_button = form.getElement('input[type="submit"]');
     ecs.setupFormFieldHelpers(document);
     upload_button.addEvent('click', function(){
+        var html5_upload = typeof(FormData) !== 'undefined';
+
         if(ecs.mainForm){
             ecs.mainForm.autosaveDisabled = true;
         }
-        /*upload_button.hide();*/
-        upload_button.setAttribute('disabled', 'disabled');
         document.getElement('.warning').show();
-        var form_data = new FormData();
-        form.getElements('(input)|(select)').each(function(input){
-            if(!input.name) return;
-            if(input.type == 'file' && input.files.length){
-                form_data.append(input.name, input.files[0]);
-            } else {
-                form_data.append(input.name, input.value);
-            }
-        }, this);
 
-        xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener('progress', function(evt){
-            upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
-        }, false);
-        xhr.addEventListener('load', function(evt){
-            upload_button.setClass('loaded');
-            /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
-            var body_html = RegExp.$1;;
-            document.getElement('body').innerHTML = body_html;
-            ecs.setupDocumentUploadForms();
-        }, false);
-        xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
-        xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
-        xhr.open('POST', window.location.pathname);
-        xhr.send(form_data);
+        if (html5_upload) {
+            upload_button.setAttribute('disabled', 'disabled');
+
+            var form_data = new FormData();
+            form.getElements('(input)|(select)').each(function(input){
+                if(!input.name) return;
+                if(input.type == 'file' && input.files.length){
+                    form_data.append(input.name, input.files[0]);
+                } else {
+                    form_data.append(input.name, input.value);
+                }
+            }, this);
+
+            xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function(evt){
+                upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
+            }, false);
+            xhr.addEventListener('load', function(evt){
+                upload_button.setClass('loaded');
+                /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
+                var body_html = RegExp.$1;;
+                document.getElement('body').innerHTML = body_html;
+                ecs.setupDocumentUploadForms();
+            }, false);
+            xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
+            xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
+            xhr.open('POST', window.location.pathname);
+            xhr.send(form_data);
+        } else {
+            upload_button.hide();
+        }
 
         if(ecs.mainForm){
-            ecs.mainForm.autosaveDisabled = true;
+            ecs.mainForm.autosaveDisabled = false;
         }
-        return false;
+        return !html5_upload;
     }, this);
 
     var file_field = $('id_document-file');
