@@ -63,6 +63,16 @@
                     {% endifequal %}
 
                     {% ifequal tab "Zentren" %}
+                        {% if investigator_formset.non_form_errors %}
+                            <div class="errors">
+                            <ul class="errorlist">
+                            {% for error in investigator_formset.non_form_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                            </div>
+                        {% endif %}
+
                         <ul class="investigator_list"></ul>
                         <div class="investigator_list_clear"></div>
 

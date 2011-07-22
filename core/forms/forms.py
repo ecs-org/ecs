@@ -282,6 +282,12 @@ class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, 
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
+    def clean(self):
+        super(BaseInvestigatorFormSet, self).clean()
+        changed_forms = [form for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
+        if len(changed_forms) < 1:
+            raise forms.ValidationError(_('At lease one centre is required.'))
+
 InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1) 
 
 class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
