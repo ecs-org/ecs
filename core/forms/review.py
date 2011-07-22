@@ -50,10 +50,10 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
             )
             self.fields['additional_reviewers'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'users'})
+                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
             )
             self.fields['external_reviewer_name'].widget = SingleselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'external_reviewers'})
+                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'external_reviewers'})
             )
         return rval
         
@@ -81,7 +81,7 @@ class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
         rval = super(BefangeneReviewForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['befangene'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'users'})
+                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
             )
         return rval
 
