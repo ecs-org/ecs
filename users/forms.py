@@ -139,9 +139,14 @@ class AdministrationFilterForm(forms.Form):
         ('active', _(u'active')),
         ('inactive', _(u'inactive')),
     ))
-    group = forms.ModelChoiceField(required=False, queryset=Group.objects.all())
+    groups = forms.ModelMultipleChoiceField(required=False, queryset=Group.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
     keyword = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(AdministrationFilterForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
 
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))

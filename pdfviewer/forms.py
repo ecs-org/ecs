@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+
 from ecs.pdfviewer.models import DocumentAnnotation
+from ecs.core.forms.fields import SingleselectWidget
 
 
 class DocumentAnnotationForm(forms.ModelForm):
@@ -22,4 +26,9 @@ class DocumentAnnotationForm(forms.ModelForm):
         
 class AnnotationSharingForm(forms.Form):
     user = forms.ModelChoiceField(User.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super(AnnotationSharingForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['user'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 

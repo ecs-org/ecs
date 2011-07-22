@@ -39,7 +39,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
 
-    filter_defaults = dict(sorting='deadline')
+    filter_defaults = dict(sorting='deadline', task_types='')
     for key in ('amg', 'mpg', 'thesis', 'expedited', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 
@@ -48,7 +48,9 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     filterform.is_valid() # force clean
 
     if request.method == 'POST':
-        usersettings.task_filter = filterform.cleaned_data
+        userfilter = filterform.cleaned_data
+        userfilter['task_types'] = ','.join([str(tt.pk) for tt in userfilter['task_types']]) if userfilter['task_types'] else ''
+        usersettings.task_filter = userfilter
         usersettings.save()
         if len(request.GET.values()) > 0:
             return HttpResponseRedirect(request.path)

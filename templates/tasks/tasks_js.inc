@@ -20,6 +20,11 @@
           });
       });
 
+      var tbls = ecs.setupAutocomplete('{{ form_id }}');
+      tbls[0].addEvent('blur', function(){
+          $('{{ form_id }}').submit();
+      });
+
       var threshold = 7;
 
       var toggle_collapse = function(){
