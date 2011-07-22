@@ -140,7 +140,7 @@ class Command(BaseCommand):
         print "debug: {0} undocumented tests".format(undoc_count)
 
         
-def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_table=True):
+def testcases2rst(headerinfo, cases, outfile, one_case_per_page=False, write_table=True):
     '''dumps testcase data from hudson mixed in with docstrings to a single file'''
     import codecs
     if not cases:
@@ -207,6 +207,9 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=True, write_tabl
             writer.out.append("")
             writer.out.append("   \pagebreak")
             writer.out.append("   \\newpage")
+            writer.out.append("")
+            writer.out.append("")
+        else:
             writer.out.append("")
             writer.out.append("")
             
