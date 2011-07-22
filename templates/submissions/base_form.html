@@ -183,11 +183,6 @@
         window.addEvent('domready', function(){
             var setup = ecs.setupForms();
 
-            $$('*[widgeturl]').each(function(w){
-                var widgeturl = w.getAttribute('widgeturl');
-                new ecs.widgets.Widget(w, {url: widgeturl});
-            }, this);
-
             new ecs.FormFieldController(['id_project_type_reg_drug'], {
                 disable: true,
                 sourceFieldClass: 'subchoice',

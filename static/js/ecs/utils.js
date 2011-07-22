@@ -330,6 +330,7 @@ ecs.InvestigatorFormset = new Class({
 
 ecs.setupDocumentUploadIframe = function(){
     var upload_iframe = $$('iframe.upload')[0];
+    if (!upload_iframe) return;
 
     function resize_iframe() {
         if (typeof(upload_iframe.contentWindow.document.body.getElement) === 'undefined') return;
@@ -536,6 +537,14 @@ ecs.setupForms = function(){
     });
     
     return setup;
+};
+
+ecs.setupWidgets = function(container){
+    container = $(container || document.body);
+    container.getElements('*[x-widget-url]').each(function(w){
+        var widgeturl = w.getAttribute('x-widget-url');
+        new ecs.widgets.Widget(w, {url: widgeturl});
+    }, this);
 };
 
 ecs.FormFieldController = new Class({
