@@ -11,10 +11,13 @@ def basic_test(**kwargs):
 
 
 class CeleryTest(EcsTestCase):
-    '''Class for testing Celery - asynchronous task queue.'''
+    '''Tests for Celery's asynchronous task queue.
+
+Tests for accessibility and configuration of the asynchronous task queue.
+'''
     
     def test_celery(self):
-        '''Tests if the asynchronous task queue worker is accessible and working properly.'''
+        '''Tests if the asynchronous task queue worker is accessible, if the logger works and if the remote test task succeeds.'''
         
         retval = basic_test.delay()
         self.failUnlessEqual(retval.get(), 'success')
