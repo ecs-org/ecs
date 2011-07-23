@@ -4,12 +4,17 @@ from ecs.utils.testcases import LoginTestCase
 from ecs.docstash.models import DocStash
 
 class DecoratorApiTest(LoginTestCase):
-    '''Tests for the Docstash'''
+    '''Tests for the Docstash
+    
+    Test for sending and receiving data from and to the docstash.
+    '''
     
     urls = 'ecs.docstash.tests.urls'
     
     def test_simple_post(self):
-        '''Tests if data can be submitted to the docstash, and read again. Posted data is compared against data read from the docstash.'''
+        '''Tests if data can be submitted to the docstash, and read again.
+        Posted data is compared against data read from the docstash.
+        '''
         
         base_url = '/simple_post/'
         test_post_data = {'foo': 'bar'}

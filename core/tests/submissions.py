@@ -176,10 +176,17 @@ def create_submission_form(ec_number=None, presenter=None):
 
 
 class SubmissionFormTest(EcsTestCase):
-    '''Tests for creating a submissino form.'''
+    '''Tests for creating a submission form.
+    
+    Basic Tests for the modules Submission, SubmissionForm EthicsCommission, Investigator.
+    '''
     
     def test_creation(self):
-        '''Tests if a submission form can be created and saved. Also makes sure that a pdf of the submission form can be rendered.'''
+        '''Tests if a submission form can be created and saved.
+        Also tests creation of an EthicsCommission and an Investigator and
+        attaching the submissionform to the create EC and the Investigator.
+        If a pdf of the submission form can be rendered is tested aswell.
+        '''
         
         sub = Submission()
         sub.save()
@@ -340,7 +347,9 @@ class SubmissionFormTest(EcsTestCase):
 
 
 class SubmissionAttachUserTest(EcsTestCase):
-    '''Tests for attaching users to a submission form.'''
+    '''Tests for attaching users to a submission in different roles.
+    
+    '''
     
     def setUp(self):
         self.email = 'foobar@example.com'
@@ -358,7 +367,7 @@ class SubmissionAttachUserTest(EcsTestCase):
         self.sf.save()
 
     def test_submission_attach_user(self):
-        '''FIXME check if correct: Tests if a user can be attached to a study as submitter and as sponsor.'''
+        '''Tests if a user can be attached to a study as submitter and as sponsor.'''
         
         attach_to_submissions(self.user)        
         self.sf = SubmissionForm.objects.get(project_title="High Risk Test Study")

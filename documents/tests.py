@@ -8,9 +8,14 @@ from ecs.documents.models import Document, DocumentType
 
 
 class DocumentsTest(LoginTestCase):
+    '''Test for the Document module
     
+    Tests for saving and retreiving documents via the Documents module.
+    '''
     def test_download(self):
-        '''Tests that a saved document can be downloaded, that its stored in the correct location and that it is a pdf.'''
+        '''Tests that a saved document can be downloaded,
+        that its stored in the correct location and that it is a pdf.
+        '''
         
         self.pdf_magic = binascii.a2b_hex('255044462D31')         
         self.tempfilename = tempfilecopy(open(os.path.join(os.path.dirname(__file__), '..', 'core', 'tests', 'data', 'menschenrechtserklaerung.pdf'), 'rb'))
@@ -32,6 +37,7 @@ class DocumentsTest(LoginTestCase):
         self.assertTrue(current_magic == self.pdf_magic)
         
     def test_upload(self):
-        '''Tests the docuemtn upload functionality.'''
+        '''Tests the docuemnt upload functionality.
+        '''
         pass
 

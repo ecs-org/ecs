@@ -9,10 +9,13 @@ from lamson.server import SMTPError
 from ecs.ecsmail.testcases import MailTestCase
 
 class ecsmailIncomingTest(MailTestCase):
-    '''Various Tests for the mail system.'''
+    '''Incoming mail tests for the ecsmail module
+    
+    Tests for relaying and receiving incoming mail messages.
+    '''
     
     def test_relay(self):
-        '''test relaying'''
+        '''Makes sure that the ecsmail module does not act as an open mail relay'''
          
         assert_raises(SMTPError, self.receive,
             "some subject", "some body",
@@ -21,7 +24,8 @@ class ecsmailIncomingTest(MailTestCase):
 
 
     def test_to_us_unknown(self):
-        '''mail to us, but unknown recipient address at our site'''
+        '''Makes sure that mail to an unknown recipient is rejected.
+        '''
         
         assert_raises(SMTPError, self.receive,
             "some subject", "some body",
@@ -31,10 +35,14 @@ class ecsmailIncomingTest(MailTestCase):
 
 
 class ecsmailOutgoingTest(MailTestCase):
-    '''A Class for testing the facilities for sending mail from the system'''
+    '''Outgoing mail tests for the ecsmail module
+    
+    Tests for sending mail in different forms and with or without attachments.
+    '''
     
     def test_hello_world(self):
-        '''tests if an email can be sent from the system'''
+        '''Tests if an email can be sent from the system,
+        '''
         
         self.deliver("some subject", "some body, first message")
         eq_(self.queue_count(), 1)
@@ -42,7 +50,8 @@ class ecsmailOutgoingTest(MailTestCase):
     
     
     def test_text_and_html(self):
-        '''Tests that creation and sending of html and text-only messages works.'''
+        '''Tests that creation and sending of html and text-only messages works.
+        '''
         
         self.deliver("another subject", "second message", 
             message_html= "<html><head></head><body><b>this is bold</b></body>")
@@ -55,7 +64,9 @@ class ecsmailOutgoingTest(MailTestCase):
     
     
     def test_attachments(self):
-        '''A Test for making sure that files can be attached to messages and that data attached is not altered.'''
+        '''Test for making sure that files can be attached to messages and
+        that data attached is not altered.
+        '''
         
         attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()
@@ -74,7 +85,9 @@ class ecsmailOutgoingTest(MailTestCase):
         
         
     def test_text_and_html_and_attachment(self):
-        '''Makes sure that a message can consist of text and html and also has an attachment. Further checks that attached data is not altered during sending.'''
+        '''Makes sure that a message can consist of text and html and also has an attachment.
+        Further checks that attached data is not altered during sending.
+        '''
         
         attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()

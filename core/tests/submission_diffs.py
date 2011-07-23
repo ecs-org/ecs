@@ -7,7 +7,10 @@ from ecs.core.tests.submissions import create_submission_form
 
 
 class SubmissionFormDiffTest(EcsTestCase):
-    '''Tests for diffs between different submissionform versions.'''
+    '''Tests for the diff_submission_forms module
+    
+    Tests for changes between different submissionform versions.
+    '''
     
     def setUp(self, *args, **kwargs):
         rval = super(SubmissionFormDiffTest, self).setUp(*args, **kwargs)
@@ -23,7 +26,10 @@ class SubmissionFormDiffTest(EcsTestCase):
         return rval
 
     def test_submission_form_diff(self):
-        '''Tests that in the differences of a submissionform a project title is set for a newer submission form and that it's value also matches the supplied title for the newer version.'''
+        '''Makes sure that if data field of a submissionform changes,
+        this change ends up in the list of changes for that submissionform.
+        Also checks that the value of the recorded change is correct.
+        '''
         
         self.new_sf.project_title = 'roflcopter'
         diff = diff_submission_forms(self.old_sf, self.new_sf)
