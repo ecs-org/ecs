@@ -47,9 +47,9 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
+    userfilter = filterform.cleaned_data
+    userfilter['task_types'] = ','.join([str(tt.pk) for tt in userfilter['task_types']]) if userfilter['task_types'] else ''
     if request.method == 'POST':
-        userfilter = filterform.cleaned_data
-        userfilter['task_types'] = ','.join([str(tt.pk) for tt in userfilter['task_types']]) if userfilter['task_types'] else ''
         usersettings.task_filter = userfilter
         usersettings.save()
         if len(request.GET.values()) > 0:
@@ -105,7 +105,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
         'submission': submission,
         'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
-        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(filterform.cleaned_data)),
+        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(userfilter)),
     }
 
     task_flavors = {
