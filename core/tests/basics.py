@@ -5,7 +5,7 @@ class ImportTest(EcsTestCase):
     ''' Check if base and core urls,view,models are importable '''
     
     def test_import(self):
-        "test if the urls module and the views are importable"
+        "Tests if the urls module and core.urls, core.views, core.models are importable"
         
         import ecs.urls
         import ecs.core.urls
