@@ -13,7 +13,7 @@ class ImportTest(EcsTestCase):
         import ecs.core.models
         
 class CoreUrlsTest(LoginTestCase):
-    '''Class for testing '''
+    '''High level tests for accessibility of core views of the system'''
     
     def test_index(self):
         '''Tests if the Dashboard/main-site of the system is accessible.'''
