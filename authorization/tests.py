@@ -10,7 +10,11 @@ from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
 class SubmissionAuthTestCase(EcsTestCase):
-    '''Class for testing the Authorization of certain users regarding a submission'''
+    '''Tests for the authorization- and role-management of all types of users regarding access to a submission.
+
+Tests the authorization to view a submission for each user-role.
+Also tests that a submission is not accessible in the system depending on the role of the user.
+'''
     
     BASE_EC_NUMBER = 9742
     EC_NUMBER = 20100000 + BASE_EC_NUMBER
@@ -67,7 +71,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.sf = sf
         
     def test_submission_auth(self):
-        '''Makes sure that each type of user only sees a submission/study if his role matches the status and type of the submission/study'''
+        '''Makes sure that each type of user(unapproved,anyone,submitter,sponsor,investigator, etc. ) only sees a submission/study if his role matches the status and type of the submission/study'''
         
         with sudo(self.unapproved_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
