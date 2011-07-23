@@ -13,7 +13,10 @@ from ecs.mediaserver.storagevault import getVault
 
 
 class StorageVaultTest(EcsTestCase):
-    '''Test Class for testing the storage facilities of the system.'''
+    '''Tests for the StorageVault module
+    
+    Consistency tests for the storage of data stored in the storagevault.
+    '''
     
     def setUp(self):
         self.vault = getVault()
@@ -25,7 +28,9 @@ class StorageVaultTest(EcsTestCase):
             self.vault.add(u, StringIO.StringIO(hashlib.md5(u).hexdigest()))
     
     def testConsistency(self):
-        '''Tests that data stored in the storage vault equals data retrieved from the storage vault'''
+        '''Tests that data stored in the storage vault equals
+        data retrieved from the storage vault.
+        '''
         
         for u in self.uuids: 
             filelike_fromvault = self.vault.get(u)

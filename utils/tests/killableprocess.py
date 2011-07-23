@@ -21,19 +21,24 @@ urlpatterns = patterns('',
 )
 
 class KillableProcessTest(TestCase):
-    '''Tests for killable processes.'''
+    '''Tests for the killableprocesses module
+    
+    Tests for killing a process.
+    '''
     
     urls = 'ecs.utils.tests.killableprocess'
 
     def test_timeout(self):
-        '''Tests if a process is killed after specified timeout.'''
+        '''Tests if a process is killed after specified timeout.
+        '''
         
         popen = killableprocess.Popen(args=SLEEPS_ALOT)
         retcode = popen.wait(timeout=2)
         self.assertNotEquals(retcode, 0)
         
     def test_client(self):
-        '''Tests if the test url is reachable via the test client.'''
+        '''Tests if the test url is reachable via the test client.
+        '''
         
         response = self.client.get('/test/')
         print response.status_code

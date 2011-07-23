@@ -11,14 +11,18 @@ from ecs.workflow.models import Foo
 from ecs.workflow.tests import repeatability_declarations as decl
 
 class RepeatabilityTest(WorkflowTestCase):
-    '''Workflow repetition tests.'''
+    '''Tests for the workflow module
+    
+    Tests for the workflow repetition functionality.
+    '''
     
     def setUp(self):
         super(RepeatabilityTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_unrepeatable(self):
-        '''Tests that a certain task cannot be done again in the workflow.'''
+        '''Tests that a certain task cannot be done again in the workflow.
+        '''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -31,7 +35,8 @@ class RepeatabilityTest(WorkflowTestCase):
         
         
     def test_simple_repeat(self):
-        '''Tests that certain Tasks can be repeated in the workflow.'''
+        '''Tests that certain Tasks can be repeated in the workflow.
+        '''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True) 

@@ -6,7 +6,11 @@ from ecs.users.utils import create_user
 
 
 class AuthorizationTest(EcsTestCase):
-    '''Tests for testing user authorizations.'''
+    '''Test for the tasks module
+    
+    
+    Tests for user authorizations and task assignment.
+    '''
     
     def setUp(self):
         group_a = Group.objects.create(name='group-a')
@@ -23,7 +27,9 @@ class AuthorizationTest(EcsTestCase):
         self.task_type_c = TaskType.objects.create(name='task-type-c')
 
     def test_simple_assignment(self):
-        '''Makes sure that assigning tasks to users works correctly.'''
+        '''Makes sure that assigning tasks to users works correctly.
+        Also makes sure that tasks cannot be assigned to unauthorized users.
+        '''
         
         task = Task.objects.create(task_type=self.task_type_a)
         task.assign(self.user_a)

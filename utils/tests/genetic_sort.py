@@ -4,10 +4,14 @@ from django.test import TestCase
 from ecs.utils.genetic_sort import GeneticSorter, swap_mutation
 
 class GeneticSorterTest(TestCase):
-    '''Tests for the Genetic Sorter.'''
+    '''Tests for the GeneticSorter module
+    
+    Genetic sorting tests.
+    '''
     
     def test_list_sort(self):
-        '''Tests if the GeneticSorter works correctly for a supplied list.'''
+        '''Tests if the GeneticSorter correctly sorts a supplied list.
+        '''
         
         N = 20
         data = random.sample(xrange(N), N)

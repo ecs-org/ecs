@@ -11,7 +11,10 @@ from ecs.workflow.models import Foo, FooReview, Token
 from ecs.workflow.tests import flow_declarations as decl
 
 class FlowTest(WorkflowTestCase):
-    '''Various tests for the workflow module.'''
+    '''Tests for the workflow module
+    
+    FIXME: what do the tests do?
+    '''
     
     def setUp(self):
         super(FlowTest, self).setUp()

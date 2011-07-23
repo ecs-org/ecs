@@ -10,10 +10,16 @@ from ecs.users.utils import get_user, create_user
 
 
 class RegistrationTest(MailTestCase, WorkflowTestCase):
-    '''class for testing the registration process'''
+    '''Tests for the user registration functionality
+    
+    High level tests for the user registration. 
+    '''
     
     def test_registration(self):
-        '''tests the registration process'''
+        '''Tests the registration process by registering as a new user,
+        following the link in the registration mail message,
+        setting a password and comparing the provided user data afterwards.
+        '''
         
         from ecs.core.bootstrap import auth_groups
         from ecs.users.bootstrap import user_workflow
@@ -50,10 +56,16 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         
 
 class PasswordChangeTest(MailTestCase):
-    ''' password changing test class'''
+    '''Tests for password changing functionality
+    
+    High level tests for password changing and password reset functionality.
+    '''
     
     def test_password_reset(self):
-        '''Tests that a user can reset his password'''
+        '''Makes sure that a user can reset his password,
+        by following the link in a password reset mail message,
+        setting a new password and performing a test login with the newly set password.
+        '''
         
         user = create_user('new.user@example.org')
         user.set_password('password')
@@ -85,7 +97,9 @@ class PasswordChangeTest(MailTestCase):
         self.failIf('form' in response.context)
         
     def test_password_change(self):
-        '''Tests the password changing functionality'''
+        '''Makes sure that a password can be changed, by changing a password and
+        performing a test-login afterwards with the changed password.
+        '''
         
         user = create_user('foobar@example.com')
         user.set_password('test')
@@ -108,7 +122,10 @@ class PasswordChangeTest(MailTestCase):
         self.failUnless(user.check_password('1234'))
         
 class MiddlewareTest(EcsTestCase):
-    '''User Middleware Testing class'''
+    '''Tests for the user middleware
+    
+    High level tests for user middleware features such as single-login enforcement.
+    '''
     
     def setUp(self, *args, **kwargs):
         testuser = create_user('testuser@example.com')

@@ -8,10 +8,15 @@ from ecs.meetings.models import Meeting
 
 
 class MeetingModelTest(EcsTestCase):
-    '''Tests for the Meeting Model'''
+    '''Tests for the Meeting module
+    
+    Test for scheduling meetings, meeting entries (and the their order) and waiting time calculation and distribution. 
+    '''
     
     def test_entry_management(self):
-        '''Tests that entries can be added to a Meeting, that the order is correct and that start and end times of meeting items are correct.'''
+        '''Tests that entries can be added to a Meeting, that the order is correct
+        and that start and end times of meeting items are correct.
+        '''
         
         start = datetime(2010, 4, 8, 0)
         m = Meeting.objects.create(start=start, title="Test")
@@ -51,7 +56,9 @@ class MeetingModelTest(EcsTestCase):
 
 
     def test_metrics(self):
-        '''Tests that meeting items and their associated waiting times are evenly and correctly distributed among test users.'''
+        '''Tests that meeting items and their associated waiting times
+        are evenly and correctly distributed among test users.
+        '''
         
         u0, u1, u2, u3 = [User.objects.create(username='u%s' % i) for i in range(4)]
         
@@ -93,7 +100,9 @@ class MeetingModelTest(EcsTestCase):
         self.failUnlessEqual(len(connection.queries), query_count)
         
     def test_automatic_meeting_assignment(self):
-        '''Tests the scheduling mechanism for meetings by scheduling and unscheduling meetings and then checking for the next meeting.'''
+        '''Tests the scheduling mechanism for meetings by scheduling
+        and unscheduling meetings and then checking for the next meeting.
+        '''
         
         from ecs.core.tests.submissions import create_submission_form
         from ecs.core.models import Submission
