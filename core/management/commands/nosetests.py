@@ -9,6 +9,31 @@ from StringIO import StringIO
 
 from textwrap import wrap
 
+def trim_docstring(docstring):
+    if not docstring:
+        return ''
+    # Convert tabs to spaces (following the normal Python rules)
+    # and split into a list of lines:
+    lines = docstring.expandtabs().splitlines()
+    # Determine minimum indentation (first line doesn't count):
+    indent = sys.maxint
+    for line in lines[1:]:
+        stripped = line.lstrip()
+        if stripped:
+            indent = min(indent, len(line) - len(stripped))
+    # Remove indentation (first line is special):
+    trimmed = [lines[0].strip()]
+    if indent < sys.maxint:
+        for line in lines[1:]:
+            trimmed.append(line[indent:].rstrip())
+    # Strip off trailing and leading blank lines:
+    while trimmed and not trimmed[-1]:
+        trimmed.pop()
+    while trimmed and not trimmed[0]:
+        trimmed.pop(0)
+    # Return a single string:
+    return '\n'.join(trimmed)
+
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-o', action='store', dest='outfile', help='output file', default=None),
@@ -98,10 +123,10 @@ class Command(BaseCommand):
                 
                 try:
                     c=getattr(m, classname)
-                    cases[pclassname]['docstring'] = c.__doc__
+                    cases[pclassname]['docstring'] = trim_docstring(c.__doc__)
                     for test in tests:
                         t=getattr(c, test['name'])
-                        test['docstring'] = t.__doc__ if t.__doc__ else ""
+                        test['docstring'] = trim_docstring(t.__doc__) if t.__doc__ else ""
                         if not t.__doc__:
                             undoc_count += 1 
                     
@@ -196,7 +221,8 @@ def testcases2rst(headerinfo, cases, outfile, one_case_per_page=False, write_tab
         writer.out.append("")
         for test in tests:
             writer.out.append("{0}".format(test['name']))
-            writer.out.append("    {0}".format(test['docstring']))
+            for line in test['docstring'].splitlines():
+                writer.out.append("    {0}".format(line))
             writer.out.append("")
         writer.out.append("")
         
