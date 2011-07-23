@@ -124,7 +124,7 @@ def submission_workflow():
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
             'thesis_categorization_review': Args(ThesisCategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Paper Submission Review")),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Thesis Paper Submission Review")),
             'thesis_recommendation': Args(NonRepeatableChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
@@ -140,7 +140,6 @@ def submission_workflow():
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
-            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_not_localec),
             ('resubmission', 'start'): None,
 
             # retrospective thesis lane
@@ -175,6 +174,7 @@ def submission_workflow():
             ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
             ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
+            ('generic_review', 'paper_submission_review'): None,
         }
     )
 
