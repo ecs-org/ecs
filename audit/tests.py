@@ -65,7 +65,7 @@ class ViewTests(EcsTestCase):
         return super(ViewTests, self).setUp(*args, **kwargs)
 
     def test_log_view_txt(self):
-        '''Tests that the audit trail is viewable via browser in format text/plain'''
+        '''Tests if the audit trail is viewable via browser in format text/plain'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('txt',)))
@@ -73,7 +73,7 @@ class ViewTests(EcsTestCase):
         self.failUnlessEqual(response['Content-Type'], 'text/plain')
 
     def test_log_view_html(self):
-        '''Tests that the audit trail is viewable via browser in format text/html'''
+        '''Tests if the audit trail is viewable via browser in format text/html'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('html',)))
@@ -103,7 +103,7 @@ class ViewTests(EcsTestCase):
 
     def test_paging(self):
         '''Creates 100 entries in the audit trail. 
-        Test that first and last entry are reachable via audit trail paging logic.
+        Tests that first and last entry are reachable via audit trail paging logic.
         '''
         
         for i in xrange(100): # create a lot of audit trail entries
