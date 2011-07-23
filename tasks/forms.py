@@ -60,6 +60,27 @@ class ManageTaskForm(forms.Form):
 
         return cd
 
+class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def clean(self, value):
+        from django.utils.encoding import force_unicode
+        if self.required and not value:
+            raise forms.ValidationError(self.error_messages['required'])
+        elif not self.required and not value:
+            return []
+        if not isinstance(value, (list, tuple)):
+            raise forms.ValidationError(self.error_messages['list'])
+        for uid in value:
+            try:
+                self.queryset.filter(workflow_node__uid=uid)
+            except ValueError:
+                raise forms.ValidationError(self.error_messages['invalid_pk_value'] % pk)
+        qs = self.queryset.filter(workflow_node__uid__in=value)
+        uids = set([force_unicode(o.workflow_node.uid) for o in qs])
+        for val in value:
+            if force_unicode(val) not in uids:
+                raise forms.ValidationError(self.error_messages['invalid_choice'] % val)
+        return qs
+
 class TaskListFilterForm(forms.Form):
     amg = forms.BooleanField(required=False)
     mpg = forms.BooleanField(required=False)
@@ -78,7 +99,7 @@ class TaskListFilterForm(forms.Form):
         ('newest', _('Newest')),
     ))
 
-    task_types = forms.ModelMultipleChoiceField(required=False, queryset=TaskType.objects.all())
+    task_types = TaskTypeMultipleChoiceField(required=False, queryset=TaskType.objects.all())
 
     def __init__(self, *args, **kwargs):
         super(TaskListFilterForm, self).__init__(*args, **kwargs)

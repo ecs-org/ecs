@@ -21,9 +21,14 @@
       });
 
       var tbls = ecs.setupAutocomplete('{{ form_id }}');
-      tbls[0].addEvent('blur', function(){
-          $('{{ form_id }}').submit();
-      });
+      if (tbls[0]) {
+          tbls[0].addEvent('blur', function(){
+              $('{{ form_id }}').submit();
+          });
+          tbls[0].addEvent('bitBoxRemove', function(){
+              $('{{ form_id }}').submit();
+          });
+      }
 
       var threshold = 7;
 

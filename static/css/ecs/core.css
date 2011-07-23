@@ -1174,14 +1174,3 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly table pre {
   margin-left: 0;
 }
-
-#task_form .textboxlist-bits {
-  width: auto;
-}
-.form_main.readonly table td:first-child {
-  display: none;
-}
-#task_form .textboxlist-bit {
-  width: auto;
-  clear: none;
-}

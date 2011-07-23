@@ -39,7 +39,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
 
-    filter_defaults = dict(sorting='deadline', task_types='')
+    filter_defaults = dict(sorting='deadline')
     for key in ('amg', 'mpg', 'thesis', 'expedited', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 
@@ -47,8 +47,8 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
-    userfilter = filterform.cleaned_data
-    userfilter['task_types'] = ','.join([str(tt.pk) for tt in userfilter['task_types']]) if userfilter['task_types'] else ''
+    userfilter = filterform.cleaned_data.copy()
+    del userfilter['task_types']
     if request.method == 'POST':
         usersettings.task_filter = userfilter
         usersettings.save()
@@ -100,6 +100,10 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
                 tasks |= submission_tasks.filter(expedited_q)
             if other:
                 tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q)
+    
+        task_types = filterform.cleaned_data['task_types']
+        if task_types:
+            tasks = tasks.filter(task_type__in=task_types)
 
     data = {
         'submission': submission,
