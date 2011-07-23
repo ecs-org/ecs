@@ -1,4 +1,4 @@
-from ecs.core.tests.basics import test_import, CoreUrlsTest
+from ecs.core.tests.basics import ImportTest, CoreUrlsTest
 from ecs.core.tests.submissions import SubmissionFormTest, SubmissionAttachUserTest
 from ecs.core.tests.tasks import CeleryTest
 from ecs.core.tests.serializer import SerializerTest
