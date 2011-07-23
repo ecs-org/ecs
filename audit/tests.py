@@ -10,7 +10,11 @@ from ecs.users.utils import create_user
 
 
 class BasicTests(EcsTestCase):
-    '''Tests for most basic audit functionality'''
+    '''Tests for most basic audit log functionality
+
+Makes sure that the audit trail is enabled, accessible
+and that the audit trail gets filled correctly.
+'''
     
     def test_settings(self):
         '''Tests that settings for audit trail exist'''
@@ -38,7 +42,11 @@ class BasicTests(EcsTestCase):
         unicode(a)
 
 class ViewTests(EcsTestCase):
-    '''Test'''
+    '''Tests for viewing the audit trail
+
+Tests text and HTML rendering of the audit trail and the paging logic.
+Also tests the authorization logic to view the audit trail.
+'''
     
     def setUp(self, *args, **kwargs):
         inspector = create_user('inspector@example.com')
@@ -85,7 +93,7 @@ class ViewTests(EcsTestCase):
         self.failUnlessEqual(response.status_code, 302)  # redirect to login page
 
     def test_log_view_foo(self):
-        '''a 'foo' version of the audit trail must not exist.'''
+        '''Makes sure that a 'foo' version of the audit trail does not exist and is treated accordingly.'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('foo',)))
