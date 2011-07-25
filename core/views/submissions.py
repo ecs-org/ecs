@@ -19,7 +19,8 @@ from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Chec
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
-    SubmissionImportForm, SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
+    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
+    SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -555,7 +556,14 @@ def all_submissions(request):
 
         submissions = submissions.filter(submissions_q)
 
-    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm, extra_context=extra_context, title=title)
+    if keyword is None:
+        filter_form = SubmissionListFullFilterForm
+        filtername = 'submission_filter_all'
+    else:
+        filter_form = SubmissionMinimalFilterForm
+        filtername = 'submission_filter_search'
+
+    return submission_list(request, submissions, keyword=keyword, filtername=filtername, filter_form=filter_form, extra_context=extra_context, title=title)
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)

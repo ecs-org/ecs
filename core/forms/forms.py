@@ -388,6 +388,9 @@ class SubmissionFilterForm(forms.Form):
 
         return submissions
 
+class SubmissionMinimalFilterForm(SubmissionFilterForm):
+    layout = ()
+
 class SubmissionWidgetFilterForm(SubmissionFilterForm):
     layout = (
         ('new', 'next_meeting', 'other_meetings'),
