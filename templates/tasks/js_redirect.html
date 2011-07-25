@@ -1,0 +1,10 @@
+{% load core i18n %}
+
+<div id="task_main">
+    <h2>{{ task }}</h2>
+    <p>{% trans "You are being redirected." %}</p>
+</div>
+
+<script type="text/javascript">
+    window.location='{{ url }}';
+</script>

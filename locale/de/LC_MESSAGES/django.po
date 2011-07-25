@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-22 16:20+0200\n"
+"POT-Creation-Date: 2011-07-25 22:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -123,23 +123,23 @@ msgstr ""
 msgid "Shorthand Symbol"
 msgstr "Kürzel"
 
-#: communication/forms.py:18 communication/forms.py:32
+#: communication/forms.py:22 communication/forms.py:36
 msgid "Ethics Commission"
 msgstr "Ethik-Kommission"
 
-#: communication/forms.py:38
+#: communication/forms.py:42
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:48 templates/communication/threads.html:19
+#: communication/forms.py:52 templates/communication/threads.html:19
 msgid "Person"
 msgstr "Person"
 
-#: communication/forms.py:81
+#: communication/forms.py:84
 msgid "Text"
 msgstr ""
 
-#: communication/forms.py:86
+#: communication/forms.py:89
 msgid "Delegate to"
 msgstr "Abgeben an"
 
@@ -195,8 +195,7 @@ msgstr "Zusatz-Review"
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
-#: core/bootstrap.py:116 core/bootstrap.py:127
-#: templates/submissions/list.html:95
+#: core/bootstrap.py:116 templates/submissions/list.html:95
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
@@ -231,6 +230,11 @@ msgstr "Formale Prüfung Diplomarbeit"
 #: core/bootstrap.py:126
 msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
+
+#: core/bootstrap.py:127
+#, fuzzy
+msgid "Thesis Paper Submission Review"
+msgstr "Formale Prüfung Unterschrift"
 
 #: core/bootstrap.py:128
 #, fuzzy
@@ -315,12 +319,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:133 core/forms/fields.py:52
-#: templates/submissions/readonly_form.html:308
+#: templates/submissions/readonly_form.html:305
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:135 core/forms/fields.py:52
-#: templates/submissions/readonly_form.html:309
+#: templates/submissions/readonly_form.html:306
 msgid "No"
 msgstr "Nein"
 
@@ -462,8 +466,8 @@ msgstr "Dosis"
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:94 core/tests/submission_diffs.py:30
-#: core/tests/submission_diffs.py:31
+#: core/paper_forms.py:94 core/tests/submission_diffs.py:36
+#: core/tests/submission_diffs.py:37
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
@@ -1307,7 +1311,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:276 core/paper_forms.py:314 meetings/forms.py:25
-#: meetings/forms.py:41 users/forms.py:148 users/forms.py:194
+#: meetings/forms.py:41 users/forms.py:153 users/forms.py:199
 msgid "title"
 msgstr "Titel"
 
@@ -1355,8 +1359,8 @@ msgid ""
 msgstr ""
 "Der Sponsor stimmt zu, dass die folgenden Daten des Antrags ggf. durch die "
 "Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt "
-"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, Koordinierende/r Prüfärztin/arzt, "
-"Sponsor/CRO und weitere Zentren"
+"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, "
+"Koordinierende/r Prüfärztin/arzt, Sponsor/CRO und weitere Zentren"
 
 #: core/paper_forms.py:294
 msgid "study site"
@@ -1535,7 +1539,7 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/fields.py:123
+#: core/forms/fields.py:125
 msgid "No information given"
 msgstr "Keine Angaben"
 
@@ -1621,11 +1625,11 @@ msgstr "Übernommen"
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:413
+#: core/forms/forms.py:416
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:424
+#: core/forms/forms.py:427
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1902,30 +1906,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:476
+#: core/views/submissions.py:477
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:533 templates/core.html:50
+#: core/views/submissions.py:534 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:535
+#: core/views/submissions.py:536
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:549
+#: core/views/submissions.py:550
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:562 templates/core.html:53
+#: core/views/submissions.py:570 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:567 templates/core.html:56
+#: core/views/submissions.py:575 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2264,53 +2268,49 @@ msgstr "unten"
 msgid "invalid data: %s"
 msgstr ""
 
-#: tasks/forms.py:12
+#: tasks/forms.py:16
 msgid "delegate"
 msgstr "abgeben"
 
-#: tasks/forms.py:12
+#: tasks/forms.py:16
 msgid "message"
 msgstr ""
 
-#: tasks/forms.py:13
+#: tasks/forms.py:17
 msgid "callback"
 msgstr ""
 
-#: tasks/forms.py:13
+#: tasks/forms.py:17
 msgid "somebody"
 msgstr ""
 
-#: tasks/forms.py:13
+#: tasks/forms.py:17
 msgid "related"
 msgstr ""
 
-#: tasks/forms.py:21
+#: tasks/forms.py:25
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#: tasks/forms.py:33
+#: tasks/forms.py:37
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:55
+#: tasks/forms.py:59
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:72
+#: tasks/forms.py:97
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:73
+#: tasks/forms.py:98
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:74
+#: tasks/forms.py:99
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
-
-#: tasks/views.py:145
-msgid "Anfrage bezüglich {0}"
-msgstr ""
 
 #: templates/core.html:29
 msgid "There is no active task."
@@ -2516,15 +2516,13 @@ msgstr "Zurück zur Nachrichtenübersicht"
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
-#: templates/communication/send.html:83 templates/communication/thread.html:74
-#: templates/submissions/readonly_form.html:273
-#: templates/tasks/manage_task.html:73
+#: templates/communication/send.html:84 templates/communication/thread.html:74
+#: templates/submissions/readonly_form.html:270
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
-#: templates/communication/send.html:87 templates/communication/thread.html:78
-#: templates/submissions/readonly_form.html:276
-#: templates/tasks/manage_task.html:77
+#: templates/communication/send.html:88 templates/communication/thread.html:78
+#: templates/submissions/readonly_form.html:273
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -2914,7 +2912,7 @@ msgstr ""
 "Um sie anzusehen klicken sie <a href=\"#\" onclick=\"window.parent.location."
 "href='%s';\">hier</a>."
 
-#: templates/pdfviewer/annotations/sharing/share.html:11
+#: templates/pdfviewer/annotations/sharing/share.html:12
 msgid "Share"
 msgstr "Teilen"
 
@@ -2980,7 +2978,7 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:220
+#: templates/submissions/base_form.html:215
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -3230,11 +3228,11 @@ msgstr "Neu öffnen"
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:302
+#: templates/submissions/readonly_form.html:299
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:305
+#: templates/submissions/readonly_form.html:302
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
@@ -3363,6 +3361,10 @@ msgstr "keine zusätzlichen/externen Gutachter"
 msgid "Export"
 msgstr "Import"
 
+#: templates/tasks/js_redirect.html:5
+msgid "You are being redirected."
+msgstr "Sie werden weitergeleitet."
+
 #: templates/tasks/log.html:5
 msgid "Type of Task"
 msgstr "Art der Aufgabe"
@@ -3387,7 +3389,8 @@ msgstr "Übertragen am"
 msgid "Assigend To"
 msgstr "Übertragen an"
 
-#: templates/tasks/log.html:14 users/forms.py:197
+#: templates/tasks/log.html:14 templates/users/administration.html:13
+#: users/forms.py:202
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -3409,10 +3412,6 @@ msgstr "Schließen"
 msgid "Delegate"
 msgstr "Abgeben"
 
-#: templates/tasks/manage_task.html:41
-msgid "Ask"
-msgstr "Fragen"
-
 #: templates/tasks/tasks.inc:11 templates/tasks/tasks_full.inc:10
 msgid "Sort by"
 msgstr "Sortieren nach"
@@ -3425,49 +3424,53 @@ msgstr "Offen"
 msgid "Proxy"
 msgstr "Vertretung"
 
-#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:30
+#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:33
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
-#: templates/tasks/tasks.inc:47 templates/tasks/tasks_full.inc:47
+#: templates/tasks/tasks.inc:47 templates/tasks/tasks_full.inc:50
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
 #: templates/tasks/tasks.inc:56 templates/tasks/tasks.inc.py:79
-#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:54
-#: templates/tasks/tasks_full.inc.py:72 templates/tasks/tasks_full.inc:89
+#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:57
+#: templates/tasks/tasks_full.inc.py:75 templates/tasks/tasks_full.inc:92
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:55
+#: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:58
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:65
+#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:68
 msgid "Open Tasks"
 msgstr "Offen"
 
-#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:82
+#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:85
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:98
+#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:101
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_full.inc:25
+#: templates/tasks/tasks_full.inc:26
+msgid "Type"
+msgstr ""
+
+#: templates/tasks/tasks_full.inc:28
 msgid "ECS Tasks"
 msgstr "ECS Aufgaben"
 
-#: templates/tasks/tasks_full.inc:25
+#: templates/tasks/tasks_full.inc:28
 msgid "Bookmark me!"
 msgstr "Lesezeichen setzen!"
 
-#: templates/tasks/tasks_js.inc:29
+#: templates/tasks/tasks_js.inc:39
 msgid "Collapse"
 msgstr "weniger"
 
-#: templates/tasks/tasks_js.inc:33
+#: templates/tasks/tasks_js.inc:43
 msgid "Expand"
 msgstr "mehr"
 
@@ -3483,10 +3486,6 @@ msgstr "Bestätigung"
 #: templates/users/administration.html:12
 msgid "Activity"
 msgstr "Aktivität"
-
-#: templates/users/administration.html:13
-msgid "Group"
-msgstr "Gruppe"
 
 #: templates/users/administration.html:14
 msgid "Name/Email"
@@ -3654,19 +3653,19 @@ msgid ""
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:54 users/forms.py:147 users/forms.py:193
+#: users/forms.py:54 users/forms.py:152 users/forms.py:198
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:55 users/forms.py:195
+#: users/forms.py:55 users/forms.py:200
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:56 users/forms.py:196
+#: users/forms.py:56 users/forms.py:201
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:57 users/forms.py:192
+#: users/forms.py:57 users/forms.py:197
 msgid "email"
 msgstr "E-Mail"
 
@@ -3766,27 +3765,27 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:149 users/forms.py:198
+#: users/forms.py:154 users/forms.py:203
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:150 users/forms.py:199
+#: users/forms.py:155 users/forms.py:204
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:151 users/forms.py:200
+#: users/forms.py:156 users/forms.py:205
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:152 users/forms.py:201
+#: users/forms.py:157 users/forms.py:206
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:202
+#: users/forms.py:207
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:215
+#: users/forms.py:220
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
 
@@ -3798,7 +3797,7 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:130 users/views.py:331
+#: users/utils.py:130 users/views.py:333
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
@@ -3811,11 +3810,11 @@ msgstr "ECS - Anmeldung"
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort vergessen"
 
-#: users/views.py:247 users/views.py:349
+#: users/views.py:247 users/views.py:351
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:341
+#: users/views.py:343
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
@@ -3866,6 +3865,12 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Ask"
+#~ msgstr "Fragen"
+
+#~ msgid "Group"
+#~ msgstr "Gruppe"
 
 #~ msgid "Additional Review"
 #~ msgstr "Zusatz-Review"

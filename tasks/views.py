@@ -15,7 +15,6 @@ from ecs.core.models import Submission, Vote
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification
 from ecs.communication.models import Thread
-from ecs.communication.forms import TaskMessageForm
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
@@ -136,36 +135,21 @@ def manage_task(request, task_pk=None):
         submission = task.data.get_submission()
     except AttributeError:
         submission = None
-    message_form = TaskMessageForm(submission, request.user, request.POST or None, prefix='message')
+
     if request.method == 'POST' and form.is_valid():
         action = form.cleaned_data['action']
         if action == 'complete':
             task.done(user=request.user, choice=form.get_choice())
-        
         elif action == 'delegate':
             task.assign(form.cleaned_data['assign_to'])
-        
-        elif action == 'message':
-            if message_form.is_valid():
-                thread = Thread.objects.create(
-                    subject=_(u'Anfrage bezüglich {0}').format(task),
-                    submission=submission,
-                    task=task,
-                    sender=request.user,
-                    receiver=message_form.cleaned_data['receiver'],
-                )
-                thread.add_message(request.user, text=message_form.cleaned_data['text'])
-            else:
-                return render(request, 'tasks/manage_task.html', {
-                    'form': form,
-                    'message_form': message_form,
-                    'task': task,
-                })
+        else:
+            raise Http404()
 
-        return HttpResponseRedirect(reverse('ecs.tasks.views.my_tasks'))
+        if isinstance(task.data, Submission):
+            return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk})})
+        return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.tasks.views.task_list')})
     return render(request, 'tasks/manage_task.html', {
         'form': form,
-        'message_form': message_form,
         'task': task,
     })
 

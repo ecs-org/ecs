@@ -80,9 +80,6 @@ class BaseMessageForm(forms.ModelForm):
 class SendMessageForm(BaseMessageForm):
     subject = Thread._meta.get_field('subject').formfield()
 
-class TaskMessageForm(BaseMessageForm):
-    pass
-
 class ReplyDelegateForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(), label=_('Text'))
 
