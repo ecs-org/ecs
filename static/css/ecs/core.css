@@ -1115,7 +1115,6 @@ content ol.submission_list h3 .ecnr {
 
 .form_main.readonly ol li {
   display: block;
-  float: left;
   margin-bottom: 10px;
 } 
 .form_main.readonly .field li label,
