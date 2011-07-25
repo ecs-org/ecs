@@ -13,7 +13,7 @@ from ecs.workflow.tests import repeatability_declarations as decl
 class RepeatabilityTest(WorkflowTestCase):
     '''Tests for the workflow module
     
-    Tests for the workflow repetition functionality.
+    Tests for the workflow activity repetition functionality.
     '''
     
     def setUp(self):
@@ -21,8 +21,7 @@ class RepeatabilityTest(WorkflowTestCase):
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_unrepeatable(self):
-        '''Tests that a certain task cannot be done again in the workflow.
-        '''
+        '''Tests if a non-repeatable activity is not repeatable.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -35,8 +34,7 @@ class RepeatabilityTest(WorkflowTestCase):
         
         
     def test_simple_repeat(self):
-        '''Tests that certain Tasks can be repeated in the workflow.
-        '''
+        '''Tests if a repeatable activity can be repeated.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True) 
@@ -67,6 +65,3 @@ class RepeatabilityTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [decl.C, decl.E])
         obj.workflow.do(decl.C)
         self.assertActivitiesEqual(obj, [decl.E])
-        
-        
-

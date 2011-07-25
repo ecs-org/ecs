@@ -184,7 +184,7 @@ class SubmissionFormTest(EcsTestCase):
     def test_creation(self):
         '''Tests if a submission form can be created and saved.
         Also tests creation of an EthicsCommission and an Investigator and
-        attaching the submissionform to the create EC and the Investigator.
+        attaching the submissionform to the created EC and the Investigator.
         If a pdf of the submission form can be rendered is tested aswell.
         '''
         

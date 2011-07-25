@@ -36,7 +36,7 @@ class MediaDisplayDownload(EcsTestCase):
             self.mediaprovider.add_blob(self.identifier, input)
 
     def testPdfPages(self):
-        '''FIXME check if correct: Tests that pages rendered as png images are valid png images
+        '''Tests that pages rendered as png images are valid png images
         and that the urls generated for viewing single pdf pages as png images are correct.
         '''
         

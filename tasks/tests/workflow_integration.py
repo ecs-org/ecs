@@ -40,7 +40,7 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         self.assertRaises(TaskType.DoesNotExist, TaskType.objects.get, workflow_node=self.n_x)
         
     def test_task_creation(self):
-        '''FIXME check if ok: Tests if the end of a workflow is reached via workflow.
+        '''Tests if the tasks are created properly if a model instance is created.
         '''
         
         obj = Foo.objects.create()
@@ -70,7 +70,7 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_b)
 
     def test_task_trail(self):
-        '''FIXME check if ok: Makes sure that task trail works correctly.
+        '''Tests if the task trail works correctly.
         '''
         
         obj = Foo.objects.create()
