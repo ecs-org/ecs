@@ -132,7 +132,7 @@ class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
             attrs['class'] = 'oneline'
         return super(ReadonlyTextInput, self).render(name, value, attrs=attrs)
 
-class ReadonlyTextarea(ReadonlyTextMixin, forms.TextInput):
+class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
     def render(self, name, value, attrs=None):
         if attrs is None: attrs = {}
         if self.readonly:
