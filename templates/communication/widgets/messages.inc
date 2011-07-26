@@ -2,6 +2,7 @@
 
 <h3>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h3>
 
+<br />
 <div class="messages_header">
 <span class="icon_sort">{% trans "sort" %}</span>
 <a class="open-in-widget" href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a>
