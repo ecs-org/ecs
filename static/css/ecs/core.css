@@ -1123,6 +1123,7 @@ content ol.submission_list h3 .ecnr {
   vertical-align: baseline;
   width: 260px;
   float: left;
+  clear: none;
 }
 .form_main.readonly .review ol li label,
 .form_main.readonly .checklist_review_tab ol li label {
@@ -1153,7 +1154,9 @@ content ol.submission_list h3 .ecnr {
   display: block;
   float: left;
   white-space: pre-wrap;
+  width: auto;
   max-width: 700px;
+  margin: 0 0 20px 0;
 }
 .form_main.readonly li pre em {
   color: #333333;
