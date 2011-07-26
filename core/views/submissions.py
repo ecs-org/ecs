@@ -134,7 +134,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
-    documents = submission_form.documents.all().order_by('pk')
     vote = submission_form.current_vote
     submission = submission_form.submission
 
@@ -144,7 +143,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = checklist_overwrite[checklist]
         else:
             try:
-                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission_form.submission, data=checklist.blueprint)
+                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint)
                 reopen_task = reopen_tasks.order_by('-created_at')[0]
             except IndexError:
                 checklist_form = make_checklist_form(checklist)(readonly=True)
@@ -155,12 +154,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     checklists = submission.checklists.order_by('blueprint__name')
     checklists = [(c, c.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
 
-    submission_forms = list(submission_form.submission.forms.order_by('created_at'))
+    submission_forms = list(submission.forms.order_by('created_at'))
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
         previous_form = sf
-
     submission_forms = reversed(submission_forms)
 
     with sudo():
@@ -170,7 +168,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'documents': documents,
+        'documents': submission_form.documents.all().order_by('doctype__identifier', 'version', 'date'),
         'readonly': True,
         'submission': submission,
         'submission_form': submission_form,

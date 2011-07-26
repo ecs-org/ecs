@@ -72,7 +72,7 @@ def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
     return render(request, tpl, {
-        'documents': notification.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+        'documents': notification.documents.exclude(status='deleted').order_by('doctype__identifier', 'version', 'date'),
         'notification': notification,
     })
 
