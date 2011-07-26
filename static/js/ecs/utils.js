@@ -556,9 +556,11 @@ ecs.setupForms = function(){
 
 ecs.setupWidgets = function(context){
     context = $(context || document.body);
-    context.getElements('*[x-widget-url]').each(function(w){
+    context.getElements('.widget').each(function(w){
         var widgeturl = w.getAttribute('x-widget-url');
-        new ecs.widgets.Widget(w, {url: widgeturl});
+        if (widgeturl) {
+            new ecs.widgets.Widget(w, {url: widgeturl});
+        }
     }, this);
 };
 
