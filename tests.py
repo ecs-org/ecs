@@ -6,9 +6,16 @@
 Unittests for the site
 """
 
-def test_import():
-    "test if all modules are importable. Simple but quite useful."
-    import settings
-    import urls
+
+class BasicImportTests():
+    """Tests for most basic importability of core modules
+    """
+    
+    def test_import(self,):
+        """Tests if settings and urls modules are importable. Simple but quite useful.
+        """
+        
+        import settings
+        import urls
 
 
