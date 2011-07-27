@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 14:44+0200\n"
+"POT-Creation-Date: 2011-07-27 16:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -726,11 +726,11 @@ msgstr "In die Studie eingeschlossen werden:"
 
 #: core/paper_forms.py:164
 msgid "male participants"
-msgstr "mänliche Teilnehmer/innen"
+msgstr "männliche Teilnehmer"
 
 #: core/paper_forms.py:165
 msgid "female participants"
-msgstr "weibliche Teilnehmer/innen"
+msgstr "weibliche Teilnehmerinnen"
 
 #: core/paper_forms.py:166
 msgid "women of childbearing age"
