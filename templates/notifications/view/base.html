@@ -12,11 +12,13 @@ Meldungen zur laufenden Studie(n)
 
 {% block content %}
 <h2>{{ notification }} für {% for sf in notification.submission_forms.all %}{{ sf.submission }}{% if not forloop.last %}, {% endif %}{% endfor %} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
-<p><strong>User: {{ notification.user }}</strong>
-<a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a></p>
-{% if notification.answer %}
-<a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
-{% endif %}
+<p>
+    <strong>Eingereicht von: {{ notification.user }}</strong><br />
+    <a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
+    {% if notification.answer %}
+    <a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
+    {% endif %}
+</p>
 
 {% with notification.submission_forms.all as submission_forms %}
     {% include "notifications/submission_data.html" %}
