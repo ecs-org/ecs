@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-25 22:48+0200\n"
+"POT-Creation-Date: 2011-07-27 14:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1790,14 +1790,12 @@ msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
 #: core/forms/review.py:36
-#, fuzzy
 msgid "legal_and_patient_review_required"
-msgstr "GCP Überprüfung notwendig"
+msgstr "Überprüfung Pat.info notwendig"
 
 #: core/forms/review.py:37
-#, fuzzy
 msgid "statistical_review_required"
-msgstr "GCP Überprüfung notwendig"
+msgstr "Statistische Überprüfung notwendig"
 
 #: core/forms/review.py:38
 #, fuzzy
@@ -1906,30 +1904,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:477
+#: core/views/submissions.py:475
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:534 templates/core.html:50
+#: core/views/submissions.py:532 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:536
+#: core/views/submissions.py:534
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:550
+#: core/views/submissions.py:548
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:570 templates/core.html:53
+#: core/views/submissions.py:568 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:575 templates/core.html:56
+#: core/views/submissions.py:573 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2130,11 +2128,11 @@ msgstr "Nach Sitzung"
 msgid "Submission {submission} added to Meeting on {date}"
 msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
 
-#: meetings/models.py:526
+#: meetings/models.py:525
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:527
+#: meetings/models.py:526
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -2556,7 +2554,7 @@ msgid "Closed"
 msgstr "Erledigt"
 
 #: templates/communication/threads.html:18
-#: templates/communication/widgets/messages.inc:6
+#: templates/communication/widgets/messages.inc:7
 msgid "sort"
 msgstr "sortieren"
 
@@ -2569,12 +2567,12 @@ msgid "Von/An"
 msgstr "Von/An"
 
 #: templates/communication/threads.html:33
-#: templates/communication/widgets/messages.inc:18
+#: templates/communication/widgets/messages.inc:19
 msgid "an"
 msgstr "an"
 
 #: templates/communication/threads.html:35
-#: templates/communication/widgets/messages.inc:18
+#: templates/communication/widgets/messages.inc:19
 msgid "von"
 msgstr "von"
 

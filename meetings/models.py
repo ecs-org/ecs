@@ -343,11 +343,10 @@ class TimetableEntry(models.Model):
     is_open = models.BooleanField(default=True)
     
     def __unicode__(self):
-        if self.index:
-            return "TOP %s" % (self.index + 1)
+        if self.index is not None:
+            return u"TOP %s" % (self.index + 1)
         else:
-            return "TOP"
-    
+            return u"TOP"
     
     def _get_duration(self):
         return timedelta(seconds=self.duration_in_seconds)

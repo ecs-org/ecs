@@ -68,7 +68,7 @@
         <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
     {% endif %}
     {% if top.next %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top }})</a>
+        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
     {% endif %}
     {% if top.previous %}
         <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
