@@ -29,4 +29,3 @@ def meetings_create():
         meeting.deadline = datetime.datetime(*m[2])
         meeting.deadline_diplomathesis = datetime.datetime(*m[3])
         meeting.save()
-

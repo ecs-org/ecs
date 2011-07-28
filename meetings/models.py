@@ -120,18 +120,17 @@ class MeetingManager(models.Manager):
             raise self.model.DoesNotExist()
 
     def next_schedulable_meeting(self, submission):
-        now = datetime.now()
-        if submission.thesis is None:
-            is_thesis = submission.current_submission_form.project_type_education_context is not None
-        else:
-            is_thesis = submission.thesis
+        sf = submission.current_submission_form
+        is_thesis = submission.thesis
+        if is_thesis is None:
+            is_thesis = sf.project_type_education_context is not None
 
-        deadline_key = 'deadline'
+        meetings = self.filter(deadline__gt=sf.created_at)
         if is_thesis:
-            deadline_key = 'deadline_diplomathesis'
+            meetings = self.filter(deadline_diplomathesis__gt=sf.created_at)
 
         try:
-            return self.filter(**{'{0}__gt'.format(deadline_key): now, 'started__isnull': True}).order_by('start')[0]
+            return meetings.filter(started=None).order_by('start')[0]
         except IndexError:
             raise self.model.DoesNotExist()
 
