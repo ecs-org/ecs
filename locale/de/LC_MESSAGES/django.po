@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-28 15:35+0200\n"
+"POT-Creation-Date: 2011-07-28 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1903,30 +1903,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:476
+#: core/views/submissions.py:480
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:533 templates/core.html:50
+#: core/views/submissions.py:537 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:535
+#: core/views/submissions.py:539
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:549
+#: core/views/submissions.py:553
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:569 templates/core.html:53
+#: core/views/submissions.py:573 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:574 templates/core.html:56
+#: core/views/submissions.py:578 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2852,7 +2852,7 @@ msgid "Submit"
 msgstr "Einreichen"
 
 #: templates/notifications/form.html:37
-#: templates/submissions/base_form.html:59
+#: templates/submissions/base_form.html:66
 msgid "Your browser does not support iframes."
 msgstr ""
 
@@ -2975,7 +2975,11 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:215
+#: templates/submissions/base_form.html:62
+msgid "At least on protocol is required."
+msgstr "Es ist mindestens ein Protokoll erforderlich."
+
+#: templates/submissions/base_form.html:222
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 

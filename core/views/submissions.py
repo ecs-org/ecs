@@ -332,6 +332,7 @@ def create_submission_form(request):
 
     notification_type = request.docstash.get('notification_type', None)
     valid = False
+    protocol_uploaded = True
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -352,9 +353,12 @@ def create_submission_form(request):
 
         if save or autosave:
             return HttpResponse('save successfull')
-        
+
+        documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
+
+        protocol_uploaded = documents.filter(doctype__identifier=u'protocol').exists()
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
-        valid = form.is_valid() and formsets_valid and not 'upload' in request.POST
+        valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
 
         if submit and valid and request.user.get_profile().approved_by_office:
             submission_form = form.save(commit=False)
@@ -370,7 +374,6 @@ def create_submission_form(request):
             submission_form.save()
             form.save_m2m()
 
-            documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             submission_form.documents = documents
             for doc in documents:
                 doc.parent_object = submission_form
@@ -411,6 +414,7 @@ def create_submission_form(request):
         'valid': valid,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
+        'protocol_uploaded': protocol_uploaded,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset

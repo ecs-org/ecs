@@ -56,6 +56,13 @@
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME (FMD2) #}
                         {% if not readonly %}
+                            {% if not protocol_uploaded %}
+                                <div class="errors">
+                                    <ul class="errorlist">
+                                        <li>{% trans "At least on protocol is required." %}</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
                             <iframe class="upload" src="{% url ecs.core.views.upload_document_for_submission docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
                         {% else %}
                             {% include "documents/compact_list.html" %}
