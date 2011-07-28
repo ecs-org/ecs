@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-27 16:47+0200\n"
+"POT-Creation-Date: 2011-07-28 15:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1552,9 +1552,8 @@ msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
 #: core/forms/forms.py:289
-#, fuzzy
 msgid "At lease one centre is required."
-msgstr "Eine Versicherung ist nicht erforderlich"
+msgstr "Es ist mindestens ein Zentrum erforderlich."
 
 #: core/forms/forms.py:332 templates/boilerplate/list.html:10
 #: templates/meetings/status.html:21
@@ -1904,30 +1903,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:475
+#: core/views/submissions.py:476
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:532 templates/core.html:50
+#: core/views/submissions.py:533 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:534
+#: core/views/submissions.py:535
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:548
+#: core/views/submissions.py:549
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:568 templates/core.html:53
+#: core/views/submissions.py:569 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:573 templates/core.html:56
+#: core/views/submissions.py:574 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2124,15 +2123,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:219
+#: meetings/models.py:218
 msgid "Submission {submission} added to Meeting on {date}"
 msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
 
-#: meetings/models.py:525
+#: meetings/models.py:524
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:526
+#: meetings/models.py:525
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -2883,15 +2882,15 @@ msgstr "Alte Version"
 msgid "New Version"
 msgstr "Neue Version"
 
-#: templates/notifications/view/base.html:18
+#: templates/notifications/view/base.html:19
 msgid "Answer"
 msgstr "Antwort"
 
-#: templates/notifications/view/base.html:43
+#: templates/notifications/view/base.html:45
 msgid "Back to answered notifications"
 msgstr "Zurück zu den beantworteten Meldungen"
 
-#: templates/notifications/view/base.html:45
+#: templates/notifications/view/base.html:47
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
@@ -3431,24 +3430,24 @@ msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
 #: templates/tasks/tasks.inc:56 templates/tasks/tasks.inc.py:79
-#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:57
-#: templates/tasks/tasks_full.inc.py:75 templates/tasks/tasks_full.inc:92
+#: templates/tasks/tasks.inc:102 templates/tasks/tasks_full.inc:59
+#: templates/tasks/tasks_full.inc.py:81 templates/tasks/tasks_full.inc:102
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:58
+#: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:62
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:68
+#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:72
 msgid "Open Tasks"
 msgstr "Offen"
 
-#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:85
+#: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:93
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:101
+#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:113
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 

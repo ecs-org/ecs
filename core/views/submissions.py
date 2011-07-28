@@ -353,7 +353,8 @@ def create_submission_form(request):
         if save or autosave:
             return HttpResponse('save successfull')
         
-        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
+        formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
+        valid = form.is_valid() and formsets_valid and not 'upload' in request.POST
 
         if submit and valid and request.user.get_profile().approved_by_office:
             submission_form = form.save(commit=False)
