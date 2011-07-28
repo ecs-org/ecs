@@ -332,7 +332,7 @@ def create_submission_form(request):
 
     notification_type = request.docstash.get('notification_type', None)
     valid = False
-    protocol_uploaded = True
+    protocol_uploaded = True    # if False an error is displayed
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
