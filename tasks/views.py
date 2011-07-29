@@ -127,6 +127,16 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
 def task_list(request, **kwargs):
     kwargs.setdefault('template', 'tasks/list.html')
     return my_tasks(request, **kwargs)
+
+def _get_task_submission(task):
+    if isinstance(task.data, Submission):
+        return task.data
+    elif isinstance(task.data, Vote) and task.data.submission_form:
+        return task.data.submission_form.submission
+    elif isinstance(task.data, Notification) and task.data.submission_forms.count():
+        return task.data.submission_forms.all()[0].submission
+    else:
+        return None
     
 def manage_task(request, task_pk=None):
     task = get_object_or_404(Task, pk=task_pk)
@@ -145,8 +155,10 @@ def manage_task(request, task_pk=None):
         else:
             raise Http404()
 
-        if isinstance(task.data, Submission):
+        submission = _get_task_submission(task)
+        if submission:
             return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk})})
+
         return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.tasks.views.task_list')})
     return render(request, 'tasks/manage_task.html', {
         'form': form,
