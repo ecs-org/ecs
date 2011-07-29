@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-29 20:55+0200\n"
+"POT-Creation-Date: 2011-07-29 23:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -810,7 +810,7 @@ msgstr ""
 
 #: core/paper_forms.py:180
 msgid "Does a final report exist?"
-msgstr "Liegt ein Abschlußbericht vor?"
+msgstr "Liegt ein Abschlussbericht vor?"
 
 #: core/paper_forms.py:180
 msgid ""
@@ -1339,6 +1339,10 @@ msgstr "Position"
 msgid "coordinating examiner (multicentric study)"
 msgstr "koordinierende/r Prüfer/in (multizentrische Studie)"
 
+#: core/paper_forms.py:284
+msgid "[9.4] The Submitter is"
+msgstr "[9.4] Antragsteller/in ist"
+
 #: core/paper_forms.py:285
 msgid "Principal investigator (monocentric study)"
 msgstr "Koordinierende/r Prüfärztin/arzt (monozentrische Studie)"
@@ -1556,8 +1560,8 @@ msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
 #: core/forms/forms.py:289
-msgid "At lease one centre is required."
-msgstr "Es ist mindestens ein Zentrum erforderlich."
+msgid "At least one centre is required."
+msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
 #: core/forms/forms.py:332 templates/boilerplate/list.html:10
 #: templates/meetings/status.html:21
@@ -3093,11 +3097,11 @@ msgstr "Nicht Einreichen"
 
 #: templates/submissions/form.html:110
 msgid ""
-"You cannot submit studies yet. Please wait until the office has approved "
-"your account."
+"Your study is filled out correctly but you cannot submit studies yet. Please "
+"wait until the office has approved your account."
 msgstr ""
-"Sie können noch keine Studien abschicken, da ihr Account noch nicht "
-"bestaetigt wurde "
+"Ihre Einreichung ist korrekt ausgefüllt, Sie können jedoch noch keine "
+"Studien abschicken, da ihr Account noch nicht bestätigt wurde."
 
 #: templates/submissions/list.html:22 templates/submissions/list.html:144
 #: templates/submissions/widget.html:77 templates/users/administration.html:27
@@ -3244,7 +3248,7 @@ msgstr ""
 
 #: templates/submissions/review_form.inc:19
 msgid "save"
-msgstr "Speichern"
+msgstr "Korrektur gelesen und gültig"
 
 #: templates/submissions/vote_publish.txt:2
 #, python-format
