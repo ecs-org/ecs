@@ -96,6 +96,13 @@
               </li>
              {% endfor %}
           {% endfor %}
+          {% if submission %}
+              {% with submission|paper_submission_review:user as paper_submission_review_task %}
+              {% if paper_submission_review_task and not paper_submission_review_task.closed_at %}
+                  <li class="negative complete">{{ paper_submission_review_task }}</li>
+              {% endif %}
+              {% endwith %}
+          {% endif %}
           </ul>
         </div>
       </div>
