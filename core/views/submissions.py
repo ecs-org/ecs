@@ -25,6 +25,7 @@ from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm
+from ecs.core.forms.utils import submission_form_to_dict
 
 from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
     ExternalChecklistReview, ThesisRecommendationReview,
@@ -103,7 +104,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         })
         if created:
             docstash.update({
-                'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
+                'form': SubmissionFormForm(data=None, initial=submission_form_to_dict(submission_form)),
                 'formsets': get_submission_formsets(instance=submission_form),
                 'submission': submission_form.submission if not delete else None,
                 'document_pks': [d.pk for d in submission_form.documents.all()],
@@ -132,7 +133,7 @@ CHECKLIST_ACTIVITIES = (ChecklistReview, AdditionalChecklistReview, ExternalChec
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
+    form = SubmissionFormForm(initial=submission_form_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     vote = submission_form.current_vote
     submission = submission_form.submission

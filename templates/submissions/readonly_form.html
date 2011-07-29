@@ -307,6 +307,10 @@
                 })
             {% endif %}
 
+            if (!$('id_invoice_differs_from_sponsor').hasAttribute('checked')) {
+                $('tabs-4').getElement('.fieldset_2').hide();
+            }
+
             $('submission_headers').getElements('a').each(function(a){
                 var container = a.getAttribute('href').split('#', 2)[1];
                 $(container).getElements('input[type="checkbox"]').each(function(input){
@@ -315,10 +319,6 @@
                     }
                 });
             });
-
-            if (!$('id_invoice_differs_from_sponsor').getAttribute('checked')) {
-                $('tabs-4').getElement('.fieldset_2').hide();
-            }
         });
     </script>
 {% endblock %}

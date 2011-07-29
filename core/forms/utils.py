@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import FieldDoesNotExist
+from django.forms.models import model_to_dict
 
 from ecs.core.forms.fields import ReadonlyTextInput, ReadonlyTextarea
 
@@ -65,3 +66,8 @@ class NewReadonlyFormSetMixin(object):
                     elif isinstance(field.widget, (forms.Textarea,)):
                         field.widget = ReadonlyTextarea(attrs=field.widget.attrs)
                 mark_readonly(form)
+
+def submission_form_to_dict(sf):
+    d = model_to_dict(sf)
+    d['invoice_differs_from_sponsor'] = bool(sf.invoice_name)
+    return d
