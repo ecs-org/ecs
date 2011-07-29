@@ -107,7 +107,7 @@
                 });
             {% endif %}
             {% if valid and not user|has_flag:'approved_by_office' %}
-                new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
+                new MooDialog.Error('{% trans "Your study is filled out correctly but you cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
         });
     </script>
