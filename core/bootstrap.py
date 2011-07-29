@@ -275,6 +275,18 @@ def expedited_review_categories():
         (u'Psychol', u'Psychologie'),
         (u'Patho', u'Pathologie'),
         (u'Zahn', u'Zahnheilkunde'),
+        
+        #new as of 2011.07.05
+        (u'Ortho', u'Orthopädie'),
+        (u'Häm', u'Hämatologie'),
+        (u'Nephro', u'Nephrologie'),
+        (u'Kardio', u'Kardiologie'), 
+        (u'Neuro', u'Neurologie'),
+        (u'HNO', u'Hals-Nasen-Ohrenkrankheiten'),
+        (u'Pfleger', u'Gesundheits und Krankenpfleger'),
+        (u'PhysMed', u'Physikalische Medizin'),
+        (u'Psych', u'Psychiatrie'),
+        
         )
     for abbrev, name in categories:
         ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
@@ -306,7 +318,7 @@ def medical_categories():
         (u'HNO', u'Hals-Nasen-Ohrenkrankheiten'),
         (u'Anästh', u'Anästhesie'),
         (u'Neuro', u'Neurologie'),
-        (u'Psych', u'Psychatrie'),
+        (u'Psych', u'Psychiatrie'),
         (u'Päd', u'Pädiatrie'),
         (u'Derma', u'Dermatologie'),
         (u'Radio', u'Radiologie'),
@@ -340,6 +352,13 @@ def medical_categories():
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
         (u'Apotheke', u'Apotheke'),
+        
+        #new as fo 2011.07.05
+        (u'Hygiene', u'Hygiene'),
+        (u'Hilfswerk', u'Hilfswerk'),
+        (u'Med. Physik', u'Med. Physik'),
+        
+        
     )
     for shortname, longname in categories:
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
