@@ -281,7 +281,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.2', 'submitter_organisation', _(u'Institution / Company')),
     FieldInfo('9.3', 'submitter_jobtitle', _(u'position')),
     # 9.4 Antragsteller/in ist (nur AMG-Studien)
-    FieldInfo('9.4.1', 'submitter_is_coordinator', _(u'coordinating examiner (multicentric study)')),
+    FieldInfo('9.4.1', 'submitter_is_coordinator', _(u'coordinating examiner (multicentric study)'), help_text=_(u'[9.4] The Submitter is')),
     FieldInfo('9.4.2', 'submitter_is_main_investigator', _(u'Principal investigator (monocentric study)')),
     FieldInfo('9.4.3', 'submitter_is_sponsor', _(u'sponsor / representative of the sponsor')),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', _(u'person/organization authorized by the sponsor')),
