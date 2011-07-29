@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-29 18:41+0200\n"
+"POT-Creation-Date: 2011-07-29 19:33+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1907,30 +1907,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:481
+#: core/views/submissions.py:482
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:543 templates/core.html:50
+#: core/views/submissions.py:544 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:545
+#: core/views/submissions.py:546
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:559
+#: core/views/submissions.py:560
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:579 templates/core.html:53
+#: core/views/submissions.py:580 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:587 templates/core.html:56
+#: core/views/submissions.py:588 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2174,7 +2174,7 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
 #: meetings/views.py:387
 msgid "agenda"
-msgstr "Agenda"
+msgstr "Tagesordnung"
 
 #: meetings/views.py:405
 msgid "Invitation to meeting"
@@ -2851,7 +2851,7 @@ msgid "No Categories."
 msgstr "Fachgebiete"
 
 #: templates/notifications/form.html:25 templates/submissions/form.html:32
-#: templates/submissions/form.html.py:79
+#: templates/submissions/form.html:105
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -3067,31 +3067,31 @@ msgstr "Neue Maßnahme hinzufügen"
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:76
+#: templates/submissions/form.html:102
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:76
+#: templates/submissions/form.html:102
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:79
+#: templates/submissions/form.html:105
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:80
+#: templates/submissions/form.html:106
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: templates/submissions/form.html:80
+#: templates/submissions/form.html:106
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:84
+#: templates/submissions/form.html:110
 msgid ""
 "You cannot submit studies yet. Please wait until the office has approved "
 "your account."

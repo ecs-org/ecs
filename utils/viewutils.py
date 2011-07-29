@@ -30,7 +30,7 @@ class CsrfExemptBaseHandler(BaseHandler):
 def pdf_response(pdf, filename='Unnamed.pdf'):
     assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=%s' % filename
+    response['Content-Disposition'] = 'attachment;filename="%s"' % filename.replace('"', '_')
     return response
 
 def render_pdf(request, template, context):
