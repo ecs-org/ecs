@@ -43,14 +43,14 @@ class ViewTestCase(LoginTestCase, WorkflowTestCase):
         
         # delegate the task back to the pool
         response = self.client.post(manage_task_url, {'action': 'delegate', 'assign_to': ''})
-        self.failUnlessEqual(response.status_code, 302)
+        self.failUnlessEqual(response.status_code, 200)
         task = refetch()
         self.failUnless(task.assigned_to is None)
         
         # reassign the user and complete the task
         task.accept(self.user)
         response = self.client.post(manage_task_url, {'action': 'complete'})
-        self.failUnlessEqual(response.status_code, 302)
+        self.failUnlessEqual(response.status_code, 200)
         task = refetch()
         self.failIf(task.closed_at is None)
         self.failIf(not task.accepted)
