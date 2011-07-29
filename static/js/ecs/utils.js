@@ -154,7 +154,7 @@ ecs.setupAutocomplete = function(context){
         var tbl = null;
         var active = !!elm.getParent('form');
         if(active){
-            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true}}});
+            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true, placeholder: 'Tippen Sie um Vorschläge zu erhalten.'}}});
             tbl.container.addClass('textboxlist-loading');
         }
         new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
