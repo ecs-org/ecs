@@ -158,7 +158,8 @@ class CategorizationReview(_CategorizationReviewBase):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_expedited(self.workflow):
+        is_special = is_expedited(self.workflow) or is_retrospective_thesis(self.workflow) or is_localec(self.workflow)
+        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_special:
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
