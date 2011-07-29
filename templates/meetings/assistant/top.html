@@ -5,7 +5,8 @@
   <div class="column_main">
     <form id="meeting_assistant_form" action="" method="post">
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} <a class="preview" href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">preview</a>{% endif %}</h3>
-        {{ submission.project_title_display|default:top.title }}
+        {{ submission.project_title_display|default:top.title }}<br />
+        {% trans "Submitter" %}: {{ submission.current_submission_form.submitter }} ({{ submission.current_submission_form.submitter_organisation }})
         <span class="meta">
             Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
         </span>
