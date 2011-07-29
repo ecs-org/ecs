@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-29 20:55+0200\n"
+"POT-Creation-Date: 2011-07-29 23:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1912,25 +1912,25 @@ msgstr ""
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:544 templates/core.html:50
+#: core/views/submissions.py:547 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:546
+#: core/views/submissions.py:549
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:560
+#: core/views/submissions.py:563
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:580 templates/core.html:53
+#: core/views/submissions.py:583 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:588 templates/core.html:56
+#: core/views/submissions.py:596 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3174,8 +3174,8 @@ msgid "Involved Parties"
 msgstr "Beteiligte Parteien"
 
 #: templates/submissions/readonly_form.html:67
-msgid "Activities"
-msgstr "Tätigkeiten"
+msgid "Evaluations"
+msgstr "Beurteilungen"
 
 #: templates/submissions/readonly_form.html:70
 #, fuzzy
@@ -3870,6 +3870,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Activities"
+#~ msgstr "Tätigkeiten"
 
 #~ msgid "Ask"
 #~ msgstr "Fragen"
