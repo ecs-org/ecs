@@ -21,7 +21,7 @@
                 {% endif %}
                 <td>
                     {% if party.user %}
-                        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}">
+                        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}" target="_blank">
                             <span class="icon_send"></span>
                             {% trans "Send Message" %}
                         </a>
