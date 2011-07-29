@@ -525,12 +525,7 @@ def submission_widget(request, template='submissions/widget.html'):
         data['filter_form'] = SubmissionWidgetFilterForm
     else:
         stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
-        odd_stashes = []
-        for stash in stashed:
-            if not stash.modtime:
-                odd_stashes.append(stash)
-        stashed.sort(key=lambda s: s.modtime, reverse=True)
-        stashed += odd_stashes
+        stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
 
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
         data['stashed_submission_forms'] = stashed
