@@ -33,7 +33,7 @@ from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
 
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
-from ecs.docstash.models import DocStash
+from ecs.docstash.models import DocStash, DocStashData
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
@@ -523,8 +523,13 @@ def submission_widget(request, template='submissions/widget.html'):
         data['filtername'] = 'submission_filter_widget_internal'
         data['filter_form'] = SubmissionWidgetFilterForm
     else:
+        stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+        for stash in stashed:
+            stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+        stashed.sort(key=lambda s: s.modtime, reverse=True)
+
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
-        data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
+        data['stashed_submission_forms'] = stashed
         data['filtername'] = 'submission_filter_widget'
         data['filter_form'] = SubmissionFilterForm
 
@@ -575,7 +580,10 @@ def assigned_submissions(request):
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
-    stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
+    stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+    for stash in stashed:
+        stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+    stashed.sort(key=lambda s: s.modtime, reverse=True)
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
 
 @forceauth.exempt
