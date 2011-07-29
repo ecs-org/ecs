@@ -37,15 +37,18 @@ def get_editor():
     return editor
 
 def _get_agilo_links(raw=False, testtrac=False, host=None, script=None):
-    ''' get it somewhere else
-usage: calls shell script as no user@host defined by host
-the script called should do a select * from trac_db_name.agilo_link from database tracdb as user user, and pipes its output to stdout
-result is a list with source|dest links, to be parsed
-
-this is to be called to construct links from agilo to make the "perfect" validation company documents ,-)
-
+    ''' get links between tickets from agilo_trac
+    yes it's one ugly hack, but it works.
+    usage: calls shell script as no user@host defined by host
+    the script called should do a select * from trac_db_name.agilo_link from database tracdb as user user, and pipes its output to stdout
+    result is a list with source|dest links, to be parsed
     '''
     from fabric.api import run, env, settings, hide
+    if not host or not script:
+        if raw:
+            return ''
+        else:
+            return [],[],{},{}
     
     env.host_string = host
     with settings(hide('stdout')):
