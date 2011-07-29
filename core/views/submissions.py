@@ -527,9 +527,7 @@ def submission_widget(request, template='submissions/widget.html'):
         stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
         odd_stashes = []
         for stash in stashed:
-            try:
-                stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
-            except DocStashData.DoesNotExist:
+            if not stash.modtime:
                 odd_stashes.append(stash)
         stashed.sort(key=lambda s: s.modtime, reverse=True)
         stashed += odd_stashes
@@ -590,9 +588,7 @@ def my_submissions(request):
     stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
     odd_stashes = []
     for stash in stashed:
-        try:
-            stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
-        except DocStashData.DoesNotExist:
+        if not stash.modtime:
             odd_stashes.append(stash)
     stashed.sort(key=lambda s: s.modtime, reverse=True)
     stashed += odd_stashes
