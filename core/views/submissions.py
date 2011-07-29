@@ -581,12 +581,7 @@ def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
 
     stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
-    odd_stashes = []
-    for stash in stashed:
-        if not stash.modtime:
-            odd_stashes.append(stash)
-    stashed.sort(key=lambda s: s.modtime, reverse=True)
-    stashed += odd_stashes
+    stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
 
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
 
