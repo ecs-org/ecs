@@ -110,7 +110,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.5', 'sponsor_fax', _(u'fax')),
     FieldInfo('1.5.6', 'sponsor_email', _(u'e-mail')),
     FieldInfo(None, 'sponsor_uid', None, short_label=_(u'VAT Nr')),
-    FieldInfo('1.5.1', 'invoice_name', _(u'name')),
+    FieldInfo('1.5.1', 'invoice_name', _(u'invoice name')),
     FieldInfo('1.5.3', 'invoice_contact_gender', _(u'sex of contact person')),
     FieldInfo('1.5.3', 'invoice_contact_title', _(u'title of contact person')),
     FieldInfo('1.5.3', 'invoice_contact_first_name', _(u'first name of contact person')),

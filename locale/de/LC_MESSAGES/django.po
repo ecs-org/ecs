@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-28 16:34+0200\n"
+"POT-Creation-Date: 2011-07-29 18:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -426,7 +426,7 @@ msgstr "Typ"
 msgid "replace document"
 msgstr "Ersetze Dokument"
 
-#: core/paper_forms.py:73 core/paper_forms.py:113
+#: core/paper_forms.py:73
 msgid "name"
 msgstr "Name"
 
@@ -563,6 +563,10 @@ msgstr "E-Mail"
 #: core/paper_forms.py:112 core/paper_forms.py:125
 msgid "VAT Nr"
 msgstr "MWST Nr"
+
+#: core/paper_forms.py:113
+msgid "invoice name"
+msgstr "Firma/Organisation"
 
 #: core/paper_forms.py:124
 msgid "UID-Nummer"
@@ -1569,13 +1573,13 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:335 core/forms/layout.py:65 core/forms/layout.py:67
-#: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:20
+#: templates/submissions/tabs/status.html:115 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:336 core/forms/layout.py:74 core/forms/layout.py:76
-#: templates/submissions/tabs/status.html:120 templates/tasks/tasks.inc:21
+#: templates/submissions/tabs/status.html:122 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
@@ -1589,7 +1593,7 @@ msgstr "Diplomarbeit"
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:339 templates/submissions/tabs/status.html:117
+#: core/forms/forms.py:339 templates/submissions/tabs/status.html:119
 #: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
@@ -1903,30 +1907,30 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:480
+#: core/views/submissions.py:481
 #, fuzzy
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:537 templates/core.html:50
+#: core/views/submissions.py:543 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:539
+#: core/views/submissions.py:545
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:553
+#: core/views/submissions.py:559
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:573 templates/core.html:53
+#: core/views/submissions.py:579 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:578 templates/core.html:56
+#: core/views/submissions.py:587 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2123,15 +2127,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:218
+#: meetings/models.py:222
 msgid "Submission {submission} added to Meeting on {date}"
 msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
 
-#: meetings/models.py:524
+#: meetings/models.py:528
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:525
+#: meetings/models.py:529
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -2172,15 +2176,15 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Agenda"
 
-#: meetings/views.py:404
+#: meetings/views.py:405
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:411
+#: meetings/views.py:412
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:474
+#: meetings/views.py:476
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -3329,15 +3333,15 @@ msgstr ""
 msgid "Neu"
 msgstr "Neu"
 
-#: templates/submissions/tabs/status.html:122
+#: templates/submissions/tabs/status.html:124
 msgid "minors"
 msgstr "Minderjährige"
 
-#: templates/submissions/tabs/status.html:138
+#: templates/submissions/tabs/status.html:140
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:174
+#: templates/submissions/tabs/status.html:176
 #, python-format
 msgid ""
 "\n"
@@ -3349,15 +3353,15 @@ msgstr ""
 "%(task_name)s \n"
 "        "
 
-#: templates/submissions/tabs/status.html:177
+#: templates/submissions/tabs/status.html:179
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:180
+#: templates/submissions/tabs/status.html:182
 msgid "No additional/external review"
 msgstr "keine zusätzlichen/externen Gutachter"
 
-#: templates/submissions/tabs/status.html:186
+#: templates/submissions/tabs/status.html:188
 #, fuzzy
 msgid "Export"
 msgstr "Import"

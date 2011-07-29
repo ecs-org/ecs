@@ -49,9 +49,9 @@ SUBMISSION_FORM_TABS = (
         ]),
         (_(u'invoice recipient'), [
             'invoice_name', 
+            'invoice_address', 'invoice_zip_code', 'invoice_city',
             'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name',
-            'invoice_address', 'invoice_zip_code', 
-            'invoice_city', 'invoice_phone', 'invoice_fax', 'invoice_email',
+            'invoice_phone', 'invoice_fax', 'invoice_email',
             'invoice_uid',
         ]),
     ]),
