@@ -525,9 +525,14 @@ def submission_widget(request, template='submissions/widget.html'):
         data['filter_form'] = SubmissionWidgetFilterForm
     else:
         stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+        odd_stashed = []
         for stash in stashed:
-            stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+            try:
+                stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+            except DocStashData.DoesNotExist:
+                odd_stashes.append(stash)
         stashed.sort(key=lambda s: s.modtime, reverse=True)
+        stashed += odd_stashes
 
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
         data['stashed_submission_forms'] = stashed
@@ -581,10 +586,17 @@ def assigned_submissions(request):
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
+
     stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+    odd_stashed = []
     for stash in stashed:
-        stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+        try:
+            stash.current_data = DocStashData.objects.get(stash=stash, version=stash.current_version)
+        except DocStashData.DoesNotExist:
+            odd_stashes.append(stash)
     stashed.sort(key=lambda s: s.modtime, reverse=True)
+    stashed += odd_stashes
+
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
 
 @forceauth.exempt
