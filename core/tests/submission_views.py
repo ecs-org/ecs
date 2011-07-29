@@ -97,7 +97,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         
     def get_post_data(self, update=None):
         data = VALID_SUBMISSION_FORM_DATA.copy()
-        data['document-doctype'] = str(DocumentType.objects.get(identifier='other').pk)
+        data['document-doctype'] = str(DocumentType.objects.get(identifier='protocol').pk)
         if update:
             data.update(update)
         return data
@@ -117,7 +117,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
         
-        upload_url = url.replace('new', 'doc/upload', 1)        # XXX: ugly
+        upload_url = url.replace('new', 'doc/upload', 1)    # XXX: ugly
 
         # document upload
         file_path = os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf')
