@@ -5,16 +5,16 @@
 """
 Unittests for the site
 """
+from ecs.utils.testcases import EcsTestCase
 
-
-class BasicImportTests():
+class BasicImportTests(EcsTestCase):
     """Tests for most basic importability of core modules
     """
     
     def test_import(self,):
         """Tests if settings and urls modules are importable. Simple but quite useful.
         """
-        
+    
         import settings
         import urls
 
