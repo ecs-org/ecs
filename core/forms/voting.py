@@ -54,7 +54,7 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'is_final': _('Proofread and valid'),
         }
 
-class B2VoteReviewForm(fTranslatedModelForm):
+class B2VoteReviewForm(TranslatedModelForm):
     class Meta:
         model = Vote
         fields = ('text', 'final', 'is_final')
