@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-29 19:33+0200\n"
+"POT-Creation-Date: 2011-07-29 20:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3358,8 +3358,8 @@ msgid "delete"
 msgstr "löschen"
 
 #: templates/submissions/tabs/status.html:182
-msgid "No additional/external review"
-msgstr "keine zusätzlichen/externen Gutachter"
+msgid "No additional/external reviews in the works."
+msgstr "Keine zusätzlichen/externen Gutachten in Arbeit."
 
 #: templates/submissions/tabs/status.html:188
 #, fuzzy

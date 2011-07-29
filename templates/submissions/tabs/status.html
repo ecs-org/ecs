@@ -179,7 +179,7 @@
         | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
     </li>
 {% empty %}
-    <li><i>{% trans "No additional/external review" %}</i></li>
+    <li><i>{% trans "No additional/external reviews in the works." %}</i></li>
 {% endfor %}
 </ul>
 {% endif %}
