@@ -389,10 +389,11 @@ def agenda_pdf(request, meeting_pk=None):
     
     rts = list(meeting.retrospective_thesis_submissions.all())
     es = list(meeting.expedited_submissions.all())
+    ls = list(meeting.localec_submissions.all())
 
     pdfstring = render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
         'meeting': meeting,
-        'additional_submissions': list(enumerate(rts, len(meeting)+1)) + list(enumerate(es, len(meeting)+len(rts)+1)),
+        'additional_submissions': enumerate(rts + es + ls, len(meeting)+1),
     })
     return pdf_response(pdfstring, filename=filename)
 
