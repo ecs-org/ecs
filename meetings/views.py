@@ -426,8 +426,9 @@ def protocol_pdf(request, meeting_pk=None):
 
     rts = list(meeting.retrospective_thesis_submissions.all())
     es = list(meeting.expedited_submissions.all())
+    ls = list(meeting.localec_submissions.all())
     additional_submissions = []
-    for i, submission in enumerate(rts + es, len(tops) + 1):
+    for i, submission in enumerate(rts + es + ls, len(tops) + 1):
         try:
             vote = Vote.objects.filter(submission_form=submission.current_submission_form)[0]
         except IndexError:

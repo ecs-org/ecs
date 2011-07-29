@@ -157,6 +157,10 @@ class Meeting(models.Model):
         return self.submissions.filter(expedited=True)
 
     @property
+    def localec_submissions(self):
+        return self.submissions.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
+
+    @property
     def retrospective_thesis_entries(self):
         return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.retrospective_thesis().values('pk').query)
 
