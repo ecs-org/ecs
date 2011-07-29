@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-29 23:43+0200\n"
+"POT-Creation-Date: 2011-07-30 00:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1817,6 +1817,10 @@ msgstr "Schlüsselwörter"
 msgid "additional_reviewers"
 msgstr "Zusätzliche Gutachter"
 
+#: core/forms/voting.py:54 core/forms/voting.py:62
+msgid "Proofread and valid"
+msgstr "Korrektur gelesen und gültig"
+
 #: core/models/names.py:37 core/models/submissions.py:792 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
@@ -1916,25 +1920,25 @@ msgstr ""
 msgid "Submissions"
 msgstr "Einreichung"
 
-#: core/views/submissions.py:547 templates/core.html:50
+#: core/views/submissions.py:542 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:549
+#: core/views/submissions.py:544
 #, fuzzy
 msgid "Study Search"
 msgstr "Suche"
 
-#: core/views/submissions.py:563
+#: core/views/submissions.py:558
 #, fuzzy
 msgid "This document is an old version."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: core/views/submissions.py:583 templates/core.html:53
+#: core/views/submissions.py:578 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:596 templates/core.html:56
+#: core/views/submissions.py:586 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3248,7 +3252,7 @@ msgstr ""
 
 #: templates/submissions/review_form.inc:19
 msgid "save"
-msgstr "Korrektur gelesen und gültig"
+msgstr "Speichern"
 
 #: templates/submissions/vote_publish.txt:2
 #, python-format
