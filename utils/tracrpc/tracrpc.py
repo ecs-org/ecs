@@ -7,6 +7,7 @@ import os, sys, tempfile, datetime, subprocess, re
 from pprint import pprint
 import urllib2, urllib
 
+from django.conf import settings as django_settings
 
 import json_hack
 import jsonrpclib
@@ -35,26 +36,20 @@ def get_editor():
         editor = os.getenv("EDITOR")
     return editor
 
-def _get_agilo_links(raw=False, testtrac=False):
+def _get_agilo_links(raw=False, testtrac=False, host=None, script=None):
     ''' get it somewhere else
-usage: calls getlinks.sh as ecsdev@ecsdev.ep3.at
-getlinks makes a select * from ecs.agilo_link from database ecsdev as user ecsdev, and pipes its output to stdout
+usage: calls shell script as no user@host defined by host
+the script called should do a select * from trac_db_name.agilo_link from database tracdb as user user, and pipes its output to stdout
 result is a list with source|dest links, to be parsed
 
 this is to be called to construct links from agilo to make the "perfect" validation company documents ,-)
 
     '''
     from fabric.api import run, env, settings, hide
-    env.host_string = 'ecsdev@ecsdev.ep3.at'
+    
+    env.host_string = host
     with settings(hide('stdout')):
-        #TODO hide output of fabric executing the script
-        #saveout = sys.stdout
-        #sys.stdout = ''
-        if testtrac:
-            result = run("~/getlinks_ekreqtest.sh")
-        else:
-            result = run("~/getlinks.sh")
-        #sys.stdout = saveout
+        result = run(script)
     if raw:
         return result
     else:
@@ -226,12 +221,16 @@ class Agilolinks():
     links = None
     linkdict = None
     reverselinkdict = None
+    agilo_links_host_string = None
+    get_agilo_links_scriptname = None
     
-    def __init__(self, testtrac=False):
+    def __init__(self, testtrac=False, agilo_host_string=None, agilo_scriptname=None):
         self.testtrac = testtrac
+        self.agilo_links_host_string = agilo_host_string
+        self.get_agilo_links_scriptname = agilo_scriptname
     
     def updatecache(self):
-        self.ids, self.links, self.linkdict, self.reverselinkdict = _get_agilo_links(raw=False, testtrac=self.testtrac)
+        self.ids, self.links, self.linkdict, self.reverselinkdict = _get_agilo_links(raw=False, testtrac=self.testtrac, host=self.agilo_links_host_string, script=self.get_agilo_links_scriptname)
         self.fetched_once = True
         
     def get_ticket_childs(self, tid):
@@ -261,7 +260,7 @@ class TracRpc():
     httpbot = None
     validclonetypes = ['task','story','requirement','bug']
     
-    def __init__(self, username, password, protocol, hostname, urlpath, debug=False, httprealm=None):
+    def __init__(self, username, password, protocol, hostname, urlpath, debug=False, httprealm=None, agilo_host_string=None, agilo_scriptname=None):
         '''
         example: TracRpc('user', 'password', 'https', 'example.org', '/url/path')
         '''
@@ -270,7 +269,7 @@ class TracRpc():
                                       urlpath, C_TRAC_AUTH_JSON)
         self.jsonrpc = jsonrpclib.Server(self._url)
         self.debugmode = debug
-        self.link_cache = Agilolinks(testtrac = debug)
+        self.link_cache = Agilolinks(testtrac = debug, agilo_host_string=agilo_host_string, agilo_scriptname=agilo_scriptname)
         self.httpbot = HttpBot(user=username, password=password, protocol=protocol, hostname=hostname, urlpath=urlpath, realm=httprealm)
         
     #see http://stackoverflow.com/questions/682504/what-is-a-clean-pythonic-way-to-have-multiple-constructors-in-python
@@ -1222,15 +1221,6 @@ class TracRpc():
         if len(targetids) > 0 and updatecache:
             self.link_cache.updatecache()
         
-    def linktest(self):
-        #pprint(self._safe_rpc(self.jsonrpc.ticket.get, 2921))
-
-        #self.link_tickets(2921, [1898, 2922])
-        #self.link_tickets(2921, [1898], deletenonlistedtargets=True)
-        self.link_tickets(2921, [2920], deletenonlistedtargets=False)
-        #self.httpbot.delete_ticket_link(2921, 1898)
-        #print "trying to link 504 w 2921 & 1337:"
-        #self.link_tickets(504, [2921, 1337])
         
 
 
