@@ -222,7 +222,7 @@
     <div id="communication_tab" class="tab">
         <div class="widget" x-widget-url="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
         <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Write a new message" %}</a>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
     {% if user|has_flag:'internal' %}
         <div id="communication_overview_tab" class="tab">
