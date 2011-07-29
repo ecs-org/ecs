@@ -310,9 +310,14 @@ def delete_document_from_submission(request):
 @with_docstash_transaction
 def create_submission_form(request):
     form = request.docstash.get('form')
+    documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
+    protocol_uploaded = documents.filter(doctype__identifier=u'protocol').exists()
     if request.method == 'POST' or form is None:
         form = SubmissionFormForm(request.POST or None)
-        
+        if request.method == 'GET':
+            protocol_uploaded = True    # don't show error on completely new
+                                        # submission
+
     formsets = request.docstash.get('formsets')
     if request.method == 'POST' or formsets is None:
         formsets = get_submission_formsets(request.POST or None)
@@ -332,7 +337,6 @@ def create_submission_form(request):
 
     notification_type = request.docstash.get('notification_type', None)
     valid = False
-    protocol_uploaded = True    # if False an error is displayed
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -354,9 +358,6 @@ def create_submission_form(request):
         if save or autosave:
             return HttpResponse('save successfull')
 
-        documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
-
-        protocol_uploaded = documents.filter(doctype__identifier=u'protocol').exists()
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
 
