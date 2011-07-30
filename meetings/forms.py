@@ -84,7 +84,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         except AssignedMedicalCategory.DoesNotExist:
             pass
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category).order_by('username')
+        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category, groups__name=u'EC-Board Member').order_by('email')
 
     class Meta:
         model = AssignedMedicalCategory
