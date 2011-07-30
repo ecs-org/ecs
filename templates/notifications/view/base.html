@@ -11,7 +11,7 @@ Meldungen zur laufenden Studie(n)
 {% endblock %}
 
 {% block content %}
-<h2>{{ notification }} für {% for sf in notification.submission_forms.all %}{{ sf.submission }}{% if not forloop.last %}, {% endif %}{% endfor %} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
+<h2>{{ notification }} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
 <p>
     <strong>Eingereicht von: {{ notification.user }}</strong><br />
     <a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
