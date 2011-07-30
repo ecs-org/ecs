@@ -281,6 +281,20 @@ def meeting_assistant_stop(request, meeting_pk=None):
         raise Http404(_("unfinished meetings cannot be stopped"))
     meeting.ended = datetime.now()
     meeting.save()
+
+    for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
+        tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
+        for top in tops:
+            vote = Vote.objects.create(top=top, result='3')
+            with sudo():
+                open_tasks = Task.objects.for_data(top.submission).filter(deleted_at__isnull=True, closed_at=None)
+                for task in open_tasks:
+                    task.deleted_at = datetime.now()
+                    task.save()
+
+            new_meeting = Meeting.objects.next_schedulable_meeting(top.submission)
+            new_meeting.add_entry(submission=top.submission, duration=timedelta(minutes=7.5))
+
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
     
 def meeting_assistant_comments(request, meeting_pk=None):
