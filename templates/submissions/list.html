@@ -108,7 +108,7 @@
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}
             {% if meetings %}
-                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}<a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user|has_flag:'internal' %}<a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% if docstash %}
