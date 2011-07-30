@@ -85,7 +85,7 @@ def get_meeting_parties(sf):
     ).values('pk').query
 
     # assigned to the top
-    for user in User.objects.filter(meeting_participations__entry__in=timetable_entries_q):
+    for user in User.objects.filter(meeting_participations__entry__in=timetable_entries_q).exclude(assigned_medical_categories__in=assigned_medical_categories_q):
         parties.append(Party(user=user, involvement=_("Meeting Participant"), anonymous=anonymous))
 
     # assigned for medical category
