@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 19:14+0200\n"
+"POT-Creation-Date: 2011-07-30 20:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1444,7 +1444,7 @@ msgstr "Rechnung"
 
 #: core/parties.py:46 templates/meetings/assistant/top.html:9
 msgid "Submitter"
-msgstr ""
+msgstr "Antragsteller"
 
 #: core/parties.py:48
 msgid "Presenter"
@@ -1455,13 +1455,12 @@ msgid "Primary Investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
 #: core/parties.py:89
-#, fuzzy
 msgid "Meeting Participant"
-msgstr "Prüfungsteilnehmer"
+msgstr "Sitzungsteilnehmer"
 
 #: core/parties.py:93
 msgid "Meeting Participant (assigned for category)"
-msgstr ""
+msgstr "Sitzungsteilnehmer (ausgewählt für Kategorie)"
 
 #: core/tasks.py:26
 #, python-format
@@ -1916,23 +1915,20 @@ msgid "Unknown"
 msgstr ""
 
 #: core/views/submissions.py:482
-#, fuzzy
 msgid "Submissions"
-msgstr "Einreichung"
+msgstr "Einreichungen"
 
 #: core/views/submissions.py:542 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
 #: core/views/submissions.py:544
-#, fuzzy
 msgid "Study Search"
-msgstr "Suche"
+msgstr "Studien-Suche"
 
 #: core/views/submissions.py:558
-#, fuzzy
 msgid "This document is an old version."
-msgstr "Die Datei ist kein gültiges PDF-Dokument."
+msgstr "Das Dokument liegt in einer veralteten Form vor."
 
 #: core/views/submissions.py:578 templates/core.html:53
 msgid "Assigned Studies"
@@ -1973,15 +1969,15 @@ msgstr ""
 
 #: documents/bootstrap.py:15
 msgid "study protocol"
-msgstr "Studienprotokoll"
+msgstr "Studienprotokoll (Prüfplan)"
 
 #: documents/bootstrap.py:16
 msgid "Investigator's Brochure"
-msgstr ""
+msgstr "Prüferinformation (Investigator's Brochure)"
 
 #: documents/bootstrap.py:17
 msgid "Amendment"
-msgstr ""
+msgstr "Amendment"
 
 #: documents/bootstrap.py:17
 msgid "Protocol changes"
@@ -1997,7 +1993,7 @@ msgstr "Lebenslauf"
 
 #: documents/bootstrap.py:19
 msgid "Conflict of Interest"
-msgstr "Interessenkonflikt"
+msgstr "Conflict of Interest"
 
 #: documents/bootstrap.py:19
 msgid "can also be a Financial Disclosure Form"
@@ -2019,16 +2015,15 @@ msgstr ""
 
 #: documents/bootstrap.py:22
 msgid "adverse reaction report"
-msgstr ""
+msgstr "Nebenwirkungsbericht"
 
 #: documents/bootstrap.py:22
 msgid "Med Watch report, CIOMS form etc."
 msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
 #: documents/bootstrap.py:23
-#, fuzzy
 msgid "Submission Form"
-msgstr "Einreichung"
+msgstr "Einreichformular"
 
 #: documents/bootstrap.py:24
 msgid "other"
@@ -2047,39 +2042,39 @@ msgstr "keine Datei"
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: documents/models.py:97 templates/submissions/diff/diff.html:21
+#: documents/models.py:98 templates/submissions/diff/diff.html:21
 msgid "new"
 msgstr "neu"
 
-#: documents/models.py:98
+#: documents/models.py:99
 msgid "uploading"
 msgstr "wird hochgeladen"
 
-#: documents/models.py:99
+#: documents/models.py:100
 msgid "uploaded"
 msgstr "hochgeladen"
 
-#: documents/models.py:100
+#: documents/models.py:101
 msgid "indexing"
 msgstr "wird indiziert"
 
-#: documents/models.py:101
+#: documents/models.py:102
 msgid "indexed"
 msgstr "indiziert"
 
-#: documents/models.py:102
+#: documents/models.py:103
 msgid "prime"
 msgstr ""
 
-#: documents/models.py:103
+#: documents/models.py:104
 msgid "ready"
 msgstr "bereit"
 
-#: documents/models.py:104
+#: documents/models.py:105
 msgid "aborted"
 msgstr "abgebrochen"
 
-#: documents/models.py:105
+#: documents/models.py:106
 msgid "deleted"
 msgstr "gelöscht"
 
@@ -3472,14 +3467,14 @@ msgid "Type"
 msgstr ""
 
 #: templates/tasks/tasks_full.inc:28
-msgid "Bookmark"
-msgstr "Lesezeichen"
-
-#: templates/tasks/tasks_full.inc:28
 msgid "Drag the bookmark link to your bookmark bar to save it."
 msgstr ""
 "Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
 "speichern."
+
+#: templates/tasks/tasks_full.inc:28
+msgid "Bookmark"
+msgstr "Lesezeichen"
 
 #: templates/tasks/tasks_js.inc:32
 msgid "Collapse"
