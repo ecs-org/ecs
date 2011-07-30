@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 20:30+0200\n"
+"POT-Creation-Date: 2011-07-30 20:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1938,19 +1938,19 @@ msgstr "Mir zugeordnete Studien"
 msgid "My Studies"
 msgstr "Meine Studien"
 
-#: documents/bootstrap.py:11
+#: documents/bootstrap.py:12
 msgid "Covering Letter"
 msgstr "Covering Letter"
 
-#: documents/bootstrap.py:11
+#: documents/bootstrap.py:12
 msgid "Cover letter / covering letter to the Ethics Commission"
 msgstr "Anschreiben / Begleitschreiben an die Ethikkommission"
 
-#: documents/bootstrap.py:12
+#: documents/bootstrap.py:13
 msgid "patient information"
 msgstr "Patienteninformation"
 
-#: documents/bootstrap.py:13
+#: documents/bootstrap.py:14
 msgid ""
 "Patients / subjects / children / youths / parents / genetic information, "
 "information for non competent patients"
@@ -1958,78 +1958,78 @@ msgstr ""
 "Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- "
 "Information, Information für nicht einwilligungsfähige Patienten"
 
-#: documents/bootstrap.py:14
+#: documents/bootstrap.py:15
 msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
 
-#: documents/bootstrap.py:14 documents/bootstrap.py:16
-#: documents/bootstrap.py:20
+#: documents/bootstrap.py:15 documents/bootstrap.py:17
+#: documents/bootstrap.py:21
 msgid " "
 msgstr ""
 
-#: documents/bootstrap.py:15
+#: documents/bootstrap.py:16
 msgid "study protocol"
 msgstr "Studienprotokoll (Prüfplan)"
 
-#: documents/bootstrap.py:16
+#: documents/bootstrap.py:17
 msgid "Investigator's Brochure"
 msgstr "Prüferinformation (Investigator's Brochure)"
 
-#: documents/bootstrap.py:17
+#: documents/bootstrap.py:18
 msgid "Amendment"
 msgstr "Amendment"
 
-#: documents/bootstrap.py:17
+#: documents/bootstrap.py:18
 msgid "Protocol changes"
 msgstr "Protokolländerungen"
 
-#: documents/bootstrap.py:18
+#: documents/bootstrap.py:19
 msgid "Curriculum Vitae (CV)"
 msgstr "Lebenslauf (CV)"
 
-#: documents/bootstrap.py:18
+#: documents/bootstrap.py:19
 msgid "CV"
 msgstr "Lebenslauf"
 
-#: documents/bootstrap.py:19
+#: documents/bootstrap.py:20
 msgid "Conflict of Interest"
 msgstr "Conflict of Interest"
 
-#: documents/bootstrap.py:19
+#: documents/bootstrap.py:20
 msgid "can also be a Financial Disclosure Form"
 msgstr "kann auch ein Financial Disclosure Form sein"
 
-#: documents/bootstrap.py:20
+#: documents/bootstrap.py:21
 msgid "Case Report Form (CRF)"
 msgstr "Fallbericht-Formular (CRF)"
 
-#: documents/bootstrap.py:21
+#: documents/bootstrap.py:22
 msgid "EudraCT Form"
 msgstr "EudraCT-Formular"
 
-#: documents/bootstrap.py:21
+#: documents/bootstrap.py:22
 msgid ""
 "Request for Authorisation, Notification of Amendment Form, Declaration of "
 "the end of the clinical trial"
 msgstr ""
 
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:23
 msgid "adverse reaction report"
 msgstr "Nebenwirkungsbericht"
 
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:23
 msgid "Med Watch report, CIOMS form etc."
 msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
-#: documents/bootstrap.py:23
+#: documents/bootstrap.py:24
 msgid "Submission Form"
 msgstr "Einreichformular"
 
-#: documents/bootstrap.py:24
+#: documents/bootstrap.py:25
 msgid "other"
 msgstr "Sonstige"
 
-#: documents/bootstrap.py:24
+#: documents/bootstrap.py:25
 msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."

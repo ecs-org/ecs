@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.conf import settings
-from django.utils.translation import ugettext as _
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
+
+_ = lambda s: s     # dummy gettext for marking strings
 
 @bootstrap.register()
 def document_types():
