@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 20:15+0200\n"
+"POT-Creation-Date: 2011-07-30 20:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1848,11 +1848,11 @@ msgstr "indirekt personenbezogen"
 
 #: core/models/submissions.py:747
 msgid "Creation of study EC-Nr. {0}"
-msgstr "Erstellung der Studie EK-Nr. %s"
+msgstr "Erstellung der Studie EK-Nr. {0}"
 
 #: core/models/submissions.py:751
 msgid "Changes to study EC-Nr. {0}"
-msgstr "Änderungen an Studie EK-Nr. %s"
+msgstr "Änderungen an Studie EK-Nr. {0}"
 
 #: core/models/submissions.py:826
 msgid "only study-related"
@@ -2871,7 +2871,7 @@ msgstr "Es existieren derzeit keine Studienmeldungen."
 msgid "Distribute"
 msgstr "Verteilen"
 
-#: templates/notifications/answers/view.html:6
+#: templates/notifications/answers/view.html:7
 #: templates/submissions/list.html:87
 #: templates/submissions/tabs/status.html:48
 msgid "Download PDF"
