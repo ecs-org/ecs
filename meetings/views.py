@@ -301,7 +301,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
                     task.save()
 
             new_meeting = Meeting.objects.next_schedulable_meeting(top.submission)
-            new_meeting.add_entry(submission=top.submission, duration=timedelta(minutes=7.5))
+            new_meeting.add_entry(submission=top.submission, duration=timedelta(seconds=0), visible=False)
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
