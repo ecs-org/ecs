@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 00:39+0200\n"
+"POT-Creation-Date: 2011-07-30 19:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,7 +191,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:115 core/bootstrap.py:644
+#: core/bootstrap.py:115 core/bootstrap.py:663
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -199,27 +199,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:117 core/bootstrap.py:639
+#: core/bootstrap.py:117 core/bootstrap.py:658
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:118 core/bootstrap.py:640
+#: core/bootstrap.py:118 core/bootstrap.py:659
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:119 core/bootstrap.py:638
+#: core/bootstrap.py:119 core/bootstrap.py:657
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:120 core/bootstrap.py:642
+#: core/bootstrap.py:120 core/bootstrap.py:661
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:121 core/bootstrap.py:643
+#: core/bootstrap.py:121 core/bootstrap.py:662
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:122 core/bootstrap.py:641
+#: core/bootstrap.py:122 core/bootstrap.py:660
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -299,16 +299,16 @@ msgstr ""
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:635
+#: core/bootstrap.py:654
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:636
+#: core/bootstrap.py:655
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:637
+#: core/bootstrap.py:656
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
@@ -1442,7 +1442,7 @@ msgstr ""
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: core/parties.py:46
+#: core/parties.py:46 templates/meetings/assistant/top.html:9
 msgid "Submitter"
 msgstr ""
 
@@ -1508,19 +1508,19 @@ msgstr "Studie angenommen"
 msgid "Study declined"
 msgstr "Studie abgelehnt"
 
-#: core/workflow.py:167 core/workflow.py:178
+#: core/workflow.py:168 core/workflow.py:179
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:169 core/workflow.py:180
+#: core/workflow.py:170 core/workflow.py:181
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
-#: core/workflow.py:390
+#: core/workflow.py:391
 msgid "B1"
 msgstr ""
 
-#: core/workflow.py:391
+#: core/workflow.py:392
 msgid "B3"
 msgstr ""
 
@@ -3472,18 +3472,20 @@ msgid "Type"
 msgstr ""
 
 #: templates/tasks/tasks_full.inc:28
-msgid "ECS Tasks"
-msgstr "ECS Aufgaben"
+msgid "Bookmark"
+msgstr "Lesezeichen"
 
 #: templates/tasks/tasks_full.inc:28
-msgid "Bookmark me!"
-msgstr "Lesezeichen setzen!"
+msgid "Drag the bookmark link to your bookmark bar to save it."
+msgstr ""
+"Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
+"speichern."
 
-#: templates/tasks/tasks_js.inc:39
+#: templates/tasks/tasks_js.inc:32
 msgid "Collapse"
 msgstr "weniger"
 
-#: templates/tasks/tasks_js.inc:43
+#: templates/tasks/tasks_js.inc:36
 msgid "Expand"
 msgstr "mehr"
 
@@ -3878,6 +3880,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "ECS Tasks"
+#~ msgstr "ECS Aufgaben"
 
 #~ msgid "Activities"
 #~ msgstr "Tätigkeiten"
