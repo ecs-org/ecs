@@ -133,7 +133,13 @@
         <td colspan="3">
             <ul>
                 {% for meeting in submission_form.submission.meetings.all %}
-                    <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                    <li>
+                        {% if user|has_flag:'internal' %}
+                            <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
+                        {% else %}
+                            {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
             {% if user|has_flag:'executive_board_member' %}
