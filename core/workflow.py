@@ -164,11 +164,6 @@ class CategorizationReview(_CategorizationReviewBase):
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
 
-        if s.external_reviewer:
-            send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
-        for add_rev in s.additional_reviewers.all():
-            send_system_message_template(add_rev, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
-
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
         model = Submission
@@ -244,8 +239,10 @@ class ExternalChecklistReview(ChecklistReview):
         return True
 
     def receive_token(self, *args, **kwargs):
+        s = self.workflow.data
         token = super(ExternalChecklistReview, self).receive_token(*args, **kwargs)
-        token.task.assign(self.workflow.data.external_reviewer_name)
+        token.task.assign(s.external_reviewer_name)
+        send_system_message_template(s.external_reviewer_name, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
         return token
 
 def unlock_external_review(sender, **kwargs):
@@ -327,15 +324,17 @@ class AdditionalReviewSplit(Generic):
         model = Submission
 
     def emit_token(self, *args, **kwargs):
+        s = self.workflow.data
         tokens = []
-        for user in self.workflow.data.additional_reviewers.all():
+        for user in s.additional_reviewers.all():
             with sudo():
-                additional_review_exists = Task.objects.for_data(self.workflow.data).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', deleted_at__isnull=True).exists()
+                additional_review_exists = Task.objects.for_data(s).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', deleted_at__isnull=True).exists()
             if additional_review_exists:
                 continue
             for token in super(AdditionalReviewSplit, self).emit_token(*args, **kwargs):
                 token.task.assign(user)
                 tokens.append(token)
+            send_system_message_template(user, _('Additional Review Invitation'), 'submissions/additional_reviewer_invitation.txt', None, submission=s)
         return tokens
 
 # XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
