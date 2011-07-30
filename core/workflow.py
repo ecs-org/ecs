@@ -393,11 +393,16 @@ class VoteB2Review(Activity):
         
     def pre_perform(self, choice):
         from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
-        new_vote = Vote.objects.create(submission_form=self.workflow.data.submission_form, result=choice)
+        sf = self.workflow.data.submission_form
+        new_vote = Vote.objects.create(submission_form=sf, result=choice)
         if new_vote.result in PERMANENT_VOTE_RESULTS:
             # abort all tasks
             with sudo():
-                open_tasks = Task.objects.for_data(new_vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
+                open_tasks = Task.objects.for_data(sf.submission).filter(deleted_at__isnull=True, closed_at=None)
                 for task in open_tasks:
                     task.deleted_at = datetime.now()
                     task.save()
+        if choice == '3':
+            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
+            # only works for normal studies (no thesis lane, etc.)
+            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
