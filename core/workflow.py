@@ -120,9 +120,9 @@ class InitialReview(Activity):
         sf.save()
 
         if sf.acknowledged:
-            send_system_message_template(sf.presenter, _('Study acknowledged'), 'submissions/acknowledge_message.txt', None, submission=s)
+            send_system_message_template(sf.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt', None, submission=s)
         else:
-            send_system_message_template(sf.presenter, _('Study declined'), 'submissions/decline_message.txt', None, submission=s)
+            send_system_message_template(sf.presenter, _('Submission not accepted'), 'submissions/decline_message.txt', None, submission=s)
 
 class Resubmission(Activity):
     class Meta:

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-30 20:50+0200\n"
+"POT-Creation-Date: 2011-07-31 15:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1500,26 +1500,26 @@ msgid "Reject"
 msgstr "Ablehnen"
 
 #: core/workflow.py:123
-msgid "Study acknowledged"
-msgstr "Studie angenommen"
+msgid "Submission accepted"
+msgstr "Einreichung akzeptiert"
 
 #: core/workflow.py:125
-msgid "Study declined"
-msgstr "Studie abgelehnt"
+msgid "Submission not accepted"
+msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:168 core/workflow.py:179
+#: core/workflow.py:174 core/workflow.py:245
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:170 core/workflow.py:181
+#: core/workflow.py:176 core/workflow.py:337
 msgid "Additional Review Invitation"
 msgstr "Einladung Zusatz-Gutachten"
 
-#: core/workflow.py:391
+#: core/workflow.py:390
 msgid "B1"
 msgstr ""
 
-#: core/workflow.py:392
+#: core/workflow.py:391
 msgid "B3"
 msgstr ""
 
@@ -1890,7 +1890,7 @@ msgstr "5a Zurückgezogen (Antragsteller)"
 msgid "5b not examined"
 msgstr "5b Nicht behandelt"
 
-#: core/models/voting.py:29
+#: core/models/voting.py:29 documents/bootstrap.py:26
 msgid "vote"
 msgstr "Votum"
 
@@ -2034,6 +2034,11 @@ msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
+#: documents/bootstrap.py:26
+#, fuzzy
+msgid "Vote"
+msgstr "Voten"
+
 #: documents/forms.py:27
 msgid "no file"
 msgstr "keine Datei"
@@ -2155,39 +2160,39 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:173
+#: meetings/views.py:175
 msgid "Meeting on {date}"
 msgstr "Sitzung am {date}"
 
-#: meetings/views.py:254
+#: meetings/views.py:260
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:263
+#: meetings/views.py:269
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:269
+#: meetings/views.py:275
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:281
+#: meetings/views.py:289
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:387
+#: meetings/views.py:412
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:405
+#: meetings/views.py:430
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:412
+#: meetings/views.py:437
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:476
+#: meetings/views.py:501
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2962,10 +2967,18 @@ msgstr "Kein Notizblock"
 #, python-format
 msgid ""
 "\n"
-"Your study \"%(project_title)s\" (%(ec_number)s) has been acknowledged.\n"
+"Your submission \"%(project_title)s\" (%(ec_number)s) has be accepted for "
+"further processing.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
 msgstr ""
 "\n"
-"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde angenommen.\n"
+"Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur weiteren "
+"Bearbeitung akzeptiert.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/submissions/additional_reviewer_invitation.txt:2
 #, python-format
@@ -3035,12 +3048,22 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Your study \"%(project_title)s\" (%(ec_number)s) has been declined. You can "
-"resubmit your study.\n"
+"Your submission \"%(project_title)s\" (%(ec_number)s) cannot be accepted in "
+"the present shape.\n"
+"Please check your inbox for more precise information. You can resubmit\n"
+"your study as appropriate.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
 msgstr ""
 "\n"
-"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
-"können die Studie neu einreichen.\n"
+"Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
+"vorliegenden Form nicht angenommen werden.\n"
+"Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
+"die Studie ggf. neu einreichen.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/submissions/external_reviewer_invitation.txt:2
 #, python-format
@@ -3340,11 +3363,11 @@ msgstr "Neu"
 msgid "minors"
 msgstr "Minderjährige"
 
-#: templates/submissions/tabs/status.html:140
+#: templates/submissions/tabs/status.html:146
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:176
+#: templates/submissions/tabs/status.html:182
 #, python-format
 msgid ""
 "\n"
@@ -3356,15 +3379,15 @@ msgstr ""
 "%(task_name)s \n"
 "        "
 
-#: templates/submissions/tabs/status.html:179
+#: templates/submissions/tabs/status.html:185
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:182
+#: templates/submissions/tabs/status.html:188
 msgid "No additional/external reviews in the works."
 msgstr "Keine zusätzlichen/externen Gutachten in Arbeit."
 
-#: templates/submissions/tabs/status.html:188
+#: templates/submissions/tabs/status.html:194
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3876,6 +3899,28 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
+#~ msgid "Study acknowledged"
+#~ msgstr "Studie angenommen"
+
+#~ msgid ""
+#~ "\n"
+#~ "Your study \"%(project_title)s\" (%(ec_number)s) has been acknowledged.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde angenommen.\n"
+
+#~ msgid "Study declined"
+#~ msgstr "Studie abgelehnt"
+
+#~ msgid ""
+#~ "\n"
+#~ "Your study \"%(project_title)s\" (%(ec_number)s) has been declined. You "
+#~ "can resubmit your study.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
+#~ "können die Studie neu einreichen.\n"
+
 #~ msgid "ECS Tasks"
 #~ msgstr "ECS Aufgaben"
 
@@ -3932,9 +3977,6 @@ msgstr ""
 
 #~ msgid "ECS Submission Wizard"
 #~ msgstr "ECS Einreichungs-Helfer"
-
-#~ msgid "Submission Wizard"
-#~ msgstr "Einreichungs-Helfer"
 
 #~ msgid "ECS Administration"
 #~ msgstr "ECS Verwaltung"
