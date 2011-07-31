@@ -69,7 +69,7 @@
                 {% if user|has_flag:'internal' %}
                     <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                 {% endif %}
-                {% if categorization_review_form %}
+                {% if categorization_review_form and user|has_flag:'internal' %}
                     <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
@@ -196,7 +196,7 @@
         </div>
     {% endif %}
 
-    {% if categorization_review_form %}
+    {% if categorization_review_form and user|has_flag:'internal' %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
                 {% if categorization_task and categorization_review_form.readonly %}
