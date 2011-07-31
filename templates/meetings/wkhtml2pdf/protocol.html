@@ -48,7 +48,8 @@
         {% endwith %}
     {% endfor %}
 
-    {% for i, submission, vote in additional_submissions %}
+    {% for i, top, vote in additional_tops %}
+        {% with top.submission as submission %}
         <span class="bold">#TOP {{ i }}</span>
         <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
         <span class="bold">Antragsteller:</span>
@@ -67,6 +68,7 @@
         <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
 
         {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
+        {% endwith %}
     {% endfor %}
 
     {% if b1ized.count %}

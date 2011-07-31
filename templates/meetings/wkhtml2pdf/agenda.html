@@ -34,23 +34,23 @@
         {% endif %}
     {% endfor %}
 
-    {% for i, submission in additional_submissions %}
+    {% for i, top in additional_tops %}
         <span class="bold">#TOP {{ i }}</span>
         <span class="bold">EK Nr.</span>
-            {{ submission.get_ec_number_display }}<br />
+            {{ top.submission.get_ec_number_display }}<br />
         <span class="bold">Antragsteller:</span>
-            {% with submission.current_submission_form.submitter as submitter %}
+            {% with top.submission.current_submission_form.submitter as submitter %}
                 {% if not submitter.first_name or not submitter.last_name %}
-                    {{ submission.current_submission_form.submitter_contact }}
+                    {{ top.submission.current_submission_form.submitter_contact }}
                 {% else %}
                     {{ submitter }}
                 {% endif %}
             {% endwith %}
             <br />
         <span class="bold">Einreichende Institution:</span>
-            {{ submission.current_submission_form.submitter_organisation }}<br />
+            {{ top.submission.current_submission_form.submitter_organisation }}<br />
         <span class="bold">Projekttitel:</span>
-            {{ submission.project_title_display }}<br />
+            {{ top.submission.project_title_display }}<br />
         <br />
     {% endfor %}
 {% endblock %}

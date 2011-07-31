@@ -411,14 +411,14 @@ def agenda_pdf(request, meeting_pk=None):
     filename = '%s-%s-%s.pdf' % (
         meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
     )
-    
-    rts = list(meeting.retrospective_thesis_submissions.all())
-    es = list(meeting.expedited_submissions.all())
-    ls = list(meeting.localec_submissions.all())
+
+    rts = list(meeting.retrospective_thesis_entries.all())
+    es = list(meeting.expedited_entries.all())
+    ls = list(meeting.localec_entries.all())
 
     pdfstring = render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
         'meeting': meeting,
-        'additional_submissions': enumerate(rts + es + ls, len(meeting)+1),
+        'additional_tops': enumerate(rts + es + ls, len(meeting)+1),
     })
     return pdf_response(pdfstring, filename=filename)
 
@@ -450,22 +450,22 @@ def protocol_pdf(request, meeting_pk=None):
     submission_forms = [x.submission_form for x in b2_votes]
     b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
 
-    rts = list(meeting.retrospective_thesis_submissions.all())
-    es = list(meeting.expedited_submissions.all())
-    ls = list(meeting.localec_submissions.all())
-    additional_submissions = []
-    for i, submission in enumerate(rts + es + ls, len(tops) + 1):
+    rts = list(meeting.retrospective_thesis_entries.all())
+    es = list(meeting.expedited_entries.all())
+    ls = list(meeting.localec_entries.all())
+    additional_tops = []
+    for i, top in enumerate(rts + es + ls, len(tops) + 1):
         try:
-            vote = Vote.objects.filter(submission_form=submission.current_submission_form)[0]
+            vote = Vote.objects.filter(top=top)[0]
         except IndexError:
             vote = None
-        additional_submissions.append((i, submission, vote,))
+        additional_tops.append((i, top, vote,))
 
     pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
         'meeting': meeting,
         'tops': tops,
         'b1ized': b1ized,
-        'additional_submissions': additional_submissions,
+        'additional_tops': additional_tops,
     })
     return pdf_response(pdf, filename=filename)
 
