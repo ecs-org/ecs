@@ -1,7 +1,7 @@
 import datetime
 from django.core.urlresolvers import reverse
 from urlparse import urlsplit
-from ecs.utils.testcases import LoginTestCase
+from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
 from ecs.core.tests.submissions import create_submission_form
 
@@ -11,7 +11,7 @@ def _get_datetime_inputs(name, dt):
         '%s_1' % name: dt.strftime("%H:%M"),
     }
 
-class ViewTestCase(LoginTestCase):
+class ViewTestCase(EcsTestCase):
     '''Tests for timetable and meetingassistant.
     
     Tests for Timetable calculations and storage,
@@ -22,7 +22,13 @@ class ViewTestCase(LoginTestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
-        
+        self.user = self.create_user('unittest-internal', profile_extra={'internal': True})
+        self.client.login(email='unittest-internal@example.com', password='password')
+
+    def tearDown(self):
+        super(ViewTestCase, self).tearDown()
+        self.client.logout()
+
     def refetch(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)
 
