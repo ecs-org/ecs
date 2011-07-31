@@ -698,7 +698,13 @@ class SubmissionForm(models.Model):
 
     def get_meeting_parties(self):
         return get_meeting_parties(self)
-
+    
+    @property
+    def additional_investigators(self):
+        additional_investigators = self.investigators.all()
+        if self.primary_investigator:
+            additional_investigators = additional_investigators.exclude(pk=self.primary_investigator.pk)
+        return additional_investigators
 
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor', 'invoice'):

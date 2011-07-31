@@ -24,12 +24,25 @@
 	{% regroup votes by top.meeting as meetings %}
 	
 	{% for meeting in meetings %}
-	    {% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}
+	    <h3>{% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}</h3>
 	    <ul>
 	    {% for vote in meeting.list %}
 	        {% with vote.submission_form  as submission_form %}
-                
-	        <li>{{ submission_form.submission.get_ec_number_display }} {{ submission_form.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}</li>
+	        <li>
+	        	{{ submission_form.submission.get_ec_number_display }} {{ submission_form.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}<br />
+	        	{% trans "Submitted at" %}: {{ submission_form.created_at|date:"d.m.Y" }}<br />
+	        	{% trans "Submitter" %}: {{ submission_form.submitter_contact }} ({% trans "Organisation" %}: {{ submission_form.submitter_organisation }})
+	        	{% if submission_form.primary_investigator %}
+	        		<br />{% trans "Medical center" %}: {{ submission_form.primary_investigator.organisation }}
+	        	{% endif %}
+	        	<br />{% trans "Sponsor" %}: {{ submission_form.sponsor_name }}
+	        	{% if submission_form.additional_investigators.count %}
+	        	<br />{% trans "Additional Investigators" %}:
+	        	{% for investigator in submission_form.additional_investigators.all %}
+        			{{ investigator.organisation }}{% if not forloop.last %},{% endif %}
+	        	{% endfor %}
+	        	{% endif %}
+	        </li>
 	        {% endwith %}
 	    {% endfor %}
 	    </ul>

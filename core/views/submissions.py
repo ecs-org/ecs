@@ -589,8 +589,7 @@ def my_submissions(request):
 def catalog(request):
     with sudo():
         votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
-
-    return render(request, 'submissions/catalog.html', {
-        'votes': votes,
-    })
-
+        html = render(request, 'submissions/catalog.html', {
+            'votes': votes,
+        })
+    return html
