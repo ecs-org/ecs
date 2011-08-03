@@ -263,37 +263,7 @@ def auth_groups():
         print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
     
 
-@bootstrap.register()
-def expedited_review_categories():
-    categories = (
-        (u'KlPh', u'Klinische Pharmakologie'),
-        (u'Stats', u'Statistik'),
-        (u'Labor', u'Labormedizin'),
-        (u'Recht', u'Juristen'),
-        (u'Radio', u'Radiologie'),
-        (u'Anästh', u'Anästhesie'),
-        (u'Psychol', u'Psychologie'),
-        (u'Patho', u'Pathologie'),
-        (u'Zahn', u'Zahnheilkunde'),
-        
-        #new as of 2011.07.05
-        (u'Ortho', u'Orthopädie'),
-        (u'Häm', u'Hämatologie'),
-        (u'Nephro', u'Nephrologie'),
-        (u'Kardio', u'Kardiologie'), 
-        (u'Neuro', u'Neurologie'),
-        (u'HNO', u'Hals-Nasen-Ohrenkrankheiten'),
-        (u'Pfleger', u'Gesundheits und Krankenpfleger'),
-        (u'PhysMed', u'Physikalische Medizin'),
-        (u'Psych', u'Psychiatrie'),
-        
-        )
-    for abbrev, name in categories:
-        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
-
-
-@bootstrap.register()
-def medical_categories():
+def medcategories():
     categories = (
         (u'Stats', u'Statistik'),
         (u'Pharma', u'Pharmakologie'), 
@@ -360,7 +330,17 @@ def medical_categories():
         
         
     )
-    for shortname, longname in categories:
+    return categories
+
+@bootstrap.register()
+def expedited_review_categories():
+    for abbrev, name in medcategories():
+        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+
+
+@bootstrap.register()
+def medical_categories():
+    for shortname, longname in medcategories():
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
         if not medcat.name == longname:
             medcat.name = longname
