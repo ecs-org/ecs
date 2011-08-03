@@ -345,17 +345,14 @@ def medical_categories():
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technischer Sicherheitsbeauftragter'),
 
-        (u'LaborDia', u'medizinische und chemische Labordiagnostik'),
         (u'Psychol', u'Psychologie'),
         
         (u'Virologie', u'Virologie'),
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
-        (u'Apotheke', u'Apotheke'),
         
         #new as fo 2011.07.05
         (u'Hygiene', u'Hygiene'),
-        (u'Hilfswerk', u'Hilfswerk'),
         (u'Med. Physik', u'Med. Physik'),
         
         
