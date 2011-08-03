@@ -355,6 +355,9 @@ def medical_categories():
         (u'Hygiene', u'Hygiene'),
         (u'Med. Physik', u'Med. Physik'),
         
+        #new as of 2011.08.04
+        (u'Unfall', u'Unfallchirurgie'),
+        
         
     )
     for shortname, longname in categories:
