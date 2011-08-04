@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
+from datetime import datetime
 
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models import Vote
 from ecs.documents.models import Document
@@ -70,22 +72,21 @@ def show_pdf_vote(request, vote_pk=None):
     pdf_data = wkhtml2pdf(render(request, template, context).content )
     return pdf_response(pdf_data, filename=pdf_name)
 
-    
 def download_signed_vote(request, vote_pk=None):
-    vote = get_object_or_404(Vote, pk=vote_pk)
-    
-    if vote.signed_at is None:
-        raise Http404('Vote has not been signed yet: %s' % (vote_pk))
-        
-    signed_vote_doc = Document.objects.get(parent_object=vote)
-    if signed_vote_doc is None:
+    vote = get_object_or_404(Vote, pk=vote_pk, signed_at__isnull=False)
+
+    vote_ct = ContentType.objects.get_for_model(Vote)
+    try:
+        signed_vote_doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
+    except Document.DoesNotExist:
         raise Http404('No signed document for vote %s available' % (vote_pk))
-    
     return download_document(request, signed_vote_doc.pk)
 
 def vote_sign_finished(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     vote = document.parent_object
+    vote.signed_at = datetime.now()
+    vote.save()
 
     return HttpResponseRedirect(reverse(
         'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
