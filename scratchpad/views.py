@@ -1,11 +1,9 @@
-import random
-
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 from ecs.utils.viewutils import render
 from ecs.scratchpad.forms import ScratchPadForm
-from ecs.scratchpad.models import ScratchPad, SCRATCHPAD_FORTUNES
+from ecs.scratchpad.models import ScratchPad
 from ecs.core.models.submissions import Submission
 
 def popup(request, scratchpad_pk=None):
@@ -18,7 +16,7 @@ def popup(request, scratchpad_pk=None):
         scratchpad = get_object_or_404(ScratchPad, owner=request.user, pk=scratchpad_pk)
         submission = scratchpad.submission
     else:
-        scratchpad, created = ScratchPad.objects.get_or_create(owner=request.user, submission=submission, defaults={'text': random.choice(SCRATCHPAD_FORTUNES)})
+        scratchpad, created = ScratchPad.objects.get_or_create(owner=request.user, submission=submission)
 
     form = ScratchPadForm(request.POST or None, instance=scratchpad)
     if request.method == 'POST' and form.is_valid():
@@ -31,8 +29,7 @@ def popup(request, scratchpad_pk=None):
     })
 
 def popup_list(request):
-    from ecs.scratchpad.models import SCRATCHPAD_FORTUNES
-    scratchpads = ScratchPad.objects.filter(owner=request.user, text__isnull=False).exclude(Q(text__in=SCRATCHPAD_FORTUNES) | Q(text=u'')).order_by('-modified_at')[:100]
+    scratchpads = ScratchPad.objects.filter(owner=request.user, text__isnull=False).exclude(text=u'').order_by('-modified_at')[:100]
     return render(request, 'scratchpad/popup_list.html', {
         'scratchpads': scratchpads,
     })

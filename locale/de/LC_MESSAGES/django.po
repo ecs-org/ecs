@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-07-31 19:04+0200\n"
+"POT-Creation-Date: 2011-09-08 11:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,7 +191,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:115 core/bootstrap.py:663
+#: core/bootstrap.py:115 core/bootstrap.py:643
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -199,27 +199,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:117 core/bootstrap.py:658
+#: core/bootstrap.py:117 core/bootstrap.py:638
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:118 core/bootstrap.py:659
+#: core/bootstrap.py:118 core/bootstrap.py:639
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:119 core/bootstrap.py:657
+#: core/bootstrap.py:119 core/bootstrap.py:637
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:120 core/bootstrap.py:661
+#: core/bootstrap.py:120 core/bootstrap.py:641
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:121 core/bootstrap.py:662
+#: core/bootstrap.py:121 core/bootstrap.py:642
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:122 core/bootstrap.py:660
+#: core/bootstrap.py:122 core/bootstrap.py:640
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -299,16 +299,16 @@ msgstr ""
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:654
+#: core/bootstrap.py:634
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:655
+#: core/bootstrap.py:635
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:656
+#: core/bootstrap.py:636
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
