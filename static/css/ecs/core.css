@@ -1191,3 +1191,10 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly table pre {
   margin-left: 0;
 }
+.preview_icon {
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(/static/images/icons.png) 0 -1056px no-repeat;
+  width: 16px;
+  height: 16px;
+}

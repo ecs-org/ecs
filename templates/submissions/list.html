@@ -19,7 +19,7 @@
     {% if submissions.has_previous %}
         <a href="#" class="prev_page">previous</a>
     {% endif %}
-		{% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
+        {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
     {% if submissions.has_next %}
         <a href="#" class="next_page">next</a>
     {% endif %}
