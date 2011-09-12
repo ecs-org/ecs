@@ -3,7 +3,7 @@ from datetime import datetime
 import tempfile
 import re
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
@@ -434,10 +434,12 @@ def submission_pdf(request, submission_form_pk=None):
         return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()
-    
+
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
+    if not request.user.get_profile().internal and not request.user == submission_form.presenter:
+        return HttpResponseForbidden()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.write(submission_form, tmpfile)

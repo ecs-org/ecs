@@ -191,5 +191,6 @@
 {% endif %}
 
 
-<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
-
+{% if user|has_flag:'internal' or user == submission_form.presenter %}
+    <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
+{% endif %}
