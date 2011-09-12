@@ -38,7 +38,7 @@ class FormInfo(object):
 
 FormInfo(Notification, fields=(
     FieldInfo(None, 'submission_forms', _(u'studies')),
-    FieldInfo('4.', 'comments', _(u'Results and conclusions')),
+    FieldInfo('4.', 'comments', _(u'Statement/Conclusion/Notice')),
 ))
 
 FormInfo(ReportNotification, fields=(

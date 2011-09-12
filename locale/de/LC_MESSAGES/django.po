@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-08 11:22+0200\n"
+"POT-Creation-Date: 2011-09-12 11:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -359,8 +359,8 @@ msgid "studies"
 msgstr "Studien"
 
 #: core/paper_forms.py:41
-msgid "Results and conclusions"
-msgstr "Ergebnisse und Schlussfolgerungen"
+msgid "Statement/Conclusion/Notice"
+msgstr "Begründung/Stellungnahme/Mitteilung"
 
 #: core/paper_forms.py:45
 msgid "Has the study started?"
@@ -1915,27 +1915,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:482
+#: core/views/submissions.py:484
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:542 templates/core.html:50
+#: core/views/submissions.py:544 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:544
+#: core/views/submissions.py:546
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:558
+#: core/views/submissions.py:560
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:578 templates/core.html:53
+#: core/views/submissions.py:580 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:586 templates/core.html:56
+#: core/views/submissions.py:588 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3404,7 +3404,7 @@ msgstr "löschen"
 msgid "No additional/external reviews in the works."
 msgstr "Keine zusätzlichen/externen Gutachten in Arbeit."
 
-#: templates/submissions/tabs/status.html:194
+#: templates/submissions/tabs/status.html:195
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3911,6 +3911,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Results and conclusions"
+#~ msgstr "Ergebnisse und Schlussfolgerungen"
 
 #~ msgid "Study acknowledged"
 #~ msgstr "Studie angenommen"
