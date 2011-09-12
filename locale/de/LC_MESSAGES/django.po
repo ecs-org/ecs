@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 11:38+0200\n"
+"POT-Creation-Date: 2011-09-12 14:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1915,27 +1915,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:484
+#: core/views/submissions.py:489
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:544 templates/core.html:50
+#: core/views/submissions.py:549 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:546
+#: core/views/submissions.py:551
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:560
+#: core/views/submissions.py:565
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:580 templates/core.html:53
+#: core/views/submissions.py:585 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:588 templates/core.html:56
+#: core/views/submissions.py:593 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3384,27 +3384,23 @@ msgstr "Minderjährige"
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:182
-#, python-format
-msgid ""
-"\n"
-"            %(assigned_to)s invited at %(assigned_at)s for %(task_name)s \n"
-"        "
-msgstr ""
-"\n"
-"            %(assigned_to)s eingeladen am %(assigned_at)s für "
-"%(task_name)s \n"
-"        "
+#: templates/submissions/tabs/status.html:186
+#: templates/submissions/tabs/status.html:208
+#, fuzzy, python-format
+msgid "%(assigned_to)s invited at %(assigned_at)s"
+msgstr "%(assigned_to)s eingeladen am %(assigned_at)s"
 
-#: templates/submissions/tabs/status.html:185
+#: templates/submissions/tabs/status.html:188
+#: templates/submissions/tabs/status.html:210
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:188
-msgid "No additional/external reviews in the works."
-msgstr "Keine zusätzlichen/externen Gutachten in Arbeit."
+#: templates/submissions/tabs/status.html:190
+#: templates/submissions/tabs/status.html:212
+msgid "Abgeschlossen"
+msgstr ""
 
-#: templates/submissions/tabs/status.html:195
+#: templates/submissions/tabs/status.html:223
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3911,6 +3907,20 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "                        %(assigned_to)s invited at %(assigned_at)s \n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "            %(assigned_to)s eingeladen am %(assigned_at)s für "
+#~ "%(task_name)s \n"
+#~ "        "
+
+#~ msgid "No additional/external reviews in the works."
+#~ msgstr "Keine zusätzlichen/externen Gutachten in Arbeit."
 
 #~ msgid "Results and conclusions"
 #~ msgstr "Ergebnisse und Schlussfolgerungen"

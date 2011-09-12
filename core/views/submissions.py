@@ -163,7 +163,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission_forms = reversed(submission_forms)
 
     with sudo():
-        cancelable_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid__in=['additional_review', 'external_review'], closed_at=None)
+        try:
+            external_review_task = Task.objects.for_data(submission).get(deleted_at__isnull=True, task_type__workflow_node__uid='external_review')
+        except Task.DoesNotExist:
+            external_review_task = None
+        additional_review_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid='additional_review')
 
     from ecs.notifications.models import NotificationType
     context = {
@@ -183,7 +187,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
-        'cancelable_tasks': cancelable_tasks,
+        'external_review_task': external_review_task,
+        'additional_review_tasks': additional_review_tasks,
     }
     
     if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):

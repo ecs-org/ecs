@@ -173,23 +173,47 @@
         <th>Expedited Review:</th>
         <td colspan="3">{{ submission_form.submission.expedited|yesno }}</td>
     </tr>
+    <tr>
+        <th>Externes Gutachten:</th>
+        <td colspan="3">
+        {% if submission_form.submission.external_reviewer %}
+            {% if user|has_flag:'internal' %}
+                {% with external_review_task as task %}
+                {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
+                {% if not task.closed_at %}
+                    | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
+                {% else %}
+                    [{% trans "Abgeschlossen" %}]
+                {% endif %}
+                {% endwith %}
+            {% else %}
+                <em>erforderlich</em>
+            {% endif %}
+        {% else %}
+            <em>Nicht erforderlich.</em>
+        {% endif %}
+        </td>
+    </tr>
+    {% if user|has_flag:'internal' and submission_form.submission.additional_reviewers.exists %}
+    <tr>
+        <th>Zusätzliche Gutachten:</th>
+        <td>
+            <ul>
+            {% for task in additional_review_tasks %}
+                <li>
+                    {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
+                    {% if not task.closed_at %}
+                        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
+                    {% else %}
+                        [{% trans "Abgeschlossen" %}]
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    {% endif %}
 </table>
-
-{% if user|has_flag:'internal' %}
-<ul>
-{% for task in cancelable_tasks %}
-    <li>
-        {% blocktrans with task.task_type as task_name and task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}
-            {{ assigned_to }} invited at {{ assigned_at }} for {{ task_name }} 
-        {% endblocktrans %}
-        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
-    </li>
-{% empty %}
-    <li><i>{% trans "No additional/external reviews in the works." %}</i></li>
-{% endfor %}
-</ul>
-{% endif %}
-
 
 {% if user|has_flag:'internal' or user == submission_form.presenter %}
     <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
