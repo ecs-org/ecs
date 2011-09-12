@@ -439,7 +439,7 @@ def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
     if not request.user.get_profile().internal and not request.user == submission_form.presenter:
-        return HttpResponseForbidden()
+        raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.write(submission_form, tmpfile)
