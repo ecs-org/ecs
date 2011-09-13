@@ -96,14 +96,17 @@ def close_thread(request, thread_pk=None):
 def incoming_message_widget(request):
     qs = Thread.objects.incoming(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
+    submission = None
     if submission_pk:
-        qs = qs.filter(submission__pk=submission_pk)
+        submission = get_object_or_404(Submission, pk=submission_pk)
+        qs = qs.filter(submission=submission)
     return message_widget(request, 
         queryset=qs,
         template='communication/widgets/incoming_messages.inc',
         user_sort='last_message__sender__username',
         session_prefix='dashboard:incoming_messages',
         page_size=4,
+        submission=submission,
         extra_context={
             'incoming': True
         }
@@ -113,14 +116,17 @@ def incoming_message_widget(request):
 def outgoing_message_widget(request):
     qs = Thread.objects.outgoing(request.user).open(request.user)
     submission_pk = request.GET.get('submission', None)
+    submission = None
     if submission_pk:
-        qs = qs.filter(submission__pk=submission_pk)
+        submission = get_object_or_404(Submission, pk=submission_pk)
+        qs = qs.filter(submission=submission)
     return message_widget(request, 
         queryset=qs,
         template='communication/widgets/outgoing_messages.inc',
         user_sort='last_message__receiver__username',
         session_prefix='dashboard:outgoing_messages',
         page_size=4,
+        submission=submission,
         extra_context={
             'incoming': False
         }
@@ -132,7 +138,7 @@ def communication_overview_widget(request, submission_pk=None):
         'threads': Thread.objects.filter(submission__pk=submission_pk),
     })
 
-def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4):
+def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
     queryset = queryset.select_related('thread')
 
     sort_session_key = '%s:sort' % session_prefix
@@ -165,6 +171,7 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
     context = {
         'page': page,
         'sort': sort,
+        'submission': submission,
     }
     if extra_context:
         context.update(extra_context)
