@@ -10,11 +10,14 @@ from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
 
-from ecs.utils.formutils import TranslatedModelForm
+from ecs.utils.formutils import TranslatedModelForm, require_fields
+
+def _unpickle(f, args, kwargs):
+    return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
 
 class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     external_reviewer_name = forms.ModelChoiceField(queryset=User.objects.filter(ecs_profile__external_review=True), required=False)
-    
+
     class Meta:
         model = Submission
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories', 'external_reviewer', 'external_reviewer_name', 
@@ -39,9 +42,12 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'keywords': _('keywords'),
             'additional_reviewers': _('additional_reviewers'),
         }
-        
+
+    def __reduce__(self):
+        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
+
     def __init__(self, *args, **kwargs):
-        rval = super(CategorizationReviewForm, self).__init__(*args, **kwargs)
+        super(CategorizationReviewForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['medical_categories'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
@@ -55,9 +61,7 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             self.fields['external_reviewer_name'].widget = SingleselectWidget(
                 url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'external_reviewers'})
             )
-        return rval
-        
-        
+
     def clean(self):
         from ecs.users.utils import get_user
         from django.contrib.auth.models import User
@@ -68,6 +72,10 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         if thesis or expedited:
             cd['external_reviewer'] = False
             cd['external_reviewer_name'] = None
+        if cd['expedited']:
+            require_fields(self, ('expedited_review_categories',))
+        if cd['external_reviewer']:
+            require_fields(self, ('external_reviewer_name',))
         return cd
 
 class RetrospectiveThesisReviewForm(ReadonlyFormMixin, forms.ModelForm):

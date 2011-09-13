@@ -11,7 +11,7 @@
 <ol>
 {% for field_name in review_form.fields %}
     {% with review_form|getitem:field_name as field %}
-        {% include "forms/field.html" %}
+        {% include "submissions/review_field.inc" %}
     {% endwith %}
 {% endfor %}
 </ol>

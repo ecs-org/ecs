@@ -235,9 +235,25 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
+    task = request.related_tasks[0]
+
+    docstash, created = DocStash.objects.get_or_create(
+        group='ecs.core.views.submissions.categorization_review',
+        owner=request.user,
+        content_type=ContentType.objects.get_for_model(task.__class__),
+        object_id=task.pk,
+    )
+
+    with docstash.transaction():
+        form = docstash.get('form')
+        if request.method == 'POST' or form is None:
+            form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
+        docstash['form'] = form
+
     if request.method == 'POST' and form.is_valid():
         form.save(request)
+        docstash.delete()
+
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
