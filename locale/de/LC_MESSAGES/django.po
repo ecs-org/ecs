@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-12 14:32+0200\n"
+"POT-Creation-Date: 2011-09-13 11:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1915,27 +1915,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:489
+#: core/views/submissions.py:500
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:549 templates/core.html:50
+#: core/views/submissions.py:560 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:551
+#: core/views/submissions.py:562
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:565
+#: core/views/submissions.py:576
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:585 templates/core.html:53
+#: core/views/submissions.py:596 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:593 templates/core.html:56
+#: core/views/submissions.py:604 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3095,7 +3095,7 @@ msgstr ""
 
 #: templates/submissions/form.html:27
 msgid "Submit Amendment"
-msgstr "Korrektur absenden"
+msgstr "Änderungen absenden"
 
 #: templates/submissions/form.html:29
 msgid "Resubmit"
@@ -3384,23 +3384,23 @@ msgstr "Minderjährige"
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:186
-#: templates/submissions/tabs/status.html:208
+#: templates/submissions/tabs/status.html:182
+#: templates/submissions/tabs/status.html:204
 #, fuzzy, python-format
 msgid "%(assigned_to)s invited at %(assigned_at)s"
 msgstr "%(assigned_to)s eingeladen am %(assigned_at)s"
 
-#: templates/submissions/tabs/status.html:188
-#: templates/submissions/tabs/status.html:210
+#: templates/submissions/tabs/status.html:184
+#: templates/submissions/tabs/status.html:206
 msgid "delete"
 msgstr "löschen"
 
-#: templates/submissions/tabs/status.html:190
-#: templates/submissions/tabs/status.html:212
+#: templates/submissions/tabs/status.html:186
+#: templates/submissions/tabs/status.html:208
 msgid "Abgeschlossen"
 msgstr ""
 
-#: templates/submissions/tabs/status.html:223
+#: templates/submissions/tabs/status.html:219
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3915,8 +3915,8 @@ msgstr ""
 #~ "                    "
 #~ msgstr ""
 #~ "\n"
-#~ "            %(assigned_to)s eingeladen am %(assigned_at)s für "
-#~ "%(task_name)s \n"
+#~ "            %(assigned_to)s eingeladen am %(assigned_at)s für %(task_name)"
+#~ "s \n"
 #~ "        "
 
 #~ msgid "No additional/external reviews in the works."
