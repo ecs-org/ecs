@@ -8,7 +8,6 @@ developers = (
     (u'Martin', u'Natano', 'natano@natano.net', 'm'),
     (u'Ludwig', u'Hammel', 'ludwig.hammel@gmail.com', 'm'),
     (u'Markus', u'Froehlich', 'froema@ep3.at', 'm'),
-    (u'Peter', u'Rehak', 'peter.rehak@meduni-graz.at', 'm'),
     (u'Thomas', u'Neumann', 'tom@newtone.cc', 'm'),
     (u'Esther', u'Neumann', 'es_data@yahoo.de', 'f'),
     (u'Hudson', u'Windmill', 'windmill@example.org', 'f'),
@@ -463,7 +462,7 @@ checklist_questions = {
         Args('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
     ],
     u'localec_review': [
-        Args('1', u'Die Ethik-Kommissio bestätigt als lokale Ethik-Kommission im Sinne des §41b (5) die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),
+        Args('1', u'Die Ethik-Kommission bestätigt als lokale Ethik-Kommission im Sinne des §41b (5) die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),
         
     ],
 }

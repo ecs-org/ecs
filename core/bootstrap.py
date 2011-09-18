@@ -307,27 +307,21 @@ def medcategories():
         (u'ImmunPatho', u'Immunpathologie'),
         (u'Patho', u'Pathologie'),
 
-        (u'Pfleger', u'Gesundheits und Krankenpfleger'),
+        (u'Pfleger', u'Gesundheits und Krankenpflege'),
         (u'Recht', u'Juristen'),
-        (u'Pharmazie', u'Pharmazeuten'),
-        (u'Patient', u'Patientenvertreter'), 
+        (u'Apotheke', u'Pharmazie'),
+        (u'Patient', u'Patientenvertretung'), 
         (u'BehinOrg', u'Benhindertenorganisation'), 
         (u'Seel', u'Seelsorger'),
-        (u'techSec', u'technischer Sicherheitsbeauftragter'),
+        (u'techSec', u'technische Sicherheitsbeauftragte'),
 
-        (u'Psychol', u'Psychologie'),
-        
+        (u'Psychol', u'Psychologie'),        
         (u'Virologie', u'Virologie'),
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
-        
-        #new as fo 2011.07.05
         (u'Hygiene', u'Hygiene'),
-        (u'Med. Physik', u'Med. Physik'),
-        
-        #new as of 2011.08.04
+        (u'MedPhy', u'Medizinische Physik'),
         (u'Unfall', u'Unfallchirurgie'),
-        
         
     )
     return categories
