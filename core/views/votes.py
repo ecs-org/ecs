@@ -5,12 +5,14 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import download_document
 from ecs.signature.views import sign
 from ecs.users.utils import user_group_required
+from ecs.tasks.models import Task
 
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render, pdf_response
@@ -21,9 +23,9 @@ def _vote_filename(vote):
     if vote.top:
         top = str(vote.top)
         meeting = vote.top.meeting
-        filename = '%s-%s-%s-Vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
+        filename = '%s-%s-%s-vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
     else:
-        filename = 'Vote_%s.pdf' % (vote_name)
+        filename = 'vote_%s.pdf' % (vote_name)
     return filename.replace(' ', '_')
 
 
@@ -69,8 +71,8 @@ def show_pdf_vote(request, vote_pk=None):
     pdf_name = _vote_filename(vote)
     pdf_data = wkhtml2pdf(render(request, template, context).content )
     return pdf_response(pdf_data, filename=pdf_name)
+  
 
-    
 def download_signed_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     
@@ -83,37 +85,55 @@ def download_signed_vote(request, vote_pk=None):
     
     return download_document(request, signed_vote_doc.pk)
 
-def vote_sign_finished(request, document_pk=None):
-    document = get_object_or_404(Document, pk=document_pk)
-    vote = document.parent_object
-
-    return HttpResponseRedirect(reverse(
-        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
+    always_mock = get.requesting.user. == "ecs_signing" or "ecs_fail_signing" user switcher user
+    always_fail = get.requesting.user == "ecs_fail_signing" user switcher user
     vote = get_object_or_404(Vote, pk=vote_pk)
-    #print 'vote_sign vote "%s"' % (vote_pk)
-    
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
-    html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'   
+    html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
     context = vote_context(vote)
-    
+        
     sign_dict = {
-        'success_tasktype_close': 'Vote Signing',
-        'success_redirect_view': 'ecs.core.views.votes.vote_sign_finished',
-        'error_redirect_view': 'ecs.core.views.votes.vote_sign_error',
-        'parent_name': 'ecs.core.models.Vote',
-        'parent_pk': vote_pk,    
+        'success_func': 'ecs.core.views.votes.success_func',
+        'error_func': 'ecs.core.views.votes.error_func',
+        'parent_pk': vote_pk,
+        'parent_type': 'ecs.core.models.Vote',    
         'document_uuid': uuid4().get_hex(),
-        'document_name': context['ec_number'],
-        'document_identifier': "votes",
+        'document_name': vote.top.submission.get_ec_number_display(),
+        'document_type': "votes",
         'document_filename': _vote_filename(vote),
-        'document_stamp': True,
+        'document_barcodestamp': True,
         'html_preview': render(request, html_template, context).content,
         'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
     }
             
-    return sign(request, sign_dict)
+    return sign(request, sign_dict, always_mock= always_mock, always_fail)
 
 
+@user_group_required("EC-Signing Group")
+def vote_sign_retry(request, vote_pk=None, description=None):
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    ct = ContentType.objects.get_for_model(vote.__class__)
+    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
+    # display retry (sign again), ignore (redirect to readonly view), decline (push task back to vote_review)
+    
+
+def success_func(document_pk=None):
+    document = get_object_or_404(Document, pk=document_pk)
+    vote = document.parent_object
+    ct = ContentType.objects.get_for_model(vote.__class__)
+    
+    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
+    task.done()
+        
+    return (reverse('ecs.core.views.readonly_submission_form', 
+        kwargs={'submission_form_pk': vote.submission_form.pk}) + 
+        ('#b2_vote_review_tab' if vote.result == '2' else '#vote_review_tab'))
+    # 'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+ 
+
+def error_func(parent_pk=None, description=''):
+    # redirect to retry, ignore, decline this vote for signing
+    return (reverse('ecs.core.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'description': description}))
