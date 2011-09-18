@@ -1,0 +1,20 @@
+diff -buNr jsp/null_request_page.jsp ecs-signing.patched/webapps/pdf-as/jsp/null_request_page.jsp
+--- jsp/null_request_page.jsp	2009-11-23 18:24:12.000000000 +0100
++++ jsp/null_request_page.jsp	2010-11-12 11:25:31.000000000 +0100
+@@ -22,6 +22,8 @@
+ 	  isExternalInvocation = vsi.exappinf != null;
+ 	  isServerBKU = Constants.SIGNATURE_DEVICE_MOC.equals(vsi.connector); 
+   }
++ 
++  String deco_page_url = request.getParameter("invoke-preview-url") + "?pdf-id=" + request.getParameter("pdf-id");
+ %>
+ 
+ <%@page import="at.gv.egiz.pdfas.web.VerifySessionInformation"%><html>
+@@ -49,6 +51,7 @@
+ 	</head>
+ 
+ 	<body>
++		<iframe src="<%=deco_page_url%>" width="90%" height="400"></iframe>
+ 		<% if (!isExternalInvocation) { %>
+ 			<h1><fmt:message key="common.title"/></h1>
+ 			<h2><fmt:message key="nullrequestpage.heading2"/></h2>
