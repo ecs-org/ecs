@@ -213,7 +213,7 @@ class Document(models.Model):
 def _post_document_save(sender, **kwargs):
     # hack for situations where there is no celerybeat
     if settings.CELERY_ALWAYS_EAGER:
-        from documents.tasks import document_tamer
+        from ecs.documents.tasks import document_tamer
         document_tamer.delay().get()
     
 class Page(models.Model):
