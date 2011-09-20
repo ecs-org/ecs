@@ -10,17 +10,17 @@ from ecs import authorization
 VOTE_RESULT_CHOICES = (
     ('1', _(u'1 positive')),
     ('2', _(u'2 positive under reserve')),
-    ('3', _(u'3 recessed (objections)')),
+    ('3a', _(u'3a recessed (not examined)')),
+    ('3b', _(u'3b recessed (examined)')),
     ('4', _(u'4 negative')),
-    ('5', _(u'5 recessed (applicant)')),
-    ('5a', _(u'5a withdrawn (applicant)')),
-    ('5b', _(u'5b not examined')),
+    ('5', _(u'5 withdrawn (applicant)')),
 )
 
 POSITIVE_VOTE_RESULTS = ('1', '2')
-NEGATIVE_VOTE_RESULTS = ('4', '5a')
+NEGATIVE_VOTE_RESULTS = ('4', '5')
 FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
 PERMANENT_VOTE_RESULTS = ('1',) + NEGATIVE_VOTE_RESULTS
+RECESSED_VOTE_RESULTS = ('3a', '3b')
 
 
 class Vote(models.Model):
@@ -89,7 +89,7 @@ class Vote(models.Model):
 
     @property
     def recessed(self):
-        return self.result in ('3', '5', '5b')
+        return self.result in ('3a', '3b')
         
     @property
     def activates(self):

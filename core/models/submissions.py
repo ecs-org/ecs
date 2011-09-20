@@ -34,7 +34,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
     def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='3'), current_submission_form__isnull=False)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result_in=['3a', '3b']), current_submission_form__isnull=False)
 
     def b4(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
@@ -253,10 +253,15 @@ class Submission(models.Model):
         return self.current_submission_form.primary_investigator
 
     def has_permanent_vote(self):
-        from ecs.core.models import Vote
         from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
-        #print Vote.objects.filter(submission_form__submission=self)
-        return Vote.objects.filter(submission_form__submission=self, result__in=PERMANENT_VOTE_RESULTS).count() > 0
+        return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
+
+    def get_last_recessed_vote(self, top):
+        from ecs.core.models.voting import RECESSED_VOTE_RESULTS
+        try:
+            return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
+        except IndexError:
+            return None
         
     def save(self, **kwargs):
         if not self.ec_number:

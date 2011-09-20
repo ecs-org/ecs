@@ -33,6 +33,7 @@
                     {{ entry.submission|ec_number }} {{ entry.submission.project_title_display|smart_truncate:40 }}
                 {% endif %}
             </h3>
+            {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
             {% if not running_optimization %}
                 <a class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
                 <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">

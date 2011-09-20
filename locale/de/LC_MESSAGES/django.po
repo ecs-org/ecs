@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-13 11:32+0200\n"
+"POT-Creation-Date: 2011-09-20 16:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,7 +191,7 @@ msgstr "Einstufung und Zuteilung"
 msgid "Additional Review Split"
 msgstr "Zusatz-Review"
 
-#: core/bootstrap.py:115 core/bootstrap.py:643
+#: core/bootstrap.py:115 core/bootstrap.py:637
 msgid "Additional Checklist Review"
 msgstr "weiteres Gutachten"
 
@@ -199,27 +199,27 @@ msgstr "weiteres Gutachten"
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:117 core/bootstrap.py:638
+#: core/bootstrap.py:117 core/bootstrap.py:632
 msgid "Legal and Patient Review"
 msgstr "Überprüfung Patinfo"
 
-#: core/bootstrap.py:118 core/bootstrap.py:639
+#: core/bootstrap.py:118 core/bootstrap.py:633
 msgid "Insurance Review"
 msgstr "Überprüfung Versicherung"
 
-#: core/bootstrap.py:119 core/bootstrap.py:637
+#: core/bootstrap.py:119 core/bootstrap.py:631
 msgid "Statistical Review"
 msgstr "Gutachten Statistik"
 
-#: core/bootstrap.py:120 core/bootstrap.py:641
+#: core/bootstrap.py:120 core/bootstrap.py:635
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: core/bootstrap.py:121 core/bootstrap.py:642
+#: core/bootstrap.py:121 core/bootstrap.py:636
 msgid "External Review"
 msgstr "Gutachten"
 
-#: core/bootstrap.py:122 core/bootstrap.py:640
+#: core/bootstrap.py:122 core/bootstrap.py:634
 msgid "GCP Review"
 msgstr "GCP Review"
 
@@ -299,16 +299,16 @@ msgstr ""
 msgid "Vote Publication"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:634
+#: core/bootstrap.py:628
 #, fuzzy
 msgid "Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:635
+#: core/bootstrap.py:629
 msgid "Expedited Review"
 msgstr "Express Gutachten"
 
-#: core/bootstrap.py:636
+#: core/bootstrap.py:630
 #, fuzzy
 msgid "Local-EC Review"
 msgstr "GCP Review"
@@ -1132,7 +1132,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:227 core/models/submissions.py:491
+#: core/paper_forms.py:227 core/models/submissions.py:497
 msgid "open"
 msgstr "offen"
 
@@ -1144,11 +1144,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:230 core/models/submissions.py:307
+#: core/paper_forms.py:230 core/models/submissions.py:313
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:491
+#: core/paper_forms.py:231 core/models/submissions.py:497
 msgid "blind"
 msgstr "blind"
 
@@ -1164,7 +1164,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:491
+#: core/paper_forms.py:235 core/models/submissions.py:497
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1746,74 +1746,74 @@ msgstr "Status"
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: core/forms/review.py:24 templates/tasks/tasks.inc:22
+#: core/forms/review.py:27 templates/tasks/tasks.inc:22
 #: templates/tasks/tasks_full.inc:21
 msgid "thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/review.py:25
+#: core/forms/review.py:28
 msgid "retrospective"
 msgstr "Retrospektiv"
 
-#: core/forms/review.py:26
+#: core/forms/review.py:29
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:27 templates/tasks/tasks.inc:23
+#: core/forms/review.py:30 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
 msgid "expedited"
 msgstr "Expedited"
 
-#: core/forms/review.py:28
+#: core/forms/review.py:31
 msgid "expedited_review_categories"
 msgstr "Kategorien für Expedited Review"
 
-#: core/forms/review.py:29
+#: core/forms/review.py:32
 msgid "external_reviewer"
 msgstr "Externes Gutachten erforderlich"
 
-#: core/forms/review.py:30
+#: core/forms/review.py:33
 msgid "external_reviewer_name"
 msgstr "Externer Gutachter"
 
-#: core/forms/review.py:31
+#: core/forms/review.py:34
 msgid "is_amg"
 msgstr "Studie nach Arzneimittelgesetz"
 
-#: core/forms/review.py:32
+#: core/forms/review.py:35
 msgid "is_mpg"
 msgstr "Studie nach Medizinproduktegesetz"
 
-#: core/forms/review.py:33
+#: core/forms/review.py:36
 msgid "sponsor_required_for_next_meeting"
 msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
 
-#: core/forms/review.py:34
+#: core/forms/review.py:37
 msgid "insurance_review_required"
 msgstr "Versicherungsüberprüfung notwendig"
 
-#: core/forms/review.py:35
+#: core/forms/review.py:38
 msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
-#: core/forms/review.py:36
+#: core/forms/review.py:39
 msgid "legal_and_patient_review_required"
 msgstr "Überprüfung Pat.info notwendig"
 
-#: core/forms/review.py:37
+#: core/forms/review.py:40
 msgid "statistical_review_required"
 msgstr "Statistische Überprüfung notwendig"
 
-#: core/forms/review.py:38
+#: core/forms/review.py:41
 #, fuzzy
 msgid "remission"
 msgstr "Neueinreichung"
 
-#: core/forms/review.py:39
+#: core/forms/review.py:42
 msgid "keywords"
 msgstr "Schlüsselwörter"
 
-#: core/forms/review.py:40
+#: core/forms/review.py:43
 msgid "additional_reviewers"
 msgstr "Zusätzliche Gutachter"
 
@@ -1821,45 +1821,45 @@ msgstr "Zusätzliche Gutachter"
 msgid "Proofread and valid"
 msgstr "Korrektur gelesen und gültig"
 
-#: core/models/names.py:37 core/models/submissions.py:798 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:804 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:798 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:804 users/forms.py:54
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:308
+#: core/models/submissions.py:314
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:309
+#: core/models/submissions.py:315
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:313
+#: core/models/submissions.py:319
 msgid "individual-related"
 msgstr "personenbezogen"
 
-#: core/models/submissions.py:314
+#: core/models/submissions.py:320
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:753
+#: core/models/submissions.py:759
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Erstellung der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:757
+#: core/models/submissions.py:763
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:832
+#: core/models/submissions.py:838
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:832
+#: core/models/submissions.py:838
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1872,24 +1872,20 @@ msgid "2 positive under reserve"
 msgstr "2 Vorbehaltich positiv"
 
 #: core/models/voting.py:13
-msgid "3 recessed (objections)"
-msgstr "3 Vertagt (Einwände)"
+msgid "3a recessed (not examined)"
+msgstr "3a Vertagt (nicht behandelt)"
 
 #: core/models/voting.py:14
+msgid "3b recessed (examined)"
+msgstr "3b Vertagt (behandelt)"
+
+#: core/models/voting.py:15
 msgid "4 negative"
 msgstr "4 Negativ"
 
-#: core/models/voting.py:15
-msgid "5 recessed (applicant)"
-msgstr "5 Vertagt (Antragsteller)"
-
 #: core/models/voting.py:16
-msgid "5a withdrawn (applicant)"
-msgstr "5a Zurückgezogen (Antragsteller)"
-
-#: core/models/voting.py:17
-msgid "5b not examined"
-msgstr "5b Nicht behandelt"
+msgid "5 withdrawn (applicant)"
+msgstr "5 Zurückgezogen (Antragsteller)"
 
 #: core/models/voting.py:29 documents/bootstrap.py:26
 msgid "vote"
@@ -1915,27 +1911,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:500
+#: core/views/submissions.py:516
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:560 templates/core.html:50
+#: core/views/submissions.py:576 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:562
+#: core/views/submissions.py:578
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:576
+#: core/views/submissions.py:592
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:596 templates/core.html:53
+#: core/views/submissions.py:612 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:604 templates/core.html:56
+#: core/views/submissions.py:620 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2579,12 +2575,12 @@ msgid "Von/An"
 msgstr "Von/An"
 
 #: templates/communication/threads.html:33
-#: templates/communication/widgets/messages.inc:19
+#: templates/communication/widgets/messages.inc:21
 msgid "an"
 msgstr "an"
 
 #: templates/communication/threads.html:35
-#: templates/communication/widgets/messages.inc:19
+#: templates/communication/widgets/messages.inc:21
 msgid "von"
 msgstr "von"
 
@@ -2841,6 +2837,18 @@ msgstr "Bestätigen"
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:64
 msgid "Go Back"
 msgstr ""
+
+#: templates/meetings/assistant/top.html:7
+msgid "Recessed"
+msgstr "Vertagt"
+
+#: templates/meetings/assistant/top.html:7
+msgid "not examined"
+msgstr "nicht behandelt"
+
+#: templates/meetings/assistant/top.html:7
+msgid "examined"
+msgstr "behandelt"
 
 #: templates/meetings/timetable/editor.html:50
 msgid "before"

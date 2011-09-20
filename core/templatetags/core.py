@@ -131,3 +131,9 @@ def yes_no_unknown(v):
         return _('no')
     else:
         return _('Unknown')
+
+@register.filter
+def last_recessed_vote(top):
+    if top.submission:
+        return top.submission.get_last_recessed_vote(top)
+    return None

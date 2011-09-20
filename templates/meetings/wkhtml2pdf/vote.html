@@ -48,28 +48,44 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 <div class="bold">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
 
 <table class="withborders">
+{% if vote.result == '1' %}
 <tr>
-  <td width="3%">[{% if vote.result == '1' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
+  <td width="3%">[X]</td>
   <td>Es besteht kein Einwand gegen die Durchführung der Studie.</td>
 </tr>
+{% endif %}
+{% if vote.result == '2' %}
 <tr>
-  <td>[{% if vote.result == '2' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
+  <td>[X]</td>
   <td>Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluß ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt. <br/>
     <div class="small"><span class="underline">Achtung:</span> Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.</div></td>
 </tr>
+{% endif %}
+{% if vote.result == '3a' %}
 <tr>
-  <td>[{% if vote.result == '3' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
+  <td>[X]</td>
+  <td>Der TOP wird bis zur nächsten Sitzung vertagt. <br/>
+</tr>
+{% endif %}
+{% if vote.result == '3b' %}
+<tr>
+  <td>[X]</td>
   <td>Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form. Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden. Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. <br/>
     <div class="small"><span class="underline">Achtung:</span> Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht, gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.</div></td>
 </tr>
+{% endif %}
+{% if vote.result == '4' %}
 <tr>
-  <td>[{% if vote.result == '4' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
+  <td>[X]</td>
   <td>Der Antrag wird von der Ethik-Kommission abgelehnt.</td>
 </tr>
+{% endif %}
+{% if vote.result == '5' %}
 <tr>
-  <td>[{% if vote.result == '5' or vote.result == '5a' or vote.result == '5b' %}X{% else %}&nbsp;&nbsp;{% endif %}]</td>
-  <td>Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)</td>
+  <td>[X]</td>
+  <td>Der Antrag wurde vom Antragsteller zurückgezogen.</td>
 </tr>
+{% endif %}
 </table> 
 
 {% if submission.current_submission_form.current_published_vote %}
@@ -91,6 +107,10 @@ Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter 
 {% if submission.is_amg or submission.is_mpg %}
 <span class="bold">
     Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
+</span><br />
+{% else %}
+<span>
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich <span class="bold">nicht</span> um eine klinische Prüfung gemäß AMG/MPG handelt.
 </span><br />
 {% endif %}
 
