@@ -1,6 +1,5 @@
 from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
-from django.template.defaultfilters import slugify
 from piston.handler import BaseHandler
 
 from ecs.utils.pdfutils import xhtml2pdf, wkhtml2pdf
@@ -31,7 +30,7 @@ class CsrfExemptBaseHandler(BaseHandler):
 def pdf_response(pdf, filename='Unnamed.pdf'):
     assert len(pdf) > 0
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename="%s"' % slugify(filename)
+    response['Content-Disposition'] = 'attachment;filename="%s"' % filename.replace('"', '_')
     return response
 
 def render_pdf(request, template, context):
