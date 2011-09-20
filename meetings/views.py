@@ -298,7 +298,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
     for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
         tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
         for top in tops:
-            vote = Vote.objects.create(top=top, result='3b')
+            vote = Vote.objects.create(top=top, result='3a')
             with sudo():
                 open_tasks = Task.objects.for_data(top.submission).filter(deleted_at__isnull=True, closed_at=None)
                 for task in open_tasks:
