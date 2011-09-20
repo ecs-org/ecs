@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.db.models import Count
 from django.utils.translation import ugettext as _
+from django.template.defaultfilters import slugify
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
@@ -293,7 +294,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
     for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
         tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
         for top in tops:
-            vote = Vote.objects.create(top=top, result='3')
+            vote = Vote.objects.create(top=top, result='3b')
             with sudo():
                 open_tasks = Task.objects.for_data(top.submission).filter(deleted_at__isnull=True, closed_at=None)
                 for task in open_tasks:
@@ -409,7 +410,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('agenda')
+        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda'))
     )
 
     rts = list(meeting.retrospective_thesis_entries.all())
@@ -434,7 +435,7 @@ def send_agenda_to_board(request, meeting_pk=None):
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('protocol')
+        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('protocol'))
     )
     
     timetable_entries = meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
@@ -486,6 +487,7 @@ def timetable_pdf(request, meeting_pk=None):
         'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
     } for key in timetable], key=lambda x:x['user'])
     
+    print timetable
     for row in timetable:
         first_entry = row['entries'][0]
         times = [{'start': first_entry.start, 'end': first_entry.end, 'index': first_entry.timetable_index}]
@@ -498,7 +500,7 @@ def timetable_pdf(request, meeting_pk=None):
         row['times'] = ', '.join(['%s - %s' % (x['start'].strftime('%H:%M'), x['end'].strftime('%H:%M')) for x in times])
     
     filename = '%s-%s-%s.pdf' % (
-        meeting.title, meeting.start.strftime('%d-%m-%Y'), _('time slot')
+        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
     )
     
     pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
