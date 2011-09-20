@@ -7,7 +7,7 @@
 {% endif %}
 <div id="meeting_editor">
     <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
-    {% if not running_optimization %}
+    {% if not readonly %}
         <ol class="options">
             <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
             <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
@@ -25,7 +25,7 @@
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
-            <span class="dragHandle">#{{ entry }} {% if not running_optimization %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
+            <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
             <h3>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
@@ -34,7 +34,7 @@
                 {% endif %}
             </h3>
             {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
-            {% if not running_optimization %}
+            {% if not readonly %}
                 <a class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
                 <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
                     <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
@@ -72,7 +72,9 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                    {% if not readonly %}
+                        <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                    {% endif %}
                     </div>
                 </li>
             {% endfor %}

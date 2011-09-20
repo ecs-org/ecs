@@ -128,6 +128,7 @@ def timetable_editor(request, meeting_pk=None):
         'active': 'timetable',
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
+        'readonly': bool(meeting.optimization_task_id) or not meeting.started is None,
     })
 
 @user_flag_required('internal')
@@ -190,6 +191,7 @@ def expert_assignment(request, meeting_pk=None):
         'meeting': meeting,
         'forms': forms,
         'categories': categories,
+        'readonly': not meeting.started is None,
     })
 
 @user_flag_required('internal')

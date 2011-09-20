@@ -3,7 +3,7 @@
 
 {% block meeting_detail %}
 
-{% if forms %}
+{% if forms and not readonly %}
     <form action="" method="post" class="form_main">
         <ul>
         {% for cat, form in forms.iteritems %}
