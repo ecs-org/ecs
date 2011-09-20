@@ -198,6 +198,16 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
 def pdf2pdfa(real_infile, real_outfile):
     ''' converts a pdf file into a PDF/A 1b file
     '''
+
+    if settings.MOCK_PDF2PDFA:  # lets fake it in case of broken ghostscript
+        offset = real_outfile.tell()
+        while True:
+            d = real_infile.read(1024)
+            real_outfile.write(d)
+            if len(d) < 1024:
+                break
+        return real_outfile.tell() - offset
+
     workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
 
     gs = [GHOSTSCRIPT_PATH,
