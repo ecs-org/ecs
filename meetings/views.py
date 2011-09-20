@@ -96,6 +96,8 @@ def add_timetable_entry(request, meeting_pk=None):
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
+    if entry.submission:
+        raise Http404(_("only tops without associated submission can be deleted"))
     entry.delete()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     

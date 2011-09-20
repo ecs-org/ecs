@@ -92,7 +92,6 @@
   display: inline-block;
   width: 16px;
   height: 16px;
-  text-indent: -200px;
   overflow: hidden;
   background: url(/static/images/icons.png) 0 -144px no-repeat;
 }
