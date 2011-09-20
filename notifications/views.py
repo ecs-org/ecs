@@ -22,6 +22,7 @@ from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm
 from ecs.documents.views import upload_document, delete_document
+from ecs.audit.utils import get_version_number
 
 
 def _get_notification_template(notification, pattern):
@@ -137,7 +138,7 @@ def delete_document_from_notification(request):
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     request.docstash['type_id'] = notification_type_pk
-
+    
     form = request.docstash.get('form')
     if request.method == 'POST' or form is None:
         form = notification_type.form_cls(request.POST or None)
@@ -194,6 +195,8 @@ def edit_notification_answer(request, notification_pk=None):
         return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
     return render(request, 'notifications/answers/form.html', {
         'notification': notification,
+        'answer': answer,
+        'answer_version': get_version_number(answer) if answer else 0,
         'form': form,
     })
 

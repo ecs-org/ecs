@@ -4,9 +4,28 @@
 {% block notification_answer_body %}
 
 <form action="" method="post" enctype="multipart/form-data" class="form_main">
-    {{ form.as_p }}
+    <ol>
+    {% for field in form %}
+        {% include 'forms/field.html' %}
+    {% endfor %}
+    </ol>
     <input type="submit" value="Speichern" />
 </form>
 
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript"> 
+        window.addEvent('domready', function(){
+            ecs.setupFormFieldHelpers();
+            {% if answer %}
+            var textarea = $('id_text');
+            ecs.textarea.installToolbar(textarea, [
+                ecs.textarea.toolbarItems.versionHistory("{% trans 'History' %} ({{ answer_version }})", "{% url ecs.core.views.field_history model_name='notification_answer' pk=answer.pk %}")
+            ]);
+            {% endif %}
+        });
+    </script>
 {% endblock %}
 

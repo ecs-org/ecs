@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs import authorization
 
+
 VOTE_RESULT_CHOICES = (
     ('1', _(u'1 positive')),
     ('2', _(u'2 positive under reserve')),
@@ -53,7 +54,7 @@ class Vote(models.Model):
         elif self.submission_form:
             return self.submission_form.submission.get_ec_number_display()
         return None
-
+        
     def __unicode__(self):
         ec_number = self.get_ec_number()
         if ec_number:

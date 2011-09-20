@@ -1,0 +1,14 @@
+.field_history .change{
+    border-top: 1px solid #666;
+    margin-bottom: 10px;
+}
+
+.field_history .change .diff{
+    border-left: 10px solid #eee;
+}
+
+.field_history .change .diff .inserted,
+.field_history .change .diff .deleted{
+    display: inline;
+}
+

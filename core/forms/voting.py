@@ -49,7 +49,7 @@ class VoteForm(SaveVoteForm):
 class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Vote
-        fields = ('result', 'text', 'is_final')
+        fields = ('text', 'is_final')
         labels = {
             'is_final': _('Proofread and valid'),
         }

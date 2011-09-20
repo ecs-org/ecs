@@ -5,6 +5,7 @@ urlpatterns = patterns(
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': '/dashboard/', 'permanent': True}),
     url(r'^autocomplete/(?P<queryset_name>[^/]+)/$', 'ecs.core.views.autocomplete'),
     url(r'^autocomplete/internal/(?P<queryset_name>[^/]+)/$', 'ecs.core.views.internal_autocomplete'),
+    url(r'^fieldhistory/(?P<model_name>[^/]+)/(?P<pk>\d+)/$', 'ecs.core.views.field_history'),
 
     url(r'^submission/(?P<submission_pk>\d+)/$', 'ecs.core.views.view_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/copy_form/$', 'ecs.core.views.copy_latest_submission_form'),

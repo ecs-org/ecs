@@ -42,6 +42,7 @@ from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import user_flag_required, user_group_required
+from ecs.audit.utils import get_version_number
 
 from ecs.documents.views import upload_document, delete_document
 
@@ -328,7 +329,10 @@ def vote_review(request, submission_form_pk=None):
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={
+        'vote_review_form': vote_review_form,
+        'vote_version': get_version_number(vote),
+    })
 
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')

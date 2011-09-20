@@ -166,8 +166,8 @@
     {% if user|has_flag:'internal' and vote_review_form %}
         <div id="vote_review_tab" class="tab">
             {% block vote_review_tab_content %}
-                <h3>Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
-                <form action="" method="post">
+                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
+                <form action="" method="post" class="review vote">
                     {% with vote_review_form as review_form %}
                         {% include 'submissions/review_form.inc' %}
                     {% endwith %}
@@ -276,6 +276,13 @@
             $$('form.review .CharField textarea').each(function(textarea){
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
             });
+            
+            {% if user|has_flag:'internal' and vote_review_form and vote %}
+                $$('form.review.vote .CharField textarea').each(function(textarea){
+                    ecs.textarea.installToolbarItem(textarea, ecs.textarea.toolbarItems.versionHistory("{% trans 'History' %} ({{ vote_version }})", "{% url ecs.core.views.field_history model_name='vote' pk=vote.pk %}"));
+                });
+            {% endif %}
+
 
             var review_save_buttons = $$('.header_actions')[0].getElements('a.review[id^=save_]');
             review_save_buttons.each(function(el){

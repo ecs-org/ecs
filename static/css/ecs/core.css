@@ -830,6 +830,12 @@ fieldset.disabled {
   width: 16px;
 }
 
+#content .ecs-TextAreaToolbar a:nth-of-type(3) {
+    width: 16px;
+    height: 16px;
+    background-color: #f00;
+    display: inline-block;
+}
 /* specific formset styles */
 
 #measure_formset textarea,
