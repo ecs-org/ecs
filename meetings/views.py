@@ -533,6 +533,18 @@ def status(request, meeting_pk=None):
         'meeting': meeting,
     })
 
+@user_flag_required('internal')
+def edit_meeting(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    form = MeetingForm(request.POST or None, instance=meeting)
+    if form.is_valid():
+        meeting = form.save()
+        return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
+    return render(request, 'meetings/form.html', {
+        'form': form,
+        'meeting': meeting,
+    })
+
 def votes_signing(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = meeting.timetable_entries.all()
