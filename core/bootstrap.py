@@ -304,30 +304,28 @@ def medcategories():
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technische Sicherheitsbeauftragte'),
 
-        (u'Psychol', u'Psychologie'),        
+        (u'Psychol', u'Psychologie'),
         (u'Virologie', u'Virologie'),
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
         (u'Hygiene', u'Hygiene'),
         (u'MedPhy', u'Medizinische Physik'),
         (u'Unfall', u'Unfallchirurgie'),
-        
     )
     return categories
 
 @bootstrap.register()
 def expedited_review_categories():
     for abbrev, name in medcategories():
-        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+        erc, created = ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
+        _update_instance(erc, {'name': name})
 
 
 @bootstrap.register()
 def medical_categories():
-    for shortname, longname in medcategories():
-        medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
-        if not medcat.name == longname:
-            medcat.name = longname
-            medcat.save()
+    for abbrev, name in medcategories():
+        medcat, created = MedicalCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
+        _update_instance(medcat, {'name': name})
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))

@@ -153,19 +153,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
 
-    def _answer_key(a):
-        import re
-        m = re.match(r'^(\d+)(\w?)\.', a.question.number)
-        if not m:
-            return 0
-        n = int(m.group(1))
-        if m.group(2):
-            n += ord(m.group(2)) / 256
-        return n
-
     checklists = submission.checklists.order_by('blueprint__name')
     checklists = [(c, c.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
-    checklists = [(c, sorted(aa, key=_answer_key)) for c, aa in checklists]
 
     submission_forms = list(submission.forms.order_by('created_at'))
     previous_form = None

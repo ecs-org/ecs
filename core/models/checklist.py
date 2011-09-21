@@ -19,15 +19,17 @@ class ChecklistBlueprint(models.Model):
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
-    number = models.CharField(max_length=5) 
-    text = models.CharField(max_length=200) 
+    number = models.CharField(max_length=5)
+    index = models.IntegerField()
+    text = models.CharField(max_length=200)
     description = models.CharField(max_length=400, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
     inverted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
-        unique_together = (('blueprint', 'number'),)
+        unique_together = (('blueprint', 'number'), ('blueprint', 'index'))
+        ordering = ('blueprint', 'index',)
 
     def __unicode__(self):
         return u"%s: '%s'" % (self.blueprint, self.text)
@@ -95,6 +97,7 @@ class ChecklistAnswer(models.Model):
 
     class Meta:
         app_label = 'core'
+        ordering = ('question__blueprint', 'question__index')
 
     def __unicode__(self):
         return u"Answer to '%s': %s" % (self.question, self.answer)
