@@ -81,7 +81,7 @@ def getVault():
     return vault()
 
 
-class StorageVault():
+class StorageVault(object):
     ''' base class for a write once, read many times storage vault
     
     Features: on the fly Encryption+Signing, Decryption+Verifying
@@ -131,7 +131,8 @@ class StorageVault():
             except Exception as e:
                 raise KeyError("while copying: {0}".format(e))
             
-            tmp_oshandle, tmp_name = tempfile.mkstemp(); os.close(tmp_oshandle)
+            tmp_oshandle, tmp_name = tempfile.mkstemp()
+            os.close(tmp_oshandle)
             try:
                 self._encrypt_sign(infile_name, tmp_name)
             except Exception as e:

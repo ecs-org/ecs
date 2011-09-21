@@ -279,8 +279,8 @@ STORAGE_DECRYPT = {
 # Mediaserver Shared Settings
 MS_SHARED = {
     "url_expiration_sec": 6*60*60,
-    "tiles": [1, 3, 5],
-    "resolutions": [800, 768],
+    "tiles": [(1,1), (5,5)],
+    "resolutions": [800],
     "aspect_ratio": 1.41428,
     "dpi": 96,
     "depth": 8,
