@@ -1,6 +1,9 @@
 from datetime import datetime, timedelta
 from celery.decorators import periodic_task
 from ecs.workflow.models import Token
+from ecs import workflow
+
+workflow.autodiscover()
 
 @periodic_task(run_every=timedelta(seconds=10))
 def handle_deadlines():

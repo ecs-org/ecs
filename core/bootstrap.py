@@ -72,11 +72,12 @@ def templates():
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, ExternalReviewSplit,
-        ExternalChecklistReview, ChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
+        ExternalChecklistReview, ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        needs_insurance_review, needs_gcp_review, has_expedited_recommendation, is_thesis,
-        is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec, is_acknowledged_and_not_localec)
+        needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review,
+        has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec,
+        is_acknowledged_and_not_localec)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
@@ -120,23 +121,22 @@ def submission_workflow():
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
             'thesis_categorization_review': Args(ThesisCategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Paper Submission Review")),
-            'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Thesis Paper Submission Review")),
+            'thesis_recommendation': Args(NonRepeatableChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
-            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=EXECUTIVE_GROUP),
+            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
 
             # local ec lane
-            'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
+            'localec_recommendation': Args(NonRepeatableChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
             'localec_recommendation_review': Args(LocalEcRecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
-            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_not_localec),
             ('resubmission', 'start'): None,
 
             # retrospective thesis lane
@@ -167,9 +167,10 @@ def submission_workflow():
             ('external_review_split', 'external_review'): None,
 
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
-            ('generic_review', 'statistical_review'): None,
-            ('generic_review', 'legal_and_patient_review'): None,
+            ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
+            ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
+            ('generic_review', 'paper_submission_review'): None,
         }
     )
 
@@ -257,25 +258,7 @@ def auth_groups():
         print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
     
 
-@bootstrap.register()
-def expedited_review_categories():
-    categories = (
-        (u'KlPh', u'Klinische Pharmakologie'),
-        (u'Stats', u'Statistik'),
-        (u'Labor', u'Labormedizin'),
-        (u'Recht', u'Juristen'),
-        (u'Radio', u'Radiologie'),
-        (u'Anästh', u'Anästhesie'),
-        (u'Psychol', u'Psychologie'),
-        (u'Patho', u'Pathologie'),
-        (u'Zahn', u'Zahnheilkunde'),
-        )
-    for abbrev, name in categories:
-        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
-
-
-@bootstrap.register()
-def medical_categories():
+def medcategories():
     categories = (
         (u'Stats', u'Statistik'),
         (u'Pharma', u'Pharmakologie'), 
@@ -300,7 +283,7 @@ def medical_categories():
         (u'HNO', u'Hals-Nasen-Ohrenkrankheiten'),
         (u'Anästh', u'Anästhesie'),
         (u'Neuro', u'Neurologie'),
-        (u'Psych', u'Psychatrie'),
+        (u'Psych', u'Psychiatrie'),
         (u'Päd', u'Pädiatrie'),
         (u'Derma', u'Dermatologie'),
         (u'Radio', u'Radiologie'),
@@ -319,23 +302,34 @@ def medical_categories():
         (u'ImmunPatho', u'Immunpathologie'),
         (u'Patho', u'Pathologie'),
 
-        (u'Pfleger', u'Gesundheits und Krankenpfleger'),
+        (u'Pfleger', u'Gesundheits und Krankenpflege'),
         (u'Recht', u'Juristen'),
-        (u'Pharmazie', u'Pharmazeuten'),
-        (u'Patient', u'Patientenvertreter'), 
+        (u'Apotheke', u'Pharmazie'),
+        (u'Patient', u'Patientenvertretung'), 
         (u'BehinOrg', u'Benhindertenorganisation'), 
         (u'Seel', u'Seelsorger'),
-        (u'techSec', u'technischer Sicherheitsbeauftragter'),
+        (u'techSec', u'technische Sicherheitsbeauftragte'),
 
-        (u'LaborDia', u'medizinische und chemische Labordiagnostik'),
-        (u'Psychol', u'Psychologie'),
-        
+        (u'Psychol', u'Psychologie'),        
         (u'Virologie', u'Virologie'),
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
-        (u'Apotheke', u'Apotheke'),
+        (u'Hygiene', u'Hygiene'),
+        (u'MedPhy', u'Medizinische Physik'),
+        (u'Unfall', u'Unfallchirurgie'),
+        
     )
-    for shortname, longname in categories:
+    return categories
+
+@bootstrap.register()
+def expedited_review_categories():
+    for abbrev, name in medcategories():
+        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+
+
+@bootstrap.register()
+def medical_categories():
+    for shortname, longname in medcategories():
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
         if not medcat.name == longname:
             medcat.name = longname
@@ -395,7 +389,7 @@ def auth_user_testusers():
         ('office', u'EC-Office', {'internal': True,}),
         ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
         ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': True, 'executive_board_member': True),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': False, 'executive_board_member': False),
         ('signing', u'EC-Signing Group', {'internal': True, }),
         ('statistic.rev', u'EC-Statistic Group', {'internal': False}),
         ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
@@ -497,8 +491,10 @@ def auth_ec_staff_users():
 
     for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for number, text, description in checklist_questions[slug]:
+        for question in checklist_questions[slug]:
+            number, text = question
             cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
             cq.text = text
-            cq.description = description
+            cq.description = question.pop('description', u'')
+            cq.inverted = question.pop('inverted', False)
             cq.save()

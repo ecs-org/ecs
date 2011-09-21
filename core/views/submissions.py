@@ -3,12 +3,13 @@ from datetime import datetime
 import tempfile
 import re
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
@@ -18,22 +19,30 @@ from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Chec
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
-    SubmissionImportForm, SubmissionFilterForm, SubmissionWidgetFilterForm, SubmissionListFilterForm, SubmissionListFullFilterForm
+    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
+    SubmissionListFilterForm, SubmissionListFullFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm
+from ecs.core.forms.utils import submission_form_to_dict
+
+from ecs.core.workflow import (ChecklistReview,
+    ExternalChecklistReview, ThesisRecommendationReview,
+    ExpeditedRecommendation, ExpeditedRecommendationReview,
+    LocalEcRecommendationReview, BoardMemberReview)
 
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
-from ecs.docstash.models import DocStash
+from ecs.docstash.models import DocStash, DocStashData
 from ecs.core.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
-from ecs.tasks.utils import has_task
-from ecs.users.utils import user_flag_required
+from ecs.tasks.utils import get_obj_tasks
+from ecs.users.utils import user_flag_required, user_group_required
+from ecs.audit.utils import get_version_number
 
 from ecs.documents.views import upload_document, delete_document
 
@@ -96,7 +105,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         })
         if created:
             docstash.update({
-                'form': SubmissionFormForm(data=None, initial=model_to_dict(submission_form)),
+                'form': SubmissionFormForm(data=None, initial=submission_form_to_dict(submission_form)),
                 'formsets': get_submission_formsets(instance=submission_form),
                 'submission': submission_form.submission if not delete else None,
                 'document_pks': [d.pk for d in submission_form.documents.all()],
@@ -119,13 +128,14 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
+CHECKLIST_ACTIVITIES = (ChecklistReview, ExternalChecklistReview, ThesisRecommendationReview,
+    ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = SubmissionFormForm(initial=model_to_dict(submission_form), readonly=True)
+    form = SubmissionFormForm(initial=submission_form_to_dict(submission_form), readonly=True)
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
-    documents = submission_form.documents.all().order_by('pk')
     vote = submission_form.current_vote
     submission = submission_form.submission
 
@@ -134,40 +144,60 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
-            checklist_form = make_checklist_form(checklist)(readonly=True)
+            try:
+                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint)
+                reopen_task = reopen_tasks.order_by('-created_at')[0]
+            except IndexError:
+                checklist_form = make_checklist_form(checklist)(readonly=True)
+            else:
+                checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
-    
-    submission_forms = list(submission_form.submission.forms.order_by('created_at'))
+
+    def _answer_key(a):
+        import re
+        m = re.match(r'^(\d+)(\w?)\.', a.question.number)
+        if not m:
+            return 0
+        n = int(m.group(1))
+        if m.group(2):
+            n += ord(m.group(2)) / 256
+        return n
+
+    checklists = submission.checklists.order_by('blueprint__name')
+    checklists = [(c, c.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
+    checklists = [(c, sorted(aa, key=_answer_key)) for c, aa in checklists]
+
+    submission_forms = list(submission.forms.order_by('created_at'))
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
         previous_form = sf
-
     submission_forms = reversed(submission_forms)
-    
+
     with sudo():
-        cancelable_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid='external_review', closed_at=None)
+        external_review_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid='external_review')
 
     from ecs.notifications.models import NotificationType
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'documents': documents,
+        'documents': submission_form.documents.all().order_by('doctype__identifier', 'version', 'date'),
         'readonly': True,
         'submission': submission,
         'submission_form': submission_form,
         'submission_forms': submission_forms,
         'vote': vote,
         'checklist_reviews': checklist_reviews,
+        'checklists': checklists,
         'show_reviews': any(checklist_reviews),
         'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
         'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False),
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
-        'cancelable_tasks': cancelable_tasks,
+        'external_review_tasks': external_review_tasks,
     }
-    
+
     if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
         context['show_reviews'] = True
         context.update({
@@ -181,10 +211,10 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
             if tasks and not [t for t in tasks if not t.closed_at]:
                 context['categorization_task'] = tasks[0]
-    
+
     if extra_context:
         context.update(extra_context)
-    
+
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
@@ -198,12 +228,28 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
-@user_flag_required('executive_board_member')
+@user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
+    task = request.related_tasks[0]
+
+    docstash, created = DocStash.objects.get_or_create(
+        group='ecs.core.views.submissions.categorization_review',
+        owner=request.user,
+        content_type=ContentType.objects.get_for_model(task.__class__),
+        object_id=task.pk,
+    )
+
+    with docstash.transaction():
+        form = docstash.get('form')
+        if request.method == 'POST' or form is None:
+            form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
+        docstash['form'] = form
+
     if request.method == 'POST' and form.is_valid():
         form.save(request)
+        docstash.delete()
+
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
@@ -220,13 +266,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
 
-    from ecs.core.workflow import (ChecklistReview, AdditionalChecklistReview,
-        ExternalChecklistReview, ThesisRecommendationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview,
-        LocalEcRecommendationReview, BoardMemberReview)
-
-    if not has_task(request.user, (ChecklistReview, AdditionalChecklistReview, ExternalChecklistReview, ThesisRecommendationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview), submission_form.submission, data=blueprint):
+    user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True, assigned_to=request.user, deleted_at=None)
+    related_tasks = [t for t in user_tasks if request.path in t.get_final_urls()]
+    if not related_tasks:
         return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    # XXX: there really should not be another task for this url
+    related_task = related_tasks[0]
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
     if blueprint.multiple:
@@ -238,7 +283,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-    form = make_checklist_form(checklist)(request.POST or None, complete_task=(blueprint.slug == 'external_review'))
+    form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
     extra_context = {}
 
     if request.method == 'POST':
@@ -258,15 +303,13 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
             checklist.save() # touch the checklist instance to trigger the post_save signal
 
-            if complete_task and checklist.is_complete:
-                extra_context['review_complete'] = checklist.pk
-            elif (complete_task or really_complete_task) and not checklist.is_complete:
+            if (complete_task or really_complete_task) and not checklist.is_complete:
                 extra_context['review_incomplete'] = True
             elif really_complete_task and checklist.is_complete:
-                external_review_task = submission_form.submission.external_review_task_for(request.user)
-                if blueprint.slug == 'external_review' and external_review_task:
-                    external_review_task.done(request.user)
+                related_task.done(request.user)
                 return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+            elif complete_task and checklist.is_complete:
+                extra_context['review_complete'] = checklist.pk
 
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)
@@ -281,7 +324,10 @@ def vote_review(request, submission_form_pk=None):
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'vote_review_form': vote_review_form,})
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={
+        'vote_review_form': vote_review_form,
+        'vote_version': get_version_number(vote),
+    })
 
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
@@ -296,9 +342,14 @@ def delete_document_from_submission(request):
 @with_docstash_transaction
 def create_submission_form(request):
     form = request.docstash.get('form')
+    documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
+    protocol_uploaded = documents.filter(doctype__identifier=u'protocol').exists()
     if request.method == 'POST' or form is None:
         form = SubmissionFormForm(request.POST or None)
-        
+        if request.method == 'GET':
+            protocol_uploaded = True    # don't show error on completely new
+                                        # submission
+
     formsets = request.docstash.get('formsets')
     if request.method == 'POST' or formsets is None:
         formsets = get_submission_formsets(request.POST or None)
@@ -338,8 +389,9 @@ def create_submission_form(request):
 
         if save or autosave:
             return HttpResponse('save successfull')
-        
-        valid = form.is_valid() and all(formset.is_valid() for formset in formsets.itervalues()) and not 'upload' in request.POST
+
+        formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
+        valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
 
         if submit and valid and request.user.get_profile().approved_by_office:
             submission_form = form.save(commit=False)
@@ -355,7 +407,6 @@ def create_submission_form(request):
             submission_form.save()
             form.save_m2m()
 
-            documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             submission_form.documents = documents
             for doc in documents:
                 doc.parent_object = submission_form
@@ -396,6 +447,7 @@ def create_submission_form(request):
         'valid': valid,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
+        'protocol_uploaded': protocol_uploaded,
     }
     for prefix, formset in formsets.iteritems():
         context['%s_formset' % prefix] = formset
@@ -413,10 +465,12 @@ def submission_pdf(request, submission_form_pk=None):
         return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()
-    
+
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
+    if not request.user.get_profile().internal and not request.user == submission_form.presenter:
+        raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.write(submission_form, tmpfile)
@@ -503,8 +557,11 @@ def submission_widget(request, template='submissions/widget.html'):
         data['filtername'] = 'submission_filter_widget_internal'
         data['filter_form'] = SubmissionWidgetFilterForm
     else:
+        stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+        stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
+
         data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
-        data['stashed_submission_forms'] = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
+        data['stashed_submission_forms'] = stashed
         data['filtername'] = 'submission_filter_widget'
         data['filter_form'] = SubmissionFilterForm
 
@@ -540,7 +597,14 @@ def all_submissions(request):
 
         submissions = submissions.filter(submissions_q)
 
-    return submission_list(request, submissions, keyword=keyword, filtername='submission_filter_all', filter_form=SubmissionListFullFilterForm, extra_context=extra_context, title=title)
+    if keyword is None:
+        filter_form = SubmissionListFullFilterForm
+        filtername = 'submission_filter_all'
+    else:
+        filter_form = SubmissionMinimalFilterForm
+        filtername = 'submission_filter_search'
+
+    return submission_list(request, submissions, keyword=keyword, filtername=filtername, filter_form=filter_form, extra_context=extra_context, title=title)
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
@@ -548,15 +612,17 @@ def assigned_submissions(request):
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
-    stashed = DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True)
+
+    stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
+    stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
+
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
 
 @forceauth.exempt
 def catalog(request):
     with sudo():
-        votes = Vote.objects.filter(result__in=('1', '1a'), submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
-
-    return render(request, 'submissions/catalog.html', {
-        'votes': votes,
-    })
-
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+        html = render(request, 'submissions/catalog.html', {
+            'votes': votes,
+        })
+    return html

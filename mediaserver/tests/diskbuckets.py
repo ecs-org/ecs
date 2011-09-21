@@ -10,7 +10,10 @@ from ecs.mediaserver.diskbuckets import DiskBuckets
 
 
 class DiskBucketsTest(EcsTestCase):
-    '''Class for testing the DiskBuckets'''
+    '''Tests for the diskbucket module
+    
+    Tests for the diskbucket module of the mediaserver by storing and retreiving data from a bucket.
+    '''
     
     def setUp(self):
         self.root_dir = tempfile.mkdtemp()

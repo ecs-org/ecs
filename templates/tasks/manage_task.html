@@ -37,50 +37,8 @@
             </span>
         </li>
         <li>
-            <input type="radio" name="action" id="id_action_message" value="message"{% ifequal form|form_value:'action' 'message' %} checked="checked"{% endifequal %} />
-            <label for="id_action_message"><span class="task_ask"></span>{% trans 'Ask' %}</label>
-            <span class="task_indent">
-            <ol class="task_message">
-            {% with message_form as form %}
-                {% include 'communication/send_base.inc' %}
-            {% endwith %}
-            </ol>
-            </span>
-        </li>
-        <li>
           <input type="submit" value="Abschicken" />
         </li>
     </ul>
 </form>
 </div>
-
-<script type="text/javascript">
-    window.addEvent('domready', function(){
-        var questionTypeInputs = $$('#id_question_type_callback', '#id_question_type_related', '#id_question_type_somebody');
-        questionTypeInputs.each(function(radio){
-            radio.addEvent('change', function(){
-                $('id_action_message').checked = true;
-            });
-        });
-
-        var container = $$('.task_message')[0];
-
-        ecs.setupMessagePopup(container, 'message');
-
-        var messageToolbarItems = [];
-
-        {% if task.data.get_submission %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ task.data.get_submission.current_submission_form.pk }}'));
-        {% endif %}
-
-        {% if user|has_flag:'internal' %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
-        {% endif %}
-
-        var textarea = container.getElement('textarea[name="message-text"]');
-        console.log(container);
-        console.log(textarea);
-        new ecs.textarea.TextArea(textarea);
-        ecs.textarea.installToolbar(textarea, messageToolbarItems);
-    });
-</script>

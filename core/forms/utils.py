@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import FieldDoesNotExist
+from django.forms.models import model_to_dict
 
 from ecs.core.forms.fields import ReadonlyTextInput, ReadonlyTextarea
 
@@ -15,7 +16,8 @@ def mark_readonly(form):
 class ReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
-        self.complete_task = kwargs.pop('complete_task', False)
+        self.related_task = kwargs.pop('related_task', None)
+        self.reopen_task = kwargs.pop('reopen_task', None)
         super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             mark_readonly(self)
@@ -23,7 +25,8 @@ class ReadonlyFormMixin(object):
 class NewReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
-        self.complete_task = kwargs.pop('complete_task', False)
+        self.related_task = kwargs.pop('related_task', None)
+        self.reopen_task = kwargs.pop('reopen_task', None)
         super(NewReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             for field in self.fields.itervalues():
@@ -63,3 +66,8 @@ class NewReadonlyFormSetMixin(object):
                     elif isinstance(field.widget, (forms.Textarea,)):
                         field.widget = ReadonlyTextarea(attrs=field.widget.attrs)
                 mark_readonly(form)
+
+def submission_form_to_dict(sf):
+    d = model_to_dict(sf)
+    d['invoice_differs_from_sponsor'] = bool(sf.invoice_name)
+    return d

@@ -34,7 +34,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
     def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='3'), current_submission_form__isnull=False)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result_in=['3a', '3b']), current_submission_form__isnull=False)
 
     def b4(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
@@ -57,14 +57,14 @@ class SubmissionQuerySet(models.query.QuerySet):
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
 
-    def reviewed_by_user(self, user, include_workflow=True):
+    def reviewed_by_user(self, user):
         submissions = self.none()
         for a in user.assigned_medical_categories.all():
             submissions |= self.filter(pk__in=a.meeting.submissions.filter(medical_categories=a.category).values('pk').query)
-        if include_workflow:
-            from ecs.tasks.models import Task
-            submission_ct = ContentType.objects.get_for_model(Submission)
-            submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+
+        from ecs.tasks.models import Task
+        submission_ct = ContentType.objects.get_for_model(Submission)
+        submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
         return submissions.distinct()
 
     def none(self):
@@ -108,8 +108,8 @@ class SubmissionManager(AuthorizationManager):
     def mine(self, user):
         return self.all().mine(user)
 
-    def reviewed_by_user(self, user, include_workflow=True):
-        return self.all().reviewed_by_user(user, include_workflow=include_workflow)
+    def reviewed_by_user(self, user):
+        return self.all().reviewed_by_user(user)
 
     def none(self):
         return self.all().none()
@@ -125,12 +125,15 @@ class Submission(models.Model):
     remission = models.NullBooleanField()
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
-    insurance_review_required = models.NullBooleanField()
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     transient = models.BooleanField(default=False)
     valid_until = models.DateField(null=True, blank=True)
-    gcp_review_required = models.NullBooleanField()
+    insurance_review_required = models.NullBooleanField()
+    gcp_review_required = models.NullBooleanField(default=False)
+    legal_and_patient_review_required = models.NullBooleanField(default=True)
+    statistical_review_required = models.NullBooleanField(default=True)
+
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
@@ -178,7 +181,7 @@ class Submission(models.Model):
     def paper_submission_review_task_for(self, user):
         from ecs.tasks.models import Task
         try:
-            return Task.objects.for_data(self).filter(task_type__workflow_node__uid='paper_submission_review', closed_at=None, deleted_at__isnull=True)[0]
+            return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
 
@@ -239,10 +242,15 @@ class Submission(models.Model):
         return self.current_submission_form.primary_investigator
 
     def has_permanent_vote(self):
-        from ecs.core.models import Vote
         from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
-        #print Vote.objects.filter(submission_form__submission=self)
-        return Vote.objects.filter(submission_form__submission=self, result__in=PERMANENT_VOTE_RESULTS).count() > 0
+        return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
+
+    def get_last_recessed_vote(self, top):
+        from ecs.core.models.voting import RECESSED_VOTE_RESULTS
+        try:
+            return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
+        except IndexError:
+            return None
         
     def save(self, **kwargs):
         if not self.ec_number:
@@ -673,18 +681,24 @@ class SubmissionForm(models.Model):
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
         
-    def get_involved_parties(self, include_workflow=True):
-        return get_involved_parties(self, include_workflow=include_workflow)
+    def get_involved_parties(self):
+        return get_involved_parties(self)
 
-    def get_presenting_parties(self, include_workflow=True):
-        return get_presenting_parties(self, include_workflow=include_workflow)
+    def get_presenting_parties(self):
+        return get_presenting_parties(self)
 
-    def get_reviewing_parties(self, include_workflow=True):
-        return get_reviewing_parties(self, include_workflow=include_workflow)
+    def get_reviewing_parties(self):
+        return get_reviewing_parties(self)
 
-    def get_meeting_parties(self, include_workflow=True):
-        return get_meeting_parties(self, include_workflow=include_workflow)
-
+    def get_meeting_parties(self):
+        return get_meeting_parties(self)
+    
+    @property
+    def additional_investigators(self):
+        additional_investigators = self.investigators.all()
+        if self.primary_investigator:
+            additional_investigators = additional_investigators.exclude(pk=self.primary_investigator.pk)
+        return additional_investigators
 
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor', 'invoice'):
@@ -717,6 +731,8 @@ def _post_submission_form_save(**kwargs):
         'is_amg': new_sf.project_type_drug,
         'is_mpg': new_sf.project_type_medical_device_or_method,
         'insurance_review_required': bool(new_sf.insurance_name),
+        'thesis': new_sf.project_type_education_context is not None,
+        'retrospective': new_sf.project_type_retrospective,
     }
 
     # set defaults
@@ -725,26 +741,15 @@ def _post_submission_form_save(**kwargs):
             setattr(submission, k, v)
     submission.save(force_update=True)
 
+    involved_users = set([p.user for p in new_sf.get_involved_parties() if p.user and not p.user == new_sf.presenter])
     if old_sf == None:   # first version of the submission
-        for p in new_sf.get_involved_parties():
-            if p.user == new_sf.presenter or not p.user: continue
-            send_system_message_template(
-                p.user,
-                _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/creation_message.txt',
-                {'party': p},
-                submission=submission
-            )
+        for u in involved_users:
+            send_system_message_template(u, _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
+                'submissions/creation_message.txt', None, submission=submission)
     else:
-        for p in new_sf.get_involved_parties():
-            if p.user == new_sf.presenter or not p.user: continue
-            send_system_message_template(
-                p.user,
-                _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/change_message.txt',
-                {'party': p},
-                submission=submission
-            )
+        for u in involved_users:
+            send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),
+                'submissions/change_message.txt', None, submission=submission)
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 

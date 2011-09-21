@@ -13,7 +13,10 @@ from ecs.users.utils import create_user
 
 
 class ViewTests(EcsTestCase):
-    '''Test Class for the feedback system'''
+    '''Tests for the feedback module
+    
+    Tests for the integrated feedback module.
+    '''
     
     def setUp(self, *args, **kwargs):
         testuser = create_user('feedback@example.com')
@@ -22,7 +25,8 @@ class ViewTests(EcsTestCase):
         super(ViewTests, self).setUp(*args, **kwargs)
 
     def test_feedback_input(self):
-        '''Tests that the integrated feedback system is accessible.'''
+        '''Makes sure that the integrated feedback system is accessible.
+        '''
         
         response = self.client.post(reverse('ecs.feedback.views.feedback_input', kwargs={'type': 'q'}), {'description': 'Does it work?', 'fb_id': ''})
         self.failUnlessEqual(response.status_code, 302)

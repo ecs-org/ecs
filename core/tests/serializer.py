@@ -21,7 +21,10 @@ SUBMISSION_FORM_DATA = {
 }
 
 class SerializerTest(EcsTestCase):
-    '''Tests for the Serializer.'''
+    '''Tests for the serializer module
+    
+    Serializer module gets tested by exporting and import data and comparing the data afterwards.
+    '''
     
     def create_submission_form(self):
         s = Submission.objects.create(ec_number=20109942)
@@ -72,7 +75,10 @@ class SerializerTest(EcsTestCase):
         self.failUnlessEqual(get_ntud_set(a), get_ntud_set(b))
     
     def test_import_export(self):
-        '''Tests the serializer by comparing original submission data against imported submission data that was previously exported from the original submission data.'''
+        '''Tests the serializer by comparing original submission data
+        against imported submission data that was previously exported
+        from the original submission data.
+        '''
         
         with sudo(get_or_create_user('test_presenter@example.com')[0]):
             sf = self.create_submission_form()

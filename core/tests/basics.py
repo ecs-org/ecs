@@ -1,16 +1,19 @@
 from django.core.urlresolvers import reverse
-from ecs.utils.testcases import LoginTestCase
+from ecs.utils.testcases import LoginTestCase, EcsTestCase
 
-def test_import():
-    "test if the urls module and the views are importable"
+class ImportTest(EcsTestCase):
+    ''' Check if base and core urls,view,models are importable '''
     
-    import ecs.urls
-    import ecs.core.urls
-    import ecs.core.views
-    import ecs.core.models
-    
+    def test_import(self):
+        "Tests if the urls module and core.urls, core.views, core.models are importable"
+        
+        import ecs.urls
+        import ecs.core.urls
+        import ecs.core.views
+        import ecs.core.models
+        
 class CoreUrlsTest(LoginTestCase):
-    '''Class for testing '''
+    '''High level tests for accessibility of core views of the system.'''
     
     def test_index(self):
         '''Tests if the Dashboard/main-site of the system is accessible.'''

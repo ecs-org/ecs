@@ -23,13 +23,21 @@ def shoot(request):
         except xmlrpclib.Fault:
             return HttpResponseBadRequest("invalid priority %s" % request.POST.get('priority', ''))
 
+    ticket_type = "bug"
+    if request.POST.get('ticket_type', ''):
+        try:
+            ticket_type_nr = trac.ticket.priority.get(request.POST.get('type', ''))
+            ticket_type = request.POST.get('ticket_type', '')
+        except xmlrpclib.Fault:
+            return HttpResponseBadRequest("invalid ticket type %s" % request.POST.get('ticket_type', ''))
+
     if hasattr(request, "original_user"):
         bugshot_reporter = request.original_user.__unicode__() 
     else:
         bugshot_reporter = request.user.__unicode__()
     
     ticket = trac.ticket.create(request.POST.get('summary', '[bugshot]'), request.POST.get('description'), {
-        "type":"bug", 
+        "type": ticket_type,
         "owner": request.POST.get('owner', ''),
         "priority": priority,
         "component": component,

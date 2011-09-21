@@ -8,48 +8,20 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Deleting field 'Submission.external_reviewer_name'
-        db.delete_column('core_submission', 'external_reviewer_name_id')
+        # Adding field 'Submission.legal_and_patient_review_required'
+        db.add_column('core_submission', 'legal_and_patient_review_required', self.gf('django.db.models.fields.NullBooleanField')(default=True, null=True, blank=True), keep_default=False)
 
-        # Deleting field 'Submission.external_reviewer'
-        db.delete_column('core_submission', 'external_reviewer')
-
-        # Deleting field 'Submission.external_reviewer_billed_at'
-        db.delete_column('core_submission', 'external_reviewer_billed_at')
-
-        # Removing M2M table for field additional_reviewers on 'Submission'
-        db.delete_table('core_submission_additional_reviewers')
-
-        # Adding M2M table for field external_reviewers on 'Submission'
-        db.create_table('core_submission_external_reviewers', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('submission', models.ForeignKey(orm['core.submission'], null=False)),
-            ('user', models.ForeignKey(orm['auth.user'], null=False))
-        ))
-        db.create_unique('core_submission_external_reviewers', ['submission_id', 'user_id'])
+        # Adding field 'Submission.statistical_review_required'
+        db.add_column('core_submission', 'statistical_review_required', self.gf('django.db.models.fields.NullBooleanField')(default=True, null=True, blank=True), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Adding field 'Submission.external_reviewer_name'
-        db.add_column('core_submission', 'external_reviewer_name', self.gf('django.db.models.fields.related.ForeignKey')(related_name='reviewed_submissions', null=True, to=orm['auth.User'], blank=True), keep_default=False)
+        # Deleting field 'Submission.legal_and_patient_review_required'
+        db.delete_column('core_submission', 'legal_and_patient_review_required')
 
-        # Adding field 'Submission.external_reviewer'
-        db.add_column('core_submission', 'external_reviewer', self.gf('django.db.models.fields.NullBooleanField')(null=True, blank=True), keep_default=False)
-
-        # Adding field 'Submission.external_reviewer_billed_at'
-        db.add_column('core_submission', 'external_reviewer_billed_at', self.gf('django.db.models.fields.DateTimeField')(default=None, null=True, blank=True, db_index=True), keep_default=False)
-
-        # Adding M2M table for field additional_reviewers on 'Submission'
-        db.create_table('core_submission_additional_reviewers', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('submission', models.ForeignKey(orm['core.submission'], null=False)),
-            ('user', models.ForeignKey(orm['auth.user'], null=False))
-        ))
-        db.create_unique('core_submission_additional_reviewers', ['submission_id', 'user_id'])
-
-        # Removing M2M table for field external_reviewers on 'Submission'
-        db.delete_table('core_submission_external_reviewers')
+        # Deleting field 'Submission.statistical_review_required'
+        db.delete_column('core_submission', 'statistical_review_required')
 
 
     models = {
@@ -208,24 +180,29 @@ class Migration(SchemaMigration):
         },
         'core.submission': {
             'Meta': {'object_name': 'Submission'},
+            'additional_reviewers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'additional_review_submission_set'", 'blank': 'True', 'to': "orm['auth.User']"}),
             'befangene': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'befangen_for_submissions'", 'null': 'True', 'to': "orm['auth.User']"}),
             'billed_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
             'current_submission_form': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'current_for_submission'", 'unique': 'True', 'null': 'True', 'to': "orm['core.SubmissionForm']"}),
             'ec_number': ('django.db.models.fields.PositiveIntegerField', [], {'unique': 'True', 'db_index': 'True'}),
             'expedited': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'expedited_review_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submissions'", 'blank': 'True', 'to': "orm['core.ExpeditedReviewCategory']"}),
-            'external_reviewers': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'external_review_submission_set'", 'blank': 'True', 'to': "orm['auth.User']"}),
-            'gcp_review_required': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'external_reviewer': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
+            'external_reviewer_billed_at': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'db_index': 'True', 'blank': 'True'}),
+            'external_reviewer_name': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'reviewed_submissions'", 'null': 'True', 'to': "orm['auth.User']"}),
+            'gcp_review_required': ('django.db.models.fields.NullBooleanField', [], {'default': 'False', 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'insurance_review_required': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'is_amg': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'is_mpg': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'keywords': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'legal_and_patient_review_required': ('django.db.models.fields.NullBooleanField', [], {'default': 'True', 'null': 'True', 'blank': 'True'}),
             'medical_categories': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "'submissions'", 'blank': 'True', 'to': "orm['core.MedicalCategory']"}),
             'next_meeting': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'_current_for_submissions'", 'null': 'True', 'to': "orm['meetings.Meeting']"}),
             'remission': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'retrospective': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'sponsor_required_for_next_meeting': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'statistical_review_required': ('django.db.models.fields.NullBooleanField', [], {'default': 'True', 'null': 'True', 'blank': 'True'}),
             'thesis': ('django.db.models.fields.NullBooleanField', [], {'null': 'True', 'blank': 'True'}),
             'transient': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'valid_until': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'})

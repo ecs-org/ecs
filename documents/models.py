@@ -19,6 +19,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
@@ -43,7 +44,7 @@ class DocumentType(models.Model):
     hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.name
+        return ugettext(self.name)
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
@@ -212,7 +213,7 @@ class Document(models.Model):
 def _post_document_save(sender, **kwargs):
     # hack for situations where there is no celerybeat
     if settings.CELERY_ALWAYS_EAGER:
-        from documents.tasks import document_tamer
+        from ecs.documents.tasks import document_tamer
         document_tamer.delay().get()
     
 class Page(models.Model):

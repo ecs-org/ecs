@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
 from ecs import authorization
 
+
 VOTE_RESULT_CHOICES = (
     ('1', _(u'1 positive')),
-    ('1a', _(u'1a positive - with corrections')),
     ('2', _(u'2 positive under reserve')),
-    ('3', _(u'3 recessed (objections)')),
+    ('3a', _(u'3a recessed (not examined)')),
+    ('3b', _(u'3b recessed (examined)')),
     ('4', _(u'4 negative')),
-    ('5', _(u'5 recessed (applicant)')),
-    ('5a', _(u'5a withdrawn (applicant)')),
-    ('5b', _(u'5b not examined')),
-    #('5c', _(u'5c Lokale EK')),
+    ('5', _(u'5 withdrawn (applicant)')),
 )
 
-POSITIVE_VOTE_RESULTS = ('1', '1a', '2')
-NEGATIVE_VOTE_RESULTS = ('4', '5a')
+POSITIVE_VOTE_RESULTS = ('1', '2')
+NEGATIVE_VOTE_RESULTS = ('4', '5')
 FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
-PERMANENT_VOTE_RESULTS = ('1', '1a') + NEGATIVE_VOTE_RESULTS
+PERMANENT_VOTE_RESULTS = ('1',) + NEGATIVE_VOTE_RESULTS
+RECESSED_VOTE_RESULTS = ('3a', '3b')
 
 
 class Vote(models.Model):
@@ -53,7 +54,7 @@ class Vote(models.Model):
         elif self.submission_form:
             return self.submission_form.submission.get_ec_number_display()
         return None
-
+        
     def __unicode__(self):
         ec_number = self.get_ec_number()
         if ec_number:
@@ -64,6 +65,16 @@ class Vote(models.Model):
         if not self.submission_form_id and self.top_id:
             self.submission_form = self.top.submission.current_submission_form
         return super(Vote, self).save(**kwargs)
+
+    def publish(self):
+        from ecs.communication.utils import send_system_message_template
+        self.published_at = datetime.now()
+        self.save()
+        if self.submission_form:
+            for p in self.submission_form.get_presenting_parties():
+                if not p.user: continue
+                send_system_message_template(p.user, _('Publication of {vote}').format(vote=unicode(self)), 'submissions/vote_publish.txt',
+                    {'vote': self, 'party': p}, submission=self.submission_form.submission)
         
     @property
     def positive(self):
@@ -79,12 +90,11 @@ class Vote(models.Model):
 
     @property
     def recessed(self):
-        return self.result in ('3', '5', '5b')
+        return self.result in ('3a', '3b')
         
     @property
     def activates(self):
-        return self.result in ('1', '1a')
-
+        return self.result == '1'
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']

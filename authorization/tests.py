@@ -10,7 +10,11 @@ from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
 class SubmissionAuthTestCase(EcsTestCase):
-    '''Class for testing the Authorization of certain users regarding a submission'''
+    '''Tests for the authorization- and role-management of all types of users regarding access to a submission.
+
+    Tests the authorization to view a submission for each user-role.
+    Also tests that a submission is not accessible in the system depending on the role of the user.
+    '''
     
     BASE_EC_NUMBER = 9742
     EC_NUMBER = 20100000 + BASE_EC_NUMBER
@@ -65,7 +69,13 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.sf = sf
         
     def test_submission_auth(self):
-        '''Makes sure that each type of user only sees a submission/study if his role matches the status and type of the submission/study'''
+        ''' Test that users can only see the submissions he/she is entitled to see.
+        
+        Makes sure that each user group (and status of a user to a submission) 
+        only sees the submissions he/she is entitled to; Checked are role, status 
+        and type of the user in relation to the submission (unapproved, anyone, 
+        submitter,sponsor,investigator, etc. )
+        '''
         
         with sudo(self.unapproved_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
@@ -130,16 +140,28 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, expect404, self.another_board_member_user, url)
 
     def test_views(self):
-        '''Tests that viewing all views related to a submission works for authorized users and is denied for unauthorized users depending on the role of the users.'''
+        '''Tests that viewing all views related to a submission works for authorized users 
+        and is denied for unauthorized users depending on the role of the users.
+        '''
         
         self._check_view(False, 'ecs.core.views.all_submissions')
         self._check_view(False, 'ecs.core.views.readonly_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
-        self._check_view(True, 'ecs.core.views.export_submission', submission_pk=self.sf.submission.pk)
         self._check_view(False, 'ecs.core.views.diff', self.sf.pk, self.sf.pk)
+
+        export_url = reverse('ecs.core.views.export_submission', kwargs={'submission_pk': self.sf.submission.pk})
+        self._check_access(False, True, self.unapproved_user, export_url)
+        self._check_access(False, True, self.anyone, export_url)
+        self._check_access(False, True, self.submitter_user, export_url)
+        self._check_access(False, True, self.sponsor_user, export_url)
+        self._check_access(False, True, self.primary_investigator_user, export_url)
+        self._check_access(True, True, self.internal_user, export_url)
+        self._check_access(False, True, self.external_review_user, export_url)
+        self._check_access(False, True, self.board_member_user, export_url)
+        self._check_access(False, True, self.another_board_member_user, export_url)
+        self._check_access(True, True, self.sf.presenter, export_url)
 
         #self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view('ecs.core.views.copy_submission_form', submission_form_pk=self.sf.pk)
         #self._check_view('ecs.core.views.copy_latest_submission_form', submission_pk=self.sf.submission.pk)
-        

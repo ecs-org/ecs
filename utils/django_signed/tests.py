@@ -4,9 +4,14 @@ import signed
 from unittest import TestCase
 
 class TestSignature(TestCase):
+    '''Tests for Signature creation
+    
+    Signature creation with different arguments
+    '''
     
     def test_signature(self):
-        "signature() function should generate a signature"
+        """signature() function should generate a signature
+        """
         for s in (
             'hello',
             '3098247:529:087:',
@@ -18,7 +23,9 @@ class TestSignature(TestCase):
             )
     
     def test_signature_optional_arguments(self):
-        "signature(value, key=..., extra_key=...) should work"
+        """signature(value, key=..., extra_key=...) should work
+        """
+        
         self.assertEqual(
             signed.signature('hello', key='this-is-the-key'),
             signed.base64_hmac('hello', 'this-is-the-key')
@@ -33,14 +40,20 @@ class TestSignature(TestCase):
         )
 
 class TestSignUnsign(TestCase):
-
+    '''Tests for sign and unsign functionality 
+    
+    Tests for key usage, unicode handling, reversibility and tampering detection.
+    '''
+    
     def test_sign_unsign_no_unicode(self):
         "sign/unsign functions should not accept unicode strings"
+        
         self.assertRaises(TypeError, signed.sign, u'\u2019')
         self.assertRaises(TypeError, signed.unsign, u'\u2019')
     
     def test_sign_uses_correct_key(self):
         "If a key is provided, sign should use it; otherwise, use SECRET_KEY"
+        
         s = 'This is a string'
         self.assertEqual(
             signed.sign(s),
@@ -53,6 +66,7 @@ class TestSignUnsign(TestCase):
     
     def sign_is_reversible(self):
         "sign/unsign should be reversible against any bytestring"
+        
         examples = (
             'q;wjmbk;wkmb',
             '3098247529087',
@@ -66,6 +80,7 @@ class TestSignUnsign(TestCase):
     
     def unsign_detects_tampering(self):
         "unsign should raise an exception if the value has been tampered with"
+        
         value = 'Another string'
         signed_value = signed.sign(value)
         transforms = (
@@ -81,6 +96,10 @@ class TestSignUnsign(TestCase):
             )
 
 class TestDumpsLoad(TestCase):
+    '''Tests for object serialization
+    
+    Tests for dumping and loading objects and for detecting data tampering on load.
+    '''
     
     def test_dumps_loads(self):
         "dumps and loads should work reversibly for any picklable object"
@@ -111,10 +130,12 @@ class TestDumpsLoad(TestCase):
             )
 
 class TestBaseConv(TestCase):
-    '''Base conversion tests.'''
+    '''Numerical Base conversion tests.
+    '''
     
     def test_baseconv(self):
-        '''Tests if base conversion works.'''
+        '''Tests if base conversion works with bases 2,16,36 and 62.
+        '''
         from baseconv import base2, base16, base36, base62
         nums = [-10 ** 10, 10 ** 10] + range(-100, 100)
         for convertor in [base2, base16, base36, base62]:

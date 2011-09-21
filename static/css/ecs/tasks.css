@@ -24,6 +24,13 @@
 #task_form .lockInfo {
   background-color: #ffff00;
 }
+#task_form .textboxlist-bits {
+  width: auto;
+}
+#task_form .textboxlist-bit {
+  width: auto;
+  clear: none;
+}
 #task_form label, 
 #task_form input[type=radio], 
 #task_form textarea, 

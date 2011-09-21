@@ -2,6 +2,7 @@
 import re
 from django.template import Library
 from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext as _
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
@@ -111,13 +112,24 @@ def external_review(submission, user):
     return submission.external_review_task_for(user)
 
 @register.filter
-def additional_review(submission, user):
-    return submission.additional_review_task_for(user)
-
-@register.filter
 def paper_submission_review(submission, user):
     return submission.paper_submission_review_task_for(user)
 
 @register.filter
 def get_field(form, fname):
     return form[fname]
+
+@register.filter
+def yes_no_unknown(v):
+    if v is True:
+        return _('yes')
+    elif v is False:
+        return _('no')
+    else:
+        return _('Unknown')
+
+@register.filter
+def last_recessed_vote(top):
+    if top.submission:
+        return top.submission.get_last_recessed_vote(top)
+    return None

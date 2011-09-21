@@ -12,13 +12,16 @@
               $('{{ form_id }}').submit();
           });
       });
-      $$('#{{ form_id }} a[bookmarktitle]').each(function(a){
-          a.addEvent('click', function(){
-              var title = a.getAttribute('bookmarktitle');
-              var url = a.getAttribute('href');
-              return !ecs.bookmark(url, title);
+
+      var tbls = ecs.setupAutocomplete('{{ form_id }}');
+      if (tbls[0]) {
+          tbls[0].addEvent('blur', function(){
+              $('{{ form_id }}').submit();
           });
-      });
+          tbls[0].addEvent('bitBoxRemove', function(){
+              $('{{ form_id }}').submit();
+          });
+      }
 
       var threshold = 7;
 

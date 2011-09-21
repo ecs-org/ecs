@@ -2,8 +2,8 @@
 {% load core %}
 {% load i18n %}
 
-{% block htmltitle %}{% trans "new meeting" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "new meeting" %}{% endblock %}
+{% block htmltitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %}{% endblock %}
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data" class="form_main">

@@ -76,6 +76,7 @@
       window.addEvent('domready', function(){
         var container = $$('.message_display')[0];
         ecs.setupMessagePopup(container);
+        ecs.setupAutocomplete();
 
         var messageToolbarItems = [];
 
@@ -93,4 +94,3 @@
       });
     </script>
 {% endblock %}
-

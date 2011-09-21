@@ -44,8 +44,14 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
 
     feedback_error = False
     summary = description = ''
-    rpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
-    
+    try:
+        rpc = tracrpc.TracRpc.from_dict(settings.FEEDBACK_CONFIG['RPC_CONFIG'])
+    except Exception,e:
+        return render(request, 'feedback/trac_offline.html', {
+            'origin': origin,
+            'feedback_error': feedback_error,
+        })
+        
     if request.method == 'POST' and request.POST.has_key('summary'):
         summary = request.POST['summary']
         description = request.POST['description'] if request.POST.has_key('description') else ""

@@ -69,6 +69,7 @@ class MultiselectWidget(forms.TextInput):
         if callable(url):
             url = url()
         attrs['x-autocomplete-url'] = url
+        attrs['x-autocomplete-type'] = 'multi'
         return super(MultiselectWidget, self).render(name, value_list, attrs=attrs)
         
     def value_from_datadict(self, data, files, name):
@@ -89,6 +90,7 @@ class SingleselectWidget(forms.TextInput):
         if callable(url):
             url = url()
         attrs['x-autocomplete-url'] = url
+        attrs['x-autocomplete-type'] = 'single'
         return super(SingleselectWidget, self).render(name, value_list, attrs=attrs)
 
     def value_from_datadict(self, data, files, name):
@@ -130,7 +132,7 @@ class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
             attrs['class'] = 'oneline'
         return super(ReadonlyTextInput, self).render(name, value, attrs=attrs)
 
-class ReadonlyTextarea(ReadonlyTextMixin, forms.TextInput):
+class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
     def render(self, name, value, attrs=None):
         if attrs is None: attrs = {}
         if self.readonly:

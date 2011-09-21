@@ -29,14 +29,7 @@
                 <span class="submission_review"></span>
                 <a href="{{ external_review_task.url }}">{{ submission|ec_number }}</a>
             {% else %}
-                {% with submission|additional_review:user as additional_review_task %}
-                {% if additional_review_task %}
-                    <span class="submission_review"></span>
-                    <a href="{{ additional_review_task.url }}">{{ submission|ec_number }}</a>
-                {% else %}
-                    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
-                {% endif %}
-                {% endwith %}
+                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
             {% endif %}
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
@@ -121,4 +114,3 @@
 {% endif %}
   });
 </script>
-

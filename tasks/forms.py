@@ -3,7 +3,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+from django.conf import settings
 
+from ecs.tasks.models import TaskType
+from ecs.core.forms.fields import MultiselectWidget
 
 class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
@@ -18,19 +22,20 @@ class TaskChoiceField(forms.ModelChoiceField):
 
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=TASK_MANAGEMENT_CHOICES)
-    assign_to = forms.ModelChoiceField(queryset=User.objects.all(), required=False, empty_label=_('<group>'))
+    assign_to = forms.ModelChoiceField(queryset=User.objects.all().order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
     
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
         self.task = task
         super(ManageTaskForm, self).__init__(*args, **kwargs)
-        self.fields['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
-        self.fields['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
-        self.fields['assign_to'].queryset = User.objects.filter(groups__task_types=task.task_type)
+        fs = self.fields
+        fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
+        fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
+        fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type)
         if task.choices:
-            self.fields['action'].choices += [('complete_%s' % i, choice[i]) for i, choice in enumerate(task.choices)]
+            fs['action'].choices += [('complete_%s' % i, choice[i]) for i, choice in enumerate(task.choices)]
         else:
-            self.fields['action'].choices += [('complete', _('complete'))]
+            fs['action'].choices += [('complete', _('complete'))]
         
     def get_choice(self):
         if not hasattr(self, 'choice_index'):
@@ -56,6 +61,27 @@ class ManageTaskForm(forms.Form):
 
         return cd
 
+class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def clean(self, value):
+        from django.utils.encoding import force_unicode
+        if self.required and not value:
+            raise forms.ValidationError(self.error_messages['required'])
+        elif not self.required and not value:
+            return []
+        if not isinstance(value, (list, tuple)):
+            raise forms.ValidationError(self.error_messages['list'])
+        for uid in value:
+            try:
+                self.queryset.filter(workflow_node__uid=uid)
+            except ValueError:
+                raise forms.ValidationError(self.error_messages['invalid_pk_value'] % pk)
+        qs = self.queryset.filter(workflow_node__uid__in=value)
+        uids = set([force_unicode(o.workflow_node.uid) for o in qs])
+        for val in value:
+            if force_unicode(val) not in uids:
+                raise forms.ValidationError(self.error_messages['invalid_choice'] % val)
+        return qs
+
 class TaskListFilterForm(forms.Form):
     amg = forms.BooleanField(required=False)
     mpg = forms.BooleanField(required=False)
@@ -74,3 +100,9 @@ class TaskListFilterForm(forms.Form):
         ('newest', _('Newest')),
     ))
 
+    task_types = TaskTypeMultipleChoiceField(required=False, queryset=TaskType.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        super(TaskListFilterForm, self).__init__(*args, **kwargs)
+        if getattr(settings, 'USE_TEXTBOXLIST', False):
+            self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'task_types'}))

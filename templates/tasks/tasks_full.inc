@@ -22,7 +22,10 @@
         {{ filterform.expedited }} <li><label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
         {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
-    <a href="{{ bookmarklink }}" bookmarktitle="{% trans "ECS Tasks" %}">{% trans "Bookmark me!" %}</a>
+    <div class="task_list_choose">
+        <label class="task_types">{% trans "Type" %}:</label> {{ filterform.task_types }}
+    </div>
+    <span class="icon_comment" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}"></span> <a href="{{ bookmarklink }}">{% trans "Bookmark" %}</a>
 </form>
 
 {% if mine_tasks %}
@@ -51,7 +54,11 @@
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
-                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>
+                    {% with task.get_preview_url as preview_url %}
+                        {% if preview_url %}
+                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                        {% endif %}
+                    {% endwith %}
                     | <a href="{% url ecs.tasks.views.decline_task_full task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
@@ -69,7 +76,11 @@
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
-                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                    {% with task.get_preview_url as preview_url %}
+                        {% if preview_url %}
+                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                        {% endif %}
+                    {% endwith %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -86,7 +97,11 @@
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
                     <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
-                    <a href="{{ task.get_preview_url }}">{% trans "Preview" %}</a>{% if not forloop.last %}, {% endif %}
+                    {% with task.get_preview_url as preview_url %}
+                        {% if preview_url %}
+                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                        {% endif %}
+                    {% endwith %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>

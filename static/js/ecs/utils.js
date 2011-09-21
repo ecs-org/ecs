@@ -74,43 +74,8 @@ ecs.setupFormFieldHelpers = function(context){
         toggleElements: context.getElements('.datepicker_toggler')
     });
 
-    var setup_autocomplete = function(elm, values, max){
-        var currentValues = values;
-        elm.value = '';
-        var tbl = null;
-        var active = !!elm.getParent('form');
-        if(active){
-            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true}}});
-            tbl.container.addClass('textboxlist-loading');
-        }
-        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
-            if(active){
-                tbl.plugins['autocomplete'].setValues(response);
-                tbl.container.removeClass('textboxlist-loading');
-            }
-            var labels = [];
-            response.each(function(item){
-                if(currentValues.contains(item[0])){
-                    if(active){
-                        tbl.add(item[1], item[0], item[2]);
-                    }
-                    else{
-                        labels.push(item[1]);
-                    }
-                }
-            });
-            if(!active){
-                (new Element('span', {html: labels.join(', ')})).replaces(elm);
-            }
-        }}).send();
-    };
+    ecs.setupAutocomplete(context);
 
-    context.getElements('.ModelMultipleChoiceField input.autocomplete').each(function(multiselect){
-        setup_autocomplete(multiselect, multiselect.value.split(','), null);
-    });
-    context.getElements('.ModelChoiceField input.autocomplete').each(function(select){
-        setup_autocomplete(select, [select.value], 1);
-    });
     context.getElements('.CharField > textarea').each(function(textarea){
         new ecs.textarea.TextArea(textarea);
     });
@@ -169,6 +134,56 @@ ecs.setupFormFieldHelpers = function(context){
         });
     });
     */
+};
+
+ecs.setupAutocomplete = function(context){
+    context = $(context || document.body);
+
+    var setup_autocomplete = function(elm){
+        var type = elm.getProperty('x-autocomplete-type');
+        if (type == 'single') {
+            var currentValues = [elm.value];
+            var max = 1;
+        } else if (type == 'multi') {
+            var currentValues = elm.value.split(',');
+            var max = null;
+        } else {
+            return;
+        }
+        elm.value = '';
+        var tbl = null;
+        var active = !!elm.getParent('form');
+        if(active){
+            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true, placeholder: 'Tippen Sie um Vorschläge zu erhalten.'}}});
+            tbl.container.addClass('textboxlist-loading');
+        }
+        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
+            if(active){
+                tbl.plugins['autocomplete'].setValues(response);
+                tbl.container.removeClass('textboxlist-loading');
+            }
+            var labels = [];
+            response.each(function(item){
+                if(currentValues.contains(item[0])){
+                    if(active){
+                        tbl.add(item[1], item[0], item[2]);
+                    } else {
+                        labels.push(item[1]);
+                    }
+                }
+            });
+            if(!active){
+                (new Element('span', {html: labels.join(', ')})).replaces(elm);
+            }
+        }}).send();
+        return tbl;
+    };
+
+    var tbls = [];
+    context.getElements('input.autocomplete').each(function(input){
+        tbls.push(setup_autocomplete(input));
+    });
+    return tbls;
 };
 
 ecs.InvestigatorFormset = new Class({
@@ -330,17 +345,23 @@ ecs.InvestigatorFormset = new Class({
 
 ecs.setupDocumentUploadIframe = function(){
     var upload_iframe = $$('iframe.upload')[0];
-    if (upload_iframe) {
-        setInterval(function(){
-            var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
-            var height = container_size.y;
-            var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
-            if (datepicker && datepicker.isVisible()) {
-                height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
-            }
-            upload_iframe.setStyle('height', height + 'px');
-        }, 500);
+    if (!upload_iframe) return;
+
+    function resize_iframe() {
+        if (typeof(upload_iframe.contentWindow.document.body.getElement) === 'undefined') return;
+        if (!upload_iframe.isVisible()) return;
+
+        var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
+        var height = container_size.y + 20;
+        var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
+        if (datepicker && datepicker.isVisible()) {
+            height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
+        }
+        upload_iframe.setStyle('height', height + 'px');
     }
+
+    upload_iframe.setStyle('height', '200px');
+    setInterval(resize_iframe, 500);
 };
 
 ecs.setupDocumentUploadForms = function(){
@@ -350,42 +371,49 @@ ecs.setupDocumentUploadForms = function(){
     var upload_button = form.getElement('input[type="submit"]');
     ecs.setupFormFieldHelpers(document);
     upload_button.addEvent('click', function(){
+        var html5_upload = typeof(FormData) !== 'undefined';
+
         if(ecs.mainForm){
             ecs.mainForm.autosaveDisabled = true;
         }
-        /*upload_button.hide();*/
-        upload_button.setAttribute('disabled', 'disabled');
         document.getElement('.warning').show();
-        var form_data = new FormData();
-        form.getElements('(input)|(select)').each(function(input){
-            if(!input.name) return;
-            if(input.type == 'file' && input.files.length){
-                form_data.append(input.name, input.files[0]);
-            } else {
-                form_data.append(input.name, input.value);
-            }
-        }, this);
 
-        xhr = new XMLHttpRequest();
-        xhr.upload.addEventListener('progress', function(evt){
-            upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
-        }, false);
-        xhr.addEventListener('load', function(evt){
-            upload_button.setClass('loaded');
-            /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
-            var body_html = RegExp.$1;;
-            document.getElement('body').innerHTML = body_html;
-            ecs.setupDocumentUploadForms();
-        }, false);
-        xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
-        xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
-        xhr.open('POST', window.location.pathname);
-        xhr.send(form_data);
+        if (html5_upload) {
+            upload_button.setAttribute('disabled', 'disabled');
+
+            var form_data = new FormData();
+            form.getElements('(input)|(select)').each(function(input){
+                if(!input.name) return;
+                if(input.type == 'file' && input.files.length){
+                    form_data.append(input.name, input.files[0]);
+                } else {
+                    form_data.append(input.name, input.value);
+                }
+            }, this);
+
+            xhr = new XMLHttpRequest();
+            xhr.upload.addEventListener('progress', function(evt){
+                upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
+            }, false);
+            xhr.addEventListener('load', function(evt){
+                upload_button.setClass('loaded');
+                /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
+                var body_html = RegExp.$1;;
+                document.getElement('body').innerHTML = body_html;
+                ecs.setupDocumentUploadForms();
+            }, false);
+            xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
+            xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
+            xhr.open('POST', window.location.pathname);
+            xhr.send(form_data);
+        } else {
+            upload_button.hide();
+        }
 
         if(ecs.mainForm){
-            ecs.mainForm.autosaveDisabled = true;
+            ecs.mainForm.autosaveDisabled = false;
         }
-        return false;
+        return !html5_upload;
     }, this);
 
     var file_field = $('id_document-file');
@@ -524,6 +552,16 @@ ecs.setupForms = function(){
     });
     
     return setup;
+};
+
+ecs.setupWidgets = function(context){
+    context = $(context || document.body);
+    context.getElements('.widget').each(function(w){
+        var widgeturl = w.getAttribute('x-widget-url');
+        if (widgeturl) {
+            new ecs.widgets.Widget(w, {url: widgeturl});
+        }
+    }, this);
 };
 
 ecs.FormFieldController = new Class({
@@ -690,15 +728,4 @@ ecs.windmill_upload = function(filename) {
     var evt = document.createEvent('Events');
     evt.initEvent('UploadAssistantSetValue', true, false);
     element.dispatchEvent(evt);
-};
-
-ecs.bookmark = function(url, title) {
-    if (window.external && window.external.AddFavorite) {       /* ie */
-        window.external.AddFavorite(url, title);
-    } else if (window.sidebar && window.sidebar.addPanel) {     /* firefox */
-        window.sidebar.addPanel(title, url, "");
-    } else {
-        return false;
-    }
-    return true;
 };

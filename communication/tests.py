@@ -10,7 +10,11 @@ from ecs.communication.testcases import CommunicationTestCase
 
 
 class CommunicationTest(CommunicationTestCase):        
-    '''Class for testing the communication facilities of the system'''
+    ''' Tests for the ecs.communication modul, responsible for communication between users
+
+    Thread creation, replying to messages, closing threads and genereal message/thread 
+    accessibility and authorization is tested.
+    '''
     
     
     """
@@ -31,8 +35,9 @@ class CommunicationTest(CommunicationTestCase):
 
         
     def test_new_thread(self):
-        '''Tests if a new thread can be created and is accessible by another user.
-        Also checks that the message is only visible in the right widget.'''
+        '''Tests if a new thread can be created and is not accessible by another user not allowed to view it.
+        Also checks that the message is only visible in the right widget.
+        '''
         
         self.client.login(email='alice@example.com', password='password')
 
@@ -73,7 +78,8 @@ class CommunicationTest(CommunicationTestCase):
         self.client.logout()
 
     def test_new_thread_invalid_submission(self):
-        '''Makes sure that a message referencing a nonexistent submission can't be created.'''
+        '''Makes sure that a message referencing a nonexistent submission can't be created.
+        '''
         
         self.client.login(email='alice@example.com', password='password')
         try:
@@ -88,7 +94,8 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(response.status_code, 404)
 
     def test_reply_message(self):
-        '''Tests that a personal message can be replied to.'''
+        '''Tests if a personal message can be replied to.
+        '''
         
         message = self.last_message
         self.client.login(email='bob@example.com', password='password')
@@ -102,7 +109,8 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(message.sender, self.bob)
 
     def test_read_thread(self):
-        '''Tests that a thread can be read by both users entitled to read it.'''
+        '''Tests if a thread is really accessible for the users entitled to read it.
+        '''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': self.thread.pk}))
@@ -138,14 +146,14 @@ class CommunicationTest(CommunicationTestCase):
         self.failUnlessEqual(response.status_code, 302)
 
     def test_incoming_message_widget(self):
-        '''Tests that the incoming message widget is accessible.'''
+        '''Tests if the incoming message widget is accessible.'''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
         self.failUnlessEqual(response.status_code, 200)
 
     def test_outgoing_message_widget(self):
-        '''Tests that the outgoing message widget is accessible.'''
+        '''Tests if the outgoing message widget is accessible.'''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))

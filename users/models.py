@@ -64,6 +64,7 @@ class UserProfile(models.Model):
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
+    submission_filter_search = JSONField()
     submission_filter_all = JSONField()
     submission_filter_widget = JSONField()
     submission_filter_widget_internal = JSONField()

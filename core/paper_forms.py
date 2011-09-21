@@ -38,7 +38,7 @@ class FormInfo(object):
 
 FormInfo(Notification, fields=(
     FieldInfo(None, 'submission_forms', _(u'studies')),
-    FieldInfo('4.', 'comments', _(u'Results and conclusions')),
+    FieldInfo('4.', 'comments', _(u'Statement/Conclusion/Notice')),
 ))
 
 FormInfo(ReportNotification, fields=(
@@ -110,7 +110,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.5', 'sponsor_fax', _(u'fax')),
     FieldInfo('1.5.6', 'sponsor_email', _(u'e-mail')),
     FieldInfo(None, 'sponsor_uid', None, short_label=_(u'VAT Nr')),
-    FieldInfo('1.5.1', 'invoice_name', _(u'name')),
+    FieldInfo('1.5.1', 'invoice_name', _(u'invoice name')),
     FieldInfo('1.5.3', 'invoice_contact_gender', _(u'sex of contact person')),
     FieldInfo('1.5.3', 'invoice_contact_title', _(u'title of contact person')),
     FieldInfo('1.5.3', 'invoice_contact_first_name', _(u'first name of contact person')),
@@ -281,7 +281,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.2', 'submitter_organisation', _(u'Institution / Company')),
     FieldInfo('9.3', 'submitter_jobtitle', _(u'position')),
     # 9.4 Antragsteller/in ist (nur AMG-Studien)
-    FieldInfo('9.4.1', 'submitter_is_coordinator', _(u'coordinating examiner (multicentric study)')),
+    FieldInfo('9.4.1', 'submitter_is_coordinator', _(u'coordinating examiner (multicentric study)'), help_text=_(u'[9.4] The Submitter is')),
     FieldInfo('9.4.2', 'submitter_is_main_investigator', _(u'Principal investigator (monocentric study)')),
     FieldInfo('9.4.3', 'submitter_is_sponsor', _(u'sponsor / representative of the sponsor')),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', _(u'person/organization authorized by the sponsor')),

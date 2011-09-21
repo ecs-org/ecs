@@ -58,11 +58,11 @@ def copy_annotations(request):
     annotations = DocumentAnnotation.objects.filter(user=request.user).select_related('document').order_by('document', 'page_number', 'y')
     if submission_form_pk:
         sf = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-        annotations.filter(document__submission_forms=sf)
+        annotations = annotations.filter(document__submission_forms=sf)
     return render(request, 'pdfviewer/annotations/copy.html', {
         'annotations': annotations,
     })
-    
+
 def share_annotations(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     annotations = document.annotations.filter(user=request.user).order_by('page_number', 'y')
@@ -86,6 +86,3 @@ def share_annotations(request, document_pk=None):
         'form': form,
         'annotations': annotations,
     })
-    
-    
-    

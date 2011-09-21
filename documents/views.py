@@ -23,18 +23,14 @@ def upload_document(request, template='documents/upload_form.html'):
     form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
     documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
     if request.method == 'POST' and form.is_valid():
-        documents = set(documents)
-        documents.add(form.save())
-        replaced_documents = [x.replaces_document for x in documents if x.replaces_document]
-        for doc in replaced_documents:
-            if doc in documents:
-                documents.remove(doc)
+        new_document = form.save()
+        documents |= Document.objects.filter(pk=new_document.pk)
+        documents = documents.exclude(pk__in=documents.exclude(replaces_document=None).values('replaces_document').query)
         request.docstash['document_pks'] = [d.pk for d in documents]
         form = DocumentForm(prefix='document')
-
     return render(request, template, {
         'form': form,
-        'documents': list(documents),
+        'documents': list(documents.order_by('doctype__identifier', 'version', 'date')),
     })
 
 def delete_document(request, document_pk):

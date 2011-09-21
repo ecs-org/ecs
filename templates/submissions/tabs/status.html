@@ -33,7 +33,7 @@
                 </td>
                 <td>
                     {% if sf != submission_form.submission.newest_submission_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a><br>
                     {% endif %}
                     {% if sf.is_notification_update %}
                         {% with sf.new_for_notification.all.0 as notif %}
@@ -111,12 +111,14 @@
     <tr>
         <th>Typ:</th>
         <td colspan="3">
-            {% if submission_form.submission_type %}
-                {{ submission_form.get_submission_type_display }}
-            {% else %}
-                {% trans "Other" %}
+            {% if submission_form.amg %}
+                {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
+                {% if submission_form.submission_type %}
+                    {{ submission_form.get_submission_type_display }}
+                {% else %}
+                    {% trans "Other" %}
+                {% endif %}
             {% endif %}
-            {% if submission_form.amg %}{% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }}){% endif %}
             {% if submission_form.mpg %}{% trans "MPG" %}{% endif %}
             {% if submission_form.thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
             {% if submission_form.subject_minage > 0 and submission_form.subject_minage < 18 %}{% trans "minors" %}{% endif %}
@@ -131,7 +133,13 @@
         <td colspan="3">
             <ul>
                 {% for meeting in submission_form.submission.meetings.all %}
-                    <li><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a></li>
+                    <li>
+                        {% if user|has_flag:'internal' %}
+                            <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
+                        {% else %}
+                            {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
+                        {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
             {% if user|has_flag:'executive_board_member' %}
@@ -162,26 +170,30 @@
         </td>
     </tr>
     <tr>
-        <th>Exedited Review:</th>
+        <th>Expedited Review:</th>
         <td colspan="3">{{ submission_form.submission.expedited|yesno }}</td>
     </tr>
+    {% if user|has_flag:'internal' and submission_form.submission.external_reviewers.exists %}
+    <tr>
+        <th>Gutachten:</th>
+        <td>
+            <ul>
+            {% for task in external_review_tasks %}
+                <li>
+                    {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
+                    {% if not task.closed_at %}
+                        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
+                    {% else %}
+                        [{% trans "Abgeschlossen" %}]
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </td>
+    </tr>
+    {% endif %}
 </table>
 
-{% if user|has_flag:'internal' %}
-<ul>
-{% for task in cancelable_tasks %}
-    <li>
-        {% blocktrans with task.task_type as task_name and task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}
-            {{ assigned_to }} invited at {{ assigned_at }} for {{ task_name }} 
-        {% endblocktrans %}
-        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
-    </li>
-{% empty %}
-    <li><i>{% trans "No additional/external review" %}</i></li>
-{% endfor %}
-</ul>
+{% if user|has_flag:'internal' or user == submission_form.presenter %}
+    <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}
-
-
-<a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
-

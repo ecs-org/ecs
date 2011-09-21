@@ -1,53 +1,52 @@
 {# context: documents #}
 {% load core pdfviewer i18n %}
+
 <div class="document_container">
 {% block document_list %}
 <div class="doclist">
 
-{# FIXME: "doctype.name" was used, but dictsort trips over None doctype values #}
-{% regroup documents|dictsort:"doctype" by doctype as doctype_list %}
+{% for doc in documents %}
+    {% ifchanged doc.doctype.identifier %}
+        <h4>{{ doc.doctype }}</h4>
+    {% endifchanged %}
 
-{% for doctype in doctype_list %}
-    <h4>{{ doctype.grouper }}</h4>
-    {% for doc in doctype.list %}
-        <div class="list_item">
-            {% get_annotations for doc as annotations %}
-            {% block actions %}
-                {% if doc.status == 'ready' %}
-                    <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
-                    | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a>
-                    {% if annotations %}
-                        | <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a>
-                    {% endif %}
+    <div class="list_item">
+        {% get_annotations for doc as annotations %}
+        {% block actions %}
+            {% if doc.status == 'ready' %}
+                <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
+                | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a> |
+                {% if annotations %}
+                    <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a> |
                 {% endif %}
-            {% endblock %}
-            <span class="doc_name">
-                {% if doc.name %}
-                {{ doc.name }}
-                {% else %}
-                Dateiname: {{ doc.original_file_name }}
-                {% endif %} 
-                - <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
-                {% if not doc|is_ready %}
-                    <span class="status">
-                        {{ doc.get_status_display }}
-                    </span>
-                {% endif %}
-                {% if doc.original_file_name %}{% endif %}
-            </span>
-            {% if annotations %}
-                <ul>
-                {% for annotation in annotations %}
-                    <li>
-                        <a href="{% url pdf_show doc.pk %}#{{ annotation.page_number }}">
-                            Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<em>Kein Text</em>' }}
-                        </a>
-                    </li>
-                {% endfor %}
-                </ul>
             {% endif %}
-        </div>
-    {% endfor %}
+        {% endblock %}
+        <span class="doc_name">
+            {% if doc.name %}
+            {{ doc.name }}
+            {% else %}
+            Dateiname: {{ doc.original_file_name }}
+            {% endif %} 
+            -  <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
+            {% if not doc|is_ready %}
+                <span class="status">
+                    {{ doc.get_status_display }}
+                </span>
+            {% endif %}
+            {% if doc.original_file_name %}{% endif %}
+        </span><br />
+        {% if annotations %}
+            <ul>
+            {% for annotation in annotations %}
+                <li>
+                    <a href="{% url pdf_show doc.pk %}#{{ annotation.page_number }}">
+                        Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text|default:'<em>Kein Text</em>' }}
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% empty %}
     <p>Noch keine Unterlagen</p>
 {% endfor %}

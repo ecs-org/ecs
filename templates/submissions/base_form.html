@@ -56,6 +56,13 @@
                     {% ifequal tab "Unterlagen" %}
                         {# FIXME (FMD2) #}
                         {% if not readonly %}
+                            {% if not protocol_uploaded %}
+                                <div class="errors">
+                                    <ul class="errorlist">
+                                        <li>{% trans "At least on protocol is required." %}</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
                             <iframe class="upload" src="{% url ecs.core.views.upload_document_for_submission docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
                         {% else %}
                             {% include "documents/compact_list.html" %}
@@ -63,6 +70,16 @@
                     {% endifequal %}
 
                     {% ifequal tab "Zentren" %}
+                        {% if investigator_formset.non_form_errors %}
+                            <div class="errors">
+                            <ul class="errorlist">
+                            {% for error in investigator_formset.non_form_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            </ul>
+                            </div>
+                        {% endif %}
+
                         <ul class="investigator_list"></ul>
                         <div class="investigator_list_clear"></div>
 
@@ -173,11 +190,6 @@
         window.addEvent('domready', function(){
             var setup = ecs.setupForms();
 
-            $$('*[widgeturl]').each(function(w){
-                var widgeturl = w.getAttribute('widgeturl');
-                new ecs.widgets.Widget(w, {url: widgeturl});
-            }, this);
-
             new ecs.FormFieldController(['id_project_type_reg_drug'], {
                 disable: true,
                 sourceFieldClass: 'subchoice',
@@ -259,32 +271,6 @@
                 auto: function(values, initial){
                     this.setDisabled(values[0]);
                 }
-            });
-
-            new ecs.FormFieldController([
-                    'id_invoice_name', 'id_invoice_contact_gender', 'id_invoice_contact_title', 'id_invoice_contact_first_name',
-                    'id_invoice_contact_last_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',
-                    'id_invoice_fax', 'id_invoice_email', 'id_invoice_uid'
-                ], {
-                    sources: ['id_invoice_differs_from_sponsor'],
-                    auto: function(values, initial){
-                        var requiredFields = [
-                            'id_invoice_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',
-                            'id_invoice_email'
-                        ];
-
-                        if(values[0]){
-                            $('tabs-4').getElement('.fieldset_2').show();
-                            this.setDisabled(false);
-                        } else {
-                            $('tabs-4').getElement('.fieldset_2').hide();
-                            this.setDisabled(true);
-                        }
-
-                        requiredFields.map($).each(function(f){
-                            this.requireField(f, values[0]);
-                        }, this);
-                    }
             });
             
             ecs.setupDocumentUploadIframe();

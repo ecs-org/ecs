@@ -2,7 +2,7 @@ ecs.textarea.toolbarItems = {};
 
 ecs.textarea.toolbarItems.boilerplate = function(label, url){
     return function(textarea){
-        var button = new Element('a', {html: label});
+        var button = new Element('a', {title: label});
         textarea.addEvent('keydown', function(e){
             if(e.alt && e.key == 'm'){
                 button.fireEvent('click');
@@ -77,7 +77,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url){
 
 ecs.textarea.toolbarItems.annotations = function(label, url){
     return function(textarea){
-        var button = new Element('a', {html: label});
+        var button = new Element('a', {title: label});
         button.addEvent('click', function(){
             var popup = new ecs.widgets.Popup({url: url});
             popup.addEvent('load', function(){
@@ -102,3 +102,16 @@ ecs.textarea.toolbarItems.annotations = function(label, url){
         return button;
     };
 };
+
+ecs.textarea.toolbarItems.versionHistory = function(label, url){
+    return function(textarea){
+        var button = new Element('a', {title: label, html: label});
+        button.addEvent('click', function(){
+            var popup = new ecs.widgets.Popup({
+                url: url + '?field=' + textarea.name
+            });
+        });
+        return button;
+    };
+};
+

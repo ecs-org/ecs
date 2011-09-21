@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Q
 
 from ecs.authorization import AuthorizationManager
 
@@ -21,6 +22,7 @@ class ChecklistQuestion(models.Model):
     text = models.CharField(max_length=200) 
     description = models.CharField(max_length=400, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
+    inverted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
@@ -50,14 +52,21 @@ class Checklist(models.Model):
         
     @property
     def is_positive(self):
-        return self.answers.filter(answer=False).count() == 0
+        return self.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True)) == 0
         
     @property
     def is_negative(self):
         return not self.is_positive
         
     def get_answers_with_comments(self, answer=None):
-        return self.answers.exclude(comment=None).exclude(comment="").filter(answer=answer).order_by('question')
+        if answer is None:
+            q = Q(answer=None)
+        else:
+            q = Q(question__inverted=False, answer=answer) | Q(question__inverted=True, answer=not answer)
+        return self.answers.exclude(comment=None).exclude(comment="").filter(q).order_by('question')
+        
+    def get_all_answers_with_comments(self):
+        return self.answers.exclude(comment=None).exclude(comment="").order_by('question')
         
     @property
     def has_positive_comments(self):
@@ -78,4 +87,15 @@ class ChecklistAnswer(models.Model):
 
     def __unicode__(self):
         return u"Answer to '%s': %s" % (self.question, self.answer)
+    
+    @property
+    def is_answered(self):
+        return self.answer is not None
 
+    @property
+    def is_positive(self):
+        return (not self.question.inverted and self.answer) or (self.question.inverted and self.answer == False)
+    
+    @property
+    def is_negative(self):
+        return not self.is_positive

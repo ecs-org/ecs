@@ -1,4 +1,4 @@
-{% if vote.result == '1' or vote.result == '1a' %}
+{% if vote.result == '1' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
 {% endif %}
 {% if vote.result == '2' %}
@@ -11,7 +11,10 @@
         gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.
     </div>
 {% endif %}
-{% if vote.result == '3' %}
+{% if vote.result == '3a' %}
+    Der TOP wird bis zur nächsten Sitzung vertagt.
+{% endif %}
+{% if vote.result == '3b' %}
     Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form.
     Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden.
     Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. <br/>
@@ -24,8 +27,8 @@
 {% if vote.result == '4' %}
     Der Antrag wird von der Ethik-Kommission abgelehnt.
 {% endif %}
-{% if vote.result == '5' or vote.result == '5a' or vote.result == '5b' %}
-    Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)
+{% if vote.result == '5' %}
+    Der Antrag wurde vom Antragsteller zurückgezogen.
 {% endif %}
 {% if not vote %}
     Es liegt kein Votum vor.

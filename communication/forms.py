@@ -2,15 +2,19 @@
 from copy import deepcopy
 
 from django import forms
+from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
+from django.core.urlresolvers import reverse
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_ec_user
 from ecs.users.utils import sudo
+from ecs.core.forms.fields import SingleselectWidget
+
 
 class BaseMessageForm(forms.ModelForm):
     receiver_involved = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
@@ -48,6 +52,8 @@ class BaseMessageForm(forms.ModelForm):
                 ('person', _('Person'))
             ]
             self.fields['receiver_person'].queryset = User.objects.exclude(pk=user.pk)
+            if getattr(settings, 'USE_TEXTBOXLIST', False):
+                self.fields['receiver_person'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
         self.fields['receiver'].queryset = User.objects.exclude(pk=user.pk)
 
@@ -74,9 +80,6 @@ class BaseMessageForm(forms.ModelForm):
 class SendMessageForm(BaseMessageForm):
     subject = Thread._meta.get_field('subject').formfield()
 
-class TaskMessageForm(BaseMessageForm):
-    pass
-
 class ReplyDelegateForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(), label=_('Text'))
 
@@ -85,6 +88,8 @@ class ReplyDelegateForm(forms.Form):
         if user.get_profile().internal:
             self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False, label=_('Delegate to'))
             self.fields.keyOrder = ['to', 'text']
+            if getattr(settings, 'USE_TEXTBOXLIST', False):
+                self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 
 class ThreadListFilterForm(forms.Form):

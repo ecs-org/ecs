@@ -76,7 +76,10 @@ VALID_SUBMISSION_FORM_DATA = {
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
-    '''Several tests for different views of a submission form.'''
+    '''Several tests for different views of a submission form.
+    
+    Tests for accessibility and functioning of core submission-form views.
+    '''
     
     def setUp(self):
         super(SubmissionViewsTestCase, self).setUp()
@@ -94,13 +97,15 @@ class SubmissionViewsTestCase(LoginTestCase):
         
     def get_post_data(self, update=None):
         data = VALID_SUBMISSION_FORM_DATA.copy()
-        data['document-doctype'] = str(DocumentType.objects.get(identifier='other').pk)
+        data['document-doctype'] = str(DocumentType.objects.get(identifier='protocol').pk)
         if update:
             data.update(update)
         return data
 
     def test_create_submission_form(self):
-        '''Tests reachability of the docstash. Also tests document count and versioning of the docstash for a test submissionform.'''
+        '''Tests if the docstash is reachable.
+        Also tests document count and versioning of the docstash for a submissionform.
+        '''
         
         url = self.get_docstash_url()
         
@@ -112,7 +117,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
         
-        upload_url = url.replace('new', 'doc/upload', 1)        # XXX: ugly
+        upload_url = url.replace('new', 'doc/upload', 1)    # XXX: ugly
 
         # document upload
         file_path = os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf')
@@ -149,14 +154,16 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(sf.documents.all()[0].version, '3')
         
     def test_readonly_submission_form(self):
-        '''Tests if the readonly submissionform is accessible.'''
+        '''Tests if the readonly submissionform is accessible.
+        '''
         
         submission_form = create_submission_form()
         response = self.client.get(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
     def test_submission_pdf(self):
-        '''Tests if a pdf can be produced out of a pre existing submissionform.'''
+        '''Tests if a pdf can be produced out of a pre existing submissionform.
+        '''
         
         submission_form = create_submission_form()
         response = self.client.get(reverse('ecs.core.views.submission_pdf', kwargs={'submission_form_pk': submission_form.pk}))
@@ -167,7 +174,9 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(response.content[:4], '%PDF')
         
     def test_submission_form_search(self):
-        '''Tests if all submissions are searchable via the keyword argument. Tests that the correct count of submissions is returned by the search function.'''
+        '''Tests if all submissions are searchable via the keyword argument.
+        Tests that the correct count of submissions is returned by the search function.
+        '''
         
         create_submission_form(20200001)
         create_submission_form(20200042)
@@ -191,7 +200,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
         
     def test_submission_form_copy(self):
-        '''Tests if a submissionform can be copied. Compares initial version against copied version.'''
+        '''Tests if a submissionform can be copied. Compares initial version against copied version.
+        '''
         
         submission_form = create_submission_form(presenter=self.user)
         response = self.client.get(reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
@@ -207,7 +217,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(response.context['form'].initial.get('project_title'), submission_form.project_title)
         
     def test_autocomplete(self):
-        '''Tests the autocompletion feature of the system by comparing the count of objects returned by the autocompletion view.'''
+        '''Tests the autocompletion feature of the system by comparing the count of objects returned by the autocompletion view.
+        '''
         
         medical_categories_count = MedicalCategory.objects.all().count()
         response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))

@@ -2,8 +2,10 @@
 from datetime import datetime
 
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.forms.utils import ReadonlyFormMixin
+from ecs.utils.formutils import TranslatedModelForm
 from ecs.core.models import Vote
 from ecs.tasks.models import Task
 from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
@@ -44,12 +46,18 @@ class VoteForm(SaveVoteForm):
 
         return instance
         
-class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
+class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Vote
-        fields = ('result', 'text', 'is_final')
+        fields = ('text', 'is_final')
+        labels = {
+            'is_final': _('Proofread and valid'),
+        }
 
-class B2VoteReviewForm(forms.ModelForm):
+class B2VoteReviewForm(TranslatedModelForm):
     class Meta:
         model = Vote
         fields = ('text', 'final', 'is_final')
+        labels = {
+            'is_final': _('Proofread and valid'),
+        }

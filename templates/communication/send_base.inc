@@ -1,3 +1,4 @@
+{% load core %}
 
 {% if form.receiver %}
 <li>
@@ -52,4 +53,3 @@
     <span class="errors">{{ form.non_field_errors }}</span>
 </li>
 {% endif %}
-

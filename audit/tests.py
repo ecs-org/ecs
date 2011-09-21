@@ -10,7 +10,11 @@ from ecs.users.utils import create_user
 
 
 class BasicTests(EcsTestCase):
-    '''Tests for most basic audit functionality'''
+    '''Tests for most basic audit log functionality
+
+    Makes sure that the audit trail is enabled, accessible
+    and that the audit trail gets filled correctly.
+    '''
     
     def test_settings(self):
         '''Tests that settings for audit trail exist'''
@@ -19,26 +23,32 @@ class BasicTests(EcsTestCase):
         self.failUnless(hasattr(settings, 'AUDIT_TRAIL_IGNORED_MODELS'))
            
     def test_create_user(self):
-        '''Makes sure that the audit trail of the system grows when objects (e.g. Users) are created and added to the system.'''
+        '''Makes sure that the audit trail of the system grows when objects 
+        (e.g. Users) are created and added to the system.
+        '''
         
         audit_trail_entries_count = AuditTrail.objects.count()
         create_user('audit_trail_test_user@example.com')  # there are being created some objects (User,UserProfile,UserSettings)
         self.assertNotEqual(audit_trail_entries_count, AuditTrail.objects.count())
     
     def test_line_formatting(self):
-        '''FIXME check if correct: Tests the audit trail log formatting.'''
+        '''Tests the audit trail log output'''
         
         a = AuditTrail.objects.all()[0]
         a.get_log_line()
 
     def test_unicode(self):
-        '''FIXME check if correct: Tests unicode support of the audit trail'''
+        '''Tests for unicode support of the audit trail'''
         
         a = AuditTrail.objects.all()[0]
         unicode(a)
 
 class ViewTests(EcsTestCase):
-    '''Test'''
+    '''Tests for viewing the audit trail
+
+    Tests text and HTML rendering of the audit trail and the paging logic.
+    Also tests the authorization logic to view the audit trail.
+    '''
     
     def setUp(self, *args, **kwargs):
         inspector = create_user('inspector@example.com')
@@ -55,7 +65,7 @@ class ViewTests(EcsTestCase):
         return super(ViewTests, self).setUp(*args, **kwargs)
 
     def test_log_view_txt(self):
-        '''Tests that the audit trail is viewable via browser in format text/plain'''
+        '''Tests if the audit trail is viewable via browser in format text/plain'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('txt',)))
@@ -63,7 +73,7 @@ class ViewTests(EcsTestCase):
         self.failUnlessEqual(response['Content-Type'], 'text/plain')
 
     def test_log_view_html(self):
-        '''Tests that the audit trail is viewable via browser in format text/html'''
+        '''Tests if the audit trail is viewable via browser in format text/html'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('html',)))
@@ -85,14 +95,16 @@ class ViewTests(EcsTestCase):
         self.failUnlessEqual(response.status_code, 302)  # redirect to login page
 
     def test_log_view_foo(self):
-        '''a 'foo' version of the audit trail must not exist.'''
+        '''Makes sure that a 'foo' version of the audit trail does not exist and is treated accordingly.'''
         
         self.client.login(email='inspector@example.com', password='4223')
         response = self.client.get(reverse('ecs.audit.views.log', args=('foo',)))
         self.failUnlessEqual(response.status_code, 404)  # foo is not a valid log format
 
     def test_paging(self):
-        '''Creates 100 entries in the audit trail. Test that first and last entry are reachable via audit trail paging logic.'''
+        '''Creates 100 entries in the audit trail. 
+        Tests that first and last entry are reachable via audit trail paging logic.
+        '''
         
         for i in xrange(100): # create a lot of audit trail entries
             create_user('audittrailpagingtest{0}@example.com'.format(i))

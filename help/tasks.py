@@ -11,7 +11,7 @@ def index_help_page(page_pk=None, **kwargs):
     logger = index_help_page.get_logger(**kwargs)
     try:
         page = Page.objects.get(pk=page_pk)
-    except Document.DoesNotExist:
+    except Page.DoesNotExist:
         logger.warning("Warning, help page with pk %s does not exist" % str(page_pk))
         return False
 

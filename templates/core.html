@@ -290,13 +290,14 @@
           'url': '/bugshot/',
           'title': 'BugShot',
           'form': '<div><input type="text" name="summary" value="" /></div>'+
+          '<dic>Type: <input type="text" name="ticket_type" value="bug" /></div>'+
           '<dic>Component: <input type="text" name="component" value="" /></div>'+
           '<div>Owner: <input type="text" name="owner" value="" /></div>'+
           '<div>Priority: <input type="text" name="priority" value="" /></div>'+
           '<div><textarea name="description"></textarea></div>',
           onShow: function(self){
               self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
-              self.overlay.getElement('input[type=text]').value = "[bugshot] ";
+              self.overlay.getElement('input[type=text]').value = "";
           },
           keyTrigger: function(e){
               return (e.meta || e.control) && e.key == ':';

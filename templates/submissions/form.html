@@ -62,6 +62,32 @@
                     addButtonText: addButtonText
                 });
             });
+
+            new ecs.FormFieldController([
+                    'id_invoice_name', 'id_invoice_contact_gender', 'id_invoice_contact_title', 'id_invoice_contact_first_name',
+                    'id_invoice_contact_last_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',
+                    'id_invoice_fax', 'id_invoice_email', 'id_invoice_uid'
+                ], {
+                    sources: ['id_invoice_differs_from_sponsor'],
+                    auto: function(values, initial){
+                        var requiredFields = [
+                            'id_invoice_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',
+                            'id_invoice_email'
+                        ];
+
+                        if(values[0]){
+                            $('tabs-4').getElement('.fieldset_2').show();
+                            this.setDisabled(false);
+                        } else {
+                            $('tabs-4').getElement('.fieldset_2').hide();
+                            this.setDisabled(true);
+                        }
+
+                        requiredFields.map($).each(function(f){
+                            this.requireField(f, values[0]);
+                        }, this);
+                    }
+            });
             
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.save();
@@ -81,7 +107,7 @@
                 });
             {% endif %}
             {% if valid and not user|has_flag:'approved_by_office' %}
-                new MooDialog.Error('{% trans "You cannot submit studies yet. Please wait until the office has approved your account." %}');
+                new MooDialog.Error('{% trans "Your study is filled out correctly but you cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
         });
     </script>

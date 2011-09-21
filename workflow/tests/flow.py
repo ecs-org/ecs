@@ -11,14 +11,18 @@ from ecs.workflow.models import Foo, FooReview, Token
 from ecs.workflow.tests import flow_declarations as decl
 
 class FlowTest(WorkflowTestCase):
-    '''Various tests for the workflow module.'''
+    '''Tests for the workflow module
+    
+    Tests if the traversal of the workflow nodes works correctly.
+    '''
     
     def setUp(self):
         super(FlowTest, self).setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_sequence(self):
-        '''FIXME check if ok: Test if completing tasks in the workflow in sequence works.'''
+        '''Tests if traversing workflow nodes in sequence works correctly.'''
+
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -39,7 +43,7 @@ class FlowTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [])
 
     def test_parallel_split(self):
-        '''FIXME no idea:'''
+        '''Tests if branch split in the workflow is performed correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -75,7 +79,7 @@ class FlowTest(WorkflowTestCase):
         obj.workflow.do(decl.B)
         
     def test_simple_merge(self):
-        '''FIXME no idea: Tests if workflow nodes can be merged into each other.'''
+        '''Tests if a branch merge in the workflow graph is traversed correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -119,7 +123,7 @@ class FlowTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [])
         
     def test_branching(self):
-        '''FIXME i have no idea: Tests if  '''
+        '''Tests if conditional branch splits are being traversed as expected.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -152,7 +156,7 @@ class FlowTest(WorkflowTestCase):
         
         
     def test_generic_control(self):
-        '''FIXME check if ok: Tests if generic workflow pattern is implemented correctly.'''
+        '''Tests if the generic workflow node is implemented correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_x0 = g.create_node(workflow.patterns.Generic, start=True)
@@ -180,7 +184,7 @@ class FlowTest(WorkflowTestCase):
 
         
     def test_synchronization(self):
-        '''FIXME check if ok: Tests if synchronized nodes work correctly in the workflow.'''
+        '''Tests if a synchronized branch merge is performed correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -252,7 +256,7 @@ class FlowTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [decl.B])
         
     def test_subgraph(self):
-        '''Tests if only completing a subgraph of a workflow graph is implemented correctly.'''
+        '''Tests if the subgraph mechanism is implemented correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         h = Graph.objects.create(name='TestSubGraph', content_type=self.foo_ct)
@@ -283,8 +287,8 @@ class FlowTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [])
         
     def test_trail(self):
-        '''Tests if the trail of a workflow graph ends up correct after completing all steps in the workflow graph.'''
-        
+        '''Tests if the trail of a workflow token is recorded correctly'''
+
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
         n_b = g.create_node(decl.B)
@@ -323,7 +327,7 @@ class FlowTest(WorkflowTestCase):
         self.failUnlessEqual(e_token.activity_trail, set([b_token, c_token]))
 
     def test_parametrization(self):
-        '''FIXME check if ok: Tests that the workflow module is fully parametrized.'''
+        '''Tests if parametrization of a workflow node is implemented correctly.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         
@@ -346,7 +350,7 @@ class FlowTest(WorkflowTestCase):
         self.assertActivitiesEqual(obj, [])
         
     def test_disable_autostart(self):
-        '''Tests autostart_disabled by comparing activities before and after disabling autostart for a workflow graph.'''
+        '''Tests if disabling the workflow autostart behaves as expected.'''
         
         g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
         n_a = g.create_node(decl.A, start=True)
@@ -359,5 +363,3 @@ class FlowTest(WorkflowTestCase):
             self.assertActivitiesEqual(obj, [])
         
         self.assertActivitiesEqual(obj, [])
-        
-

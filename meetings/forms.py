@@ -69,10 +69,9 @@ class SubmissionReschedulingForm(forms.Form):
     def __init__(self, *args, **kwargs):
         submission = kwargs.pop('submission')
         super(SubmissionReschedulingForm, self).__init__(*args, **kwargs)
-        now = datetime.now()
-        current_meetings = submission.meetings.filter(start__gt=now).order_by('start')
+        current_meetings = submission.meetings.filter(started=None).order_by('start')
         self.fields['from_meeting'].queryset = current_meetings
-        self.fields['to_meeting'].queryset = Meeting.objects.filter(start__gt=now).exclude(pk__in=[m.pk for m in current_meetings])
+        self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings])
     
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
@@ -85,7 +84,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         except AssignedMedicalCategory.DoesNotExist:
             pass
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category).order_by('username')
+        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category, groups__name=u'EC-Board Member').order_by('email')
 
     class Meta:
         model = AssignedMedicalCategory

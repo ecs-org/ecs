@@ -6,6 +6,11 @@ from ecs.utils.testcases import EcsTestCase
 from ecs.utils.gpgutils import encrypt_sign, decrypt_verify, reset_keystore, gen_keypair, import_key
 
 class Gpgutilstest(EcsTestCase):
+    '''Tests for the gpgutils module
+    
+    Tests for data encryption, decryption and signature verification.
+    '''
+    
     def setUp(self):
         super(Gpgutilstest, self).setUp()
         
@@ -55,7 +60,7 @@ class Gpgutilstest(EcsTestCase):
 
 
     def testConsistency(self):
-        '''Tests if data can be encrypted and signed and then if it can be decrypted and veriefied via gpg and that it matches the previously encrypted test data.'''
+        '''Tests if data can be encrypted and signed and then if it can be decrypted and verified via gpg and that it matches the previously encrypted test data.'''
         
         # self.fresh_temporary_entities()
         self.testdata="im very happy to be testdata"

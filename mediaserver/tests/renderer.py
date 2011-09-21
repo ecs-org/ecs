@@ -12,7 +12,10 @@ from ecs.mediaserver.utils import MediaProvider
 
 
 class RendererTest(EcsTestCase):
-    '''Class for testing the PDF2PNG rendering facilities.'''
+    '''Tests for the MediaProvider module
+    
+    Test for the rendering functionality that render pdf documents as png images.
+    '''
     
     png_magic = binascii.a2b_hex('89504E470D0A1A0A')
     
@@ -29,7 +32,9 @@ class RendererTest(EcsTestCase):
         # shutil.rmtree(self.render_dirname)
         
     def testPngRendering(self):
-        '''Tests that PNG renderer produces png images and that the right amount of pages is produced, when rendering a pdf document.'''
+        '''Tests that PNG renderer produces png images and that the right amount of pages is produced,
+        when rendering a pdf document.
+        '''
         
         tiles = settings.MS_SHARED ["tiles"]
         resolutions = settings.MS_SHARED ["resolutions"]

@@ -73,6 +73,7 @@
     <script type="text/javascript">
         window.addEvent('domready', function(){
             ecs.setupForms();
+
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.save(true);
                 return false;
@@ -81,11 +82,6 @@
                 ecs.mainForm.submit('submit');
                 return false;
             });
-
-            $$('*[widgeturl]').each(function(w){
-                var widgeturl = w.getAttribute('widgeturl');
-                new ecs.widgets.Widget(w, {url: widgeturl});
-            }, this);
 
             var submissionFormsSelect = $('id_submission_forms');
             var submissionFormSelect = $('id_submission_form');

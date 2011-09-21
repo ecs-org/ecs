@@ -1,0 +1,16 @@
+{% load i18n %}
+
+<div style="width:600px" class="field_history">
+{% for change in history %}
+    <div class="change">
+        Version {{ change.version_number }} ({{ change.timestamp|date:'d.m.Y, H:i:s' }}, {{ change.user }})
+        <div class="diff">
+        {% if change.diff %}
+            {{ change.diff|safe }}
+        {% else %}
+            <i>{% trans 'No text' %}</i>
+        {% endif %}
+        </div>
+    </div>
+{% endfor %}
+</div>

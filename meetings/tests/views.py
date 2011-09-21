@@ -1,7 +1,7 @@
 import datetime
 from django.core.urlresolvers import reverse
 from urlparse import urlsplit
-from ecs.utils.testcases import LoginTestCase
+from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
 from ecs.core.tests.submissions import create_submission_form
 
@@ -11,18 +11,31 @@ def _get_datetime_inputs(name, dt):
         '%s_1' % name: dt.strftime("%H:%M"),
     }
 
-class ViewTestCase(LoginTestCase):
-    '''Tests for timetable and meetingassistant.'''
+class ViewTestCase(EcsTestCase):
+    '''Tests for timetable and meetingassistant.
+    
+    Tests for Timetable calculations and storage,
+    consistency of the meetingassistant's actions when starting and stopping meetings,
+    quickjump feature. 
+    '''
     
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
-        
+        self.user = self.create_user('unittest-internal', profile_extra={'internal': True})
+        self.client.login(email='unittest-internal@example.com', password='password')
+
+    def tearDown(self):
+        super(ViewTestCase, self).tearDown()
+        self.client.logout()
+
     def refetch(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)
 
     def test_timetable(self):
-        '''Tests if timetable durations are correct, if meeting entries are correctly stored in the timetable.'''
+        '''Tests if timetable durations are correct,
+        and if meeting entries are correctly stored in the timetable.
+        '''
         
         create_meeting_url = reverse('ecs.meetings.views.create_meeting')
         response = self.client.get(create_meeting_url)
@@ -61,7 +74,9 @@ class ViewTestCase(LoginTestCase):
         
 
     def test_meeting_assistant(self):
-        '''Makes sure that the meeting assistant is fully functional. Tests that it starts and stops meetings correctly.'''
+        '''Makes sure that the meeting assistant is fully functional.
+        Tests that the meeting assistant starts and stops meetings correctly.
+        '''
         
         meeting = Meeting.objects.create(start=self.start)
         submission = create_submission_form().submission
@@ -105,7 +120,8 @@ class ViewTestCase(LoginTestCase):
         self.failUnless(meeting.ended)
 
     def test_meeting_assistant_quickjump(self):
-        '''Tests that the quickjump view is accessible and that it returns the right url.'''
+        '''Tests that the quickjump view is accessible and that it returns the right url.
+        '''
         
         meeting = Meeting.objects.create(start=self.start, started=self.start)
         e0 = meeting.add_entry(duration_in_seconds=42)

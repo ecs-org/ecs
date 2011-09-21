@@ -22,24 +22,25 @@ ul.diff li {
   padding: 10px;
   margin: 10px;
 }
-.diff_toggles {
+#content .diff_toggles {
   margin-bottom: 10px;
 }
-.diff_toggles a {
+#content .diff_toggles a {
+  display: inline-block;
+  padding: 3px 8px;
+  margin: 10px 5px 10px 0;
+  background: #666;
+  text-align: center;
+  font-size: 12px;
+  clear: both;  
+  color: #fff;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  background: #E2EAF0;
-  border: 1px solid #B7D4E5;
-  display: inline-block;
-  line-height: 20px;
-  margin: 2px;
-  padding: 0 8px;
 }
-.diff_toggles a:hover {
-  background-color: #2B558E;
-  color: #fff !important;
-  text-decoration: none !important;
+#content .diff_toggles a:hover {
+  text-decoration: none;
+  background: #333;
 }
 .diff .field {
   display: block;

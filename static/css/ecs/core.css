@@ -24,7 +24,7 @@
   padding: 4px 7px;
   background: #f4f4f4;
   color: #2b558e;
-	font-weight: bolder;
+  font-weight: bolder;
   margin-right: 3px;
   border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
@@ -37,7 +37,7 @@
   border: 1px solid #b7d4e5;
   background: #e2eaf0;
   color: #2b558e;
-	font-weight: normal;
+  font-weight: normal;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -217,6 +217,39 @@
   display: none;
 }
 
+#checklist_summary_tab .checklist {
+  font-size: 120%;
+  margin-bottom: 5px;
+}
+
+#checklist_summary_tab ol > li > ol {
+  margin-left: 10px;
+}
+
+#checklist_summary_tab > ol > li {
+  padding-bottom: 15px;
+}
+
+#checklist_summary_tab .answer > .positive {
+  color: #00ff00;
+}
+
+#checklist_summary_tab .answer > .negative {
+  color: #ff0000;
+}
+
+#checklist_summary_tab .answer > .unanswered {
+  color: #333333;
+}
+
+#checklist_summary_tab .comment {
+  margin-left: 10px;
+  color: #000000;
+  background-color: #ffffff;
+  font-family: monospace;
+  font-size: 110%;
+}
+
 /* sidebar */
 
 #logo small {
@@ -389,7 +422,7 @@ table.notification td {
 /* content */
 
 li.ModelChoiceField select {
-  width: 20em;
+  width: 35em;
 }
 td.TypedChoiceField select {
   width: 6em;
@@ -775,13 +808,34 @@ fieldset.disabled {
 .textboxlist-autocomplete ul {
   margin: 0 !important;
 }
+
 .ecs-TextAreaToolbar {
   display: block;
 }
 .ecs-TextAreaToolbar a {
-	margin-right: 10px;
+	margin: 0 10px 5px 0;
+}
+#content .ecs-TextAreaToolbar a:nth-of-type(1) {
+  display: inline-block;
+  text-indent: -9999px; 
+  background: url(/static/images/icons.png) 0 -1088px no-repeat;
+  height: 16px;
+  width: 16px;
+}
+#content .ecs-TextAreaToolbar a:nth-of-type(2) {
+  display: inline-block;
+  text-indent: -9999px; 
+  background: url(/static/images/icons.png) 0 -1072px no-repeat;
+  height: 16px;
+  width: 16px;
 }
 
+#content .ecs-TextAreaToolbar a:nth-of-type(3) {
+    width: 16px;
+    height: 16px;
+    background-color: #f00;
+    display: inline-block;
+}
 /* specific formset styles */
 
 #measure_formset textarea,
@@ -814,9 +868,6 @@ fieldset.disabled {
 }
 .form_main input#id_title {
   width: 350px;
-}
-.form_main td.15em textarea {
-  width: 250px;
 }
 .form_main input[type=submit] {
   margin: 10px 10px 10px 240px;
@@ -865,7 +916,7 @@ fieldset.disabled {
 .doclist .list_item {
   display: block;
   margin-bottom: 5px;
-  padding-bottom: 2px
+  padding-bottom: 2px;
   background: #ddd; 
 }
 .doclist .list_item span.doc_name:before {
@@ -1081,24 +1132,23 @@ content ol.submission_list h3 .ecnr {
   margin-right: 10px;
 }
 
-/*****************
- *    Readonly   *
- ****************/
+/*  Readonly  */
 
+.form_main.readonly ol li {
+  display: block;
+  margin-bottom: 10px;
+} 
 .form_main.readonly .field li label,
 .form_main.readonly ol li label {
   text-align: left;
   vertical-align: baseline;
-  min-width: 240px;
-  max-width: 700px;
-  width: auto;
+  width: 260px;
   float: left;
+  clear: none;
 }
 .form_main.readonly .review ol li label,
 .form_main.readonly .checklist_review_tab ol li label {
-  min-width: 220px;
-  width: 220px;
-  text-align: right;
+  width: 240px;
 }
 .form_main.readonly li pre,
 .form_main.readonly td pre {
@@ -1112,8 +1162,9 @@ content ol.submission_list h3 .ecnr {
 }
 .form_main.readonly li pre.oneline,
 .form_main.readonly td pre {
+  float: left;
   padding: 4px;
-  display: inline-block;
+  display: block;
   margin-bottom: 4px;
   position: relative;
   top: -4px;
@@ -1122,8 +1173,11 @@ content ol.submission_list h3 .ecnr {
 .form_main.readonly li pre.multiline {
   padding: 5px;
   display: block;
-  clear: both;
-  margin: 0px 0px 20px 20px;
+  float: left;
+  white-space: pre-wrap;
+  width: auto;
+  max-width: 700px;
+  margin: 0 0 20px 0;
 }
 .form_main.readonly li pre em {
   color: #333333;
@@ -1139,4 +1193,14 @@ content ol.submission_list h3 .ecnr {
 }
 .form_main.readonly .version a {
   vertical-align: top;
+}
+.form_main.readonly table pre {
+  margin-left: 0;
+}
+.preview_icon {
+  display: inline-block;
+  text-indent: -9999px;
+  background: url(/static/images/icons.png) 0 -1056px no-repeat;
+  width: 16px;
+  height: 16px;
 }

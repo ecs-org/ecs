@@ -8,14 +8,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Deleting field 'UserProfile.external_review'
-        db.delete_column('users_userprofile', 'external_review')
+        # Adding field 'UserSettings.submission_filter_search'
+        db.add_column('users_usersettings', 'submission_filter_search', self.gf('django_extensions.db.fields.json.JSONField')(), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Adding field 'UserProfile.external_review'
-        db.add_column('users_userprofile', 'external_review', self.gf('django.db.models.fields.BooleanField')(default=False), keep_default=False)
+        # Deleting field 'UserSettings.submission_filter_search'
+        db.delete_column('users_usersettings', 'submission_filter_search')
 
 
     models = {
@@ -60,7 +60,7 @@ class Migration(SchemaMigration):
             'accepted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'ecs_invitations'", 'to': "orm['auth.User']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'default': "'8576254c928c4c4d9127c504dad8ff2a'", 'unique': 'True', 'max_length': '32'})
+            'uuid': ('django.db.models.fields.CharField', [], {'default': "'9e87e46308464d819959e99e7477250f'", 'unique': 'True', 'max_length': '32'})
         },
         'users.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
@@ -71,6 +71,7 @@ class Migration(SchemaMigration):
             'city': ('django.db.models.fields.CharField', [], {'max_length': '80', 'blank': 'True'}),
             'executive_board_member': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'expedited_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'external_review': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'fax': ('django.db.models.fields.CharField', [], {'max_length': '45', 'blank': 'True'}),
             'forward_messages_after_minutes': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'gender': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
@@ -103,6 +104,7 @@ class Migration(SchemaMigration):
             'submission_filter_all': ('django_extensions.db.fields.json.JSONField', [], {}),
             'submission_filter_assigned': ('django_extensions.db.fields.json.JSONField', [], {}),
             'submission_filter_mine': ('django_extensions.db.fields.json.JSONField', [], {}),
+            'submission_filter_search': ('django_extensions.db.fields.json.JSONField', [], {}),
             'submission_filter_widget': ('django_extensions.db.fields.json.JSONField', [], {}),
             'submission_filter_widget_internal': ('django_extensions.db.fields.json.JSONField', [], {}),
             'task_filter': ('django_extensions.db.fields.json.JSONField', [], {}),

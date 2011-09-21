@@ -4,7 +4,7 @@ from ecs.notifications.models import NotificationAnswer
 
 
 class NotificationAnswerForm(forms.ModelForm):
-    valid = forms.BooleanField(label=_('valid'))
+    valid = forms.BooleanField(label=_('valid'), required=False)
     class Meta:
         model = NotificationAnswer
         fields = ('valid', 'text',)
