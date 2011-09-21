@@ -30,7 +30,7 @@ class EthicsCommission(models.Model):
 
 class ExpeditedReviewCategory(models.Model):
     name = models.CharField(max_length=60)
-    abbrev = models.CharField(max_length=12)
+    abbrev = models.CharField(max_length=12, unique=True)
     users = models.ManyToManyField(User, related_name='expedited_review_categories')
 
     class Meta:
