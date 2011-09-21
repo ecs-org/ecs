@@ -28,7 +28,7 @@ class ChecklistQuestion(models.Model):
 
     class Meta:
         app_label = 'core'
-        unique_together = (('blueprint', 'number'), ('blueprint', 'index'))
+        unique_together = (('blueprint', 'number'),)
         ordering = ('blueprint', 'index',)
 
     def __unicode__(self):
