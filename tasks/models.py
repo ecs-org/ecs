@@ -10,7 +10,7 @@ from django.utils.translation import ugettext as _
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission, Vote
+from ecs.core.models import Submission, Vote, Checklist
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.authorization.managers import AuthorizationManager
@@ -64,6 +64,8 @@ class TaskQuerySet(models.query.QuerySet):
             for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
                 notification_ct = ContentType.objects.get_for_model(notification_model)
                 q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
+            checklist_ct = ContentType.objects.get_for_model(Checklist)
+            q |= models.Q(content_type=checklist_ct, data_id__in=Checklist.objects.filter(submission=submission).values('pk').query)
         return self.filter(q).distinct()
 
 class TaskManager(AuthorizationManager):

@@ -75,7 +75,7 @@
                     </li>
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
-                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
                     </li>
                 {% endfor %}

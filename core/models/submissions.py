@@ -65,6 +65,9 @@ class SubmissionQuerySet(models.query.QuerySet):
         from ecs.tasks.models import Task
         submission_ct = ContentType.objects.get_for_model(Submission)
         submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
+        from ecs.core.models import Checklist
+        checklist_ct = ContentType.objects.get_for_model(Checklist)
+        submissions |= self.filter(pk__in=Checklist.objects.all().values('submission__pk').query)
         return submissions.distinct()
 
     def none(self):
@@ -174,7 +177,7 @@ class Submission(models.Model):
     def external_review_task_for(self, user):
         from ecs.tasks.models import Task
         try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
+            return Task.objects.for_submission(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
     

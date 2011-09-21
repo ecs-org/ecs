@@ -11,7 +11,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission, Vote
+from ecs.core.models import Submission, Vote, Checklist
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification
 from ecs.communication.models import Thread
@@ -135,6 +135,8 @@ def _get_task_submission(task):
         return task.data.submission_form.submission
     elif isinstance(task.data, Notification) and task.data.submission_forms.count():
         return task.data.submission_forms.all()[0].submission
+    elif isinstance(task.data, Checklist) and task.data.submission:
+        return task.data.submission
     else:
         return None
     

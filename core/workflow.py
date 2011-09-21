@@ -17,6 +17,7 @@ from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
+register(Checklist)
 
 @guard(model=Submission)
 def is_acknowledged(wf):
@@ -94,6 +95,14 @@ def needs_legal_and_patient_review(wf):
 def needs_statistical_review(wf):
     return wf.data.statistical_review_required
 
+@guard(model=Checklist)
+def is_external_review_checklist(wf):
+    return wf.data.blueprint.slug == 'external_review'
+
+@guard(model=Checklist)
+def checklist_review_review_failed(wf):
+    return wf.data.status == 'review_fail'
+
 class InitialReview(Activity):
     class Meta:
         model = Submission
@@ -157,6 +166,14 @@ class CategorizationReview(_CategorizationReviewBase):
             # schedule submission for the next schedulable meeting
             meeting = Meeting.objects.next_schedulable_meeting(s)
             meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
+
+        # create external review checklists
+        blueprint = ChecklistBlueprint.objects.get(slug='external_review')
+        for user in s.external_reviewers.all():
+            checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user)
+            if created:
+                for question in blueprint.questions.order_by('text'):
+                    ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
@@ -279,39 +296,6 @@ def unlock_localec_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
 post_save.connect(unlock_localec_recommendation_review, sender=Checklist)
 
-class ExternalReviewSplit(Generic):
-    class Meta:
-        model = Submission
-
-    def emit_token(self, *args, **kwargs):
-        s = self.workflow.data
-        tokens = []
-        for user in s.external_reviewers.all():
-            with sudo():
-                external_review_exists = Task.objects.for_data(s).filter(assigned_to=user, task_type__workflow_node__uid='external_review', deleted_at__isnull=True).exists()
-            if external_review_exists:
-                continue
-            for token in super(ExternalReviewSplit, self).emit_token(*args, **kwargs):
-                token.task.assign(user)
-                tokens.append(token)
-            send_system_message_template(user, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=s)
-        return tokens
-
-# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
-class ExternalChecklistReview(ChecklistReview):
-    def is_reentrant(self):
-        return True
-
-def unlock_external_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ExternalChecklistReview)
-post_save.connect(unlock_external_review, sender=Checklist)
-
-# treat declined external review tasks as if the deadline was reached
-def external_review_declined(sender, **kwargs):
-    task = kwargs['task']
-    task.node_controller.progress(task.workflow_token, deadline=True)
-task_declined.connect(external_review_declined, sender=ExternalChecklistReview)
-
 class VoteFinalization(Activity):
     class Meta:
         model = Vote
@@ -372,3 +356,66 @@ class VoteB2Review(Activity):
             meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
             # only works for normal studies (no thesis lane, etc.)
             meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
+
+class ExternalReview(Activity):
+    class Meta:
+        model = Checklist
+
+    def is_repeatable(self):
+        return True
+
+    def is_reentrant(self):
+        return True
+
+    def is_locked(self):
+        checklist = self.workflow.data
+        return not checklist.is_complete
+
+    def get_url(self):
+        checklist = self.workflow.data
+        blueprint = checklist.blueprint
+        submission_form = checklist.submission.current_submission_form
+        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
+
+    def receive_token(self, *args, **kwargs):
+        c = self.workflow.data
+        token = super(ExternalReview, self).receive_token(*args, **kwargs)
+        token.task.assign(c.user)
+        if c.status == 'new':
+            send_system_message_template(c.user, _('External Review Invitation'), 'submissions/external_reviewer_invitation.txt', None, submission=c.submission)
+        return token
+
+def unlock_external_review(sender, **kwargs):
+    kwargs['instance'].workflow.unlock(ExternalReview)
+post_save.connect(unlock_external_review, sender=Checklist)
+
+# treat declined external review tasks as if the deadline was reached
+def external_review_declined(sender, **kwargs):
+    task = kwargs['task']
+    task.node_controller.progress(task.workflow_token, deadline=True)
+task_declined.connect(external_review_declined, sender=ExternalReview)
+
+class ExternalReviewReview(Activity):
+    class Meta:
+        model = Checklist
+
+    def get_url(self):
+        checklist = self.workflow.data
+        submission_form = checklist.submission.current_submission_form
+        return reverse('ecs.core.views.show_checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'checklist_pk': checklist.pk})
+
+    def get_choices(self):
+        return (
+            ('review_ok', _('Publish')),
+            ('review_fail', _('Send back to external Reviewer')),
+            ('dropped', _('Drop')),
+        )
+
+    def pre_perform(self, choice):
+        c = self.workflow.data
+        c.status = choice
+        c.save()
+        if c.status == 'review_ok':
+            pass        # TODO: send mail with attached checklist pdf to the presenting parties
+        elif c.status == 'review_fail':
+            send_system_message_template(c.user, _('External Review Declined'), 'submissions/external_review_declined.txt', None, submission=c.submission)

@@ -14,7 +14,6 @@ class DeclineTaskForm(forms.Form):
     
 
 TASK_MANAGEMENT_CHOICES = [('delegate', _('delegate')),('message', _('message'))]
-TASK_QUESTION_TYPE = [('callback', _('callback')), ('somebody', _('somebody')), ('related', _('related') )]
 
 class TaskChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, task):
@@ -33,7 +32,7 @@ class ManageTaskForm(forms.Form):
         fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
         fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type)
         if task.choices:
-            fs['action'].choices += [('complete_%s' % i, choice[i]) for i, choice in enumerate(task.choices)]
+            fs['action'].choices += [('complete_%s' % i, choice[0]) for i, choice in enumerate(task.choices)]
         else:
             fs['action'].choices += [('complete', _('complete'))]
         

@@ -49,6 +49,8 @@ class SubmissionQFactory(authorization.QFactory):
                 current_submission_form__sponsor=user
             ) | self.make_q(
                 pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
+            ) | self.make_q(
+                pk__in=Checklist.objects.values('submission__pk').query
             )
         q |= until_eol_q
         return q
@@ -91,16 +93,19 @@ class NotificationQFactory(authorization.QFactory):
 
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
     authorization.register(cls, factory=NotificationQFactory)
-    
+
 
 class ChecklistQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        q = self.make_q(submission__in=Submission.objects.filter(pk__gt=0).values('pk').query)
-        if not profile.internal:
-            q &= self.make_q(user=user)
+        if profile.internal:
+            return self.make_q()
+        q = self.make_q(user=user)
+        for x in ('sponsor', 'invoice', 'submitter', 'presenter'):
+            kwargs = {'status': 'review_ok', 'submission__current_submission_form__{0}'.format(x): user}
+            q |= self.make_q(**kwargs)
         return q
-        
+
 authorization.register(Checklist, factory=ChecklistQFactory)
 
 class DocumentAnnotationQFactory(authorization.QFactory):

@@ -1,0 +1,10 @@
+{% load i18n core %}
+{% blocktrans with submission|ec_number as ec_number %}
+Your external review for the study {{ ec_number }} can not be accepted in the
+present shape.
+Please check your inbox for more precise information. You can resubmit
+your external review as appropriate.
+
+Sincerly yours,
+    The Team of the Ethics Commission
+{% endblocktrans %}

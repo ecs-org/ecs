@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.db.models import Q
+from django.utils.translation import ugettext as _
 
 from ecs.authorization import AuthorizationManager
 
@@ -14,7 +15,7 @@ class ChecklistBlueprint(models.Model):
         app_label = 'core'
 
     def __unicode__(self):
-        return self.name
+        return _(self.name)
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
@@ -31,11 +32,21 @@ class ChecklistQuestion(models.Model):
     def __unicode__(self):
         return u"%s: '%s'" % (self.blueprint, self.text)
 
+
+CHECKLIST_STATUS_CHOICES = (
+    ('new', _('New')),
+    ('completed', _('Completed')),
+    ('review_ok', _('Review OK')),
+    ('review_fail', _('Review Failed')),
+    ('dropped', _('Dropped')),
+)
+
 class Checklist(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='checklists')
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     user = models.ForeignKey('auth.user')
-    
+    status = models.CharField(max_length=15, default='new', choices=CHECKLIST_STATUS_CHOICES)
+
     objects = AuthorizationManager()
 
     class Meta:
@@ -45,33 +56,33 @@ class Checklist(models.Model):
         if self.blueprint.multiple:
             return "%s (%s)" % (self.blueprint, self.user)
         return u"%s" % self.blueprint
-        
+
     @property
     def is_complete(self):
         return self.answers.filter(answer=None).count() == 0
-        
+
     @property
     def is_positive(self):
         return self.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True)) == 0
-        
+
     @property
     def is_negative(self):
         return not self.is_positive
-        
+
     def get_answers_with_comments(self, answer=None):
         if answer is None:
             q = Q(answer=None)
         else:
             q = Q(question__inverted=False, answer=answer) | Q(question__inverted=True, answer=not answer)
         return self.answers.exclude(comment=None).exclude(comment="").filter(q).order_by('question')
-        
+
     def get_all_answers_with_comments(self):
         return self.answers.exclude(comment=None).exclude(comment="").order_by('question')
-        
+
     @property
     def has_positive_comments(self):
         return self.get_answers_with_comments(True).exists()
-        
+
     @property
     def has_negative_comments(self):
         return self.get_answers_with_comments(False).exists()
@@ -87,7 +98,7 @@ class ChecklistAnswer(models.Model):
 
     def __unicode__(self):
         return u"Answer to '%s': %s" % (self.question, self.answer)
-    
+
     @property
     def is_answered(self):
         return self.answer is not None
@@ -95,7 +106,7 @@ class ChecklistAnswer(models.Model):
     @property
     def is_positive(self):
         return (not self.question.inverted and self.answer) or (self.question.inverted and self.answer == False)
-    
+
     @property
     def is_negative(self):
         return not self.is_positive

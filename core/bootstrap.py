@@ -71,8 +71,8 @@ def templates():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.core.bootstrap.checklist_blueprints'))
 def submission_workflow():
     from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, ExternalReviewSplit,
-        ExternalChecklistReview, ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
+    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview,
+        ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
         needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review,
@@ -86,7 +86,6 @@ def submission_workflow():
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
-    external_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='external_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
@@ -109,8 +108,6 @@ def submission_workflow():
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
-            'external_review_split': Args(ExternalReviewSplit, name=_("External Review Split")),
-            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
@@ -162,10 +159,6 @@ def submission_workflow():
             ('localec_recommendation', 'localec_recommendation_review'): None,
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
-            ('categorization_review', 'external_review_split'): None,
-
-            ('external_review_split', 'external_review'): None,
-
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
             ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
@@ -246,6 +239,7 @@ def auth_groups():
         u'userswitcher_target',
         u'translators',
         u'sentryusers',
+        u'External Review Review Group',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -399,6 +393,7 @@ def auth_user_testusers():
         ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
         ('localec.rev', u'Local-EC Review Group', {'internal': True}),
         ('b2.rev', u'EC-B2 Review Group', {'internal': True}),
+        ('ext.rev.rev', u'External Review Review Group', {'internal': True}),
     )
 
     boardtestusers = (
@@ -476,25 +471,3 @@ def auth_ec_staff_users():
         from ecs.core.bootstrap_settings import staff_users
     except ImportError:
         staff_users = ()
-    
-    for blueprint in blueprints:
-        b, created = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
-        _update_instance(b, blueprint)
-
-    try:
-        from ecs.core.bootstrap_settings import checklist_questions
-    except ImportError:
-        question = [(u'1. Everything fine and positive', u'this is important'),]        
-        checklist_questions = {}
-        for blueprint in blueprints:
-            checklist_questions [blueprint['slug']] = deepcopy(question)
-
-    for slug in checklist_questions.keys():
-        blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for question in checklist_questions[slug]:
-            number, text = question
-            cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
-            cq.text = text
-            cq.description = question.pop('description', u'')
-            cq.inverted = question.pop('inverted', False)
-            cq.save()

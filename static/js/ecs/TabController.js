@@ -16,6 +16,9 @@ ecs.Tab = new Class({
         this.panel.setClass(cls, set);
     },
     setSelected: function(selected){
+        console.log(this.header);
+        console.log(this.header.getElement('a'));
+        console.log(this.header.getElement('a').href);
         window.location.hash = '#' + this.header.getElement('a').href.split('#')[1];
         this.setClass(this.controller.options.selectedTabClass, selected);
         this.panel.setStyle('display', selected ? 'block' : 'none');

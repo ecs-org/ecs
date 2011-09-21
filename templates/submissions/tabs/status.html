@@ -178,15 +178,11 @@
         <th>Gutachten:</th>
         <td>
             <ul>
-            {% for task in external_review_tasks %}
-                <li>
-                    {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
-                    {% if not task.closed_at %}
-                        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
-                    {% else %}
-                        [{% trans "Abgeschlossen" %}]
-                    {% endif %}
-                </li>
+            {% for checklist in external_review_checklists %}
+                <li>{{ checklist }} [{{ checklist.get_status_display }}]
+                {% if checklist.status == 'new' or checklist.status == 'review_fail' %}
+                    <a href="{% url ecs.core.views.drop_checklist_review submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "drop" %}</a>
+                {% endif %}</li>
             {% endfor %}
             </ul>
         </td>

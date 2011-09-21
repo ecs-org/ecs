@@ -28,7 +28,7 @@ from ecs.core.forms.voting import VoteReviewForm
 from ecs.core.forms.utils import submission_form_to_dict
 
 from ecs.core.workflow import (ChecklistReview,
-    ExternalChecklistReview, ThesisRecommendationReview,
+    ThesisRecommendationReview,
     ExpeditedRecommendation, ExpeditedRecommendationReview,
     LocalEcRecommendationReview, BoardMemberReview)
 
@@ -128,7 +128,7 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
-CHECKLIST_ACTIVITIES = (ChecklistReview, ExternalChecklistReview, ThesisRecommendationReview,
+CHECKLIST_ACTIVITIES = (ChecklistReview, ThesisRecommendationReview,
     ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
@@ -174,8 +174,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         previous_form = sf
     submission_forms = reversed(submission_forms)
 
-    with sudo():
-        external_review_tasks = Task.objects.for_data(submission).filter(deleted_at__isnull=True, task_type__workflow_node__uid='external_review')
+    external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
 
     from ecs.notifications.models import NotificationType
     context = {
@@ -195,7 +194,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
-        'external_review_tasks': external_review_tasks,
+        'external_review_checklists': external_review_checklists,
     }
 
     if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
@@ -261,6 +260,25 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
+def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    checklist = get_object_or_404(Checklist, pk=checklist_pk)
+    if not submission_form.submission == checklist.submission:
+        raise Http404()
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={'active_checklist': checklist.pk})
+
+@user_flag_required('internal')
+def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    checklist = get_object_or_404(Checklist, pk=checklist_pk, status__in=('new', 'review_fail'))
+
+    checklist.status = 'dropped'
+    checklist.save()
+    with sudo():
+        for task in Task.objects.for_data(checklist).exclude(closed_at__isnull=False):
+            task.deleted_at = datetime.now()
+            task.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -306,6 +324,8 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             if (complete_task or really_complete_task) and not checklist.is_complete:
                 extra_context['review_incomplete'] = True
             elif really_complete_task and checklist.is_complete:
+                checklist.status = 'completed'
+                checklist.save()
                 related_task.done(request.user)
                 return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
             elif complete_task and checklist.is_complete:
