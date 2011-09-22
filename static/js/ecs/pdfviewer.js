@@ -12,6 +12,7 @@ ecs.pdfviewer.ImageSet = new Class({
         this.width = options.width;
         this.height = options.height;
         this.images = [];
+        this.borderWidths = options.borderWidths;
     },
     addImage: function(image){
         if(!this.height){
@@ -30,7 +31,8 @@ ecs.pdfviewer.ImageSet = new Class({
         img.src = image.url;
     },
     getSpriteOffset: function(x, y){
-        return '-' + parseInt(x * this.getPageWidth()) + 'px -' + parseInt(y * this.getPageHeight()) + 'px';
+        return '-' + (parseInt(x * this.getPageWidth()) + this.borderWidths.left) + 'px'
+            + ' -' + (parseInt(y * this.getPageHeight()) + this.borderWidths.top) + 'px';
     },
     getPageWidth: function(){
         return this.width / this.sprite.x;
@@ -48,8 +50,8 @@ ecs.pdfviewer.ImageSet = new Class({
         var spriteY = parseInt(spriteIndex / this.sprite.x);
         var image = this.images[imageIndex];
         el.setStyles({
-            'width': this.getPageWidth() + 'px',
-            'height': this.getPageHeight() + 'px'
+            'width': (this.getPageWidth() - this.borderWidths.left - this.borderWidths.right) + 'px',
+            'height': (this.getPageHeight() - this.borderWidths.top - this.borderWidths.bottom) + 'px'
         });
         var offset = this.getSpriteOffset(spriteX, spriteY);
         this.loadImage(image, function(){
@@ -110,7 +112,12 @@ ecs.pdfviewer.DocumentViewer = new Class({
             pageDown: function(meta, e){ return e.key == '9' || e.code == ecs.pdfviewer.utils.PAGE_DOWN;},
             search: function(meta, e){ return meta && (e.key == 's' || e.key == 'f');},
             gotoPage: function(meta, e){ return meta && e.key == 'g';},
-            cycleController: function(meta, e){ return e.key == 'enter';}
+            zoomIn: function(meta, e){ return e.key == 'enter' || e.key == 'down';},
+            zoomOut: function(meta, e){ return meta && e.key == 'up';},
+            nextPage: function(meta, e){ return meta && (e.key == 'right' || e.key == 'down');},
+            previousPage: function(meta, e){ return meta && (e.key == 'left' || e.key == 'up');},
+            firstPage: function(meta, e){ return meta && e.shift && (e.key == 'left' || e.key == 'up');},
+            lastPage: function(meta, e){ return meta && e.shift && (e.key == 'right' || e.key == 'down');}
         };
 
         this.keyboardNavigationEnabled = true;
@@ -311,7 +318,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
         this.currentRenderArgs = $A(arguments);
         window.location.hash = this.currentPageIndex + 1;
-        this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? ' - ' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
+        this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
         if(this.currentScreen){
             this.currentScreen.dispose();
@@ -415,50 +422,28 @@ ecs.pdfviewer.DocumentViewer = new Class({
             this.gotoPagePopup.show();
             return false;
         }
-        if(this.keyboard.cycleController(metaKey, e)){
+        if(this.keyboard.zoomIn(metaKey, e)){
             this.cycleController(+1);
             return false;
         }
-        else if(e.key == 'up'){
-            if(metaKey){
-                this.cycleController(-1);
-            }
-            else if(atTop){
-                this.previousPage(this.getController().sliceLength);
-            }
-            else{
-                return true;
-            }
+        if(this.keyboard.zoomOut(metaKey, e)){
+            this.cycleController(-1);
             return false;
         }
-        else if(e.key == 'down'){
-            if(metaKey){
-                this.cycleController(+1);
-            }
-            else if(atBottom){
-                this.nextPage();
-            }
-            else{
-                return true;
-            }
+        if(this.keyboard.firstPage(metaKey, e)){
+            this.setPage(0);
             return false;
         }
-        else if(metaKey && e.key == 'right'){
-            if(e.shift){
-                this.setPage(this.pageCount - 1);
-            }
-            else{
-                this.nextPage();
-            }
+        if(this.keyboard.lastPage(metaKey, e)){
+            this.setPage(this.pageCount - 1);
             return false;
         }
-        else if(metaKey && e.key == 'left'){
-            if(e.shift){
-                this.setPage(0);
-            }
-            else{
-                this.previousPage();
-            }
+        if(this.keyboard.previousPage(metaKey, e)){
+            this.previousPage();
+            return false;
+        }
+        if(this.keyboard.nextPage(metaKey, e)){
+            this.nextPage();
             return false;
         }
     },
@@ -591,8 +576,10 @@ ecs.pdfviewer.Annotation = new Class({
 
 ecs.pdfviewer.Popup = new Class({
     Implements: Events,
+
     initialize: function(viewer){
         this.viewer = viewer;
+        this.dispose = this.dispose.bind(this);
     },
     init: function(){
         if(this.element){
@@ -609,7 +596,7 @@ ecs.pdfviewer.Popup = new Class({
 
         this.initContent(content);
         
-        closeButton.addEvent('click', this.dispose.bind(this));
+        closeButton.addEvent('click', this.dispose);
         this.escapeListener = (function(e){
             if(e.key == 'esc'){
                 this.dispose();
@@ -618,7 +605,7 @@ ecs.pdfviewer.Popup = new Class({
         }).bind(this);
         this.cover.setStyle('display', 'none');
         this.cover.grab(this.element);
-        $(document.body).appendChild(this.cover);
+        $(document.body).grab(this.cover);
         new Drag.Move(this.element, {handle: background});
     },
     dispose: function(){
@@ -639,24 +626,42 @@ ecs.pdfviewer.Popup = new Class({
 
 ecs.pdfviewer.GotoPagePopup = new Class({
     Extends: ecs.pdfviewer.Popup,
+    
+    initialize: function(viewer){
+        this.parent(viewer);
+        this.onKeyDown = this.onKeyDown.bind(this);
+    },
+    
     initContent: function(content){
+        this.element.addClass('gotoPage');
         this.input = new Element('input', {type: 'text'});
         this.input.addEvent('change', (function(){
             var p = parseInt(this.input.value);
             this.viewer.gotoPage(p - 1);
         }).bind(this));
+        this.input.addEvent('keydown', this.onKeyDown);
         content.grab(new Element('span', {'class': 'label', 'html': 'Goto Page:'}))
         content.grab(this.input);
-
     },
     onShow: function(){
         this.input.value = this.viewer.currentPageIndex + 1;
+        this.input.focus();
+        this.input.selectRange(0, this.input.value.length);
+    },
+    onKeyDown: function(e){
+        if(e.key == 'enter'){
+            this.input.blur();
+            this.dispose();
+            e.stop();
+        }
     }
 });
 
 ecs.pdfviewer.SearchPopup = new Class({
     Extends: ecs.pdfviewer.Popup,
+    
     initContent: function(content){
+        this.element.addClass('search');
         this.input = new Element('input', {type: 'text', value: ''});
         this.input.addEvent('keypress', (function(e){
             if(e.key == 'enter'){

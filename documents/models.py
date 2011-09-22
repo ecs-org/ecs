@@ -132,6 +132,12 @@ class Document(models.Model):
     
     objects = DocumentManager()
     
+    @property
+    def doctype_name(self):
+        if self.doctype_id:
+            return _(self.doctype.name)
+        return u"Sonstige Unterlagen"
+    
     def __unicode__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
