@@ -22,10 +22,11 @@ def document_types():
         (_(u"EudraCT Form"), u"eudract", _(u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial")),
         (_(u"adverse reaction report"), u"adversereaction", _(u"Med Watch report, CIOMS form etc.")),
         (_(u"Submission Form"), u"submissionform", _(u"Submission Form")),
+        (_(u"Checklist"), u"checklist", _(u"Checklist")),
         (_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
         (_(u"vote"), u"votes", _(u"Vote")),
     )
-    hidden = ('submissionform', 'votes',)
+    hidden = ('submissionform', 'votes', 'checklist')
 
     for name, identifier, helptext in names:
         d, created = DocumentType.objects.get_or_create(identifier=identifier)

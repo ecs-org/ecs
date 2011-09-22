@@ -416,6 +416,9 @@ class ExternalReviewReview(Activity):
         c.status = choice
         c.save()
         if c.status == 'review_ok':
-            pass        # TODO: send mail with attached checklist pdf to the presenting parties
+            c.render_pdf()
+            presenting_users = set([p.user for p in c.submission.current_submission_form.get_presenting_parties() if p.user])
+            for u in presenting_users:
+                send_system_message_template(u, _('External Review'), 'submissions/external_review_publish.txt', {'checklist': c}, submission=c.submission)
         elif c.status == 'review_fail':
             send_system_message_template(c.user, _('External Review Declined'), 'submissions/external_review_declined.txt', None, submission=c.submission)

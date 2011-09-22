@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 
 from ecs.authorization import AuthorizationManager
+from ecs.documents.models import Document
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
@@ -48,6 +50,7 @@ class Checklist(models.Model):
     submission = models.ForeignKey('core.Submission', related_name='checklists', null=True)
     user = models.ForeignKey('auth.user')
     status = models.CharField(max_length=15, default='new', choices=CHECKLIST_STATUS_CHOICES)
+    pdf_document = models.OneToOneField(Document, related_name="checklist", null=True)
 
     objects = AuthorizationManager()
 
@@ -88,6 +91,24 @@ class Checklist(models.Model):
     @property
     def has_negative_comments(self):
         return self.get_answers_with_comments(False).exists()
+
+    def render_pdf(self):
+        from django.template.defaultfilters import slugify
+        from ecs.utils.viewutils import render_pdf_context
+        from ecs.documents.models import DocumentType
+
+        doctype = DocumentType.objects.get(identifier='checklist')
+        name = slugify(unicode(self))
+        filename = '{0}.pdf'.format(name)
+
+        pdfdata = render_pdf_context('db/submissions/wkhtml2pdf/checklist.html', {
+            'checklist': self,
+        })
+
+        self.pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype,
+            parent_object=self, name=name, original_file_name=filename, version='1',
+            date=datetime.now())
+        self.save()
 
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
