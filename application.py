@@ -163,9 +163,9 @@ ghostscript:req:openbsd:pkg:ghostscript--
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
 # mediaserver: new rendering may use mupdf
-mupdf:static32:apt|suse:http://mupdf.googlecode.com/files/mupdf-0.8.165-linux-i386.tar.gz:tarflat:pdfdraw
-mupdf:static64:apt|suse:http://mupdf.googlecode.com/files/mupdf-0.8.165-linux-amd64.tar.gz:tarflat:pdfdraw
-mupdf:static:win:http://mupdf.googlecode.com/files/mupdf-0.8.165-windows.zip:unzipflat:pdfdraw
+mupdf:static32:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-i386.tar.gz:tarflat:pdfdraw
+mupdf:static64:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-amd64.tar.gz:tarflat:pdfdraw
+mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdraw
 #mupdf 0.8.165 if currently not available for mac, last available is 0.7
 mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
 
