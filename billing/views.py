@@ -8,14 +8,15 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.db.models import Q
 
 from ecs.utils.decorators import developer
-from ecs.core.models import Submission
+from ecs.core.models import Submission, Checklist
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.utils import deliver, whitewash
 
-from ecs.billing.models import Price
+from ecs.billing.models import Price, ChecklistBillingState
 from ecs.billing.stats import collect_submission_billing_stats
 
 
@@ -122,34 +123,34 @@ def submission_billing(request):
     return render(request, 'billing/submissions.html', {
         'submissions': unbilled_submissions,
     })
-    
+
 
 @developer
 def reset_external_review_payment(request):
-    Submission.objects.update(external_reviewer_billed_at=None)
+    ChecklistBillingState.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
 
-
 def external_review_payment(request):
-    submissions = Submission.objects.filter(external_reviewer=True, external_reviewer_billed_at=None, external_reviewer_name__isnull=False)
+    checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status='new').filter(
+        Q(billing_state__isnull=True)|Q(billing_state__isnull=False, billing_state__billed_at=None))
     price = Price.objects.get_review_price()
 
     if request.method == 'POST':
         selected_for_payment = []
-        for submission in submissions:
-            if request.POST.get('pay_%s' % submission.pk, False):
-                selected_for_payment.append(submission)
-        reviewers = User.objects.filter(reviewed_submissions__in=selected_for_payment).distinct()
-        
+        for checklist in checklists:
+            if request.POST.get('pay_%s' % checklist.pk, False):
+                selected_for_payment.append(checklist)
+        reviewers = User.objects.filter(pk__in=[c.user.pk for c in selected_for_payment]).distinct()
+
         xls = SimpleXLS()
         xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum')))
         for i, reviewer in enumerate(reviewers):
-            submissions = reviewer.reviewed_submissions.filter(pk__in=[s.pk for s in selected_for_payment])
+            checklists = reviewer.checklist_set.filter(pk__in=[c.pk for c in selected_for_payment])
             xls.write_row(i + 1, [
-                len(submissions),
+                len(checklists),
                 unicode(reviewer),
-                ", ".join(s.get_ec_number_display() for s in submissions),
-                len(submissions) * price.price,
+                ", ".join(c.submission.get_ec_number_display() for c in checklists),
+                len(checklists) * price.price,
             ])
         r = len(reviewers) + 1
         xls.write_row(r, [
@@ -158,18 +159,22 @@ def external_review_payment(request):
             "",
             xlwt.Formula('SUM(D2:D%s)' % r),
         ])
-        
+
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
         doctype = DocumentType.objects.get(identifier='other')
         doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
-        
-        Submission.objects.filter(pk__in=[s.pk for s in selected_for_payment]).update(external_reviewer_billed_at=now)
-        
+
+        for checklist in selected_for_payment:
+            state, created = ChecklistBillingState.objects.get_or_create(checklist=checklist, defaults={'billed_at': now})
+            if not state.billed_at == now:
+                state.billed_at = now
+                state.save()
+
         htmlmail = unicode(render_html(request, 'billing/email/external_review.html', {}))
         plainmail = whitewash(htmlmail)
-        
+
         deliver(settings.BILLING_RECIPIENT_LIST,
             subject=_(u'Payment request'), 
             message=plainmail,
@@ -177,13 +182,13 @@ def external_review_payment(request):
             attachments=[('externalreview-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
             from_email=settings.DEFAULT_FROM_EMAIL,
         )
-        
+
         return render(request, 'billing/external_review_summary.html', {
             'reviewers': reviewers,
             'xls_doc': doc,
         })
 
     return render(request, 'billing/external_review.html', {
-        'submissions': submissions,
+        'checklists': checklists,
         'price': price,
     })

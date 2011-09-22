@@ -14,15 +14,16 @@
         <a href="{% url ecs.billing.views.reset_external_review_payment %}" class="button_submit">reset</a>
     {% endif %}
     <form action="" method="post">
-    {% for submission in submissions %}
-        <ol>
-          <li>
-            <input type="checkbox" name="pay_{{ submission.pk }}" checked="checked" /> {{ submission.external_reviewer_name }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
-            <div><span class="price">{{ price.price|euro }}</span> ({{ price.text }})</div>
-          </li>
-          <li><input type="submit" /></li>
-        </ol>
-    {% endfor %}
+    <ol>
+        {% for checklist in checklists %}
+            {% with checklist.submission as submission %}
+            <li>
+                <input type="checkbox" name="pay_{{ checklist.pk }}" checked="checked" /> {{ checklist }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
+                <div><span class="price">{{ price.price|euro }}</span> ({{ price.text }})</div>
+            </li>
+            {% endwith %}
+        {% endfor %}
+        <li><input type="submit" /></li>
+    </ol>
     </form>
 {% endblock %}
-

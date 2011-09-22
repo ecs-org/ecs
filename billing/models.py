@@ -46,3 +46,7 @@ class Price(models.Model):
     
     def __unicode__(self):
         return dict(PRICE_CATEGORIES)[self.category]
+
+class ChecklistBillingState(models.Model):
+    checklist = models.OneToOneField('core.Checklist', null=True, related_name='billing_state')
+    billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
