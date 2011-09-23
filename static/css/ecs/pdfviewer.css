@@ -10,16 +10,44 @@ body.pdfviewer .hidden{
 #pdfviewer{
     margin: auto;
     width: 800px;
+    position: relative;
+}
+
+#pdfviewer #menubutton{
+    position: absolute;
+    top: 8px;
+    left: 10px;
+    z-index: 200;
+    width: 19px;
+    height: 19px;
+    display: inline-block;
+    text-align: center;
+    padding: 6px 10px 10px 6px;
+    font-size: 28px;
+    line-height: 21px;
+    color: #666;
+    border-radius: 19px;
+    border: 1px solid #999;
+    box-shadow: 1px 1px 0px #fff;
+    background-color: rgba(0, 0, 0, 0.05);
+    text-shadow: #fff 1px 1px 0px;
+}
+
+#pdfviewer #menubutton:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+    text-decoration: none;
 }
 
 #pdfviewer .header{
     color: #000;
     font-size: 15px;
     padding: 10px;
+    padding-left: 60px;
     position: relative;
-    background-color: #dddde3;
-    text-shadow: #fff 1px 1px 1px;
-    
+    background-color: #ccd9e6;
+    text-shadow: #fff 1px 1px 0px;
+    box-shadow: 0px 1px 3px #999;
+    z-index: 100;
 }
 
 #pdfviewer .header .details{
@@ -35,6 +63,7 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .body{
+    border-top: 1px solid #fff;
     float: left;
     position: relative;
     background-color: #444;
@@ -49,7 +78,12 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .page.current{
-    border-color: #99ccff;
+    border-color: #88bbdd;
+}
+
+#pdfviewer .page.current > .info{
+    display: block;
+    color: #88bbdd;
 }
 
 #pdfviewer .i1x1 .page.current{
@@ -88,7 +122,7 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .page:hover{
-    border-color: #cc0000;
+    border: 1px dashed #ccd9e6;
 }
 
 #pdfviewer .page:hover > .info{
@@ -132,7 +166,7 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer a.next:hover, body.pdfviewer a.previous:hover{
-    background-color: #cccc00;
+    background-color: #ccd9e6;
 }
 
 #pdfviewer .screen{
@@ -199,11 +233,12 @@ body.pdfviewer #navigation{
 
 #pdfviewer .annotation > .marker{
     position: absolute;
-    left: 100%;
-    width: 7px;
-    height: 7px;
-    border: 2px solid #000000;
-    background-color: #ffff00;
+    left: 99%;
+    width: 8px;
+    height: 8px;
+    border: 2px solid #88bbdd;
+    background-color: #fff;
+    border-radius: 6px;
     opacity: 0.5;
     margin-left: -11px;
 }
@@ -388,4 +423,39 @@ body.pdfviewer .popup.gotoPage input::-moz-selection,
 body.pdfviewer .popup input:focus{
     background-color: #2E1428;
 }
+
+/* menu popup */
+body.pdfviewer .popup.menu,
+body.pdfviewer .popup.menu > .content{
+    width: 312px;
+    height: 312px;
+}
+body.pdfviewer .popup.menu a.close{
+    display: none;
+}
+body.pdfviewer .popup.menu a{
+    float: left;
+    display: block;
+
+    width: 100px;
+    height: 70px;
+    padding: 0px;
+    padding-top: 30px;
+
+    font-size: 14px;
+    background-color: #ccd9e6;
+    text-align: center;
+    border-radius: 3px;
+    color: #000;
+    text-shadow: 1px 1px 0px #fff;
+    border: none;
+    margin: 2px;
+}
+
+body.pdfviewer .popup.menu a:hover{
+    background-color: #C1CDDA;
+    text-decoration: none;
+}
+
+
 

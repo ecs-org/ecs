@@ -1,8 +1,11 @@
 {% extends "shell.html" %}
 {% load i18n pdfviewer %}
 
-{% block htmlbody %}
+{% block htmltitle %}
+{% if document.parent_object %}{{ document.parent_object }}: {% endif %}{{ document.doctype_name }}
+{% endblock %}
 
+{% block htmlbody %}
 {% if document|is_ready %}
 <div id="pdfviewer"></div>
 <div id="navigation" class="hidden">
@@ -62,7 +65,48 @@
                 deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
                 helpContents: $('navigation'),
                 wheelScrollThreshold: 1,//30,
-                wheelTimeThreshold: 200
+                wheelTimeThreshold: 200,
+                shortcuts: [
+                    /* in case of conflict, the first shortcut wins */
+                    {command: 'toggleHelp',           key: 'space', annotationMode: true},
+                    {command: 'toggleAnnotationMode', key: 'a', meta: true,  annotationMode: true},
+                    {command: 'quitAnnotationMode',   key: 'esc', annotationMode: true},
+
+                    {command: 'previousPage',       key: 'pageup', top: true},
+                    {command: 'scrollToTop',        key: 'pageup'},
+                    {command: 'previousPage',       key: '1', top: true},
+                    {command: 'scrollToTop',        key: '1'},
+
+                    {command: 'nextPage',           key: 'pagedown', bottom: true},
+                    {command: 'scrollToBottom',     key: 'pagedown'},
+                    {command: 'nextPage',           key: '9', bottom: true},
+                    {command: 'scrollToBottom',     key: '9'},
+
+                    {command: 'selectPreviousPage', key: 'left'},
+                    {command: 'firstPage',          key: 'left', shift: true, meta:true},
+                    {command: 'previousPage',       key: 'left', meta: true},
+                    
+                    {command: 'selectNextPage',     key: 'right'},
+                    {command: 'nextPage',           key: 'right', meta: true},
+                    {command: 'lastPage',           key: 'right', shift:true, meta: true},
+
+                    {command: 'selectNextRow',      key: 'down'},
+                    {command: 'cycleIn',            key: 'down'},
+                    {command: 'lastPage',           key: 'down', shift: true, meta: true},
+                    {command: 'nextPage',           key: 'down', meta: true},
+
+                    {command: 'selectPreviousRow',  key: 'up'},
+                    {command: 'cycleOut',           key: 'up'},
+                    {command: 'firstPage',          key: 'up', shift: true, meta: true},
+                    {command: 'previousPage',       key: 'up', meta: true},
+                    
+                    {command: 'cycleIn',            key: 'enter'},
+                    
+                    {command: 'showSearch',         key: 'f', meta: true},
+                    {command: 'showSearch',         key: 's', meta: true},
+                    {command: 'showGotoPage',       key: 'g', meta: true},
+                    {command: 'toggleMenu',         key: 'm', meta: true, annotationMode: true}
+                ]
             });
             
             var IMAGE_TILING = [1, 5];
