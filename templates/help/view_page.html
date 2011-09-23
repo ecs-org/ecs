@@ -30,6 +30,24 @@
         | <span class="help_diff">
             <a href="{% url ecs.help.views.difference_help_pages page_pk=page.pk %}">Version: {{ versions }} ({% trans "last edited" %} {{ current.revision.date_created|timesince }} {% trans "ago by" %} {{ current.revision.user }})</a>
         </span>
+        <span class="help_review_status {{ page.review_status }}">
+            | Status: {{ page.get_review_status_display }}
+        </span>
+        {% if page.review_status == 'new' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.ready_for_review page_pk=page.pk %}">ready for review</a>
+            </span>
+        {% endif %}
+        {% if page.review_status == 'ready_for_review' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.review_ok page_pk=page.pk %}">review ok</a> 
+            </span>
+        {% endif %}
+        {% if page.review_status == 'review_ok' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.ready_for_review page_pk=page.pk %}">review again</a> 
+            </span>
+        {% endif %}
     {% endif %}
 {% endblock %}
       

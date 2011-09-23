@@ -69,7 +69,20 @@
   padding: 3px 7px;
   font-size: 14px;
 }
-.help_overview a:hover, .help_search a:hover {
+.help_review_overview a {
+  position: absolute;
+  top: 8px;
+  right: 240px;
+  display: block;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  background-color: #E2EAF0;
+  border: 1px solid #B7D4E5;
+  padding: 3px 7px;
+  font-size: 14px;
+}
+.help_overview a:hover, .help_search a:hover, .help_review_overview a:hover {
   text-decoration: none;
   background: #2B558E;
   color: #fff;
@@ -109,6 +122,12 @@
 	background: #eee;
 	font-size: 14px;
 	border-bottom: 1px solid #ddd;
+}
+#help_nav .help_review_status.ready_for_review {
+    color: #ff0000;
+}
+#help_nav .help_review_status.review_ok {
+    color: #00ff00;
 }
 .nav_left {
   float: left;

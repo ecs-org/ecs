@@ -18,6 +18,9 @@
     <div id="help_title">
       {{ page.title }}
     </div>
+    {% if user|has_flag:"help_writer" %}
+        <span class="help_review_overview"><a href="{% url ecs.help.views.review_overview %}">Review Übersicht</a></span>
+    {% endif %}
     <span class="help_overview"><a href="{% url ecs.help.views.index %}">Inhaltsverzeichnis</a></span>
     <span class="help_search"><a href="{% url ecs.help.views.search %}">Suche</a></span>
   </div>

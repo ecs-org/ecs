@@ -8,11 +8,18 @@ from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import smart_str
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
 
 from ecs.utils import cached_property
 from ecs.tracking.models import View
 from ecs.help.utils import publish_parts
 
+
+REVIEW_STATUS_CHOICES = (
+    ('new', _('New')),
+    ('ready_for_review', _('Ready for Review')),
+    ('review_ok', _('Review OK')),
+)
 
 class Page(models.Model):
     view = models.ForeignKey(View, null=True, blank=True)
@@ -20,6 +27,7 @@ class Page(models.Model):
     slug = models.CharField(max_length=100, unique=True)
     title = models.CharField(max_length=150)
     text = models.TextField()
+    review_status = models.CharField(max_length=20, default='new', choices=REVIEW_STATUS_CHOICES)
     
     class Meta:
         unique_together = ('view', 'anchor')

@@ -25,6 +25,7 @@ from ecs.help.models import Page, Attachment
 from ecs.help.forms import HelpPageForm, AttachmentUploadForm, ImportForm
 from ecs.help.utils import publish_parts
 from ecs.help import serializer
+from ecs.utils.tracrpc import TracRpc
 
 
 def redirect_to_page(page):
@@ -85,6 +86,27 @@ def download_attachment(request, attachment_pk=None):
     attachment = get_object_or_404(Attachment, pk=attachment_pk)
     return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)
 
+@user_flag_required('help_writer')
+def ready_for_review(request, page_pk=None):
+    page = get_object_or_404(Page, pk=page_pk, review_status__in=['new', 'review_ok'])
+    page.review_status = 'ready_for_review'
+    page.save()
+    # TODO: create trac testing ticket
+    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+
+@user_flag_required('help_writer')
+def review_ok(request, page_pk=None):
+    page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
+    page.review_status = 'review_ok'
+    page.save()
+    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+
+@user_flag_required('help_writer')
+def review_overview(request):
+    pages = Page.objects.filter(review_status='ready_for_review')
+    return render(request, 'help/review_overview.html', {
+        'pages': pages
+    })
 
 @user_flag_required('help_writer')
 @revision.create_on_success
@@ -108,7 +130,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
 
     if form.is_valid():
         new = not bool(page)
-        page = form.save()
+        page = form.save(commit=False)
         revision.user = request.original_user if hasattr(request, "original_user") else request.user
         if new and page.slug:
             try:

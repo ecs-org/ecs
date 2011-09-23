@@ -367,6 +367,11 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
+HELP_REVIEW_CONFIG = {'create_trac_tickets': True, 'store_in_db': False,
+    'RPC_CONFIG': {'username': 'sharing', 'password': 'uehkdkDijepo833', 'proto': 'https', 'host': 'ecsdev.ep3.at', 'urlpath': '/project/ecs'},
+    'milestone': 'Milestone 16', 'component': 'feedback',
+    'ticketfieldnames': ['summary', 'description', 'location', 'absoluteurl', 'type', 'cc', 'ecsfeedback_creator', 'milestone', 'component']}
+
 # ecs.bugshot tracrpc settings
 BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 16',}
 
