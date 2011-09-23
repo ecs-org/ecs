@@ -130,7 +130,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
 
     if form.is_valid():
         new = not bool(page)
-        page = form.save(commit=False)
+        page = form.save()
         revision.user = request.original_user if hasattr(request, "original_user") else request.user
         if new and page.slug:
             try:
