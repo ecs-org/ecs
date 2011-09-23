@@ -103,9 +103,11 @@ def review_ok(request, page_pk=None):
 
 @user_flag_required('help_writer')
 def review_overview(request):
-    pages = Page.objects.filter(review_status='ready_for_review')
+    ready_for_review = Page.objects.filter(review_status='ready_for_review')
+    new = Page.objects.filter(review_status='new')
     return render(request, 'help/review_overview.html', {
-        'pages': pages
+        'ready_for_review': ready_for_review,
+        'new': new,
     })
 
 @user_flag_required('help_writer')
