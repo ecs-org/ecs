@@ -72,33 +72,20 @@ class SubmissionReschedulingForm(forms.Form):
         current_meetings = submission.meetings.filter(started=None).order_by('start')
         self.fields['from_meeting'].queryset = current_meetings
         self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings])
-    
+
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meeting')
-        self.category = kwargs.pop('category')
-        self.submissions = self.meeting.submissions.filter(medical_categories=self.category)
-        try:
-            kwargs['instance'] = AssignedMedicalCategory.objects.get(category=self.category, meeting=self.meeting)
-        except AssignedMedicalCategory.DoesNotExist:
-            pass
-        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category, groups__name=u'EC-Board Member').order_by('email')
-
     class Meta:
         model = AssignedMedicalCategory
         fields = ('board_member',)
-        
-    def save(self, **kwargs):
-        commit = kwargs.get('commit', True)
-        kwargs['commit'] = False
-        obj = super(AssignedMedicalCategoryForm, self).save(**kwargs)
-        obj.meeting = self.meeting
-        obj.category = self.category
-        if commit:
-            obj.save()
-        return obj
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs['instance']
+        self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category)
+        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['board_member'].queryset = User.objects.filter(medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
+
+AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory, extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
 
 class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):

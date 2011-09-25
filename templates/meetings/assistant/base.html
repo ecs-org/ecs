@@ -1,20 +1,18 @@
-{% extends 'meetings/detail.html' %}
 {% load core i18n %}
 
-{% block meeting_detail %}
 <div id="meeting_assistant">
     <div class="meeting_assistant_nav">
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
             {% if not meeting.started %}
-                <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
+                <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
-                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
+                    <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
-                <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
+                <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
                 {% if not meeting.ended and meeting.retrospective_thesis_entries.count or not meeting.ended and meeting.expedited_entries.count %}
-                    <div class="button"><a href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}">{% trans 'Ret. Thesis/Expedited' %}</a></div>
+                    <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}">{% trans 'Ret. Thesis/Expedited' %}</a></div>
                 {% endif %}
             {% endif %}
             <ol class="info">
@@ -48,7 +46,7 @@
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
                     <div class="search">
-                        <form action="{% url ecs.meetings.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}">
+                        <form action="{% url ecs.meetings.views.meeting_assistant_quickjump meeting_pk=meeting.pk %}" class="open-in-widget">
                             <input type="text" name="q" placeholder="in Sitzungen suchen" />
                             <input type="submit" value="Suchen" />
                         </form>
@@ -64,10 +62,7 @@
         {% block meeting_assistant_sidebar %}{% endblock %}
     </div>
 </div>
-{% endblock %}
 
-{% block jsbottom %}
-{{ block.super }}
 <script type="text/javascript">
     window.addEvent('domready', function(){
         setInterval(function(){
@@ -75,4 +70,3 @@
         }, 6000);
     });
 </script>
-{% endblock %}

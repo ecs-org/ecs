@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-22 16:15+0200\n"
+"POT-Creation-Date: 2011-09-25 20:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,51 +71,51 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:45
+#: billing/views.py:46
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:78 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:78 core/models/submissions.py:163
+#: billing/views.py:79 core/models/submissions.py:163
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:78
+#: billing/views.py:79
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:78
+#: billing/views.py:79
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:78 core/forms/layout.py:58 core/forms/layout.py:59
+#: billing/views.py:79 core/forms/layout.py:58 core/forms/layout.py:59
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:78
+#: billing/views.py:79
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:78 billing/views.py:145
+#: billing/views.py:79 billing/views.py:146
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:106
+#: billing/views.py:107
 msgid "Billing request"
 msgstr ""
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:145
+#: billing/views.py:146
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:174
+#: billing/views.py:179
 msgid "Payment request"
 msgstr ""
 
@@ -1570,8 +1570,9 @@ msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:332 core/models/checklist.py:41
+#: core/forms/forms.py:332 core/models/checklist.py:42 help/models.py:19
 #: templates/boilerplate/list.html:10 templates/meetings/status.html:21
+#: templates/meetings/tabs/status.html:18
 msgid "New"
 msgstr "Neu"
 
@@ -1744,7 +1745,9 @@ msgid "Study status"
 msgstr "Studienstatus"
 
 #: core/forms/layout.py:179 templates/meetings/detail.html:10
-#: templates/meetings/status.html:6 templates/meetings/status.html.py:14
+#: templates/meetings/details.html:9 templates/meetings/status.html:6
+#: templates/meetings/status.html.py:14 templates/meetings/tabs/status.html:3
+#: templates/meetings/tabs/status.html:11
 #: templates/submissions/readonly_form.html:45
 msgid "Status"
 msgstr "Status"
@@ -1820,19 +1823,19 @@ msgstr "Gutachter"
 msgid "Proofread and valid"
 msgstr "Korrektur gelesen und gültig"
 
-#: core/models/checklist.py:42
+#: core/models/checklist.py:43
 msgid "Completed"
 msgstr "Abgeschlossen"
 
-#: core/models/checklist.py:43
+#: core/models/checklist.py:44 help/models.py:21
 msgid "Review OK"
 msgstr "Überprüfung OK"
 
-#: core/models/checklist.py:44
+#: core/models/checklist.py:45
 msgid "Review Failed"
 msgstr "Überprüfung fehlgeschlagen"
 
-#: core/models/checklist.py:45
+#: core/models/checklist.py:46
 msgid "Dropped"
 msgstr "Fallengelassen"
 
@@ -2100,6 +2103,11 @@ msgstr "abgebrochen"
 msgid "deleted"
 msgstr "gelöscht"
 
+#: help/models.py:20
+#, fuzzy
+msgid "Ready for Review"
+msgstr "Gutachten Statistik"
+
 #: mediaserver/views.py:17 mediaserver/views.py:28 mediaserver/views.py:51
 msgid "Invalid expiring url"
 msgstr ""
@@ -2181,39 +2189,39 @@ msgstr "Vergangene Sitzungen"
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:179
+#: meetings/views.py:173 meetings/views.py:560
 msgid "Meeting on {date}"
 msgstr "Sitzung am {date}"
 
-#: meetings/views.py:265
+#: meetings/views.py:259
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:274
+#: meetings/views.py:268
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:280
+#: meetings/views.py:274
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:294
+#: meetings/views.py:288
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:417
+#: meetings/views.py:411
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:435
+#: meetings/views.py:429
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:442
+#: meetings/views.py:436
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:507
+#: meetings/views.py:501
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2488,6 +2496,7 @@ msgid "Save"
 msgstr "Speichern"
 
 #: templates/boilerplate/list.html:13 templates/meetings/status.html:10
+#: templates/meetings/tabs/status.html:7
 msgid "edit"
 msgstr "Bearbeiten"
 
@@ -2500,7 +2509,7 @@ msgstr "Löschen"
 msgid "No boilerplate yet!"
 msgstr "Es gibt nocht keinen Textbaustein!"
 
-#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:54
+#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:57
 msgid "Date"
 msgstr "Datum"
 
@@ -2681,16 +2690,29 @@ msgstr ""
 msgid "Meeting"
 msgstr "Sitzung"
 
-#: templates/meetings/detail.html:14
+#: templates/meetings/detail.html:14 templates/meetings/details.html:19
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/detail.html:17 templates/meetings/status.html:42
+#: templates/meetings/detail.html:17 templates/meetings/details.html:20
+#: templates/meetings/status.html:42 templates/meetings/tabs/status.html:39
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/detail.html:22
+#: templates/meetings/detail.html:22 templates/meetings/details.html:11
 msgid "Signatur der Voten"
+msgstr ""
+
+#: templates/meetings/details.html:7
+msgid "Overview"
+msgstr "Übersicht"
+
+#: templates/meetings/details.html:17
+msgid "Planning"
+msgstr "Planung"
+
+#: templates/meetings/details.html:21
+msgid "Sitzungsassistent"
 msgstr ""
 
 #: templates/meetings/expert_notification.txt:2
@@ -2756,67 +2778,68 @@ msgstr "Sitzung verlegen"
 msgid "Save and return to study"
 msgstr "Speichern und zurück zur Studie"
 
-#: templates/meetings/status.html:9 users/forms.py:114
+#: templates/meetings/status.html:9 templates/meetings/tabs/status.html:6
+#: users/forms.py:114
 msgid "Title"
 msgstr "Titel"
 
-#: templates/meetings/status.html:10
+#: templates/meetings/status.html:10 templates/meetings/tabs/status.html:7
 msgid "Scheduled for"
 msgstr "Geplant für"
 
-#: templates/meetings/status.html:11
+#: templates/meetings/status.html:11 templates/meetings/tabs/status.html:8
 msgid "Deadline for Submission"
 msgstr "Letzter Einreichtermin"
 
-#: templates/meetings/status.html:12
+#: templates/meetings/status.html:12 templates/meetings/tabs/status.html:9
 msgid "Deadline for Thesis Submission"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/status.html:17
+#: templates/meetings/status.html:17 templates/meetings/tabs/status.html:14
 msgid "Ended"
 msgstr "Beendet"
 
-#: templates/meetings/status.html:19
+#: templates/meetings/status.html:19 templates/meetings/tabs/status.html:16
 msgid "Started"
 msgstr "Gestartet"
 
-#: templates/meetings/status.html:27
+#: templates/meetings/status.html:27 templates/meetings/tabs/status.html:24
 msgid "Started at"
 msgstr "Gestartet um"
 
-#: templates/meetings/status.html:30
+#: templates/meetings/status.html:30 templates/meetings/tabs/status.html:27
 msgid "Ended at"
 msgstr "Beendet um"
 
-#: templates/meetings/status.html:33
+#: templates/meetings/status.html:33 templates/meetings/tabs/status.html:30
 msgid "Agenda"
 msgstr "Tagesordnung"
 
-#: templates/meetings/status.html:35
+#: templates/meetings/status.html:35 templates/meetings/tabs/status.html:32
 msgid "Agenda PDF"
 msgstr "Tagesordnung PDF"
 
-#: templates/meetings/status.html:37
+#: templates/meetings/status.html:37 templates/meetings/tabs/status.html:34
 msgid "Send agenda to board"
 msgstr ""
 
-#: templates/meetings/status.html:43
+#: templates/meetings/status.html:43 templates/meetings/tabs/status.html:40
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/status.html:46
+#: templates/meetings/status.html:46 templates/meetings/tabs/status.html:43
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/status.html:47
+#: templates/meetings/status.html:47 templates/meetings/tabs/status.html:44
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
-#: templates/meetings/assistant/base.html:15
+#: templates/meetings/assistant/base.html:13
 msgid "Comments"
 msgstr "Kommentare"
 
-#: templates/meetings/assistant/base.html:17
+#: templates/meetings/assistant/base.html:15
 #, fuzzy
 msgid "Ret. Thesis/Expedited"
 msgstr "Expedited"
@@ -2860,6 +2883,7 @@ msgid "Go Back"
 msgstr ""
 
 #: templates/meetings/assistant/top.html:7
+#: templates/meetings/tabs/timetable.html:34
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
@@ -2867,6 +2891,7 @@ msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
+#: templates/meetings/tabs/timetable.html:34
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
@@ -2874,20 +2899,24 @@ msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
+#: templates/meetings/tabs/timetable.html:34
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
 msgid "examined"
 msgstr "behandelt"
 
+#: templates/meetings/tabs/timetable.html:51
 #: templates/meetings/timetable/editor.html:53
 msgid "before"
 msgstr ""
 
+#: templates/meetings/tabs/timetable.html:51
 #: templates/meetings/timetable/editor.html:53
 msgid "waiting"
 msgstr ""
 
+#: templates/meetings/tabs/timetable.html:51
 #: templates/meetings/timetable/editor.html:53
 msgid "after"
 msgstr ""
@@ -2951,11 +2980,11 @@ msgstr "Zurück zu den beantworteten Meldungen"
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
-#: templates/pdfviewer/viewer.html:36
+#: templates/pdfviewer/viewer.html:39
 msgid "Your document is not ready yet."
 msgstr "Das Dokument steht noch nicht bereit."
 
-#: templates/pdfviewer/viewer.html:37
+#: templates/pdfviewer/viewer.html:40
 #, fuzzy
 msgid ""
 "\n"
@@ -2966,12 +2995,12 @@ msgstr ""
 "Um sie anzusehen klicken sie <a href=\"#\" onclick=\"window.parent.location."
 "href='%s';\">hier</a>."
 
-#: templates/pdfviewer/viewer.html:54
+#: templates/pdfviewer/viewer.html:57
 #, fuzzy
 msgid "Version"
 msgstr "Version"
 
-#: templates/pdfviewer/viewer.html:54
+#: templates/pdfviewer/viewer.html:57
 #, fuzzy
 msgid "Filename"
 msgstr "Dateiname"
@@ -3155,7 +3184,8 @@ msgid ""
 msgstr ""
 "\n"
 "Es liegt ein neues Gutachten für die Studie %(ec_number)s vor.\n"
-"Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei herunterzuladen:\n"
+"Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei "
+"herunterzuladen:\n"
 
 #: templates/submissions/external_review_publish.txt:8
 msgid ""

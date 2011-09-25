@@ -23,7 +23,7 @@ from ecs.tasks.models import Task
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionReschedulingForm, AssignedMedicalCategoryForm, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
+    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
 
 
 
@@ -127,11 +127,11 @@ def users_by_medical_category(request):
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     return render(request, 'meetings/timetable/editor.html', {
-        'active': 'timetable',
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
         'readonly': bool(meeting.optimization_task_id) or not meeting.started is None,
     })
+
 
 @user_flag_required('internal')
 def expert_assignment(request, meeting_pk=None):
@@ -528,12 +528,58 @@ def next(request):
     else:
         return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
 
-def status(request, meeting_pk=None):
+@user_flag_required('internal')
+def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    return render(request, 'meetings/status.html', {
-        'active': 'status',
+
+    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
+    for cat in required_categories:
+        AssignedMedicalCategory.objects.get_or_create(meeting=meeting, category=cat)
+    expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting))
+
+    if request.method == 'POST' and expert_formset.is_valid():
+        submitted_form = request.POST.get('submitted_form')
+        if submitted_form == 'expert_formset' and expert_formset.is_valid():
+            active = 'experts'
+            for amc in expert_formset.save(commit=False):
+                previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
+                amc.save()
+                if previous_expert == amc.board_member:
+                    continue
+                entries = list(meeting.timetable_entries.filter(submission__medical_categories=amc.category).distinct())
+                if previous_expert:
+                    # remove all participations for a previous selected board member.
+                    # XXX: this may delete manually entered data. (FMD2)
+                    Participation.objects.filter(medical_category=amc.category, entry__meeting=meeting).delete()
+
+                    # delete obsolete board member review tasks
+                    for entry in entries:
+                        with sudo():
+                            tasks = list(Task.objects.for_data(entry.submission).filter(
+                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True))
+                        for task in tasks:
+                            task.deleted_at = datetime.now()
+                            task.save()
+                if amc.board_member:
+                    meeting.create_boardmember_reviews(send_messages=False)
+                    send_system_message_template(amc.board_member,
+                        _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')),
+                        'meetings/expert_notification.txt',
+                        {
+                            'category': amc.category,
+                            'meeting': meeting,
+                        }
+                    )
+
+    return render(request, 'meetings/details.html', {
         'meeting': meeting,
+        'expert_formset': expert_formset,
+        'active': active,
     })
+
+
+def status(request, meeting_pk=None):
+    return meeting_details(request, meeting_pk=meeting_pk, active='status')
 
 @user_flag_required('internal')
 def edit_meeting(request, meeting_pk=None):

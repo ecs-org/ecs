@@ -1,7 +1,4 @@
-{% extends 'meetings/detail.html' %}
 {% load core i18n userutils %}
-
-{% block meeting_detail %}
 
 <h2>{% trans "Status" %}</h2>
 
@@ -47,6 +44,3 @@
         <td><a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a></td>
     </tr>
 </table>
-
-{% endblock %}
-

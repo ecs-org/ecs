@@ -1,0 +1,78 @@
+{% extends 'core.html' %}
+{% load core i18n userutils %}
+
+{% block headernav %}
+    <ul class="tab_header_groups">
+        <li>
+            <a href="#">{% trans "Overview" %}</a>
+            <ul class="tab_headers">
+                <li><a href="#status_tab">{% trans "Status" %}</a></li>
+                {% if user|is_member_of:"EC-Signing Group" %}
+                    <li><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
+                {% endif %}
+            </ul>
+        </li>
+        {% if user|is_member_of:"EC-Office" and not meeting.ended %}
+        <li>
+            <a href="#">{% trans "Planning" %}</a>
+            <ul class="tab_headers">
+                <li{% if active == 'experts' %} class="active"{% endif %}><a href="#experts_tab">{% trans "Spezialistenzuordnung" %}</a></li>
+                <li{% if active == 'timetable' %} class="active"{% endif %}><a href="#timetable_tab">{% trans "Timetable" %}</a></li>
+                <li{% if active == 'assistant' %} class="active"{% endif %}><a href="#assistant_tab">{% trans "Sitzungsassistent" %}</a></li>
+            </ul>
+        </li>
+        {% endif %}
+    </ul>
+    {{ block.super }}
+{% endblock %}
+
+{% block htmltitle %}{{ meeting.title|default:"<em>Unbenannte Sitzung</em>" }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}{% endblock %}
+
+{% block content %}
+<div id="tabs">
+    <div id="status_tab">
+        {% include 'meetings/tabs/status.html' %}
+    </div>
+    {% if user|is_member_of:"EC-Signing Group" %}
+    <div id="signing_tab"></div>
+    {% endif %}
+
+    {% if user|is_member_of:"EC-Office" and not meeting.ended %}
+        <div id="experts_tab">
+            {% include 'meetings/tabs/experts.html' %}
+        </div>
+        <div id="timetable_tab">
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}"></div>
+        </div>
+        <div id="assistant_tab">
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}"></div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block menuSelection %}meetings{% endblock %}
+
+{% block jsbottom %}
+  {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            var tabController = new ecs.TabController($$('.tab_header_groups > li'));
+            ecs.setupWidgets();
+
+            function updateHeaderHeight() {
+                var tabHeight = tabController.getSelectedTabGroup().container.getHeight();
+                if(tabHeight){
+                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
+                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
+                }
+                $('content').setStyle('top', $('header').getHeight() + 'px');
+            }
+            tabController.addEvent('tabGroupSelectionChange', updateHeaderHeight);
+            window.addEvent('resize', updateHeaderHeight);
+            $('header').setStyle('height', 'auto');
+            updateHeaderHeight();
+        });
+    </script>
+{% endblock %}

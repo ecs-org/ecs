@@ -3,7 +3,7 @@
 
 {% block meeting_assistant_body %}
   <div class="column_main">
-    <form id="meeting_assistant_form" action="" method="post">
+    <form id="meeting_assistant_form" action="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk top_pk=top.pk %}" method="post" class="open-in-widget">
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">preview</a>{% endif %}</h3>
         {{ submission.project_title_display|default:top.title }}<br />
         {% trans "Submitter" %}: {{ submission.current_submission_form.submitter }} ({{ submission.current_submission_form.submitter_organisation }})
@@ -20,7 +20,7 @@
             <div class="block_right">
                 <div class="buttons">
                   <ul>
-                      <li><a id="complete" href="">Fertig</a></li>
+                      <li><a class="open-in-widget" id="complete" href="">Fertig</a></li>
                   </ul>
                 </div>
             </div>
@@ -43,9 +43,9 @@
       
                 <div class="buttons">
                    <ul>
-                      <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
-                      <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
-                      <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
+                      <li><a class="open-in-widget" id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
+                      <li><a class="open-in-widget" id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
+                      <li><a class="open-in-widget" id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
                    </ul>
                 </div>
               </div>
@@ -63,19 +63,19 @@
 
 {% block meeting_assistant_navigation %}
     {% if top.next_open %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
     {% endif %}
     {% if top.previous_open %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
     {% endif %}
     {% if top.next %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
     {% endif %}
     {% if top.previous %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
     {% endif %}
     {% if last_top %}
-        <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
     {% endif %}
     {{ block.super }}
 {% endblock %}
@@ -107,10 +107,7 @@
           </ul>
         </div>
       </div>
-{% endblock %}
 
-{% block jsbottom %}
-    {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function(){
             /* ecs.setupForms(); */ /* do we need this? */

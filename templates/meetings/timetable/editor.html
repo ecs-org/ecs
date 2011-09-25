@@ -1,7 +1,5 @@
-{% extends 'meetings/detail.html' %}
 {% load core i18n %}
 
-{% block meeting_detail %}
 {% if running_optimization %}
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}
@@ -9,8 +7,8 @@
     <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
     {% if not readonly %}
         <ol class="options">
-            <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
-            <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
         </ol>
     {% endif %}
     <div class="waiting_time">
@@ -36,9 +34,9 @@
             {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
             {% if not readonly %}
                 {% if not entry.submission %}
-                    <a class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">X</a>
+                    <a class="open-in-widget" class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">X</a>
                 {% endif %}
-                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
+                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post" class="open-in-widget>
                     <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
                     <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
                 </form>
@@ -75,7 +73,7 @@
                         </ul>
                     {% endif %}
                     {% if not readonly %}
-                        <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                        <span class="contraints_edit"><a class="open-in-widget" href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
                     {% endif %}
                     </div>
                 </li>
@@ -83,10 +81,7 @@
         </ul>
     </div>
 </div>
-{% endblock %}
 
-{% block jsbottom %}
-{{ block.super }}
 <script type="text/javascript">
 window.addEvent('domready', function(){
 {% if running_optimization %}
@@ -114,6 +109,7 @@ window.addEvent('domready', function(){
             }
         });
     });
+    {% if not readonly %}
     new Sortables('timetable', {
         clone: true,
         opacity: 0.5,
@@ -128,11 +124,12 @@ window.addEvent('domready', function(){
             var fromIndex = dndInfo.startIndex;
             dndInfo.startIndex = null;
             if(fromIndex != toIndex && fromIndex !== null){
-                window.location.href = '{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
+                var widget = $('timetable_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
+                widget.load('{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
             }
         }
+        {% endif %}
     });
 {% endif %}
 });
 </script>
-{% endblock %}
