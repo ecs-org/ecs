@@ -24,11 +24,14 @@ class SubmissionQuerySet(models.query.QuerySet):
                 | Q(current_submission_form__project_type_reg_drug=True)
             )
         ))
-    
+
     def mpg(self):
         return self.filter(Q(is_mpg=True) | (
             Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
         ))
+
+    def amg_mpg(self):
+        return self.amg() & self.mpg()
 
     def b2(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
@@ -50,6 +53,12 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def retrospective_thesis(self):
         return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
+
+    def expedited(self):
+        return self.filter(expedited=True)
+
+    def localec(self):
+        return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
 
     def next_meeting(self):
         return self.filter(meetings__start__gt=datetime.now())
@@ -73,16 +82,19 @@ class SubmissionQuerySet(models.query.QuerySet):
     def none(self):
         """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
         return self.extra(where=['1=0']) 
-        
+
 class SubmissionManager(AuthorizationManager):
     def get_base_query_set(self):
         return SubmissionQuerySet(self.model).distinct()
-        
+
     def amg(self):
         return self.all().amg()
-        
+
     def mpg(self):
         return self.all().mpg()
+
+    def amg_mpg(self):
+        return self.all().amg_mpg()
 
     def new(self):
         return self.all().new()
@@ -104,6 +116,12 @@ class SubmissionManager(AuthorizationManager):
 
     def retrospective_thesis(self):
         return self.all().retrospective_thesis()
+
+    def expedited(self):
+        return self.all().expedited()
+
+    def localec(self):
+        return self.all().localec()
 
     def next_meeting(self):
         return self.all().next_meeting()

@@ -19,6 +19,7 @@ from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.models import Task
+from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_TYPE_MULTICENTRIC
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
@@ -571,7 +572,19 @@ def meeting_details(request, meeting_pk=None, active=None):
                         }
                     )
 
+    print [s.current_submission_form.investigators.all() for s in meeting.submissions.filter(current_submission_form__investigators__gt=1)]
     return render(request, 'meetings/details.html', {
+        'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
+        'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
+        'amg_mpg_count': meeting.submissions.amg_mpg().count(),
+        'retrospective_thesis_count': meeting.submissions.retrospective_thesis().count(),
+        'expedited_count': meeting.submissions.expedited().count(),
+        'localec_count': meeting.submissions.localec().count(),
+        'other_count': meeting.submissions.exclude(pk__in=meeting.submissions.amg().values('pk').query).exclude(pk__in=meeting.submissions.mpg().values('pk').query).exclude(pk__in=meeting.submissions.retrospective_thesis().values('pk').query).exclude(pk__in=meeting.submissions.expedited().values('pk').query).exclude(pk__in=meeting.submissions.localec().values('pk').query).count(),
+        'dissertation_count': meeting.submissions.filter(current_submission_form__project_type_education_context=1).count(),
+        'diploma_thesis_count': meeting.submissions.filter(current_submission_form__project_type_education_context=2).count(),
+        'amg_multi_main_count': meeting.submissions.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC).count(),
+        'remission_count': meeting.submissions.filter(remission=True).count(),
         'meeting': meeting,
         'expert_formset': expert_formset,
         'active': active,

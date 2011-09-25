@@ -7,6 +7,7 @@
             <a href="#">{% trans "Overview" %}</a>
             <ul class="tab_headers">
                 <li><a href="#status_tab">{% trans "Status" %}</a></li>
+                <li><a href="#statistics_tab">{% trans "Statistics" %}</a></li>
                 {% if user|is_member_of:"EC-Signing Group" %}
                     <li><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
                 {% endif %}
@@ -33,6 +34,9 @@
 <div id="tabs">
     <div id="status_tab">
         {% include 'meetings/tabs/status.html' %}
+    </div>
+    <div id="statistics_tab">
+        {% include 'meetings/tabs/statistics.html' %}
     </div>
     {% if user|is_member_of:"EC-Signing Group" %}
     <div id="signing_tab"></div>
