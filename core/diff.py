@@ -126,6 +126,24 @@ class ListDiffNode(DiffNode):
         return "\n".join(result)
 
 
+class DocumentListDiffNode(ListDiffNode):
+    def _prepare(self):
+        self.diffs = []
+        old_docs = {}
+        for doc in self.old:
+            old_docs[doc.uuid_document] = doc
+        added_docs = []
+        for doc in self.new:
+            if doc.uuid_document in old_docs:
+                del old_docs[doc.uuid_document]
+            else:
+                self.diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
+        for doc in old_docs.values():
+            self.diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
+
+    def html(self):
+        return "\n".join(d.html() for op, d in self.diffs)
+
 def _render_value(val):
     if val is None:
         return _('No Information')
@@ -149,7 +167,7 @@ class ModelDiffer(object):
     identify = None
     label_map = {}
 
-    def __init__(self, model=None, exclude=None, fields=None, follow=None, identify=None, label_map=None):
+    def __init__(self, model=None, exclude=None, fields=None, follow=None, identify=None, label_map=None, node_map=None):
         if model:
             self.model = model
         if exclude:
@@ -162,6 +180,7 @@ class ModelDiffer(object):
             self.identify = identify
         if label_map:
             self.label_map = label_map
+        self.node_map = node_map or {}
 
     def get_field_names(self):
         names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
@@ -190,7 +209,7 @@ class ModelDiffer(object):
             new_val = list(new_val.all().order_by('pk')) if new else []
             if not old_val and not new_val:
                 return None
-            return ListDiffNode(old_val, new_val, **kwargs)
+            return self.node_map.get(name, ListDiffNode)(old_val, new_val, **kwargs)
         elif field.choices:
             old_val = unicode(dict(field.choices)[old_val]) if old_val else _('No Information')
             new_val = unicode(dict(field.choices)[new_val]) if new_val else _('No Information')
@@ -264,6 +283,9 @@ _differs = {
             'is_notification_update', 'submission_type'),
         follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set',
             'documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
+        node_map={
+            'documents': DocumentListDiffNode,
+        },
         label_map=dict([
             ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
             ('investigators', _(u'Zentren')),
