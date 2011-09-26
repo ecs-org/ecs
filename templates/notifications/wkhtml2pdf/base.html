@@ -52,18 +52,18 @@
 
     <p style="margin-left: 2cm; text-indent: -2cm">
     2.1. Projekttitel (Kurzbezeichnung):<br>
-    <b>{% for submission in notification.submission_forms.all %}
-    {{ submission.project_title_display }}{% if not forloop.last %}, {% endif %}
+    <b>{% for sf in submission_forms %}
+    {{ sf.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
     {% endfor %}</b>
     </p>
     <p style="margin-left: 2cm; text-indent: -2cm">
     2.2. Protokollnummer (falls vorhanden):<br>
     <b>
-        {% for submission in notification.submission_forms.all %}
-            {% if submission.protocol_number %}
-                {{ submission.protocol_number }}{% if not forloop.last %}, {% endif %}
-            {% endif %}
-        {% endfor %}</b>
+        {% for protocol_number in protocol_numbers %}
+            {{ protocol_number }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            –
+        {% endfor %}
     </p>
 
     {% block mainitem %}

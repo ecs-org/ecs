@@ -81,6 +81,7 @@
         window.addEvent('domready', function(){
             ecs.setupForms();
             
+            {% ifequal tab "Änderungen" %}
             $('diff_show_old').addEvent('click', function() {
               $$('.diff .deleted').show();
               $$('.diff .inserted').hide();
@@ -93,6 +94,7 @@
               $$('.diff .deleted').show();
               $$('.diff .inserted').show();
             });
+            {% endifequal %}
 
 
             $('save-button').addEvent('click', function(){

@@ -237,8 +237,13 @@ def distribute_notification_answer(request, notification_pk=None):
 
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
+    submission_forms = notification.submission_forms.select_related('submission').all()
+    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+    protocol_numbers.sort()
     return _notification_pdf_response(notification, 'db/notifications/wkhtml2pdf/%s.html', suffix='.pdf', context={
         'notification': notification,
+        'protocol_numbers': protocol_numbers,
+        'submission_forms': submission_forms,
         'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         'url': request.build_absolute_uri(),
     })

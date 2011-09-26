@@ -53,19 +53,23 @@ class TaskQuerySet(models.query.QuerySet):
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
     def for_submission(self, submission, related=True):
-        tasks = Task.objects.all()
+        tasks = self.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
         q = models.Q(content_type=submission_ct, data_id=submission.pk)
         if related:
             vote_ct = ContentType.objects.get_for_model(Vote)
             q |= models.Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
+
             meeting_ct = ContentType.objects.get_for_model(Meeting)
             q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
+
             for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
                 notification_ct = ContentType.objects.get_for_model(notification_model)
                 q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
+            
             checklist_ct = ContentType.objects.get_for_model(Checklist)
             q |= models.Q(content_type=checklist_ct, data_id__in=Checklist.objects.filter(submission=submission).values('pk').query)
+            
         return self.filter(q).distinct()
 
 class TaskManager(AuthorizationManager):
