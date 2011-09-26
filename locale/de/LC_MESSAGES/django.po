@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-25 22:45+0200\n"
+"POT-Creation-Date: 2011-09-26 12:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2695,23 +2695,29 @@ msgstr "Übersicht"
 msgid "Statistics"
 msgstr "Statistik"
 
-#: templates/meetings/details.html:12
+#: templates/meetings/details.html:11
+#: templates/meetings/tabs/open_tasks.html:3 templates/tasks/tasks.inc:69
+#: templates/tasks/tasks_full.inc:72
+msgid "Open Tasks"
+msgstr "Offene Aufgaben"
+
+#: templates/meetings/details.html:13
 msgid "Signatur der Voten"
 msgstr ""
 
-#: templates/meetings/details.html:18
+#: templates/meetings/details.html:19
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/meetings/details.html:20
+#: templates/meetings/details.html:21
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:21 templates/meetings/tabs/status.html:39
+#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:39
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/details.html:22
+#: templates/meetings/details.html:23
 msgid "Sitzungsassistent"
 msgstr ""
 
@@ -3606,10 +3612,6 @@ msgstr "Vorschau"
 #: templates/tasks/tasks.inc:59 templates/tasks/tasks_full.inc:62
 msgid "Decline"
 msgstr "Ablehnen"
-
-#: templates/tasks/tasks.inc:69 templates/tasks/tasks_full.inc:72
-msgid "Open Tasks"
-msgstr "Offen"
 
 #: templates/tasks/tasks.inc:92 templates/tasks/tasks_full.inc:93
 msgid "Proxy Tasks"

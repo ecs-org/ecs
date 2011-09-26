@@ -572,7 +572,12 @@ def meeting_details(request, meeting_pk=None, active=None):
                         }
                     )
 
-    print [s.current_submission_form.investigators.all() for s in meeting.submissions.filter(current_submission_form__investigators__gt=1)]
+    open_tasks = {}
+    for submission in meeting.submissions.all():
+        ts = list(Task.objects.for_submission(submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
+        if len(ts):
+            open_tasks[submission] = ts
+
     return render(request, 'meetings/details.html', {
         'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
         'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
@@ -587,6 +592,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'remission_count': meeting.submissions.filter(remission=True).count(),
         'meeting': meeting,
         'expert_formset': expert_formset,
+        'open_tasks': open_tasks,
         'active': active,
     })
 
