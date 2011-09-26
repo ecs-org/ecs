@@ -602,6 +602,8 @@ def meeting_details(request, meeting_pk=None, active=None):
         'diploma_thesis_count': meeting.submissions.filter(current_submission_form__project_type_education_context=2).count(),
         'amg_multi_main_count': meeting.submissions.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC).count(),
         'remission_count': meeting.submissions.filter(remission=True).count(),
+        'b3_examined_count': Vote.objects.filter(result='3b', top__meeting__pk=meeting.pk).count(),
+        'b3_not_examined_count': Vote.objects.filter(result='3a', top__meeting__pk=meeting.pk).count(),
         'meeting': meeting,
         'expert_formset': expert_formset,
         'open_tasks': open_tasks,

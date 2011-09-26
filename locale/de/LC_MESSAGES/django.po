@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 17:12+0200\n"
+"POT-Creation-Date: 2011-09-26 17:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2912,6 +2912,14 @@ msgstr "Leitethikkommission"
 msgid "Remission"
 msgstr "Gebührenbefreiung"
 
+#: templates/meetings/tabs/statistics.html:15
+msgid "B3 (examined)"
+msgstr "B3 (behandelt)"
+
+#: templates/meetings/tabs/statistics.html:16
+msgid "B3 (not examined)"
+msgstr "B3 (nicht behandelt)"
+
 #: templates/meetings/tabs/status.html:4 users/forms.py:114
 msgid "Title"
 msgstr "Titel"
@@ -4034,9 +4042,6 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
-
-#~ msgid "keywords"
-#~ msgstr "Schlüsselwörter"
 
 #~ msgid "Meeting"
 #~ msgstr "Sitzung"
