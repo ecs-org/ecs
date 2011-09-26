@@ -4,7 +4,6 @@
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}
 <div id="meeting_editor">
-    <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
     {% if not readonly %}
         <ol class="options">
             <li><a class="open-in-widget" href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>

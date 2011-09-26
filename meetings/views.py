@@ -578,6 +578,18 @@ def meeting_details(request, meeting_pk=None, active=None):
         if len(ts):
             open_tasks[submission] = ts
 
+    tops = meeting.timetable_entries.all()
+    votes_list = [ ]
+    for top in tops:
+        votes = Vote.objects.filter(top=top)
+        c = votes.count()
+        assert(c < 2)
+        if c is 0:
+            vote = None
+        else:
+            vote = votes[0]
+        votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
+
     return render(request, 'meetings/details.html', {
         'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
         'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
@@ -593,6 +605,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'meeting': meeting,
         'expert_formset': expert_formset,
         'open_tasks': open_tasks,
+        'votes_list': votes_list,
         'active': active,
     })
 
@@ -613,21 +626,4 @@ def edit_meeting(request, meeting_pk=None):
     })
 
 def votes_signing(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.timetable_entries.all()
-    votes_list = [ ]
-    for top in tops:
-        votes = Vote.objects.filter(top=top)
-        c = votes.count()
-        assert(c < 2)
-        if c is 0:
-            vote = None
-        else:
-            vote = votes[0]
-        votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
-    response = render(request, 'meetings/votes_signing.html', {
-        'active': 'votes_signing',
-        'meeting': meeting,
-        'votes_list': votes_list,
-    })
-    return response
+    return meeting_details(request, meeting_pk=meeting_pk, active='signing')

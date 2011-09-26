@@ -1,7 +1,5 @@
 {% load core i18n userutils %}
 
-<h2>{% trans "Status" %}</h2>
-
 <table>
     <tr><th>{% trans "Title" %}:</th><td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td></tr>
     <tr><th>{% trans "Scheduled for" %}:</th><td>{{ meeting.start|date:'d.m.Y H:i' }}{% if not meeting.started %} <a href="{% url ecs.meetings.views.edit_meeting meeting_pk=meeting.pk %}">{% trans "edit" %}</a>{% endif %}</td></tr>

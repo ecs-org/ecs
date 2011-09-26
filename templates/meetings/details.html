@@ -10,7 +10,7 @@
                 <li><a href="#statistics_tab">{% trans "Statistics" %}</a></li>
                 <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
                 {% if user|is_member_of:"EC-Signing Group" %}
-                    <li><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
+                    <li{% if active == 'signing' %} class="active"{% endif %}><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
                 {% endif %}
             </ul>
         </li>
@@ -43,7 +43,9 @@
         {% include 'meetings/tabs/open_tasks.html' %}
     </div>
     {% if user|is_member_of:"EC-Signing Group" %}
-    <div id="signing_tab"></div>
+    <div id="signing_tab">
+        {% include 'meetings/tabs/signing.html' %}
+    </div>
     {% endif %}
 
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}

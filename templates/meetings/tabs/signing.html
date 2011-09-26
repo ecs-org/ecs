@@ -1,9 +1,5 @@
-{% extends 'meetings/detail.html' %}
 {% load core i18n userutils %}
 
-{% block meeting_detail %}
-
-<h2>Voten des Meetings {{ meeting }}</h2>
 <ul>
 {% for d in votes_list|dictsort:'top_index' %}
   <li>
@@ -23,7 +19,3 @@
   </li>
 {% endfor %}
 </ul>
-
-{% endblock %}
-
-{% block menuSelection %}{% endblock %}
