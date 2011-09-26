@@ -457,5 +457,9 @@ body.pdfviewer .popup.menu a:hover{
     text-decoration: none;
 }
 
+/* annotation sharing popup */
+body.pdfviewer .popup.annotationSharing #annotation_share{
+    color: #fff;
+}
 
 

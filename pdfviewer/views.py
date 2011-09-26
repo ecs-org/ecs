@@ -5,10 +5,12 @@ from django.utils import simplejson
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
 from ecs.core.models import SubmissionForm
+from ecs.communication.utils import send_system_message
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
@@ -75,6 +77,11 @@ def share_annotations(request, document_pk=None):
             annotation.pk = None
             annotation.user = user
             annotation.save()
+        message_params = {
+            'user': request.user, 
+            'url': request.build_absolute_uri(reverse('ecs.pdfviewer.views.show', kwargs={'document_pk': document_pk})),
+        }
+        send_system_message(user, _(u'%(user)s shared annotations with you.') % message_params, _(u'See %(url)s.') % message_params)
         return render(request, 'pdfviewer/annotations/sharing/success.html', {
             'document': document,
             'target_user': user,
