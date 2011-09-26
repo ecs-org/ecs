@@ -40,7 +40,14 @@
                 
                 {% ifequal tab "Änderungen" %}
                     <div class="field">
-                        {{ request.docstash.extra.diff|safe }}
+                        <div class="diff_toggles">
+                            <a href="#" id="diff_show_old">{% trans "old" %}</a>
+                            <a href="#" id="diff_show_new">{% trans "new" %}</a>
+                            <a href="#" id="diff_show_all">{% trans "all" %}</a>
+                        </div>
+                        <div class="diff">
+                            {{ request.docstash.extra.diff|safe }}
+                        </div>
                     </div>
                 {% endifequal %}
                 
@@ -73,6 +80,20 @@
     <script type="text/javascript">
         window.addEvent('domready', function(){
             ecs.setupForms();
+            
+            $('diff_show_old').addEvent('click', function() {
+              $$('.diff .deleted').show();
+              $$('.diff .inserted').hide();
+            });
+            $('diff_show_new').addEvent('click', function() {
+              $$('.diff .deleted').hide();
+              $$('.diff .inserted').show();
+            });
+            $('diff_show_all').addEvent('click', function() {
+              $$('.diff .deleted').show();
+              $$('.diff .inserted').show();
+            });
+
 
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.save(true);
