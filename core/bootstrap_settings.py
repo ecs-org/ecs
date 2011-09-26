@@ -410,7 +410,7 @@ checklist_questions = {
             description=u'''- durch eine neue Substanz mit hoher Nebenwirkungsrate
             - durch Vorenthalten einer wirksamen Therapie
             - durch radioaktive Isotope
-            - durch eine spezielle Dosierung von Medikamenten'''),
+            - durch eine spezielle Dosierung von Medikamenten''', inverted=True),
         Args('4b', u'Stehen diese Risken Ihrer Meinung nach in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie?'),
         Args('5a', u'Werden dem Patienten/Probanden durch die für die Studie notwendigen Untersuchungen besondere Belastungen bzw. Risken zugemutet?', inverted=True),
         Args('5b', u'Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?'),

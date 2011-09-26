@@ -69,7 +69,7 @@ class Checklist(models.Model):
 
     @property
     def is_positive(self):
-        return self.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True)) == 0
+        return self.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True)).count() == 0
 
     @property
     def is_negative(self):
