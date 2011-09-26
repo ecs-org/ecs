@@ -492,7 +492,6 @@ def timetable_pdf(request, meeting_pk=None):
         'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
     } for key in timetable], key=lambda x:x['user'])
     
-    print timetable
     for row in timetable:
         first_entry = row['entries'][0]
         times = [{'start': first_entry.start, 'end': first_entry.end, 'index': first_entry.timetable_index}]

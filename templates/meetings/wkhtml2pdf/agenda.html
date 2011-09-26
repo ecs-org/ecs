@@ -31,6 +31,8 @@
             <span class="bold">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
             <br />
+        {% else %}
+            <span class="bold">{{ entry.title|default:'<i>No title.</i>' }}</span><br />
         {% endif %}
     {% endfor %}
 

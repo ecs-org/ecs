@@ -38,7 +38,7 @@
             <span class="bold">Einreichende Institut:</span> {{ top.submission.current_submission_form.submitter_organisation }}<br />
             <span class="bold">Projekttitel:</span> {{ top.submission.project_title_display }}<br />
         {% else %}
-            <br />
+            <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span></br />
         {% endif %}
 
         {% with top.submission as submission %}
