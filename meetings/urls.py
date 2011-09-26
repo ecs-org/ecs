@@ -18,6 +18,7 @@ urlpatterns = patterns('ecs.meetings.views',
 
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/$', 'timetable_editor'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/$', 'optimize_timetable'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/optimize/(?P<algorithm>random|brute_force|ga)/long/$', 'optimize_timetable_long'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/new/$', 'add_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/add/$', 'add_free_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'move_timetable_entry'),

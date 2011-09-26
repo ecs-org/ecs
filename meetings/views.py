@@ -207,6 +207,15 @@ def optimize_timetable(request, meeting_pk=None, algorithm=None):
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('internal')
+def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    if not meeting.optimization_task_id:
+        meeting.optimization_task_id = "xxx:fake"
+        meeting.save()
+        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm, 'algorithm_parameters': {'population_size': 1000}})
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+
+@user_flag_required('internal')
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)

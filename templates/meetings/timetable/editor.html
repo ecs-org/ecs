@@ -8,6 +8,7 @@
         <ol class="options">
             <li><a class="open-in-widget" href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
             <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable_long meeting_pk=meeting.pk,algorithm='ga' %}">Lange optimieren</a></li>
         </ol>
     {% endif %}
     <div class="waiting_time">

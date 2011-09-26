@@ -5,17 +5,19 @@ from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutat
 from ecs.meetings.models import Meeting
 
 
-def optimize_random(timetable, func):
+def optimize_random(timetable, func, params):
     p = list(timetable)
     random.shuffle(p)
     return p
     
-def optimize_brute_force(timetable, func):
+def optimize_brute_force(timetable, func, params):
     value, p = max((func(p), p) for p in itertools.permutations(timetable))
     return p
     
-def optimize_ga(timetable, func):
-    sorter = GeneticSorter(timetable, func, seed=(timetable,), population_size=100, crossover_p=0.3, mutations={
+def optimize_ga(timetable, func, params):
+    params = params or {}
+    population_size = params.get('population_size') or 100
+    sorter = GeneticSorter(timetable, func, seed=(timetable,), population_size=population_size, crossover_p=0.3, mutations={
         inversion_mutation: 0.002,
         swap_mutation: 0.02,
         displacement_mutation: 0.01,
@@ -32,7 +34,7 @@ def _eval_timetable(metrics):
     return 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1) + 1000.0 / (math.sqrt(metrics._optimal_start_diff_squared_sum) + 1)
 
 @task()
-def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
+def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None, **kwargs):
     logger = optimize_timetable_task.get_logger(**kwargs)
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
@@ -47,7 +49,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, **kwargs):
             else:
                 regular_entries.append(entry)
         f = meeting.create_evaluation_func(_eval_timetable)
-        meeting._apply_permutation(algo(tuple(regular_entries), f) + tuple(batch_entries))
+        meeting._apply_permutation(algo(tuple(regular_entries), f, algorithm_parameters) + tuple(batch_entries))
         retval = True
     except Exception, e:
         logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
