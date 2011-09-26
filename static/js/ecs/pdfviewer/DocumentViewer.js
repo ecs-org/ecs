@@ -85,8 +85,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
         this.gotoPagePopup = new ecs.pdfviewer.GotoPagePopup(this);
         this.menuPopup = new ecs.pdfviewer.MenuPopup(this);
+        this.annotationSharingPopup = new ecs.pdfviewer.AnnotationSharingPopup(this);
         
-        [this.annotationEditor, this.searchPopup, this.gotoPagePopup, this.menuPopup].each(function(popup){
+        [this.annotationEditor, this.searchPopup, this.gotoPagePopup, this.menuPopup, this.annotationSharingPopup].each(function(popup){
             popup.addEvent('show', (function(){
                 this.keyboardNavigationEnabled = false;
                 this.currentPopup = popup;
@@ -367,6 +368,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
     },
     showGotoPage: function(){
         return this.showPopup(this.gotoPagePopup);
+    },
+    shareAnnotations: function(){
+        this.showPopup(this.annotationSharingPopup);
     },
     cycleIn: function(){
         this.cycleController(+1);

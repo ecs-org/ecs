@@ -131,6 +131,18 @@ ecs.pdfviewer.GotoPagePopup = new Class({
     }
 });
 
+ecs.pdfviewer.AnnotationSharingPopup = new Class({
+    Extends: ecs.pdfviewer.Popup,
+    
+    initContent: function(content){
+        this.element.addClass('annotationSharing');
+        this.widget = new ecs.widgets.Widget(content);
+    },
+    onShow: function(){
+        this.widget.load('annotations/share/');
+    }
+});
+
 ecs.pdfviewer.SearchPopup = new Class({
     Extends: ecs.pdfviewer.Popup,
     

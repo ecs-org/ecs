@@ -131,7 +131,7 @@
             var USER_ID = {{ request.user.pk }};
             
             {{ document|annotations_for_user:user }}.each(function(a){
-                viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height, a.author__id != USER_ID ? a.author__username : null));
+                viewer.addAnnotation(a.page_number - 1, new ecs.pdfviewer.Annotation(a.pk, a.text, a.x, a.y, a.width, a.height, a.author__id != USER_ID ? a.author__email : null));
             });
 
             viewer.gotoAnchor();
