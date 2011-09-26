@@ -88,7 +88,7 @@ def download_attachment(request, attachment_pk=None):
 
 @user_flag_required('help_writer')
 def ready_for_review(request, page_pk=None):
-    page = get_object_or_404(Page, pk=page_pk, review_status__in=['new', 'review_ok'])
+    page = get_object_or_404(Page, pk=page_pk, review_status__in=['new', 'review_ok', 'review_fail'])
     page.review_status = 'ready_for_review'
     page.save()
     # TODO: create trac testing ticket
@@ -102,11 +102,20 @@ def review_ok(request, page_pk=None):
     return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
 
 @user_flag_required('help_writer')
+def review_fail(request, page_pk=None):
+    page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
+    page.review_status = 'review_fail'
+    page.save()
+    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+
+@user_flag_required('help_writer')
 def review_overview(request):
     ready_for_review = Page.objects.filter(review_status='ready_for_review')
+    review_fail = Page.objects.filter(review_status='review_fail')
     new = Page.objects.filter(review_status='new')
     return render(request, 'help/review_overview.html', {
         'ready_for_review': ready_for_review,
+        'review_fail': review_fail,
         'new': new,
     })
 

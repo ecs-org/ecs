@@ -12,6 +12,7 @@ urlpatterns = patterns('ecs.help.views',
     url(r'^page/new/$', 'edit_help_page'),
     url(r'^page/(?P<page_pk>\d+)/ready_for_review/$', 'ready_for_review'),
     url(r'^page/(?P<page_pk>\d+)/review_ok/$', 'review_ok'),
+    url(r'^page/(?P<page_pk>\d+)/review_fail/$', 'review_fail'),
     
     url(r'^view/(?P<view_pk>\d+)/', 'find_help'),
     url(r'^view/(?P<view_pk>\d+)/(?P<anchor>[\w-]+)/$', 'find_help'),

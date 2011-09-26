@@ -14,6 +14,18 @@
     {% endfor %}
     </ul>
 
+    <h2>Review Failed</h2>
+    <ul>
+    {% for page in review_fail %}
+        <li>
+            {{ page.title }}
+            | <a href="{% url ecs.help.views.view_help_page page_pk=page.pk %}">view</a>
+        </li>
+    {% empty %}
+        <li><em>No review failed yet!</em></li>
+    {% endfor %}
+    </ul>
+
     <h2>New</h2>
     <ul>
     {% for page in new %}

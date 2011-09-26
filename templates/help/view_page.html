@@ -42,8 +42,11 @@
             | <span class="help_review_status">
                 <a href="{% url ecs.help.views.review_ok page_pk=page.pk %}">review ok</a> 
             </span>
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.review_fail page_pk=page.pk %}">review fail</a> 
+            </span>
         {% endif %}
-        {% if page.review_status == 'review_ok' %}
+        {% if page.review_status == 'review_ok' or page.review_status == 'review_fail' %}
             | <span class="help_review_status">
                 <a href="{% url ecs.help.views.ready_for_review page_pk=page.pk %}">review again</a> 
             </span>

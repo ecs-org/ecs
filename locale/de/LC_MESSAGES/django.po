@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 12:06+0200\n"
+"POT-Creation-Date: 2011-09-26 14:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1571,7 +1571,7 @@ msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
 #: core/forms/forms.py:332 core/models/checklist.py:42 help/models.py:19
-#: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:18
+#: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
 
@@ -1584,14 +1584,14 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:335 core/forms/layout.py:65 core/forms/layout.py:67
-#: templates/meetings/tabs/statistics.html:6
+#: templates/meetings/tabs/statistics.html:4
 #: templates/submissions/tabs/status.html:115 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:336 core/forms/layout.py:74 core/forms/layout.py:76
-#: templates/meetings/tabs/statistics.html:7
+#: templates/meetings/tabs/statistics.html:5
 #: templates/submissions/tabs/status.html:122 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
@@ -1601,12 +1601,12 @@ msgstr "MPG"
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:338 templates/meetings/tabs/statistics.html:10
+#: core/forms/forms.py:338 templates/meetings/tabs/statistics.html:8
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:339 templates/meetings/tabs/statistics.html:12
+#: core/forms/forms.py:339 templates/meetings/tabs/statistics.html:10
 #: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
@@ -1747,8 +1747,7 @@ msgid "Study status"
 msgstr "Studienstatus"
 
 #: core/forms/layout.py:179 templates/meetings/details.html:9
-#: templates/meetings/tabs/status.html:3
-#: templates/meetings/tabs/status.html:11
+#: templates/meetings/tabs/status.html:9
 #: templates/submissions/readonly_form.html:45
 msgid "Status"
 msgstr "Status"
@@ -1832,7 +1831,7 @@ msgstr "Abgeschlossen"
 msgid "Review OK"
 msgstr "Überprüfung OK"
 
-#: core/models/checklist.py:45
+#: core/models/checklist.py:45 help/models.py:22
 msgid "Review Failed"
 msgstr "Überprüfung fehlgeschlagen"
 
@@ -2302,9 +2301,19 @@ msgstr "mitte"
 msgid "bottom"
 msgstr "unten"
 
-#: pdfviewer/views.py:47
+#: pdfviewer/views.py:49
 #, python-format
 msgid "invalid data: %s"
+msgstr ""
+
+#: pdfviewer/views.py:84
+#, python-format
+msgid "%(user)s shared annotations with you."
+msgstr ""
+
+#: pdfviewer/views.py:84
+#, python-format
+msgid "See %(url)s."
 msgstr ""
 
 #: tasks/forms.py:16
@@ -2496,7 +2505,7 @@ msgstr "Neuer Textbaustein"
 msgid "Save"
 msgstr "Speichern"
 
-#: templates/boilerplate/list.html:13 templates/meetings/tabs/status.html:7
+#: templates/boilerplate/list.html:13 templates/meetings/tabs/status.html:5
 msgid "edit"
 msgstr "Bearbeiten"
 
@@ -2691,12 +2700,10 @@ msgid "Overview"
 msgstr "Übersicht"
 
 #: templates/meetings/details.html:10
-#: templates/meetings/tabs/statistics.html:3
 msgid "Statistics"
 msgstr "Statistik"
 
-#: templates/meetings/details.html:11
-#: templates/meetings/tabs/open_tasks.html:3 templates/tasks/tasks.inc:69
+#: templates/meetings/details.html:11 templates/tasks/tasks.inc:69
 #: templates/tasks/tasks_full.inc:72
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
@@ -2713,7 +2720,7 @@ msgstr "Planung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:39
+#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:37
 msgid "Timetable"
 msgstr "Zeitplanung"
 
@@ -2832,121 +2839,148 @@ msgid "Go Back"
 msgstr ""
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:33
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:33
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:33
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:40
 msgid "examined"
 msgstr "behandelt"
 
-#: templates/meetings/tabs/statistics.html:8
+#: templates/meetings/tabs/open_tasks.html:8
+#: templates/submissions/tabs/involved_parties.html:6
+#: templates/tasks/log.html:13
+msgid "Name"
+msgstr "Name"
+
+#: templates/meetings/tabs/open_tasks.html:9 templates/tasks/log.html:14
+#: templates/users/administration.html:13 users/forms.py:202
+msgid "Groups"
+msgstr "Gruppen"
+
+#: templates/meetings/tabs/open_tasks.html:10 templates/tasks/log.html:6
+msgid "Accepted?"
+msgstr "Angenommen?"
+
+#: templates/meetings/tabs/open_tasks.html:11 templates/tasks/log.html:7
+msgid "Created At"
+msgstr "Erstellt am"
+
+#: templates/meetings/tabs/open_tasks.html:12 templates/tasks/log.html:9
+msgid "Assigend At"
+msgstr "Übertragen am"
+
+#: templates/meetings/tabs/open_tasks.html:13 templates/tasks/log.html:10
+msgid "Assigend To"
+msgstr "Übertragen an"
+
+#: templates/meetings/tabs/statistics.html:6
 msgid "AMG/MPG"
 msgstr ""
 
-#: templates/meetings/tabs/statistics.html:9
+#: templates/meetings/tabs/statistics.html:7
 #, fuzzy
 msgid "Retrospective Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/statistics.html:11
+#: templates/meetings/tabs/statistics.html:9
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: templates/meetings/tabs/statistics.html:13
+#: templates/meetings/tabs/statistics.html:11
 #, fuzzy
 msgid "Dissertation"
 msgstr "Diplomarbeit / Dissertation"
 
-#: templates/meetings/tabs/statistics.html:14
+#: templates/meetings/tabs/statistics.html:12
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
 
-#: templates/meetings/tabs/statistics.html:15
+#: templates/meetings/tabs/statistics.html:13
 msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
-#: templates/meetings/tabs/statistics.html:16
+#: templates/meetings/tabs/statistics.html:14
 msgid "Remission"
 msgstr "Gebührenbefreiung"
 
-#: templates/meetings/tabs/status.html:6 users/forms.py:114
+#: templates/meetings/tabs/status.html:4 users/forms.py:114
 msgid "Title"
 msgstr "Titel"
 
-#: templates/meetings/tabs/status.html:7
+#: templates/meetings/tabs/status.html:5
 msgid "Scheduled for"
 msgstr "Geplant für"
 
-#: templates/meetings/tabs/status.html:8
+#: templates/meetings/tabs/status.html:6
 msgid "Deadline for Submission"
 msgstr "Letzter Einreichtermin"
 
-#: templates/meetings/tabs/status.html:9
+#: templates/meetings/tabs/status.html:7
 msgid "Deadline for Thesis Submission"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/status.html:14
+#: templates/meetings/tabs/status.html:12
 msgid "Ended"
 msgstr "Beendet"
 
-#: templates/meetings/tabs/status.html:16
+#: templates/meetings/tabs/status.html:14
 msgid "Started"
 msgstr "Gestartet"
 
-#: templates/meetings/tabs/status.html:24
+#: templates/meetings/tabs/status.html:22
 msgid "Started at"
 msgstr "Gestartet um"
 
-#: templates/meetings/tabs/status.html:27
+#: templates/meetings/tabs/status.html:25
 msgid "Ended at"
 msgstr "Beendet um"
 
-#: templates/meetings/tabs/status.html:30
+#: templates/meetings/tabs/status.html:28
 msgid "Agenda"
 msgstr "Tagesordnung"
 
-#: templates/meetings/tabs/status.html:32
+#: templates/meetings/tabs/status.html:30
 msgid "Agenda PDF"
 msgstr "Tagesordnung PDF"
 
-#: templates/meetings/tabs/status.html:34
+#: templates/meetings/tabs/status.html:32
 msgid "Send agenda to board"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:40
+#: templates/meetings/tabs/status.html:38
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/tabs/status.html:43
+#: templates/meetings/tabs/status.html:41
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/tabs/status.html:44
+#: templates/meetings/tabs/status.html:42
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
-#: templates/meetings/timetable/editor.html:51
+#: templates/meetings/timetable/editor.html:50
 msgid "before"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:51
+#: templates/meetings/timetable/editor.html:50
 msgid "waiting"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:51
+#: templates/meetings/timetable/editor.html:50
 msgid "after"
 msgstr ""
 
@@ -3465,11 +3499,6 @@ msgstr "alle"
 msgid "Involvement"
 msgstr "Beteiligung"
 
-#: templates/submissions/tabs/involved_parties.html:6
-#: templates/tasks/log.html:13
-msgid "Name"
-msgstr "Name"
-
 #: templates/submissions/tabs/involved_parties.html:7
 msgid "Organization"
 msgstr "Organisation"
@@ -3540,30 +3569,9 @@ msgstr "Sie werden weitergeleitet."
 msgid "Type of Task"
 msgstr "Art der Aufgabe"
 
-#: templates/tasks/log.html:6
-msgid "Accepted?"
-msgstr "Angenommen?"
-
-#: templates/tasks/log.html:7
-msgid "Created At"
-msgstr "Erstellt am"
-
 #: templates/tasks/log.html:8
 msgid "Closed At"
 msgstr "Abgeschlossen am"
-
-#: templates/tasks/log.html:9
-msgid "Assigend At"
-msgstr "Übertragen am"
-
-#: templates/tasks/log.html:10
-msgid "Assigend To"
-msgstr "Übertragen an"
-
-#: templates/tasks/log.html:14 templates/users/administration.html:13
-#: users/forms.py:202
-msgid "Groups"
-msgstr "Gruppen"
 
 #: templates/tasks/log.html:32
 msgid "Closed tasks are grayed out. Deleted tasks are crossed out."

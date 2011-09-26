@@ -19,6 +19,7 @@ REVIEW_STATUS_CHOICES = (
     ('new', _('New')),
     ('ready_for_review', _('Ready for Review')),
     ('review_ok', _('Review OK')),
+    ('review_fail', _('Review Failed')),
 )
 
 class Page(models.Model):

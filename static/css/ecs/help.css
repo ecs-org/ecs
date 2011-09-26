@@ -124,10 +124,13 @@
 	border-bottom: 1px solid #ddd;
 }
 #help_nav .help_review_status.ready_for_review {
-    color: #ff0000;
+    color: #0000ff;
 }
 #help_nav .help_review_status.review_ok {
     color: #00ff00;
+}
+#help_nav .help_review_status.review_fail {
+    color: #ff0000;
 }
 .nav_left {
   float: left;
