@@ -49,7 +49,7 @@ class Serializer(object):
         return instance
 
 class PageSerializer(Serializer):
-    fields = ['view', 'anchor', 'slug', 'title', 'text']
+    fields = ['view', 'anchor', 'slug', 'title', 'text', 'review_status']
     unique = ['slug']
     model = Page
 
