@@ -435,7 +435,7 @@ def send_agenda_to_board(request, meeting_pk=None):
     for recipient in settings.AGENDA_RECIPIENT_LIST:
         send_system_message_template(recipient, _('Invitation to meeting'), 'meetings/boardmember_invitation.txt', {'meeting': meeting})
 
-    return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -527,7 +527,7 @@ def next(request):
     except Meeting.DoesNotExist:
         return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
     else:
-        return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('internal')
 def meeting_details(request, meeting_pk=None, active=None):
@@ -610,16 +610,13 @@ def meeting_details(request, meeting_pk=None, active=None):
     })
 
 
-def status(request, meeting_pk=None):
-    return meeting_details(request, meeting_pk=meeting_pk, active='status')
-
 @user_flag_required('internal')
 def edit_meeting(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     form = MeetingForm(request.POST or None, instance=meeting)
     if form.is_valid():
         meeting = form.save()
-        return HttpResponseRedirect(reverse('ecs.meetings.views.status', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/form.html', {
         'form': form,
         'meeting': meeting,
