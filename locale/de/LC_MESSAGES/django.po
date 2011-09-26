@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 14:04+0200\n"
+"POT-Creation-Date: 2011-09-26 17:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:79 core/models/submissions.py:181
+#: billing/views.py:79 core/models/submissions.py:180
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -1127,7 +1127,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:227 core/models/submissions.py:506
+#: core/paper_forms.py:227 core/models/submissions.py:505
 msgid "open"
 msgstr "offen"
 
@@ -1139,11 +1139,11 @@ msgstr "randomisiert"
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:230 core/models/submissions.py:322
+#: core/paper_forms.py:230 core/models/submissions.py:321
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:506
+#: core/paper_forms.py:231 core/models/submissions.py:505
 msgid "blind"
 msgstr "blind"
 
@@ -1159,7 +1159,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:506
+#: core/paper_forms.py:235 core/models/submissions.py:505
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1812,10 +1812,6 @@ msgid "remission"
 msgstr "Neueinreichung"
 
 #: core/forms/review.py:38
-msgid "keywords"
-msgstr "Schlüsselwörter"
-
-#: core/forms/review.py:39
 msgid "external_reviewers"
 msgstr "Gutachter"
 
@@ -1839,45 +1835,45 @@ msgstr "Überprüfung fehlgeschlagen"
 msgid "Dropped"
 msgstr "Fallengelassen"
 
-#: core/models/names.py:37 core/models/submissions.py:813 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:54
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:813 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:54
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:323
+#: core/models/submissions.py:322
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
-#: core/models/submissions.py:324
+#: core/models/submissions.py:323
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommision"
 
-#: core/models/submissions.py:328
+#: core/models/submissions.py:327
 msgid "individual-related"
 msgstr "personenbezogen"
 
-#: core/models/submissions.py:329
+#: core/models/submissions.py:328
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:768
+#: core/models/submissions.py:767
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Erstellung der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:772
+#: core/models/submissions.py:771
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:847
+#: core/models/submissions.py:846
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:847
+#: core/models/submissions.py:846
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2160,15 +2156,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:221
+#: meetings/models.py:234
 msgid "Submission {submission} added to Meeting on {date}"
 msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
 
-#: meetings/models.py:527
+#: meetings/models.py:540
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:528
+#: meetings/models.py:541
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -4038,6 +4034,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "keywords"
+#~ msgstr "Schlüsselwörter"
 
 #~ msgid "Meeting"
 #~ msgstr "Sitzung"

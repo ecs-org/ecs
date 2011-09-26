@@ -137,7 +137,6 @@ class SubmissionManager(AuthorizationManager):
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
-    keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     thesis = models.NullBooleanField()
     retrospective = models.NullBooleanField()

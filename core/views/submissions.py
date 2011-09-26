@@ -592,7 +592,7 @@ def all_submissions(request):
     title = _('All Studies')
     if keyword:
         title = _('Study Search')
-        submissions_q = Q(ec_number__icontains=keyword) | Q(keywords__icontains=keyword)
+        submissions_q = Q(ec_number__icontains=keyword)
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
             num = int(m.group(1))

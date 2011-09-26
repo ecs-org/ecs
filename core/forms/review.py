@@ -20,7 +20,7 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         model = Submission
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
             'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'gcp_review_required', 'legal_and_patient_review_required',
-            'statistical_review_required', 'remission', 'keywords', 'external_reviewers')
+            'statistical_review_required', 'remission', 'external_reviewers')
         labels = {
             'thesis': _('thesis'),
             'retrospective': _('retrospective'),
@@ -35,7 +35,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'legal_and_patient_review_required': _('legal_and_patient_review_required'),
             'statistical_review_required': _('statistical_review_required'),
             'remission': _('remission'),
-            'keywords': _('keywords'),
             'external_reviewers': _('external_reviewers'),
         }
 
