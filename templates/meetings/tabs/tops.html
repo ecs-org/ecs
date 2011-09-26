@@ -1,0 +1,35 @@
+{% load core i18n userutils %}
+
+{% if tops_without_votes %}
+<h2>{% trans "Open TOPs" %}</h2>
+<ul>
+{% for data in tops_without_votes %}
+    <li>
+        {% if data.board_member %}
+            {{ data.board_member }} ({% for amc in data.amcs %}{{ amc.category.abbrev }}{% if not forloop.last %}, {% endif %}{% endfor %})
+        {% else %}
+            <i>{% trans "No board member." %}</i>
+        {% endif %}
+        <ul>
+        {% for top in data.tops %}
+            <li>
+                {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}
+            </li>
+        {% endfor %}
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+
+{% if tops_with_votes %}
+<h2>{% trans "Finished TOPs" %}</h2>
+<ul>
+{% for top in tops_with_votes %}
+    <li>
+        {{ top }} - {{ top.submission|ec_number }} ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
+    </li>
+{% endfor %}
+</ul>
+{% endif %}

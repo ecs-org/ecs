@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 17:39+0200\n"
+"POT-Creation-Date: 2011-09-26 23:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -308,44 +308,44 @@ msgstr "Gutachten"
 msgid "External Review Review"
 msgstr "Gutachten Überprüfung"
 
-#: core/diff.py:131 core/diff.py:195 core/diff.py:196 core/diff.py:232
-#: core/diff.py:233
+#: core/diff.py:149 core/diff.py:214 core/diff.py:215 core/diff.py:251
+#: core/diff.py:252
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:133 core/forms/fields.py:52
+#: core/diff.py:151 core/forms/fields.py:52
 #: templates/submissions/readonly_form.html:301
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:135 core/forms/fields.py:52
+#: core/diff.py:153 core/forms/fields.py:52
 #: templates/submissions/readonly_form.html:302
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:268
+#: core/diff.py:290
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:269
+#: core/diff.py:291
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:270
+#: core/diff.py:292
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:272
+#: core/diff.py:294
 msgid ""
 "Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
 "Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:273
+#: core/diff.py:295
 msgid "Dokumente"
 msgstr ""
 
-#: core/diff.py:281
+#: core/diff.py:303
 msgid "Mitarbeiter"
 msgstr ""
 
@@ -2063,7 +2063,8 @@ msgstr "keine Datei"
 msgid "This Document is not a valid PDF document."
 msgstr "Die Datei ist kein gültiges PDF-Dokument."
 
-#: documents/models.py:98 templates/submissions/diff/diff.html:21
+#: documents/models.py:98 templates/notifications/form.html:45
+#: templates/submissions/diff/diff.html:21
 msgid "new"
 msgstr "neu"
 
@@ -2704,23 +2705,27 @@ msgstr "Statistik"
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
-#: templates/meetings/details.html:13
+#: templates/meetings/details.html:12
+msgid "TOPs"
+msgstr ""
+
+#: templates/meetings/details.html:14
 msgid "Signatur der Voten"
 msgstr ""
 
-#: templates/meetings/details.html:19
+#: templates/meetings/details.html:20
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/meetings/details.html:21
+#: templates/meetings/details.html:22
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:37
+#: templates/meetings/details.html:23 templates/meetings/tabs/status.html:37
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/details.html:23
+#: templates/meetings/details.html:24
 msgid "Sitzungsassistent"
 msgstr ""
 
@@ -2976,6 +2981,22 @@ msgstr "Protokoll"
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
+#: templates/meetings/tabs/tops.html:4
+msgid "Open TOPs"
+msgstr "Offene TOPs"
+
+#: templates/meetings/tabs/tops.html:11
+msgid "No board member."
+msgstr ""
+
+#: templates/meetings/tabs/tops.html:27
+msgid "Finished TOPs"
+msgstr "Abgeschlossene TOPs"
+
+#: templates/meetings/tabs/tops.html:31
+msgid "No Vote yet!"
+msgstr "Es gibt nocht kein Votum!"
+
 #: templates/meetings/timetable/editor.html:50
 msgid "before"
 msgstr ""
@@ -2997,6 +3018,16 @@ msgstr "Einreichen"
 #: templates/submissions/base_form.html:66
 msgid "Your browser does not support iframes."
 msgstr ""
+
+#: templates/notifications/form.html:44
+#: templates/submissions/diff/diff.html:20
+msgid "old"
+msgstr "alt"
+
+#: templates/notifications/form.html:46
+#: templates/submissions/diff/diff.html:22
+msgid "all"
+msgstr "alle"
 
 #: templates/notifications/list.html:27
 msgid "There are no notifications yet."
@@ -3490,14 +3521,6 @@ msgstr ""
 #: templates/submissions/widget.html:59 templates/submissions/widget.html:61
 msgid "More"
 msgstr "Mehr"
-
-#: templates/submissions/diff/diff.html:20
-msgid "old"
-msgstr "alt"
-
-#: templates/submissions/diff/diff.html:22
-msgid "all"
-msgstr "alle"
 
 #: templates/submissions/tabs/involved_parties.html:5
 msgid "Involvement"

@@ -9,6 +9,7 @@
                 <li><a href="#status_tab">{% trans "Status" %}</a></li>
                 <li><a href="#statistics_tab">{% trans "Statistics" %}</a></li>
                 <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
+                <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
                 {% if user|is_member_of:"EC-Signing Group" %}
                     <li{% if active == 'signing' %} class="active"{% endif %}><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
                 {% endif %}
@@ -41,6 +42,9 @@
     </div>
     <div id="open_tasks_tab">
         {% include 'meetings/tabs/open_tasks.html' %}
+    </div>
+    <div id="tops_tab">
+        {% include 'meetings/tabs/tops.html' %}
     </div>
     {% if user|is_member_of:"EC-Signing Group" %}
     <div id="signing_tab">

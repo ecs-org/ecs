@@ -20,7 +20,7 @@
             <div class="block_right">
                 <div class="buttons">
                   <ul>
-                      <li><a class="open-in-widget" id="complete" href="">Fertig</a></li>
+                      <li><a id="complete" href="">Fertig</a></li>
                   </ul>
                 </div>
             </div>
@@ -43,9 +43,9 @@
       
                 <div class="buttons">
                    <ul>
-                      <li><a class="open-in-widget" id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
-                      <li><a class="open-in-widget" id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
-                      <li><a class="open-in-widget" id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
+                      <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
+                      <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
+                      <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
                    </ul>
                 </div>
               </div>
@@ -133,17 +133,6 @@
                     $('id_simple_save').value = '1';
                     meetingAssistantForm.submit();
                     return false;
-                });
-                $(window).addEvent('unload', function(){
-                    var request = new Request({
-                        url: '{{ request.path }}',
-                        data: $extend(meetingAssistantForm.toQueryString().parseQueryString(), {
-                            autosave: '1',
-                            close_top: '0',
-                            simple_save: '1'
-                        })
-                    });
-                    request.send();
                 });
             {% endif %}
             $$('a.textblock').each(function(link){

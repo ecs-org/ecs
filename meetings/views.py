@@ -590,6 +590,19 @@ def meeting_details(request, meeting_pk=None, active=None):
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
 
+    board_members = meeting.medical_categories.exclude(board_member__isnull=True).values('board_member').distinct().values_list('board_member', flat=True)
+    tops_without_votes = []
+    for bm in board_members:
+        amcs = meeting.medical_categories.filter(board_member=bm).order_by('category__abbrev')
+        tops = list(meeting.timetable_entries.filter(submission__medical_categories__pk__in=[amc.category.pk for amc in amcs], vote__isnull=True).order_by('timetable_index'))
+        if tops:
+            tops_without_votes.append({'board_member': amcs[0].board_member, 'amcs': amcs, 'tops': tops})
+    tops = meeting.timetable_entries.filter(vote__isnull=True).exclude(submission__medical_categories__pk__in=meeting.medical_categories.exclude(board_member__isnull=True).values('category__pk').query)
+    if tops:
+        tops_without_votes.append({'board_member': None, 'amcs': None, 'tops': tops})
+
+    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True)
+
     return render(request, 'meetings/details.html', {
         'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
         'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
@@ -608,6 +621,8 @@ def meeting_details(request, meeting_pk=None, active=None):
         'expert_formset': expert_formset,
         'open_tasks': open_tasks,
         'votes_list': votes_list,
+        'tops_without_votes': tops_without_votes,
+        'tops_with_votes': tops_with_votes,
         'active': active,
     })
 
