@@ -131,7 +131,20 @@ class MeetingManager(models.Manager):
         try:
             return meetings.filter(started=None).order_by('start')[0]
         except IndexError:
-            raise self.model.DoesNotExist()
+            last_meeting = meetings.all().order_by('-start')[0]
+            new_start = last_meeting.start
+            new_deadline = last_meeting.deadline
+            new_deadline_diplomathesis = last_meeting.deadline_diplomathesis
+            while True:
+                new_start += timedelta(days=30)
+                new_deadline += timedelta(days=30)
+                new_deadline_diplomathesis += timedelta(days=30)
+                if (not is_thesis and datetime.now() < new_deadline) or \
+                    (is_thesis and datetime.now() < new_deadline_diplomathesis):
+                    title = new_start.strftime('%B Meeting %Y')
+                    m = Meeting.objects.create(start=new_start, deadline=new_deadline,
+                        deadline_diplomathesis=new_deadline_diplomathesis, title=title)
+                    return m
 
 class Meeting(models.Model):
     start = models.DateTimeField()
