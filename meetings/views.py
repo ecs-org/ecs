@@ -17,9 +17,9 @@ from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
-from ecs.communication.utils import send_system_message_template
 from ecs.tasks.models import Task
 from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_TYPE_MULTICENTRIC
+from ecs.ecsmail.utils import deliver
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
@@ -131,70 +131,6 @@ def timetable_editor(request, meeting_pk=None):
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
         'readonly': bool(meeting.optimization_task_id) or not meeting.started is None,
-    })
-
-
-@user_flag_required('internal')
-def expert_assignment(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
-
-    forms = SortedDict()
-    for cat in required_categories:
-        forms[cat] = AssignedMedicalCategoryForm(request.POST or None, meeting=meeting, category=cat, prefix='cat%s' % cat.pk)
-
-    if request.method == 'POST':
-        for cat, form in forms.iteritems():
-            if not form.is_valid():
-                continue
-
-            old_amc = None
-            try:
-                old_amc = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat)
-            except AssignedMedicalCategory.DoesNotExist:
-                old_amc = None
-
-            amc = form.save()
-
-            if old_amc and old_amc.board_member and old_amc.board_member == form.cleaned_data['board_member']:
-                continue
-
-            entries = list(meeting.timetable_entries.filter(submission__medical_categories=cat).distinct())
-
-            if old_amc and old_amc.board_member:
-                # remove all participations for a previous selected board member.
-                # XXX: this may delete manually entered data. (FMD2)
-                Participation.objects.filter(medical_category=cat, entry__meeting=meeting).delete()
-
-                # delete obsolete board member review tasks
-                for entry in entries:
-                    with sudo():
-                        tasks = list(Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True))
-                    for task in tasks:
-                        task.deleted_at = datetime.now()
-                        task.save()
-
-            amc = form.save()
-            if amc.board_member:
-                meeting.create_boardmember_reviews(send_messages=False)
-                send_system_message_template(amc.board_member, _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')), 'meetings/expert_notification.txt', {
-                    'category': cat,
-                    'meeting': meeting,
-                })
-
-    categories = SortedDict()
-    for cat in required_categories:
-        try:
-            categories[cat] = AssignedMedicalCategory.objects.get(meeting=meeting, category=cat).board_member
-        except AssignedMedicalCategory.DoesNotExist:
-            categories[cat] = None
-
-    return render(request, 'meetings/timetable/medical_categories.html', {
-        'active': 'experts',
-        'meeting': meeting,
-        'forms': forms,
-        'categories': categories,
-        'readonly': not meeting.started is None,
     })
 
 @user_flag_required('internal')
@@ -426,23 +362,26 @@ def agenda_pdf(request, meeting_pk=None):
     filename = '%s-%s-%s.pdf' % (
         slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda'))
     )
-
-    rts = list(meeting.retrospective_thesis_entries.all())
-    es = list(meeting.expedited_entries.all())
-    ls = list(meeting.localec_entries.all())
-
-    pdfstring = render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
-        'meeting': meeting,
-        'additional_tops': enumerate(rts + es + ls, len(meeting)+1),
-    })
-    return pdf_response(pdfstring, filename=filename)
+    pdf = meeting.get_agenda_pdf(request)
+    return pdf_response(pdf, filename=filename)
 
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    for recipient in settings.AGENDA_RECIPIENT_LIST:
-        send_system_message_template(recipient, _('Invitation to meeting'), 'meetings/boardmember_invitation.txt', {'meeting': meeting})
+    agenda_pdf = meeting.get_agenda_pdf(request)
+    agenda_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda')))
+    timetable_pdf = meeting.get_timetable_pdf(request)
+    timetable_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot')))
+    attachments = ((agenda_filename, agenda_pdf, 'application/pdf'), (timetable_filename, timetable_pdf, 'application/pdf'))
+
+    users = User.objects.filter(meeting_participations__entry__meeting=meeting)
+    for user in users:
+        start, end = meeting._get_timeframe_for_user(user)
+        time = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+        htmlmail = unicode(render_html(request, 'meetings/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'user': user}))
+        deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail,
+            from_email= settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
@@ -487,39 +426,11 @@ def protocol_pdf(request, meeting_pk=None):
 
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    
-    timetable = {}
-    for entry in meeting:
-        for user in entry.users:
-            if user in timetable:
-                timetable[user].append(entry)
-            else:
-                timetable[user] = [entry]
-    
-    timetable = sorted([{
-        'user': key,
-        'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
-    } for key in timetable], key=lambda x:x['user'])
-    
-    for row in timetable:
-        first_entry = row['entries'][0]
-        times = [{'start': first_entry.start, 'end': first_entry.end, 'index': first_entry.timetable_index}]
-        for entry in row['entries'][1:]:
-            if times[-1]['end'] == entry.start:
-                times[-1]['end'] = entry.end
-            else:
-                times.append({'start': entry.start, 'end': entry.end, 'index': entry.timetable_index})
-    
-        row['times'] = ', '.join(['%s - %s' % (x['start'].strftime('%H:%M'), x['end'].strftime('%H:%M')) for x in times])
-    
+
     filename = '%s-%s-%s.pdf' % (
         slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
     )
-    
-    pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
-        'meeting': meeting,
-        'timetable': timetable,
-    })
+    pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
 
 def timetable_htmlemailpart(request, meeting_pk=None):
@@ -570,15 +481,7 @@ def meeting_details(request, meeting_pk=None, active=None):
                             task.deleted_at = datetime.now()
                             task.save()
                 if amc.board_member:
-                    meeting.create_boardmember_reviews(send_messages=False)
-                    send_system_message_template(amc.board_member,
-                        _('Meeting on {date}').format(date=meeting.start.strftime('%d.%m.%Y')),
-                        'meetings/expert_notification.txt',
-                        {
-                            'category': amc.category,
-                            'meeting': meeting,
-                        }
-                    )
+                    meeting.create_boardmember_reviews()
 
     open_tasks = {}
     for submission in meeting.submissions.all():

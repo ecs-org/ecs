@@ -9,6 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
+from ecs.utils.viewutils import render_pdf
 
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
@@ -215,9 +216,8 @@ class Meeting(models.Model):
         del self.timetable
         del self.users_with_constraints
 
-    def create_boardmember_reviews(self, send_messages=True):
+    def create_boardmember_reviews(self):
         from ecs.tasks.models import TaskType
-        from ecs.communication.utils import send_system_message_template
 
         task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
         for amc in self.medical_categories.all():
@@ -230,13 +230,6 @@ class Meeting(models.Model):
                     # create board member review task
                     token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
                     token.task.accept(user=amc.board_member)
-                    if send_messages:
-                        subject = _('Submission {submission} added to Meeting on {date}').format(submission=entry.submission.get_ec_number_display(), date=self.start.strftime('%d.%m.%Y'))
-                        send_system_message_template(amc.board_member, subject, 'meetings/expert_notification_submission_added.txt', {
-                            'category': amc.category,
-                            'meeting': self,
-                            'submission': entry.submission,
-                        })
             
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
@@ -345,6 +338,47 @@ class Meeting(models.Model):
     def __nonzero__(self):
         return True   # work around a django bug
 
+    def get_agenda_pdf(self, request):
+        rts = list(self.retrospective_thesis_entries.all())
+        es = list(self.expedited_entries.all())
+        ls = list(self.localec_entries.all())
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
+            'meeting': self,
+            'additional_tops': enumerate(rts + es + ls, len(self)+1),
+        })
+
+    def _get_timeframe_for_user(self, user):
+        entries = list(self.timetable_entries.filter(participations__user=user).order_by('timetable_index'))
+        start = entries[0].start
+        start -= timedelta(minutes=start.minute%10)
+        end = entries[-1].end
+        if end.minute % 10 > 0:
+            end += timedelta(minutes=10-end.minute%10)
+        return (start, end)
+
+    def get_timetable_pdf(self, request):
+        timetable = {}
+        for entry in self:
+            for user in entry.users:
+                if user in timetable:
+                    timetable[user].append(entry)
+                else:
+                    timetable[user] = [entry]
+
+        timetable = sorted([{
+            'user': key,
+            'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
+        } for key in timetable], key=lambda x:x['user'])
+
+        for row in timetable:
+            start, end = self._get_timeframe_for_user(row['user'])
+            row['time'] = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
+            'meeting': self,
+            'timetable': timetable,
+        })
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')

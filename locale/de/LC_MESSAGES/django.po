@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-26 23:18+0200\n"
+"POT-Creation-Date: 2011-09-27 12:47+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2157,70 +2157,66 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:234
-msgid "Submission {submission} added to Meeting on {date}"
-msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
-
-#: meetings/models.py:540
+#: meetings/models.py:575
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:541
+#: meetings/models.py:576
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:42 templates/core.html:74
+#: meetings/views.py:43 templates/core.html:74
 #: templates/submissions/list.html:104
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:49 templates/core.html:78
+#: meetings/views.py:50 templates/core.html:78
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:52 templates/core.html:79
+#: meetings/views.py:53 templates/core.html:79
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:101
+#: meetings/views.py:102
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:180 meetings/views.py:567
-msgid "Meeting on {date}"
-msgstr "Sitzung am {date}"
-
-#: meetings/views.py:266
+#: meetings/views.py:272
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:275
+#: meetings/views.py:281
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:281
+#: meetings/views.py:287
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:295
+#: meetings/views.py:301
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:418
+#: meetings/views.py:424 meetings/views.py:434
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:436
+#: meetings/views.py:436 meetings/views.py:492
+msgid "time slot"
+msgstr "Zeitfenster"
+
+#: meetings/views.py:444
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:443
+#: meetings/views.py:452
 msgid "protocol"
 msgstr "Protokoll"
 
-#: meetings/views.py:508
-msgid "time slot"
-msgstr "Zeitfenster"
+#: meetings/views.py:547
+msgid "Meeting on {date}"
+msgstr "Sitzung am {date}"
 
 #: notifications/bootstrap.py:41
 #, fuzzy
@@ -2678,15 +2674,28 @@ msgstr "zuletzt bearbeitet"
 msgid "ago by"
 msgstr ""
 
-#: templates/meetings/boardmember_invitation.txt:2
+#: templates/meetings/boardmember_invitation.html:6
 #, python-format
 msgid ""
 "\n"
-"Sehr geehrte/r %(receiver)s,\n"
+"Sehr geehrte/r %(user)s,\n"
+msgstr ""
+
+#: templates/meetings/boardmember_invitation.html:12
+#, python-format
+msgid ""
 "\n"
-"sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
+"Sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
 "am %(meeting_start)s Uhr, sine tempore\n"
-"im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien\n"
+"im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
+"Ihre Answesenheit ist zeitplanmäßig vom %(time)s Uhr erforderlich.\n"
+"Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplannten Teilnahme.\n"
+"Berücksichtigen Sie bitte, dass ihre Teilnahme auch über das Ende des\n"
+"angegebenen Zeitfensters erforderlich sein kein.\n"
+msgstr ""
+
+#: templates/meetings/boardmember_invitation.html:24
+msgid ""
 "\n"
 "Mit freundlichen Grüßen,\n"
 "    Ethik-Kommission der MedUni Wien\n"
@@ -2728,48 +2737,6 @@ msgstr "Zeitplanung"
 #: templates/meetings/details.html:24
 msgid "Sitzungsassistent"
 msgstr ""
-
-#: templates/meetings/expert_notification.txt:2
-#, python-format
-msgid ""
-"\n"
-"You have been assigned as the expert of \"%(category)s\" for the\n"
-"meeting on %(date)s.\n"
-"\n"
-"Sincerly yours,\n"
-"    The Team of the Ethics Commission\n"
-msgstr ""
-"\n"
-"Sie wurden als Experte für \"%(category)s\" für die Sitzung\n"
-"am %(date)s ausgewählt.\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission\n"
-
-#: templates/meetings/expert_notification_submission_added.txt:2
-#, python-format
-msgid ""
-"\n"
-"As stated in a previous message, you have been assigned as the export of\n"
-"\"%(category)s\" for meeting on %(date)s.\n"
-"\n"
-"Please note, that a new submission has been added to the meeting.\n"
-"The submission in question is: %(ec_number)s %(project_title)s\n"
-"\n"
-"Sincerly yours,\n"
-"    The Team of the Ethics Commission\n"
-msgstr ""
-"\n"
-"Wie ihnen bereits in einer vorherigen Nachricht mitgeteilt wurde, wurden Sie "
-"als\n"
-"Experte für \"%(category)s\" für die Sitzung am %(date)s ausgewählt.\n"
-"\n"
-"Bitte beachten Sie, dass Ihnen eine neue Studie zur Begutachtung zugeteilt "
-"wurde.\n"
-"Die betreffende Einreichung lautet: %(ec_number)s %(project_title)s\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission\n"
 
 #: templates/meetings/form.html:5 templates/meetings/form.html.py:6
 #: templates/meetings/timetable/view.html:7
@@ -2840,23 +2807,23 @@ msgid "Go Back"
 msgstr ""
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:33
+#: templates/meetings/timetable/editor.html:34
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:40
+#: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:33
+#: templates/meetings/timetable/editor.html:34
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:40
+#: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:33
+#: templates/meetings/timetable/editor.html:34
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:40
+#: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "examined"
 msgstr "behandelt"
 
@@ -2997,15 +2964,15 @@ msgstr "Abgeschlossene TOPs"
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
-#: templates/meetings/timetable/editor.html:50
+#: templates/meetings/timetable/editor.html:51
 msgid "before"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:50
+#: templates/meetings/timetable/editor.html:51
 msgid "waiting"
 msgstr ""
 
-#: templates/meetings/timetable/editor.html:50
+#: templates/meetings/timetable/editor.html:51
 msgid "after"
 msgstr ""
 
@@ -4065,6 +4032,47 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Submission {submission} added to Meeting on {date}"
+#~ msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
+
+#~ msgid ""
+#~ "\n"
+#~ "You have been assigned as the expert of \"%(category)s\" for the\n"
+#~ "meeting on %(date)s.\n"
+#~ "\n"
+#~ "Sincerly yours,\n"
+#~ "    The Team of the Ethics Commission\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Sie wurden als Experte für \"%(category)s\" für die Sitzung\n"
+#~ "am %(date)s ausgewählt.\n"
+#~ "\n"
+#~ "Mit freundlichen Grüßen,\n"
+#~ "    Das Team der Ethik-Kommission\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "As stated in a previous message, you have been assigned as the export of\n"
+#~ "\"%(category)s\" for meeting on %(date)s.\n"
+#~ "\n"
+#~ "Please note, that a new submission has been added to the meeting.\n"
+#~ "The submission in question is: %(ec_number)s %(project_title)s\n"
+#~ "\n"
+#~ "Sincerly yours,\n"
+#~ "    The Team of the Ethics Commission\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Wie ihnen bereits in einer vorherigen Nachricht mitgeteilt wurde, wurden "
+#~ "Sie als\n"
+#~ "Experte für \"%(category)s\" für die Sitzung am %(date)s ausgewählt.\n"
+#~ "\n"
+#~ "Bitte beachten Sie, dass Ihnen eine neue Studie zur Begutachtung "
+#~ "zugeteilt wurde.\n"
+#~ "Die betreffende Einreichung lautet: %(ec_number)s %(project_title)s\n"
+#~ "\n"
+#~ "Mit freundlichen Grüßen,\n"
+#~ "    Das Team der Ethik-Kommission\n"
 
 #~ msgid "Meeting"
 #~ msgstr "Sitzung"
