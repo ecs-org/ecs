@@ -11,6 +11,9 @@ ecs.Tab = new Class({
         this.header.addEvent('click', this.clickHandler);
         this.selected = false;
     },
+    getTitle: function(){
+        return this.header.getElement('a').innerHTML;
+    },
     setClass: function(cls, set){
         this.header.setClass(cls, set);
         this.panel.setClass(cls, set);
@@ -68,6 +71,9 @@ ecs.TabGroup = new Class({
     },
     onTabSelect: function(tab){
         this.selectedTab = tab;
+        var title = $(document).title.split('|');
+        title[0] = tab.getTitle();
+        document.title = title.join(' | ');
     },
     removeTab: function(tab){
         this.tabs.erase(tab);

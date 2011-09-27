@@ -2,7 +2,7 @@
 {% load core i18n userutils %} 
 
 
-{% block htmltitle %}{{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
+{% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
 {% block headertitle %}
   <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
 {% endblock %}
