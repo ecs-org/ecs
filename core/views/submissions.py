@@ -420,7 +420,10 @@ def create_submission_form(request):
                 submission = Submission.objects.create()
             submission_form.submission = submission
             submission_form.presenter = request.user
-            submission_form.susar_presenter = request.user
+            if submission.current_submission_form:
+                submission_form.susar_presenter = submission.current_submission_form.susar_presenter
+            else:
+                submission_form.susar_presenter = request.user
             submission_form.is_notification_update = bool(notification_type)
             submission_form.transient = bool(notification_type)
             submission_form.save()
