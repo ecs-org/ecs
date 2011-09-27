@@ -160,6 +160,7 @@ def create_submission_form(ec_number=None, presenter=None):
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
         presenter=presenter or get_or_create_user('test_presenter@example.com')[0],
+        susar_presenter=presenter or get_or_create_user('test_presenter@example.com')[0],
         )
     sform.save()
     sform.substance_registered_in_countries = []
