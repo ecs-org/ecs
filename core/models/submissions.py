@@ -21,59 +21,6 @@ from ecs.users.utils import get_user, create_phantom_user
 from ecs.authorization import AuthorizationManager
 
 
-class SubmissionManager(AuthorizationManager):
-    def get_base_query_set(self):
-        return SubmissionQuerySet(self.model).distinct()
-
-    def amg(self):
-        return self.all().amg()
-
-    def mpg(self):
-        return self.all().mpg()
-
-    def amg_mpg(self):
-        return self.all().amg_mpg()
-
-    def new(self):
-        return self.all().new()
-
-    def b2(self):
-        return self.all().b2()
-
-    def b3(self):
-        return self.all().b3()
-
-    def b4(self):
-        return self.all().b4()
-
-    def thesis(self):
-        return self.all().thesis()
-
-    def retrospective(self):
-        return self.all().retrospective()
-
-    def retrospective_thesis(self):
-        return self.all().retrospective_thesis()
-
-    def expedited(self):
-        return self.all().expedited()
-
-    def localec(self):
-        return self.all().localec()
-
-    def next_meeting(self):
-        return self.all().next_meeting()
-
-    def mine(self, user):
-        return self.all().mine(user)
-
-    def reviewed_by_user(self, user):
-        return self.all().reviewed_by_user(user)
-
-    def none(self):
-        return self.all().none()
->>>>>>> other
-
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
