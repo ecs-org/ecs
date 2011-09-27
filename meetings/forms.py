@@ -102,7 +102,7 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         from ecs.core.models import Vote
-        from ecs.core.models.voting import FINAL_VOTE_RESULTS
+        from ecs.core.models.constants import FINAL_VOTE_RESULTS
         from django.db.models import Q
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
@@ -114,7 +114,7 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
             self.fields[k].initial = [x.pk for x in q.all()]
 
     def save(self):
-        from ecs.core.models.voting import Vote, PERMANENT_VOTE_RESULTS
+        from ecs.core.models.voting import Vote
         from ecs.users.utils import sudo
         from ecs.tasks.models import Task
         cd = self.cleaned_data

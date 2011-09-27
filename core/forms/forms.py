@@ -13,7 +13,7 @@ from ecs.utils.formutils import require_fields
 from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, EmailUserSelectWidget
 from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
-from ecs.core.models.voting import FINAL_VOTE_RESULTS
+
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
@@ -28,6 +28,9 @@ class ModelFormSetPickleMixin(object):
 
 ## notifications ##
 
+def get_usable_submission_forms():
+    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True).filter(presenter=get_current_user()).order_by('submission__ec_number')
+
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
@@ -36,7 +39,7 @@ class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
 class MultiNotificationForm(NotificationForm):
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['submission_forms'].queryset = get_usable_submission_forms()
 
 class SusarNotificationForm(MultiNotificationForm):
     def __init__(self, *args, **kwargs):
@@ -48,7 +51,7 @@ class SingleStudyNotificationForm(NotificationForm):
     
     def __init__(self, *args, **kwargs):
         super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_form'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['submission_form'].queryset = get_usable_submission_forms()
 
     class Meta:
         model = Notification

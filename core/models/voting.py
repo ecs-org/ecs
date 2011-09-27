@@ -6,23 +6,7 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
 from ecs import authorization
-
-
-VOTE_RESULT_CHOICES = (
-    ('1', _(u'1 positive')),
-    ('2', _(u'2 positive under reserve')),
-    ('3a', _(u'3a recessed (not examined)')),
-    ('3b', _(u'3b recessed (examined)')),
-    ('4', _(u'4 negative')),
-    ('5', _(u'5 withdrawn (applicant)')),
-)
-
-POSITIVE_VOTE_RESULTS = ('1', '2')
-NEGATIVE_VOTE_RESULTS = ('4', '5')
-FINAL_VOTE_RESULTS = POSITIVE_VOTE_RESULTS + NEGATIVE_VOTE_RESULTS
-PERMANENT_VOTE_RESULTS = ('1',) + NEGATIVE_VOTE_RESULTS
-RECESSED_VOTE_RESULTS = ('3a', '3b')
-
+from ecs.core.models.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
 
 class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
@@ -87,7 +71,11 @@ class Vote(models.Model):
     @property
     def final(self):
         return self.result in FINAL_VOTE_RESULTS
-
+        
+    @property
+    def permanent(self):
+        return self.result in PERMANENT_VOTE_RESULTS
+        
     @property
     def recessed(self):
         return self.result in ('3a', '3b')

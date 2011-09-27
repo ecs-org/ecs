@@ -13,7 +13,7 @@ from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
-from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
 register(Vote)
@@ -45,7 +45,7 @@ def is_expedited(wf):
 
 @guard(model=Submission)
 def is_localec(wf):
-    return wf.data.current_submission_form.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+    return wf.data.current_submission_form.is_categorized_multicentric_and_local
 
 @guard(model=Submission)
 def is_expedited_or_retrospective_thesis(wf):
@@ -342,10 +342,9 @@ class VoteB2Review(Activity):
         )
 
     def pre_perform(self, choice):
-        from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
         sf = self.workflow.data.submission_form
         new_vote = Vote.objects.create(submission_form=sf, result=choice)
-        if new_vote.result in PERMANENT_VOTE_RESULTS:
+        if new_vote.permanent:
             # abort all tasks
             with sudo():
                 open_tasks = Task.objects.for_data(sf.submission).filter(deleted_at__isnull=True, closed_at=None)

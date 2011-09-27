@@ -2,7 +2,7 @@
 {% load core i18n userutils %} 
 
 
-{% block htmltitle %}{{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
+{% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
 {% block headertitle %}
   <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
 {% endblock %}
@@ -11,7 +11,7 @@
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-    {% if submission_form.presenter == request.user and submission_form.submission.current_submission_form == submission_form %}
+    {% if submission_form.presenter == request.user and submission_form.is_current %}
         {% if not submission_form.submission.has_permanent_vote %}
             <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
         {% else %}

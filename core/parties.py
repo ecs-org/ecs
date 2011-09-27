@@ -1,8 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.conf import settings
+from django.template import Template, Context, RequestContext, loader
 
 from ecs.users.utils import sudo
+
 
 class Party(object):
     def __init__(self, organization=None, name=None, user=None, email=None, involvement=None, anonymous=False):
@@ -27,6 +30,29 @@ class Party(object):
         if self._anonymous or not name:
             return u'- anonymous -'
         return unicode(name)
+        
+    def send_system_message(self, subject, template, context=None, **kwargs):
+        from ecs.ecsmail.utils import deliver, whitewash
+        from ecs.communication.utils import send_system_message
+        
+        if isinstance(template, (tuple, list)):
+            template = loader.select_template(template)
+        if not isinstance(template, Template):
+            template = loader.get_template(template)
+        request = kwargs.pop('request')
+        if request:
+            ctx = RequestContext(request, context)
+        else:
+            ctx = Context(context)
+        
+        htmlmail = unicode(template.render(ctx))
+        plainmail = whitewash(htmlmail)
+
+        if self.user:
+            send_system_message(self.user, subject, plainmail, **kwargs)
+        elif self.email:
+            deliver(self.email, subject=subject, message=plainmail, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL)
+
 
 @sudo()
 def get_presenting_parties(sf):
