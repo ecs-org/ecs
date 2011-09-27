@@ -1,5 +1,11 @@
 {% extends 'db/notifications/wkhtml2pdf/base.html' %}
-
+{% load i18n %}
 {% block mainitem %}
     {{ block.super }}
+    <p>{% trans 'Reason for not started' %}:<b>{{ notification.reason_for_not_started }}</b></p>
+    <p>{% trans 'Recruited subjects' %}: <b>{{ notification.recruited_subjects }}</b></p>
+    <p>{% trans 'Finished subjects' %}: <b>{{ notification.finished_subjects }}</b></p>
+    <p>{% trans 'Aborted subjects' %}: <b>{{ notification.aborted_subjects }}</b></p>
+    <p>{% trans 'SAE count' %}: <b>{{ notification.SAE_count }}</b></p>
+    <p>{% trans 'SUSAR count' %}: <b>{{ notification.SUSAR_count }}</b></p> 
 {% endblock %}

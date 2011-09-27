@@ -1,14 +1,8 @@
 {% extends "db/notifications/wkhtml2pdf/ReportNotificationForm.html" %}
 {% block mainitem %}
-    {{ block.super }}
-    {% with notification.completionreportnotification as completion_notification %}
-        <p>Grund warum noch nicht begonnen: <b>{{ completion_notification.reason_for_not_started }}</b></p>
-        <p>Angeworbene Versuchspersonen: <b>{{ completion_notification.recruited_subjects }}</b></p>
-        <p>Beendete Versuchspersonen: <b>{{ completion_notification.finished_subjects }}</b></p>
-        <p>Abgebrochene Versuchspersonen: <b>{{ completion_notification.aborted_subjects }}</b></p>
-        <p>SAE Zahl: <b>{{ completion_notification.SAE_count }}</b></p>
-        <p>SUSAR Zahl: <b>{{ completion_notification.SUSAR_count }}</b></p> 
-        <p>Die Studie wurde abgebrochen: <b>{{ completion_notification.study_aborted|yesno:"Ja,Nein" }}</b></p>
-        <p>Datum der Beendigung: <b>{{ completion_notification.completion_date|date:'d.m.Y' }}</b></p>
+    {% with notification.completionreportnotification as notification %}
+        {{ block.super }}
+        <p>Die Studie wurde abgebrochen: <b>{{ notification.study_aborted|yesno:"Ja,Nein" }}</b></p>
+        <p>Datum der Beendigung: <b>{{ notification.completion_date|date:'d.m.Y' }}</b></p>
     {% endwith %}
 {% endblock %}
