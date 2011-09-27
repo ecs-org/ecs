@@ -435,11 +435,11 @@ class SubmissionForm(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
 
     def save(self, **kwargs):
+        from ecs.users.utils import get_current_user
         if not self.presenter_id:
-            from ecs.users.utils import get_current_user
-            user = get_current_user()
-            if user:
-                self.presenter = user
+            self.presenter = get_current_user()
+        if not self.susar_presenter_id:
+            self.susar_presenter = get_current_user()
         for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name'), ('invoice', 'invoice_name')):
             email = getattr(self, '{0}_email'.format(x))
             if email:
