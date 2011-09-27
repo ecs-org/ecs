@@ -193,3 +193,6 @@
 {% if user|has_flag:'internal' or user == submission_form.presenter %}
     <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}
+{% if user|has_flag:'executive_board_member' or user == submission_form.presenter %}
+    <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Change Presenter" %}</a>
+{% endif %}

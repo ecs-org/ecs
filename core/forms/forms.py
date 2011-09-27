@@ -10,7 +10,7 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
 from ecs.utils.formutils import require_fields
-from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput
+from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, EmailUserSelectWidget
 from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 from ecs.core.models.voting import FINAL_VOTE_RESULTS
@@ -277,6 +277,17 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         widgets = {
             'email': StrippedTextInput(),
         }
+
+class PresenterChangeForm(forms.ModelForm):
+    class Meta:
+        model = SubmissionForm
+        fields = ('presenter',)
+
+    def __init__(self, *args, **kwargs):
+        super(PresenterChangeForm, self).__init__(*args, **kwargs)
+        profile = get_current_user().get_profile()
+        if not profile.executive_board_member:
+            self.fields['presenter'].widget = EmailUserSelectWidget()
 
 class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):

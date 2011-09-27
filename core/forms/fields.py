@@ -3,8 +3,11 @@ import datetime
 
 from django import forms
 from django.utils.translation import ugettext as _
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 from ecs.utils.timedelta import parse_timedelta
+from ecs.users.utils import get_user
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
 TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
@@ -147,3 +150,20 @@ class StrippedTextInput(ReadonlyTextInput):
         if v is not None:
             v = v.strip()
         return v
+
+class EmailUserSelectWidget(forms.TextInput):
+    def render(self, name, value, attrs=None):
+        if value is None:
+            value = ''
+        else:
+            value = User.objects.get(pk=value).email
+        return super(EmailUserSelectWidget, self).render(name, value, attrs=attrs)
+
+    def value_from_datadict(self, data, files, name):
+        val = data.get(name, '')
+        if not val:
+            return None
+        try:
+            return get_user(val.strip()).pk
+        except User.DoesNotExist:
+            return None

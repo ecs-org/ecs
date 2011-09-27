@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^submission/(?P<submission_pk>\d+)/messages/new/$', 'ecs.communication.views.new_thread'),
     url(r'^submission/(?P<submission_pk>\d+)/export/$', 'ecs.core.views.export_submission'),
     url(r'^submission/(?P<submission_pk>\d+)/tasks/log/$', 'ecs.tasks.views.task_backlog'),
+    url(r'^submission/(?P<submission_pk>\d+)/change_presenter/$', 'ecs.core.views.change_submission_presenter'),
 
     url(r'^submission/(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', 'ecs.core.views.submissions.delete_task'),
 

@@ -1,0 +1,4 @@
+{% load i18n core %}
+{% blocktrans with submission|ec_number as ec_number %}
+Sie sind nun nicht mehr Präsentator der Studie {{ ec_number }}.
+{% endblocktrans %}

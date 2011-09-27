@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-27 12:47+0200\n"
+"POT-Creation-Date: 2011-09-27 17:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1566,87 +1566,87 @@ msgstr "Studie"
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:289
+#: core/forms/forms.py:294
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:332 core/models/checklist.py:42 help/models.py:19
+#: core/forms/forms.py:337 core/models/checklist.py:42 help/models.py:19
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
 
-#: core/forms/forms.py:333 templates/core.html:76
+#: core/forms/forms.py:338 templates/core.html:76
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:334
+#: core/forms/forms.py:339
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:335 core/forms/layout.py:65 core/forms/layout.py:67
+#: core/forms/forms.py:340 core/forms/layout.py:65 core/forms/layout.py:67
 #: templates/meetings/tabs/statistics.html:4
 #: templates/submissions/tabs/status.html:115 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:336 core/forms/layout.py:74 core/forms/layout.py:76
+#: core/forms/forms.py:341 core/forms/layout.py:74 core/forms/layout.py:76
 #: templates/meetings/tabs/statistics.html:5
 #: templates/submissions/tabs/status.html:122 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:337
+#: core/forms/forms.py:342
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:338 templates/meetings/tabs/statistics.html:8
+#: core/forms/forms.py:343 templates/meetings/tabs/statistics.html:8
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:339 templates/meetings/tabs/statistics.html:10
+#: core/forms/forms.py:344 templates/meetings/tabs/statistics.html:10
 #: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:340
+#: core/forms/forms.py:345
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:341
+#: core/forms/forms.py:346
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:342
+#: core/forms/forms.py:347
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:343
+#: core/forms/forms.py:348
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:344 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:349 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:345 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:350 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:346
+#: core/forms/forms.py:351
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:416
+#: core/forms/forms.py:421
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:427
+#: core/forms/forms.py:432
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1925,27 +1925,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:532
+#: core/views/submissions.py:552
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:592 templates/core.html:50
+#: core/views/submissions.py:612 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:594
+#: core/views/submissions.py:614
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:608
+#: core/views/submissions.py:628
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:628 templates/core.html:53
+#: core/views/submissions.py:648 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:636 templates/core.html:56
+#: core/views/submissions.py:656 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2157,66 +2157,62 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:575
+#: meetings/models.py:574
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:576
+#: meetings/models.py:575
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/views.py:43 templates/core.html:74
+#: meetings/views.py:42 templates/core.html:74
 #: templates/submissions/list.html:104
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:50 templates/core.html:78
+#: meetings/views.py:49 templates/core.html:78
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:53 templates/core.html:79
+#: meetings/views.py:52 templates/core.html:79
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:102
+#: meetings/views.py:101
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:272
+#: meetings/views.py:211
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:281
+#: meetings/views.py:220
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:287
+#: meetings/views.py:226
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:301
+#: meetings/views.py:240
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:424 meetings/views.py:434
+#: meetings/views.py:363 meetings/views.py:373
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:436 meetings/views.py:492
+#: meetings/views.py:375 meetings/views.py:431
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:444
+#: meetings/views.py:383
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:452
+#: meetings/views.py:391
 msgid "protocol"
 msgstr "Protokoll"
-
-#: meetings/views.py:547
-msgid "Meeting on {date}"
-msgstr "Sitzung am {date}"
 
 #: notifications/bootstrap.py:41
 #, fuzzy
@@ -3028,6 +3024,37 @@ msgstr "Alte Version"
 msgid "New Version"
 msgstr "Neue Version"
 
+#: templates/notifications/view/ReportNotificationForm.html:5
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:5
+msgid "Reason for not started"
+msgstr ""
+
+#: templates/notifications/view/ReportNotificationForm.html:6
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:6
+msgid "Recruited subjects"
+msgstr ""
+
+#: templates/notifications/view/ReportNotificationForm.html:7
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:7
+#, fuzzy
+msgid "Finished subjects"
+msgstr "Abgeschlossene TOPs"
+
+#: templates/notifications/view/ReportNotificationForm.html:8
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:8
+msgid "Aborted subjects"
+msgstr ""
+
+#: templates/notifications/view/ReportNotificationForm.html:9
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:9
+msgid "SAE count"
+msgstr ""
+
+#: templates/notifications/view/ReportNotificationForm.html:10
+#: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:10
+msgid "SUSAR count"
+msgstr ""
+
 #: templates/notifications/view/base.html:19
 msgid "Answer"
 msgstr "Antwort"
@@ -3172,6 +3199,13 @@ msgstr ""
 "\n"
 "Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
 "können die Studie neu einreichen.\n"
+
+#: templates/submissions/change_presenter.html:4
+#: templates/submissions/change_presenter.html:5
+#: templates/submissions/change_presenter.html:11
+#: templates/submissions/tabs/status.html:197
+msgid "Change Presenter"
+msgstr "Präsentator Ändern"
 
 #: templates/submissions/checklist_summary.inc:20
 #, fuzzy
@@ -4032,6 +4066,9 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "Meeting on {date}"
+#~ msgstr "Sitzung am {date}"
 
 #~ msgid "Submission {submission} added to Meeting on {date}"
 #~ msgstr "Studie {submission} der Sizung am {date} hinzugefügt"
