@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-27 17:30+0200\n"
+"POT-Creation-Date: 2011-09-27 20:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,12 +313,12 @@ msgstr "Gutachten Überprüfung"
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:151 core/forms/fields.py:52
+#: core/diff.py:151 core/forms/fields.py:55
 #: templates/submissions/readonly_form.html:301
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:153 core/forms/fields.py:52
+#: core/diff.py:153 core/forms/fields.py:55
 #: templates/submissions/readonly_form.html:302
 msgid "No"
 msgstr "Nein"
@@ -1127,7 +1127,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:227 core/models/submissions.py:505
+#: core/paper_forms.py:227 core/models/submissions.py:506
 msgid "open"
 msgstr "offen"
 
@@ -1143,7 +1143,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:505
+#: core/paper_forms.py:231 core/models/submissions.py:506
 msgid "blind"
 msgstr "blind"
 
@@ -1159,7 +1159,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:505
+#: core/paper_forms.py:235 core/models/submissions.py:506
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1535,26 +1535,26 @@ msgstr "Gutachten Abgelehnt"
 msgid "comment"
 msgstr "Kommentar"
 
-#: core/forms/fields.py:23
+#: core/forms/fields.py:26
 msgid "Please enter a date in the format dd.mm.yyyy."
 msgstr "Bitte geben Sie ein Datum im Format TT.MM.JJJJ ein."
 
-#: core/forms/fields.py:30
+#: core/forms/fields.py:33
 msgid "Please enter a date in dd.mm.yyyy format and time in format HH:MM."
 msgstr ""
 "Bitte geben Sie ein Datum im Format TT.MM.JJJJ und eine Uhrzeit im Format HH:"
 "MM ein."
 
-#: core/forms/fields.py:35
+#: core/forms/fields.py:38
 msgid "Please enter a time in the format HH: MM."
 msgstr "Bitte geben Sie eine Uhrzeit im Format HH:MM ein."
 
-#: core/forms/fields.py:41
+#: core/forms/fields.py:44
 msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/fields.py:125
+#: core/forms/fields.py:128
 msgid "No information given"
 msgstr "Keine Angaben"
 
@@ -1566,87 +1566,87 @@ msgstr "Studie"
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:294
+#: core/forms/forms.py:311
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:337 core/models/checklist.py:42 help/models.py:19
+#: core/forms/forms.py:354 core/models/checklist.py:42 help/models.py:19
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
 
-#: core/forms/forms.py:338 templates/core.html:76
+#: core/forms/forms.py:355 templates/core.html:76
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:339
+#: core/forms/forms.py:356
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:340 core/forms/layout.py:65 core/forms/layout.py:67
+#: core/forms/forms.py:357 core/forms/layout.py:65 core/forms/layout.py:67
 #: templates/meetings/tabs/statistics.html:4
 #: templates/submissions/tabs/status.html:115 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:341 core/forms/layout.py:74 core/forms/layout.py:76
+#: core/forms/forms.py:358 core/forms/layout.py:74 core/forms/layout.py:76
 #: templates/meetings/tabs/statistics.html:5
 #: templates/submissions/tabs/status.html:122 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:342
+#: core/forms/forms.py:359
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:343 templates/meetings/tabs/statistics.html:8
+#: core/forms/forms.py:360 templates/meetings/tabs/statistics.html:8
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:344 templates/meetings/tabs/statistics.html:10
+#: core/forms/forms.py:361 templates/meetings/tabs/statistics.html:10
 #: templates/submissions/tabs/status.html:119 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:345
+#: core/forms/forms.py:362
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:346
+#: core/forms/forms.py:363
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:347
+#: core/forms/forms.py:364
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:348
+#: core/forms/forms.py:365
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:349 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:366 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:350 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:367 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:351
+#: core/forms/forms.py:368
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:421
+#: core/forms/forms.py:438
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:432
+#: core/forms/forms.py:449
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1835,12 +1835,12 @@ msgstr "Überprüfung fehlgeschlagen"
 msgid "Dropped"
 msgstr "Fallengelassen"
 
-#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:813 users/forms.py:54
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:813 users/forms.py:54
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1861,19 +1861,19 @@ msgstr "personenbezogen"
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/submissions.py:767
+#: core/models/submissions.py:768
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Erstellung der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:771
+#: core/models/submissions.py:772
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:847
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:847
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1925,27 +1925,33 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:552
+#: core/views/submissions.py:489 core/views/submissions.py:494
+#: core/views/submissions.py:514 core/views/submissions.py:519
+#, fuzzy
+msgid "Studie {0}"
+msgstr "Studien"
+
+#: core/views/submissions.py:584
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:612 templates/core.html:50
+#: core/views/submissions.py:644 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:614
+#: core/views/submissions.py:646
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:628
+#: core/views/submissions.py:660
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:648 templates/core.html:53
+#: core/views/submissions.py:680 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:656 templates/core.html:56
+#: core/views/submissions.py:688 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3207,6 +3213,13 @@ msgstr ""
 msgid "Change Presenter"
 msgstr "Präsentator Ändern"
 
+#: templates/submissions/change_susar_presenter.html:4
+#: templates/submissions/change_susar_presenter.html:5
+#: templates/submissions/change_susar_presenter.html:11
+#: templates/submissions/tabs/status.html:200
+msgid "Change Susar Presenter"
+msgstr "Susar Präsentator Ändern"
+
 #: templates/submissions/checklist_summary.inc:20
 #, fuzzy
 msgid "No Checklist yet."
@@ -3397,6 +3410,20 @@ msgstr ""
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
+#: templates/submissions/presenter_change_new.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie wurden als Präsentator für die Studie %(ec_number)s ausgewählt.\n"
+msgstr ""
+
+#: templates/submissions/presenter_change_previous.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie sind nun nicht mehr Präsentator der Studie %(ec_number)s.\n"
+msgstr ""
+
 #: templates/submissions/readonly_form.html:26
 #: templates/submissions/readonly_form.html:29
 #, python-format
@@ -3497,6 +3524,20 @@ msgstr ""
 #: templates/submissions/review_form.inc:19
 msgid "save"
 msgstr "Speichern"
+
+#: templates/submissions/susar_presenter_change_new.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie wurden als Susar Präsentator für die Studie %(ec_number)s ausgewählt.\n"
+msgstr ""
+
+#: templates/submissions/susar_presenter_change_previous.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie sind nun nicht mehr Susar Präsentator der Studie %(ec_number)s.\n"
+msgstr ""
 
 #: templates/submissions/vote_publish.txt:2
 #, python-format

@@ -38,6 +38,11 @@ class MultiNotificationForm(NotificationForm):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
         self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
 
+class SusarNotificationForm(MultiNotificationForm):
+    def __init__(self, *args, **kwargs):
+        super(MultiNotificationForm, self).__init__(*args, **kwargs)
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), susar_presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
     
@@ -288,6 +293,17 @@ class PresenterChangeForm(forms.ModelForm):
         profile = get_current_user().get_profile()
         if not profile.executive_board_member:
             self.fields['presenter'].widget = EmailUserSelectWidget()
+
+class SusarPresenterChangeForm(forms.ModelForm):
+    class Meta:
+        model = SubmissionForm
+        fields = ('susar_presenter',)
+
+    def __init__(self, *args, **kwargs):
+        super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
+        profile = get_current_user().get_profile()
+        if not profile.executive_board_member:
+            self.fields['susar_presenter'].widget = EmailUserSelectWidget()
 
 class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):

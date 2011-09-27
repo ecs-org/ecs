@@ -20,8 +20,8 @@ class SubmissionQFactory(authorization.QFactory):
         if not profile.approved_by_office:
             return self.make_deny_q()
             
-        ### default policy: only avaiable for the presenter.
-        q = self.make_q(forms__presenter=user)
+        ### default policy: only avaiable for the (susar) presenter.
+        q = self.make_q(current_submission_form__presenter=user) | self.make_q(current_submission_form__susar_presenter=user)
 
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(external_reviewers=user)
@@ -101,7 +101,7 @@ class ChecklistQFactory(authorization.QFactory):
         if profile.internal:
             return self.make_q()
         q = self.make_q(user=user)
-        for x in ('sponsor', 'invoice', 'submitter', 'presenter'):
+        for x in ('sponsor', 'invoice', 'submitter', 'presenter', 'susar_presenter'):
             kwargs = {'status': 'review_ok', 'submission__current_submission_form__{0}'.format(x): user}
             q |= self.make_q(**kwargs)
         return q

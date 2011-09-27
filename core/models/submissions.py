@@ -64,7 +64,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(meetings__start__gt=datetime.now())
 
     def mine(self, user):
-        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
+        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user)|Q(current_submission_form__susar_presenter=user))
 
     def reviewed_by_user(self, user):
         submissions = self.none()
@@ -343,6 +343,7 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField()
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
+    susar_presenter = models.ForeignKey(User, related_name='susar_presented_submission_forms')
     created_at = models.DateTimeField(auto_now_add=True)
     
     # denormalization

@@ -20,7 +20,7 @@ from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Chec
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
-    SubmissionListFilterForm, SubmissionListFullFilterForm, PresenterChangeForm
+    SubmissionListFilterForm, SubmissionListFullFilterForm, PresenterChangeForm, SusarPresenterChangeForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -420,6 +420,7 @@ def create_submission_form(request):
                 submission = Submission.objects.create()
             submission_form.submission = submission
             submission_form.presenter = request.user
+            submission_form.susar_presenter = request.user
             submission_form.is_notification_update = bool(notification_type)
             submission_form.transient = bool(notification_type)
             submission_form.save()
@@ -495,6 +496,31 @@ def change_submission_presenter(request, submission_pk=None):
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission_form.submission})
+
+def change_submission_susar_presenter(request, submission_pk=None):
+    profile = request.user.get_profile()
+    if profile.executive_board_member:
+        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
+    else:
+        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk, susar_presenter=request.user)
+
+    previous_susar_presenter = submission_form.susar_presenter
+    form = SusarPresenterChangeForm(request.POST or None, instance=submission_form)
+
+    if request.method == 'POST' and form.is_valid():
+        new_susar_presenter = form.cleaned_data['susar_presenter']
+        submission_form.susar_presenter = new_susar_presenter
+        submission_form.save()
+        send_system_message_template(new_susar_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
+            'submissions/susar_presenter_change_new.txt', None, submission=submission_form.submission)
+        if request.user == previous_susar_presenter:
+            return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
+        else:
+            send_system_message_template(previous_susar_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
+                'submissions/susar_presenter_change_previous.txt', None, submission=submission_form.submission)
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+
+    return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission_form.submission})
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def delete_docstash_entry(request):

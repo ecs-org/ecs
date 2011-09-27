@@ -13,20 +13,12 @@ from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
+from ecs.bootstrap.utils import update_instance
 
 
 # We use this helper function for marking task names as translatable, they are
 # getting translated later.
 _ = lambda s: s
-
-def _update_instance(instance, d):
-    changed = False
-    for k,v in d.iteritems():
-        if not getattr(instance, k) == v:
-            setattr(instance, k, v)
-            changed = True
-    if changed:
-        instance.save()
 
 @bootstrap.register()
 def sites():
@@ -318,14 +310,14 @@ def medcategories():
 def expedited_review_categories():
     for abbrev, name in medcategories():
         erc, created = ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
-        _update_instance(erc, {'name': name})
+        update_instance(erc, {'name': name})
 
 
 @bootstrap.register()
 def medical_categories():
     for abbrev, name in medcategories():
         medcat, created = MedicalCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
-        _update_instance(medcat, {'name': name})
+        update_instance(medcat, {'name': name})
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))

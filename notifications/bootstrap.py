@@ -4,6 +4,7 @@ from ecs.notifications.models import NotificationType, Notification, CompletionR
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
+from ecs.bootstrap.utils import update_instance
 
 
 # for marking the task names translatable
@@ -12,17 +13,19 @@ _ = lambda s: s
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.MultiNotificationForm", False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
+        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.SusarNotificationForm", False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
         (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, u""),
         (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, u""),
         (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu."),
     )
-    
+
     for name, form, diff, default_response in types:
-        t, created = NotificationType.objects.get_or_create(name=name, form=form, diff=diff)
-        if t.default_response != default_response:
-            t.default_response = default_response
-            t.save()
+        t, created = NotificationType.objects.get_or_create(name=name)
+        update_instance(t, {
+            'form': form,
+            'diff': diff,
+            'default_response': default_response,
+        })
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
