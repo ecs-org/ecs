@@ -337,6 +337,18 @@
 .user_icon {
   background: url(/static/images/icons.png) -320px 0 no-repeat;
 }
+.icon_pdf {
+  border: none;
+  background: url(/static/images/pdf.png) 0 0 no-repeat;
+  width: 32px;
+  height: 32px;
+  padding: 0px;
+  position: relative;
+  top: 3px;
+  display: inline-block;
+  overflow: hidden;
+  text-indent: -1000px;
+}
 .togglers, .main_item {
   display: block;
   cursor: pointer;

@@ -4,10 +4,11 @@
         <table>
             <tr>
                 <th>Version</th>
-                <th>Eingereicht von</th>
-                <th>Eingereicht am</th>
-                <th colspan="2">Versionen</th>
-                <th></th>
+                <th>von</th>
+                <th>am</th>
+                <th>zur Vorversion</th>
+                <th>zur Neuesten</th>
+                <th>Download PDF</th>
             </tr>
             {% with submission_form.submission.get_current_docstash as docstash %}
             {% if docstash %}
@@ -45,7 +46,7 @@
                 </td>
                 <td>
                     {% if sf == submission_form.submission.newest_submission_form %}
-                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="button_submit">{% trans "Download PDF" %}</a>
+                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
                     {% endif %}
                 </td>
             </tr>
