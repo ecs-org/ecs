@@ -335,6 +335,7 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
             presenter=get_or_create_user('test_presenter@example.com')[0],
+            susar_presenter=get_or_create_user('test_presenter@example.com')[0],
             )
         sform.save()
         sform.substance_registered_in_countries = []
