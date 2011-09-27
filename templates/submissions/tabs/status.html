@@ -135,7 +135,7 @@
                 {% for meeting in submission_form.submission.meetings.all %}
                     <li>
                         {% if user|has_flag:'internal' %}
-                            <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
+                            <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                         {% else %}
                             {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
                         {% endif %}

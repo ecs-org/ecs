@@ -508,7 +508,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         tops = list(meeting.timetable_entries.filter(submission__medical_categories__pk__in=[amc.category.pk for amc in amcs], vote__isnull=True).order_by('timetable_index'))
         if tops:
             tops_without_votes.append({'board_member': amcs[0].board_member, 'amcs': amcs, 'tops': tops})
-    tops = meeting.timetable_entries.filter(vote__isnull=True).exclude(submission__medical_categories__pk__in=meeting.medical_categories.exclude(board_member__isnull=True).values('category__pk').query)
+    tops = meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).exclude(submission__medical_categories__pk__in=meeting.medical_categories.exclude(board_member__isnull=True).values('category__pk').query)
     if tops:
         tops_without_votes.append({'board_member': None, 'amcs': None, 'tops': tops})
 
