@@ -18,7 +18,6 @@ from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprin
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.tasks.models import Task
-from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_TYPE_MULTICENTRIC
 from ecs.ecsmail.utils import deliver
 
 from ecs.meetings.tasks import optimize_timetable_task
@@ -272,7 +271,7 @@ def meeting_assistant_comments(request, meeting_pk=None):
 
 @user_flag_required('internal')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
-    from ecs.core.models.voting import FINAL_VOTE_RESULTS
+    from ecs.core.models.constants import FINAL_VOTE_RESULTS
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
     if form.is_valid():
@@ -524,7 +523,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'other_count': meeting.submissions.exclude(pk__in=meeting.submissions.amg().values('pk').query).exclude(pk__in=meeting.submissions.mpg().values('pk').query).exclude(pk__in=meeting.submissions.retrospective_thesis().values('pk').query).exclude(pk__in=meeting.submissions.expedited().values('pk').query).exclude(pk__in=meeting.submissions.localec().values('pk').query).count(),
         'dissertation_count': meeting.submissions.filter(current_submission_form__project_type_education_context=1).count(),
         'diploma_thesis_count': meeting.submissions.filter(current_submission_form__project_type_education_context=2).count(),
-        'amg_multi_main_count': meeting.submissions.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC).count(),
+        'amg_multi_main_count': meeting.submissions.localec().count(),
         'remission_count': meeting.submissions.filter(remission=True).count(),
         'b3_examined_count': Vote.objects.filter(result='3b', top__meeting__pk=meeting.pk).count(),
         'b3_not_examined_count': Vote.objects.filter(result='3a', top__meeting__pk=meeting.pk).count(),

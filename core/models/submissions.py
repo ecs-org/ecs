@@ -9,131 +9,17 @@ from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models.names import NameField
+from ecs.core.models.constants import (
+    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES,
+    SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
+    PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS,
+)
+from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
-from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user
+from ecs.authorization import AuthorizationManager
 
-MIN_EC_NUMBER = 1000
-
-class SubmissionQuerySet(models.query.QuerySet):
-    def amg(self):
-        return self.filter(Q(is_amg=True) | (
-            Q(is_amg=None) & (
-                Q(current_submission_form__project_type_non_reg_drug=True)
-                | Q(current_submission_form__project_type_reg_drug=True)
-            )
-        ))
-
-    def mpg(self):
-        return self.filter(Q(is_mpg=True) | (
-            Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
-        ))
-
-    def amg_mpg(self):
-        return self.amg() & self.mpg()
-
-    def b2(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
-
-    def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result_in=['3a', '3b']), current_submission_form__isnull=False)
-
-    def b4(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
-
-    def new(self):
-        return self.filter(meetings__isnull=True)
-
-    def thesis(self):
-        return self.filter(Q(thesis=True)|(Q(thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
-
-    def retrospective(self):
-        return self.filter(Q(retrospective=True)|Q(retrospective=None, current_submission_form__project_type_retrospective=True))
-
-    def retrospective_thesis(self):
-        return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
-
-    def expedited(self):
-        return self.filter(expedited=True)
-
-    def localec(self):
-        return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
-
-    def next_meeting(self):
-        return self.filter(meetings__start__gt=datetime.now())
-
-    def mine(self, user):
-        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
-
-    def reviewed_by_user(self, user):
-        submissions = self.none()
-        for a in user.assigned_medical_categories.all():
-            submissions |= self.filter(pk__in=a.meeting.submissions.filter(medical_categories=a.category).values('pk').query)
-
-        from ecs.tasks.models import Task
-        submission_ct = ContentType.objects.get_for_model(Submission)
-        submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
-        from ecs.core.models import Checklist
-        checklist_ct = ContentType.objects.get_for_model(Checklist)
-        submissions |= self.filter(pk__in=Checklist.objects.all().values('submission__pk').query)
-        return submissions.distinct()
-
-    def none(self):
-        """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
-        return self.extra(where=['1=0']) 
-
-class SubmissionManager(AuthorizationManager):
-    def get_base_query_set(self):
-        return SubmissionQuerySet(self.model).distinct()
-
-    def amg(self):
-        return self.all().amg()
-
-    def mpg(self):
-        return self.all().mpg()
-
-    def amg_mpg(self):
-        return self.all().amg_mpg()
-
-    def new(self):
-        return self.all().new()
-
-    def b2(self):
-        return self.all().b2()
-
-    def b3(self):
-        return self.all().b3()
-
-    def b4(self):
-        return self.all().b4()
-
-    def thesis(self):
-        return self.all().thesis()
-
-    def retrospective(self):
-        return self.all().retrospective()
-
-    def retrospective_thesis(self):
-        return self.all().retrospective_thesis()
-
-    def expedited(self):
-        return self.all().expedited()
-
-    def localec(self):
-        return self.all().localec()
-
-    def next_meeting(self):
-        return self.all().next_meeting()
-
-    def mine(self, user):
-        return self.all().mine(user)
-
-    def reviewed_by_user(self, user):
-        return self.all().reviewed_by_user(user)
-
-    def none(self):
-        return self.all().none()
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -262,11 +148,9 @@ class Submission(models.Model):
         return self.current_submission_form.primary_investigator
 
     def has_permanent_vote(self):
-        from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
         return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
 
     def get_last_recessed_vote(self, top):
-        from ecs.core.models.voting import RECESSED_VOTE_RESULTS
         try:
             return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
         except IndexError:
@@ -313,20 +197,6 @@ class Submission(models.Model):
     class Meta:
         app_label = 'core'
 
-SUBMISSION_TYPE_MONOCENTRIC = 1
-SUBMISSION_TYPE_MULTICENTRIC = 2
-SUBMISSION_TYPE_MULTICENTRIC_LOCAL = 6
-
-SUBMISSION_TYPE_CHOICES = (
-    (SUBMISSION_TYPE_MONOCENTRIC, ugettext_lazy('monocentric')), 
-    (SUBMISSION_TYPE_MULTICENTRIC, ugettext_lazy('multicentric, main ethics commission')),
-    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, ugettext_lazy('multicentric, local ethics commission')),
-)
-
-SUBMISSION_INFORMATION_PRIVACY_CHOICES = (
-    ('personal', ugettext_lazy('individual-related')), 
-    ('non-personal', ugettext_lazy('implicit individual-related')),
-)
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
@@ -353,7 +223,7 @@ class SubmissionForm(models.Model):
     class Meta:
         app_label = 'core'
         
-    objects = AuthorizationManager()
+    objects = SubmissionFormManager()
     
     # 1.4 (via self.documents)
 
@@ -619,6 +489,10 @@ class SubmissionForm(models.Model):
     
     def get_filename_slice(self):
         return self.submission.get_ec_number_display(separator='_')
+        
+    @property
+    def is_current(self):
+        return self.submission.current_submission_form_id == self.id
     
     @property
     def amg(self):
@@ -645,6 +519,10 @@ class SubmissionForm(models.Model):
     @property
     def monocentric(self):
         return self.investigators.count() == 1
+        
+    @property
+    def is_categorized_multicentric_and_local(self):
+        return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
         
     @property
     def study_plan_open(self):

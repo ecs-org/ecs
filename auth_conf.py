@@ -6,7 +6,7 @@ from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
     ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist, ExpeditedReviewCategory)
 from ecs.documents.models import Document
-from ecs.core.models.voting import FINAL_VOTE_RESULTS
+from ecs.core.models.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification

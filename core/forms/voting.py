@@ -8,7 +8,7 @@ from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.utils.formutils import TranslatedModelForm
 from ecs.core.models import Vote
 from ecs.tasks.models import Task
-from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
+from ecs.core.models.constants import PERMANENT_VOTE_RESULTS
 from ecs.users.utils import sudo
 
 def ResultField(**kwargs):
