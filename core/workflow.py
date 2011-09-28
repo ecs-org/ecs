@@ -21,15 +21,15 @@ register(Checklist)
 
 @guard(model=Submission)
 def is_acknowledged(wf):
-    return wf.data.current_submission_form.acknowledged
+    return wf.data.newest_submission_form.acknowledged
 
 @guard(model=Submission)
-def is_acknowledged_and_localec(wf):
-    return is_acknowledged(wf) and is_localec(wf)
+def is_initial_submission(wf):
+    return wf.data.forms.filter(acknowledged=True).count() == 1
 
 @guard(model=Submission)
-def is_acknowledged_and_not_localec(wf):
-    return is_acknowledged(wf) and not is_localec(wf)
+def is_acknowledged_and_initial_submission(wf):
+    return is_acknowledged(wf) and is_initial_submission(wf)
 
 @guard(model=Submission)
 def is_thesis(wf):
@@ -51,10 +51,19 @@ def is_localec(wf):
 def is_expedited_or_retrospective_thesis(wf):
     return is_expedited(wf) or is_retrospective_thesis(wf)
 
+@guard(model=Submission)
+def is_acknowledged_and_localec(wf):
+    # legacy: only for backwards compatibility
+    return is_acknowledged(wf) and is_localec(wf)
+
+@guard(model=Submission)
+def is_acknowledged_and_not_localec(wf):
+    # legacy: only for backwards compatibility
+    return is_acknowledged(wf) and not is_localec(wf)
+
 @guard(model=Vote)
 def is_executive_vote_review_required(wf):
     return wf.data.executive_review_required
-
 
 @guard(model=Vote)
 def is_final(wf):
@@ -107,6 +116,9 @@ class InitialReview(Activity):
     class Meta:
         model = Submission
 
+    def is_repeatable(self):
+        return True
+
     def get_url(self):
         return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
@@ -118,12 +130,19 @@ class InitialReview(Activity):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        sf = s.current_submission_form
+        sf = s.newest_submission_form
         sf.acknowledged = choice
         sf.save()
 
         if sf.acknowledged:
             send_system_message_template(sf.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt', None, submission=s)
+            if not s.current_submission_form == sf:
+                s.current_submission_form = sf
+                s.save()
+                involved_users = set([p.user for p in sf.get_involved_parties() if p.user and not p.user == sf.presenter])
+                for u in involved_users:
+                    send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(s.get_ec_number_display()),
+                        'submissions/change_message.txt', None, submission=s)
         else:
             send_system_message_template(sf.presenter, _('Submission not accepted'), 'submissions/decline_message.txt', None, submission=s)
 
