@@ -2,8 +2,7 @@
 
 <div id="task_main">
 <form action="{% url ecs.tasks.views.manage_task task_pk=task.pk %}" method="post" id="task_form" class="open-in-widget">
-    <div class="show_all"><a href="{% url ecs.tasks.views.my_tasks %}" class="open-in-widget">{% trans 'Show all tasks' %}</a></div>
-    <h2>{{ task }}</h2>
+    <div>{% trans 'Task' %}: {{ task }}</div>
     {% if task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
     {% endif %}

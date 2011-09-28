@@ -159,9 +159,9 @@ def manage_task(request, task_pk=None):
 
         submission = _get_task_submission(task)
         if submission:
-            return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk})})
+            return render(request, 'tasks/js_redirect.html', {'url': reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk})})
 
-        return render(request, 'tasks/js_redirect.html', {'task': task, 'url': reverse('ecs.tasks.views.task_list')})
+        return render(request, 'tasks/js_redirect.html', {'url': reverse('ecs.tasks.views.task_list')})
     return render(request, 'tasks/manage_task.html', {
         'form': form,
         'task': task,

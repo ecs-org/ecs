@@ -1,9 +1,20 @@
-/* TaskForm */
+#headerworkflow {
+    float: left;
+    width: 85%;
+    border: 1px solid #2b558e;
+    border-bottom-width: 0;
+    border-radius: 5px 5px 0 0;
+    padding: 10px;
+    padding-bottom: 0px;
+    margin-bottom: -10px;
+    margin-top: 5px;
+    top: -3px;
+    background-color: #f4f4f4;
+}
 
+/* TaskForm */
 #task_form {
-  padding: 10px;
   font-size: 12px;
-  max-width: 650px;
 }
 #task_form ul {
   float: left;
@@ -12,11 +23,9 @@
 }
 #task_form li {
   list-style-type: none;
-  display: block;
   float: left;
-  width: 100%;
-  clear: both;
   padding-top: 3px;
+  margin-right: 10px;
 }
 #task_form .errors {
   color: #ff0000;
@@ -48,9 +57,10 @@
 #task_form input[type=submit] {
   position: relative;
   display: block;
-  float: right;
-  margin: 5px 10px;
+  /*float: right;*/
+  margin: 0;
   z-index: 10;
+  top: -2px;
 }
 #task_form .task_indent {
   clear: both;

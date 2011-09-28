@@ -1067,8 +1067,7 @@ content ol.submission_list h3 .ecnr {
 .attachments li:nth-of-type(1) ,
 .dashboard_widget .messages li:nth-of-type(1) ,
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
-.task_item:nth-of-type(1) ,
-#task_form li:nth-of-type(1) {
+.task_item:nth-of-type(1) {
   border-top: 1px solid #eddfbf;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -1082,8 +1081,7 @@ content ol.submission_list h3 .ecnr {
 .dashboard_widget .messages li:nth-child(odd) ,
 .dashboard_widget .submission_widget_list li:nth-child(odd) ,
 .administration_detail .user_list tr:nth-child(odd) ,
-.task_item:nth-child(odd) ,
-#task_form li:nth-child(odd) {
+.task_item:nth-child(odd) {
   background-color: #EFEFDD;
   border-bottom: 1px solid #eddfbf;
 }
@@ -1098,8 +1096,7 @@ content ol.submission_list h3 .ecnr {
 .dashboard_widget .messages li:nth-child(even) ,
 .dashboard_widget .submission_widget_list li:nth-child(even) ,
 .administration_detail .user_list tr:nth-child(even) ,
-.task_item:nth-child(even) ,
-#task_form li:nth-child(even) {
+.task_item:nth-child(even) {
   background-color: #E8E8D8;
   border-bottom: 1px solid #eddfbf;  
 }
@@ -1114,7 +1111,6 @@ content ol.submission_list h3 .ecnr {
 .dashboard_widget .submission_widget_list li:hover,
 .administration_detail .user_list tr:hover,
 .task_item:hover,
-#task_form li:hover,
 #content .messages tr:hover {
   background-color: #eee;
 }

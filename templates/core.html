@@ -21,15 +21,6 @@
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
-  {% if user.get_profile.has_explicit_workflow %}
-    {% with request.related_tasks as related_tasks %}
-        {% if related_tasks %}
-            <a href="{% url ecs.tasks.views.manage_task task_pk=related_tasks.0.pk %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
-        {% else %}
-            <span class="icon_workflow_gray" title="{% trans "There is no active task." %}">foo</span>
-        {% endif %}
-    {% endwith %}
-  {% endif %}
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   <a href="" id="feedback_button" class="feedback_trigger icon_feedback" title="{% trans "Compliments, comments or complaints?" %}">feedback</a>
   {% get_scratchpad as scratchpad %}
@@ -124,6 +115,15 @@
   </ul>
 {% endblock %}
 
+{% block header %}
+    {{ block.super }}
+    {% with request.related_tasks as related_tasks %}
+        {% if related_tasks %}
+            <div id="headerworkflow"></div>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
+
 {% block headernav %}
     {% if user.get_profile.indisposed %}
     <div>
@@ -212,6 +212,12 @@
     }
 
     window.addEvent('domready', function(){
+      {% with request.related_tasks as related_tasks %}
+        {% if related_tasks %}
+          var w = new ecs.widgets.Widget($('headerworkflow'), {'url': '{% url ecs.tasks.views.manage_task task_pk=related_tasks.0.pk %}'});
+          w.addEvent('load', function(){$('content').setStyle('top', $('header').getHeight() + 'px');});
+        {% endif %}
+      {% endwith %}
 
       $$('textarea.maxlength').each(function(el) {
         el.addEvent('keypress', maxlength);
