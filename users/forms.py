@@ -146,7 +146,7 @@ class AdministrationFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AdministrationFilterForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
 
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
@@ -166,7 +166,7 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['gender'].initial = profile.gender
         self.fields['title'].initial = profile.title
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
             self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
             self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
@@ -209,7 +209,7 @@ class InvitationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(InvitationForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
             self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
             self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
 
