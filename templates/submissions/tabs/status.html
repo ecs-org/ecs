@@ -188,6 +188,11 @@
             </ul>
         </td>
     </tr>
+    {% else %}
+    <tr>
+        <th>Gutachten erforderlich:</th>
+        <td>{{ submission_form.submission.external_reviewers.exists|yesno }}</td>
+    </tr>
     {% endif %}
 </table>
 
