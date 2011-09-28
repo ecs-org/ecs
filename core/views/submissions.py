@@ -462,7 +462,7 @@ def create_submission_form(request):
                 resubmission_task.done(request.user)
 
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
-    
+
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,

@@ -17,7 +17,7 @@ from ecs.core.models.constants import (
 from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
 from ecs.documents.models import Document, DocumentType
-from ecs.users.utils import get_user, create_phantom_user
+from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
 
 
@@ -158,7 +158,6 @@ class Submission(models.Model):
         
     def save(self, **kwargs):
         if not self.ec_number:
-            from ecs.users.utils import sudo
             with sudo():
                 year = datetime.now().year
                 max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
@@ -624,7 +623,8 @@ def _post_submission_form_save(**kwargs):
     initial = not submission.current_submission_form
 
     old_sf = submission.current_submission_form
-    submission.current_submission_form = new_sf
+    if initial:
+        submission.current_submission_form = new_sf
 
     defaults = {
         'is_amg': new_sf.project_type_drug,
@@ -646,9 +646,17 @@ def _post_submission_form_save(**kwargs):
             send_system_message_template(u, _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
                 'submissions/creation_message.txt', None, submission=submission)
     else:
-        for u in involved_users:
-            send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/change_message.txt', None, submission=submission)
+        from ecs.core.workflow import InitialReview
+        from ecs.tasks.utils import get_obj_tasks
+        with sudo():
+            try:
+                initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]
+            except IndexError:
+                pass
+            else:
+                initial_review_task.reopen()
+                send_system_message_template(initial_review_task.assigned_to, _('New version of study EC-Nr. {0}').format(submission.get_ec_number_display()),
+                    'submissions/new_version_message.txt', None, submission=submission)
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 

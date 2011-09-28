@@ -68,8 +68,7 @@ def submission_workflow():
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
         needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review,
-        has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec,
-        is_acknowledged_and_not_localec)
+        has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
@@ -99,6 +98,7 @@ def submission_workflow():
             'generic_review': Args(Generic, name=_("Review Split")),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
+            'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
@@ -125,13 +125,13 @@ def submission_workflow():
         edges={
             ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
-            ('resubmission', 'start'): None,
+            ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
+            ('initial_review_barrier', 'categorization_review'): Args(guard=is_localec, negated=True),
 
             # retrospective thesis lane
             ('start', 'initial_thesis_review'): Args(guard=is_thesis),
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('thesis_categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'thesis_paper_submission_review'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
@@ -147,7 +147,7 @@ def submission_workflow():
             ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
 
             # local ec lane
-            ('initial_review', 'localec_recommendation'): Args(guard=is_acknowledged_and_localec),
+            ('initial_review_barrier', 'localec_recommendation'): Args(guard=is_localec),
             ('localec_recommendation', 'localec_recommendation_review'): None,
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
