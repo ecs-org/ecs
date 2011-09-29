@@ -1,0 +1,9 @@
+Antwort auf {{ notification }} ({% url ecs.notifications.views.view_notification notification_pk=notification.pk %}) für
+
+    {% for sf in notification.submission_forms.all %}- {{ sf.submission }}: {% url ecs.core.views.view_submission submission_pk=sf.submission.pk %}
+{% endfor %}
+vom {{ notification.timestamp|date:'d.m.Y' }}.
+
+User: {{ notification.user }}
+
+{{ answer.text }}

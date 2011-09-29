@@ -1,5 +1,9 @@
 ecs.dragdrop = {};
 
+function _tlog(msg){
+    document.body.appendChild(new Element('div', {html: msg, style: 'color:#fff'}));
+}
+
 ecs.dragdrop.Frame = new Class({
     Implements: Events,
     initialize: function(el, options){
@@ -19,19 +23,31 @@ ecs.dragdrop.Frame = new Class({
         this.element.addEvent('mousedown', this.mouseDownListener);
         this.element.addEvent('mouseup', this.mouseUpListener);
         this.element.addEvent('mousemove', this.mouseMoveListener);
+        /*
+        document.addListener('touchstart', this.moveDownListener);
+        document.addListener('touchend', this.mouseUpListener);
+        document.addListener('touchmove', this.mouseMoveListener);
+        */
     },
     detach: function(){
         this.element.removeEvent('mousedown', this.mouseDownListener);
         this.element.removeEvent('mouseup', this.mouseUpListener);
         this.element.removeEvent('mousemove', this.mouseMoveListener);
+        /*
+        document.removeListener('touchstart', this.moveDownListener);
+        document.removeListener('touchend', this.mouseUpListener);
+        document.removeListener('touchmove', this.mouseMoveListener);
+        */
     },
     onMouseDown: function(e){
+        //_tlog("down " + e);
         this.basePosition = this.element.getPosition();
         this.start = e.page;
         this.element.grab(this.frameOverlay);
         this.onMouseMove(e);
     },
     onMouseUp: function(e){
+        //_tlog("up " + e);
         var frame = this.getFrame();
         this.start = null;
         this.frameOverlay.dispose();
@@ -51,13 +67,21 @@ ecs.dragdrop.Frame = new Class({
         return f;
     },
     onMouseMove: function(e){
+        //_tlog("move " + e + e.event.clientX + "/" + e.event.clientY);
+        //e.stop();
         if(!this.start){
             return;
         }
-        this.point = e.page;
-        if(this.paintOverlay){
-            this.paintFrame();
+        try{
+            this.point = e.page;
+            if(this.paintOverlay){
+                this.paintFrame();
+            }
         }
+        catch(e){
+            _tlog(e);
+        }
+        //return false;
     },
     paintFrame: function(x, y, w, h, rx, ry){
         var f = this.getFrame();

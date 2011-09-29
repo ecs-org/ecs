@@ -17,6 +17,7 @@ class Vote(models.Model):
     is_final = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
+    valid_until = models.DateTimeField(null=True)
         
     class Meta:
         app_label = 'core'
