@@ -69,7 +69,7 @@
                 !is_browser(/Version[\/\s](\d+\.\d+).*Safari/, 5) &&
                 !is_browser(/MSIE[\/\s](\d+\.\d+)/, 9)) {
                 $('browser_warning').show();
-                $('login_button').hide();
+                //$('login_button').hide();
             } else {
                 $('login_button').focus();
             }

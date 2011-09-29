@@ -287,7 +287,7 @@ MS_SHARED = {
 }
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 MS_CLIENT = {
-    "server": "http://localhost:8000",
+    "server": "", # use relative url for testing
     "bucket": "/mediaserver/",
     # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
     "key_id": "b2SpFfUvfD44LUzHDu7w",

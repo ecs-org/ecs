@@ -30,28 +30,6 @@ class Party(object):
         if self._anonymous or not name:
             return u'- anonymous -'
         return unicode(name)
-        
-    def send_system_message(self, subject, template, context=None, **kwargs):
-        from ecs.ecsmail.utils import deliver, whitewash
-        from ecs.communication.utils import send_system_message
-        
-        if isinstance(template, (tuple, list)):
-            template = loader.select_template(template)
-        if not isinstance(template, Template):
-            template = loader.get_template(template)
-        request = kwargs.pop('request')
-        if request:
-            ctx = RequestContext(request, context)
-        else:
-            ctx = Context(context)
-        
-        htmlmail = unicode(template.render(ctx))
-        plainmail = whitewash(htmlmail)
-
-        if self.user:
-            send_system_message(self.user, subject, plainmail, **kwargs)
-        elif self.email:
-            deliver(self.email, subject=subject, message=plainmail, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL)
 
 
 @sudo()

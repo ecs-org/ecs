@@ -2,6 +2,7 @@ from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
+from ecs.workflow.patterns import Generic
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, NotificationAnswer
 from ecs.core.models import Submission
 
@@ -61,9 +62,10 @@ class SignNotificationAnswer(Activity):
         model = Notification
 
 
-class DistributeNotificationAnswer(Activity):
+class DistributeNotificationAnswer(Generic):
     class Meta:
         model = Notification
-        
-    def get_url(self):
-        return reverse('ecs.notifications.views.distribute_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
+
+    def handle_token(self, token):
+        self.workflow.data.answer.distribute()
+        super(DistributeNotificationAnswer, self).handle_token(token)

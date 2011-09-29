@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
@@ -24,6 +25,8 @@ def get_vote_filter_q(prefix, *args, **kwargs):
     f['%svotes__result__in' % prefix] = accepted_votes
     if kwargs.get('published', True):
         f['%svotes__published_at__isnull' % prefix] = False
+    if kwargs.get('valid', True):
+        f['%svotes__valid_until__gte'] = datetime.datetime.now()
     return Q(**f)
 
 
