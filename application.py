@@ -101,6 +101,7 @@ whoosh:inst:all:pypi:whoosh\>=2.2.2
 httplib2:inst:all:pypi:httplib2
 # we use == for pysolr because we dont want 2.1beta
 pysolr:inst:all:pypi:pysolr==2.0.15
+ordereddict:inst:all:pypi:ordereddict
 django-haystack:inst:all:pypi:django-haystack\>=1.2.5
 # pdf text extract
 pdftotext:req:apt:apt-get:poppler-utils
