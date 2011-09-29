@@ -44,8 +44,12 @@
 
 {% endblock %}
 
-{% block jsbottom %}
+{% block htmlcss %}
+    <!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
+    {{ block.super }}
+{% endblock %}
 
+{% block jsbottom %}
 {{ block.super }}
 
 <script type="text/javascript">

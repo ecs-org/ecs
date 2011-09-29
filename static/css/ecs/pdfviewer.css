@@ -1,6 +1,13 @@
 body.pdfviewer{
     overflow: auto;
     background-color: #000;
+    overflow-x: hidden;
+    //-webkit-user-select:none;
+
+}
+
+.selectable, input, textarea{
+    -webkit-user-select:auto;
 }
 
 body.pdfviewer .hidden{
