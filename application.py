@@ -99,8 +99,9 @@ whoosh:inst:all:pypi:whoosh\>=2.2.2
 # pysolr uses beautiful soup optional for solr error support
 # pysolr uses httplib2 with fallback to httplib
 httplib2:inst:all:pypi:httplib2
-pysolr:inst:all:pypi:pysolr\>=2.0.15
-django-haystack:inst:all:pypi:haystack\>=1.2.5
+# we use == for pysolr because we dont want 2.1beta
+pysolr:inst:all:pypi:pysolr==2.0.15
+django-haystack:inst:all:pypi:django-haystack\>=1.2.5
 # pdf text extract
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:homebrew:poppler
