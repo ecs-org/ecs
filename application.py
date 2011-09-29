@@ -59,21 +59,16 @@ windmill:inst:all:pypi:windmill\>=1.6
 cicero:inst:all:pypi:cicero
 
 # queuing: celery 
-#carrot:inst:all:pypi:carrot\>=0.10.7
-# use ghettoq if development instead rabbitmq
-#odict:inst:all:pypi:odict
-#ghettoq:inst:all:pypi:ghettoq
-
 importlib:inst:all:pypi:importlib
 python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
 anyjson:inst:all:pypi:anyjson\>=0.3.1
-amqplib:inst:all:pypi:amqplib\>=0.6
-kombu:inst:all:pypi:kombu\>=1.1.2
-#django-kombu:inst:all:pypi:django-kombu\>=0.9.2
+# FIXME: amqplib 1.0.0 and 1.0.1 breaks on windows install
+amqplib:inst:all:pypi:amqplib\>=1.0.1
+kombu:inst:all:pypi:kombu\>=1.4.1
 pyparsing:inst:all:pypi:pyparsing\<2.0.0
-celery:inst:all:pypi:celery==2.2.6
+celery:inst:all:pypi:celery==2.3.3
 django-picklefield:inst:all:pypi:django-picklefield
-django-celery:inst:all:pypi:django-celery==2.2.4
+django-celery:inst:all:pypi:django-celery==2.3.3
 
 
 
@@ -81,6 +76,7 @@ django-celery:inst:all:pypi:django-celery==2.2.4
 chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
 lockfile:inst:all:pypi:lockfile
+mock:inst:all:pypi:mock\<0.8
 # we dont use python-daemon functionality in lamson, but lamson.utils imports daemon and fails
 # so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:all:dir:ecs/utils/fake-daemon/
@@ -99,12 +95,12 @@ gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gp
 
 
 # search
-# XXX: haystack should be compatible to whoosh>0.4 but it seems not to be
-whoosh:inst:all:pypi:whoosh\<=0.4
+whoosh:inst:all:pypi:whoosh\>=2.2.2
+# pysolr uses beautiful soup optional for solr error support
 # pysolr uses httplib2 with fallback to httplib
 httplib2:inst:all:pypi:httplib2
-pysolr:inst:all:pypi:pysolr
-django-haystack:inst:all:http://github.com/toastdriven/django-haystack/tarball/master
+pysolr:inst:all:pypi:pysolr\>=2.0.15
+django-haystack:inst:all:pypi:haystack\>=1.2.5
 # pdf text extract
 pdftotext:req:apt:apt-get:poppler-utils
 pdftotext:req:mac:homebrew:poppler
@@ -213,11 +209,11 @@ jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.t
 
 # logging: django-sentry; 
 # uuid:inst:all:pypi:uuid uuid is in mainlibs since 2.3 ... and was not thread safe in 2.5...
+django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 django-indexer:inst:all:pypi:django-indexer\>=0.3.0
 django-paging:inst:all:pypi:django-paging\>=0.2.4
-django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 pygooglechart:inst:all:pypi:pygooglechart
-django-sentry:inst:all:pypi:django-sentry==1.8.5
+django-sentry:inst:all:pypi:django-sentry==1.11.4
 
 # ecs.help needs reversion from now on
 django-reversion:inst:all:pypi:django-reversion
@@ -248,6 +244,7 @@ unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
 coverage:inst:!win:pypi:coverage\<3.4
 coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
 nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
+unittest2:inst:all:pypi:unittest2
 logilab-common:inst:all:pypi:logilab-common\>=0.49.0
 logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
@@ -282,12 +279,6 @@ ipython:inst:all:pypi:ipython
 
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
-
-## mutt was needed if you what to have an easy time with mail and lamson for testing, use it with mutt -F ecsmail/muttrc
-#mutt:req:apt:apt-get:mutt
-#mutt:req:suse:zypper:mutt
-#mutt:static:win:http://download.berlios.de/mutt-win32/mutt-win32-1.5.9-754ea0f091fc-2.zip:unzipflat:mutt.exe
-#mutt:req:mac:macports:mutt
 
 # FIXME: who needs simplejson, and why is it in developer packages
 simplejson:inst:all:pypi:simplejson
