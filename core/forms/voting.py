@@ -21,7 +21,7 @@ class SaveVoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final', 'signed_at')
+        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final', 'signed_at', 'valid_until')
 
     def save(self, top, *args, **kwargs):
         kwargs['commit'] = False
