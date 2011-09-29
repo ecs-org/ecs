@@ -67,7 +67,7 @@ def submission_workflow():
         ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
         ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
     from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review,
+        needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
         has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
     
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
@@ -155,7 +155,7 @@ def submission_workflow():
             ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
             ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
-            ('generic_review', 'paper_submission_review'): None,
+            ('generic_review', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
         }
     )
 

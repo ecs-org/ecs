@@ -13,6 +13,7 @@ from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
+from ecs.tasks.utils import block_if_task_exists
 
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
@@ -89,20 +90,29 @@ def has_thesis_recommendation(wf):
     return bool(answer.answer)
 
 @guard(model=Submission)
+@block_if_task_exists('insurance_review')
 def needs_insurance_review(wf):
     return wf.data.insurance_review_required
 
 @guard(model=Submission)
-def needs_gcp_review(wf):
-    return wf.data.gcp_review_required
+@block_if_task_exists('statistical_review')
+def needs_statistical_review(wf):
+    return wf.data.statistical_review_required
 
 @guard(model=Submission)
+@block_if_task_exists('legal_and_patient_review')
 def needs_legal_and_patient_review(wf):
     return wf.data.legal_and_patient_review_required
 
 @guard(model=Submission)
-def needs_statistical_review(wf):
-    return wf.data.statistical_review_required
+@block_if_task_exists('gcp_review')
+def needs_gcp_review(wf):
+    return wf.data.gcp_review_required
+
+@guard(model=Submission)
+@block_if_task_exists('paper_submission_review')
+def needs_paper_submission_review(wf):
+    return True
 
 @guard(model=Checklist)
 def is_external_review_checklist(wf):
