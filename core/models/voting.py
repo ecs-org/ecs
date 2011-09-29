@@ -54,6 +54,7 @@ class Vote(models.Model):
     def publish(self):
         from ecs.communication.utils import send_system_message_template
         self.published_at = datetime.now()
+        self.valid_until = self.published_at.replace(year=self.published_at.year + 1)
         self.save()
         if self.submission_form:
             for p in self.submission_form.get_presenting_parties():

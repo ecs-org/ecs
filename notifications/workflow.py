@@ -62,7 +62,7 @@ class SignNotificationAnswer(Activity):
         model = Notification
 
 
-class DistributeNotificationAnswer(Generic):
+class AutoDistributeNotificationAnswer(Generic):
     class Meta:
         model = Notification
 

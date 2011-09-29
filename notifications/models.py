@@ -15,6 +15,7 @@ class NotificationType(models.Model):
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
     diff = models.BooleanField(default=False)
     default_response = models.TextField(blank=True)
+    grants_vote_extension = models.BooleanField(default=False)
     
     @property
     def form_cls(self):
@@ -96,6 +97,7 @@ class NotificationAnswer(models.Model):
     def distribute(self):
         from ecs.core.models.submissions import Submission
         from ecs.communication.utils import send_system_message_template
+        extend = self.notification.type.grants_vote_extension and self.notification.extension_of_vote_requested
         for submission in Submission.objects.filter(forms__in=self.notification.submission_forms.values('pk').query):
             for party in get_presenting_parties(submission.current_submission_form):
                 if party.user: # FIXME: why don't have all parties shadow users?
@@ -104,5 +106,7 @@ class NotificationAnswer(models.Model):
                         'answer': self,
                         'recipient': party,
                     }, submission=submission)
+            if extend:
+                pass # submission.votes.positive()
 
     
