@@ -47,7 +47,7 @@ def notification_workflow():
             'notification_group_review': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_('Notification Review')),
             'executive_group_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
             'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
-            'distribute_notification_answer': Args(DistributeNotificationAnswer, group=OFFICE_GROUP, name=_('Distribute Notification Answer')),
+            'distribute_notification_answer': Args(DistributeNotificationAnswer, name=_('Distribute Notification Answer')),
         },
         edges={
             ('start', 'susar_review'): Args(guard=is_susar),

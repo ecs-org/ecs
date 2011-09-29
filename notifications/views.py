@@ -214,11 +214,11 @@ def distribute_notification_answer(request, notification_pk=None):
     if request.method == 'POST':
         for submission in Submission.objects.filter(forms__in=notification.submission_forms.values('pk').query):
             for party in get_presenting_parties(submission.current_submission_form):
-                party.send_system_message(_('New Notification Answer'), 'notifications/answers/email.html', request=request, submission=submission, context={
+                send_system_message_template(party.user, _('New Notification Answer'), 'notifications/answers/new_message.txt', context={
                     'notification': notification,
                     'answer': notification.answer,
                     'recipient': party,
-                })
+                }, request=request, submission=submission)
 
     return render(request, 'notifications/answers/distribute.html', {
         'notification': notification,

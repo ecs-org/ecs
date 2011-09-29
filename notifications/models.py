@@ -3,9 +3,12 @@ import datetime
 from django.db import models
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
+from django.utils.translation import ugettext as _
 
 from ecs.documents.models import Document
 from ecs.authorization.managers import AuthorizationManager
+from ecs.core.parties import get_presenting_parties
+
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
@@ -89,4 +92,17 @@ class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     text = models.TextField()
+    
+    def distribute(self):
+        from ecs.core.models.submissions import Submission
+        from ecs.communication.utils import send_system_message_template
+        for submission in Submission.objects.filter(forms__in=self.notification.submission_forms.values('pk').query):
+            for party in get_presenting_parties(submission.current_submission_form):
+                if party.user: # FIXME: why don't have all parties shadow users?
+                    send_system_message_template(party.user, _('New Notification Answer'), 'notifications/answers/new_message.txt', context={
+                        'notification': self.notification,
+                        'answer': self,
+                        'recipient': party,
+                    }, submission=submission)
+
     
