@@ -116,21 +116,11 @@ pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.z
 xlwt:inst:all:pypi:xlwt
 
 
-# pdf generation / pisa
-# pyPDF is deprecated for ecs in favour of pdfminer, but somehow needed (optional) for pisa:
-pyPDF:inst:all:pypi:pyPDF
-html5lib:inst:all:pypi:html5lib
-reportlab:req:apt:apt-get:libfreetype6-dev
-reportlab:inst:!win:pypi:reportlab
-reportlab:instbin:win:http://pypi.python.org/packages/2.6/r/reportlab/reportlab-2.3.win32-py2.6.exe
-pisa:inst:all:pypi:pisa
-
 # webkit html to pdf
 wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tar:wkhtmltopdf-amd64
 wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tar:wkhtmltopdf-i386
 wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tar:wkhtmltopdf
 wkhtmltopdf:req:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
-
 
 # (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
 pdfminer:inst:all:pypi:pdfminer
@@ -166,7 +156,6 @@ mupdf:static64:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-amd64.tar.gz:t
 mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdraw
 #mupdf 0.8.165 if currently not available for mac, last available is 0.7
 mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
-
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick

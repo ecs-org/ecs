@@ -249,44 +249,6 @@ def pdf2pdfa(real_infile, real_outfile):
     return real_outfile.tell() - offset
 
 
-def xhtml2pdf(html, timeoutseconds=30):
-    ''' Takes custom (pisa style) xhtml and makes an pdf document out of it
-    
-    takes fonts from ecs.utils.xhtml2pdf directory via callback fetch_resources
-    
-    :returns: pdf data or makes error pdf data if something went wrong
-    '''
-    def fetch_resources(uri, rel):
-        """
-        Callback to allow pisa/reportlab to retrieve Images,Stylesheets, etc.
-        `uri` is the href attribute from the html link element.
-        `rel` gives a relative path, but it's not used here.
-        """
-        import string
-        valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
-        uri = ''.join(c for c in uri if c in valid_chars)
-        path = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf', uri)
-        # print "uri, rel, path", uri, rel, path
-        return path
-
-    import ho.pisa as pisa
-
-    pdf = StringIO()
-    pdfa = StringIO()
-    ret = "" 
-
-    try:
-        pisa.CreatePDF(html, pdf, show_error_as_pdf = True, link_callback=fetch_resources)
-        pdf.seek(0)
-        #pdf2pdfa(pdf, pdfa)
-        #pdfa.seek(0)
-        ret = pdf.getvalue() # FIXME: we do NOT use pdf2pdfa after xhtml2pdf because it shredders output (pdfa.getvalue()) 
-    finally:
-        pdf.close()
-        pdfa.close()
-    return ret
-
-
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
