@@ -133,3 +133,14 @@ def last_recessed_vote(top):
     if top.submission:
         return top.submission.get_last_recessed_vote(top)
     return None
+
+
+@register.filter
+def allows_amendments_by(sf, user):
+    return sf.allows_amendments(user)
+    
+@register.filter
+def allows_edits_by(sf, user):
+    return sf.allows_edits(user)
+
+

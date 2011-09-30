@@ -3,33 +3,38 @@
 
 
 {% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
+
 {% block headertitle %}
-  <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
+    {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    {% if submission_form.submission.finished %}
+        ({% trans 'finished' %})
+    {% endif %}
 {% endblock %}
 
 
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-    {% if submission_form.presenter == request.user and submission_form.is_current %}
-        {% if not submission_form.submission.has_permanent_vote %}
+        {% if submission_form|allows_edits_by:request.user %}
             <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
-        {% else %}
+        {% endif %}
+        {% if submission_form|allows_amendments_by:request.user %}
             {% for notification_type in diff_notification_types %}
                 <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
             {% endfor %}
         {% endif %}
-    {% endif %}
-    {% for checklist, checklist_review_form in checklist_reviews %}
-        {% if not checklist_review_form.readonly %}
-            {% if checklist_review_form.related_task %}
-                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
-                <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
-            {% else %}
-                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+
+        {% for checklist, checklist_review_form in checklist_reviews %}
+            {% if not checklist_review_form.readonly %}
+                {% if checklist_review_form.related_task %}
+                    <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
+                    <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
+                {% else %}
+                    <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+                {% endif %}
             {% endif %}
-        {% endif %}
-    {% endfor %}
+        {% endfor %}
     </div>
 {% endblock %}
 
@@ -132,7 +137,7 @@
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}
-            <ul>
+            <ul class="notification_list">
                 {% for notification in open_notifications %}
                     <li>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
@@ -150,11 +155,12 @@
     <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}</h3>
         {% if answered_notifications %}
-            <ul>
+            <ul class="notification_list">
                 {% for notification in answered_notifications %}
-                    <li>
+                    <li{% if notification.rejected %} class="rejected"{% endif %}>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
+                        {% if notification.rejected %}({% trans 'rejected' %}){% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -183,8 +189,10 @@
         {% if published_votes %}
             <ul>
                 {% for vote in published_votes %}
-                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}
                     <a href="{% url ecs.core.views.download_signed_vote vote_pk=vote.pk %}" target="_blank">{% trans "Download" %}</a>
+                    {% if vote.valid_until %}({% trans 'valid until' %}: {{ vote.valid_until|date:'d.m.Y' }}){% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}

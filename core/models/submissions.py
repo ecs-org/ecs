@@ -19,6 +19,7 @@ from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_pr
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
+from ecs.core.signals import study_finished
 
 
 class Submission(models.Model):
@@ -39,7 +40,7 @@ class Submission(models.Model):
     gcp_review_required = models.NullBooleanField(default=False)
     legal_and_patient_review_required = models.NullBooleanField(default=True)
     statistical_review_required = models.NullBooleanField(default=True)
-
+    finished = models.BooleanField(default=False)
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
@@ -172,6 +173,11 @@ class Submission(models.Model):
         
     def __unicode__(self):
         return self.get_ec_number_display()
+        
+    def finish(self):
+        self.finished = True
+        self.save()
+        study_finished.send(sender=Submission, submission=self)
         
     def update_next_meeting(self):
         next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
@@ -493,7 +499,13 @@ class SubmissionForm(models.Model):
     @property
     def is_current(self):
         return self.submission.current_submission_form_id == self.id
-    
+        
+    def allows_edits(self, user):
+        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote and not self.submission.finished
+        
+    def allows_amendments(self, user):
+        return self.presenter == user and self.is_current and self.submission.has_permanent_vote and not self.submission.finished
+
     @property
     def amg(self):
         if self.submission.is_amg is not None:

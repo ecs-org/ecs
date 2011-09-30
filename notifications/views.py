@@ -20,7 +20,7 @@ from ecs.documents.models import Document
 from ecs.ecsmail.utils import deliver, whitewash
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
-from ecs.notifications.forms import NotificationAnswerForm
+from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
 
@@ -186,13 +186,17 @@ def edit_notification_answer(request, notification_pk=None):
     except NotificationAnswer.DoesNotExist:
         answer = None
         kwargs['initial'] = {'text': notification.type.default_response}
-        
-    form = NotificationAnswerForm(request.POST or None, instance=answer, **kwargs)
+    
+    form_cls = NotificationAnswerForm
+    if notification.type.rejectable:
+        form_cls = RejectableNotificationAnswerForm
+    
+    form = form_cls(request.POST or None, instance=answer, **kwargs)
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification
         answer.save()
-        return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
+        #return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
     return render(request, 'notifications/answers/form.html', {
         'notification': notification,
         'answer': answer,

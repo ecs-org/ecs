@@ -12,7 +12,7 @@ from ecs.core.models.constants import (
 def get_vote_filter_q(prefix, *args, **kwargs):
     accepted_votes = set()
     f = {}
-    prefix = '%s__' % prefix if prefix else ''
+    prefix = ('%s__' % prefix) if prefix else ''
     if kwargs.get('positive', False):
         accepted_votes |= set(POSITIVE_VOTE_RESULTS)
     if kwargs.get('negative', False):
@@ -26,7 +26,7 @@ def get_vote_filter_q(prefix, *args, **kwargs):
     if kwargs.get('published', True):
         f['%svotes__published_at__isnull' % prefix] = False
     if kwargs.get('valid', True):
-        f['%svotes__valid_until__gte'] = datetime.datetime.now()
+        f['%svotes__valid_until__gte' % prefix] = datetime.datetime.now()
     return Q(**f)
 
 
@@ -175,4 +175,29 @@ class SubmissionFormManager(AuthorizationManager):
         
     def with_vote(self, *args, **kwargs):
         return self.all().with_vote(*args, **kwargs)
+
+
+class VoteQuerySet(models.query.QuerySet):
+    def positive(self):
+        return self.filter(result__in=POSITIVE_VOTE_RESULTS)
+        
+    def negative(self):
+        return self.filter(result__in=NEGATIVE_VOTE_RESULTS)
+        
+    def permanent(self):
+        return self.filter(result__in=PERMANENT_VOTE_RESULTS)
+
+
+class VoteManager(AuthorizationManager):
+    def get_base_query_set(self):
+        return VoteQuerySet(self.model)
+
+    def positive(self):
+        return self.all().positive()
+
+    def negative(self):
+        return self.all().negative()
+
+    def permanent(self):
+        return self.all().permanent()
 

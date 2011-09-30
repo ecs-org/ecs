@@ -7,6 +7,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs import authorization
 from ecs.core.models.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
+from ecs.core.models.managers import VoteManager
+from ecs.core.signals import vote_extended, vote_published
+
 
 class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
@@ -22,7 +25,7 @@ class Vote(models.Model):
     class Meta:
         app_label = 'core'
         
-    objects = authorization.AuthorizationManager()
+    objects = VoteManager()
     
     def get_submission(self):
         return self.submission_form.submission
@@ -61,7 +64,14 @@ class Vote(models.Model):
                 if not p.user: continue
                 send_system_message_template(p.user, _('Publication of {vote}').format(vote=unicode(self)), 'submissions/vote_publish.txt',
                     {'vote': self, 'party': p}, submission=self.submission_form.submission)
-        
+        vote_published.send(sender=Vote, vote=self)
+    
+    def extend(self):
+        d = self.valid_until
+        self.valid_until = d.replace(year=d.year + 1)
+        self.save()
+        vote_extended.send(sender=Vote, vote=self)
+    
     @property
     def positive(self):
         return self.result in POSITIVE_VOTE_RESULTS

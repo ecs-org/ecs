@@ -13,25 +13,53 @@ _ = lambda s: s
 @bootstrap.register()
 def notification_types():
     types = (
-        (u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", "ecs.core.forms.SusarNotificationForm", False, False, u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis."),
-        (u"Zwischenbericht", "ecs.core.forms.ProgressReportNotificationForm", False, True, u""),
-        (u"Abschlussbericht", "ecs.core.forms.CompletionReportNotificationForm", False, False, u""),
-        (u"Amendment", "ecs.core.forms.forms.AmendmentNotificationForm", True, False, u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu."),
+        dict(
+            name = u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", 
+            form = "ecs.core.forms.SusarNotificationForm",
+            default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
+            diff = False,
+            grants_vote_extension = False,
+            rejectable = False,
+            finishes_study = False,
+        ),
+        dict(
+            name = u"Zwischenbericht",
+            form = "ecs.core.forms.ProgressReportNotificationForm",
+            default_response = u"",
+            diff = False,
+            grants_vote_extension = True,
+            rejectable = True,
+            finishes_study = False,
+        ),
+        dict(
+            name = u"Abschlussbericht",
+            form = "ecs.core.forms.CompletionReportNotificationForm",
+            default_response = u"",
+            diff = False,
+            grants_vote_extension = False,
+            rejectable = True,
+            finishes_study = True,
+        ),
+        dict(
+            name = u"Amendment",
+            form = "ecs.core.forms.forms.AmendmentNotificationForm",
+            default_response = u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu.",
+            diff = True,
+            grants_vote_extension = False,
+            rejectable = True,
+            finishes_study = False,
+        ),
     )
 
-    for name, form, diff, vote_ext, default_response in types:
-        t, created = NotificationType.objects.get_or_create(name=name)
-        update_instance(t, {
-            'form': form,
-            'diff': diff,
-            'default_response': default_response,
-            'grants_vote_extension': vote_ext,
-        })
+    for data in types:
+        data = data.copy()
+        t, created = NotificationType.objects.get_or_create(name=data.pop('name'))
+        update_instance(t, data)
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
-    from ecs.notifications.workflow import (InitialNotificationReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SignNotificationAnswer, 
-        needs_executive_review, is_susar, is_report, is_amendment)
+    from ecs.notifications.workflow import (InitialNotificationReview, InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SignNotificationAnswer, 
+        needs_executive_review, is_susar, is_report, is_amendment, needs_further_review)
 
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
@@ -43,27 +71,40 @@ def notification_workflow():
         nodes={
             'start': Args(Generic, start=True, name=_('Start')),
             'susar_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Susar Review')),
-            'initial_notification_review': Args(InitialNotificationReview, group=OFFICE_GROUP, name=_('Initial Notification Review')),
-            'initial_amendment_review': Args(InitialNotificationReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
-            'notification_group_review': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_('Notification Review')),
-            'executive_group_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
             'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
+
+            # reports
+            'office_group_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Notification Review')),
+            'executive_group_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
+
+            # amendments
+            'initial_amendment_review': Args(InitialAmendmentReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
+            'notification_group_review': Args(EditNotificationAnswer, group=NOTIFICATION_REVIEW_GROUP, name=_('Amendment Review')),
+            'executive_amendment_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
         },
         edges={
             ('start', 'susar_review'): Args(guard=is_susar),
-            ('start', 'initial_notification_review'): Args(guard=is_report),
+            ('start', 'office_group_review'): Args(guard=is_report),
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),
 
-            ('initial_notification_review', 'notification_group_review'): Args(guard=needs_executive_review, negated=True),
-            ('initial_notification_review', 'executive_group_review'): Args(guard=needs_executive_review),
-            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_review, negated=True),
-            ('initial_amendment_review', 'executive_group_review'): Args(guard=needs_executive_review),
+            # reports
+            ('office_group_review', 'executive_group_review'): None,
+            ('executive_group_review', 'office_group_review'): Args(guard=needs_further_review),
+            ('executive_group_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
 
-            ('executive_group_review', 'notification_answer_signing'): None,
+            # amendments
+            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_review, negated=True),
+            ('initial_amendment_review', 'executive_amendment_review'): Args(guard=needs_executive_review),
+
+            ('notification_group_review', 'executive_amendment_review'): Args(guard=needs_further_review), 
+            ('notification_group_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
+
+            ('executive_amendment_review', 'notification_group_review'): Args(guard=needs_further_review),
+            ('executive_amendment_review', 'notification_answer_signing'): Args(guard=needs_further_review, negated=True),
+            ('notification_answer_signing', 'distribute_notification_answer'): None,
 
             ('susar_review', 'distribute_notification_answer'): None,
-            ('notification_group_review', 'distribute_notification_answer'): None,
-            ('notification_answer_signing', 'distribute_notification_answer'): None,
+            
         }
     )

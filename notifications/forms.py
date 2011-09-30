@@ -4,7 +4,15 @@ from ecs.notifications.models import NotificationAnswer
 
 
 class NotificationAnswerForm(forms.ModelForm):
-    valid = forms.BooleanField(label=_('valid'), required=False)
     class Meta:
         model = NotificationAnswer
-        fields = ('valid', 'text',)
+        fields = ('text',)
+
+
+class RejectableNotificationAnswerForm(NotificationAnswerForm):
+    rejected = forms.BooleanField(required=False)
+
+    class Meta:
+        model = NotificationAnswer
+        fields = ('rejected', 'text',)
+

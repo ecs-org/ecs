@@ -1212,3 +1212,7 @@ content ol.submission_list h3 .ecnr {
   width: 16px;
   height: 16px;
 }
+
+#content .notification_list > .rejected > a{
+    color: #f00;
+}

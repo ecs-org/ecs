@@ -16,6 +16,8 @@ class NotificationType(models.Model):
     diff = models.BooleanField(default=False)
     default_response = models.TextField(blank=True)
     grants_vote_extension = models.BooleanField(default=False)
+    finishes_study = models.BooleanField(default=False)
+    rejectable = models.BooleanField(default=False)
     
     @property
     def form_cls(self):
@@ -60,6 +62,13 @@ class Notification(models.Model):
     
     def __unicode__(self):
         return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
+        
+    @property
+    def rejected(self):
+        try:
+            return self.answer.rejected
+        except NotificationAnswer.DoesNotExist:
+            return None
 
 
 class ReportNotification(Notification):
@@ -92,21 +101,45 @@ class AmendmentNotification(DiffNotification, Notification):
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     valid = models.BooleanField(default=True) # if the notification has been accepted by the office
+    review_count = models.PositiveIntegerField(default=0)
     text = models.TextField()
+    rejected = models.BooleanField(default=False)
+    
+    @property
+    def needs_further_review(self):
+        # further review is required iff: the answer is not valid or has not been reviewed by a multiple of four eyes.
+        return not self.valid or self.review_count == 0 or self.review_count % 2 != 0
     
     def distribute(self):
         from ecs.core.models.submissions import Submission
         from ecs.communication.utils import send_system_message_template
-        extend = self.notification.type.grants_vote_extension and self.notification.extension_of_vote_requested
+        
+        extend, finish = False, False
+        if not self.rejected:
+            if self.notification.type.grants_vote_extension:
+                try:
+                    extend = ProgressReportNotification.objects.get(pk=self.notification.pk).extension_of_vote_requested
+                except ProgressReportNotification.DoesNotExist:
+                    pass
+            if self.notification.type.finishes_study:
+                finish = True
+        interested_parties = set()
+
         for submission in Submission.objects.filter(forms__in=self.notification.submission_forms.values('pk').query):
             for party in get_presenting_parties(submission.current_submission_form):
-                if party.user: # FIXME: why don't have all parties shadow users?
-                    send_system_message_template(party.user, _('New Notification Answer'), 'notifications/answers/new_message.txt', context={
-                        'notification': self.notification,
-                        'answer': self,
-                        'recipient': party,
-                    }, submission=submission)
+                interested_parties.add(party)
             if extend:
-                pass # submission.votes.positive()
+                for vote in submission.votes.positive().permanent():
+                    vote.extend()
+            if finish:
+                submission.finish()
+            
+        for party in interested_parties:
+            if party.user: # FIXME: why don't have all parties shadow users?
+                send_system_message_template(party.user, _('New Notification Answer'), 'notifications/answers/new_message.txt', context={
+                    'notification': self.notification,
+                    'answer': self,
+                    'recipient': party,
+                }, submission=submission)
 
     

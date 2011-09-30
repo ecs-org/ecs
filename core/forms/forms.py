@@ -29,7 +29,7 @@ class ModelFormSetPickleMixin(object):
 ## notifications ##
 
 def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user()).order_by('submission__ec_number')
+    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__finished=False).order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
