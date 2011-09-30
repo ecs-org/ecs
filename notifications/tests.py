@@ -150,6 +150,6 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.failUnless('<form' in response.content)
 
-      def test_vote_extension_workflow(self):
-          pass
+    def test_vote_extension_workflow(self):
+        pass
 
