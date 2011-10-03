@@ -61,13 +61,16 @@ class EcsTestCase(TestCase):
             setattr(profile, k, v)
         profile.approved_by_office = True
         profile.save()
+        return user
     
     def tearDown(self):
         settings.ENABLE_AUDIT_TRAIL = False
         User.objects.all().delete()
         
     @contextmanager
-    def login(self, email, password):
+    def login(self, email, password='password'):
+        if '@' not in email:
+            email = '{0}@example.com'.format(email)
         self.client.login(email=email, password=password)
         yield
         self.client.logout()

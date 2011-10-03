@@ -44,7 +44,7 @@ class MultiNotificationForm(NotificationForm):
 class SusarNotificationForm(MultiNotificationForm):
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), susar_presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__finished=False).order_by('submission__ec_number')
 
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))

@@ -24,18 +24,18 @@
                 <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
             {% endfor %}
         {% endif %}
-
+        
         {% if not request.task_management_form %}
-        {% for checklist, checklist_review_form in checklist_reviews %}
-            {% if not checklist_review_form.readonly %}
-                {% if checklist_review_form.related_task %}
-                    <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
-                    <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
-                {% else %}
-                    <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+            {% for checklist, checklist_review_form in checklist_reviews %}
+                {% if not checklist_review_form.readonly %}
+                    {% if checklist_review_form.related_task %}
+                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
+                        <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
+                    {% else %}
+                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
         {% endif %}
     </div>
 {% endblock %}

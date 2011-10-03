@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import datetime
 
 from django.core.urlresolvers import reverse
+from django.core.management import call_command
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
@@ -151,5 +154,57 @@ class NotificationFormTest(LoginTestCase):
         self.failUnless('<form' in response.content)
 
     def test_vote_extension_workflow(self):
-        pass
+        from ecs.core.tests.submissions import create_submission_form
+        from django.contrib.auth.models import Group
+        
+        call_command('bootstrap')
+        
+        now = datetime.datetime.now()
+        nt = NotificationType.objects.get(form='ecs.core.forms.ProgressReportNotificationForm')
 
+        presenter = self.create_user('presenter')
+        office = self.create_user('office', profile_extra={'internal': True})
+        office.groups.add(Group.objects.get(name=u'EC-Office'))
+        executive = self.create_user('executive', profile_extra={'internal': True})
+        executive.groups.add(Group.objects.get(name=u'EC-Executive Board Group'))
+
+        sf = create_submission_form(presenter=presenter)
+        
+
+        with self.login('presenter'):
+            response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': nt.pk}))
+            url = response['Location'] # docstash redirect
+
+            # no vote yet => we cannot select the submission form
+            response = self.client.get(url)
+            self.assertFalse(response.context['form'].fields['submission_form'].queryset.filter(pk=sf.pk).exists())
+        
+            # create a permanent final postive vote
+            vote = sf.votes.create(result='1', is_final=True, signed_at=now, published_at=now, valid_until=now.replace(year=now.year + 1))
+        
+            # now we have a vote => submission form is selectable
+            response = self.client.get(url)
+            self.assertTrue(response.context['form'].fields['submission_form'].queryset.filter(pk=sf.pk).exists())
+            
+            # create a notification, request a vote extension
+            response = self.client.post(url, {
+                'submission_form': sf.pk,
+                'extension_of_vote_requested': 'on',
+                'runs_till': '12.12.2012',
+                'submit': 'on',
+                'SAE_count': '0',
+                'SUSAR_count': '0',
+            })
+            self.assertEqual(response.status_code, 302)
+            notification = self.client.get(reponse['Location']).context['notification']
+            
+        # office review
+        with self.login('office'):
+            response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
+            task = response.context['open_tasks'].get(
+                data_id=notification.pk, 
+                content_type=ContentType.object.get_for_model(ProgressReportNotification),
+            )
+            task.accept(office)
+        # executive review
+            

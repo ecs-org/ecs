@@ -501,10 +501,10 @@ class SubmissionForm(models.Model):
         return self.submission.current_submission_form_id == self.id
         
     def allows_edits(self, user):
-        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote and not self.submission.finished
+        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.finished
         
     def allows_amendments(self, user):
-        return self.presenter == user and self.is_current and self.submission.has_permanent_vote and not self.submission.finished
+        return self.presenter == user and self.is_current and self.submission.has_permanent_vote() and not self.submission.finished
 
     @property
     def amg(self):
