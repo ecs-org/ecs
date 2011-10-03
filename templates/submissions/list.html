@@ -85,7 +85,7 @@
              {% endwith %}
             {% with submission|paper_submission_review:user as paper_submission_review_task %}
                 {% if paper_submission_review_task %}
-                    | <a class="open-in-popup" href="{% url ecs.tasks.views.manage_task task_pk=paper_submission_review_task.pk %}">{% trans "Paper Submission Review" %}</a>
+                    | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
                 {% endif %}
             {% endwith %}
         </div>

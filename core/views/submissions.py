@@ -220,7 +220,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    task = request.related_tasks[0]
+    task = request.task_management_form.task
 
     docstash, created = DocStash.objects.get_or_create(
         group='ecs.core.views.submissions.categorization_review',
@@ -236,10 +236,21 @@ def categorization_review(request, submission_form_pk=None):
         docstash['form'] = form
 
     if request.method == 'POST' and form.is_valid():
-        form.save(request)
+        form.save()
         docstash.delete()
 
+    form.bound_to_task = task
+
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
+
+
+@user_flag_required('internal')
+def paper_submission_review(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    task = submission.paper_submission_review_task_for(request.user)
+    if not task.assigned_to == request.user:
+        task.accept(request.user)
+    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
 
 @user_flag_required('internal')
@@ -300,6 +311,8 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
     form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
+    if hasattr(request, 'task_management_form'):
+        form.bound_to_task = request.task_management_form.task
     extra_context = {}
 
     if request.method == 'POST':
@@ -340,6 +353,8 @@ def vote_review(request, submission_form_pk=None):
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
+    if hasattr(request, 'task_management_form'):
+        vote_review_form.bound_to_task = request.task_management_form.task
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={

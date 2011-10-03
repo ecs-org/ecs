@@ -192,6 +192,8 @@ def edit_notification_answer(request, notification_pk=None):
         form_cls = RejectableNotificationAnswerForm
     
     form = form_cls(request.POST or None, instance=answer, **kwargs)
+    if hasattr(request, 'task_management_form'):
+        form.bound_to_task = request.task_management_form.task
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification

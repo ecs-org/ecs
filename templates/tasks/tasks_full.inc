@@ -36,8 +36,7 @@
             <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-                    <a href="{{ task.url|default:manage_url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
+                    <a href="{{ task.url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>

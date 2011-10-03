@@ -28,7 +28,10 @@ class Vote(models.Model):
     objects = VoteManager()
     
     def get_submission(self):
-        return self.submission_form.submission
+        if self.submission_form:
+            return self.submission_form.submission
+        else:
+            return None
     
     @property
     def result_text(self):

@@ -117,11 +117,14 @@
 
 {% block header %}
     {{ block.super }}
-    {% with request.related_tasks as related_tasks %}
-        {% if related_tasks %}
-            <div id="headerworkflow"></div>
-        {% endif %}
-    {% endwith %}
+    {% if request.task_management_form %}
+        <div id="headerworkflow">
+        {% with request.task_management_form as form %}
+            {% include 'tasks/manage_task.html' %}
+        {% endwith %}
+        </div>
+        <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
+    {% endif %}
 {% endblock %}
 
 {% block headernav %}
@@ -212,12 +215,18 @@
     }
 
     window.addEvent('domready', function(){
-      {% with request.related_tasks as related_tasks %}
-        {% if related_tasks %}
-          var w = new ecs.widgets.Widget($('headerworkflow'), {'url': '{% url ecs.tasks.views.manage_task task_pk=related_tasks.0.pk %}'});
-          w.addEvent('load', function(){$('content').setStyle('top', $('header').getHeight() + 'px');});
-        {% endif %}
-      {% endwith %}
+      {% if request.task_management_form %}
+          var headerworkflow = $('headerworkflow');
+          var w = new ecs.widgets.TaskWidget(headerworkflow, {});
+          var toggle_headerworkflow = $('toggle_headerworkflow');
+          toggle_headerworkflow.addEvent('click', function(){
+            var visible = headerworkflow.isVisible();
+            headerworkflow.toggle();
+            toggle_headerworkflow.toggleClass('collapsed', !visible);
+            toggle_headerworkflow.innerHTML = visible ? '&gt;' : '&lt;';
+            w.updateContentHeight();
+          });
+      {% endif %}
 
       $$('textarea.maxlength').each(function(el) {
         el.addEvent('keypress', maxlength);

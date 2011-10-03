@@ -70,6 +70,12 @@ class Notification(models.Model):
         except NotificationAnswer.DoesNotExist:
             return None
 
+    def get_submission(self):
+        if self.submission_forms.count():
+            return self.submission_forms.all()[0].submission
+        else:
+            return None
+
 
 class ReportNotification(Notification):
     reason_for_not_started = models.TextField(null=True, blank=True)

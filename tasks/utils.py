@@ -12,7 +12,7 @@ def get_obj_tasks(activities, obj, data=None):
     return tasks
 
 def block_if_task_exists(node_uid):
-    ''' For tasks which should only be started once '''
+    ''' workflow guard decorator for tasks which should only be started once '''
     def _decorator(func):
         @wraps(func)
         def _inner(wf):

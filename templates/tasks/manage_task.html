@@ -1,9 +1,9 @@
 {% load core i18n userutils %}
 
 <div id="task_main">
-<form action="{% url ecs.tasks.views.manage_task task_pk=task.pk %}" method="post" id="task_form" class="open-in-widget">
-    <div>{% trans 'Task' %}: {{ task }}</div>
-    {% if task.locked %}
+<form action="{{ request.path }}" method="post" id="task_form">
+    <div>{% trans 'Task' %}: {{ form.task }}</div>
+    {% if form.task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
     {% endif %}
     {% if form.errors|contains:'action' %}
@@ -12,21 +12,21 @@
     </span>
     {% endif %}
     <ul>
-        {% if not task.choices %}
+        {% if not form.task.choices %}
         <li>
-            <input type="radio" name="action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if task.locked %} disabled="disabled"{% endif %}/>
+            <input type="radio" name="task_management-action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if form.task.locked %} disabled="disabled"{% endif %}/>
             <label for="id_action_complete"><span class="task_complete"></span>{% trans 'Close' %}</label>
         </li>
         {% else %}
-            {% for val, label in task.choices %}
+            {% for val, label in form.task.choices %}
             <li>
-                <input type="radio" name="action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if task.locked %} disabled="disabled"{% endif %}/>
+                <input type="radio" name="task_management-action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" {% if form.task.locked %} disabled="disabled"{% endif %}/>
                 <label for="id_action_complete_{{ forloop.counter0 }}"><span class="task_reject"></span>{{ label }}</label>
             </li>
             {% endfor %}
         {% endif %}
         <li>
-            <input type="radio" name="action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
+            <input type="radio" name="task_management-action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
             <label for="id_action_delegate"><span class="task_delegate"></span>{% trans 'Delegate' %}</label>
             <span class="task_delegate_assign">
                 <label for="id_assign_to">An</label>{{ form.assign_to }}
@@ -36,8 +36,12 @@
             </span>
         </li>
         <li>
-          <input type="submit" value="Abschicken" />
+          <input type="submit" name="task_management-submit" value="Abschicken" />
+        </li>
+        <li>
+          <input style="display:none;" type="submit" name="task_management-save" value="Nur Speichern" />
         </li>
     </ul>
+    {{ form.post_data }}
 </form>
 </div>

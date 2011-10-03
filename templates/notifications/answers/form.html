@@ -3,13 +3,15 @@
 
 {% block notification_answer_body %}
 
-<form action="" method="post" enctype="multipart/form-data" class="form_main">
+<form action="" method="post" enctype="multipart/form-data" class="form_main{% if form.bound_to_task %} bound_to_task{% endif %}">
     <ol>
     {% for field in form %}
         {% include 'forms/field.html' %}
     {% endfor %}
     </ol>
-    <input type="submit" value="Speichern" />
+    {% if not form.bound_to_task %}
+        <input type="submit" value="Speichern" />
+    {% endif %}
     Review: {{ answer.review_count }}
 </form>
 

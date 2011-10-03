@@ -11,6 +11,19 @@
     top: -3px;
     background-color: #f4f4f4;
 }
+#toggle_headerworkflow {
+    position: absolute;
+    bottom: 5px;
+    left: 0px;
+    padding: 10px 1px;
+    background-color: #f4f4f4;
+    border: 1px solid #2b558e;
+    border-radius: 3px 0 0 3px;
+    text-decoration: none;
+}
+#toggle_headerworkflow.collapsed {
+    border-radius: 0 3px 3px 0;
+}
 
 /* TaskForm */
 #task_form {

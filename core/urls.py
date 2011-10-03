@@ -26,6 +26,7 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/drop/(?P<checklist_pk>\d+)/$', 'ecs.core.views.drop_checklist_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/pdf/(?P<checklist_pk>\d+)/$', 'ecs.core.views.checklist_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/categorization/$', 'ecs.core.views.categorization_review'),
+    url(r'^submission_form/(?P<submission_pk>\d+)/review/paper_submission/$', 'ecs.core.views.paper_submission_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/befangene/$', 'ecs.core.views.befangene_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/vote/$', 'ecs.core.views.vote_review'),
 

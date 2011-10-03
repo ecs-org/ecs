@@ -62,13 +62,6 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
     all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type')
-    related_url = request.GET.get('url', None)
-    if related_url:
-        related_tasks = [t for t in all_tasks.filter(assigned_to=request.user, accepted=True) if related_url in t.get_final_urls()]
-        if len(related_tasks) == 1:
-            return HttpResponseRedirect(reverse('ecs.tasks.views.manage_task', kwargs={'task_pk': related_tasks[0].pk}))
-        elif related_tasks:
-            pass # XXX: how do we handle this case? (FMD2)
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -127,45 +120,6 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
 def task_list(request, **kwargs):
     kwargs.setdefault('template', 'tasks/list.html')
     return my_tasks(request, **kwargs)
-
-def _get_task_submission(task):
-    if isinstance(task.data, Submission):
-        return task.data
-    elif isinstance(task.data, Vote) and task.data.submission_form:
-        return task.data.submission_form.submission
-    elif isinstance(task.data, Notification) and task.data.submission_forms.count():
-        return task.data.submission_forms.all()[0].submission
-    elif isinstance(task.data, Checklist) and task.data.submission:
-        return task.data.submission
-    else:
-        return None
-    
-def manage_task(request, task_pk=None):
-    task = get_object_or_404(Task, pk=task_pk)
-    form = ManageTaskForm(request.POST or None, task=task)
-    try:
-        submission = task.data.get_submission()
-    except AttributeError:
-        submission = None
-
-    if request.method == 'POST' and form.is_valid():
-        action = form.cleaned_data['action']
-        if action == 'complete':
-            task.done(user=request.user, choice=form.get_choice())
-        elif action == 'delegate':
-            task.assign(form.cleaned_data['assign_to'])
-        else:
-            raise Http404()
-
-        submission = _get_task_submission(task)
-        if submission:
-            return render(request, 'tasks/js_redirect.html', {'url': reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk})})
-
-        return render(request, 'tasks/js_redirect.html', {'url': reverse('ecs.tasks.views.task_list')})
-    return render(request, 'tasks/manage_task.html', {
-        'form': form,
-        'task': task,
-    })
 
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)

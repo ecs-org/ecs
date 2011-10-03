@@ -29,6 +29,7 @@ body {
   padding: 10px;
   display: block;
   border-bottom: 1px solid #B5CFDF;
+  overflow: hidden;
 }
 #headertitle {
   float: left;

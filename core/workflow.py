@@ -216,8 +216,11 @@ class PaperSubmissionReview(Activity):
         model = Submission
 
     def get_url(self):
-        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+        return reverse('ecs.core.views.paper_submission_review', kwargs={'submission_pk': self.workflow.data_id})
 
+    def get_final_urls(self):
+        return super(PaperSubmissionReview, self).get_final_urls() + [
+            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})]
 
 class ChecklistReview(Activity):
     class Meta:
