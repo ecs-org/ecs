@@ -113,10 +113,12 @@ def review_overview(request):
     ready_for_review = Page.objects.filter(review_status='ready_for_review')
     review_fail = Page.objects.filter(review_status='review_fail')
     new = Page.objects.filter(review_status='new')
+    review_ok = Page.objects.filter(review_status='review_ok')
     return render(request, 'help/review_overview.html', {
         'ready_for_review': ready_for_review,
         'review_fail': review_fail,
         'new': new,
+        'review_ok': review_ok,
     })
 
 @user_flag_required('help_writer')
