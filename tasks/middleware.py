@@ -4,10 +4,10 @@ from django.http import HttpResponseRedirect, QueryDict
 from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import Task
-from ecs.tasks.forms import ManageTaskForm
 
 class RelatedTasksMiddleware(object):
     def process_request(self, request):
+        from ecs.tasks.forms import ManageTaskForm
         if not request.user.is_authenticated():
             return
 
