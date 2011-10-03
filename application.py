@@ -63,17 +63,16 @@ importlib:inst:all:pypi:importlib
 python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
 anyjson:inst:all:pypi:anyjson\>=0.3.1
 # Fixme: new set would be amqplib 1.0.2, kombu 1.4.1, celery 2.3.3 
-amqplib:inst:all:pypi:amqplib==0.6.1
-# FIXME: amqplib 1.0.0 and 1.0.1 breaks on windows install
-#amqplib:inst:all:pypi:amqplib\>=1.0.2
-kombu:inst:all:pypi:kombu==1.1.6
-#kombu:inst:all:pypi:kombu\>=1.4.1
+#amqplib:inst:all:pypi:amqplib==0.6.1
+amqplib:inst:all:pypi:amqplib\>=1.0.2
+#kombu:inst:all:pypi:kombu==1.1.6
+kombu:inst:all:pypi:kombu\>=1.4.1
 pyparsing:inst:all:pypi:pyparsing\<2.0.0
-celery:inst:all:pypi:celery==2.2.6
-#celery:inst:all:pypi:celery==2.3.3
+#celery:inst:all:pypi:celery==2.2.6
+celery:inst:all:pypi:celery==2.3.3
 django-picklefield:inst:all:pypi:django-picklefield
-django-celery:inst:all:pypi:django-celery==2.2.4
-#django-celery:inst:all:pypi:django-celery==2.3.3
+#django-celery:inst:all:pypi:django-celery==2.2.4
+django-celery:inst:all:pypi:django-celery==2.3.3
 
 
 
