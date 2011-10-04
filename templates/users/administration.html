@@ -36,6 +36,7 @@
 <table class="user_list">
     <tr>
         <th>{% trans "User" %}</th>
+        <th>{% trans "E-mail" %}</th>
         <th title="{% trans "Unapproved users may not be able to sumit studies" %}">{% trans "Approval" %}</th>
         <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
         <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
@@ -50,6 +51,7 @@
                     {% endif %}
                 </a>
             </td>
+            <td>{{ profile_user.email }}</td>
             <td>
                 {% if profile_user|has_flag:"approved_by_office" %}
                     <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Revoke Approval" %}</a>
