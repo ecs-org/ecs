@@ -1,4 +1,5 @@
 # ecs main application environment config
+import platform
 
 from deployment.utils import package_merge
 from ecs.target import SetupTarget
@@ -57,9 +58,16 @@ django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 windmill:inst:all:pypi:windmill\>=1.6
 # for random text generation in windmill tests
 cicero:inst:all:pypi:cicero
+"""
 
+# importlib is a dependency of celery, but importlib is included in
+# Python 2.7 and newer for 2.x
+v = platform.python_version_tuple()
+if not (int(v[0]) == 2 and int(v[1]) >= 7):
+    main_packages += "importlib:inst:all:pypi:importlib\n"
+
+main_packages += """
 # queuing: celery 
-importlib:inst:all:pypi:importlib
 python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
 anyjson:inst:all:pypi:anyjson\>=0.3.1
 # Fixme: new set would be amqplib 1.0.2, kombu 1.4.1, celery 2.3.3 
@@ -219,7 +227,6 @@ diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/maste
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main requirements for now
 django-rosetta:inst:all:pypi:django-rosetta
 """
-
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
 guitest_packages = """
