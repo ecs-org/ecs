@@ -359,6 +359,9 @@ class VotePublication(Activity):
     def pre_perform(self, choice):
         vote = self.workflow.data
         vote.publish()
+        
+    def get_url(self): # FIXME
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
 
 class VoteB2Review(Activity):
     class Meta:
