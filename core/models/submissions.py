@@ -504,7 +504,9 @@ class SubmissionForm(models.Model):
         return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.finished
         
     def allows_amendments(self, user):
-        return self.presenter == user and self.is_current and self.submission.has_permanent_vote() and not self.submission.finished
+        if self.presenter == user and self.is_current and not self.submission.finished:
+            return SubmissionForm.objects.filter(pk=self.pk).with_vote(permanent=True, positive=True, published=True, valid=True).exists()
+        return False
 
     @property
     def amg(self):
