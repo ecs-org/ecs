@@ -55,12 +55,6 @@
 </ol>
 
 <div class="paginator">
-    {% if user|has_flag:"internal" %}
-        <a href="{% url ecs.core.views.all_submissions %}">{% trans "More" %}</a>
-    {% else %}
-        <a href="{% url ecs.core.views.my_submissions %}">{% trans "More" %}</a>
-    {% endif %}
-
     {% if not submissions.number == 1 %}
         <a href="#" class="first_page open-in-widget">first</a>
     {% endif %}
