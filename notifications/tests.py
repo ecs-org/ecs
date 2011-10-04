@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
-from ecs.notifications.models import NotificationType, Notification
+from ecs.notifications.models import NotificationType, Notification, ProgressReportNotification
 
 from ecs.core.tests.submissions import create_submission_form
 
@@ -196,15 +196,22 @@ class NotificationFormTest(LoginTestCase):
                 'SUSAR_count': '0',
             })
             self.assertEqual(response.status_code, 302)
-            notification = self.client.get(reponse['Location']).context['notification']
+            notification = self.client.get(response['Location']).context['notification']
             
         # office review
         with self.login('office'):
             response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
             task = response.context['open_tasks'].get(
                 data_id=notification.pk, 
-                content_type=ContentType.object.get_for_model(ProgressReportNotification),
+                content_type=ContentType.objects.get_for_model(ProgressReportNotification),
             )
             task.accept(office)
         # executive review
-            
+        #with self.login('executive'):
+        #    response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
+        #    task = response.context['open_tasks'].get(
+        #        data_id=notification.pk, 
+        #        content_type=ContentType.object.get_for_model(ProgressReportNotification),
+        #    )
+        #    task.accept(executive)
+
