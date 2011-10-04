@@ -1082,7 +1082,7 @@ content ol.submission_list h3 .ecnr {
 .administration_detail .user_list tr:nth-child(odd) ,
 .task_item:nth-child(odd),
 .field_history .change:nth-child(odd) {
-  background-color: #EFEFDD;
+  background: #EFEFDD;
   border-bottom: 1px solid #eddfbf;
 }
 #content ol.submission_list li:nth-child(even) ,
@@ -1098,7 +1098,7 @@ content ol.submission_list h3 .ecnr {
 .administration_detail .user_list tr:nth-child(even) ,
 .task_item:nth-child(even),
 .field_history .change:nth-child(even) {
-  background-color: #E8E8D8;
+  background: #E8E8D8;
   border-bottom: 1px solid #eddfbf;  
 }
 #content ol.submission_list li:hover,
@@ -1114,7 +1114,7 @@ content ol.submission_list h3 .ecnr {
 .task_item:hover,
 .field_history .change:hover,
 #content .messages tr:hover {
-  background-color: #fefefe;
+  background: #fefefe;
 }
 
 .submission_list_choose li {
