@@ -1,28 +1,30 @@
 #headerworkflow {
   float: left;
   width: 85%;
-  border: 1px solid #2b558e;
-  border-bottom-width: 0;
-  border-radius: 5px 5px 0 0;
+  border: 1px solid #B5CFDF;
+  border-radius: 5px;
   padding: 10px;
-  padding-bottom: 0px;
-  margin-bottom: -10px;
+  padding-bottom: 3px;
   margin-top: 5px;
+  margin-bottom: -5px;
   top: -3px;
-  background-color: #f4f4f4;
+  background: #f4f4f4;
 }
 #toggle_headerworkflow {
   position: absolute;
-  bottom: 5px;
+  bottom: 15px;
   left: 0px;
   padding: 10px 1px;
-  background-color: #f4f4f4;
-  border: 1px solid #2b558e;
+  background: #B5CFDF;
+  border: 1px solid #fff;
+  border-right: none;
   border-radius: 3px 0 0 3px;
   text-decoration: none;
 }
 #toggle_headerworkflow.collapsed {
   border-radius: 0 3px 3px 0;
+  border: 1px solid #fff;
+  background: #B5CFDF;
 }
 
 /* TaskForm */
