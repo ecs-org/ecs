@@ -29,7 +29,7 @@
   display: block;
 }
 .message_display form {
-  width: 100%;
+  max-width: 700px;
   padding: 10px 0;
 }
 .message_display #id_subject {
@@ -57,6 +57,11 @@
 .message_display li {
   margin-bottom: 2px;
 }
+.message_display li li {
+  display: block;
+  clear: both;
+  margin-bottom: 0;
+}
 .message_display h3 {
   display: block;
   font-weight: lighter;
@@ -69,7 +74,11 @@
   min-width: 100px;
 }
 .message_display .input label {
-  vertical-align: middle;
+  vertical-align: top;
+  padding-top: 2px;
+}
+.message_display ul li label {
+  min-width: 130px;
 }
 .message_display .actions {
   width: 20px;
@@ -118,6 +127,66 @@ table.messages .threadstart {
 }
 #content .messages_header, #content .messages th, #content .messages td {
   padding: 5px;
+}
+
+/* textbox list mods */
+
+.textboxlist {
+  display: inline;
+  font: 12px Arial, Helvetica, sans-serif;
+  margin-left: 10px;
+}
+.textboxlist-bits {
+  border: none;
+  padding: 0;
+}
+ul.textboxlist-bits li {
+  background: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  padding: 0;
+}
+ul.textboxlist-bits li input {
+  width: 100px !important;
+  border: 1px solid #B7B7B7;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  padding: 2px;
+}
+.textboxlist-autocomplete {
+  left: 286px;
+}
+.textboxlist-bit {
+  margin: 0;
+}
+.textboxlist-autocomplete-placeholder {
+  border-top: 1px solid #999;
+}
+.textboxlist-autocomplete-results li:first-child {
+  border-top: 1px solid #999;
+}
+.textboxlist-autocomplete-results li:last-child {
+  border-bottom: 1px solid #999;
+}
+.textboxlist-autocomplete-result {
+  width: 100%;
+  border-right: 1px solid #999;
+}
+li.textboxlist-autocomplete-result:hover {
+  background: #fefefe;
+}
+.textboxlist-bit-editable {
+  border: none;
+}
+.textboxlist-bit-box-deletable {
+  border: none;
+  border-radius: 0;
+  background: none;
+  max-width: 250px;
+  width: 200px;
+}
+.textboxlist-bit-box-deletebutton {
+  right: 0;
 }
 
 /* icons */
