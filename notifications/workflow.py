@@ -1,7 +1,6 @@
 from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
-from django.db.models.signals import post_save
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
@@ -40,30 +39,11 @@ def needs_further_review(wf):
 
 
 class BaseNotificationReview(Activity):
-    def is_locked(self):
-        try:
-            return not self.workflow.data.answer
-        except NotificationAnswer.DoesNotExist:
-            return True
-
     def get_url(self):
         return reverse('ecs.notifications.views.edit_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
 
     def get_final_urls(self):
         return super(BaseNotificationReview, self).get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
-
-
-def unlock_notification_review(sender, **kwargs):
-    notification = kwargs['instance'].notification
-    for model in NOTIFICATION_MODELS:
-        try:
-            n = model.objects.get(pk=notification.pk)
-            n.workflow.unlock(InitialNotificationReview)
-            n.workflow.unlock(InitialAmendmentReview)
-            n.workflow.unlock(EditNotificationAnswer)
-        except model.DoesNotExist:
-            pass
-post_save.connect(unlock_notification_review, sender=NotificationAnswer)
 
 
 class InitialNotificationReview(BaseNotificationReview):
