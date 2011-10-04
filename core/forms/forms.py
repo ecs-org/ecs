@@ -10,7 +10,8 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
 from ecs.utils.formutils import require_fields
-from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, EmailUserSelectWidget
+from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
+    EmailUserSelectWidget, SingleselectWidget
 from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
@@ -296,6 +297,8 @@ class PresenterChangeForm(forms.ModelForm):
         profile = get_current_user().get_profile()
         if not profile.executive_board_member:
             self.fields['presenter'].widget = EmailUserSelectWidget()
+        else:
+            self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class SusarPresenterChangeForm(forms.ModelForm):
     class Meta:
@@ -307,6 +310,8 @@ class SusarPresenterChangeForm(forms.ModelForm):
         profile = get_current_user().get_profile()
         if not profile.executive_board_member:
             self.fields['susar_presenter'].widget = EmailUserSelectWidget()
+        else:
+            self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
