@@ -135,6 +135,15 @@ table.messages .threadstart {
   display: inline;
   font: 12px Arial, Helvetica, sans-serif;
   margin-left: 10px;
+  max-width: 500px; 
+}
+#content .textboxlist ul {
+  margin: 0;
+  display: inline-block;
+}
+ul.textboxlist-autocomplete-results li {
+  float: left;
+  display: block;
 }
 .textboxlist-bits {
   border: none;
@@ -147,14 +156,16 @@ ul.textboxlist-bits li {
   padding: 0;
 }
 ul.textboxlist-bits li input {
-  width: 100px !important;
   border: 1px solid #B7B7B7;
   font-family: Arial,Helvetica,sans-serif;
   font-size: 12px;
   padding: 2px;
 }
-.textboxlist-autocomplete {
+.message_display .textboxlist-autocomplete {
   left: 286px;
+}
+.task_list_choose .textboxlist-autocomplete {
+  left: 87px;
 }
 .textboxlist-bit {
   margin: 0;
@@ -169,14 +180,18 @@ ul.textboxlist-bits li input {
   border-bottom: 1px solid #999;
 }
 .textboxlist-autocomplete-result {
-  width: 100%;
+  float: left;
+  display: block;
+  width: 500px;
   border-right: 1px solid #999;
 }
 li.textboxlist-autocomplete-result:hover {
   background: #fefefe;
 }
 .textboxlist-bit-editable {
+  float: left;
   border: none;
+  clear: both;
 }
 .textboxlist-bit-box-deletable {
   border: none;
@@ -185,7 +200,7 @@ li.textboxlist-autocomplete-result:hover {
   max-width: 250px;
   width: 200px;
 }
-.textboxlist-bit-box-deletebutton {
+.message_display .textboxlist-bit-box-deletebutton {
   right: 0;
 }
 
