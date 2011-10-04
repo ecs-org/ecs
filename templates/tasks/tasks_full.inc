@@ -25,7 +25,10 @@
     <div class="task_list_choose">
         <label class="task_types">{% trans "Type" %}:</label> {{ filterform.task_types }}
     </div>
-    <span class="icon_comment" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}"></span> <a href="{{ bookmarklink }}">{% trans "Bookmark" %}</a>
+    <div class="task_bookmark">
+        <span class="icon_comment" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}"></span> 
+        <a href="{{ bookmarklink }}">{% trans "Bookmark" %}</a>
+    </div>
 </form>
 
 {% if mine_tasks %}

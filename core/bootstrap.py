@@ -382,7 +382,6 @@ def auth_user_developers():
             'start_workflow': True,
         })
 
-
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_sentryuser():
@@ -392,9 +391,10 @@ def auth_user_sentryuser():
         user.is_superuser = True
         user.save()
         profile = user.get_profile()
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
+        update_instance(profile, {                        
+            "approved_by_office" : True,
+            "start_workflow" : True,
+        })
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
@@ -423,13 +423,15 @@ def auth_user_testusers():
 
     boardtestusers = (
          ('b.member1.klph', ('KlPh',)),
-         ('b.member2.klph.onko', ('KlPh','Onko')),
-         ('b.member3.onko', ('Onko',)),
-         ('b.member4.infektio', ('Infektio',)),
-         ('b.member5.kardio', ('Kardio',)),
-         ('b.member6.paed', ('Päd',)), 
-    )
-
+         ('b.member2.radio.klph', ('Radio', 'KlPh', )),
+         ('b.member3.anästh', ('Anästh',)),
+         ('b.member4.chir', ('Chir',)),
+         ('b.member5.nephro', ('Nephro',)),
+         ('b.member6.psychol', ('Psychol',)), 
+         ('b.member7.gastro', ('Gastro',)),
+         ('b.member8.neuro', ('Neuro',)),
+         ('b.member9.angio', ('Angio',)),
+    )      
     expeditedtestusers = (
          ('expedited.klph', ('KlPh',)),
          ('expedited.stats', ('Stats',)),
@@ -470,7 +472,7 @@ def auth_user_testusers():
             'approved_by_office': True,
             'start_workflow': True,
         })
-
+    
         for medcategory in medcategories:
             m = _get_medical_category(medcategory)
             m.users.add(user)
@@ -486,7 +488,7 @@ def auth_user_testusers():
             'approved_by_office': True,
             'start_workflow': True,
         })
-
+        
         for expcategory in expcategories:
             e = _get_expedited_category(expcategory)
             e.users.add(user)
