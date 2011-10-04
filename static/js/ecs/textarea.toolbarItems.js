@@ -105,7 +105,7 @@ ecs.textarea.toolbarItems.annotations = function(label, url){
 
 ecs.textarea.toolbarItems.versionHistory = function(label, url){
     return function(textarea){
-        var button = new Element('a', {title: label, html: label, 'class': 'versions'});
+        var button = new Element('a', {title: label, 'class': 'versions'});
         button.addEvent('click', function(){
             var popup = new ecs.widgets.Popup({
                 url: url + '?field=' + textarea.name
