@@ -4,6 +4,7 @@ from urlparse import urlsplit
 
 from django.core.urlresolvers import reverse
 from django.utils import simplejson
+from django.contrib.auth.models import Group
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.core.tests.submissions import create_submission_form
@@ -12,6 +13,8 @@ from ecs.core import bootstrap
 from ecs.core.models import SubmissionForm
 from ecs.core.models import EthicsCommission
 from ecs.documents.models import DocumentType
+from ecs.users.utils import get_or_create_user
+from ecs.tasks.models import Task
 
 VALID_SUBMISSION_FORM_DATA = {
     u'investigator-0-ethics_commission': [u'1'], u'study_plan_abort_crit': [u'Peto'], u'submitter_contact_title': [u'Univ. Doz. Dr.'], 
@@ -87,7 +90,17 @@ class SubmissionViewsTestCase(LoginTestCase):
         bootstrap.ethics_commissions()
         VALID_SUBMISSION_FORM_DATA[u'investigator-0-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
         VALID_SUBMISSION_FORM_DATA[u'investigator-1-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
-        
+
+        self.office_user, created = get_or_create_user('unittest-office@example.org')
+        self.office_user.set_password('password')
+        self.office_user.save()
+        office_group = Group.objects.get(name='EC-Office')
+        self.office_user.groups.add(office_group)
+        profile = self.office_user.get_profile()
+        profile.internal = True
+        profile.approved_by_office = True
+        profile.save()
+
     def get_docstash_url(self):
         url = reverse('ecs.core.views.create_submission_form')
         response = self.client.get(url)
@@ -225,3 +238,41 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.failUnlessEqual(len(simplejson.loads(response.content)), medical_categories_count)
 
+    def test_initial_review(self):
+        submission_form = create_submission_form(presenter=self.user)
+
+        self.client.logout()
+        self.client.login(email=self.office_user.email, password='password')
+
+        task = Task.objects.for_data(submission_form.submission).get(task_type__workflow_node__uid='initial_review')
+        refetch = lambda: Task.objects.get(pk=task.pk)
+
+        # accept initial review task
+        response = self.client.get(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
+        self.failUnlessEqual(response.status_code, 302)
+        task = refetch()
+        self.failUnlessEqual(self.office_user, task.assigned_to)
+
+        url = reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
+
+        response = self.client.get(url)
+        self.failUnlessEqual(response.status_code, 200)
+
+        # delegate the task back to the pool
+        reponse = self.client.post(url, {'task_management-action': 'delegate', 'task_management-assign_to': '', 'task_management-submit': 'submit'})
+        task = refetch()
+        self.failUnlessEqual(None, task.assigned_to)
+
+        # accept the task again
+        response = self.client.get(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
+        self.failUnlessEqual(response.status_code, 302)
+        task = refetch()
+        self.failUnlessEqual(self.office_user, task.assigned_to)
+
+        # complete the task
+        reponse = self.client.post(url, {'task_management-action': 'complete_0', 'task_management-submit': 'submit'})
+        task = refetch()
+        self.failUnless(task.closed_at is not None)
+
+        self.client.logout()
+        self.client.login(email=self.user.email, password='password')
