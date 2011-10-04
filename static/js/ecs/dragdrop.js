@@ -1,3 +1,4 @@
+ecs = window.ecs = window.ecs || {};
 ecs.dragdrop = {};
 
 function _tlog(msg){
@@ -23,21 +24,11 @@ ecs.dragdrop.Frame = new Class({
         this.element.addEvent('mousedown', this.mouseDownListener);
         this.element.addEvent('mouseup', this.mouseUpListener);
         this.element.addEvent('mousemove', this.mouseMoveListener);
-        /*
-        document.addListener('touchstart', this.moveDownListener);
-        document.addListener('touchend', this.mouseUpListener);
-        document.addListener('touchmove', this.mouseMoveListener);
-        */
     },
     detach: function(){
         this.element.removeEvent('mousedown', this.mouseDownListener);
         this.element.removeEvent('mouseup', this.mouseUpListener);
         this.element.removeEvent('mousemove', this.mouseMoveListener);
-        /*
-        document.removeListener('touchstart', this.moveDownListener);
-        document.removeListener('touchend', this.mouseUpListener);
-        document.removeListener('touchmove', this.mouseMoveListener);
-        */
     },
     onMouseDown: function(e){
         //_tlog("down " + e);

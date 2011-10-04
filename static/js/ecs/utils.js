@@ -51,7 +51,7 @@ ecs.clearFormFields = function(context){
 ecs.disabledFormFields = function(context, disable){
     context = $(context || document.body);
     context.getElements('input, select, textarea').each(function(field){
-        if(!$defined(disable) || disable){
+        if(typeof(disable) === 'undefined' || disable){
             field.setProperty('disabled', 'disabled');
         }
         else{

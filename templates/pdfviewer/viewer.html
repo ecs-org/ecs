@@ -5,52 +5,30 @@
 {% if document.parent_object %}{{ document.parent_object }}: {% endif %}{{ document.doctype_name }}
 {% endblock %}
 
-{% block htmlbody %}
-{% if document|is_ready %}
-<div id="pdfviewer"></div>
-<div id="navigation" class="hidden">
-    <select id="metaKeySelect">
-        <option value="">-</option>
-        <option value="alt">Alt</option>
-        <option value="control">Control</option>
-        <option value="meta">Meta</option>
-    </select>
-    <div><span class="metaKey"></span> + &rarr;: Next Page</div>
-    <div><span class="metaKey"></span> + &larr;: Previous Page</div>
-    <div><span class="metaKey"></span> + Shift + &rarr;: Last Page</div>
-    <div><span class="metaKey"></span> + Shift + &larr;: First Page</div>
-    <div><span class="metaKey"></span> + &darr;: Zoom In</div>
-    <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
-    <div><span class="metaKey"></span> + A: Enter/Leave Annotation Mode</div>
-    <div><span class="metaKey"></span> + G: Goto Page</div>
-    <div><span class="metaKey"></span> + F: Search</div>
-    <div><span class="metaKey"></span> + 1: Page Up</div>
-    <div><span class="metaKey"></span> + 9: Page Down</div>
-    <div>ESC: Leave Annotation Mode / Close Annotation Popup</div>
-    
-    <p>
-        Use the mousewheel or arrow keys for scrolling. When the end of a page is reached, scrolling further will load the next page.
-    </p>
-    <p>
-        Annotations: Double click on overlay or single click on marker to edit; drag and drop to move, resize by dragging the lower right cover.
-    </p>
-</div>
-{% else %}
-    <h1>{% trans "Your document is not ready yet." %}</h1>
-    {% blocktrans %}
-        Click <a href="" click="window.location.reload; return false;">here</a> to reload the page.
-    {% endblocktrans %}
-{% endif %}
-
-{% endblock %}
-
-{% block htmlcss %}
-    <!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
-    {{ block.super }}
+{% block htmlmeta %}
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
 {% endblock %}
 
 {% block jsbottom %}
-{{ block.super }}
+<!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-core-1.4.0-full-nocompat-yc.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-more-1.4.0.1.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsCustomEvent/Source/Element.defineCustomEvent.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Browser/Features.Touch.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Desktop/Mouse.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Click.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touch.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Swipe.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touchhold.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Pinch.js"></script>
+
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/__init__.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/ImageSet.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Annotation.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/DocumentViewer.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Popup.js"></script>
 
 <script type="text/javascript">
     $(window).addEvent('domready', function(){
@@ -95,12 +73,10 @@
                     {command: 'lastPage',           key: 'right', shift:true, meta: true},
 
                     {command: 'selectNextRow',      key: 'down'},
-                    {command: 'cycleIn',            key: 'down'},
                     {command: 'lastPage',           key: 'down', shift: true, meta: true},
                     {command: 'nextPage',           key: 'down', meta: true},
 
                     {command: 'selectPreviousRow',  key: 'up'},
-                    {command: 'cycleOut',           key: 'up'},
                     {command: 'firstPage',          key: 'up', shift: true, meta: true},
                     {command: 'previousPage',       key: 'up', meta: true},
                     
@@ -109,9 +85,37 @@
                     {command: 'showSearch',         key: 'f', meta: true},
                     {command: 'showSearch',         key: 's', meta: true},
                     {command: 'showGotoPage',       key: 'g', meta: true},
-                    {command: 'toggleMenu',         key: 'm', meta: true, annotationMode: true}
+                    {command: 'toggleMenu',         key: 'm', meta: true, annotationMode: true},
+                    
+                    // gestures
+                    {command: 'toggleMenu',         gesture: 'touchhold'},
+                    {command: 'nextPage',           gesture: 'swipeleft'},
+                    {command: 'previousPage',       gesture: 'swiperight'}
                 ]
             });
+            
+            var element = $('pdfviewer');
+            element.store('swipe:distance', 30);
+            element.addEvent('swipe', function(e){
+                if(e.direction == 'left'){
+                    viewer.nextPage();
+                }
+                else if(e.direction == 'right'){
+                    viewer.previousPage();
+                }
+                return false;
+            });
+            element.store('touchhold:delay', 300);
+            element.addEvent('touchhold', function(){
+                viewer.toggleMenu();
+                return false;
+            });
+            element.store('pinch:threshold', 0.4);
+            element.addEvent('pinch', function(){
+                viewer.cycleIn();
+                return false;
+            });
+
             
             var IMAGE_TILING = [1, 5];
             var IMAGE_WIDTH = 800; // 768
@@ -158,6 +162,7 @@
         {% endif %}
     });
     
+    /*
     {% comment %}
     TODO: Warning, this duplicates get_origin,camera.Camera & camera.install from core.html to get bugshot in pdfviewer
     {% endcomment %}
@@ -184,6 +189,46 @@
             return (e.meta || e.control) && e.key == ':';
         }
     });
+    */
 </script>
+
+{% endblock %}
+
+{% block htmlbody %}
+{% if document|is_ready %}
+<div id="pdfviewer"></div>
+<div id="navigation" class="hidden">
+    <select id="metaKeySelect">
+        <option value="">-</option>
+        <option value="alt">Alt</option>
+        <option value="control">Control</option>
+        <option value="meta">Meta</option>
+    </select>
+    <div><span class="metaKey"></span> + &rarr;: Next Page</div>
+    <div><span class="metaKey"></span> + &larr;: Previous Page</div>
+    <div><span class="metaKey"></span> + Shift + &rarr;: Last Page</div>
+    <div><span class="metaKey"></span> + Shift + &larr;: First Page</div>
+    <div><span class="metaKey"></span> + &darr;: Zoom In</div>
+    <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
+    <div><span class="metaKey"></span> + A: Enter/Leave Annotation Mode</div>
+    <div><span class="metaKey"></span> + G: Goto Page</div>
+    <div><span class="metaKey"></span> + F: Search</div>
+    <div><span class="metaKey"></span> + 1: Page Up</div>
+    <div><span class="metaKey"></span> + 9: Page Down</div>
+    <div>ESC: Leave Annotation Mode / Close Annotation Popup</div>
+    
+    <p>
+        Use the mousewheel or arrow keys for scrolling. When the end of a page is reached, scrolling further will load the next page.
+    </p>
+    <p>
+        Annotations: Double click on overlay or single click on marker to edit; drag and drop to move, resize by dragging the lower right cover.
+    </p>
+</div>
+{% else %}
+    <h1>{% trans "Your document is not ready yet." %}</h1>
+    {% blocktrans %}
+        Click <a href="" click="window.location.reload; return false;">here</a> to reload the page.
+    {% endblocktrans %}
+{% endif %}
 
 {% endblock %}

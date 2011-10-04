@@ -12,7 +12,7 @@ ecs.pdfviewer.Annotation = new Class({
         var a = new Element('div', {'class': 'annotation'});
         var dim = el.getSize();
         a.setStyle('top', (this.y * dim.y) + 'px');
-        a.setClass('foreign', !!this.author);
+        a.toggleClass('foreign', !!this.author);
         var overlay = new Element('div', {'class': 'overlay'});
     
         overlay.setStyles({

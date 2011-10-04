@@ -46,7 +46,7 @@ ecs.widgets.Widget = new Class({
         request.addEvent('success', (function(){
             if(callback){
                 var stop = callback();
-                if($defined(stop) && !stop){
+                if(typeof(stop) !== 'undefined' && !stop){
                     return;
                 }
             }

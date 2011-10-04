@@ -34,7 +34,7 @@ ecs.pdfviewer.Popup = new Class({
         this.visible = false;
     },
     dispose: function(){
-        $(window).removeEvent(this.escapeListener);
+        $(document.body).removeEvent('keydown', this.escapeListener);
         this.cover.setStyle('display', 'none');
         this.visible = false;
         this.fireEvent('hide');
@@ -44,7 +44,7 @@ ecs.pdfviewer.Popup = new Class({
         this.cover.setStyle('display', '');
         this.visible = true;
         this.onShow.apply(this, arguments);
-        $(window).addEvent('keydown', this.escapeListener);
+        $(document.body).addEvent('keydown', this.escapeListener);
         this.fireEvent('show');
     },
     toggle: function(){
@@ -108,7 +108,7 @@ ecs.pdfviewer.GotoPagePopup = new Class({
     
     initContent: function(content){
         this.element.addClass('gotoPage');
-        this.input = new Element('input', {type: 'text'});
+        this.input = new Element('input', {type: 'number', min: '1', max: this.viewer.pageCount});
         this.input.addEvent('change', (function(){
             var p = parseInt(this.input.value);
             this.viewer.gotoPage(p - 1);
@@ -184,7 +184,7 @@ ecs.pdfviewer.SearchPopup = new Class({
         request.send();
     },
     onShow: function(query){
-        if($defined(query)){
+        if(typeof(query) !== 'undefined'){
             this.input.value = query;
         }
         this.input.focus();
@@ -215,7 +215,7 @@ ecs.pdfviewer.AnnotationEditor = new Class({
         this.annotation = annotation;
         this.annotationElement = element;
         this.textarea.value = annotation.text;
-        this.element.setClass('foreign', !!annotation.author);
+        this.element.toggleClass('foreign', !!annotation.author);
         this.authorInfo.innerHTML = 'Anmerkung von ' + annotation.author + ':';
         this.textarea.focus();
     },

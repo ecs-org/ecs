@@ -1,3 +1,4 @@
+ecs = window.ecs = window.ecs || {};
 ecs.pdfviewer = {};
 
 /* TODO: optimize loading time / responsiveness

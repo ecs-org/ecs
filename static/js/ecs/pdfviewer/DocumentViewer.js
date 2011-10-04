@@ -54,7 +54,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.menuButton = new Element('a', {id: 'menubutton', html: '❀', events: {click: this.toggleMenu.bind(this)}});
         this.prevLink = new Element('a', {'class': 'previous', title: 'previous page'});
         this.nextLink = new Element('a', {'class': 'next', title: 'next page'});
-        this.element.adopt(this.header, this.menuButton, this.body);
+        this.element.adopt(this.header, this.menuButton, this.body, new Element('div', {'class': 'clearfix'}));
         this.body.adopt(this.prevLink, this.viewport, this.nextLink);
 
         this.prevLink.addEvent('click', (function(){
@@ -275,10 +275,10 @@ ecs.pdfviewer.DocumentViewer = new Class({
         return annotationElement;
     },
     render: function(imageSetKey, offset, w, h){
-        if($A(arguments).every((function(val, i){ return val == this.currentRenderArgs[i]}).bind(this))){
+        if(Array.prototype.every.call(arguments, function(val, i){ return val == this.currentRenderArgs[i]}, this)){
             return;
         }
-        this.currentRenderArgs = $A(arguments);
+        this.currentRenderArgs = Array.clone(arguments);
         window.location.hash = this.currentPageIndex + 1;
         this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
@@ -399,6 +399,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         
         for(var i=0;i<this.shortcuts.length;i++){
             var s = this.shortcuts[i];
+            if(s.gesture){
+                continue;
+            }
             if(this.annotationMode && !s.annotationMode){
                 continue;
             }
@@ -423,7 +426,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         if(this.annotationMode){
             return true;
         }
-        
         var U = ecs.pdfviewer.utils;
         if(e.wheel > 0 && U.isAtTop() || e.wheel < 0  && U.isAtBottom()){
             if(this._wheelTimeout){
