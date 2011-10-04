@@ -1,17 +1,17 @@
 {% extends 'public.html' %}
 
 {% block content %}
-    <form action="" method="post">
+    <form action="" method="post" class="register_error">
         {% csrf_token %}
         <p>{{ form.gender.label_tag }}{{ form.gender }}
-            {% if form.gender.errors %}<br>{{ form.gender.errors}}{% endif %}</p>
+            {% if form.gender.errors %}{{ form.gender.errors}}{% endif %}</p>
         <p>{{ form.first_name.label_tag }}{{ form.first_name }}
-            {% if form.first_name.errors %}<br>{{ form.first_name.errors}}{% endif %}</p>
+            {% if form.first_name.errors %}{{ form.first_name.errors}}{% endif %}</p>
         <p>{{ form.last_name.label_tag }}{{ form.last_name }}
-            {% if form.last_name.errors %}<br>{{ form.last_name.errors}}{% endif %}</p>
+            {% if form.last_name.errors %}{{ form.last_name.errors}}{% endif %}</p>
         <p>{{ form.email.label_tag }}{{ form.email }}
-            {% if form.email.errors %}<br>{{ form.email.errors}}{% endif %}</p>
-		{{ form.non_field_errors }}
+            {% if form.email.errors %}{{ form.email.errors}}{% endif %}</p>
+		    {{ form.non_field_errors }}
         <input type="submit" value="Registrieren" />
     </form>
 {% endblock %}
