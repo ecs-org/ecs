@@ -144,7 +144,7 @@ table.messages .threadstart {
   background: url(/static/images/icons.png) -0 -160px no-repeat;
 }
 .icon_sort {
-  background: url(/static/images/icons.png) 0 -208px no-repeat;
+  background: url(/static/images/icons.png) -240px -256px no-repeat;
 }
 .icon_send {
   background: url(/static/images/icons.png) -160px -48px no-repeat;
