@@ -53,7 +53,7 @@ def notification_types():
 
     for data in types:
         data = data.copy()
-        t, created = NotificationType.objects.get_or_create(name=data.pop('name'))
+        t, created = NotificationType.objects.get_or_create(name=data.pop('name'), defaults=data)
         update_instance(t, data)
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))

@@ -20,6 +20,33 @@ from ecs.bootstrap.utils import update_instance
 # getting translated later.
 _ = lambda s: s
 
+
+# caching lookup function to spare db queries
+def _get_group(name, cache={}):
+    try:
+        g = cache[name]
+    except KeyError:
+        g = Group.objects.get(name=name)
+        cache[name] = g
+    return g
+
+def _get_medical_category(abbrev, cache={}):
+    try:
+        mc = cache[abbrev]
+    except KeyError:
+        mc = MedicalCategory.objects.get(abbrev=abbrev)
+        cache[abbrev] = mc
+    return mc
+
+def _get_expedited_category(abbrev, cache={}):
+    try:
+        ec = cache[abbrev]
+    except KeyError:
+        ec = ExpeditedReviewCategory.objects.get(abbrev=abbrev)
+        cache[abbrev] = ec
+    return ec
+
+
 @bootstrap.register()
 def sites():
     sites_list = (
@@ -32,15 +59,18 @@ def sites():
     # FIXME: On virtual image creation this somehow must be editable for bootstrapping with the right hostname of the target machine
     for pk, name, domain in sites_list:
         site, created = Site.objects.get_or_create(pk=pk)
-        site.name = name
-        site.domain = domain
-        site.save()
-
+        update_instance(site, {
+            'name': name,
+            'domain': domain,
+        })
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
     from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
+
+    sites = list(Site.objects.all())
+
     for dirpath, dirnames, filenames in os.walk(basedir):
         if 'wkhtml2pdf' not in dirpath:
             continue
@@ -51,12 +81,13 @@ def templates():
             if ext in ('.html', '.inc'):
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
-                content = open(path, 'r').read()
-                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
-                if not created and tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                tpl, created = Template.objects.get_or_create(name=name)
+                if created or tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                    # only read the file if we really have to
+                    with open(path, 'r') as f:
+                        content = f.read()
                     tpl.content = content
-                    tpl.save()
-                tpl.sites = Site.objects.all()
+                tpl.sites = sites
                 tpl.save()
 
 
@@ -328,7 +359,10 @@ def auth_user_developers():
     except ImportError:
         # first, Last, email, password, gender (sic!)
         developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', 'f'),)
-        
+
+    translators_group = _get_group('translators')
+    sentry_group = _get_group('sentryusers')
+
     for first, last, email, password, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
         user.first_name = first
@@ -336,23 +370,24 @@ def auth_user_developers():
         user.set_password(password)
         user.is_staff = False
         user.is_superuser = False
-        user.groups.add(Group.objects.get(name="translators"))
-        user.groups.add(Group.objects.get(name="sentryusers"))
+        user.groups.add(translators_group)
+        user.groups.add(sentry_group)
         user.save()
         profile = user.get_profile()
-        profile.approved_by_office = True
-        profile.help_writer = True
-        profile.forward_messages_after_minutes = 360
-        profile.gender = gender
-        profile.start_workflow = True
-        profile.save()
+        update_instance(profile, {
+            'approved_by_office': True,
+            'help_writer': True,
+            'forward_messages_after_minutes': 360,
+            'gender': gender,
+            'start_workflow': True,
+        })
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_sentryuser():
         user, created = get_or_create_user('sentry@example.org', start_workflow=False)
-        user.groups.add(Group.objects.get(name="userswitcher_target"))
+        user.groups.add(_get_group('userswitcher_target'))
         user.is_staff = True
         user.is_superuser = True
         user.save()
@@ -402,42 +437,42 @@ def auth_user_testusers():
          ('expedited.recht', ('Recht',)),
     )
     
-    userswitcher_group = Group.objects.get(name="userswitcher_target")
-    boardmember_group = Group.objects.get(name='EC-Board Member')
-    expedited_review_group = Group.objects.get(name='Expedited Review Group')
+    userswitcher_group = _get_group('userswitcher_target')
+    boardmember_group = _get_group('EC-Board Member')
+    expedited_review_group = _get_group('Expedited Review Group')
 
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
             if testgroup:
-                user.groups.add(Group.objects.get(name=testgroup))
+                user.groups.add(_get_group(testgroup))
             user.groups.add(userswitcher_group)
 
             profile = user.get_profile()
-            for flagname, flagvalue in flags.items():
-                setattr(profile, flagname, flagvalue)
-            profile.approved_by_office = True
+            flags = flags.copy()
+            flags.update({
+                'approved_by_office': True,
+                'start_workflow': True,
+            })
+            update_instance(profile, flags)
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
-                profile.help_writer = True
+                flags['help_writer'] = True
 
-            profile.start_workflow = True
-            profile.save()
-
-    
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
         user.groups.add(boardmember_group)
         user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
-        profile.board_member = True
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
+        update_instance(profile, {
+            'board_member': True,
+            'approved_by_office': True,
+            'start_workflow': True,
+        })
 
         for medcategory in medcategories:
-            m= MedicalCategory.objects.get(abbrev=medcategory)
+            m = _get_medical_category(medcategory)
             m.users.add(user)
 
     for testuser, expcategories in expeditedtestusers:
@@ -446,13 +481,14 @@ def auth_user_testusers():
         user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
-        profile.expedited_review = True
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
+        update_instance(profile, {
+            'expedited_review': True,
+            'approved_by_office': True,
+            'start_workflow': True,
+        })
 
         for expcategory in expcategories:
-            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
+            e = _get_expedited_category(expcategory)
             e.users.add(user)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))

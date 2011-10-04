@@ -3,6 +3,7 @@ from django.conf import settings
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
+from ecs.bootstrap.utils import update_instance
 
 _ = lambda s: s     # dummy gettext for marking strings
 
@@ -29,12 +30,10 @@ def document_types():
     hidden = ('submissionform', 'votes', 'checklist')
 
     for name, identifier, helptext in names:
-        d, created = DocumentType.objects.get_or_create(identifier=identifier)
-        d.name = name
-        d.helptext = helptext
-        if identifier in hidden:
-            d.hidden = True
-        else:
-            d.hidden = False
-        d.save()
-
+        data = {
+            'name': name,
+            'helptext': helptext,
+            'hidden': identifier in hidden,
+        }
+        d, created = DocumentType.objects.get_or_create(identifier=identifier, defaults=data)
+        update_instance(d, data)
