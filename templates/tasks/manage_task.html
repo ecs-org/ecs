@@ -2,7 +2,7 @@
 
 <div id="task_main">
 <form action="{{ request.path }}" method="post" id="task_form">
-    <div>{% trans 'Task' %}: {{ form.task }}</div>
+    <h4>{% trans 'Task' %}: {{ form.task }}</h4>
     {% if form.task.locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
     {% endif %}
