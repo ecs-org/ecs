@@ -32,11 +32,6 @@
     </tbody>
 </table>
 
-{% if user|has_flag:'executive_board_member' %}
-    <p><a href="{% url ecs.core.views.categorization_review submission_form_pk=submission_form.pk %}" class="button_submit">{% trans 'Add Additional Reviewers' %}</a></p>
-{% endif %}
-
-
 {% if befangene_review_form %}
     <h3>{% trans "Biased Parties" %}</h3>
     <div id="befangene_review" class="tab">
