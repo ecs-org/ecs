@@ -1,7 +1,7 @@
 {% load core i18n userutils %}
 
 <ol>
-{% for checklist, answers in checklists %}
+{% for checklist, answers in checklist_summary %}
     <li>
         <div class="checklist">{{ checklist.blueprint.name }}: {{ checklist.user|formal_name }}</div>
         <ol>

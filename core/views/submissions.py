@@ -140,8 +140,10 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote = submission_form.current_vote
     submission = submission_form.submission
 
+    checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(user=request.user)).order_by('blueprint__name')
+
     checklist_reviews = []
-    for checklist in Checklist.objects.filter(submission=submission).select_related('blueprint'):
+    for checklist in checklists:
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
@@ -154,8 +156,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
 
-    checklists = submission.checklists.order_by('blueprint__name')
-    checklists = [(c, c.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))) for c in checklists if c.is_negative or c.get_all_answers_with_comments().count()]
+    checklist_summary = []
+    for checklist in checklists:
+        if checklist.is_negative or checklist.get_all_answers_with_comments().count():
+            answers = checklist.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))
+            checklist_summary.append((checklist, answers))
 
     submission_forms = list(submission.forms.order_by('created_at'))
     previous_form = None
@@ -177,7 +182,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission_forms': submission_forms,
         'vote': vote,
         'checklist_reviews': checklist_reviews,
-        'checklists': checklists,
+        'checklist_summary': checklist_summary,
         'show_reviews': any(checklist_reviews),
         'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True),
         'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False),

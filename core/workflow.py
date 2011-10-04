@@ -249,6 +249,19 @@ class ChecklistReview(Activity):
         submission_form = self.workflow.data.current_submission_form
         return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
 
+    def pre_perform(self, choice):
+        blueprint = self.node.data
+        lookup_kwargs = {'blueprint': blueprint}
+        if blueprint.multiple:
+            lookup_kwargs['user'] = get_current_user()
+        try:
+            checklist = self.workflow.data.checklists.get(**lookup_kwargs)
+        except Checklist.DoesNotExist:
+            pass
+        else:
+            checklist.status = 'completed'
+            checklist.save()
+
 def unlock_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ChecklistReview)
 post_save.connect(unlock_checklist_review, sender=Checklist)
@@ -279,6 +292,7 @@ class ThesisRecommendationReview(NonRepeatableChecklistReview):
         return True
 
     def pre_perform(self, choice):
+        super(ThesisRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
         if has_thesis_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
@@ -304,6 +318,7 @@ class ExpeditedRecommendationReview(NonRepeatableChecklistReview):
         return True
 
     def pre_perform(self, choice):
+        super(ExpeditedRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
         if has_expedited_recommendation(self.workflow) and s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
@@ -319,6 +334,7 @@ class LocalEcRecommendationReview(NonRepeatableChecklistReview):
         return True
 
     def pre_perform(self, choice):
+        super(LocalEcRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
         if s.timetable_entries.count() == 0:
             meeting = Meeting.objects.next_schedulable_meeting(s)
