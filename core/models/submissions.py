@@ -137,6 +137,16 @@ class Submission(models.Model):
         return False
         
     @property
+    def lifecycle_phase(self):
+        if self.finished:
+            return _('Finished')
+        elif self.is_active:
+            return _('Active')
+        elif self.current_submission_form.acknowledged:
+            return _('Acknowledged')
+        return _('New')
+        
+    @property
     def main_ethics_commission(self):
         if not self.current_submission_form:
             return None

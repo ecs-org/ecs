@@ -114,15 +114,7 @@
     <tr>
         <th>Phase:</th>
         <td colspan="3">
-            {% if submission_form.submission.is_active %}
-                {% trans "Aktiv" %}
-            {% else %}
-                {% if submission_form.acknowledged %}
-                    {% trans "Akzeptiert" %}
-                {% else %}
-                    {% trans "Neu" %}
-                {% endif %}
-            {% endif %}
+            {{ submission.lifecycle_phase }}
         </td>
     </tr>
     <tr>
