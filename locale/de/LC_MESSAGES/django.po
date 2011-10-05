@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-05 12:08+0200\n"
+"POT-Creation-Date: 2011-10-05 23:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1132,7 +1132,7 @@ msgstr "wenn erforderlich"
 msgid "open / blind / double-blind"
 msgstr "Offen / blind / doppelblind"
 
-#: core/paper_forms.py:227 core/models/submissions.py:381
+#: core/paper_forms.py:227 core/models/submissions.py:391
 msgid "open"
 msgstr "offen"
 
@@ -1148,7 +1148,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:231 core/models/submissions.py:381
+#: core/paper_forms.py:231 core/models/submissions.py:391
 msgid "blind"
 msgstr "blind"
 
@@ -1164,7 +1164,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:381
+#: core/paper_forms.py:235 core/models/submissions.py:391
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1584,7 +1584,8 @@ msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:367 core/models/checklist.py:42 help/models.py:19
+#: core/forms/forms.py:367 core/models/checklist.py:42
+#: core/models/submissions.py:147 help/models.py:19
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -1599,14 +1600,14 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:370 core/forms/layout.py:65 core/forms/layout.py:67
 #: templates/meetings/tabs/statistics.html:4
-#: templates/submissions/tabs/status.html:132 templates/tasks/tasks.inc:20
+#: templates/submissions/tabs/status.html:124 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:371 core/forms/layout.py:74 core/forms/layout.py:76
 #: templates/meetings/tabs/statistics.html:5
-#: templates/submissions/tabs/status.html:139 templates/tasks/tasks.inc:21
+#: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
@@ -1621,7 +1622,7 @@ msgid "Expedited"
 msgstr "Expedited"
 
 #: core/forms/forms.py:374 templates/meetings/tabs/statistics.html:10
-#: templates/submissions/tabs/status.html:136 templates/tasks/tasks.inc:24
+#: templates/submissions/tabs/status.html:128 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
@@ -1889,29 +1890,43 @@ msgstr "4 Negativ"
 msgid "5 withdrawn (applicant)"
 msgstr "5 Zurückgezogen (Antragsteller)"
 
-#: core/models/names.py:37 core/models/submissions.py:713 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:723 users/forms.py:54
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:713 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:723 users/forms.py:54
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:660
+#: core/models/submissions.py:142
+#, fuzzy
+msgid "Finished"
+msgstr "Abgeschlossene TOPs"
+
+#: core/models/submissions.py:144 templates/users/administration.html:42
+msgid "Active"
+msgstr "Aktiv"
+
+#: core/models/submissions.py:146
+#, fuzzy
+msgid "Acknowledged"
+msgstr "Bestätigen"
+
+#: core/models/submissions.py:670
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Erstellung der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:672
+#: core/models/submissions.py:682
 msgid "New version of study EC-Nr. {0}"
 msgstr "Neue Version der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:747
+#: core/models/submissions.py:757
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:747
+#: core/models/submissions.py:757
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1939,33 +1954,33 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:512 core/views/submissions.py:517
-#: core/views/submissions.py:537 core/views/submissions.py:542
+#: core/views/submissions.py:515 core/views/submissions.py:520
+#: core/views/submissions.py:540 core/views/submissions.py:545
 #, fuzzy
 msgid "Studie {0}"
 msgstr "Studien"
 
-#: core/views/submissions.py:607
+#: core/views/submissions.py:610
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:667 templates/core.html:41
+#: core/views/submissions.py:670 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:669
+#: core/views/submissions.py:672
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:683
+#: core/views/submissions.py:686
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:703 templates/core.html:44
+#: core/views/submissions.py:706 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:711 templates/core.html:47
+#: core/views/submissions.py:714 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2262,7 +2277,7 @@ msgstr "Formale Prüfung Amendment"
 msgid "Amendment Review"
 msgstr "Formale Prüfung Amendment"
 
-#: notifications/models.py:145 notifications/views.py:223
+#: notifications/models.py:145 notifications/views.py:224
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -2397,11 +2412,11 @@ msgid "Communication"
 msgstr "Nachrichten"
 
 #: templates/core.html:35 templates/tasks/list.html:6
-#: templates/tasks/list.html.py:7
+#: templates/tasks/list.html.py:7 templates/tasks/tasks.inc:5
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: templates/core.html:38
+#: templates/core.html:38 templates/submissions/widget.html:3
 msgid "Studies"
 msgstr "Studien"
 
@@ -3408,13 +3423,13 @@ msgstr ""
 "Studien abschicken, da ihr Account noch nicht bestätigt wurde."
 
 #: templates/submissions/list.html:22 templates/submissions/list.html:137
-#: templates/submissions/widget.html:64 templates/users/administration.html:27
+#: templates/submissions/widget.html:66 templates/users/administration.html:27
 #: templates/users/administration.html:89 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
 #: templates/submissions/list.html:22 templates/submissions/list.html:137
-#: templates/submissions/widget.html:64 templates/users/administration.html:27
+#: templates/submissions/widget.html:66 templates/users/administration.html:27
 #: templates/users/administration.html:89
 msgid "of"
 msgstr "von"
@@ -3431,11 +3446,11 @@ msgstr "Bearbeiten"
 msgid "Vote Review"
 msgstr "B2 Voten"
 
-#: templates/submissions/list.html:94 templates/submissions/widget.html:38
+#: templates/submissions/list.html:94 templates/submissions/widget.html:40
 msgid "Categories"
 msgstr "Fachgebiete"
 
-#: templates/submissions/list.html:99 templates/submissions/widget.html:43
+#: templates/submissions/list.html:99 templates/submissions/widget.html:45
 msgid "ExpeditedReviewCategories"
 msgstr "Expedited Review Fachgebiete"
 
@@ -3449,7 +3464,7 @@ msgid ""
 "abgelehnt. Sie können die Studie neu einreichen."
 msgstr ""
 
-#: templates/submissions/list.html:125 templates/submissions/widget.html:53
+#: templates/submissions/list.html:125 templates/submissions/widget.html:55
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
@@ -3666,32 +3681,19 @@ msgstr "wie Sponsor"
 msgid "No Primary Investigator"
 msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 
-#: templates/submissions/tabs/status.html:118
-msgid "Aktiv"
-msgstr ""
-
-#: templates/submissions/tabs/status.html:121
-msgid "Akzeptiert"
-msgstr ""
-
-#: templates/submissions/tabs/status.html:123
-#, fuzzy
-msgid "Neu"
-msgstr "Neu"
-
-#: templates/submissions/tabs/status.html:141
+#: templates/submissions/tabs/status.html:133
 msgid "minors"
 msgstr "Minderjährige"
 
-#: templates/submissions/tabs/status.html:163
+#: templates/submissions/tabs/status.html:155
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:201
+#: templates/submissions/tabs/status.html:193
 msgid "drop"
 msgstr "fallen lassen"
 
-#: templates/submissions/tabs/status.html:216
+#: templates/submissions/tabs/status.html:208
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -3819,10 +3821,6 @@ msgstr "Verhindert"
 #: templates/users/administration.html:42
 msgid "Inactive users are not able to log into the system"
 msgstr "Inaktive Benutzer können das System nicht verwenden"
-
-#: templates/users/administration.html:42
-msgid "Active"
-msgstr "Aktiv"
 
 #: templates/users/administration.html:50
 msgid "phantom"
@@ -4171,6 +4169,10 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
+#, fuzzy
+#~ msgid "Neu"
+#~ msgstr "Neu"
+
 #~ msgid "Initial Notification Review"
 #~ msgstr "Formale Prüfung Studienmeldung"
 
@@ -4255,15 +4257,6 @@ msgstr ""
 
 #~ msgid "External Review Split"
 #~ msgstr "Gutachten Aufteilung"
-
-#~ msgid "Results and conclusions"
-#~ msgstr "Ergebnisse und Schlussfolgerungen"
-
-#~ msgid "Study acknowledged"
-#~ msgstr "Studie angenommen"
-
-#~ msgid "Study declined"
-#~ msgstr "Studie abgelehnt"
 
 #~ msgid ""
 #~ "\n"
