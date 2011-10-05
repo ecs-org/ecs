@@ -28,7 +28,8 @@ class RelatedTasksMiddleware(object):
                     form.is_valid()     # validate form, so errors are displayed
                 if submit or save:
                     post_data = request.POST.get('task_management-post_data', '')
-                    request.POST = QueryDict(post_data, encoding=request.POST.encoding)
+                    # QueryDict only reliably works with bytestrings, so we encode `post_data` again (see #2978).
+                    request.POST = QueryDict(post_data.encode('utf-8'), encoding='utf-8')
                     # if there is no post_data, we pretend that the request is a GET request, so
                     # forms in the view don't show errors
                     if not post_data:
