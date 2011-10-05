@@ -1,8 +1,8 @@
 {% load i18n %}
 
 <div id="task_main">
-{% if submission %}
-    <h1>{{ submission }}</h1>
+{% if not submission %}
+    <h3>{% trans 'Tasks' %}</h3>
 {% endif %}
 
 {# this form needs an explicit action, because it is used in widgets #}
