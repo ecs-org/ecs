@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-05 11:44+0200\n"
+"POT-Creation-Date: 2011-10-05 12:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3757,8 +3757,8 @@ msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
 #: templates/tasks/tasks_full.inc:26
-msgid "Type"
-msgstr ""
+msgid "Task Type"
+msgstr "Aufgabenart"
 
 #: templates/tasks/tasks_full.inc:29
 msgid "Drag the bookmark link to your bookmark bar to save it."

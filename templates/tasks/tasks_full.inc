@@ -23,7 +23,7 @@
         {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
     <div class="task_list_choose">
-        <label class="task_types">{% trans "Type" %}:</label> {{ filterform.task_types }}
+        <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
     </div>
     <div class="task_bookmark">
         <span class="icon_comment" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}"></span> 
