@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-05 10:04+0200\n"
+"POT-Creation-Date: 2011-10-05 11:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4092,7 +4092,7 @@ msgstr "Einladungstext"
 
 #: users/forms.py:220
 msgid "There is already a user with this email address."
-msgstr "Es ist bereits ein Benutzer mit dieser Email-Addresse registriert."
+msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
 #: users/utils.py:67
 msgid "Ms."
