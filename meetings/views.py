@@ -31,7 +31,7 @@ def create_meeting(request):
     form = MeetingForm(request.POST or None)
     if form.is_valid():
         meeting = form.save()
-        return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+        return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/form.html', {
         'form': form,
     })
