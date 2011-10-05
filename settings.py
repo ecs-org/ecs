@@ -441,10 +441,6 @@ DEVSERVER_MODULES = (
     #'devserver.modules.cache.CacheSummaryModule',
 )
 
-# activate this for development if your ghostscript version is broken;
-# not to be used in production environment
-MOCK_PDF2PDFA = False
-
 # settings override 
 ###################
 #these are local fixes, they default to a sane value if unset
