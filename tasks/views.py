@@ -101,7 +101,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
         'submission': submission,
         'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
-        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(userfilter)),
+        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(filterform.data.copy())),
     }
 
     task_flavors = {
