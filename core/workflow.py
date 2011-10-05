@@ -241,7 +241,7 @@ class ChecklistReview(Activity):
         try:
             checklist = self.workflow.data.checklists.get(**lookup_kwargs)
         except Checklist.DoesNotExist:
-            return False
+            return True
         return not checklist.is_complete
 
     def get_url(self):

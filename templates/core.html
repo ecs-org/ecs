@@ -117,9 +117,9 @@
 
 {% block header %}
     {{ block.super }}
-    {% if request.task_management_form %}
+    {% if request.task_management.form %}
         <div id="headerworkflow">
-        {% with request.task_management_form as form %}
+        {% with request.task_management.form as form %}
             {% include 'tasks/manage_task.html' %}
         {% endwith %}
         </div>
@@ -215,7 +215,7 @@
     }
 
     window.addEvent('domready', function(){
-      {% if request.task_management_form %}
+      {% if request.task_management.form %}
           var headerworkflow = $('headerworkflow');
           var w = new ecs.widgets.TaskWidget(headerworkflow, {});
           var toggle_headerworkflow = $('toggle_headerworkflow');

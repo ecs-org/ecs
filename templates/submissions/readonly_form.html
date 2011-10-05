@@ -25,7 +25,7 @@
             {% endfor %}
         {% endif %}
         
-        {% if not request.task_management_form %}
+        {% if not request.task_management.form %}
             {% for checklist, checklist_review_form in checklist_reviews %}
                 {% if not checklist_review_form.readonly %}
                     {% if checklist_review_form.related_task %}

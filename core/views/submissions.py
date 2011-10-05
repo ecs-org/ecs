@@ -225,7 +225,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    task = request.task_management_form.task
+    task = request.task_management.task
 
     docstash, created = DocStash.objects.get_or_create(
         group='ecs.core.views.submissions.categorization_review',
@@ -314,10 +314,12 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     if created:
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+        checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
 
     form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
-    if hasattr(request, 'task_management_form'):
-        form.bound_to_task = request.task_management_form.task
+    task = request.task_management.task
+    if task:
+        form.bound_to_task = task
     extra_context = {}
 
     if request.method == 'POST':
@@ -358,8 +360,9 @@ def vote_review(request, submission_form_pk=None):
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
-    if hasattr(request, 'task_management_form'):
-        vote_review_form.bound_to_task = request.task_management_form.task
+    task = request.task_management.task
+    if task:
+        vote_review_form.bound_to_task = task
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={
