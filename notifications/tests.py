@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
 from ecs.notifications.models import NotificationType, Notification, ProgressReportNotification
-
+from ecs.core.models import Vote
 from ecs.core.tests.submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):
@@ -162,16 +162,18 @@ class NotificationFormTest(LoginTestCase):
         now = datetime.datetime.now()
         nt = NotificationType.objects.get(form='ecs.core.forms.ProgressReportNotificationForm')
 
-        presenter = self.create_user('presenter')
-        office = self.create_user('office', profile_extra={'internal': True})
+        presenter = self.create_user('test_presenter')
+        office = self.create_user('test_office', profile_extra={'internal': True})
         office.groups.add(Group.objects.get(name=u'EC-Office'))
-        executive = self.create_user('executive', profile_extra={'internal': True})
-        executive.groups.add(Group.objects.get(name=u'EC-Executive Board Group'))
+        executive = self.create_user('text_executive', profile_extra={'internal': True, 'executive_board_member': True})
+        executive.groups.add(
+            Group.objects.get(name=u'EC-Executive Board Group'),
+            Group.objects.get(name=u'EC-Notification Review Group'),
+        )
 
         sf = create_submission_form(presenter=presenter)
-        
 
-        with self.login('presenter'):
+        with self.login('test_presenter'):
             response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': nt.pk}))
             url = response['Location'] # docstash redirect
 
@@ -197,21 +199,36 @@ class NotificationFormTest(LoginTestCase):
             })
             self.assertEqual(response.status_code, 302)
             notification = self.client.get(response['Location']).context['notification']
-            
-        # office review
-        with self.login('office'):
+        
+        def do_review(user):
             response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
             task = response.context['open_tasks'].get(
                 data_id=notification.pk, 
                 content_type=ContentType.objects.get_for_model(ProgressReportNotification),
             )
-            task.accept(office)
-        # executive review
-        #with self.login('executive'):
-        #    response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
-        #    task = response.context['open_tasks'].get(
-        #        data_id=notification.pk, 
-        #        content_type=ContentType.object.get_for_model(ProgressReportNotification),
-        #    )
-        #    task.accept(executive)
+            task.accept(user)
+            response = self.client.get(task.url)
+            self.assertEqual(response.status_code, 200)
+            
+            response = self.client.post(task.url, {
+                'task_management-submit': 'Abschicken',
+                'task_management-action': 'complete_0',
+                'task_management-post_data': 'text=Test.',
+            })
+            self.assertEqual(response.status_code, 302)
 
+        # office review
+        with self.login('test_office'):
+            do_review(office)
+        
+        # executive review
+        with self.login('text_executive'):
+            do_review(executive)
+        
+        notification = ProgressReportNotification.objects.get(pk=notification.pk)
+        old_valid_until = vote.valid_until
+        vote = Vote.objects.get(pk=vote.pk)
+        self.assertEqual(vote.valid_until, old_valid_until.replace(year=old_valid_until.year + 1))
+        
+        
+        

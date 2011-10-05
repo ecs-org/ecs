@@ -189,7 +189,11 @@ class Task(models.Model):
         if user and check_authorization:
             groups = self.task_type.groups.all()
             if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
-                raise ValueError("Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (self, user, ", ".join(map(unicode, self.task_type.groups.all()))))
+                raise ValueError((u"Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (
+                    self, 
+                    user, 
+                    ", ".join(unicode(x) for x in self.task_type.groups.all()),
+                )).encode('ascii', 'ignore'))
         self.assigned_to = user
         self.accepted = False
         if user:
