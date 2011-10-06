@@ -85,15 +85,21 @@ class NodeController(object):
 
     def is_reentrant(self):
         return True
+        
+    def unlock_token(self, token):
+        return token.unlock()
+        
+    def lock_token(self, token):
+        return token.lock()
 
     def unlock(self):
         locked = self.is_locked()
         if locked:
             for token in self.get_tokens(locked=False):
-                token.lock()
+                self.lock_token(token)
         else:
             for token in self.get_tokens(locked=True):
-                token.unlock()
+                self.unlock_token(token)
         return locked
     
     def emit_token(self, deadline=False, trail=()):
@@ -196,3 +202,7 @@ class FlowController(NodeController):
         if not self.is_locked():
             self.handle_token(token)
 
+    def unlock_token(self, token):
+        if super(FlowController, self).unlock_token(token):
+            self.handle_token(token)
+    

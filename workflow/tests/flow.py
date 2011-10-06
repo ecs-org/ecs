@@ -255,6 +255,23 @@ class FlowTest(WorkflowTestCase):
         obj.workflow.do(decl.D)
         self.assertActivitiesEqual(obj, [decl.B])
         
+    def test_flow_controller_locks(self):
+        g = Graph.objects.create(name='TestGraph', content_type=self.foo_ct, auto_start=True)
+        n_f = g.create_node(decl.F, start=True)
+        n_a = g.create_node(decl.A)
+        n_f.add_edge(n_a)
+
+        obj = Foo.objects.create()
+        self.assertActivitiesEqual(obj, [])
+        
+        decl.foo_change.send(obj)
+        self.assertActivitiesEqual(obj, [])
+        
+        obj.flag = True
+        obj.save()
+        decl.foo_change.send(obj)
+        self.assertActivitiesEqual(obj, [decl.A])
+
     def test_subgraph(self):
         '''Tests if the subgraph mechanism is implemented correctly.'''
         

@@ -27,6 +27,9 @@ def get_vote_filter_q(prefix, *args, **kwargs):
         f['%svotes__published_at__isnull' % prefix] = False
     if kwargs.get('valid', True):
         f['%svotes__valid_until__gte' % prefix] = datetime.datetime.now()
+    for key, value in kwargs.iteritems():
+        if key.startswith('valid_until'):
+            f['%svotes__%s' % (prefix, key)] = value
     return Q(**f)
 
 

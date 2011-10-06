@@ -98,6 +98,11 @@ class Vote(models.Model):
     @property
     def activates(self):
         return self.result == '1'
+        
+    @property
+    def valid(self):
+        return self.valid_until < datetime.now()
+
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']

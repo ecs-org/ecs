@@ -184,10 +184,10 @@ class Submission(models.Model):
     def __unicode__(self):
         return self.get_ec_number_display()
         
-    def finish(self):
+    def finish(self, expired=False):
         self.finished = True
         self.save()
-        study_finished.send(sender=Submission, submission=self)
+        study_finished.send(sender=Submission, submission=self, expired=expired)
         
     def update_next_meeting(self):
         next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
