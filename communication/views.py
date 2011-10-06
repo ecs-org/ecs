@@ -58,10 +58,10 @@ def read_thread(request, thread_pk=None):
 
     def _get_reply_text(msg):
         if msg.sender == request.user:  # bump
-            return u'\n>' + u'\n>'.join(msg.text.splitlines())
+            return u'\n\n\n>' + u'\n>'.join(msg.text.splitlines())
         else:
             reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
-            return reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
+            return u'\n\n\n' + reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
 
     form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': _get_reply_text(msg)})
 

@@ -82,6 +82,9 @@
         new ecs.textarea.TextArea(textarea);
         ecs.textarea.installToolbar(textarea, messageToolbarItems);
         ecs.setupAutocomplete();
+
+        textarea.focus();
+        textarea.selectRange(0, 0);
       });
     </script>
 {% endblock %}
