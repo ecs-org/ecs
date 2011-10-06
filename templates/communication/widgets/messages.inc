@@ -4,12 +4,7 @@
 
 <br />
 <div class="messages_header">
-<span class="icon_sort">{% trans "sort" %}</span>
-{% if not submission %}
-<a class="open-in-widget" href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a> |
-{% endif %}
-<a class="open-in-widget" href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">Person</a> |
-<a class="open-in-widget" href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">Ältere/Neuere</a>
+    {% include 'communication/sort_options.inc' %}
 </div>
 
 <ol class="messages">

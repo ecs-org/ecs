@@ -108,7 +108,8 @@ def incoming_message_widget(request):
         page_size=4,
         submission=submission,
         extra_context={
-            'incoming': True
+            'incoming': True,
+            'widget': True,
         }
     )
 
@@ -128,7 +129,8 @@ def outgoing_message_widget(request):
         page_size=4,
         submission=submission,
         extra_context={
-            'incoming': False
+            'incoming': False,
+            'widget': True,
         }
     )
 
@@ -139,20 +141,19 @@ def communication_overview_widget(request, submission_pk=None):
     })
 
 def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
-    queryset = queryset.select_related('thread')
-
     sort_session_key = '%s:sort' % session_prefix
-    sort = request.GET.get('sort', request.session.get(sort_session_key, '-timestamp'))
+    raw_sort = request.GET.get('sort', request.session.get(sort_session_key, '-last_message__timestamp'))
     
+    sort_options = ('last_message__timestamp', 'user', 'submission')
+    sort = raw_sort
     if sort:
-        if not sort in ('timestamp', '-timestamp', 'user', '-user', 'thread__submission', '-thread__submission'):
+        field = sort if sort[0] != '-' else sort[1:]
+        if field not in sort_options:
             sort = None
-        if sort and sort.endswith('user'):
-            if user_sort:
-                queryset = queryset.order_by(sort.replace('user', user_sort))
-            else:
-                sort = None
-    
+        elif field == 'user':
+            sort = sort.replace('user', user_sort) if user_sort else None
+    if sort:
+        queryset = queryset.order_by(sort)
     request.session[sort_session_key] = sort
 
     page_session_key = 'dashboard:%s:page' % session_prefix
@@ -170,7 +171,7 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
 
     context = {
         'page': page,
-        'sort': sort,
+        'sort': raw_sort,
         'submission': submission,
     }
     if extra_context:
@@ -207,7 +208,7 @@ def list_threads(request):
 
     return message_widget(request, 
         template='communication/threads.html',
-        queryset=queryset_stage2.order_by('-last_message__timestamp'),
+        queryset=queryset_stage2,
         session_prefix='messages:unified',
         user_sort='receiver__username',
         page_size=10,

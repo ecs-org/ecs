@@ -14,11 +14,8 @@
             {{ filterform.closed }} <label class="thread_outgoing">{% trans "Closed" %}</label>
         </div>
     </form>
-
-    <span class="icon_sort">{% trans "sort" %}</span>
-    <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
-    | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
-  </div>
+    {% include 'communication/sort_options.inc' %}
+</div>
 {{ block.super }}
 </div>
 {% endblock %}
