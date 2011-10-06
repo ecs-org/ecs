@@ -484,7 +484,8 @@ def meeting_details(request, meeting_pk=None, active=None):
 
     open_tasks = {}
     for submission in meeting.submissions.all():
-        ts = list(Task.objects.for_submission(submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
+        with sudo():
+            ts = list(Task.objects.for_submission(submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
         if len(ts):
             open_tasks[submission] = ts
 
