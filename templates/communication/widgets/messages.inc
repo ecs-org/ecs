@@ -32,7 +32,7 @@
         <a class="open-in-widget prev_page" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}">previous</a>
     {% endif %}
 
-    {{ page.number }} von {{ page.paginator.num_pages }}
+    Seite {{ page.number }} von {{ page.paginator.num_pages }}
     
     {% if page.has_next %}
         <a class="open-in-widget next_page" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}">next</a>
