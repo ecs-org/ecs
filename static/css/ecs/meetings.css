@@ -7,6 +7,16 @@
   margin-bottom: 10px;
 }
 
+/* experts */
+
+#experts_tab ol li {
+  margin-bottom: 10px;
+}
+#experts_tab ol li span {
+  display: block;
+  margin-bottom: 5px;
+}
+
 /* meeting_editor */
 
 #meeting_editor {
@@ -21,8 +31,7 @@
 	width: 210px;
   background-color: #eee;
 	border-radius: 3px;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
+  border: 1px solid #ccc;
 }
 #meeting_editor #userlist ul {
 	list-style: none;
@@ -30,15 +39,15 @@
 	padding: 2px;
 }
 #meeting_editor #userlist li {
-  border-top: 1px solid #ffffff;
+  border-top: 1px solid #ccc;
   padding: 5px;
 }
-#meeting_editor #userlist h5 {
+#meeting_editor #userlist h4 {
 	padding: 5px;
-	margin-bottom: 5px;
+	margin-bottom: 2px;
 }
 #meeting_editor #userlist .info {
-  background-color: #ffffff;
+  background-color: #fff;
   font-size: 0.8em;
 }
 #meeting_editor #userlist .info .constraints {
@@ -62,14 +71,13 @@
 #meeting_editor #timetable {
 	float: left;
   list-style: none;
-  width: 535px;
-  margin: 0px;
+  width: 530px;
+  margin: 0;
 }
 #meeting_editor #timetable li {
 	font-size: 12px;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
+  border: 1px solid #ccc;
 }
 #meeting_editor .entry {
   border: 1px solid #eee;
@@ -93,7 +101,8 @@
   width: 16px;
   height: 16px;
   overflow: hidden;
-  background: url(/static/images/icons.png) 0 -144px no-repeat;
+  background: url(/static/images/icons.png) 0 -192px no-repeat;
+  margin: 2px 2px 0 0;
 }
 #meeting_editor .entry .dragHandle {
   float: left;
@@ -112,9 +121,9 @@
 #meeting_editor .entry input.optimal_start {
   width: 50px;
 }
-#meeting_editor .entry h3 {
+#meeting_editor .entry h4 {
   margin-bottom: 2px;
-	font-weight: bolder;
+  padding-right: 20px;
 }
 #meeting_editor .options li {
 	display: inline;
@@ -311,7 +320,7 @@
   margin-top: 10px;
   vertical-align: top;
   max-width: 250px;
-  min-width: 200px;
+  min-width: 160px;
 }
 #meeting_assistant_body .reviews,
 .column_main form {
@@ -352,21 +361,19 @@
 #meeting_assistant .buttons a {
   display: block;
   float: left;
-  border: 1px solid #ccc;
   background: #666;
   color: #fff;
   margin: 0 0 5px;
   padding: 5px;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
 }
 #meeting_assistant .buttons a:hover {
   text-decoration: none;
   background: #333;
 }
 #meeting_assistant .buttons a.selected {
-  background-color: #71ce09;
+  background: #71ce09;
+  color: #253D0A;
 }
 #meeting_assistant .buttons a .details {
   display: block;
@@ -401,7 +408,7 @@
 }
 #meeting_assistant .navigation a:hover {
   text-decoration: none;
-  background: #999;
+  background: #333;
   color: #fff;
 }
 #meeting_assistant .preview {
@@ -453,31 +460,41 @@
 }
 #meeting_assistant .reviews li {
   display: block;
-  padding: 5px;
+  padding: 5px 8px;
 	margin-bottom: 5px;
   border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   font-weight: bolder;
-  color: #fff;
 }
 #meeting_assistant .reviews li.absent {
-  background-color: #ccc;
+  background: #ededed;
+  border: 1px solid #ccc;
 }
 #meeting_assistant .reviews li.positive {
-  background-color: #71ce09;
+  background: #CDFC97;
+  border: 1px solid #8bf82b;
+  color: #253D0A;
 }
 #meeting_assistant .reviews li.positive.comments {
-  background-color: #8bf82b;
+  background: #E3FFC4;
+  border: 1px solid #8bf82b;
+  color: #253D0A;
 }
 #meeting_assistant .reviews li.negative {
-  background-color: #DF0D0D;
+  background: #FCBBB5;
+  border: 1px solid red;
+  color: #3F0000; 
 }
 #meeting_assistant .reviews li.negative.comments {
-  background-color: #df430d;
+  background: #F9D4C7;
+  border: 1px solid #df430d;
+  color: #3F0000;
 }
 #meeting_assistant .reviews li.incomplete {
-  background-color: #ccc;
+  background: #ededed;
+  border: 1px solid #ccc;
+  color: #000;
 }
 #meeting_assistant_body .reviews a:hover {
   text-decoration: none;

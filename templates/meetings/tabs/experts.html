@@ -2,28 +2,28 @@
 
 <form method="post">
 {{ expert_formset.management_form }}
-<ul>
+<ol>
 {% for form in expert_formset.forms %}
     <li>
-        <div>
+        <span>
             {{ form.instance.category }}
             [Einreichungen:
             {% for submission in form.submissions %}
                  <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">
                     {{ submission }}</a>{% if not forloop.last %}, {% endif %}
             {% endfor %}]
-        </div>
-        <div>
+        </span>
+        <span>
             {% if meeting.started %}
                 {{ form.instance.board_member }}
             {% else %}
                 {{ form.id }}
                 {{ form.board_member }}
             {% endif %}
-        </div>
+        </span>
     </li>
 {% endfor %}
-</ul>
+</ol>
 {% if not meeting.started %}
     <input type="hidden" name="submitted_form" value="expert_formset" />
     <input type="submit" value="Speichern" />
