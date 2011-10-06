@@ -149,7 +149,7 @@ class MeetingManager(models.Manager):
 
 class Meeting(models.Model):
     start = models.DateTimeField()
-    title = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=200)
     optimization_task_id = models.TextField(null=True)
     submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     started = models.DateTimeField(null=True)
