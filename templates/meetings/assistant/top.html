@@ -111,6 +111,10 @@
     <script type="text/javascript">
         window.addEvent('domready', function(){
             /* ecs.setupForms(); */ /* do we need this? */
+            {% if submission %}
+            new ecs.textarea.TextArea($('id_text'));
+            {% endif %}
+            
             var meetingAssistantForm = $('meeting_assistant_form');
             {% if not submission %}
                 $('complete').addEvent('click', function(){
