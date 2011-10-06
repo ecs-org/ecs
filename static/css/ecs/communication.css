@@ -119,13 +119,39 @@
 .message_display .form .input {
   display: inline-block;
 }
+#thread_list_filter,
+.thread_list_choose,
+.messages_header .sort_options {
+  display: inline;
+}
+.thread_list_choose,
+.messages_header .sort_options {
+  margin-right: 10px;
+  background: #EFEFDD;
+  border-radius: 3px;
+}
 .thread_list_choose {
-	margin-bottom: 10px;
+  padding: 7px 3px 5px 8px;
+}
+.messages_header .sort_options {
+  padding: 7px 8px 5px;
+}
+.thread_list_choose label {
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+.messages_overview .messages_header {
+  margin-bottom: 15px;
+}
+.messages_overview table.messages {
+  display: block;
+  clear: both;
 }
 table.messages .threadstart {
   border-top: 1px solid #cccccc;
 }
-#content .messages_header, #content .messages th, #content .messages td {
+#content .messages th, #content .messages td {
   padding: 5px;
 }
 
@@ -206,11 +232,12 @@ li.textboxlist-autocomplete-result:hover {
 
 /* icons */
 
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send {
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send, .icon_in, .icon_out, .icon_pending {
   display: inline-block;
   text-indent: -9999px;
   width: 16px;
   height: 16px;
+  margin-right: 3px;
 }
 .icon_read {
   background: url(/static/images/icons.png) -160px -128px no-repeat;
@@ -233,6 +260,16 @@ li.textboxlist-autocomplete-result:hover {
 .icon_send {
   background: url(/static/images/icons.png) -160px -48px no-repeat;
 }
+.icon_in {
+  background: url(/static/images/icons.png) -240px -288px no-repeat;
+}
+.icon_out {
+  background: url(/static/images/icons.png) -240px -272px no-repeat;
+}
+.icon_pending {
+  background: url(/static/images/icons.png) 0 -672px no-repeat;
+}
+
 
 /* Communication Thread */
 

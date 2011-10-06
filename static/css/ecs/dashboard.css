@@ -41,9 +41,7 @@
   display: inline-block;
   background: #EFEFDD;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  padding: 2px !important;
+  padding: 3px 5px !important;
   margin-bottom: 5px;
 }
 .dashboard_widget .messages > li,
