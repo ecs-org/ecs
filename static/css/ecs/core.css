@@ -532,7 +532,7 @@ li.TypedChoiceField ul > li label{
 .form_main ul.errorlist li {
   margin-left: 220px;
   margin-bottom: 5px;
-  color: #9D261D;
+  color: red;
 }
 .errorlist li {
   color: red;
