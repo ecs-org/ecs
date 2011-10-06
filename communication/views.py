@@ -210,7 +210,7 @@ def list_threads(request):
         queryset=queryset_stage2.order_by('-last_message__timestamp'),
         session_prefix='messages:unified',
         user_sort='receiver__username',
-        page_size=10,
+        page_size=15,
         extra_context={'filterform': filterform},
     )
 
