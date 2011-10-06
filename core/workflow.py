@@ -275,7 +275,7 @@ class NonRepeatableChecklistReview(ChecklistReview):
 
 def unlock_non_repeatable_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(NonRepeatableChecklistReview)
-post_save.connect(unlock_checklist_review, sender=Checklist)
+post_save.connect(unlock_non_repeatable_checklist_review, sender=Checklist)
 
 class BoardMemberReview(ChecklistReview):
     def is_reentrant(self):
