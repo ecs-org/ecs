@@ -35,8 +35,8 @@
         {% if document|is_ready %}
             var viewer = new ecs.pdfviewer.DocumentViewer($('pdfviewer'), {
                 pageCount: {{ document.pages }},
-                title: '{{ document.doctype_name }}: {{ document.name }}{% if document.parent_object %} für {{ document.parent_object }}{% endif %} '
-                    + '<div class="details">{% trans "Version" %}: {{ document.version}}, {% trans "Date" %}: {{ document.date|date:"d.m.Y" }}, {% trans "Filename" %}: {{ document.original_file_name|default:"–" }}</div>',
+                title: '{{ document.doctype_name|escapejs }}: {{ document.name|escapejs }} {% if document.parent_object|escapejs %} für {{ document.parent_object|escapejs }}{% endif %}'
+                    + '<div class="details">{% trans "Version" %}: {{ document.version|escapejs }}, {% trans "Date" %}: {{ document.date|date:"d.m.Y" }}, {% trans "Filename" %}: {{ document.original_file_name|default:"–"|escapejs }}</div>',
                 controllers: [
                     new ecs.pdfviewer.Controller('5x5', 5, 5),
                     new ecs.pdfviewer.Controller('1x1', 1, 1)
