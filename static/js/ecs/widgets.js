@@ -34,6 +34,9 @@ ecs.widgets.Widget = new Class({
         }
     },
     load: function(url, form, callback){
+        if(this.url && url){
+            url = url.replace(/\$CURRENT_URL\$/, encodeURIComponent(this.url.replace(/^https?:\/\/[^/]+/, '')));
+        }
         var request = new Request.HTML({
             url: url || (form ? form.getProperty('action') : this.url),
             method: form ? form.method : 'get',
