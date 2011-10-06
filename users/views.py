@@ -315,6 +315,7 @@ def administration(request, limit=20):
         'users': users,
         'filterform': filterform,
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
+        'active': 'user_administration',
     })
 
 @user_flag_required('internal')
@@ -354,6 +355,7 @@ def invite(request):
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,
         'comment': comment,
+        'active': 'user_invite',
     })
 
 
