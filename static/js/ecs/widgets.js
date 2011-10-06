@@ -34,8 +34,10 @@ ecs.widgets.Widget = new Class({
         }
     },
     load: function(url, form, callback){
-        if(this.url && url){
+        var target_url = url;
+        if(this.url && url && url.indexOf('$CURRENT_URL$') >= 0){
             url = url.replace(/\$CURRENT_URL\$/, encodeURIComponent(this.url.replace(/^https?:\/\/[^/]+/, '')));
+            target_url = null; // CURRENT_URL is mainly used for redirects: do not update this.url
         }
         var request = new Request.HTML({
             url: url || (form ? form.getProperty('action') : this.url),
@@ -43,8 +45,8 @@ ecs.widgets.Widget = new Class({
             update: this.element,
             data: form ? form.toQueryString() : ''
         });
-        if(url){
-            this.url = url;
+        if(target_url){
+            this.url = target_url;
         }
         request.addEvent('success', (function(){
             if(callback){
