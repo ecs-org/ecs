@@ -56,8 +56,8 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     
     sortings = {
         'deadline': 'workflow_token__deadline',
-        'oldest': '-created_at',
-        'newest': 'created_at',
+        'oldest': 'created_at',
+        'newest': '-created_at',
     }
     order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
