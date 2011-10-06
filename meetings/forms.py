@@ -19,13 +19,12 @@ class MeetingForm(TranslatedModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'comments')
         labels = {
             'start': _(u'date and time'),
             'title': _(u'title'),
             'deadline': _(u'deadline'),
             'deadline_diplomathesis': _(u'deadline thesis'),
-            'comments': _('comments'),
         }
 
 class TimetableEntryForm(forms.Form):
