@@ -149,8 +149,6 @@
   display: inline-block;
   margin: 0 5px 5px;
   cursor: pointer;
-  vertical-align: top;
-  padding-top: 2px;
 }
 #task_main .task_list_choose select {
   padding: 0 !important;
@@ -213,12 +211,13 @@ a:hover {
   text-decoration: underline;
 }
 
+/* icons */
+
 .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
   width: 16px;
   height: 16px;
-  padding-left: 16px;
-  padding-bottom: 1px;
-  margin-right: 5px;
+  padding: 0 0 1px 16px;
+  margin-right: 3px;
 }
 .task_mine {
   background: url(/static/images/icons.png) 0 -16px no-repeat;
