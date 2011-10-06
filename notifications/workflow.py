@@ -87,6 +87,9 @@ class EditNotificationAnswer(BaseNotificationReview):
 class SignNotificationAnswer(Activity):
     class Meta:
         model = Notification
+    
+    def get_url(self): # FIXME
+        return reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
 
 
 class AutoDistributeNotificationAnswer(Generic):

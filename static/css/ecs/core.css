@@ -1137,12 +1137,21 @@ content ol.submission_list h3 .ecnr {
   padding: 3px;
 }
 #scratchpad .save, #scratchpad .save_close {
-  float: right;
   display: inline-block;
   margin-right: 10px;
 }
+#scratchpad .save_close {
+  float: right;
+}
+#scratchpad textarea {
+  width: 460px;
+}
+#scratchpad .buttons {
+  display: inline-block;
+  width: 250px;
+}
 
-/*  Readonly  */
+/*  Readonly Forms  */
 
 .form_main.readonly ol li {
   display: block;
@@ -1217,4 +1226,79 @@ content ol.submission_list h3 .ecnr {
 
 #content .notification_list > .rejected > a{
     color: #f00;
+}
+
+/* textbox list mods */
+
+.textboxlist {
+  display: inline;
+  font: 12px Arial, Helvetica, sans-serif;
+  margin-left: 10px;
+  max-width: 500px; 
+}
+#content .textboxlist ul {
+  margin: 0;
+  display: inline-block;
+}
+ul.textboxlist-autocomplete-results li {
+  float: left;
+  display: block;
+}
+.textboxlist-bits {
+  border: none;
+  padding: 0;
+}
+ul.textboxlist-bits li {
+  background: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  padding: 0;
+}
+ul.textboxlist-bits li input {
+  border: 1px solid #B7B7B7;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  padding: 2px;
+}
+.message_display .textboxlist-autocomplete {
+  left: 286px;
+}
+.task_list_choose .textboxlist-autocomplete {
+  left: 87px;
+}
+.textboxlist-bit {
+  margin: 0;
+}
+.textboxlist-autocomplete-placeholder {
+  border-top: 1px solid #999;
+}
+.textboxlist-autocomplete-results li:first-child {
+  border-top: 1px solid #999;
+}
+.textboxlist-autocomplete-results li:last-child {
+  border-bottom: 1px solid #999;
+}
+.textboxlist-autocomplete-result {
+  float: left;
+  display: block;
+  width: 500px;
+  border-right: 1px solid #999;
+}
+li.textboxlist-autocomplete-result:hover {
+  background: #fefefe;
+}
+.textboxlist-bit-editable {
+  float: left;
+  border: none;
+  clear: both;
+}
+.textboxlist-bit-box-deletable {
+  border: none;
+  border-radius: 0;
+  background: none;
+  max-width: 250px;
+  width: 200px;
+}
+.message_display .textboxlist-bit-box-deletebutton {
+  right: 0;
 }

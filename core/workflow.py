@@ -147,8 +147,7 @@ class InitialReview(Activity):
         if sf.acknowledged:
             send_system_message_template(sf.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt', None, submission=s)
             if not s.current_submission_form == sf:
-                s.current_submission_form = sf
-                s.save()
+                sf.mark_current()
                 involved_users = set([p.user for p in sf.get_involved_parties() if p.user and not p.user == sf.presenter])
                 for u in involved_users:
                     send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(s.get_ec_number_display()),

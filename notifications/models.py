@@ -43,6 +43,16 @@ class DiffNotification(models.Model):
         self.submission_forms = [self.old_submission_form]
         self.new_submission_form.transient = False
         self.new_submission_form.save()
+        
+    def apply(self):
+        new_sf = self.new_submission_form
+        if not self.new_submission_form.is_current and self.old_submission_form.is_current:
+            new_sf.acknowledged = True
+            new_sf.save()
+            new_sf.mark_current()
+            return True
+        else:
+            return False
 
 
 class Notification(models.Model):
@@ -121,17 +131,24 @@ class NotificationAnswer(models.Model):
         from ecs.core.models.submissions import Submission
         from ecs.communication.utils import send_system_message_template
         
+        if not self.rejected and self.notification.type.diff:
+            try:
+                notification = AmendmentNotification.objects.get(pk=self.notification.pk)
+                notification.apply()
+            except AmendmentNotification.DoesNotExist:
+                assert False, "we should never get here"
+        
         extend, finish = False, False
         if not self.rejected:
             if self.notification.type.grants_vote_extension:
                 try:
                     extend = ProgressReportNotification.objects.get(pk=self.notification.pk).extension_of_vote_requested
                 except ProgressReportNotification.DoesNotExist:
-                    pass
+                    assert False, "we should never get here"
             if self.notification.type.finishes_study:
                 finish = True
         interested_parties = set()
-
+        
         for submission in Submission.objects.filter(forms__in=self.notification.submission_forms.values('pk').query):
             for party in get_presenting_parties(submission.current_submission_form):
                 interested_parties.add(party)
