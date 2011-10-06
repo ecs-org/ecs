@@ -139,6 +139,16 @@
             }
 
             ecs.setupDocumentUploadIframe();
+
+            if ($('id_study_started')) {
+                new ecs.FormFieldController(['id_reason_for_not_started'], {
+                    sources: ['id_study_started'],
+                    auto: function(values, initial){
+                        this.requireField($('id_reason_for_not_started'), !values[0]);
+                        this.setDisabled(values[0]);
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}

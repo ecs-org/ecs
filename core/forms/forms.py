@@ -80,6 +80,12 @@ class ProgressReportNotificationForm(SingleStudyNotificationForm):
         model = ProgressReportNotification
         exclude = SingleStudyNotificationForm._meta.exclude
 
+    def clean(self):
+        cleaned_data = super(ProgressReportNotificationForm, self).clean()
+        if not cleaned_data.get('study_started', False):
+            require_fields(self, ('reason_for_not_started',))
+        return cleaned_data
+
 class CompletionReportNotificationForm(SingleStudyNotificationForm):
     completion_date = DateField(required=True)
 

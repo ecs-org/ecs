@@ -2,7 +2,10 @@
 {% load i18n %}
 {% block mainitem %}
     {{ block.super }}
-    <p>{% trans 'Reason for not started' %}:<b>{{ notification.reason_for_not_started }}</b></p>
+    <p>{% trans 'Has the study been started?' %}:<b>{{ notification.study_started|yesno:'Ja,Nein' }}</b></p>
+    {% if not notification.study_started %}
+        <p>{% trans 'Reason for not started' %}:<b>{{ notification.reason_for_not_started }}</b></p>
+    {% endif %}
     <p>{% trans 'Recruited subjects' %}: <b>{{ notification.recruited_subjects }}</b></p>
     <p>{% trans 'Finished subjects' %}: <b>{{ notification.finished_subjects }}</b></p>
     <p>{% trans 'Aborted subjects' %}: <b>{{ notification.aborted_subjects }}</b></p>
