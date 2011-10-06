@@ -85,22 +85,34 @@
         <div class="reviews">
           <ul>
           {% for blueprint, checklists in checklist_review_states %}
-            {% for checklist in checklists %}
-              <li class="{{ checklist.is_positive|yesno:'positive,negative' }} {{ checklist.is_complete|yesno:'complete,incomplete' }}">
-                  {{ checklist }}
+            {% for task, checklist in checklists %}
+              <li class="{% if checklist %}{{ checklist.is_positive|yesno:'positive,negative' }} {{ checklist.is_complete|yesno:'complete,incomplete' }}{% else %}negative incomplete{% endif %}">
+                {{ task.task_type }}
+                {% if task.assigned_to %}
+                  ({{ task.assigned_to }})
+                {% endif %}
+                {% if checklist %}
                   {% if checklist.has_positive_comments %}
-                      <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">copy positive</a>
+                    <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">copy positive</a>
                   {% endif %}
                   {% if checklist.has_negative_comments %}
-                      <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">copy negative</a>
+                    <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">copy negative</a>
                   {% endif %}
+                {% endif %}
               </li>
-             {% endfor %}
+            {% endfor %}
           {% endfor %}
+
+
           {% if submission %}
-              {% with submission|paper_submission_review:user as paper_submission_review_task %}
-              {% if paper_submission_review_task and not paper_submission_review_task.closed_at %}
-                  <li class="negative complete">{{ paper_submission_review_task }}</li>
+              {% with submission|paper_submission_review:user as task %}
+              {% if task and not task.closed_at %}
+                  <li class="negative complete">
+                    {{ task.task_type }}
+                    {% if task.assigned_to %}
+                      ({{ task.assigned_to }})
+                    {% endif %}
+                  </li>
               {% endif %}
               {% endwith %}
           {% endif %}

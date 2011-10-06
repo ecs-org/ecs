@@ -11,10 +11,11 @@ from django.utils.datastructures import SortedDict
 from django.db.models import Count
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory, Vote, ChecklistBlueprint
+from ecs.core.models import Submission, MedicalCategory, Vote, Checklist, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.tasks.models import Task
@@ -338,13 +339,25 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     if last_top_cache_key in request.session:
         last_top = TimetableEntry.objects.get(pk=request.session[last_top_cache_key])
     request.session[last_top_cache_key] = top.pk
-    
+
     checklist_review_states = SortedDict()
+    blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)
     if top.submission:
         for blueprint in ChecklistBlueprint.objects.order_by('name'):
-            checklist_review_states[blueprint] = []
-        for checklist in top.submission.checklists.select_related('blueprint'):
-            checklist_review_states[checklist.blueprint].append(checklist)
+            with sudo():
+                tasks = list(Task.objects.for_submission(top.submission).filter(deleted_at=None,
+                    task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id))
+            checklists = []
+            for task in tasks:
+                lookup_kwargs = {'blueprint': blueprint}
+                if blueprint.multiple:
+                    lookup_kwargs['user'] = task.assigned_to
+                try:
+                    checklist = top.submission.checklists.exclude(status='dropped').get(**lookup_kwargs)
+                except Checklist.DoesNotExist:
+                    checklist = None
+                checklists.append((task, checklist))
+            checklist_review_states[blueprint] = checklists
 
     return render(request, 'meetings/assistant/top.html', {
         'meeting': meeting,
