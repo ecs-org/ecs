@@ -41,7 +41,7 @@ class ViewTestCase(EcsTestCase):
         response = self.client.get(create_meeting_url)
         self.failUnlessEqual(response.status_code, 200)
 
-        data = {}
+        data = {'title': 'Testmeeting'}
         data.update(_get_datetime_inputs('start', self.start))
         data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + datetime.timedelta(days=30)))
         data.update(_get_datetime_inputs('deadline', self.start + datetime.timedelta(days=14)))
