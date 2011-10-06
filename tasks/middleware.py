@@ -84,6 +84,7 @@ class RelatedTasksMiddleware(object):
         request.task_management = TaskManagementData(request)
 
     def process_response(self, request, response):
-        if not request.user.is_authenticated():
+        if hasattr(request, 'task_management'):
+            return request.task_management.process_response(response)
+        else:
             return response
-        return request.task_management.process_response(response)
