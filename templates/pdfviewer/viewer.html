@@ -46,8 +46,14 @@
                 editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
                 deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
                 helpContents: $('navigation'),
-                wheelScrollThreshold: 1,//30,
-                wheelTimeThreshold: 200,
+
+                wheelScrollThreshold: 1,
+                wheelTimeThreshold: 200, // ms
+                swipeDistance: 30, // px
+                touchholdDelay: 300, // ms
+                pinchThreshold: 0.4,
+                touchCenterSize: 100, // px
+
                 shortcuts: [
                     /* in case of conflict, the first shortcut wins */
                     {command: 'toggleHelp',           key: 'space', annotationMode: true},
@@ -86,36 +92,14 @@
                     {command: 'showSearch',         key: 's', meta: true},
                     {command: 'showGotoPage',       key: 'g', meta: true},
                     {command: 'toggleMenu',         key: 'm', meta: true, annotationMode: true},
-                    
-                    // gestures
+                ],
+                gestures: [
                     {command: 'toggleMenu',         gesture: 'touchhold'},
-                    {command: 'nextPage',           gesture: 'swipeleft'},
-                    {command: 'previousPage',       gesture: 'swiperight'}
+                    {command: 'cycleIn',            gesture: 'pinch'},
+                    {command: 'nextPage',           gesture: 'swipe', direction: 'left'},
+                    {command: 'previousPage',       gesture: 'swipe', direction: 'right'}
                 ]
             });
-            
-            var element = $('pdfviewer');
-            element.store('swipe:distance', 30);
-            element.addEvent('swipe', function(e){
-                if(e.direction == 'left'){
-                    viewer.nextPage();
-                }
-                else if(e.direction == 'right'){
-                    viewer.previousPage();
-                }
-                return false;
-            });
-            element.store('touchhold:delay', 300);
-            element.addEvent('touchhold', function(){
-                viewer.toggleMenu();
-                return false;
-            });
-            element.store('pinch:threshold', 0.4);
-            element.addEvent('pinch', function(){
-                viewer.cycleIn();
-                return false;
-            });
-
             
             var IMAGE_TILING = [1, 5];
             var IMAGE_WIDTH = 800; // 768
@@ -154,6 +138,10 @@
                 });
             });
             metaKeySelect.value = '{{ user.ecs_settings.pdfviewer_settings.metaKey }}';
+            
+            $('navigation').addEvent('touch', function(){
+                $('navigation').toggleClass('hidden');
+            });
 
         {% else %}
             setTimeout(function() {

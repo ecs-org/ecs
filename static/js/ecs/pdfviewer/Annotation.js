@@ -28,6 +28,9 @@ ecs.pdfviewer.Annotation = new Class({
         if(onShow){
             marker.addEvent('click', onShow);
             overlay.addEvent('dblclick', onShow);
+            if(Browser.Features.Touch){
+                overlay.addEvent('touch', onShow);
+            }
         }
         return a;
     },

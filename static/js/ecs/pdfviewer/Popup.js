@@ -95,6 +95,18 @@ ecs.pdfviewer.MenuPopup = new Class({
         menuItems.each(function(item){
             content.grab(this.makeMenuButton(item));
         }, this);
+    },
+    
+    show: function(){
+        if(Browser.Features.Touch){
+            this.init();
+            var touchStop = new Element('div', {'class': 'touchStop'});
+            this.element.grab(touchStop);
+            $(document.body).addEvent('touchend', function(){
+                touchStop.dispose();
+            });
+        }
+        this.parent();
     }
 });
 

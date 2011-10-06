@@ -11,6 +11,9 @@ ecs.pdfviewer.Controller = new Class({
     },
     render: function(viewer, pageIndex, force){
         viewer.render(this.imageSet, this.getBlockIndex(pageIndex) * this.sliceLength, this.x, this.y);
+    },
+    getSize: function(){
+        return this.x * this.y;
     }
 });
 
@@ -29,11 +32,18 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.metaKey = options.metaKey || '';
         this.minAnnotationWidth = options.minAnnotationWidth || 20;
         this.minAnnotationHeight = options.minAnnotationHeight || 20;
+        this.swipeDistance = options.swipeDistance || 30;
+        this.touchholdDelay = options.touchholdDelay || 300;
+        this.pinchThreshold = options.pinchThreshold || 0.4
+        this.touchCenterSize = options.touchCenterSize || 20;
 
-        this.shortcuts = options.shortcuts;
+        this.shortcuts = options.shortcuts || [];
+        this.gestures = options.gestures || [];
         this.keyboardNavigationEnabled = true;
+        this.gestureNavigationEnabled = true;
         this.scrollFx = new Fx.Scroll(document.body, {duration: 100});
-
+        
+        
         this.imageSets = {};
         this.currentPageIndex = 0;
         this.currentControllerIndex = 0;
@@ -47,6 +57,25 @@ ecs.pdfviewer.DocumentViewer = new Class({
         $(window).addEvent('click', this.handleClick.bind(this));
         $(window).addEvent('mousewheel', this.handleMouseWheel.bind(this));
         $(window).addEvent('keydown', this.handleKeyPress.bind(this));
+
+        this.element.store('swipe:distance', this.swipeDistance);
+        this.element.addEvent('swipe', this.handleSwipe.bind(this));
+        this.element.store('touchhold:delay', this.touchholdDelay);
+        this.element.addEvent('touchhold', this.handleTouchhold.bind(this));
+        this.element.store('pinch:threshold', this.pinchThreshold);
+        this.element.addEvent('pinch', this.handlePinch);
+        
+        if(Browser.Features.Touch){
+            this.element.addEvent('click', (function(e){
+                if(this.getController().getSize() != 1){
+                    return;
+                }
+                var size = this.element.getSize();
+                if(Math.abs(e.page.x - size.x/2) <= this.touchCenterSize / 2 && Math.abs(e.page.y - size.y/2) < this.touchCenterSize / 2){
+                    return this.toggleMenu();
+                }
+            }).bind(this));
+        }
         
         this.body = new Element('div', {'class': 'body'});
         this.viewport = new Element('div', {'class': 'viewport'});
@@ -80,7 +109,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
                 this.annotationEditor.show(annotation, annotationElement);
             }
         }).bind(this));
-
+        
         this.annotationEditor = new ecs.pdfviewer.AnnotationEditor(this);
         this.searchPopup = new ecs.pdfviewer.SearchPopup(this);
         this.gotoPagePopup = new ecs.pdfviewer.GotoPagePopup(this);
@@ -90,14 +119,16 @@ ecs.pdfviewer.DocumentViewer = new Class({
         [this.annotationEditor, this.searchPopup, this.gotoPagePopup, this.menuPopup, this.annotationSharingPopup].each(function(popup){
             popup.addEvent('show', (function(){
                 this.keyboardNavigationEnabled = false;
+                this.gestureNavigationEnabled = false;
                 this.currentPopup = popup;
             }).bind(this));
             popup.addEvent('hide', (function(){
                 this.keyboardNavigationEnabled = true;
+                this.gestureNavigationEnabled = true;
                 this.currentPopup = null;
             }).bind(this));
         }, this);
-
+        
     },
     gotoAnchor: function(hash){
         hash = hash || window.location.hash;
@@ -448,6 +479,31 @@ ecs.pdfviewer.DocumentViewer = new Class({
                 }
             }
         }
+    },
+    handleGesture: function(e, type, prop){
+        if(!this.gestureNavigationEnabled){
+            return;
+        }
+        for(var i=0;i<this.gestures.length;i++){
+            var g = this.gestures[i];
+            if(this.annotationMode && !g.annotationMode){
+                continue;
+            }
+            if(g.gesture == type && (!prop || e[prop] == g[prop])){
+                if(this[g.command]()){
+                    return false;
+                }
+            }
+        }
+    },
+    handleSwipe: function(e){
+        return this.handleGesture(e, 'swipe', 'direction');
+    },
+    handleTouchhold: function(e){
+        return this.handleGesture(e, 'touchhold');
+    },
+    handlePinch: function(e){
+        return this.handleGesture(e, 'pinch');
     },
     handleClick: function(e){
         var target = $(e.target);
