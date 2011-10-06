@@ -2,7 +2,7 @@
   position: fixed;
   top: 200px;
   left: 300px;
-  z-index: 1000000;
+  z-index: 2500000;
   background-color: #ffffff;
   border: 3px solid #B7D4E5;
   -moz-border-radius: 10px;
@@ -45,7 +45,7 @@
   height: 100%;
   background-color: #000000;
   opacity: 0.2;
-  z-index: 999999;
+  z-index: 2000000;
 }
 .ecs-Popup h4 {
   font-size: 1em;

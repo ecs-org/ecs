@@ -828,21 +828,21 @@ fieldset.disabled {
 .ecs-TextAreaToolbar a {
 	margin: 0 10px 5px 0;
 }
-#content .ecs-TextAreaToolbar a.annotations,
-#content .ecs-TextAreaToolbar a.boilerplate,
-#content .ecs-TextAreaToolbar a.versions {
+.ecs-TextAreaToolbar a.annotations,
+.ecs-TextAreaToolbar a.boilerplate,
+.ecs-TextAreaToolbar a.versions {
   display: inline-block;
   text-indent: -9999px;
   height: 16px;
   width: 16px;
 }
-#content .ecs-TextAreaToolbar a.annotations {
+.ecs-TextAreaToolbar a.annotations {
   background: url(/static/images/icons.png) 0 -1088px no-repeat;
 }
-#content .ecs-TextAreaToolbar a.boilerplate {
+.ecs-TextAreaToolbar a.boilerplate {
   background: url(/static/images/icons.png) 0 -1072px no-repeat;
 }
-#content .ecs-TextAreaToolbar a.versions {
+.ecs-TextAreaToolbar a.versions {
   background: url(/static/images/icons.png) -80px -48px no-repeat;
 }
 
