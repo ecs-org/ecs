@@ -510,6 +510,10 @@ class SubmissionForm(models.Model):
     def is_current(self):
         return self.submission.current_submission_form_id == self.id
         
+    def mark_current(self):
+        self.submission.current_submission_form = self
+        self.submission.save()
+        
     def allows_edits(self, user):
         return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.finished
         
