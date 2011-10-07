@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
-    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist, ExpeditedReviewCategory)
+    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist, ChecklistAnswer, ExpeditedReviewCategory)
 from ecs.documents.models import Document
 from ecs.core.models.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
@@ -101,12 +101,14 @@ class ChecklistQFactory(authorization.QFactory):
         if profile.internal:
             return self.make_q()
         q = self.make_q(user=user)
+        q |= self.make_q(submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         for x in ('sponsor', 'invoice', 'submitter', 'presenter', 'susar_presenter'):
             kwargs = {'status': 'review_ok', 'submission__current_submission_form__{0}'.format(x): user}
             q |= self.make_q(**kwargs)
         return q
 
 authorization.register(Checklist, factory=ChecklistQFactory)
+authorization.register(ChecklistAnswer, lookup='checklist')
 
 class DocumentAnnotationQFactory(authorization.QFactory):
     def get_q(self, user):
