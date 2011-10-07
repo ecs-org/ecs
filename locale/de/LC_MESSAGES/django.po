@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 17:20+0200\n"
+"POT-Creation-Date: 2011-10-07 18:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1515,14 +1515,14 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:376 core/forms/layout.py:65 core/forms/layout.py:67
-#: templates/meetings/tabs/statistics.html:4
+#: templates/meetings/tabs/status.html:51
 #: templates/submissions/tabs/status.html:124 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:377 core/forms/layout.py:74 core/forms/layout.py:76
-#: templates/meetings/tabs/statistics.html:5
+#: templates/meetings/tabs/status.html:52
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
@@ -1532,12 +1532,12 @@ msgstr "MPG"
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:379 templates/meetings/tabs/statistics.html:8
+#: core/forms/forms.py:379 templates/meetings/tabs/status.html:55
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:380 templates/meetings/tabs/statistics.html:10
+#: core/forms/forms.py:380 templates/meetings/tabs/status.html:57
 #: templates/submissions/tabs/status.html:128 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
@@ -2467,7 +2467,7 @@ msgstr "Löschen"
 msgid "No boilerplate yet!"
 msgstr "Es gibt nocht keinen Textbaustein!"
 
-#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:39
+#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:40
 msgid "Date"
 msgstr "Datum"
 
@@ -2664,36 +2664,32 @@ msgstr ""
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:10
-msgid "Statistics"
-msgstr "Statistik"
-
-#: templates/meetings/details.html:11 templates/tasks/tasks.inc:68
+#: templates/meetings/details.html:10 templates/tasks/tasks.inc:68
 #: templates/tasks/tasks_full.inc:74
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
-#: templates/meetings/details.html:12
+#: templates/meetings/details.html:11
 msgid "TOPs"
 msgstr ""
 
-#: templates/meetings/details.html:14
+#: templates/meetings/details.html:13
 msgid "Signatur der Voten"
 msgstr ""
 
-#: templates/meetings/details.html:20
+#: templates/meetings/details.html:19
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/meetings/details.html:22
+#: templates/meetings/details.html:21
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:23 templates/meetings/tabs/status.html:37
+#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:37
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/details.html:24
+#: templates/meetings/details.html:23
 msgid "Sitzungsassistent"
 msgstr ""
 
@@ -2813,44 +2809,6 @@ msgstr "Übertragen am"
 msgid "Assigend To"
 msgstr "Übertragen an"
 
-#: templates/meetings/tabs/statistics.html:6
-msgid "AMG/MPG"
-msgstr ""
-
-#: templates/meetings/tabs/statistics.html:7
-#, fuzzy
-msgid "Retrospective Thesis"
-msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
-
-#: templates/meetings/tabs/statistics.html:9
-msgid "Local EC"
-msgstr "Lokale EK"
-
-#: templates/meetings/tabs/statistics.html:11
-#, fuzzy
-msgid "Dissertation"
-msgstr "Diplomarbeit / Dissertation"
-
-#: templates/meetings/tabs/statistics.html:12
-msgid "Diploma Thesis"
-msgstr "Diplomarbeit"
-
-#: templates/meetings/tabs/statistics.html:13
-msgid "Multicentric, Main EC"
-msgstr "Leitethikkommission"
-
-#: templates/meetings/tabs/statistics.html:14
-msgid "Remission"
-msgstr "Gebührenbefreiung"
-
-#: templates/meetings/tabs/statistics.html:15
-msgid "B3 (examined)"
-msgstr "B3 (behandelt)"
-
-#: templates/meetings/tabs/statistics.html:16
-msgid "B3 (not examined)"
-msgstr "B3 (nicht behandelt)"
-
 #: templates/meetings/tabs/status.html:4 users/forms.py:114
 msgid "Title"
 msgstr "Titel"
@@ -2906,6 +2864,52 @@ msgstr "Protokoll"
 #: templates/meetings/tabs/status.html:42
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
+
+#: templates/meetings/tabs/status.html:46
+msgid "Statistics"
+msgstr "Statistik"
+
+#: templates/meetings/tabs/status.html:48
+msgid "Gesamt"
+msgstr ""
+
+#: templates/meetings/tabs/status.html:53
+msgid "AMG/MPG"
+msgstr ""
+
+#: templates/meetings/tabs/status.html:54
+#, fuzzy
+msgid "Retrospective Thesis"
+msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
+
+#: templates/meetings/tabs/status.html:56
+msgid "Local EC"
+msgstr "Lokale EK"
+
+#: templates/meetings/tabs/status.html:60
+#, fuzzy
+msgid "Dissertation"
+msgstr "Diplomarbeit / Dissertation"
+
+#: templates/meetings/tabs/status.html:61
+msgid "Diploma Thesis"
+msgstr "Diplomarbeit"
+
+#: templates/meetings/tabs/status.html:62
+msgid "Multicentric, Main EC"
+msgstr "Leitethikkommission"
+
+#: templates/meetings/tabs/status.html:63
+msgid "Remission"
+msgstr "Gebührenbefreiung"
+
+#: templates/meetings/tabs/status.html:64
+msgid "B3 (examined)"
+msgstr "B3 (behandelt)"
+
+#: templates/meetings/tabs/status.html:65
+msgid "B3 (not examined)"
+msgstr "B3 (nicht behandelt)"
 
 #: templates/meetings/tabs/tops.html:4
 msgid "Open TOPs"
@@ -3062,21 +3066,21 @@ msgstr "Zurück zu den beantworteten Meldungen"
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
-#: templates/pdfviewer/viewer.html:39
+#: templates/pdfviewer/viewer.html:40
 #, fuzzy
 msgid "Version"
 msgstr "Version"
 
-#: templates/pdfviewer/viewer.html:39
+#: templates/pdfviewer/viewer.html:40
 #, fuzzy
 msgid "Filename"
 msgstr "Dateiname"
 
-#: templates/pdfviewer/viewer.html:216
+#: templates/pdfviewer/viewer.html:217
 msgid "Your document is not ready yet."
 msgstr "Das Dokument steht noch nicht bereit."
 
-#: templates/pdfviewer/viewer.html:217
+#: templates/pdfviewer/viewer.html:218
 #, fuzzy
 msgid ""
 "\n"
@@ -3199,7 +3203,7 @@ msgstr ""
 #: templates/submissions/change_presenter.html:5
 #: templates/submissions/change_presenter.html:11
 msgid "Change Presenter"
-msgstr "Präsentator Ändern"
+msgstr "Einreicher Ändern"
 
 #: templates/submissions/change_susar_presenter.html:4
 #: templates/submissions/change_susar_presenter.html:5

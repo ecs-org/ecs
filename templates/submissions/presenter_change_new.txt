@@ -1,4 +1,4 @@
 {% load i18n core %}
 {% blocktrans with submission|ec_number as ec_number %}
-Sie wurden als Präsentator für die Studie {{ ec_number }} ausgewählt.
+Sie wurden als Einreicher für die Studie {{ ec_number }} ausgewählt.
 {% endblocktrans %}
