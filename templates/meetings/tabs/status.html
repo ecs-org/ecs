@@ -42,3 +42,25 @@
         <td><a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a></td>
     </tr>
 </table>
+
+<h2>{% trans 'Statistics' %}</h2>
+
+<p><strong>{% trans 'Gesamt' %}:</strong> {{ cumulative_count }}</p>
+
+<table>
+    <tr><th>{% trans "AMG" %}</th><td>{{ amg_count }}</td></tr>
+    <tr><th>{% trans "MPG" %}</th><td>{{ mpg_count }}</td></tr>
+    <tr><th>{% trans "AMG/MPG" %}</th><td>{{ amg_mpg_count }}</td></tr>
+    <tr><th>{% trans "Retrospective Thesis" %}</th><td>{{ retrospective_thesis_count }}</td></tr>
+    <tr><th>{% trans "Expedited" %}</th><td>{{ expedited_count }}</td></tr>
+    <tr><th>{% trans "Local EC" %}</th><td>{{ localec_count }}</td></tr>
+    <tr><th>{% trans "Other" %}</th><td>{{ other_count }}</td></tr>
+</table>
+<table>
+    <tr><th>{% trans "Dissertation" %}</th><td>{{ dissertation_count }}</td></tr>
+    <tr><th>{% trans "Diploma Thesis" %}</th><td>{{ diploma_thesis_count }}</td></tr>
+    <tr><th>{% trans "Multicentric, Main EC" %}</th><td>{{ amg_multi_main_count }}</td></tr>
+    <tr><th>{% trans "Remission" %}</th><td>{{ remission_count }}</td></tr>
+    <tr><th>{% trans "B3 (examined)" %}</th><td>{{ b3_examined_count }}</td></tr>
+    <tr><th>{% trans "B3 (not examined)" %}</th><td>{{ b3_not_examined_count }}</td></tr>
+</table>

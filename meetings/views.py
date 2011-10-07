@@ -528,6 +528,7 @@ def meeting_details(request, meeting_pk=None, active=None):
     tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True)
 
     return render(request, 'meetings/details.html', {
+        'cumulative_count': meeting.submissions.all().count(),
         'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
         'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
         'amg_mpg_count': meeting.submissions.amg_mpg().count(),
