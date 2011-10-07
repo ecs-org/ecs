@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 13:17+0200\n"
+"POT-Creation-Date: 2011-10-07 13:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -479,14 +479,6 @@ msgstr "Projekttitel (englisch)"
 msgid "protocol number/-name"
 msgstr "Protokollnummer/-bezeichnung"
 
-#: core/paper_forms.py:96
-msgid ""
-"This refers to an internal name used by the sponsor. Does not apply to most "
-"studies."
-msgstr ""
-"Gemeint ist eine interne Bezeichnung des Sponsors, trifft auf die meisten "
-"Studien nicht zu."
-
 #: core/paper_forms.py:97
 msgid "date of protocol"
 msgstr "Datum des Protokolls"
@@ -752,27 +744,9 @@ msgid ""
 msgstr ""
 "Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der Studie"
 
-#: core/paper_forms.py:169
-msgid ""
-"If specifying the Duration of the participation in the study is not "
-"reasonable(e.g. archived material) specify \"not applicable\"."
-msgstr ""
-"In Fällen, in denen eine Angabe der Dauer der Studienteilnahme nicht "
-"sinnvoll ist (z.B. archiviertes Material etc.) ist der Vermerk \"nicht "
-"zutreffend\" einzusetzen."
-
 #: core/paper_forms.py:170
 msgid "active phase"
 msgstr "Aktive Phase"
-
-#: core/paper_forms.py:170
-msgid ""
-"If specifying the duration of the active phase is not reasonable(e.g. "
-"archived material) specify \"not applicable\"."
-msgstr ""
-"In Fällen, in denen eine Angabe der Dauer der aktiven Phase nicht sinnvoll "
-"ist (z.B. archiviertes Material etc.) ist der Vermerk \"nicht zutreffend\" "
-"einzusetzen."
 
 #: core/paper_forms.py:171
 msgid "Follow-up inspections"
@@ -950,22 +924,12 @@ msgstr ""
 msgid "Description of the recruitment process"
 msgstr "Beschreibung des Rekrutierungsverfahrens"
 
-#: core/paper_forms.py:210
-msgid ""
-"All material to be used, for example Listings including layout must be "
-"enclosed"
-msgstr ""
-"alle zur Verwendung bestimmten Materialien, z.B. Inserate inkl. Layout "
-"müssen beigelegt werden"
-
 #: core/paper_forms.py:211
 msgid ""
 "Approach at test center(s), for informing and  obtaining an informed consent "
-"of candidates, or parents or legal representatives, if applicable"
+"of candidates"
 msgstr ""
-"Vorgehensweise an der/den Prüfstelle/n, zur Information und Erlangung der "
-"informierten Einwil ligung von Prüfungsteilnehmer/inne/n, bzw. Eltern oder "
-"gesetzlichen Vertreter/inne/n, wenn zu-treffend"
+"Vorgehensweise an der Prüfstelle, zur Erlangung der informierten Einwilligung"
 
 #: core/paper_forms.py:212
 msgid "Risk assessment"
@@ -1091,8 +1055,8 @@ msgid "additional information"
 msgstr "Weitere Informationen"
 
 #: core/paper_forms.py:227
-msgid "open / blind / double-blind"
-msgstr "Offen / blind / doppelblind"
+msgid "Open / Blind / Double-blind"
+msgstr "Offen / Blind / Doppelblind"
 
 #: core/paper_forms.py:228 core/models/submissions.py:391
 msgid "open"
@@ -4137,6 +4101,36 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid ""
+#~ "This refers to an internal name used by the sponsor. Does not apply to "
+#~ "most studies."
+#~ msgstr ""
+#~ "Gemeint ist eine interne Bezeichnung des Sponsors, trifft auf die meisten "
+#~ "Studien nicht zu."
+
+#~ msgid ""
+#~ "If specifying the Duration of the participation in the study is not "
+#~ "reasonable(e.g. archived material) specify \"not applicable\"."
+#~ msgstr ""
+#~ "In Fällen, in denen eine Angabe der Dauer der Studienteilnahme nicht "
+#~ "sinnvoll ist (z.B. archiviertes Material etc.) ist der Vermerk \"nicht "
+#~ "zutreffend\" einzusetzen."
+
+#~ msgid ""
+#~ "If specifying the duration of the active phase is not reasonable(e.g. "
+#~ "archived material) specify \"not applicable\"."
+#~ msgstr ""
+#~ "In Fällen, in denen eine Angabe der Dauer der aktiven Phase nicht "
+#~ "sinnvoll ist (z.B. archiviertes Material etc.) ist der Vermerk \"nicht "
+#~ "zutreffend\" einzusetzen."
+
+#~ msgid ""
+#~ "All material to be used, for example Listings including layout must be "
+#~ "enclosed"
+#~ msgstr ""
+#~ "alle zur Verwendung bestimmten Materialien, z.B. Inserate inkl. Layout "
+#~ "müssen beigelegt werden"
 
 #~ msgid "who will be responsible and where"
 #~ msgstr "wer wird verantwortlich sein und wo"

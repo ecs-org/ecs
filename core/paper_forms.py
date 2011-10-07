@@ -93,13 +93,13 @@ FormInfo(NonTestedUsedDrug, fields=(
 FormInfo(SubmissionForm, fields=(
     # 1. Allgemeines
     FieldInfo('1.1', 'project_title', _(u'project title'), short_label=_('project title (english)')),
-    FieldInfo('1.2', 'protocol_number', _(u'protocol number/-name'), help_text=_(u'This refers to an internal name used by the sponsor. Does not apply to most studies.')),
+    FieldInfo('1.2', 'protocol_number', _(u'protocol number/-name')),
     FieldInfo('1.3', None, _(u'date of protocol')), #'date_of_protocol'
     FieldInfo('1.2.1', 'eudract_number', _(u'EudraCT-Nr.')),
     FieldInfo('1.3.1', None, _(u'ISRCTN-Nr.')), #'isrctn_number'
     FieldInfo(None, 'external_reviewer_suggestions', None, short_label=_(u'external reviewer suggestions'), help_text=_(u'for graduate work or retrospective or non-interventional studies specify "not applicable"')),
     # 1.5 u'Sponsor / Rechnungsempfänger/in (Kontaktperson in der Buchhaltung)'
-    FieldInfo('1.5.1', 'sponsor_name', _(u'sponsor name'), help_text=_(u'For non commercial studies specify the Medical University of Vienna as sponsor.')),
+    FieldInfo('1.5.1', 'sponsor_name', _(u'sponsor name')),
     FieldInfo('1.5.3', 'sponsor_contact_gender', _(u'sex of contact person')),
     FieldInfo('1.5.3', 'sponsor_contact_title', _(u'title of contact person')),
     FieldInfo('1.5.3', 'sponsor_contact_first_name', _(u'first name of contact person')),
@@ -166,8 +166,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.10.4', 'subject_females', _(u'female participants')),
     FieldInfo('2.10.5', 'subject_childbearing', _(u'women of childbearing age')),
     
-    FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study'), help_text=_(u'If specifying the Duration of the participation in the study is not reasonable(e.g. archived material) specify "not applicable".')),
-    FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase'), help_text=_(u'If specifying the duration of the active phase is not reasonable(e.g. archived material) specify "not applicable".')),
+    FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study')),
+    FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase')),
     FieldInfo('2.11.2', 'subject_duration_controls', _(u'Follow-up inspections')),
     FieldInfo('2.12', 'subject_planned_total_duration', _(u'Expected total duration of the study')),
     # 3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert)
@@ -207,8 +207,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('7.5', 'german_inclusion_exclusion_crit', _(u'Relevant in- and exclusion criteria')),
     FieldInfo('7.6', 'german_ethical_info', _(u'ethical considerations')),
     FieldInfo('7.7', 'german_protected_subjects_info', _(u'Justification for the inclusion of persons from protected groups'), help_text=_(u'e.g. Minor, temporary or permanent non-competent person, if applicable')),
-    FieldInfo('7.8', 'german_recruitment_info', _(u'Description of the recruitment process'), help_text=_(u'All material to be used, for example Listings including layout must be enclosed')),
-    FieldInfo('7.9', 'german_consent_info', _(u'Approach at test center(s), for informing and  obtaining an informed consent of candidates, or parents or legal representatives, if applicable')),
+    FieldInfo('7.8', 'german_recruitment_info', _(u'Description of the recruitment process')),
+    FieldInfo('7.9', 'german_consent_info', _(u'Approach at test center(s), for informing and  obtaining an informed consent of candidates')),
     FieldInfo('7.10', 'german_risks_info', _(u'Risk assessment')),
     FieldInfo('7.11', 'german_benefits_info', _(u'Expected benefits for the included test participants')),
     FieldInfo('7.12', 'german_relationship_info', _(u'Relation between subject and investigator'), help_text=_(u'e.g. Patient - doctor, student - teacher, employee - employer, etc.')),
@@ -224,7 +224,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('7.22', 'german_additional_info', _(u'additional information')),
     # 8. Biometrie, Datenschutz
     # 8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)
-    FieldInfo(None, 'study_plan_blind', None, short_label=_(u'open / blind / double-blind')),
+    FieldInfo(None, 'study_plan_blind', None, short_label=_(u'Open / Blind / Double-blind')),
     FieldInfo('8.1.1', 'study_plan_open', _(u'open'), db_field=False), 
     FieldInfo('8.1.2', 'study_plan_randomized', _(u'randomized')),
     FieldInfo('8.1.3', 'study_plan_parallelgroups', _(u'parallel groups')),
