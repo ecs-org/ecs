@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 10:28+0200\n"
+"POT-Creation-Date: 2011-10-07 10:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -197,15 +197,15 @@ msgstr "Formale Prüfung Unterschrift"
 
 #: core/bootstrap.py:135 core/bootstrap.py:645
 msgid "Legal and Patient Review"
-msgstr "Überprüfung Patinfo"
+msgstr "Pat.info Bewertung"
 
 #: core/bootstrap.py:136 core/bootstrap.py:646
 msgid "Insurance Review"
-msgstr "Überprüfung Versicherung"
+msgstr "Versicherungsbewertung"
 
 #: core/bootstrap.py:137 core/bootstrap.py:644
 msgid "Statistical Review"
-msgstr "Gutachten Statistik"
+msgstr "Statistische Bewertung"
 
 #: core/bootstrap.py:138 core/bootstrap.py:648
 msgid "Board Member Review"
@@ -213,7 +213,7 @@ msgstr "Board Member Review"
 
 #: core/bootstrap.py:139 core/bootstrap.py:647
 msgid "GCP Review"
-msgstr "GCP Review"
+msgstr "GCP Bewertung"
 
 #: core/bootstrap.py:142
 msgid "Initial Thesis Review"
@@ -629,7 +629,9 @@ msgstr "Sonstige Kategorien"
 
 #: core/paper_forms.py:140
 msgid "e.g. Dietetics, epidemiology, etc."
-msgstr "z.B.: immunologische Untersuchung"
+msgstr ""
+"z.B.: immunologische Untersuchung, Epidemiologische Untersuchung, Diätetik, "
+"etc."
 
 #: core/paper_forms.py:141
 msgid "Dissertation / Thesis"
@@ -915,8 +917,7 @@ msgid ""
 "Results of pre-clinical tests or justification for the waiving of pre-"
 "clinical tests"
 msgstr ""
-"Ergebnisse der prä-klinischen Tests oder Begründung für den Verzicht auf prä-"
-"klinischen Tests"
+"Ergebnisse der präklinischen Tests oder Begründung für den Verzicht auf präklinische Tests"
 
 #: core/paper_forms.py:206
 msgid "Primary hypothesis of the study"
@@ -982,7 +983,7 @@ msgstr ""
 msgid ""
 "who will inform and when, need for legal representation, witnesses, etc."
 msgstr ""
-"wer wird informieren und wann, Erfordernis für gesetzliche Vertretung, "
+"wer wird informieren und wann; Erfordernis für gesetzliche Vertretung, "
 "Zeugen, etc."
 
 #: core/paper_forms.py:212
@@ -2688,6 +2689,10 @@ msgstr "Ersetzt Dokument"
 msgid "New Document"
 msgstr "Neues Dokument"
 
+#: templates/documents/upload_form.html:39
+msgid "Upload"
+msgstr "Hochladen"
+
 #: templates/documents/upload_form.html:41
 msgid "Please be patient, the file is being uploaded and processed"
 msgstr ""
@@ -3533,9 +3538,8 @@ msgid "Evaluations"
 msgstr "Beurteilungen"
 
 #: templates/submissions/readonly_form.html:77
-#, fuzzy
 msgid "Checklist Summary"
-msgstr "Zusammenfassung des Projektes"
+msgstr "Übersicht"
 
 #: templates/submissions/readonly_form.html:95
 msgid "Votes"
