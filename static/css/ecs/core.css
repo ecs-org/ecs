@@ -800,9 +800,9 @@ fieldset.disabled {
 .form_main #id_start_1, .form_main #id_deadline_1, .form_main #id_deadline_diplomathesis_1 {
   margin-left: 30px;
 }
-.form_main textarea{
-    /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
-    width: 400px; 
+.form_main textarea {
+  /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
+  width: 400px;
 }
 .form_main textarea#id_project_title, .form_main textarea#id_german_summary {
   height: 90px;
@@ -1115,6 +1115,13 @@ content ol.submission_list h3 .ecnr {
   background: #f2f0e5;
   color: #333;
 }
+.form_main.readonly ol li label {
+  padding: 0;
+  padding-left: 0;
+}
+.readonly textarea {
+  margin-left: 240px;
+}
 
 #checklist_summary_tab .checklist {
   font-size: 120%;
@@ -1241,8 +1248,7 @@ content ol.submission_list h3 .ecnr {
   display: none;
 }
 
-
-/* textbox list mods */
+/* textbox list mods 
 
 .textboxlist {
   display: inline;
@@ -1315,4 +1321,27 @@ li.textboxlist-autocomplete-result:hover {
 }
 .message_display .textboxlist-bit-box-deletebutton {
   right: 0;
+}*/
+#content .textboxlist {
+  display: inline;
+}
+#content .textboxlist ul {
+  margin: 0 0 10px;
+}
+.message_display .textboxlist-autocomplete {
+  margin-left: 133px;
+}
+.textboxlist-bits {
+  border: 1px solid #B7B7B7;
+}
+.textboxlist-autocomplete-result {
+  background: #E8E8D8;
+  border: 1px solid #B7B7B7;
+}
+.message_display .input li.textboxlist-bit-box:nth-child(odd) ,
+.message_display .input li.textboxlist-bit-box:nth-child(even) {
+  background: #DEE7F8;
+}
+.message_display .input li.textboxlist-bit-box {
+  padding: 0 5px;
 }
