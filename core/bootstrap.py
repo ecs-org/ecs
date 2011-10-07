@@ -323,7 +323,7 @@ def medcategories():
         (u'Recht', u'Juristen'),
         (u'Apotheke', u'Pharmazie'),
         (u'Patient', u'Patientenvertretung'), 
-        (u'BehinOrg', u'Benhindertenorganisation'), 
+        (u'BehinOrg', u'Behindertenorganisation'), 
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technische Sicherheitsbeauftragte'),
 
