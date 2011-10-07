@@ -784,12 +784,13 @@ fieldset.disabled {
   width: 90%;
 }
 .form_main ol li .datepicker_toggler {
-  position: absolute;
+  display: inline-block;
   text-indent: -9999px; 
   background: url(/static/images/icons.png) -80px 0 no-repeat;
   height: 16px;
   width: 16px;
   margin-left: 5px;
+  float: left;
 }
 .form_main .star {
   margin: 0 5px 0 3px;
