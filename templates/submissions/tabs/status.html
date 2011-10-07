@@ -29,7 +29,7 @@
                 <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                 <td>
                     {% if sf.previous_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">aktuelle Änderungen</a>
+                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
                     {% endif %}
                 </td>
                 <td>
