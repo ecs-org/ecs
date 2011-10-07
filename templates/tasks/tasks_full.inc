@@ -10,17 +10,17 @@
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
     </div>
     <ul class="task_list_choose">
-        {{ filterform.mine }} <li><label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
-        {{ filterform.assigned }} <li><label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
-        {{ filterform.open }} <li><label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
-        {{ filterform.proxy }} <li><label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
+        <li>{{ filterform.mine }} <label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
+        <li>{{ filterform.assigned }} <label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
+        <li>{{ filterform.open }} <label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
+        <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
     </ul>
     <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        {{ filterform.amg }} <li><label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
-        {{ filterform.mpg }} <li><label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
-        {{ filterform.thesis }} <li><label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
-        {{ filterform.expedited }} <li><label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
-        {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
+        <li>{{ filterform.amg }} <label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
+        <li>{{ filterform.mpg }} <label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
+        <li>{{ filterform.thesis }} <label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
+        <li>{{ filterform.expedited }} <label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
+        <li>{{ filterform.other }} <label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
     <div class="task_list_choose">
         <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
