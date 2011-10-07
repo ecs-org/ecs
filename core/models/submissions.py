@@ -639,7 +639,6 @@ def attach_to_submissions(user):
         inv.save()
 
 def _post_submission_form_save(**kwargs):
-    from ecs.meetings.models import Meeting, AssignedMedicalCategory
     from ecs.communication.utils import send_system_message_template
 
     new_sf = kwargs['instance']
