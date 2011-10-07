@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 10:41+0200\n"
+"POT-Creation-Date: 2011-10-07 13:17+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,8 +508,8 @@ msgid ""
 "for graduate work or retrospective or non-interventional studies specify "
 "\"not applicable\""
 msgstr ""
-"bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
-"\"nicht zutreffend\" angeben"
+"Bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
+"\"nicht zutreffend\" angeben."
 
 #: core/paper_forms.py:102
 msgid "sponsor name"
@@ -917,7 +917,8 @@ msgid ""
 "Results of pre-clinical tests or justification for the waiving of pre-"
 "clinical tests"
 msgstr ""
-"Ergebnisse der präklinischen Tests oder Begründung für den Verzicht auf präklinische Tests"
+"Ergebnisse der präklinischen Tests oder Begründung für den Verzicht auf "
+"präklinische Tests"
 
 #: core/paper_forms.py:206
 msgid "Primary hypothesis of the study"
@@ -934,19 +935,6 @@ msgstr "Relevante Ein- und Ausschlusskriterien"
 #: core/paper_forms.py:208
 msgid "ethical considerations"
 msgstr "Ethische Überlegungen"
-
-#: core/paper_forms.py:208
-msgid ""
-"Identify and describe all possible problems. Describe the possible gain in "
-"knowledge that is to be achieved through the study and its significance, and "
-"possible risks of harm or burdens to the test participants. Add your own "
-"assessment of the benefit / risk ratio."
-msgstr ""
-"Identifizieren und beschreiben Sie alle möglicherweise auftretenden "
-"Probleme. Beschreiben Sie den mög lichen Wissenszuwachs, der durch die "
-"Studie erzielt werden soll und seine Bedeutung, sowie mögliche Risi­ken für "
-"Schädigungen oder Belastungen der Prüfungsteilnehmer/innen. Legen Sie Ihre "
-"eigene Bewertung des Nutzen/Risiko-Verhältnisses dar"
 
 #: core/paper_forms.py:209
 msgid "Justification for the inclusion of persons from protected groups"
@@ -967,8 +955,8 @@ msgid ""
 "All material to be used, for example Listings including layout must be "
 "enclosed"
 msgstr ""
-"alle zur Verwendung bestimmte Materialien, z.B. Inserate inkl. Layout müssen "
-"beigelegt werden"
+"alle zur Verwendung bestimmten Materialien, z.B. Inserate inkl. Layout "
+"müssen beigelegt werden"
 
 #: core/paper_forms.py:211
 msgid ""
@@ -979,28 +967,9 @@ msgstr ""
 "informierten Einwil ligung von Prüfungsteilnehmer/inne/n, bzw. Eltern oder "
 "gesetzlichen Vertreter/inne/n, wenn zu-treffend"
 
-#: core/paper_forms.py:211
-msgid ""
-"who will inform and when, need for legal representation, witnesses, etc."
-msgstr ""
-"wer wird informieren und wann; Erfordernis für gesetzliche Vertretung, "
-"Zeugen, etc."
-
 #: core/paper_forms.py:212
-msgid ""
-"Risk assessment, foreseeable risks of treatment and procedures to be used"
-msgstr ""
-"Risikoabschätzung, vorhersehbare Risiken der Behandlung und sonstiger "
-"Verfahren, die verwendet werden sollen"
-
-#: core/paper_forms.py:212
-msgid ""
-"including pain, discomfort, invasion of personal integrity and measures to "
-"prevent and / or supply of unexpected / undesirable events"
-msgstr ""
-"inkl. Schmerzen, Unannehmlichkeiten, Verletzung der persönlichen Integrität "
-"und Maßnah men zur Vermeidung und/oder Versorgung von unvorhergesehenen / "
-"unerwünschten Ereignissen"
+msgid "Risk assessment"
+msgstr "Risikoabschätzung"
 
 #: core/paper_forms.py:213
 msgid "Expected benefits for the included test participants"
@@ -1078,10 +1047,6 @@ msgstr ""
 "Plan zur Behandlung oder Versorgung nachdem die Personen ihre Teilnahme an "
 "der Studie beendet haben"
 
-#: core/paper_forms.py:219
-msgid "who will be responsible and where"
-msgstr "wer wird verantwortlich sein und wo"
-
 #: core/paper_forms.py:220
 msgid ""
 "Amount and method of compensation or remuneration to the test participants"
@@ -1113,10 +1078,6 @@ msgstr ""
 "Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten, "
 "Publikationsrichtlinien, etc."
 
-#: core/paper_forms.py:222 core/paper_forms.py:223
-msgid "if not included in the protocol"
-msgstr "wenn nicht im Protokoll dargestellt"
-
 #: core/paper_forms.py:223
 msgid ""
 "Financing of the study and information on financial or other interests of "
@@ -1128,10 +1089,6 @@ msgstr ""
 #: core/paper_forms.py:224
 msgid "additional information"
 msgstr "Weitere Informationen"
-
-#: core/paper_forms.py:224
-msgid "if necessary"
-msgstr "wenn erforderlich"
 
 #: core/paper_forms.py:227
 msgid "open / blind / double-blind"
@@ -1550,7 +1507,7 @@ msgstr "Fallen lassen"
 msgid "External Review Declined"
 msgstr "Gutachten Abgelehnt"
 
-#: core/forms/checklist.py:22 core/models/voting.py:19
+#: core/forms/checklist.py:23 core/models/voting.py:19
 msgid "comment"
 msgstr "Kommentar"
 
@@ -1776,62 +1733,62 @@ msgstr "Status"
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: core/forms/review.py:25 templates/tasks/tasks.inc:22
+#: core/forms/review.py:37 templates/tasks/tasks.inc:22
 #: templates/tasks/tasks_full.inc:21
 msgid "thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/review.py:26
+#: core/forms/review.py:38
 msgid "retrospective"
 msgstr "Retrospektiv"
 
-#: core/forms/review.py:27
+#: core/forms/review.py:39
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:28 templates/tasks/tasks.inc:23
+#: core/forms/review.py:40 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
 msgid "expedited"
 msgstr "Expedited"
 
-#: core/forms/review.py:29
+#: core/forms/review.py:41
 msgid "expedited_review_categories"
 msgstr "Kategorien für Expedited Review"
 
-#: core/forms/review.py:30
+#: core/forms/review.py:42
 msgid "is_amg"
 msgstr "Studie nach Arzneimittelgesetz"
 
-#: core/forms/review.py:31
+#: core/forms/review.py:43
 msgid "is_mpg"
 msgstr "Studie nach Medizinproduktegesetz"
 
-#: core/forms/review.py:32
+#: core/forms/review.py:44
 msgid "sponsor_required_for_next_meeting"
 msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
 
-#: core/forms/review.py:33
+#: core/forms/review.py:45
 msgid "insurance_review_required"
 msgstr "Versicherungsüberprüfung notwendig"
 
-#: core/forms/review.py:34
+#: core/forms/review.py:46
 msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
-#: core/forms/review.py:35
+#: core/forms/review.py:47
 msgid "legal_and_patient_review_required"
 msgstr "Überprüfung Pat.info notwendig"
 
-#: core/forms/review.py:36
+#: core/forms/review.py:48
 msgid "statistical_review_required"
 msgstr "Statistische Überprüfung notwendig"
 
-#: core/forms/review.py:37
+#: core/forms/review.py:49
 #, fuzzy
 msgid "remission"
 msgstr "Neueinreichung"
 
-#: core/forms/review.py:38
+#: core/forms/review.py:50
 msgid "external_reviewers"
 msgstr "Gutachter"
 
@@ -2472,18 +2429,24 @@ msgid "Sentry ErrorLog"
 msgstr "Sentry Fehlerprotokoll"
 
 #: templates/core.html:99
-msgid "Render Test PDF"
-msgstr ""
+#, fuzzy
+msgid "Render Submission PDF"
+msgstr "Sitzung verlegen"
 
-#: templates/core.html:105
+#: templates/core.html:100
+#, fuzzy
+msgid "Render Checklist PDF"
+msgstr "Formale Prüfung Diplomarbeit"
+
+#: templates/core.html:106
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:126
+#: templates/core.html:127
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
 
-#: templates/core.html:134
+#: templates/core.html:135
 #, python-format
 msgid ""
 "\n"
@@ -2496,15 +2459,15 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:259
+#: templates/core.html:260
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:259
+#: templates/core.html:260
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:275
+#: templates/core.html:276
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -4174,6 +4137,47 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "who will be responsible and where"
+#~ msgstr "wer wird verantwortlich sein und wo"
+
+#~ msgid ""
+#~ "Identify and describe all possible problems. Describe the possible gain "
+#~ "in knowledge that is to be achieved through the study and its "
+#~ "significance, and possible risks of harm or burdens to the test "
+#~ "participants. Add your own assessment of the benefit / risk ratio."
+#~ msgstr ""
+#~ "Identifizieren und beschreiben Sie alle möglicherweise auftretenden "
+#~ "Probleme. Beschreiben Sie den mög lichen Wissenszuwachs, der durch die "
+#~ "Studie erzielt werden soll und seine Bedeutung, sowie mögliche Risi­ken "
+#~ "für Schädigungen oder Belastungen der Prüfungsteilnehmer/innen. Legen Sie "
+#~ "Ihre eigene Bewertung des Nutzen/Risiko-Verhältnisses dar"
+
+#~ msgid ""
+#~ "who will inform and when, need for legal representation, witnesses, etc."
+#~ msgstr ""
+#~ "wer wird informieren und wann; Erfordernis für gesetzliche Vertretung, "
+#~ "Zeugen, etc."
+
+#~ msgid ""
+#~ "Risk assessment, foreseeable risks of treatment and procedures to be used"
+#~ msgstr ""
+#~ "Risikoabschätzung, vorhersehbare Risiken der Behandlung und sonstiger "
+#~ "Verfahren, die verwendet werden sollen"
+
+#~ msgid ""
+#~ "including pain, discomfort, invasion of personal integrity and measures "
+#~ "to prevent and / or supply of unexpected / undesirable events"
+#~ msgstr ""
+#~ "inkl. Schmerzen, Unannehmlichkeiten, Verletzung der persönlichen "
+#~ "Integrität und Maßnahmen zur Vermeidung und/oder Versorgung von "
+#~ "unvorhergesehenen / unerwünschten Ereignissen"
+
+#~ msgid "if not included in the protocol"
+#~ msgstr "wenn nicht im Protokoll dargestellt"
+
+#~ msgid "if necessary"
+#~ msgstr "wenn erforderlich"
 
 #~ msgid "reason_for_not_started"
 #~ msgstr "Grund warum noch nicht begonnen"
