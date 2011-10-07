@@ -116,9 +116,6 @@
   display: inline-block;
   width: 400px;
 }
-.message_display .input li.textboxlist-bit-box {
-  padding: 0 5px;
-}
 #thread_list_filter,
 .thread_list_choose,
 .messages_header .sort_options {
