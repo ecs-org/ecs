@@ -9,19 +9,14 @@
 .submission_list_choose {
   border-bottom: 1px solid #eddfbf;
 }
-.submission_list_choose input[type=checkbox] {
-  position: absolute;
-  top: 5px;
-}
 .submission_list_choose label {
   display: inline-block;
-  margin: 0 5px 5px;
+  margin: 0 5px 5px 0;
   cursor: pointer;
 }
 .submission_list_choose li {
   display: inline;
   list-style: none;
-  margin-left: 14px;
 }
 .submission_list .warning {
   font-size: 150%;
@@ -44,9 +39,9 @@
 .submission_new, .submission_next_meeting, .submission_b2, .submission_amg,
 .submission_mpg, .submission_thesis, .submission_other,
 .submission_inprogress, .submission_resubmission, .submission_review {
+  display: inline-block;
   width: 16px;
   height: 16px;
-  padding: 0 0 1px 16px;
   margin-right: 3px;
 }
 .submission_new {
