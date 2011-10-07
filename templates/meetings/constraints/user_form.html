@@ -10,7 +10,7 @@
 {% block content %}
 <div id="meeting_constraint_editor">
     <div>
-        <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">Zurück zur Zeitplanung für dieses Meeting</a>
+        <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">Zurück zur Zeitplanung für dieses Meeting</a>
     </div>
     <form action="" method="post" enctype="multipart/form-data">
         {% with constraint_formset as formset %}

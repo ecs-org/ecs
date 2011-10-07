@@ -73,7 +73,7 @@
                         </ul>
                     {% endif %}
                     {% if not readonly %}
-                        <span class="contraints_edit"><a class="open-in-widget" href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                        <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
                     {% endif %}
                     </div>
                 </li>
