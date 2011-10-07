@@ -81,7 +81,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
 
     def next_meeting(self):
-        return self.filter(meetings__start__gt=datetime.datetime.now())
+        return self.filter(meetings__start__gt=datetime.now())
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user)|Q(current_submission_form__susar_presenter=user))
