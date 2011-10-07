@@ -231,7 +231,7 @@
             {% if review_form.readonly and checklist.status == 'review_ok' %}
                 <p><a class="button_submit" href="{% url ecs.core.views.checklist_pdf submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "Download PDF" %}</a></p>
             {% endif %}
-            {% include 'submissions/review_form.inc' %}
+            {% include 'submissions/checklist_review_form.inc' %}
         {% endwith %}
     </div>
     {% endfor %}
