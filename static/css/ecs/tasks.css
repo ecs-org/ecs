@@ -147,7 +147,7 @@
 }
 .task_list_choose label {
   display: inline-block;
-  margin: 0 5px 5px;
+  margin: 0 5px 5px 0;
   cursor: pointer;
 }
 #task_main .task_list_choose select {
@@ -158,14 +158,9 @@
   font-size: 14px;
   margin-bottom: 6px;
 }
-.task_list_choose input[type=checkbox] {
-  position: absolute;
-  top: 5px;
-}
 .task_list_choose li {
   display: inline;
   list-style: none;
-  margin-left: 14px;
 }
 .task_item {
   background-color: #EFEFD1;
@@ -214,9 +209,9 @@ a:hover {
 /* icons */
 
 .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
+  display: inline-block;
   width: 16px;
   height: 16px;
-  padding: 0 0 1px 16px;
   margin-right: 3px;
 }
 .task_mine {
