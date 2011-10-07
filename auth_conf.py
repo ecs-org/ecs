@@ -101,7 +101,7 @@ class ChecklistQFactory(authorization.QFactory):
         if profile.internal:
             return self.make_q()
         q = self.make_q(user=user)
-        q |= self.make_q(submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
+        q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         for x in ('sponsor', 'invoice', 'submitter', 'presenter', 'susar_presenter'):
             kwargs = {'status': 'review_ok', 'submission__current_submission_form__{0}'.format(x): user}
             q |= self.make_q(**kwargs)
