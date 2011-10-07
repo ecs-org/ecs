@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
+from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget, NullBooleanWidget
 
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 
@@ -21,6 +21,18 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
             'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'gcp_review_required', 'legal_and_patient_review_required',
             'statistical_review_required', 'remission', 'external_reviewers')
+        widgets = {
+            'thesis': NullBooleanWidget,
+            'retrospective': NullBooleanWidget,
+            'expedited': NullBooleanWidget,
+            'is_amg': NullBooleanWidget,
+            'is_mpg': NullBooleanWidget,
+            'insurance_review_required': NullBooleanWidget,
+            'gcp_review_required': NullBooleanWidget,
+            'legal_and_patient_review_required': NullBooleanWidget,
+            'statistical_review_required': NullBooleanWidget,
+            'remission': NullBooleanWidget,
+        }
         labels = {
             'thesis': _('thesis'),
             'retrospective': _('retrospective'),
