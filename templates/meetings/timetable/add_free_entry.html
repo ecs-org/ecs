@@ -7,6 +7,6 @@
             {% include "forms/field.html" %}
         {% endfor %}
     </ol>
-    <span class="cancel"><a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a></span>
+    <span class="cancel"><a class="open-in-widget" href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a></span>
     <input type="submit" value="Speichern" />
 </form>

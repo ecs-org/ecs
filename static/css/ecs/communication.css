@@ -105,10 +105,6 @@
 .messages_overview img {
   vertical-align: middle;
 }
-.message_display select {
-  display: inline-block;
-  margin-left: 10px;
-}
 .message_display .ecs-TextAreaToolbar {
   display: inline-block;
 }
@@ -118,6 +114,7 @@
 }
 .message_display .form .input {
   display: inline-block;
+  width: 400px;
 }
 #thread_list_filter,
 .thread_list_choose,

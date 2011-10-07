@@ -117,7 +117,7 @@ class Thread(models.Model):
         if user.id == self.sender_id:
             self.closed_by_sender = True
             self.save()
-        elif user.id == self.receiver_id:
+        if user.id == self.receiver_id:
             self.closed_by_receiver = True
             self.save()
 

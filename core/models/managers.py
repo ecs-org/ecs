@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
@@ -26,7 +26,7 @@ def get_vote_filter_q(prefix, *args, **kwargs):
     if kwargs.get('published', True):
         f['%svotes__published_at__isnull' % prefix] = False
     if kwargs.get('valid', True):
-        f['%svotes__valid_until__gte' % prefix] = datetime.datetime.now()
+        f['%svotes__valid_until__gte' % prefix] = datetime.now()
     for key, value in kwargs.iteritems():
         if key.startswith('valid_until'):
             f['%svotes__%s' % (prefix, key)] = value
