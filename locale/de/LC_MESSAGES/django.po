@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 13:36+0200\n"
+"POT-Creation-Date: 2011-10-07 16:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -419,8 +419,8 @@ msgid "version"
 msgstr "Version"
 
 #: core/paper_forms.py:68
-msgid "date"
-msgstr "Datum"
+msgid "date of document creation"
+msgstr "Datum der Dokumenterstellung"
 
 #: core/paper_forms.py:69 core/paper_forms.py:80
 msgid "type"
@@ -506,14 +506,6 @@ msgstr ""
 #: core/paper_forms.py:102
 msgid "sponsor name"
 msgstr "Firma/Organisation"
-
-#: core/paper_forms.py:102
-msgid ""
-"For non commercial studies specify the Medical University of Vienna as "
-"sponsor."
-msgstr ""
-"Bei nicht kommerziell gesponserten Studien ist die Medizinische Universität "
-"Wien als Sponsor anzugeben."
 
 #: core/paper_forms.py:103 core/paper_forms.py:115
 msgid "sex of contact person"
@@ -690,9 +682,7 @@ msgid ""
 "Necessarily indicate, in case of an AMG-study the clinical phase, in case of "
 "medical devices the most appropriate phase."
 msgstr ""
-"Bei einer Prüfung nach dem AMG ist hier die klinische Phase anzugeben, bei "
-"einer Prüfung nach dem MPG die am ehesten zutreffende Phase. Für alle "
-"anderen Studientypen ist keine Angabe erforderlich."
+"Bei AMG-Prüfung unbedingt angeben, bei MPG die am ehesten zutreffende Phase."
 
 #: core/paper_forms.py:158
 msgid "There are already votes of other ethics commissions."
@@ -3212,6 +3202,11 @@ msgstr "Präsentator Ändern"
 msgid "Change Susar Presenter"
 msgstr "Susar Präsentator Ändern"
 
+#: templates/submissions/checklist_review_form.inc:47
+#: templates/submissions/review_form.inc:20
+msgid "save"
+msgstr "Speichern"
+
 #: templates/submissions/checklist_summary.inc:20
 #, fuzzy
 msgid "No Checklist yet."
@@ -3537,10 +3532,6 @@ msgstr "Das Gutachten ist nicht vollständig."
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
-
-#: templates/submissions/review_form.inc:20
-msgid "save"
-msgstr "Speichern"
 
 #: templates/submissions/susar_presenter_change_new.txt:2
 #, python-format
@@ -4101,6 +4092,16 @@ msgstr ""
 #: utils/countries/models.py:58
 msgid "US States"
 msgstr ""
+
+#~ msgid "date"
+#~ msgstr "Datum"
+
+#~ msgid ""
+#~ "For non commercial studies specify the Medical University of Vienna as "
+#~ "sponsor."
+#~ msgstr ""
+#~ "Bei nicht kommerziell gesponserten Studien ist die Medizinische "
+#~ "Universität Wien als Sponsor anzugeben."
 
 #~ msgid ""
 #~ "This refers to an internal name used by the sponsor. Does not apply to "

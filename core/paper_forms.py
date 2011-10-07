@@ -65,7 +65,7 @@ FormInfo(Document, fields=(
     FieldInfo(None, 'file', _(u'PDF-file')),
     FieldInfo(None, 'original_file_name', _(u'file name')),
     FieldInfo(None, 'version', _(u'version')),
-    FieldInfo(None, 'date', _(u'date')),
+    FieldInfo(None, 'date', _(u'date of document creation')),
     FieldInfo(None, 'doctype', _(u'type')),
     FieldInfo(None, 'replaces_document', _(u'replace document'))
 ))
