@@ -249,7 +249,7 @@ def categorization_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
-@user_flag_required('internal')
+@user_flag_required('internal', 'thesis_review')
 def paper_submission_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     task = submission.paper_submission_review_task_for(request.user)
