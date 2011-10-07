@@ -192,7 +192,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'external_review_checklists': external_review_checklists,
     }
 
-    if request.user not in (submission_form.presenter, submission_form.submitter, submission_form.sponsor):
+    if request.user not in (submission_form.presenter, submission_form.susar_presenter, submission_form.submitter, submission_form.sponsor):
         context['show_reviews'] = True
         context.update({
             'categorization_review_form': CategorizationReviewForm(instance=submission, readonly=True),
