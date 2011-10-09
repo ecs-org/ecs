@@ -236,10 +236,12 @@ def meeting_assistant_start(request, meeting_pk=None):
 @user_flag_required('internal')
 def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
-    if meeting.open_tops.count():
+    if meeting.open_tops.exists():
         raise Http404(_("unfinished meetings cannot be stopped"))
     meeting.ended = datetime.now()
     meeting.save()
+    for vote in Vote.objects.filter(top__meeting=meeting):
+        vote.save() # trigger post_save for all votes
 
     for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
         tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
