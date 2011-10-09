@@ -124,7 +124,11 @@
         window.addEvent('domready', function(){
             /* ecs.setupForms(); */ /* do we need this? */
             {% if submission %}
-            new ecs.textarea.TextArea($('id_text'));
+            var textarea = $('id_text')
+            new ecs.textarea.TextArea(textarea);
+            ecs.textarea.installToolbar(textarea, [
+                ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}")
+            ]);
             {% endif %}
             
             var meetingAssistantForm = $('meeting_assistant_form');
