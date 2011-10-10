@@ -393,7 +393,7 @@ def send_agenda_to_board(request, meeting_pk=None):
     for user in users:
         start, end = meeting._get_timeframe_for_user(user)
         time = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
-        htmlmail = unicode(render_html(request, 'meetings/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'user': user}))
+        htmlmail = unicode(render_html(request, 'meetings/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
         deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail,
             from_email= settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
