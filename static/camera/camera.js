@@ -3,12 +3,9 @@ var camera = {
     format: 'png',
 
     install: function(){
-        this.applet = new Element('object', {type: 'application/x-java-applet', width: 0, height: 0});
-        this.applet.appendChild(new Element('param', {name: 'code', value: 'Camera'}));
-        this.applet.appendChild(new Element('param', {name: 'archive', value: this.appletURL}));
+        this.applet = new Element('applet', {code: 'Camera.class', archive: this.appletURL, width: 0, height: 0});
         // we have to set <param name="initial_focus" value="false"/> to prevent firefox on windows from stealing the keyboard focus (see bug #470):
         this.applet.appendChild(new Element('param', {name: 'initial_focus', value: 'false'}));
-        console.log(this.applet);
         document.body.appendChild(this.applet);
     },
     shoot: function(callback){

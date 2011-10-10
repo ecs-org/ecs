@@ -7,8 +7,6 @@ ecs.Tab = new Class({
         this.index = index;
         this.group = null;
         this.panel.setStyle('display', 'none');
-        this.clickHandler = controller.onTabHeaderClick.bindWithEvent(controller, this);
-        this.header.addEvent('click', this.clickHandler);
         this.selected = false;
     },
     getTitle: function(){
@@ -19,7 +17,6 @@ ecs.Tab = new Class({
         this.panel.setClass(cls, set);
     },
     setSelected: function(selected){
-        window.location.hash = '#' + this.header.getElement('a').href.split('#')[1];
         this.setClass(this.controller.options.selectedTabClass, selected);
         this.panel.setStyle('display', selected ? 'block' : 'none');
         this.selected = selected;
@@ -30,8 +27,6 @@ ecs.Tab = new Class({
         ecs.disabledFormFields(this.panel, disabled);
     },
     remove: function(){
-        this.header.removeEvent('click', this.clickHandler);
-        this.clickHandler = null;
         this.header.dispose();
         this.panel.dispose();
         this.fireEvent('remove');
@@ -95,8 +90,10 @@ ecs.TabGroup = new Class({
         if(this.header){
             this.header.setClass(this.controller.options.selectedTabClass, selected);
         }
-        this.controller.selectTab(this.selectedTab);
         this.container.setStyle('display', selected ? 'block' : 'none');
+        if (selected && this.selectedTab) {
+            window.location.hash = '#' + this.selectedTab.header.getElement('a').href.split('#')[1];
+        }
     }
 });
 
@@ -116,6 +113,7 @@ ecs.TabController = new Class({
         this.selectedTab = null;
         this.selectedTabGroup = null;
         this.tabGroupContainers = tabGroupContainers;
+        this.hashChangeHandler = this.onHashChange.bind(this);
 
         var index = 0;
         var initialSelection = null;
@@ -140,10 +138,22 @@ ecs.TabController = new Class({
             this.tabGroups.push(new ecs.TabGroup(this, header, container, tabs));
         }, this);
         this.selectTab(initialSelection || this.tabs[0], true);
+        window.addEventListener('hashchange', this.hashChangeHandler, false);
     },
-    onTabHeaderClick: function(evt, tab){
-        this.selectTab(tab);
-        evt.stop();
+    onHashChange: function(evt){
+        var new_hash = window.location.hash.substr(1);
+        if (!new_hash) {
+            this.selectTab(this.tabs[0]);
+        }
+        this.tabs.some(function(tab){
+            var tab_hash = tab.header.getElement('a').href.split('#')[1];
+            if (tab_hash == new_hash) {
+                this.selectTab(tab);
+                return true;
+            } else {
+                return false;
+            }
+        }, this);
     },
     onTabGroupHeaderClick: function(evt, tabGroup){
         this.selectTabGroup(tabGroup);
