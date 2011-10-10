@@ -552,7 +552,7 @@ class SubmissionForm(models.Model):
         
     def allows_amendments(self, user):
         if self.presenter == user and self.is_current and not self.submission.finished:
-            return SubmissionForm.objects.filter(pk=self.pk).with_vote(permanent=True, positive=True, published=True, valid=True).exists()
+            return self.submission.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
     @property
