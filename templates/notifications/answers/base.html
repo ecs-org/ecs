@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="notification">
-<h2>Antwort auf <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a> vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
+<h2>Antwort auf <a target="_blank" href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a> vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
 
 <p>
 {% block notification_answer_head %}
