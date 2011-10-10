@@ -126,6 +126,7 @@ body.pdfviewer .hidden{
     background-repeat: no-repeat;
     position: relative;
     overflow: visible;
+    background-color: #fff;
 }
 
 #pdfviewer .page.current{
@@ -142,8 +143,8 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .page.loading{
-    background-position: 5px 5px;
-    background-image: url(/static/images/loading.gif);
+    background-position: 45% 45%;
+    background-image: url(/static/images/loading_small.gif);
 }
 
 #pdfviewer .page > .info{

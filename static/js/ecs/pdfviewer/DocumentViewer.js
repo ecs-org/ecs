@@ -80,10 +80,12 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.innerViewport = new Element('div');
         this.viewport.grab(this.innerViewport);
         this.viewportOffset = 0;
+        this.viewportAnimated = false;
         
         this.body = new Element('div', {'class': 'body'});
         this.header = new Element('div', {'class': 'header', html: this.title});
-        this.menuButton = new Element('a', {id: 'menubutton', html: '❀', events: {click: this.toggleMenu.bind(this)}});
+        this.header.addEvent('click', this.toggleMenu.bind(this));
+        this.menuButton = new Element('a', {id: 'menubutton', html: '❀'});
         this.prevLink = new Element('a', {'class': 'previous', title: 'previous page'});
         this.nextLink = new Element('a', {'class': 'next', title: 'next page'});
         this.element.adopt(this.header, this.menuButton, this.body, new Element('div', {'class': 'clearfix'}));
@@ -374,8 +376,10 @@ ecs.pdfviewer.DocumentViewer = new Class({
                     if(!Browser.Features.Touch && !options.dontScroll){
                         this.scrollFx.toElement(currentPageElement);
                     }
+                    this.viewportAnimated = false;
                 }).bind(this)
             });
+            this.viewportAnimated = true;
             viewportFx.start(-this.viewportOffset * 800, -screenX);
         }
         else{
@@ -462,7 +466,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         return true;
     },
     handleKeyPress: function(e){
-        if(!this.keyboardNavigationEnabled){
+        if(!this.keyboardNavigationEnabled || this.viewportAnimated){
             return true;
         }
         var metaKey = !this.metaKey || e[this.metaKey];
@@ -496,7 +500,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
     },
     handleMouseWheel: function(e){
-        if(this.annotationMode){
+        if(this.annotationMode || this.viewportAnimated){
             return true;
         }
         var U = ecs.pdfviewer.utils;
