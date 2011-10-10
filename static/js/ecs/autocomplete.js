@@ -109,7 +109,6 @@ ecs.autocomplete.Autocompleter = new Class({
     },
     tick: function(){
         this.filterChoices(this.textInput.value);
-        console.log('tick', this.textInput.value);
     },
     deactivate: function(){
         if(!this.active){
