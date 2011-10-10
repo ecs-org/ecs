@@ -533,6 +533,9 @@ body.pdfviewer .popup.menu a:hover{
 }
 
 /* annotation sharing popup */
+body.pdfviewer .popup.annotationSharing{
+    color: #fff;
+}
 body.pdfviewer .popup.annotationSharing #annotation_share{
     color: #fff;
 }

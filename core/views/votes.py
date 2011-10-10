@@ -19,7 +19,7 @@ from ecs.utils.viewutils import render, pdf_response
 
 
 def _vote_filename(vote):
-    vote_name = vote.get_ec_number() or 'id_%s' % vote.pk
+    vote_name = vote.get_ec_number().replace('/', '-')
     if vote.top:
         top = str(vote.top)
         meeting = vote.top.meeting

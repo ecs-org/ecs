@@ -84,6 +84,7 @@ class MultiselectWidget(forms.TextInput):
 class SingleselectWidget(forms.TextInput):
     def __init__(self, *args, **kwargs):
         self.url = kwargs.pop('url')
+        self.type = kwargs.pop('type', 'single')
         return super(SingleselectWidget, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, choices=()):
@@ -93,7 +94,7 @@ class SingleselectWidget(forms.TextInput):
         if callable(url):
             url = url()
         attrs['x-autocomplete-url'] = url
-        attrs['x-autocomplete-type'] = 'single'
+        attrs['x-autocomplete-type'] = self.type
         return super(SingleselectWidget, self).render(name, value_list, attrs=attrs)
 
     def value_from_datadict(self, data, files, name):

@@ -141,6 +141,9 @@ ecs.setupAutocomplete = function(context){
 
     var setup_autocomplete = function(elm){
         var type = elm.getProperty('x-autocomplete-type');
+        if(type == 'ecs'){
+            return new ecs.autocomplete.Autocompleter(elm, {});
+        }
         if (type == 'single') {
             var currentValues = [elm.value];
             var max = 1;
