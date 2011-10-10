@@ -16,8 +16,10 @@
 {% endblock %}
 </p>
 
-{% with notification.submission_forms.all as submission_forms %}
-    {% include "notifications/submission_data.html" %}
+{% with 1 as target_blank %}
+    {% with notification.submission_forms.all as submission_forms %}
+        {% include "notifications/submission_data.html" %}
+    {% endwith %}
 {% endwith %}
 
 {% block notification_answer_body %}
