@@ -253,7 +253,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         task = refetch()
         self.failUnlessEqual(self.office_user, task.assigned_to)
 
-        url = reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
+        url = task.url
 
         response = self.client.get(url)
         self.failUnlessEqual(response.status_code, 200)
