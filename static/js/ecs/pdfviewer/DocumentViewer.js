@@ -311,7 +311,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
         this.currentRenderArgs = Array.clone(arguments);
         window.location.hash = this.currentPageIndex + 1;
-        this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
+        //this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
         if(this.currentScreen){
             this.currentScreen.dispose();
@@ -337,7 +337,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
                     pageEl.addClass('current');
                     currentPageElement = pageEl;
                 }
-                pageEl.grab(new Element('div', {'class': 'info', html: 'Seite ' + (pageIndex + 1)}));
+                pageEl.grab(new Element('div', {'class': 'info', html: 'Seite ' + (pageIndex + 1) + ' von ' + this.pageCount}));
                 row.grab(pageEl);
             }
             screen.grab(row);

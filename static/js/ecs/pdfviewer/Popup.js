@@ -120,7 +120,7 @@ ecs.pdfviewer.GotoPagePopup = new Class({
     
     initContent: function(content){
         this.element.addClass('gotoPage');
-        this.input = new Element('input', {type: 'number', min: '1', max: this.viewer.pageCount});
+        this.input = new Element('input', {type: 'text'}); // type: 'number', min: '1', max: this.viewer.pageCount
         this.input.addEvent('change', (function(){
             var p = parseInt(this.input.value);
             this.viewer.gotoPage(p - 1);
