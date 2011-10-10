@@ -737,7 +737,7 @@ fieldset.disabled {
   clear: none;
 }
 .form_main .textboxlist {
-  width: 90%;
+  width: auto;
 }
 .form_main .textboxlist ul {
   background: #fff;
@@ -1323,7 +1323,7 @@ li.textboxlist-autocomplete-result:hover {
   right: 0;
 }*/
 #content .textboxlist {
-  display: inline;
+  display: inline-block;
 }
 #content .textboxlist ul {
   margin: 0 0 10px;
