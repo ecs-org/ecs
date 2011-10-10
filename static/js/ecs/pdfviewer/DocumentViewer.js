@@ -111,6 +111,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
                 var pageEl = this.currentScreen.getElement('.page');
                 var annotationElement = this.renderAnnotation(pageEl, annotation);
                 annotation.startAnnotationMode(annotationElement);
+                if(Browser.Features.Touch){
+                    this.toggleAnnotationMode();
+                }
                 this.annotationEditor.show(annotation, annotationElement);
             }
         }).bind(this));
