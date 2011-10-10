@@ -23,7 +23,7 @@
             {% endif %}
             {% endwith %}
             {% for sf in submission_forms %}
-            <tr class="version">
+            <tr class="version{% if not sf.acknowledged %} rejected{% endif %}">
                 <td>{{ sf.version }}</td>
                 <td>{{ sf.presenter }}</td>
                 <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>

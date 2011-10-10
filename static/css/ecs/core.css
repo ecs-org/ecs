@@ -360,6 +360,9 @@ table.notification td {
 #content #status_tab table table {
   margin: -3px 0 3px;
 }
+#content #status_tab tr.version.rejected {
+  color: #ff0000;
+}
 
 /* content */
 
