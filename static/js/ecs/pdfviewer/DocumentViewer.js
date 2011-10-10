@@ -141,10 +141,16 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
     },
     scrollToTop: function(){
+        if(Browser.Features.Touch){
+            return false;
+        }
         this.scrollFx.toTop();
         return true;
     },
     scrollToBottom: function(){
+        if(Browser.Features.Touch){
+            return false;
+        }
         this.scrollFx.toBottom();
         return true;
     },
@@ -220,22 +226,24 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var oldBlockIndex = this.getCurrentBlockIndex();
         this.setPage(this.currentPageIndex + delta, false);
         if(oldBlockIndex != this.getCurrentBlockIndex()){
-            this.update(true);
+            this.update(delta > 0 ? +1 : -1);
         }
         else{
             this.currentScreen.getElement('.page.current').removeClass('current');
             var el = this.currentScreen.getElement('.page' + this.currentPageIndex);
             el.addClass('current');
-            if(this.getController().sliceLength == 1){
-                if(delta > 0){
-                    this.scrollFx.toTop();
+            if(!Browser.Features.Touch){
+                if(this.getController().sliceLength == 1){
+                    if(delta > 0){
+                        this.scrollFx.toTop();
+                    }
+                    else{
+                        this.scrollFx.toBottom();
+                    }
                 }
                 else{
-                    this.scrollFx.toBottom();
+                    this.scrollFx.toElement(el);
                 }
-            }
-            else{
-                this.scrollFx.toElement(el);
             }
         }
         return true;
@@ -353,7 +361,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         if(animationOffset){
             var viewportFx = new Fx.Tween(this.innerViewport, {
                 property: 'left',
-                duration: 1200,
+                duration: 600,
                 transition: Fx.Transitions.linear,
                 onComplete: (function(){
                     this.viewportOffset += animationOffset;
@@ -361,17 +369,22 @@ ecs.pdfviewer.DocumentViewer = new Class({
                         this.currentScreen.dispose();
                     }
                     this.currentScreen = screen;
+                    if(!Browser.Features.Touch){
+                        this.scrollFx.toElement(currentPageElement);
+                    }
                 }).bind(this)
             });
             viewportFx.start(-this.viewportOffset * 800, -screenX);
         }
         else{
             this.currentScreen = screen;
-            this.scrollFx.toElement(currentPageElement);
+            if(!Browser.Features.Touch){
+                this.scrollFx.toElement(currentPageElement);
+            }
         }
         // simple preloading
         imageSet.renderPage(offset - 1);
-        imageSet.renderPage(ofset + w*h);
+        imageSet.renderPage(offset + w*h);
         return screen;
     },
     toggleAnnotationMode: function(){

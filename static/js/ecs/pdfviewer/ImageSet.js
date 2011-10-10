@@ -40,6 +40,9 @@ ecs.pdfviewer.ImageSet = new Class({
         var spriteIndex = pageIndex % perImage;
         var spriteX = spriteIndex % this.sprite.x;
         var spriteY = parseInt(spriteIndex / this.sprite.x);
+        if(imageIndex >= this.images.length || imageIndex < 0){
+            return null;
+        }
         var image = this.images[imageIndex];
         el.setStyles({
             'width': (this.getPageWidth() - this.borderWidths.left - this.borderWidths.right) + 'px',
