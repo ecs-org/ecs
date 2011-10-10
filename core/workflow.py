@@ -185,18 +185,8 @@ class _CategorizationReviewBase(Activity):
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
 
-class CategorizationReview(_CategorizationReviewBase):
-    class Meta:
-        model = Submission
-
     def pre_perform(self, choice):
         s = self.workflow.data
-        is_special = is_expedited(self.workflow) or is_retrospective_thesis(self.workflow) or is_localec(self.workflow)
-        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_special:
-            # schedule submission for the next schedulable meeting
-            meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
-
         # create external review checklists
         blueprint = ChecklistBlueprint.objects.get(slug='external_review')
         for user in s.external_reviewers.all():
@@ -205,12 +195,33 @@ class CategorizationReview(_CategorizationReviewBase):
                 for question in blueprint.questions.order_by('text'):
                     ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
+        with sudo():
+            expedited_recommendation_tasks = Task.objects.for_data(s).filter(
+                deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
+            for task in expedited_recommendation_tasks:
+                task.expedited_review_categories = s.expedited_review_categories.all()
+
+class CategorizationReview(_CategorizationReviewBase):
+    class Meta:
+        model = Submission
+
+    def pre_perform(self, choice):
+        super(CategorizationReview, self).pre_perform(choice)
+        s = self.workflow.data
+        is_special = is_expedited(self.workflow) or is_retrospective_thesis(self.workflow) or is_localec(self.workflow)
+        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_special:
+            # schedule submission for the next schedulable meeting
+            meeting = Meeting.objects.next_schedulable_meeting(s)
+            meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
+
+
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
         model = Submission
 
     def pre_perform(self, choice):
-        s = self.workflow.data
+        super(ThesisCategorizationReview, self).pre_perform(choice)
+        # stub
 
 class PaperSubmissionReview(Activity):
     class Meta:
@@ -306,8 +317,8 @@ post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
 class ExpeditedRecommendation(NonRepeatableChecklistReview):
     def receive_token(self, *args, **kwargs):
         token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
-        for cat in self.workflow.data.expedited_review_categories.all():
-            token.task.expedited_review_categories.add(cat)
+        s = self.workflow.data
+        token.task.expedited_review_categories = s.expedited_review_categories.all()
         return token
 
 def unlock_expedited_recommendation(sender, **kwargs):
