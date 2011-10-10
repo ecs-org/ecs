@@ -57,7 +57,7 @@ def sign(request, sign_dict):
         # session-id=9085B85B364BEC31E7D38047FE54577D, not used
         'locale': 'de',
     }
-    data = urllib.urlencode(values)
+    data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
     redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
     #print 'sign: redirect to [%s]' % redirect
 
