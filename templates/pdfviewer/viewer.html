@@ -42,7 +42,7 @@
         {% if document|is_ready %}
             var viewer = new ecs.pdfviewer.DocumentViewer($('pdfviewer'), {
                 pageCount: {{ document.pages }},
-                title: '{{ document.doctype_name|escapejs }}: {{ document.name|escapejs }} {% if document.parent_object %} für {{ document.parent_object|escapejs }}{% endif %}'
+                title: '{{ title|escapejs }}'
                     + '<div class="details">{% trans "Date" %}: {{ document.date|date:"d.m.Y" }}</div>',
                 controllers: [
                     new ecs.pdfviewer.Controller('5x5', 5, 5),

@@ -27,8 +27,23 @@ def show(request, document_pk=None):
 
         usersettings.pdfviewer_settings = settings
         usersettings.save()
+    
+    title_bits = []
+    if hasattr(document.parent_object, 'submission'):
+        title_bits.append(document.parent_object.submission.get_ec_number_display())
+    title_bits += [u'%s:' % document.doctype_name, document.name]
+    if document.parent_object:
+        if isinstance(document.parent_object, SubmissionForm):
+            parent = document.parent_object.project_title
+        else:
+            parent = unicode(document.parent_object)
+        title_bits += [_(u' for '), parent]
+    title_bits.append(u'(Version: %s)' % document.version)
 
-    return render(request, 'pdfviewer/viewer.html', {'document': document})
+    return render(request, 'pdfviewer/viewer.html', {
+        'document': document,
+        'title': u' '.join(title_bits),
+    })
 
 @csrf_exempt
 def edit_annotation(request, document_pk=None):
