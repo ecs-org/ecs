@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from ecs.core.models import Vote
+from ecs.core.models import Vote, Submission
 from ecs.meetings.models import Meeting
 from ecs.utils.common_messages import send_submission_message
 
@@ -97,5 +97,5 @@ def send_reminder_messages(today=None):
 
 @periodic_task(run_every=timedelta(seconds=10))
 def finish_studies_with_expired_votes():
-    for submission in Submission.objects.filter(finished=False).with_vote(positive=True, permanent=True, published=True, valid_until__lte=datetime.datetime.now()):
+    for submission in Submission.objects.filter(finished=False).with_vote(positive=True, permanent=True, published=True, valid_until__lte=datetime.now()):
         submission.finish(expired=True)

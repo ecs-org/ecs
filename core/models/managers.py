@@ -51,7 +51,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.amg() & self.mpg()
     
     def with_vote(self, *args, **kwargs):
-        return self.filter('forms', get_vote_filter_q(None, *args, **kwargs))
+        return self.filter(get_vote_filter_q('forms', *args, **kwargs))
 
     def b2(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
