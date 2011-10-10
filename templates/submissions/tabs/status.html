@@ -8,14 +8,15 @@
                 <th>am</th>
                 <th>zur Vorversion</th>
                 <th>zur Neuesten</th>
-                <th>Download PDF</th>
+                <th>{% trans 'Amendment' %}</th>
+                <th>{% trans 'Download PDF' %}</th>
             </tr>
             {% with submission_form.submission.get_current_docstash as docstash %}
             {% if docstash %}
                 <tr class="version">
                     <td>{{ submission_form.submission.forms.count|add:1 }}</td>
                     <td colspan="2"><i>{% trans "This form has not been submitted yet." %}</i></td>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                     <td>
                         <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
                     </td>
@@ -36,12 +37,16 @@
                     {% if sf != submission_form.submission.newest_submission_form %}
                         <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a><br>
                     {% endif %}
+                </td>
+                <td>
                     {% if sf.is_notification_update %}
                         {% with sf.new_for_notification.all.0 as notif %}
                             {% if notif %}
                             <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
                             {% endif %}
                         {% endwith %}
+                    {% else %}
+                        –
                     {% endif %}
                 </td>
                 <td>
