@@ -389,7 +389,7 @@ def send_agenda_to_board(request, meeting_pk=None):
     timetable_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot')))
     attachments = ((agenda_filename, agenda_pdf, 'application/pdf'), (timetable_filename, timetable_pdf, 'application/pdf'))
 
-    users = User.objects.filter(meeting_participations__entry__meeting=meeting)
+    users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
         start, end = meeting._get_timeframe_for_user(user)
         time = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
