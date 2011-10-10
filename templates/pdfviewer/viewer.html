@@ -37,7 +37,7 @@
             var viewer = new ecs.pdfviewer.DocumentViewer($('pdfviewer'), {
                 pageCount: {{ document.pages }},
                 title: '{{ document.doctype_name|escapejs }}: {{ document.name|escapejs }} {% if document.parent_object|escapejs %} für {{ document.parent_object|escapejs }}{% endif %}'
-                    + '<div class="details">{% trans "Version" %}: {{ document.version|escapejs }}, {% trans "Date" %}: {{ document.date|date:"d.m.Y" }}, {% trans "Filename" %}: {{ document.original_file_name|default:"–"|escapejs }}</div>',
+                    + '<div class="details">{% trans "Date" %}: {{ document.date|date:"d.m.Y" }}</div>',
                 controllers: [
                     new ecs.pdfviewer.Controller('5x5', 5, 5),
                     new ecs.pdfviewer.Controller('1x1', 1, 1)
@@ -120,6 +120,9 @@
                 }
             });
             $(document.body).addClass('pdfviewer');
+            if(Browser.Features.Touch){
+                $(document.body).addClass('touch');
+            }
             
             var USER_ID = {{ request.user.pk }};
             
