@@ -9,8 +9,8 @@ ecs.pdfviewer.Controller = new Class({
     getBlockIndex: function(pageIndex){
         return parseInt(Math.floor(pageIndex / this.sliceLength));
     },
-    render: function(viewer, pageIndex, animation){
-        viewer.render(this.imageSet, this.getBlockIndex(pageIndex) * this.sliceLength, this.x, this.y, animation);
+    render: function(viewer, pageIndex, options){
+        viewer.render(this.imageSet, this.getBlockIndex(pageIndex) * this.sliceLength, this.x, this.y, options);
     },
     getSize: function(){
         return this.x * this.y;
@@ -183,8 +183,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
     getController: function(){
         return this.controllers[this.currentControllerIndex];
     },
-    update: function(animation){
-        this.getController().render(this, this.currentPageIndex, animation);
+    update: function(options){
+        this.getController().render(this, this.currentPageIndex, options);
     },
     setControllerIndex: function(index){
         this.currentControllerIndex = index;
@@ -194,27 +194,27 @@ ecs.pdfviewer.DocumentViewer = new Class({
         index = (this.controllers.length + this.currentControllerIndex + (delta || 1)) % this.controllers.length
         this.setControllerIndex(index);
     },
-    setPage: function(pageIndex, update, animation){
+    setPage: function(pageIndex, update, options){
         if(pageIndex < 0 || pageIndex >= this.pageCount){
             return false;
         }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
-                this.update(animation);
+                this.update(options);
             }
             return true;
         }
         return false;
     },
     nextPage: function(delta){
-        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1), true, +1)){
+        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1), true, {animationOffset: +1, dontScroll: true})){
             this.scrollToTop();
         }
         return true;
     },
     previousPage: function(delta){
-        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0), true, -1)){
+        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0), true, {animationOffset: -1, dontScroll: true})){
             this.scrollToBottom();
         }
         return true;
@@ -226,7 +226,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var oldBlockIndex = this.getCurrentBlockIndex();
         this.setPage(this.currentPageIndex + delta, false);
         if(oldBlockIndex != this.getCurrentBlockIndex()){
-            this.update(delta > 0 ? +1 : -1);
+            this.update({animationOffset: delta > 0 ? +1 : -1});
         }
         else{
             this.currentScreen.getElement('.page.current').removeClass('current');
@@ -316,7 +316,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         annotationElement.store('annotation', annotation);
         return annotationElement;
     },
-    render: function(imageSetKey, offset, w, h, animationOffset){
+    render: function(imageSetKey, offset, w, h, options){
         if(Array.prototype.every.call(arguments, function(val, i){ return val == this.currentRenderArgs[i]}, this)){
             return;
         }
@@ -324,7 +324,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
         window.location.hash = this.currentPageIndex + 1;
         //this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
-        animationOffset = animationOffset || 0;
+        options = options || {};
+        animationOffset = options.animationOffset || 0;
         if(!animationOffset && this.currentScreen){
             this.currentScreen.dispose();
         }
@@ -370,7 +371,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
                         this.currentScreen.dispose();
                     }
                     this.currentScreen = screen;
-                    if(!Browser.Features.Touch){
+                    if(!Browser.Features.Touch && !options.dontScroll){
                         this.scrollFx.toElement(currentPageElement);
                     }
                 }).bind(this)
@@ -379,7 +380,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
         else{
             this.currentScreen = screen;
-            if(!Browser.Features.Touch){
+            if(!Browser.Features.Touch && !options.dontScroll){
                 this.scrollFx.toElement(currentPageElement);
             }
         }

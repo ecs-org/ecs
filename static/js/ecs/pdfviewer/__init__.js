@@ -17,7 +17,7 @@ ecs.pdfviewer.utils = {
         return win.getScrollHeight() - win.getScroll().y - win.getHeight() <= 1;
     },
     isAtTop: function(){
-        return $(window).getScroll().y == 0
+        return $(window).getScroll().y < 3;
     }
 };
 
