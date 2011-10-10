@@ -1,5 +1,10 @@
 /* headernav */
 
+input[disabled] {
+  background-color: #d4d0c8;
+  color: #000000;
+}
+
 .tab_header_groups {
   position: relative;
   margin-bottom: 0;
