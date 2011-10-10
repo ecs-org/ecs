@@ -48,7 +48,11 @@ def create_user(email, start_workflow=True, **kwargs):
     return user
 
 def get_user(email, **kwargs):
-    return User.objects.get(username=hash_email(email), **kwargs)
+    try:
+        name = hash_email(email)
+    except UnicodeEncodeError:
+        raise User.DoesNotExist()
+    return User.objects.get(username=name, **kwargs)
 
 def get_current_user():
     if hasattr(current_user_store, 'user'):
