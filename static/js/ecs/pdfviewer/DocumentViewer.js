@@ -9,8 +9,8 @@ ecs.pdfviewer.Controller = new Class({
     getBlockIndex: function(pageIndex){
         return parseInt(Math.floor(pageIndex / this.sliceLength));
     },
-    render: function(viewer, pageIndex, force){
-        viewer.render(this.imageSet, this.getBlockIndex(pageIndex) * this.sliceLength, this.x, this.y);
+    render: function(viewer, pageIndex, animation){
+        viewer.render(this.imageSet, this.getBlockIndex(pageIndex) * this.sliceLength, this.x, this.y, animation);
     },
     getSize: function(){
         return this.x * this.y;
@@ -42,7 +42,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.keyboardNavigationEnabled = true;
         this.gestureNavigationEnabled = true;
         this.scrollFx = new Fx.Scroll(document.body, {duration: 100});
-        
         
         this.imageSets = {};
         this.currentPageIndex = 0;
@@ -77,8 +76,12 @@ ecs.pdfviewer.DocumentViewer = new Class({
             }).bind(this));
         }
         
-        this.body = new Element('div', {'class': 'body'});
         this.viewport = new Element('div', {'class': 'viewport'});
+        this.innerViewport = new Element('div');
+        this.viewport.grab(this.innerViewport);
+        this.viewportOffset = 0;
+        
+        this.body = new Element('div', {'class': 'body'});
         this.header = new Element('div', {'class': 'header', html: this.title});
         this.menuButton = new Element('a', {id: 'menubutton', html: '❀', events: {click: this.toggleMenu.bind(this)}});
         this.prevLink = new Element('a', {'class': 'previous', title: 'previous page'});
@@ -174,8 +177,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
     getController: function(){
         return this.controllers[this.currentControllerIndex];
     },
-    update: function(){
-        this.getController().render(this, this.currentPageIndex);
+    update: function(animation){
+        this.getController().render(this, this.currentPageIndex, animation);
     },
     setControllerIndex: function(index){
         this.currentControllerIndex = index;
@@ -185,27 +188,27 @@ ecs.pdfviewer.DocumentViewer = new Class({
         index = (this.controllers.length + this.currentControllerIndex + (delta || 1)) % this.controllers.length
         this.setControllerIndex(index);
     },
-    setPage: function(pageIndex, update){
+    setPage: function(pageIndex, update, animation){
         if(pageIndex < 0 || pageIndex >= this.pageCount){
             return false;
         }
         if(pageIndex != this.currentPageIndex){
             this.currentPageIndex = pageIndex;
             if(update !== false){
-                this.update();
+                this.update(animation);
             }
             return true;
         }
         return false;
     },
     nextPage: function(delta){
-        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1))){
+        if(this.setPage(Math.min(this.currentPageIndex + (delta || this.getController().sliceLength), this.pageCount - 1), true, +1)){
             this.scrollToTop();
         }
         return true;
     },
     previousPage: function(delta){
-        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0))){
+        if(this.setPage(Math.max(this.currentPageIndex - (delta || this.getController().sliceLength), 0), true, -1)){
             this.scrollToBottom();
         }
         return true;
@@ -217,7 +220,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         var oldBlockIndex = this.getCurrentBlockIndex();
         this.setPage(this.currentPageIndex + delta, false);
         if(oldBlockIndex != this.getCurrentBlockIndex()){
-            this.update();
+            this.update(true);
         }
         else{
             this.currentScreen.getElement('.page.current').removeClass('current');
@@ -305,7 +308,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         annotationElement.store('annotation', annotation);
         return annotationElement;
     },
-    render: function(imageSetKey, offset, w, h){
+    render: function(imageSetKey, offset, w, h, animationOffset){
         if(Array.prototype.every.call(arguments, function(val, i){ return val == this.currentRenderArgs[i]}, this)){
             return;
         }
@@ -313,7 +316,8 @@ ecs.pdfviewer.DocumentViewer = new Class({
         window.location.hash = this.currentPageIndex + 1;
         //this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
-        if(this.currentScreen){
+        animationOffset = animationOffset || 0;
+        if(!animationOffset && this.currentScreen){
             this.currentScreen.dispose();
         }
         var screen = new Element('div', {'class': 'screen i' + imageSetKey});
@@ -342,9 +346,32 @@ ecs.pdfviewer.DocumentViewer = new Class({
             }
             screen.grab(row);
         }
-        this.viewport.grab(screen);
-        this.currentScreen = screen;
-        this.scrollFx.toElement(currentPageElement);
+        var screenX = (this.viewportOffset + animationOffset) * 800;
+        screen.setStyle('left', screenX + 'px');
+        this.innerViewport.grab(screen);
+
+        if(animationOffset){
+            var viewportFx = new Fx.Tween(this.innerViewport, {
+                property: 'left',
+                duration: 1200,
+                transition: Fx.Transitions.linear,
+                onComplete: (function(){
+                    this.viewportOffset += animationOffset;
+                    if(this.currentScreen){
+                        this.currentScreen.dispose();
+                    }
+                    this.currentScreen = screen;
+                }).bind(this)
+            });
+            viewportFx.start(-this.viewportOffset * 800, -screenX);
+        }
+        else{
+            this.currentScreen = screen;
+            this.scrollFx.toElement(currentPageElement);
+        }
+        // simple preloading
+        imageSet.renderPage(offset - 1);
+        imageSet.renderPage(ofset + w*h);
         return screen;
     },
     toggleAnnotationMode: function(){
