@@ -549,6 +549,32 @@ class TimetableEntry(models.Model):
         after = self._collect_users(padding_after, xrange(self.index + 1, len(self.meeting))).difference(waiting_users)
         return len(before), len(waiting_users), len(after)
 
+    def refresh(self, **kwargs):
+        visible = kwargs.pop('visible', True)
+        previous_index = self.timetable_index
+        to_visible = visible and previous_index is None
+        from_visible = not visible and not previous_index is None
+        if to_visible:
+            last_index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            if last_index is None:
+                kwargs['timetable_index'] = 0
+            else:
+                kwargs['timetable_index'] = last_index + 1
+        elif from_visible:
+            kwargs['timetable_index'] = None
+        duration = kwargs.pop('duration', None)
+        if duration is not None:
+            kwargs['duration_in_seconds'] = duration.seconds
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+        self.save()
+        if from_visible:
+            for i, entry in enumerate(self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index')):
+                entry.timetable_index = i
+                entry.save()
+        self.meeting._clear_caches()
+        self.meeting.create_boardmember_reviews()
+
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:

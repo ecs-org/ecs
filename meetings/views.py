@@ -253,8 +253,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
                     task.deleted_at = datetime.now()
                     task.save()
 
-            new_meeting = Meeting.objects.next_schedulable_meeting(top.submission)
-            new_meeting.add_entry(submission=top.submission, duration=timedelta(seconds=0), visible=False)
+            top.submission.schedule_to_meeting()
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
@@ -327,9 +326,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 top.is_open = False
                 top.save()
             if vote.recessed:
-                # schedule submission for the next schedulable meeting
-                next_meeting = Meeting.objects.next_schedulable_meeting(top.submission)
-                next_meeting.add_entry(submission=top.submission, duration=timedelta(minutes=7.5))
+                top.submission.schedule_to_meeting()
             return next_top_redirect()
     elif request.method == 'POST':
         top.is_open = False

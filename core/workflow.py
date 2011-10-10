@@ -36,15 +36,15 @@ def is_acknowledged_and_initial_submission(wf):
 
 @guard(model=Submission)
 def is_thesis(wf):
-    return bool(Submission.objects.thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
+    return Submission.objects.thesis().filter(pk=wf.data.pk).exists() and not is_expedited(wf)
 
 @guard(model=Submission)
 def is_retrospective_thesis(wf):
-    return bool(Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).count()) and not is_expedited(wf)
+    return Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).exists() and not is_expedited(wf)
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return wf.data.expedited and wf.data.expedited_review_categories.count()
+    return wf.data.expedited and wf.data.expedited_review_categories.exists()
 
 @guard(model=Submission)
 def is_localec(wf):
@@ -209,11 +209,8 @@ class CategorizationReview(_CategorizationReviewBase):
         super(CategorizationReview, self).pre_perform(choice)
         s = self.workflow.data
         is_special = is_expedited(self.workflow) or is_retrospective_thesis(self.workflow) or is_localec(self.workflow)
-        if is_acknowledged(self.workflow) and s.timetable_entries.count() == 0 and not is_special:
-            # schedule submission for the next schedulable meeting
-            meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.add_entry(submission=s, duration=timedelta(minutes=7.5))
-
+        if is_acknowledged(self.workflow) and (not is_special or s.meetings.filter(started=None).exists()):
+            s.schedule_to_meeting()
 
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
@@ -302,9 +299,8 @@ class ThesisRecommendationReview(NonRepeatableChecklistReview):
     def pre_perform(self, choice):
         super(ThesisRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
-        if has_thesis_recommendation(self.workflow) and s.timetable_entries.count() == 0:
-            meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
+        if has_thesis_recommendation(self.workflow):
+            s.schedule_to_meeting()
 
 def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
@@ -328,9 +324,8 @@ class ExpeditedRecommendationReview(NonRepeatableChecklistReview):
     def pre_perform(self, choice):
         super(ExpeditedRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
-        if has_expedited_recommendation(self.workflow) and s.timetable_entries.count() == 0:
-            meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
+        if has_expedited_recommendation(self.workflow):
+            s.schedule_to_meeting()
 
 def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
@@ -344,9 +339,7 @@ class LocalEcRecommendationReview(NonRepeatableChecklistReview):
     def pre_perform(self, choice):
         super(LocalEcRecommendationReview, self).pre_perform(choice)
         s = self.workflow.data
-        if s.timetable_entries.count() == 0:
-            meeting = Meeting.objects.next_schedulable_meeting(s)
-            meeting.add_entry(submission=s, duration=timedelta(seconds=0), visible=False)
+        s.schedule_to_meeting()
 
 def unlock_localec_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
@@ -397,7 +390,7 @@ class VoteB2Review(Activity):
     def get_choices(self):
         return (
             ('1', _('B1')),
-            ('3', _('B3')),
+            ('3b', _('B3')),
         )
 
     def pre_perform(self, choice):
@@ -410,10 +403,8 @@ class VoteB2Review(Activity):
                 for task in open_tasks:
                     task.deleted_at = datetime.now()
                     task.save()
-        if choice == '3':
-            meeting = Meeting.objects.next_schedulable_meeting(sf.submission)
-            # only works for normal studies (no thesis lane, etc.)
-            meeting.add_entry(submission=sf.submission, duration=timedelta(minutes=7.5))
+        if choice == '3b':
+            sf.submission.schedule_to_meeting()
 
 class ExternalReview(Activity):
     class Meta:

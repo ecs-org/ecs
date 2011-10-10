@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.db.models import Q
@@ -208,7 +208,40 @@ class Submission(models.Model):
             content_type=ContentType.objects.get_for_model(self.__class__),
             object_id=self.pk,
         )
-        
+
+    def schedule_to_meeting(self):
+        from ecs.meetings.models import Meeting
+        from ecs.core.models import Vote
+
+        expedited = self.expedited and self.expedited_review_categories.exists()
+        retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=self.pk).exists()
+        localec = self.current_submission_form.is_categorized_multicentric_and_local
+        visible = not expedited and not retrospective_thesis and not localec
+        duration = timedelta(minutes=7.5 if visible else 0)
+
+        def _schedule():
+            meeting = Meeting.objects.next_schedulable_meeting(self)
+            meeting.add_entry(submission=self, duration=duration, visible=visible)
+
+        try:
+            current_top = self.timetable_entries.order_by('-meeting__start')[0]
+        except IndexError:
+            current_top = None
+
+        if current_top is None:
+            _schedule()
+        else:
+            if current_top.meeting.started is None:
+                current_top.refresh(duration=duration, visible=visible)
+            else:
+                try:
+                    last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')
+                except IndexError:
+                    pass
+                else:
+                    if last_vote.recessed:
+                        _schedule()
+
     class Meta:
         app_label = 'core'
 
