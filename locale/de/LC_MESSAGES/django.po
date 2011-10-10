@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-07 18:29+0200\n"
+"POT-Creation-Date: 2011-10-10 12:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -305,7 +305,7 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: core/bootstrap.py:649 core/bootstrap.py:689 core/workflow.py:471
+#: core/bootstrap.py:649 core/bootstrap.py:689 core/workflow.py:484
 msgid "External Review"
 msgstr "Gutachten"
 
@@ -1413,51 +1413,51 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: core/workflow.py:137
+#: core/workflow.py:139
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:138
+#: core/workflow.py:140
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:148
+#: core/workflow.py:150
 msgid "Submission accepted"
 msgstr "Einreichung akzeptiert"
 
-#: core/workflow.py:153
+#: core/workflow.py:155
 msgid "Changes to study EC-Nr. {0}"
 msgstr "Änderungen an Studie EK-Nr. {0}"
 
-#: core/workflow.py:156
+#: core/workflow.py:158
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:390
+#: core/workflow.py:403
 msgid "B1"
 msgstr ""
 
-#: core/workflow.py:391
+#: core/workflow.py:404
 msgid "B3"
 msgstr ""
 
-#: core/workflow.py:434
+#: core/workflow.py:447
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: core/workflow.py:458
+#: core/workflow.py:471
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: core/workflow.py:459
+#: core/workflow.py:472
 msgid "Send back to external Reviewer"
 msgstr "Zurück zum Gutachter"
 
-#: core/workflow.py:460
+#: core/workflow.py:473
 msgid "Drop"
 msgstr "Fallen lassen"
 
-#: core/workflow.py:473
+#: core/workflow.py:486
 msgid "External Review Declined"
 msgstr "Gutachten Abgelehnt"
 
@@ -1806,12 +1806,12 @@ msgstr "4 Negativ"
 msgid "5 withdrawn (applicant)"
 msgstr "5 Zurückgezogen (Antragsteller)"
 
-#: core/models/names.py:37 core/models/submissions.py:727 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:726 users/forms.py:54
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:727 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:726 users/forms.py:54
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1830,19 +1830,19 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigen"
 
-#: core/models/submissions.py:674
+#: core/models/submissions.py:673
 msgid "Creation of study EC-Nr. {0}"
 msgstr "Erstellung der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:686
+#: core/models/submissions.py:685
 msgid "New version of study EC-Nr. {0}"
 msgstr "Neue Version der Studie EK-Nr. {0}"
 
-#: core/models/submissions.py:761
+#: core/models/submissions.py:760
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:761
+#: core/models/submissions.py:760
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2145,19 +2145,19 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:375 meetings/views.py:385
+#: meetings/views.py:377 meetings/views.py:387
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:387 meetings/views.py:443
+#: meetings/views.py:389 meetings/views.py:445
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:395
+#: meetings/views.py:397
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:403
+#: meetings/views.py:405
 msgid "protocol"
 msgstr "Protokoll"
 
@@ -2507,6 +2507,7 @@ msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:88 templates/communication/thread.html:78
+#: templates/meetings/assistant/top.html:130
 #: templates/submissions/readonly_form.html:272
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
@@ -3031,18 +3032,17 @@ msgstr "Keine Änderungen."
 #: templates/notifications/view/ReportNotificationForm.html:9
 #: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:9
 msgid "Recruited subjects"
-msgstr ""
+msgstr "Rekrutierte Versuchspersonen"
 
 #: templates/notifications/view/ReportNotificationForm.html:10
 #: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:10
-#, fuzzy
 msgid "Finished subjects"
-msgstr "Abgeschlossene TOPs"
+msgstr "Beendete Versuchspersonen"
 
 #: templates/notifications/view/ReportNotificationForm.html:11
 #: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:11
 msgid "Aborted subjects"
-msgstr ""
+msgstr "Abgebrochene Versuchspersonen"
 
 #: templates/notifications/view/ReportNotificationForm.html:12
 #: templates/notifications/wkhtml2pdf/ReportNotificationForm.html:12
@@ -3421,14 +3421,14 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"Sie wurden als Präsentator für die Studie %(ec_number)s ausgewählt.\n"
+"Sie wurden als Einreicher für die Studie %(ec_number)s ausgewählt.\n"
 msgstr ""
 
 #: templates/submissions/presenter_change_previous.txt:2
 #, python-format
 msgid ""
 "\n"
-"Sie sind nun nicht mehr Präsentator der Studie %(ec_number)s.\n"
+"Sie sind nun nicht mehr Einreicher der Studie %(ec_number)s.\n"
 msgstr ""
 
 #: templates/submissions/readonly_form.html:11
