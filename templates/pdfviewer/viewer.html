@@ -36,7 +36,7 @@
         {% if document|is_ready %}
             var viewer = new ecs.pdfviewer.DocumentViewer($('pdfviewer'), {
                 pageCount: {{ document.pages }},
-                title: '{{ document.doctype_name|escapejs }}: {{ document.name|escapejs }} {% if document.parent_object|escapejs %} für {{ document.parent_object|escapejs }}{% endif %}'
+                title: '{{ document.doctype_name|escapejs }}: {{ document.name|escapejs }} {% if document.parent_object %} für {{ document.parent_object|escapejs }}{% endif %}'
                     + '<div class="details">{% trans "Date" %}: {{ document.date|date:"d.m.Y" }}</div>',
                 controllers: [
                     new ecs.pdfviewer.Controller('5x5', 5, 5),
@@ -146,6 +146,8 @@
             $('navigation').addEvent('touch', function(){
                 $('navigation').toggleClass('hidden');
             });
+            
+            $('pdfviewer_loading').dispose();
 
         {% else %}
             setTimeout(function() {
@@ -189,7 +191,10 @@
 {% block htmlbody %}
 {% if document|is_ready %}
 <div id="pdfviewer"></div>
-<div id="navigation" class="hidden">
+<div id="pdfviewer_loading">
+    <div class="text"><img src="/static/images/loading.gif" width="64" height="64"/>Loading {{ document.doctype_name }}: {{ document.name }} {% if document.parent_object %} für {{ document.parent_object }}{% endif %}</div>
+</div>
+<div id="navigation" style="display:none" class="hidden">
     <select id="metaKeySelect">
         <option value="">-</option>
         <option value="alt">Alt</option>

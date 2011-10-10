@@ -211,11 +211,7 @@ ecs.pdfviewer.AnnotationEditor = new Class({
         var saveLink = new Element('a', {html: 'Save'});
         var cancelLink = new Element('a', {html: 'Cancel'});
         var deleteLink = new Element('a', {html: 'Delete'});
-        content.grab(this.authorInfo);
-        content.grab(this.textarea);
-        content.grab(saveLink);
-        content.grab(cancelLink);
-        content.grab(deleteLink);
+        content.adopt(this.authorInfo, this.textarea, saveLink, cancelLink, deleteLink);
         saveLink.addEvent('click', this.onSave.bind(this));
         cancelLink.addEvent('click', this.onCancel.bind(this));
         deleteLink.addEvent('click', this.onDelete.bind(this));
