@@ -1,5 +1,5 @@
 {% extends "shell.html" %}
-{% load i18n pdfviewer %}
+{% load i18n pdfviewer compress %}
 
 {% block htmltitle %}
 {% if document.parent_object %}{{ document.parent_object }}: {% endif %}{{ document.doctype_name }}
@@ -12,24 +12,26 @@
 
 {% block jsbottom %}
 <!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-core-1.4.0-full-nocompat-yc.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-more-1.4.0.1.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsCustomEvent/Source/Element.defineCustomEvent.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Browser/Features.Touch.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Desktop/Mouse.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Click.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touch.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Swipe.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touchhold.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Pinch.js"></script>
+{% compress js %}
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-core-1.4.1-full-nocompat-yc.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-more-1.4.0.1.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsCustomEvent/Source/Element.defineCustomEvent.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Browser/Features.Touch.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Desktop/Mouse.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Click.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touch.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Swipe.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Touchhold.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooToolsMobile/Source/Touch/Pinch.js"></script>
 
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/__init__.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/ImageSet.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Annotation.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/DocumentViewer.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Popup.js"></script>
-<script type="text/javascript" src="{{ MEDIA_URL }}camera/camera.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/__init__.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/ImageSet.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Annotation.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/DocumentViewer.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Popup.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}camera/camera.js"></script>
+{% endcompress %}
 
 <script type="text/javascript">
     $(window).addEvent('domready', function(){
