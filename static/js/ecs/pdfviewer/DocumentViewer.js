@@ -362,6 +362,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
             var viewportFx = new Fx.Tween(this.innerViewport, {
                 property: 'left',
                 duration: 600,
+                fps: 10,
                 transition: Fx.Transitions.linear,
                 onComplete: (function(){
                     this.viewportOffset += animationOffset;
