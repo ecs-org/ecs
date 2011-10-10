@@ -471,8 +471,8 @@ body.pdfviewer .popup.menu,
 body.pdfviewer .popup.menu > .content{
     width: 312px;
     height: 312px;
-    margin-top: -156px;
-    margin-left: -156px;
+    /*margin-top: -156px;
+    margin-left: -156px;*/
 }
 body.pdfviewer .popup.menu a.close{
     display: none;
