@@ -740,24 +740,8 @@ fieldset.disabled {
 .form_main .small {
   width: 120px;
 }
-.form_main .textboxlist-bit {
-  list-style-type: none;
-  clear: none;
-}
-.form_main .textboxlist {
-  width: auto;
-}
-.form_main .textboxlist ul {
-  background: #fff;
-}
-.form_main .textboxlist-autocomplete {
-  margin: -20px  0 0 240px;
-}
 #content .form_main tr.version:nth-of-type(2) td {
   background: #eee;
-}
-.textboxlist-autocomplete ul {
-  margin: 0 !important;
 }
 
 .ecs-TextAreaToolbar {
@@ -1333,12 +1317,10 @@ li.textboxlist-autocomplete-result:hover {
 }*/
 #content .textboxlist {
   display: inline-block;
+  width: 250px;
 }
 #content .textboxlist ul {
-  margin: 0 0 10px;
-}
-.message_display .textboxlist-autocomplete {
-  margin-left: 133px;
+  margin: 0;
 }
 .textboxlist-bits {
   border: 1px solid #B7B7B7;
@@ -1347,10 +1329,15 @@ li.textboxlist-autocomplete-result:hover {
   background: #E8E8D8;
   border: 1px solid #B7B7B7;
 }
-.message_display .input li.textboxlist-bit-box:nth-child(odd) ,
-.message_display .input li.textboxlist-bit-box:nth-child(even) {
+li.textboxlist-bit-box:nth-child(odd) ,
+li.textboxlist-bit-box:nth-child(even) {
   background: #DEE7F8;
 }
-.message_display .input li.textboxlist-bit-box {
-  padding: 0 5px;
+li.textboxlist-bit-box {
+  padding: 0 20px 0 5px;
+}
+
+.form_main.readonly ol li.textboxlist-autocomplete-result {
+  float: none;
+  margin-bottom: 0;
 }
