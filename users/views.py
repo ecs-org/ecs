@@ -261,6 +261,7 @@ def administration(request, limit=20):
     filter_defaults = {
         'page': '1',
         'groups': '',
+        'medical_categories': '',
         'approval': 'both',
         'activity': 'active',
         'keyword': '',
@@ -286,6 +287,9 @@ def administration(request, limit=20):
     if filterform.cleaned_data['groups']:
         users = users.filter(groups__in=filterform.cleaned_data['groups'])
 
+    if filterform.cleaned_data['medical_categories']:
+        users = users.filter(groups__in=filterform.cleaned_data['medical_categories'])
+
     keyword = filterform.cleaned_data['keyword']
     if keyword:
         keyword_q = Q(username__icontains=keyword) | Q(email__icontains=keyword)
@@ -310,6 +314,7 @@ def administration(request, limit=20):
 
     userfilter = filterform.cleaned_data
     userfilter['groups'] = ','.join([str(g.pk) for g in userfilter['groups']]) if userfilter['groups'] else ''
+    userfilter['medical_categories'] = ','.join([str(g.pk) for g in userfilter['medical_categories']]) if userfilter['medical_categories'] else ''
     usersettings.useradministration_filter = userfilter
     usersettings.save()
 
