@@ -230,9 +230,14 @@ body.pdfviewer .hidden{
     -moz-transform: rotate(-90deg);
 }
 
-#pdfviewer a.next:hover, body.pdfviewer a.previous:hover{
+#pdfviewer a.next:hover, #pdfviewer a.previous:hover{
     background-color: #ccd9e6;
 }
+
+body.touch #pdfviewer a.next:hover, #pdfviewer a.previous:hover{
+    background-color: transparent;
+}
+
 
 #pdfviewer .screen{
     -moz-user-select: none;
@@ -332,13 +337,13 @@ body.pdfviewer .annotationDisplay{
     padding: 20px;
     z-index: 1000;
 }
-body.pdfviewer .annotationDisplay > .background{
+body.pdfviewer .popup > .background{
     position: absolute;
     margin: -20px;
     width: 100%;
     height: 100%;
-    background-color: #000;
-    opacity: 0.8;
+    background-color: #222;
+    opacity: 0.9;
     -moz-border-radius: 10px;
     z-index: 1;
 }
@@ -413,33 +418,7 @@ body.pdfviewer .cover{
     z-index: 9000;
 }
 
-body.pdfviewer .searchPopup input{
-    font-size: 14px;
-    padding: 3px;
-    margin: 3px;
-}
-body.pdfviewer .searchPopup .results{
-    color: #99ddff;
-    margin: 3px;
-    font-size: 13px;
-    overflow: auto;
-    height: 160px;
-    clear: both;
-}
-
-body.pdfviewer .searchPopup .results div{
-    margin-bottom: 3px;
-    padding: 3px;
-}
-body.pdfviewer .searchPopup .results div:hover{
-    background-color: #222222;
-}
-
-body.pdfviewer .searchPopup .results .highlighted{
-    background-color: #000000;
-    color: #ffffff;
-}
-
+/* popups */
 body.pdfviewer .popup{
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -464,6 +443,48 @@ body.pdfviewer .popup span.label{
     color: #ffffff;
 }
 
+/* search popup */
+body.pdfviewer .searchPopup{
+    width: 700px;
+    height: 400px;
+    margin-left: -370px;
+    margin-top: -200px;
+}
+body.pdfviewer .searchPopup > .content{
+    width: 700px;
+    height: 400px;
+}
+
+body.pdfviewer .searchPopup input{
+    font-size: 14px;
+    padding: 3px;
+    margin: 3px;
+    width: 590px;
+}
+body.pdfviewer .searchPopup .results{
+    color: #ccc;
+    margin: 3px;
+    font-size: 13px;
+    overflow: auto;
+    height: 360px;
+    clear: both;
+}
+
+body.pdfviewer .searchPopup .results div{
+    margin-bottom: 3px;
+    padding: 3px;
+}
+body.pdfviewer .searchPopup .results div:hover{
+    background-color: #000000;
+}
+
+body.pdfviewer .searchPopup .results .highlighted{
+    background-color: #000000;
+    color: #99ddff;
+}
+
+/*
+FIXME: unused?
 body.pdfviewer .slider{
     width: 200px;
     height: 8px;
@@ -476,36 +497,35 @@ body.pdfviewer .slider .knob{
     height: 8px;
     background-color: #cc0000;
 }
-
+*/
 
 body.pdfviewer .popup input{
     background-color: #444;
-    border: 1px solid transparent;
+    border: 1px solid #666666;
     display: inline-block;
     -moz-box-shadow: none;
     color: #fff;
     -moz-border-radius: 3px;
+    letter-spacing: 1px;
 }
 
-/* search popup */
-body.pdfviewer .popup.search{
-    height: 200px;
+body.pdfviewer .popup input:focus{
+    background-color: #000;
 }
 
+/* goto page popup */
 body.pdfviewer .popup.gotoPage input{
     width: 60px;
     margin-left: 10px;
 }
 
-/* goto page popup */
 body.pdfviewer .popup.gotoPage{
     height: 30px;
     width: 220px;
     font-size: 15px;
 }
 
-body.pdfviewer .popup.gotoPage input::-moz-selection,
-body.pdfviewer .popup input:focus{
+body.pdfviewer .popup.gotoPage input::-moz-selection{
     background-color: #2E1428;
 }
 

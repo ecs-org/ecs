@@ -10,7 +10,7 @@ ecs.pdfviewer.Popup = new Class({
             return;
         }
         this.cover = new Element('div', {'class': 'cover'});
-        this.element = new Element('div', {'class': 'searchPopup annotationDisplay popup'});
+        this.element = new Element('div', {'class': 'annotationDisplay popup'});
         var background = new Element('div', {'class': 'background'});
         var content = new Element('div', {'class': 'content'});
         var closeButton = new Element('a', {'class': 'close', 'html': '&times;'});
@@ -160,6 +160,7 @@ ecs.pdfviewer.SearchPopup = new Class({
     
     initContent: function(content){
         this.element.addClass('search');
+        this.element.addClass('searchPopup');
         this.input = new Element('input', {type: 'text', value: ''});
         this.input.addEvent('keypress', (function(e){
             if(e.key == 'enter'){
