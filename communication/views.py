@@ -56,14 +56,7 @@ def read_thread(request, thread_pk=None):
         msg.unread = False
         msg.save()
 
-    def _get_reply_text(msg):
-        if msg.sender == request.user:  # bump
-            return u'\n\n\n>' + u'\n>'.join(msg.text.splitlines())
-        else:
-            reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
-            return u'\n\n\n' + reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
-
-    form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': _get_reply_text(msg)})
+    form = ReplyDelegateForm(request.user, request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
         delegate_to = form.cleaned_data.get('to')
@@ -80,7 +73,7 @@ def read_thread(request, thread_pk=None):
                 submission=thread.submission,
             )
         msg = thread.add_message(request.user, text=form.cleaned_data['text'])
-        form = ReplyDelegateForm(request.user, None, initial={'text': _get_reply_text(msg)})
+        form = ReplyDelegateForm(request.user, None)
 
     return render(request, 'communication/thread.html', {
         'thread': thread,
