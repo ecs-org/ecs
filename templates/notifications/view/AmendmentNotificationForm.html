@@ -10,11 +10,40 @@
                 <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=notification.old_submission_form.pk %}">{% trans 'Old Version' %}</a>
                 | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=notification.new_submission_form.pk %}">{% trans 'New Version' %}</a>
                 {% if notification.diff %}
-                    {{ notification.diff|safe }}
+                    <div class="diff_toggles">
+                        <a href="#" id="diff_show_old">{% trans "old" %}</a>
+                        <a href="#" id="diff_show_new">{% trans "new" %}</a>
+                        <a href="#" id="diff_show_all">{% trans "all" %}</a>
+                    </div>
+                    <div class="diff">
+                        {{ notification.diff|safe }}
+                    </div>
                 {% else %}
                     <em>{% trans 'No changes.' %}</em>
                 {% endif %}
             {% endwith %}
         </td>
     </tr>
+{% endblock %}
+
+{% block jsbottom %}
+{{ block.super }}
+<script type="text/javascript">
+window.addEvent('domready', function(){
+    if($('diff_show_old')){
+        $('diff_show_old').addEvent('click', function() {
+          $$('.diff .deleted').show();
+          $$('.diff .inserted').hide();
+        });
+        $('diff_show_new').addEvent('click', function() {
+          $$('.diff .deleted').hide();
+          $$('.diff .inserted').show();
+        });
+        $('diff_show_all').addEvent('click', function() {
+          $$('.diff .deleted').show();
+          $$('.diff .inserted').show();
+        });
+    }
+});
+</script>
 {% endblock %}
