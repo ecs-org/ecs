@@ -1251,6 +1251,7 @@ content ol.submission_list h3 .ecnr {
 .readonly .checklist_review_tab textarea {
   clear: both;
   display: inline-block;
+  margin-left: 0;
 } 
 .checklist_review_tab input {
   display: none;
