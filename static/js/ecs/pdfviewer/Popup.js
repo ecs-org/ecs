@@ -90,7 +90,7 @@ ecs.pdfviewer.MenuPopup = new Class({
             {label: 'exit', command: ''},
             {label: 'show annotation', command: 'gotoNextAnnotation'},
             {label: 'help', command: 'showHelp'},
-            {label: 'share', command: 'shareAnnotations'},
+            {label: 'share annotation', command: 'shareAnnotations'},
             {label: 'last', command: 'lastPage'}
         ];
         menuItems.each(function(item){
