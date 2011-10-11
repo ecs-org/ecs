@@ -1277,6 +1277,9 @@ li.textboxlist-bit-box {
 .message_display li.textboxlist-bit {
   padding-right: 20px;
 }
+.textboxlist-autocomplete {
+  z-index: 100;
+}
 .textboxlist-autocomplete-result-focus {
   background: #333;
   color: #fff;
