@@ -141,9 +141,10 @@ ecs.setupAutocomplete = function(context){
 
     var setup_autocomplete = function(elm){
         var type = elm.getProperty('x-autocomplete-type');
-        if(type == 'ecs'){
+        if(type == 'single'){
             return new ecs.autocomplete.Autocompleter(elm, {});
         }
+        // FIXME: cleanup the following code (we don't need single select support anymore)
         if (type == 'single') {
             var currentValues = [elm.value];
             var max = 1;

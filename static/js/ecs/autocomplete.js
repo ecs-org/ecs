@@ -5,7 +5,7 @@ ecs.autocomplete.Autocompleter = new Class({
     Implements: Events,
     initialize: function(input, options){
         this.element = new Element('div', {'class': 'ecs-Autocomplete'});
-        this.textInput = new Element('input', {type: 'text', value: input.value});
+        this.textInput = new Element('input', {type: 'text'});
         this.textInput.addEvent('focus', this.activate.bind(this));
         this.textInput.addEvent('blur', (function(){
             setTimeout(this.deactivate.bind(this), 200);
@@ -28,12 +28,14 @@ ecs.autocomplete.Autocompleter = new Class({
                 url: this.url,
                 onSuccess: (function(result){
                     this.setChoices(result);
+                    this.setValue(input.value);
                 }).bind(this)
             });
             request.send();
         }
         else if(options.choices){
             this.setChoices(options.choices);
+            this.setValue(input.value);
         }
         this.element.replaces(input);
     },
@@ -53,6 +55,15 @@ ecs.autocomplete.Autocompleter = new Class({
             el.store('ecs-Autocomplete-choice', c);
             this.choiceBox.grab(el);
         }, this);
+    },
+    setValue: function(value){
+        for(var i=0;i<this.choices.length;i++){
+            var c = this.choices[i];
+            if(this.getChoiceValue(c) == value){
+                this.selectChoice(c);
+                return;
+            }
+        }
     },
     selectChoice: function(c){
         if(this.currentChoiceElement){
