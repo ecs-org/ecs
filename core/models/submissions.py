@@ -235,7 +235,7 @@ class Submission(models.Model):
                 current_top.refresh(duration=duration, visible=visible)
             else:
                 try:
-                    last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')
+                    last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')[0]
                 except IndexError:
                     pass
                 else:
