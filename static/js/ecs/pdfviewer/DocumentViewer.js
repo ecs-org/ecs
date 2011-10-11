@@ -363,6 +363,16 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.annotationEditor.show(annotation, el);
         return true;
     },
+    gotoNextAnnotation: function(){
+        for(var i = 0; i < this.pageCount; i++){
+            var p = (this.currentPageIndex + i) % this.pageCount;
+            var list = this.annotations['_' + p];
+            if(list && list.length){
+                return this.gotoAnnotation(list[0]);
+            }
+        }
+        return false;
+    },
     render: function(imageSetKey, offset, w, h, options){
         if(Array.prototype.every.call(arguments, function(val, i){ return val == this.currentRenderArgs[i]}, this)){
             return;

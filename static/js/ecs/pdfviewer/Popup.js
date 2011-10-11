@@ -82,12 +82,13 @@ ecs.pdfviewer.MenuPopup = new Class({
     initContent: function(content){
         this.element.addClass('menu');
         var menuItems = [
-            {label: 'first', command: 'firstPage'},
+            //{label: 'first', command: 'firstPage'},
             {label: 'goto', command: 'showGotoPage'},
-            {label: 'zoom', command: 'cycleIn'},
-            {label: 'annotate/leave annotate', command: 'toggleAnnotationMode'},
-            {label: 'exit', command: ''},
             {label: 'search', command: 'showSearch'},
+            {label: 'zoom', command: 'cycleIn'},
+            {label: 'annotate', command: 'toggleAnnotationMode'},
+            {label: 'exit', command: ''},
+            {label: 'show annotation', command: 'gotoNextAnnotation'},
             {label: 'help', command: 'showHelp'},
             {label: 'share', command: 'shareAnnotations'},
             {label: 'last', command: 'lastPage'}
