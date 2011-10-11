@@ -108,6 +108,7 @@ ecs.widgets.Popup = new Class({
         this.popup.grab(this.headElement);
         this.popup.grab(this.element);
 
+        this.preCloseHandlers = [];
         var closeButton = new Element('a', {'class': 'close', html: 'close'});
         closeButton.addEvent('click', (function(){
             this.close();
@@ -173,12 +174,18 @@ ecs.widgets.Popup = new Class({
         $(window).removeEvent('keyup', this.keypress);
         $(window).removeEvent('resize', this.resize);
     },
+    addPreCloseHandler: function(handler){
+        this.preCloseHandlers.push(handler);
+    },
     close: function(){
+        this.preCloseHandlers.each(function(handler){
+            handler();
+        }, true);
         this.dispose();
     },
     keyHandler: function(evt){
         if(evt.key == 'esc'){
-            this.dispose();
+            this.close();
         }
     },
     dispose: function(){
