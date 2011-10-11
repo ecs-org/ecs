@@ -49,8 +49,12 @@ class TaskQuerySet(models.query.QuerySet):
         return qs
 
     def for_widget(self, user):
-        not_for_widget = ['resubmission', 'external_review']
+        not_for_widget = ['resubmission', 'external_review', 'paper_submission_review', 'thesis_paper_submission_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
+
+    def for_management(self, user):
+        managed_transparently = ['resubmission', 'external_review']
+        return self.for_user(user).exclude(task_type__workflow_node__uid__in=managed_transparently)
 
     def for_submission(self, submission, related=True):
         tasks = self.all()
@@ -87,6 +91,9 @@ class TaskManager(AuthorizationManager):
 
     def for_widget(self, user):
         return self.all().for_widget(user)
+
+    def for_management(self, user):
+        return self.all().for_management(user)
 
     def for_submission(self, submission, related=True):
         return self.all().for_submission(submission, related=related)
