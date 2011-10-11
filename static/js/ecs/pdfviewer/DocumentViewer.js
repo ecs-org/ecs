@@ -25,10 +25,10 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.wheelScrollThreshold = options.wheelScrollThreshold || 1.0;
         this.wheelTimeThreshold = options.wheelTimeThreshold || 1;
         this.title = options.title;
-        this.helpContents = options.helpContents;
         this.searchURL = options.searchURL;
         this.editAnnotationURL = options.editAnnotationURL;
         this.deleteAnnotationURL = options.deleteAnnotationURL;
+        this.helpURL = options.helpURL;
         this.metaKey = options.metaKey || '';
         this.minAnnotationWidth = options.minAnnotationWidth || 20;
         this.minAnnotationHeight = options.minAnnotationHeight || 20;
@@ -427,8 +427,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         }
         return false;
     },
-    toggleHelp: function(){
-        this.helpContents.toggleClass('hidden');
+    showHelp: function(){
+        var win = window.open(this.helpURL, 'ecshelp');
+        win.focus();
         return true;
     },
     toggleMenu: function(){
@@ -439,7 +440,6 @@ ecs.pdfviewer.DocumentViewer = new Class({
         if(this.currentPopup){
             this.currentPopup.hide();
         }
-        this.helpContents.addClass('hidden');
         popup.show();
         return true;
     },

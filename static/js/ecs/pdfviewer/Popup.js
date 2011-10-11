@@ -88,7 +88,7 @@ ecs.pdfviewer.MenuPopup = new Class({
             {label: 'annotate/leave annotate', command: 'toggleAnnotationMode'},
             {label: 'exit', command: ''},
             {label: 'search', command: 'showSearch'},
-            {label: 'help', command: 'toggleHelp'},
+            {label: 'help', command: 'showHelp'},
             {label: 'share', command: 'shareAnnotations'},
             {label: 'last', command: 'lastPage'}
         ];

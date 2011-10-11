@@ -52,7 +52,7 @@
                 searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
                 editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
                 deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
-                helpContents: $('navigation'),
+                helpURL: '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}',
 
                 wheelScrollThreshold: 1,
                 wheelTimeThreshold: 200, // ms
@@ -63,7 +63,7 @@
 
                 shortcuts: [
                     /* in case of conflict, the first shortcut wins */
-                    {command: 'toggleHelp',           key: 'space', annotationMode: true},
+                    {command: 'showHelp',             key: 'space',  annotationMode: true},
                     {command: 'toggleAnnotationMode', key: 'a', meta: true,  annotationMode: true},
                     {command: 'quitAnnotationMode',   key: 'esc', annotationMode: true},
 
@@ -139,7 +139,7 @@
             viewer.gotoAnchor();
             viewer.update();
             
-            
+            /*
             var metaKeySelect = $('metaKeySelect')
             metaKeySelect.addEvent('change', function(){
                 viewer.setMetaKey(metaKeySelect.value);
@@ -148,11 +148,7 @@
                 });
             });
             metaKeySelect.value = '{{ user.ecs_settings.pdfviewer_settings.metaKey }}';
-            
-            $('navigation').addEvent('touch', function(){
-                $('navigation').toggleClass('hidden');
-            });
-            
+            */
             $('pdfviewer_loading').dispose();
 
         {% else %}
@@ -199,33 +195,6 @@
 <div id="pdfviewer"></div>
 <div id="pdfviewer_loading">
     <div class="text"><img src="/static/images/loading.gif" width="64" height="64"/>Loading {{ document.doctype_name }}: {{ document.name }} {% if document.parent_object %} für {{ document.parent_object }}{% endif %}</div>
-</div>
-<div id="navigation" style="display:none" class="hidden">
-    <select id="metaKeySelect">
-        <option value="">-</option>
-        <option value="alt">Alt</option>
-        <option value="control">Control</option>
-        <option value="meta">Meta</option>
-    </select>
-    <div><span class="metaKey"></span> + &rarr;: Next Page</div>
-    <div><span class="metaKey"></span> + &larr;: Previous Page</div>
-    <div><span class="metaKey"></span> + Shift + &rarr;: Last Page</div>
-    <div><span class="metaKey"></span> + Shift + &larr;: First Page</div>
-    <div><span class="metaKey"></span> + &darr;: Zoom In</div>
-    <div><span class="metaKey"></span> + &uarr;: Zoom Out</div>
-    <div><span class="metaKey"></span> + A: Enter/Leave Annotation Mode</div>
-    <div><span class="metaKey"></span> + G: Goto Page</div>
-    <div><span class="metaKey"></span> + F: Search</div>
-    <div><span class="metaKey"></span> + 1: Page Up</div>
-    <div><span class="metaKey"></span> + 9: Page Down</div>
-    <div>ESC: Leave Annotation Mode / Close Annotation Popup</div>
-    
-    <p>
-        Use the mousewheel or arrow keys for scrolling. When the end of a page is reached, scrolling further will load the next page.
-    </p>
-    <p>
-        Annotations: Double click on overlay or single click on marker to edit; drag and drop to move, resize by dragging the lower right cover.
-    </p>
 </div>
 {% else %}
     <h1>{% trans "Your document is not ready yet." %}</h1>
