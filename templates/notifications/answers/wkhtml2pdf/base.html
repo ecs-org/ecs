@@ -13,7 +13,7 @@
     <col width="215"><col width="84"><col width="84"><col width="195">
     <tr>
         <th width="215" height="24">Ethik-Kommission</th>
-        <th width="84">EK-Nummer</th>
+        <th width="50">EK-Nummer</th>
         <th width="84">Protokoll-Nr.</th>
         <th width="84">EudraCT-Nr.</th>
         <th width="84">Datum des Votums</th>
@@ -22,7 +22,7 @@
     {% for submission_form in notification.submission_forms.all %}
     <tr>
         <td>{{ submission_form.submission.main_ethics_commission }}</td>
-        <td>{{ submission_form.submission }} {{ submission_form.submission.project_title_display }}</td>
+        <td>{{ submission_form.submission.get_ec_number_display }}</td>
         <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
         <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
         <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
@@ -39,6 +39,12 @@
     <h2>Angaben zum Forschungsprojekt</h2>
 
     {% block mainitem %}
+        <p style="margin-left: 1cm; text-indent: -1cm">
+            <b>Studientitel:</b>
+            {% for submission_form in notification.submission_forms.all %}
+                {{ submission_form.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
         <p style="margin-left: 1cm; text-indent: -1cm">
         <b>Begründung/Stellungnahme/Mitteilung</b><br>
         <b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
