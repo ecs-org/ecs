@@ -216,7 +216,6 @@ def vote_workflow():
             'office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
             'final_office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
             'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
-            'vote_publication': Args(VotePublication, group=OFFICE_GROUP, name=_("Vote Publication")),
         }, 
         edges={
             ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
@@ -236,8 +235,7 @@ def vote_workflow():
             ('executive_vote_review', 'vote_signing'): Args(guard=is_final),
             
             ('final_office_vote_review', 'executive_vote_review'): None,
-            ('vote_signing', 'vote_publication'): None,
-            ('vote_publication', 'b2_review'): Args(guard=is_b2),
+            ('vote_signing', 'b2_review'): Args(guard=is_b2),
         }
     )
 

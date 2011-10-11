@@ -366,20 +366,22 @@ class VoteSigning(Activity):
     class Meta:
         model = Vote
 
+    def pre_perform(self, choice):
+        vote = self.workflow.data
+        vote.publish()
+
     def get_url(self):
         return reverse('ecs.core.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})
 
 
+# legacy: to be removed
 class VotePublication(Activity):
     class Meta:
         model = Vote
 
-    def pre_perform(self, choice):
-        vote = self.workflow.data
-        vote.publish()
-        
     def get_url(self): # FIXME
         return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
+
 
 class VoteB2Review(Activity):
     class Meta:
