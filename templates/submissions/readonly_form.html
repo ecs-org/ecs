@@ -17,7 +17,7 @@
     {{ block.super }}
     <div class="header_actions">
         {% if submission_form|allows_edits_by:request.user %}
-            <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
+            <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission_form.submission.pk %}">{% trans 'Edit' %}</a>
         {% endif %}
         {% if submission_form|allows_amendments_by:request.user %}
             {% for notification_type in diff_notification_types %}
