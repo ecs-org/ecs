@@ -85,10 +85,9 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.body = new Element('div', {'class': 'body'});
         this.header = new Element('div', {'class': 'header', html: this.title});
         this.header.addEvent('click', this.toggleMenu.bind(this));
-        this.menuButton = new Element('a', {id: 'menubutton', html: '❀'});
         this.prevLink = new Element('a', {'class': 'previous', title: 'previous page'});
         this.nextLink = new Element('a', {'class': 'next', title: 'next page'});
-        this.element.adopt(this.header, this.menuButton, this.body, new Element('div', {'class': 'clearfix'}));
+        this.element.adopt(this.header, this.body, new Element('div', {'class': 'clearfix'}));
         this.body.adopt(this.prevLink, this.viewport, this.nextLink);
 
         this.prevLink.addEvent('click', (function(){

@@ -50,31 +50,6 @@ body.pdfviewer .hidden{
     height: 100%;
 }
 
-#pdfviewer #menubutton{
-    position: absolute;
-    top: 8px;
-    left: 10px;
-    z-index: 200;
-    width: 19px;
-    height: 19px;
-    display: inline-block;
-    text-align: center;
-    padding: 6px 11px 10px 5px;
-    font-size: 28px;
-    line-height: 21px;
-    color: #666;
-    border-radius: 19px;
-    border: 1px solid #999;
-    box-shadow: 1px 1px 0px #fff;
-    background-color: rgba(0, 0, 0, 0.05);
-    text-shadow: #fff 1px 1px 0px;
-}
-
-#pdfviewer #menubutton:hover{
-    background-color: rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-}
-
 #pdfviewer .header{
     color: #000;
     font-size: 15px;
@@ -88,9 +63,8 @@ body.pdfviewer .hidden{
     left: 0px;
 
     padding: 10px;
-    padding-left: 60px;
     height: 34px;
-    width: 730px;
+    width: 780px;
 }
 
 #pdfviewer .header .details{
