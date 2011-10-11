@@ -54,6 +54,8 @@ if user in conf_dict.keys():
     if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver', 'testmaker'])):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+    ABSOLUTE_URL_PREFIX = "http://{0}".format(domain)
+
 if user == 'testecs':
     # FIXME: Disabled, will use mock interface default
     # PDFAS_SERVICE = 'http://test.ecsdev.ep3.at:4780/pdf-as/'
