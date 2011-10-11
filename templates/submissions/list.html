@@ -58,8 +58,7 @@
 
         {% with submission|external_review:user as external_review_task %}
             {% if external_review_task %}
-                <span class="submission_review"></span>
-                <a href="{{ external_review_task.url }}">{{ submission|ec_number }}</a>
+                <a href="{{ external_review_task.url }}"><span class="submission_review"></span>{{ submission|ec_number }}</a>
             {% else %}
                 <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
             {% endif %}
