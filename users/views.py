@@ -288,7 +288,7 @@ def administration(request, limit=20):
         users = users.filter(groups__in=filterform.cleaned_data['groups'])
 
     if filterform.cleaned_data['medical_categories']:
-        users = users.filter(groups__in=filterform.cleaned_data['medical_categories'])
+        users = users.filter(medical_categories__in=filterform.cleaned_data['medical_categories'])
 
     keyword = filterform.cleaned_data['keyword']
     if keyword:
