@@ -363,7 +363,8 @@ _queries = {
     'b2':               lambda s,u: s.b2(),
     'b3':               lambda s,u: s.b3(),
     'b4':               lambda s,u: s.b4(),
-    'other_votes':      lambda s,u: s.exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query),
+    'other_votes':      lambda s,u: s.b1() | s.b5(),
+    'no_votes':         lambda s,u: s.exclude(pk__in=s.b1().values('pk').query).exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query).exclude(pk__in=s.b5().values('pk').query),
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
     'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
@@ -382,6 +383,7 @@ _labels = {
     'b3': _('B3 Votes'),
     'b4': _('B4 Votes'),
     'other_votes': _('Other Votes'),
+    'no_votes': _('No Votes'),
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
@@ -429,29 +431,25 @@ class SubmissionFilterForm(forms.Form):
 
         return submissions
 
+FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
+FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'other')
+FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
+FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
+
 class SubmissionMinimalFilterForm(SubmissionFilterForm):
     layout = ()
 
 class SubmissionWidgetFilterForm(SubmissionFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-    )
+    layout = (FILTER_MEETINGS, FILTER_TYPE)
 
-class SubmissionListFilterForm(SubmissionWidgetFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-        ('b2', 'b3', 'b4', 'other_votes'),
-    )
+class AssignedSubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES)
 
-class SubmissionListFullFilterForm(SubmissionListFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-        ('b2', 'b3', 'b4', 'other_votes'),
-        ('mine', 'assigned', 'other_studies'),
-    )
+class MySubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_VOTES,)
+
+class AllSubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
 
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))

@@ -53,14 +53,20 @@ class SubmissionQuerySet(models.query.QuerySet):
     def with_vote(self, *args, **kwargs):
         return self.filter(get_vote_filter_q('forms', *args, **kwargs))
 
+    def b1(self):
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='1')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='1'), current_submission_form__isnull=False)
+
     def b2(self):
         return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
 
     def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=['3a', '3b']), current_submission_form__isnull=False)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=['3a', '3b'])|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=['3a', '3b']), current_submission_form__isnull=False)
 
     def b4(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='4')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
+
+    def b5(self):
+        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='5')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='5'), current_submission_form__isnull=False)
 
     def new(self):
         return self.filter(meetings__isnull=True)
@@ -81,7 +87,13 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
 
     def next_meeting(self):
-        return self.filter(meetings__start__gt=datetime.now())
+        from ecs.meetings.models import Meeting
+        try:
+            meeting = Meeting.objects.filter(start__gt=datetime.now()).order_by('start')[0]
+        except IndexError:
+            return self.none()
+        else:
+            return self.filter(meetings__pk=meeting.pk)
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user)|Q(current_submission_form__susar_presenter=user))
@@ -124,6 +136,9 @@ class SubmissionManager(AuthorizationManager):
     def with_vote(self, *args, **kwargs):
         return self.all().with_vote(*args, **kwargs)
 
+    def b1(self):
+        return self.all().b1()
+
     def b2(self):
         return self.all().b2()
 
@@ -132,6 +147,9 @@ class SubmissionManager(AuthorizationManager):
 
     def b4(self):
         return self.all().b4()
+
+    def b5(self):
+        return self.all().b5()
 
     def thesis(self):
         return self.all().thesis()
