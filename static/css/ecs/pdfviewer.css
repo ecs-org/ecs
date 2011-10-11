@@ -409,6 +409,36 @@ body.pdfviewer .annotationDisplay a:hover{
     border-color: #99ddff;
 }
 
+body.pdfviewer .annotationDisplay a.next,
+body.pdfviewer .annotationDisplay a.previous{
+    position: absolute;
+    display: block;
+    top: 20px;
+    width: 20px;
+    height: 40px;
+    padding: 10px;
+    font-size: 20px;
+    background-color: #222;
+    border: none;
+    margin: 0px;
+}
+
+body.pdfviewer .annotationDisplay a.next:hover,
+body.pdfviewer .annotationDisplay a.previous:hover{
+    text-decoration: none;
+    color: #fff;
+    background-color: #000;
+}
+
+body.pdfviewer .annotationDisplay a.next{
+    right: -45px;
+}
+
+body.pdfviewer .annotationDisplay a.previous{
+    left: -45px;
+}
+
+
 body.pdfviewer .cover{
     position: fixed;
     top: 0px;

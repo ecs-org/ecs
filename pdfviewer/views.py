@@ -18,7 +18,7 @@ from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
 
 def show(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
-    annotations = list(document.annotations.filter(user=request.user).values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
+    annotations = list(document.annotations.filter(user=request.user).order_by('page_number', 'y').values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
 
     if request.method == 'POST':
         usersettings = request.user.ecs_settings

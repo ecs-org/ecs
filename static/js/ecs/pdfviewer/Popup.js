@@ -212,10 +212,14 @@ ecs.pdfviewer.AnnotationEditor = new Class({
         var saveLink = new Element('a', {html: 'Save'});
         var cancelLink = new Element('a', {html: 'Cancel'});
         var deleteLink = new Element('a', {html: 'Delete'});
-        content.adopt(this.authorInfo, this.textarea, saveLink, cancelLink, deleteLink);
+        this.nextLink = new Element('a', {html: '>', 'class': 'next'});
+        this.previousLink = new Element('a', {html: '<', 'class': 'previous'});
+        content.adopt(this.nextLink, this.previousLink, this.authorInfo, this.textarea, saveLink, cancelLink, deleteLink);
         saveLink.addEvent('click', this.onSave.bind(this));
         cancelLink.addEvent('click', this.onCancel.bind(this));
         deleteLink.addEvent('click', this.onDelete.bind(this));
+        this.nextLink.addEvent('click', this.selectNextAnnotation.bind(this));
+        this.previousLink.addEvent('click', this.selectPreviousAnnotation.bind(this));
         this.addEvent('hide', (function(){
             this.annotation = null;
         }).bind(this));
@@ -223,6 +227,10 @@ ecs.pdfviewer.AnnotationEditor = new Class({
     onShow: function(annotation, element){
         this.annotation = annotation;
         this.annotationElement = element;
+        this.nextAnnotation = this.viewer.getAdjacentAnnotation(annotation, +1);
+        this.previousAnnotation = this.viewer.getAdjacentAnnotation(annotation, -1);
+        this.nextLink[this.nextAnnotation ? 'show' : 'hide']();
+        this.previousLink[this.previousAnnotation ? 'show' : 'hide']();
         this.textarea.value = annotation.text;
         this.element.toggleClass('foreign', !!annotation.author);
         this.authorInfo.innerHTML = 'Anmerkung von ' + annotation.author + ':';
@@ -244,5 +252,11 @@ ecs.pdfviewer.AnnotationEditor = new Class({
     onDelete: function(){
         this.viewer.removeAnnotation(this.annotationElement);
         this.dispose();
+    },
+    selectPreviousAnnotation: function(){
+        this.viewer.gotoAnnotation(this.previousAnnotation);
+    },
+    selectNextAnnotation: function(){
+        this.viewer.gotoAnnotation(this.nextAnnotation);
     }
 });

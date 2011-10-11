@@ -271,10 +271,36 @@ ecs.pdfviewer.DocumentViewer = new Class({
     },
     addAnnotation: function(pageIndex, annotation){
         var key = '_' + pageIndex;
-        if(!this.annotations[key]){
-            this.annotations[key] = [];
+        annotation.pageIndex = pageIndex;
+        var list = this.annotations[key];
+        if(!list){
+            list = this.annotations[key] = [];
         }
-        this.annotations[key].push(annotation);
+        var inserted = false;
+        for(var i=0;i<list.length;i++){
+            if(list[i].y > annotation.y){
+                list.splice(i, 0, annotation);
+                inserted = true;
+                break;
+            }
+        }
+        if(!inserted){
+            list.push(annotation);
+        }
+    },
+    getAdjacentAnnotation: function(annotation, d){
+        var list = this.annotations['_' + annotation.pageIndex];
+        var index = list.indexOf(annotation) + d;
+        if(index < list.length && index >= 0){
+            return list[index];
+        }
+        for(var p = annotation.pageIndex + d; p < this.pageCount && p >= 0; p+=d){
+            var list = this.annotations['_' + p];
+            if(list && list.length){
+                return d > 0 ? list[0] : list[list.length - 1];
+            }
+        }
+        return null;
     },
     removeAnnotation: function(annotationElement){
         var annotation = annotationElement.retrieve('annotation');
@@ -319,13 +345,30 @@ ecs.pdfviewer.DocumentViewer = new Class({
             this.annotationEditor.show(annotation, annotationElement);
         }).bind(this));
         annotationElement.store('annotation', annotation);
+        this.renderedAnnotations.push(annotationElement);
         return annotationElement;
+    },
+    getAnnotationElement: function(annotation){
+        for(var i=0;i<this.renderedAnnotations.length;i++){
+            var el = this.renderedAnnotations[i];
+            if(el.retrieve('annotation') === annotation){
+                return el;
+            }
+        }
+        return null;
+    },
+    gotoAnnotation: function(annotation){
+        this.setPage(annotation.pageIndex);
+        var el = this.getAnnotationElement(annotation);
+        this.annotationEditor.show(annotation, el);
+        return true;
     },
     render: function(imageSetKey, offset, w, h, options){
         if(Array.prototype.every.call(arguments, function(val, i){ return val == this.currentRenderArgs[i]}, this)){
             return;
         }
         this.currentRenderArgs = Array.clone(arguments);
+        this.renderedAnnotations = [];
         window.location.hash = this.currentPageIndex + 1;
         //this.header.innerHTML = this.title + ' <span class="location">Seite ' + (offset + 1) + (w*h > 1 ? '–' + (offset + w*h) : '') + ' von ' + this.pageCount + '</span>';
         var imageSet = this.imageSets[imageSetKey];
