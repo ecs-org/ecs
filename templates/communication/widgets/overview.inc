@@ -12,7 +12,7 @@
                 <span class="preview"></span><span class="preview_text">{{ message|preview:80 }}</span>
                 <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
             </div>
-            <pre class="body">{{ message.text|safe }}<pre>
+            <pre class="body">{{ message.text|urlize }}</pre>
         </li>
     {% endfor %}
     </ul>
