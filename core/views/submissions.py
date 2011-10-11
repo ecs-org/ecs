@@ -20,7 +20,7 @@ from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Chec
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
-    SubmissionListFilterForm, SubmissionListFullFilterForm, PresenterChangeForm, SusarPresenterChangeForm
+    PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm
 from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -698,7 +698,7 @@ def all_submissions(request):
         submissions = submissions.filter(submissions_q)
 
     if keyword is None:
-        filter_form = SubmissionListFullFilterForm
+        filter_form = AllSubmissionsFilterForm
         filtername = 'submission_filter_all'
     else:
         filter_form = SubmissionMinimalFilterForm
@@ -708,7 +708,7 @@ def all_submissions(request):
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
-    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=SubmissionListFilterForm, title=_('Assigned Studies'))
+    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=AssignedSubmissionsFilterForm, title=_('Assigned Studies'))
 
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
@@ -716,7 +716,7 @@ def my_submissions(request):
     stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
     stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
 
-    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=SubmissionListFilterForm, title=_('My Studies'))
+    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=MySubmissionsFilterForm, title=_('My Studies'))
 
 @forceauth.exempt
 def catalog(request):
