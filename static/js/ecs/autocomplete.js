@@ -90,7 +90,7 @@ ecs.autocomplete.Autocompleter = new Class({
         if(text == this.lastFilter){
             return;
         }
-        var refine = text.indexOf(this.lastFilter) != -1 && this.filteredElements.length;
+        var refine = text.indexOf(this.lastFilter) === 0 && this.filteredElements.length;
         var baseElements = refine ? this.filteredElements : this.choiceBox.getChildren();
         this.filteredElements = [];
         this.highlightChoiceIndex = -1;
@@ -104,9 +104,6 @@ ecs.autocomplete.Autocompleter = new Class({
                 el.hide();
             }
         }, this);
-        if(this.filteredElements.length == 1){
-            this.selectChoice(this.getChoiceForElement(this.filteredElements[0]));
-        }
         this.lastFilter = text;
     },
     activate: function(){
