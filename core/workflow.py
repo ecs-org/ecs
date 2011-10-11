@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -468,6 +469,6 @@ class ExternalReviewReview(Activity):
             c.render_pdf()
             presenting_users = set([p.user for p in c.submission.current_submission_form.get_presenting_parties() if p.user])
             for u in presenting_users:
-                send_system_message_template(u, _('External Review'), 'submissions/external_review_publish.txt', {'checklist': c}, submission=c.submission)
+                send_system_message_template(u, _('External Review'), 'submissions/external_review_publish.txt', {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
         elif c.status == 'review_fail':
             send_system_message_template(c.user, _('External Review Declined'), 'submissions/external_review_declined.txt', None, submission=c.submission)

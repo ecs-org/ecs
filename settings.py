@@ -327,6 +327,9 @@ ECSMAIL_DEFAULT = {
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
+# absolute URL prefix w/out trailing slash
+ABSOLUTE_URL_PREFIX = "http://localhost:8000"
+
 # default contact person if someone sends message to "EK"
 DEFAULT_CONTACT = 'office1@example.org'
 

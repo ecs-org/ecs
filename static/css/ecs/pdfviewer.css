@@ -381,11 +381,23 @@ body.pdfviewer .annotationDisplay.foreign .authorInfo{
 body.pdfviewer .annotationDisplay a{
     color: #99ddff;
     border: 1px solid #666666;
-    padding: 3px;
     display: inline-block;
-    float: right;
-    margin: 3px;
-    margin-right: 0px;
+    width: 76px;
+    text-align: center;
+    margin-top: 5px;
+    padding: 5px 3px 5px 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 5px;
+}
+
+body.pdfviewer .annotationDisplay a + a{
+    margin-left: 24px;
+}
+
+body.pdfviewer .annotationDisplay a.close{
+    width: 30px;
+    text-align: right;
 }
 
 body.pdfviewer .annotationDisplay a:hover{
