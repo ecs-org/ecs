@@ -194,7 +194,7 @@ def submission_workflow():
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
     from ecs.core.models import Vote
-    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication, VoteB2Review
+    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VoteB2Review
     from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade
     
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
