@@ -20,9 +20,7 @@
   color: #333;
   border-bottom: 1px solid #B7B7B7;
 }
-.ecs-Autocomplete .choices > div:hover {
-  color: #000;
-}
+.ecs-Autocomplete .choices > div:hover,
 .ecs-Autocomplete .choices > div.highlight {
   background: #333;
   color: #fff;
