@@ -9,7 +9,7 @@ ecs.pdfviewer.Annotation = new Class({
         this.author = author;
     },
     attachTo: function(el, onShow){
-        var a = new Element('div', {'class': 'annotation'});
+        var a = new Element('div', {'class': 'annotation', title: this.text});
         var dim = el.getSize();
         a.setStyle('top', (this.y * dim.y) + 'px');
         a.toggleClass('foreign', !!this.author);

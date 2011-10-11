@@ -232,6 +232,7 @@ ecs.pdfviewer.AnnotationEditor = new Class({
             this.annotation.text = this.textarea.value;
             this.annotation.author = null;
             this.annotationElement.removeClass('foreign');
+            this.annotationElement.title = this.textarea.value;
             this.viewer.sendAnnotationUpdate(this.annotation);
         }
         this.dispose();
