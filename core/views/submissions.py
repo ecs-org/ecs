@@ -260,6 +260,7 @@ def paper_submission_review(request, submission_pk=None):
     task = submission.paper_submission_review_task_for(request.user)
     if not task.assigned_to == request.user:
         task.accept(request.user)
+        return HttpResponseRedirect(reverse('ecs.core.views.paper_submission_review', kwargs={'submission_pk': submission_pk}))
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
