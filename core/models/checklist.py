@@ -22,10 +22,10 @@ class ChecklistBlueprint(models.Model):
 
 class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
-    number = models.CharField(max_length=5)
-    index = models.IntegerField()
+    number = models.CharField(max_length=5, db_index=True)
+    index = models.IntegerField(db_index=True)
     text = models.CharField(max_length=200)
-    description = models.CharField(max_length=400, null=True, blank=True)
+    description = models.CharField(max_length=500, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
     inverted = models.BooleanField(default=False)
 
