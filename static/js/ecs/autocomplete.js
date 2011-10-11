@@ -90,13 +90,13 @@ ecs.autocomplete.Autocompleter = new Class({
         if(text == this.lastFilter){
             return;
         }
-        var refine = text.indexOf(this.lastFilter) === 0 && this.filteredElements.length;
+        var refine = text.indexOf(this.lastFilter) != -1 && this.filteredElements.length;
         var baseElements = refine ? this.filteredElements : this.choiceBox.getChildren();
         this.filteredElements = [];
         this.highlightChoiceIndex = -1;
         baseElements.each(function(el){
             var c = this.getChoiceForElement(el);
-            if(this.maxVisibleChoices > this.filteredElements.length && this.getChoiceText(c).toLowerCase().indexOf(text) === 0){
+            if(this.maxVisibleChoices > this.filteredElements.length && this.getChoiceText(c).toLowerCase().indexOf(text) != -1){
                 this.filteredElements.push(el);
                 el.show();
             }
