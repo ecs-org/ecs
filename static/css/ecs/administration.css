@@ -4,12 +4,13 @@
 	margin: 0 0 20px;
 	padding: 5px;
 }
+/*
 .administration_detail .useradministration_choose .textboxlist {
-  min-width: 220px;
   clear: none;
   display: inline-block;
   vertical-align: top;
 }
+*/
 .administration_detail .useradministration_choose li {
   list-style: none;
 	margin-bottom: 5px;
