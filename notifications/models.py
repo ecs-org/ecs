@@ -15,7 +15,7 @@ class NotificationType(models.Model):
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
     default_response = models.TextField(blank=True)
 
-    diff = models.BooleanField(default=False)
+    includes_diff = models.BooleanField(default=False)
     grants_vote_extension = models.BooleanField(default=False)
     finishes_study = models.BooleanField(default=False)
     is_rejectable = models.BooleanField(default=False)
@@ -132,7 +132,7 @@ class NotificationAnswer(models.Model):
         from ecs.core.models.submissions import Submission
         from ecs.communication.utils import send_system_message_template
         
-        if not self.is_rejected and self.notification.type.diff:
+        if not self.is_rejected and self.notification.type.includes_diff:
             try:
                 notification = AmendmentNotification.objects.get(pk=self.notification.pk)
                 notification.apply()

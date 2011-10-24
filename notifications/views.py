@@ -88,7 +88,7 @@ def submission_data_for_notification(request):
 
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
-        'notification_types': NotificationType.objects.exclude(diff=True).order_by('name')
+        'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('name')
     })
     
 def create_diff_notification(request, submission_form_pk=None, notification_type_pk=None):
