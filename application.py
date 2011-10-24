@@ -185,7 +185,7 @@ libfreetype6-dev:req:apt:apt-get:libfreetype6-dev
 liblcms1-dev-devel:req:apt:apt-get:liblcms1-dev
 
 # PIL requirements for opensuse
-libjpeg-devel:req:suse:zypper:libjpeg-devel
+libjpeg62-devel:req:suse:zypper:libjpeg62-devel
 zlib-devel:req:suse:zypper:zlib
 freetype2-devel:req:suse:zypper:freetype2-devel
 liblcms1:req:suse:zypper:liblcms1
