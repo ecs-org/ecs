@@ -10,9 +10,9 @@ class NotificationAnswerForm(forms.ModelForm):
 
 
 class RejectableNotificationAnswerForm(NotificationAnswerForm):
-    rejected = forms.BooleanField(required=False)
+    is_rejected = forms.BooleanField(required=False)
 
     class Meta:
         model = NotificationAnswer
-        fields = ('rejected', 'text',)
+        fields = ('is_rejected', 'text',)
 

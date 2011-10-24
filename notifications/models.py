@@ -13,11 +13,12 @@ from ecs.core.parties import get_presenting_parties
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
-    diff = models.BooleanField(default=False)
     default_response = models.TextField(blank=True)
+
+    diff = models.BooleanField(default=False)
     grants_vote_extension = models.BooleanField(default=False)
     finishes_study = models.BooleanField(default=False)
-    rejectable = models.BooleanField(default=False)
+    is_rejectable = models.BooleanField(default=False)
     
     @property
     def form_cls(self):
@@ -74,9 +75,9 @@ class Notification(models.Model):
         return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
         
     @property
-    def rejected(self):
+    def is_rejected(self):
         try:
-            return self.answer.rejected
+            return self.answer.is_rejected
         except NotificationAnswer.DoesNotExist:
             return None
 
@@ -117,21 +118,21 @@ class AmendmentNotification(DiffNotification, Notification):
 
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
-    valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     review_count = models.PositiveIntegerField(default=0)
     text = models.TextField()
-    rejected = models.BooleanField(default=False)
+    is_valid = models.BooleanField(default=True) # if the notification has been accepted by the office
+    is_rejected = models.BooleanField(default=False)
     
     @property
     def needs_further_review(self):
         # further review is required iff: the answer is not valid or has not been reviewed by a multiple of four eyes.
-        return not self.valid or self.review_count == 0 or self.review_count % 2 != 0
+        return not self.is_valid or self.review_count == 0 or self.review_count % 2 != 0
     
     def distribute(self):
         from ecs.core.models.submissions import Submission
         from ecs.communication.utils import send_system_message_template
         
-        if not self.rejected and self.notification.type.diff:
+        if not self.is_rejected and self.notification.type.diff:
             try:
                 notification = AmendmentNotification.objects.get(pk=self.notification.pk)
                 notification.apply()
@@ -139,7 +140,7 @@ class NotificationAnswer(models.Model):
                 assert False, "we should never get here"
         
         extend, finish = False, False
-        if not self.rejected:
+        if not self.is_rejected:
             if self.notification.type.grants_vote_extension:
                 try:
                     extend = ProgressReportNotification.objects.get(pk=self.notification.pk).extension_of_vote_requested

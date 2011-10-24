@@ -31,7 +31,7 @@ def is_amendment(wf):
     
 @guard(model=Notification)
 def is_rejected(wf):
-    return wf.data.rejected
+    return wf.data.is_rejected
     
 @guard(model=Notification)
 def needs_further_review(wf):
@@ -79,7 +79,7 @@ class EditNotificationAnswer(BaseNotificationReview):
     
     def pre_perform(self, choice):
         answer = self.workflow.data.answer
-        answer.valid = choice
+        answer.is_valid = choice
         answer.review_count += 1
         answer.save()
 

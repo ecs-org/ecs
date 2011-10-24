@@ -19,7 +19,7 @@ def notification_types():
             default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
             diff = False,
             grants_vote_extension = False,
-            rejectable = False,
+            is_rejectable = False,
             finishes_study = False,
         ),
         dict(
@@ -28,7 +28,7 @@ def notification_types():
             default_response = u"",
             diff = False,
             grants_vote_extension = True,
-            rejectable = True,
+            is_rejectable = True,
             finishes_study = False,
         ),
         dict(
@@ -37,7 +37,7 @@ def notification_types():
             default_response = u"",
             diff = False,
             grants_vote_extension = False,
-            rejectable = True,
+            is_rejectable = True,
             finishes_study = True,
         ),
         dict(
@@ -46,7 +46,7 @@ def notification_types():
             default_response = u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu.",
             diff = True,
             grants_vote_extension = False,
-            rejectable = True,
+            is_rejectable = True,
             finishes_study = False,
         ),
     )

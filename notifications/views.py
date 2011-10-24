@@ -188,7 +188,7 @@ def edit_notification_answer(request, notification_pk=None):
         kwargs['initial'] = {'text': notification.type.default_response}
     
     form_cls = NotificationAnswerForm
-    if notification.type.rejectable:
+    if notification.type.is_rejectable:
         form_cls = RejectableNotificationAnswerForm
     
     form = form_cls(request.POST or None, instance=answer, **kwargs)
