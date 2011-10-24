@@ -131,11 +131,11 @@ class DocumentListDiffNode(ListDiffNode):
         self.diffs = []
         old_docs = {}
         for doc in self.old:
-            old_docs[doc.uuid_document] = doc
+            old_docs[doc.uuid] = doc
         added_docs = []
         for doc in self.new:
-            if doc.uuid_document in old_docs:
-                del old_docs[doc.uuid_document]
+            if doc.uuid in old_docs:
+                del old_docs[doc.uuid]
             else:
                 self.diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
         for doc in old_docs.values():

@@ -176,7 +176,7 @@ def sign_receive(request, jsessionid=None):
 
     parent_obj = get_object_or_404(get_callable(sign_dict['parent_name']), pk=sign_dict['parent_pk'])
     doctype = DocumentType.objects.get(identifier=sign_dict['document_identifier'])
-    document = Document.objects.create(uuid_document=sign_dict["document_uuid"],
+    document = Document.objects.create(uuid=sign_dict["document_uuid"],
         parent_object=parent_obj, branding='n', doctype=doctype, file=f,
         original_file_name=sign_dict["document_filename"], date=datetime.now())
 

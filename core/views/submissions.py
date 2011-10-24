@@ -684,10 +684,10 @@ def all_submissions(request):
             submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
         if re.match(r'([a-zA-Z0-9]{5,32})', keyword):
             ct = ContentType.objects.get_for_model(Submission)
-            document_q = Document.objects.filter(uuid_document__icontains=keyword, content_type=ct).values('object_id').query
+            document_q = Document.objects.filter(uuid__icontains=keyword, content_type=ct).values('object_id').query
             submissions_q |= Q(pk__in=document_q)
             ct = ContentType.objects.get_for_model(SubmissionForm)
-            documents = list(Document.objects.filter(uuid_document__icontains=keyword, content_type=ct))
+            documents = list(Document.objects.filter(uuid__icontains=keyword, content_type=ct))
             if [d for d in documents if not d.parent_object == d.parent_object.submission.current_submission_form]:
                 extra_context['warning'] = _('This document is an old version.')
             submissions_q |= Q(forms__pk__in=[d.object_id for d in documents])

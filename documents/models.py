@@ -41,7 +41,7 @@ class DocumentType(models.Model):
     name = models.CharField(max_length=100)
     identifier = models.CharField(max_length=30, db_index=True, blank=True, default= "")
     helptext = models.TextField(blank=True, default="")
-    hidden = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
         return ugettext(self.name)
@@ -49,7 +49,7 @@ class DocumentType(models.Model):
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
     _, file_ext = os.path.splitext(filename)
-    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid_document + file_ext[:5]))
+    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid + file_ext[:5]))
     return target_name
     
 class DocumentFileStorage(FileSystemStorage):
@@ -107,7 +107,7 @@ C_STATUS_CHOICES = (
 )
 
 class Document(models.Model):
-    uuid_document = models.SlugField(max_length=36, unique=True)
+    uuid = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
@@ -163,19 +163,19 @@ class Document(models.Model):
             personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
             brand = self.branding == 'p' or self.branding == 'b'
 
-        return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
+        return generate_media_url(self.uuid, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
         ''' load actual data from mediaserver including optional branding ; you rarely use this. '''
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
         brand = self.branding == 'p' or self.branding == 'b'
-        return download_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
+        return download_from_mediaserver(self.uuid, self.get_filename(), personalization=personalization, brand=brand)
 
     def get_pages_list(self): 
         ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height') pictures
         for every supported rendersize options for every page of the document
         '''
-        return generate_pages_urllist(self.uuid_document, self.pages)
+        return generate_pages_urllist(self.uuid, self.pages)
                
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
@@ -186,10 +186,10 @@ class Document(models.Model):
         return False
 
     def save(self, **kwargs):
-        print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid_document, self.mimetype, self.status, self.retries))
+        print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid, self.mimetype, self.status, self.retries))
 
-        if not self.uuid_document: 
-            self.uuid_document = uuid4().get_hex() # generate a new random uuid
+        if not self.uuid: 
+            self.uuid = uuid4().get_hex() # generate a new random uuid
             content_type = None
             if self.file.name or self.original_file_name:
                 filename_to_check = self.file.name if self.file.name else self.original_file_name

@@ -19,7 +19,7 @@ from ecs.utils.pathutils import tempfilecopy
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
-    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(hidden=True), required=False)
+    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(is_hidden=True), required=False)
 
     def clean_file(self):
         pdf = self.cleaned_data['file']

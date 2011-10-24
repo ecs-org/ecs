@@ -57,7 +57,19 @@ class Args(object):
             if default:
                 return default[0]
             raise
-        
+    
+    def get(self, key, default=None):
+        if isinstance(key, str):
+            try:
+                return self.kwargs[key]
+            except KeyError:
+                return default
+        else:
+            try:
+                return self.args[key]
+            except IndexError:
+                return default
+    
     def __getitem__(self, key):
         if isinstance(key, str):
             return self.kwargs[key]
@@ -65,4 +77,3 @@ class Args(object):
         
     def __nonzero__(self):
         return bool(self.args or self.kwargs)
-
