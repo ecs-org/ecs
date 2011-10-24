@@ -7,11 +7,11 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        db.rename_column('notfications_notificationtype', 'diff', 'includes_diff')
+        db.rename_column('notifications_notificationtype', 'diff', 'includes_diff')
 
 
     def backwards(self, orm):
-        db.rename_column('notfications_notificationtype', 'includes_diff', 'diff')
+        db.rename_column('notifications_notificationtype', 'includes_diff', 'diff')
 
 
     models = {
