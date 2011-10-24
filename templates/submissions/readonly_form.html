@@ -159,10 +159,10 @@
         {% if answered_notifications %}
             <ul class="notification_list">
                 {% for notification in answered_notifications %}
-                    <li{% if notification.rejected %} class="rejected"{% endif %}>
+                    <li{% if notification.is_rejected %} class="rejected"{% endif %}>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
-                        {% if notification.rejected %}({% trans 'rejected' %}){% endif %}
+                        {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
                     </li>
                 {% endfor %}
             </ul>
