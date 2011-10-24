@@ -559,13 +559,13 @@ class SubmissionForm(models.Model):
         return False
 
     @property
-    def amg(self):
+    def is_amg(self):
         if self.submission.is_amg is not None:
             return self.submission.is_amg
         return self.project_type_drug
 
     @property
-    def mpg(self):
+    def is_mpg(self):
         if self.submission.is_mpg is not None:
             return self.submission.is_mpg
         return self.project_type_medical_device
@@ -581,7 +581,7 @@ class SubmissionForm(models.Model):
         return self.investigators.count() > 1
         
     @property
-    def monocentric(self):
+    def is_monocentric(self):
         return self.investigators.count() == 1
         
     @property

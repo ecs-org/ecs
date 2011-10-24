@@ -228,7 +228,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.1.1', 'study_plan_open', _(u'open'), db_field=False), 
     FieldInfo('8.1.2', 'study_plan_randomized', _(u'randomized')),
     FieldInfo('8.1.3', 'study_plan_parallelgroups', _(u'parallel groups')),
-    FieldInfo('8.1.4', 'monocentric', _(u'monocentric'), db_field=False), 
+    FieldInfo('8.1.4', 'is_monocentric', _(u'monocentric'), db_field=False), 
     FieldInfo('8.1.5', 'study_plan_single_blind', _(u'blind'), db_field=False), 
     FieldInfo('8.1.6', 'study_plan_controlled', _(u'controlled')),
     FieldInfo('8.1.7', 'study_plan_cross_over', _(u'cross-over')),
