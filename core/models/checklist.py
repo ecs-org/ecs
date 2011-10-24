@@ -27,7 +27,7 @@ class ChecklistQuestion(models.Model):
     text = models.CharField(max_length=200)
     description = models.CharField(max_length=500, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
-    inverted = models.BooleanField(default=False)
+    is_inverted = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'core'
@@ -69,7 +69,7 @@ class Checklist(models.Model):
 
     @property
     def is_positive(self):
-        return self.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True)).count() == 0
+        return self.answers.filter(Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True)).count() == 0
 
     @property
     def is_negative(self):
@@ -79,7 +79,7 @@ class Checklist(models.Model):
         if answer is None:
             q = Q(answer=None)
         else:
-            q = Q(question__inverted=False, answer=answer) | Q(question__inverted=True, answer=not answer)
+            q = Q(question__is_inverted=False, answer=answer) | Q(question__is_inverted=True, answer=not answer)
         return self.answers.exclude(comment=None).exclude(comment="").filter(q).order_by('question')
 
     def get_all_answers_with_comments(self):
@@ -135,7 +135,7 @@ class ChecklistAnswer(models.Model):
 
     @property
     def is_positive(self):
-        return (not self.question.inverted and self.answer) or (self.question.inverted and self.answer == False)
+        return (not self.question.is_inverted and self.answer) or (self.question.is_inverted and self.answer == False)
 
     @property
     def is_negative(self):

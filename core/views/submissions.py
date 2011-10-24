@@ -160,7 +160,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     checklist_summary = []
     for checklist in checklists:
         if checklist.is_negative or checklist.get_all_answers_with_comments().count():
-            answers = checklist.answers.filter(Q(question__inverted=False, answer=False) | Q(question__inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))
+            answers = checklist.answers.filter(Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))
             checklist_summary.append((checklist, answers))
 
     submission_forms = list(submission.forms.order_by('created_at'))
