@@ -31,11 +31,11 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     remission = models.NullBooleanField()
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
-    sponsor_required_for_next_meeting = models.BooleanField(default=False)
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     valid_until = models.DateField(null=True, blank=True)
 
+    sponsor_required_for_next_meeting = models.BooleanField(default=False)
     insurance_review_required = models.NullBooleanField()
     gcp_review_required = models.NullBooleanField(default=False)
     legal_and_patient_review_required = models.NullBooleanField(default=True)
@@ -587,7 +587,13 @@ class SubmissionForm(models.Model):
     @property
     def is_categorized_multicentric_and_local(self):
         return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
-        
+    
+    @property
+    def includes_minors(self):
+        if self.subject_minage is None:
+            return None
+        return 0 <= self.subject_minage < 18
+    
     @property
     def study_plan_open(self):
         return self.study_plan_blind == 0

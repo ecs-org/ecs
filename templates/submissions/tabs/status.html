@@ -135,7 +135,7 @@
             {% endif %}
             {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
             {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
-            {% if submission_form.subject_minage > 0 and submission_form.subject_minage < 18 %}{% trans "minors" %}{% endif %}
+            {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
         </td>
     </tr>
     <tr>
