@@ -35,6 +35,7 @@ class Submission(models.Model):
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     valid_until = models.DateField(null=True, blank=True)
+
     insurance_review_required = models.NullBooleanField()
     gcp_review_required = models.NullBooleanField(default=False)
     legal_and_patient_review_required = models.NullBooleanField(default=True)
@@ -158,7 +159,8 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.primary_investigator
-
+    
+    @property
     def has_permanent_vote(self):
         return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
 
@@ -549,7 +551,7 @@ class SubmissionForm(models.Model):
         self.submission.save()
         
     def allows_edits(self, user):
-        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.is_finished
+        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote and not self.submission.is_finished
         
     def allows_amendments(self, user):
         if self.presenter == user and self.is_current and not self.submission.is_finished:
