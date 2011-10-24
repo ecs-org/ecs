@@ -47,6 +47,5 @@ def post_save_handler(**kwargs):
     a.instance = instance
     a.content_type = ContentType.objects.get_for_model(sender)
     a.data = serialize('json', sender.objects.filter(pk=instance.pk))
-    a.object_created = kwargs['created']
+    a.is_instance_created = kwargs['created']
     a.save()
-
