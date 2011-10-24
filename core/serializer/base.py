@@ -344,7 +344,7 @@ class SubmissionSerializer(ModelSerializer):
         super(SubmissionSerializer, self).__init__(Submission, **kwargs)
         
     def load(self, data, zf, version, commit=False):
-        return Submission.objects.create(transient=True)
+        return Submission.objects.create(is_transient=True)
         
 class CountrySerializer(ModelSerializer):
     def __init__(self, **kwargs):
@@ -361,7 +361,7 @@ class CountrySerializer(ModelSerializer):
 class SubmissionFormSerializer(ModelSerializer):
     def load(self, data, zf, version, commit=True):
         obj = super(SubmissionFormSerializer, self).load(data, zf, version, commit=False)
-        obj.transient = True
+        obj.is_transient = True
         if commit:
             obj.save()
         return obj
@@ -373,7 +373,7 @@ _serializers = {
         ),
         exclude = (
             'pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 
-            'presenter', 'susar_presenter', 'transient', 'is_notification_update', 'invoice',
+            'presenter', 'susar_presenter', 'is_transient', 'is_notification_update', 'invoice',
         ),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',

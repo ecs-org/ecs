@@ -19,17 +19,17 @@ from ecs.tasks.utils import block_if_task_exists
 def vote_workflow_start_if(vote, created):
     return vote.result and (not vote.top_id or vote.top.meeting.ended) and not vote.workflow
 
-register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.transient)
+register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 register(Vote, autostart_if=vote_workflow_start_if)
 register(Checklist)
 
 @guard(model=Submission)
 def is_acknowledged(wf):
-    return wf.data.newest_submission_form.acknowledged
+    return wf.data.newest_submission_form.is_acknowledged
 
 @guard(model=Submission)
 def is_initial_submission(wf):
-    return wf.data.forms.filter(acknowledged=True).count() == 1
+    return wf.data.forms.filter(is_acknowledged=True).count() == 1
 
 @guard(model=Submission)
 def is_acknowledged_and_initial_submission(wf):
@@ -144,10 +144,10 @@ class InitialReview(Activity):
     def pre_perform(self, choice):
         s = self.workflow.data
         sf = s.newest_submission_form
-        sf.acknowledged = choice
+        sf.is_acknowledged = choice
         sf.save()
 
-        if sf.acknowledged:
+        if sf.is_acknowledged:
             send_system_message_template(sf.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt', None, submission=s)
             if not s.current_submission_form == sf:
                 sf.mark_current()

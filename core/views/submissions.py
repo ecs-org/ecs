@@ -189,7 +189,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False).order_by('-timestamp'),
         'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
         'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
-        'diff_notification_types': NotificationType.objects.filter(diff=True).order_by('name'),
+        'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
     }
 
@@ -454,7 +454,7 @@ def create_submission_form(request):
             else:
                 submission_form.susar_presenter = request.user
             submission_form.is_notification_update = bool(notification_type)
-            submission_form.transient = bool(notification_type)
+            submission_form.is_transient = bool(notification_type)
             submission_form.save()
             form.save_m2m()
 

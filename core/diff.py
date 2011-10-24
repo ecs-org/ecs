@@ -278,8 +278,8 @@ class UserDiffer(AtomicModelDiffer):
 _differs = {
     SubmissionForm: ModelDiffer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
-            'pdf_document', 'current_pending_vote', 'current_published_vote', 'acknowledged',
-            'created_at', 'presenter', 'sponsor', 'invoice', 'submitter', 'transient',
+            'pdf_document', 'current_pending_vote', 'current_published_vote', 'is_acknowledged',
+            'created_at', 'presenter', 'sponsor', 'invoice', 'submitter', 'is_transient',
             'is_notification_update', 'submission_type'),
         follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set',
             'documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),

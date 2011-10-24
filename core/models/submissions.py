@@ -34,12 +34,12 @@ class Submission(models.Model):
     sponsor_required_for_next_meeting = models.BooleanField(default=False)
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    transient = models.BooleanField(default=False)
     valid_until = models.DateField(null=True, blank=True)
     insurance_review_required = models.NullBooleanField()
     gcp_review_required = models.NullBooleanField(default=False)
     legal_and_patient_review_required = models.NullBooleanField(default=True)
     statistical_review_required = models.NullBooleanField(default=True)
+    is_transient = models.BooleanField(default=False)
     finished = models.BooleanField(default=False)
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
@@ -142,7 +142,7 @@ class Submission(models.Model):
             return _('Finished')
         elif self.is_active:
             return _('Active')
-        elif self.current_submission_form.acknowledged:
+        elif self.current_submission_form.is_acknowledged:
             return _('Acknowledged')
         return _('New')
         
@@ -248,12 +248,12 @@ class Submission(models.Model):
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
-    acknowledged = models.BooleanField(default=False)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.OneToOneField(Document, related_name="submission_form", null=True)
     documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
     is_notification_update = models.BooleanField(default=False)
-    transient = models.BooleanField(default=False)
+    is_transient = models.BooleanField(default=False)
+    is_acknowledged = models.BooleanField(default=False)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -676,7 +676,7 @@ def _post_submission_form_save(**kwargs):
 
     new_sf = kwargs['instance']
     
-    if not kwargs['created'] or new_sf.transient:
+    if not kwargs['created'] or new_sf.is_transient:
         return
 
     submission = new_sf.submission
