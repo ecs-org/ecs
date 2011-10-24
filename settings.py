@@ -207,7 +207,6 @@ INSTALLED_APPS = (
     'ecs.notifications',
     'ecs.authorization',
     'ecs.integration',
-    'ecs.fastlane',
     'ecs.boilerplate',
     'ecs.scratchpad',
 )
