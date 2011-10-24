@@ -71,7 +71,7 @@ def is_executive_vote_review_required(wf):
 
 @guard(model=Vote)
 def is_final(wf):
-    return wf.data.is_final
+    return wf.data.is_final_version
 
 @guard(model=Vote)
 def is_b2(wf):

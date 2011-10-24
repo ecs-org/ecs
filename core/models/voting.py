@@ -17,7 +17,7 @@ class Vote(models.Model):
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_(u'vote'))
     executive_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=_(u'comment'))
-    is_final = models.BooleanField(default=False)
+    is_final_version = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
     valid_until = models.DateTimeField(null=True)

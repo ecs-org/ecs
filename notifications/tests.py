@@ -182,7 +182,7 @@ class NotificationFormTest(LoginTestCase):
             self.assertFalse(response.context['form'].fields['submission_form'].queryset.filter(pk=sf.pk).exists())
         
             # create a permanent final postive vote
-            vote = sf.votes.create(result='1', is_final=True, signed_at=now, published_at=now, valid_until=now.replace(year=now.year + 1))
+            vote = sf.votes.create(result='1', is_final_version=True, signed_at=now, published_at=now, valid_until=now.replace(year=now.year + 1))
         
             # now we have a vote => submission form is selectable
             response = self.client.get(url)

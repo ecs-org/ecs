@@ -21,7 +21,7 @@ class SaveVoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final', 'signed_at', 'valid_until')
+        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final_version', 'signed_at', 'valid_until')
 
     def save(self, top, *args, **kwargs):
         kwargs['commit'] = False
@@ -49,15 +49,15 @@ class VoteForm(SaveVoteForm):
 class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Vote
-        fields = ('text', 'is_final')
+        fields = ('text', 'is_final_version')
         labels = {
-            'is_final': _('Proofread and valid'),
+            'is_final_version': _('Proofread and valid'),
         }
 
 class B2VoteReviewForm(TranslatedModelForm):
     class Meta:
         model = Vote
-        fields = ('text', 'final', 'is_final')
+        fields = ('text', 'is_final_version')
         labels = {
-            'is_final': _('Proofread and valid'),
+            'is_final_version': _('Proofread and valid'),
         }
