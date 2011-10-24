@@ -40,7 +40,7 @@ class Submission(models.Model):
     legal_and_patient_review_required = models.NullBooleanField(default=True)
     statistical_review_required = models.NullBooleanField(default=True)
     is_transient = models.BooleanField(default=False)
-    finished = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
     
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
@@ -138,7 +138,7 @@ class Submission(models.Model):
         
     @property
     def lifecycle_phase(self):
-        if self.finished:
+        if self.is_finished:
             return _('Finished')
         elif self.is_active:
             return _('Active')
@@ -185,7 +185,7 @@ class Submission(models.Model):
         return self.get_ec_number_display()
         
     def finish(self, expired=False):
-        self.finished = True
+        self.is_finished = True
         self.save()
         study_finished.send(sender=Submission, submission=self, expired=expired)
         
@@ -548,10 +548,10 @@ class SubmissionForm(models.Model):
         self.submission.save()
         
     def allows_edits(self, user):
-        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.finished
+        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote() and not self.submission.is_finished
         
     def allows_amendments(self, user):
-        if self.presenter == user and self.is_current and not self.submission.finished:
+        if self.presenter == user and self.is_current and not self.submission.is_finished:
             return self.submission.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
