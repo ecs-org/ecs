@@ -121,7 +121,7 @@ class MeetingManager(models.Manager):
 
     def next_schedulable_meeting(self, submission):
         sf = submission.current_submission_form
-        is_thesis = submission.thesis
+        is_thesis = submission.is_thesis
         if is_thesis is None:
             is_thesis = sf.project_type_education_context is not None
 
