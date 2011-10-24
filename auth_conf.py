@@ -17,7 +17,7 @@ class SubmissionQFactory(authorization.QFactory):
         profile = user.get_profile()
 
         ### shortcircuit logic
-        if not profile.approved_by_office:
+        if not profile.is_approved_by_office:
             return self.make_deny_q()
             
         ### default policy: only avaiable for the (susar) presenter.
@@ -25,13 +25,13 @@ class SubmissionQFactory(authorization.QFactory):
 
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(external_reviewers=user)
-        if profile.thesis_review:
+        if profile.is_thesis_reviewer:
             until_vote_q |= self.make_q(is_thesis=True)
-        if profile.board_member:
+        if profile.is_board_member:
             until_vote_q |= self.make_q(timetable_entries__participations__user=user)
-        if profile.expedited_review:
+        if profile.is_expedited_reviewer:
             until_vote_q |= self.make_q(is_expedited=True)
-        if profile.insurance_review:
+        if profile.is_insurance_reviewer:
             until_vote_q |= self.make_q(insurance_review_required=True)
         q |= until_vote_q & (
             self.make_q(current_submission_form__current_published_vote=None)
@@ -40,7 +40,7 @@ class SubmissionQFactory(authorization.QFactory):
 
         ### rules that apply until the end of the submission lifecycle
         until_eol_q = self.make_q(pk__gt=0)
-        if not (user.is_staff or profile.internal):
+        if not (user.is_staff or profile.is_internal):
             until_eol_q &= self.make_q(
                 current_submission_form__submitter=user
             ) | self.make_q(
@@ -98,7 +98,7 @@ for cls in (Notification, CompletionReportNotification, ProgressReportNotificati
 class ChecklistQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        if profile.internal:
+        if profile.is_internal:
             return self.make_q()
         q = self.make_q(user=user)
         q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)

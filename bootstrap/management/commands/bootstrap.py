@@ -23,7 +23,7 @@ def _create_root_user():
     root.save()
     
     profile = root.get_profile()
-    profile.approved_by_office = True
+    profile.is_approved_by_office = True
     profile.forward_messages_after_minutes = 0 # Never forward messages
     profile.gender = 'f'
     profile.save()

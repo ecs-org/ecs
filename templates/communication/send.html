@@ -49,7 +49,7 @@
             {% for user in thread.get_participants %}
               <li>
               <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
-              {% if user.internal %}
+              {% if user|has_flag:'is_internal' %}
                 <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
               {% else %}
                 <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
@@ -84,7 +84,7 @@
             messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission.current_submission_form.pk }}'));
         {% endif %}
 
-        {% if user|has_flag:'internal' %}
+        {% if user|has_flag:'is_internal' %}
             messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
         {% endif %}
 

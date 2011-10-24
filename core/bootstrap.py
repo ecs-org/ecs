@@ -373,8 +373,8 @@ def auth_user_developers():
         user.save()
         profile = user.get_profile()
         update_instance(profile, {
-            'approved_by_office': True,
-            'help_writer': True,
+            'is_approved_by_office': True,
+            'is_help_writer': True,
             'forward_messages_after_minutes': 360,
             'gender': gender,
             'start_workflow': True,
@@ -390,7 +390,7 @@ def auth_user_sentryuser():
         user.save()
         profile = user.get_profile()
         update_instance(profile, {                        
-            "approved_by_office" : True,
+            "is_approved_by_office" : True,
             "start_workflow" : True,
         })
 
@@ -403,20 +403,20 @@ def auth_user_testusers():
         ('presenter', None, {}),
         ('sponsor', None, {}),
         ('investigator', None, {}),
-        ('office', u'EC-Office', {'internal': True,}),
-        ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
-        ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': False, 'executive_board_member': False),
-        ('signing', u'EC-Signing Group', {'internal': True, }),
-        ('statistic.rev', u'EC-Statistic Group', {'internal': False}),
-        ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
-        ('insurance.rev', u'EC-Insurance Reviewer', {'internal': False, 'insurance_review': True}),
-        ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
+        ('office', u'EC-Office', {'is_internal': True,}),
+        ('internal.rev', u'EC-Internal Review Group', {'is_internal': True,}),
+        ('executive', u'EC-Executive Board Group', {'is_internal': True, 'is_executive_board_member': True),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False),
+        ('signing', u'EC-Signing Group', {'is_internal': True, }),
+        ('statistic.rev', u'EC-Statistic Group', {'is_internal': False}),
+        ('notification.rev', u'EC-Notification Review Group', {'is_internal': True, }),
+        ('insurance.rev', u'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
+        ('thesis.rev', u'EC-Thesis Review Group', {'is_internal': False, 'is_thesis_reviewer': True),
         ('external.reviewer', None, {}),
-        ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
-        ('localec.rev', u'Local-EC Review Group', {'internal': True}),
-        ('b2.rev', u'EC-B2 Review Group', {'internal': True}),
-        ('ext.rev.rev', u'External Review Review Group', {'internal': True}),
+        ('gcp.reviewer', u'GCP Review Group', {'is_internal': False}),
+        ('localec.rev', u'Local-EC Review Group', {'is_internal': True}),
+        ('b2.rev', u'EC-B2 Review Group', {'is_internal': True}),
+        ('ext.rev.rev', u'External Review Review Group', {'is_internal': True}),
     )
 
     boardtestusers = (
@@ -451,13 +451,13 @@ def auth_user_testusers():
             profile = user.get_profile()
             flags = flags.copy()
             flags.update({
-                'approved_by_office': True,
+                'is_approved_by_office': True,
                 'start_workflow': True,
             })
             update_instance(profile, flags)
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
-                flags['help_writer'] = True
+                flags['is_help_writer'] = True
 
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
@@ -466,8 +466,8 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         update_instance(profile, {
-            'board_member': True,
-            'approved_by_office': True,
+            'is_board_member': True,
+            'is_approved_by_office': True,
             'start_workflow': True,
         })
     
@@ -482,8 +482,8 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         update_instance(profile, {
-            'expedited_review': True,
-            'approved_by_office': True,
+            'is_expedited_reviewer': True,
+            'is_approved_by_office': True,
             'start_workflow': True,
         })
         

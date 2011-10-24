@@ -34,7 +34,7 @@ def autocomplete(request, queryset_name=None):
         raise Http404
     return HttpResponse(simplejson.dumps(result), content_type='application/json')
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def internal_autocomplete(request, queryset_name=None):
     try:
         result = INTERNAL_AUTOCOMPLETE_QUERYSETS[queryset_name]()

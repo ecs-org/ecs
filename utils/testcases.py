@@ -42,7 +42,7 @@ class EcsTestCase(TestCase):
 
         settings.ENABLE_AUDIT_TRAIL = True
         
-        self.create_user('alice', profile_extra={'internal': True})
+        self.create_user('alice', profile_extra={'is_internal': True})
         for name in ('bob', 'unittest',):
             self.create_user(name)
         
@@ -59,7 +59,7 @@ class EcsTestCase(TestCase):
         profile = user.get_profile()
         for k, v in profile_extra.iteritems():
             setattr(profile, k, v)
-        profile.approved_by_office = True
+        profile.is_approved_by_office = True
         profile.save()
         return user
     

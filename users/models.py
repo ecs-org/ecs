@@ -12,18 +12,18 @@ from django.utils.translation import ugettext_lazy as _
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
     last_password_change = models.DateTimeField(default=datetime.datetime.now)
-    phantom = models.BooleanField(default=False)
-    approved_by_office = models.BooleanField(default=False)
-    indisposed = models.BooleanField(default=False)
+    is_phantom = models.BooleanField(default=False)
+    is_approved_by_office = models.BooleanField(default=False)
+    is_indisposed = models.BooleanField(default=False)
     start_workflow = models.BooleanField(default=False)
 
-    board_member = models.BooleanField(default=False)
-    executive_board_member = models.BooleanField(default=False)
-    thesis_review = models.BooleanField(default=False)
-    insurance_review = models.BooleanField(default=False)
-    expedited_review = models.BooleanField(default=False)
-    internal = models.BooleanField(default=False)
-    help_writer = models.BooleanField(default=False)
+    is_board_member = models.BooleanField(default=False)
+    is_executive_board_member = models.BooleanField(default=False)
+    is_thesis_reviewer = models.BooleanField(default=False)
+    is_insurance_reviewer = models.BooleanField(default=False)
+    is_expedited_reviewer = models.BooleanField(default=False)
+    is_internal = models.BooleanField(default=False)
+    is_help_writer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
@@ -86,7 +86,7 @@ post_save.connect(_post_user_save, sender=User)
 
 class InvitationQuerySet(models.query.QuerySet):
     def new(self):
-        return self.filter(accepted=False)
+        return self.filter(is_accepted=False)
 
 class InvitationManager(models.Manager):
     def get_query_set(self):
@@ -98,6 +98,6 @@ class InvitationManager(models.Manager):
 class Invitation(models.Model):
     user = models.ForeignKey(User, related_name='ecs_invitations')
     uuid = models.CharField(max_length=32, default=lambda: uuid4().get_hex(), unique=True)
-    accepted = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
 
     objects = InvitationManager()

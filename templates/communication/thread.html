@@ -74,7 +74,7 @@
             messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ thread.submission.current_submission_form.pk }}'));
         {% endif %}
 
-        {% if user|has_flag:'internal' %}
+        {% if user|has_flag:'is_internal' %}
             messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
         {% endif %}
 

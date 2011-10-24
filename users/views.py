@@ -197,35 +197,35 @@ def edit_profile(request):
 
 def notify_return(request):
     profile = request.user.get_profile()
-    profile.indisposed = False
+    profile.is_indisposed = False
     profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.profile'))
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     profile = user.get_profile()
-    if profile.indisposed:
-        profile.indisposed = False
+    if profile.is_indisposed:
+        profile.is_indisposed = False
     else:
-        profile.indisposed = True
+        profile.is_indisposed = True
 
     profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
         approved = request.POST.get('approve', False)
-        UserProfile.objects.filter(user=user).update(approved_by_office=approved)
+        UserProfile.objects.filter(user=user).update(is_approved_by_office=approved)
         if approved:
             attach_to_submissions(user)
     return render(request, 'users/approve.html', {
         'profile_user': user,
     })
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -236,7 +236,7 @@ def toggle_active(request, user_pk=None):
     user.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
@@ -252,7 +252,7 @@ def details(request, user_pk=None):
         'form': form,
     })
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
@@ -273,8 +273,8 @@ def administration(request, limit=20):
 
     approval_lookup = {
         'both': User.objects.all(),
-        'yes': User.objects.filter(ecs_profile__approved_by_office=True),
-        'no': User.objects.filter(ecs_profile__approved_by_office=False),
+        'yes': User.objects.filter(ecs_profile__is_approved_by_office=True),
+        'no': User.objects.filter(ecs_profile__is_approved_by_office=False),
     }
 
     users = approval_lookup[filterform.cleaned_data['approval']]
@@ -325,7 +325,7 @@ def administration(request, limit=20):
         'active': 'user_administration',
     })
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def invite(request):
     form = InvitationForm(request.POST or None)
     comment = None
@@ -378,9 +378,9 @@ def accept_invitation(request, invitation_uuid=None):
         user = form.save()
         profile = user.get_profile()
         profile.last_password_change = datetime.now()
-        profile.phantom = False
+        profile.is_phantom = False
         profile.save()
-        invitation.accepted = True
+        invitation.is_accepted = True
         invitation.save()
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)

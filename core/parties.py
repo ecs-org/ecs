@@ -63,7 +63,7 @@ def get_reviewing_parties(sf):
 
     parties = []
 
-    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
+    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().is_internal
     from ecs.tasks.models import Task
     external_reviewer_pks = sf.submission.external_reviewers.all().values_list('pk', flat=True)
     for task in Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).order_by('created_at').select_related('task_type').distinct():
@@ -79,7 +79,7 @@ def get_meeting_parties(sf):
     from ecs.users.middleware import current_user_store
 
     parties = []
-    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().internal
+    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().is_internal
     
     timetable_entries_q = sf.submission.timetable_entries.all().values('pk').query
     meetings_q = sf.submission.meetings.filter(timetable_entries__in=timetable_entries_q).values('pk').query

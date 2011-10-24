@@ -37,7 +37,7 @@ class TaskQuerySet(models.query.QuerySet):
         return self.filter(content_type=ct, data_id=data.pk)
 
     def acceptable_for_user(self, user):
-        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__indisposed=True)).exclude(deleted_at__isnull=False)
+        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
 
     def for_user(self, user, activity=None, data=None):
         qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)

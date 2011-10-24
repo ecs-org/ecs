@@ -200,7 +200,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
-        if request.user.get_profile().executive_board_member:
+        if request.user.get_profile().is_executive_board_member:
             from ecs.core.workflow import CategorizationReview
 
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
@@ -214,7 +214,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def delete_task(request, submission_form_pk=None, task_pk=None):
     with sudo():
         task = get_object_or_404(Task, pk=task_pk)
@@ -254,7 +254,7 @@ def initial_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
-@user_flag_required('internal', 'thesis_review')
+@user_flag_required('is_internal', 'is_thesis_reviewer')
 def paper_submission_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     task = submission.paper_submission_review_task_for(request.user)
@@ -264,7 +264,7 @@ def paper_submission_review(request, submission_pk=None):
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def befangene_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
@@ -287,7 +287,7 @@ def checklist_pdf(request, submission_form_pk=None, checklist_pk=None):
         raise Http404()
     return HttpResponseRedirect(url)
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     checklist = get_object_or_404(Checklist, pk=checklist_pk, status__in=('new', 'review_fail'))
@@ -359,7 +359,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)
 
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
@@ -440,7 +440,7 @@ def create_submission_form(request):
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
 
-        if submit and valid and request.user.get_profile().approved_by_office:
+        if submit and valid and request.user.get_profile().is_approved_by_office:
             submission_form = form.save(commit=False)
             submission = request.docstash.get('submission')
             if submission:   # refetch submission object because it could have changed
@@ -506,7 +506,7 @@ def create_submission_form(request):
 
 def change_submission_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
-    if profile.executive_board_member:
+    if profile.is_executive_board_member:
         submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
     else:
         submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk, presenter=request.user)
@@ -531,7 +531,7 @@ def change_submission_presenter(request, submission_pk=None):
 
 def change_submission_susar_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
-    if profile.executive_board_member:
+    if profile.is_executive_board_member:
         submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
     else:
         submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk, susar_presenter=request.user)
@@ -570,7 +570,7 @@ def submission_pdf(request, submission_form_pk=None):
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
-    if not request.user.get_profile().internal and not request.user == submission_form.presenter:
+    if not request.user.get_profile().is_internal and not request.user == submission_form.presenter:
         raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
@@ -581,7 +581,7 @@ def export_submission(request, submission_pk):
     return response
 
 
-@user_flag_required('approved_by_office')
+@user_flag_required('is_approved_by_office')
 def import_submission_form(request):
     form = SubmissionImportForm(request.POST or None, request.FILES or None)
 
@@ -653,7 +653,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
-    if request.user.get_profile().internal:
+    if request.user.get_profile().is_internal:
         data['submissions'] = Submission.objects.all()
         data['filtername'] = 'submission_filter_widget_internal'
         data['filter_form'] = SubmissionWidgetFilterForm

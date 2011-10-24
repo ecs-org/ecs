@@ -55,7 +55,7 @@
                     <li>
                         <a href="#workflow_tab">{% trans 'Workflow' %}</a>
                     </li>
-                    {% if user|has_flag:'internal' %}
+                    {% if user|has_flag:'is_internal' %}
                         <li>
                             <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
                         </li>
@@ -69,15 +69,15 @@
 
         {{ block.super }}
 
-        {% if show_reviews or user|has_flag:'internal' %}
+        {% if show_reviews or user|has_flag:'is_internal' %}
         <li>
             <a href="#">{% trans "Evaluations" %}</a>
             <ul class="tab_headers">
-                {% if user|has_flag:'internal' %}
+                {% if user|has_flag:'is_internal' %}
                     <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                 {% endif %}
                 {% if categorization_review_form %}
-                {% if user|has_flag:'internal' or user|is_member_of:'EC-Thesis Executive Group' %}
+                {% if user|has_flag:'is_internal' or user|is_member_of:'EC-Thesis Executive Group' %}
                     <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
@@ -94,7 +94,7 @@
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                {% if user|has_flag:'internal' and show_reviews and vote_review_form %}
+                {% if user|has_flag:'is_internal' and show_reviews and vote_review_form %}
                     <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#vote_review_tab">Votum</a>
                     </li>
@@ -113,7 +113,7 @@
             <a href="#">{% trans "Communication" %}</a>
             <ul class="tab_headers">
                 <li><a href="#communication_tab">{% trans "My Communication" %}</a></li>
-                {% if user|has_flag:'internal' %}
+                {% if user|has_flag:'is_internal' %}
                     <li><a href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>
                 {% endif %}
             </ul>
@@ -173,7 +173,7 @@
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    {% if user|has_flag:'internal' and vote_review_form %}
+    {% if user|has_flag:'is_internal' and vote_review_form %}
         <div id="vote_review_tab" class="tab">
             {% block vote_review_tab_content %}
                 <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
@@ -202,14 +202,14 @@
         {% endif %}
     </div>
 
-    {% if user|has_flag:'internal' %}
+    {% if user|has_flag:'is_internal' %}
         <div id="checklist_summary_tab" class="tab">
             {% include 'submissions/checklist_summary.inc' %}
         </div>
     {% endif %}
 
     {% if categorization_review_form %}
-    {% if user|has_flag:'internal' or user|is_member_of:'EC-Thesis Executive Group' %}
+    {% if user|has_flag:'is_internal' or user|is_member_of:'EC-Thesis Executive Group' %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
                 {% if categorization_task and categorization_review_form.readonly %}
@@ -241,7 +241,7 @@
         <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
-    {% if user|has_flag:'internal' %}
+    {% if user|has_flag:'is_internal' %}
         <div id="communication_overview_tab" class="tab">
             <div class="widget" x-widget-url="{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}"></div>
         </div>
@@ -250,7 +250,7 @@
         <div id="workflow_tab" class="tab">
             <div class="widget" x-widget-url="{% url ecs.tasks.views.my_tasks submission_pk=submission_form.submission.pk %}"></div>
         </div>
-        {% if user|has_flag:'internal' %}
+        {% if user|has_flag:'is_internal' %}
             <div id="workflow_log" class="tab">
                 <div class="widget" x-widget-url="{% url ecs.tasks.views.task_backlog submission_pk=submission_form.submission.pk %}"></div>
             </div>
@@ -268,7 +268,7 @@
             var reviewToolbarItems = [
                 ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}')
             ];
-            {% if user|has_flag:'internal' %}
+            {% if user|has_flag:'is_internal' %}
                 reviewToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
             {% endif %}
 
@@ -276,7 +276,7 @@
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
             });
             
-            {% if user|has_flag:'internal' and vote_review_form and vote %}
+            {% if user|has_flag:'is_internal' and vote_review_form and vote %}
                 $$('form.review.vote .CharField textarea').each(function(textarea){
                     ecs.textarea.installToolbarItem(textarea, ecs.textarea.toolbarItems.versionHistory("{% trans 'History' %} ({{ vote_version }})", "{% url ecs.core.views.field_history model_name='vote' pk=vote.pk %}"));
                 });

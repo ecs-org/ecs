@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block nav_left %}
-    {% if user|has_flag:"help_writer" %}
+    {% if user|has_flag:"is_help_writer" %}
         <span class="help_edit">
             <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a> 
         </span>

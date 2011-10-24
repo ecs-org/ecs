@@ -89,18 +89,18 @@
             {% endwith %}
         </div>
         {% with submission.medical_categories.all as categories %}
-            {% if categories and user|has_flag:'internal' %}
+            {% if categories and user|has_flag:'is_internal' %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.expedited_review_categories.all as er_categories %}
-            {% if categories and user|has_flag:'internal' %}
+            {% if categories and user|has_flag:'is_internal' %}
                 <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}
             {% if meetings %}
-                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user|has_flag:'internal' %}<a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user|has_flag:'is_internal' %}<a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% if docstash %}

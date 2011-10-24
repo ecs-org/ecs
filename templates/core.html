@@ -37,7 +37,7 @@
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
-          {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
+          {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
               <li><a href="{% url ecs.core.views.all_submissions %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|assigned_submissions_count %}
@@ -47,7 +47,7 @@
               <li><a href="{% url ecs.core.views.my_submissions %}">{% trans "My Studies" %}</a></li>
           {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>
-          {% if user|has_flag:"approved_by_office" %}
+          {% if user|has_flag:"is_approved_by_office" %}
               <li><a href="{% url ecs.core.views.import_submission_form %}">{% trans "Import" %}</a></li>
           {% endif %}
       </ul>
@@ -60,12 +60,12 @@
           <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans 'New Notification' %}</a></li>
       </ul>
     </li>
-    {% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
                 <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
-                {% if user|has_flag:"internal" %}
+                {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
                     <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
                     {% if user|is_member_of:"EC-Office" %}
@@ -75,17 +75,17 @@
           </ul>
         </li>
     {% endif %}
-    {% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_executive_board_member" %}
         <li>
           <span class="togglers">{% trans "Administration" %}</span>
           <ul class="elements">
-                {% if user|has_flag:"internal" %}
+                {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
                     <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
                 <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
-                {% if user|has_flag:"executive_board_member" %}
+                {% if user|has_flag:"is_executive_board_member" %}
                     <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
                 {% endif %}
           </ul>
@@ -129,7 +129,7 @@
 {% endblock %}
 
 {% block headernav %}
-    {% if user.get_profile.indisposed %}
+    {% if user.get_profile.is_indisposed %}
     <div>
       {% url ecs.users.views.profile as profile_url %}
       {% blocktrans with profile_url as profile_url %}
@@ -166,10 +166,10 @@
     var accordion_choices = [
         'submissions',
         'notifications',
-{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+{% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
         'meetings',
 {% endif %}
-{% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+{% if user|has_flag:"is_internal" or user|has_flag:"is_executive_board_member" %}
         'administration',
 {% endif %}
         'demo'

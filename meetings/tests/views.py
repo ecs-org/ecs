@@ -22,7 +22,7 @@ class ViewTestCase(EcsTestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
-        self.user = self.create_user('unittest-internal', profile_extra={'internal': True})
+        self.user = self.create_user('unittest-internal', profile_extra={'is_internal': True})
         self.client.login(email='unittest-internal@example.com', password='password')
 
     def tearDown(self):

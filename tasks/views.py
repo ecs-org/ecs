@@ -20,7 +20,7 @@ from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
 
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     with sudo():
         tasks = Task.objects.all()
@@ -108,7 +108,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
         'mine': lambda tasks: tasks.filter(assigned_to=request.user, accepted=True).order_by(*order_by),
         'assigned': lambda tasks: tasks.filter(assigned_to=request.user, accepted=False).order_by(*order_by),
         'open': lambda tasks: tasks.filter(assigned_to=None).order_by(*order_by),
-        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__indisposed=True).order_by(*order_by),
+        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__is_indisposed=True).order_by(*order_by),
     }
 
     for k, f in task_flavors.iteritems():

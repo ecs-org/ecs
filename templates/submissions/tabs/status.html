@@ -64,7 +64,7 @@
             {% with submission_form.presenter.get_profile.organisation as organisation%}
                 {{ submission_form.presenter }}{% if organisation %} ({{organisation}}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'executive_board_member' or user == submission_form.presenter %}
+            {% if user|has_flag:'is_executive_board_member' or user == submission_form.presenter %}
                 | <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission_form.submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -75,7 +75,7 @@
             {% with submission_form.susar_presenter.get_profile.organisation as organisation%}
                 {{ submission_form.susar_presenter }}{% if organisation %} ({{organisation}}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'executive_board_member' or user == submission_form.susar_presenter %}
+            {% if user|has_flag:'is_executive_board_member' or user == submission_form.susar_presenter %}
                 | <a href="{% url ecs.core.views.change_submission_susar_presenter submission_pk=submission_form.submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -148,7 +148,7 @@
             <ul>
                 {% for meeting in submission_form.submission.meetings.all %}
                     <li>
-                        {% if user|has_flag:'internal' %}
+                        {% if user|has_flag:'is_internal' %}
                             <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                         {% else %}
                             {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
@@ -156,12 +156,12 @@
                     </li>
                 {% endfor %}
             </ul>
-            {% if user|has_flag:'executive_board_member' %}
+            {% if user|has_flag:'is_executive_board_member' %}
                 <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
     </tr>
-    {% if user|has_flag:'internal' %}
+    {% if user|has_flag:'is_internal' %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
@@ -187,7 +187,7 @@
         <th>Expedited Review:</th>
         <td colspan="3">{{ submission_form.submission.is_expedited|yesno }}</td>
     </tr>
-    {% if user|has_flag:'internal' and submission_form.submission.external_reviewers.exists %}
+    {% if user|has_flag:'is_internal' and submission_form.submission.external_reviewers.exists %}
     <tr>
         <th>Gutachten:</th>
         <td>
@@ -209,6 +209,6 @@
     {% endif %}
 </table>
 
-{% if user|has_flag:'internal' or user == submission_form.presenter %}
+{% if user|has_flag:'is_internal' or user == submission_form.presenter %}
     <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}

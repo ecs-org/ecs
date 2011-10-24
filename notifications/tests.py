@@ -163,9 +163,9 @@ class NotificationFormTest(LoginTestCase):
         nt = NotificationType.objects.get(form='ecs.core.forms.ProgressReportNotificationForm')
 
         presenter = self.create_user('test_presenter')
-        office = self.create_user('test_office', profile_extra={'internal': True})
+        office = self.create_user('test_office', profile_extra={'is_internal': True})
         office.groups.add(Group.objects.get(name=u'EC-Office'))
-        executive = self.create_user('text_executive', profile_extra={'internal': True, 'executive_board_member': True})
+        executive = self.create_user('text_executive', profile_extra={'is_internal': True, 'is_executive_board_member': True})
         executive.groups.add(
             Group.objects.get(name=u'EC-Executive Board Group'),
             Group.objects.get(name=u'EC-Notification Review Group'),

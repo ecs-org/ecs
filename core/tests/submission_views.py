@@ -97,8 +97,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         office_group = Group.objects.get(name='EC-Office')
         self.office_user.groups.add(office_group)
         profile = self.office_user.get_profile()
-        profile.internal = True
-        profile.approved_by_office = True
+        profile.is_internal = True
+        profile.is_approved_by_office = True
         profile.save()
 
     def get_docstash_url(self):
