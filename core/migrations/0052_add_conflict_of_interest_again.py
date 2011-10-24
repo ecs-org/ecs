@@ -7,8 +7,6 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        from ecs.core.bootstrap import checklist_blueprints
-        checklist_blueprints()  # run checklist bootstrap now, because default sequence is syncdb/migrate/bootstrap
         for checklist in orm.Checklist.objects.filter(blueprint__slug='external_review').select_related('blueprint'):
             changed = False
             for question in checklist.blueprint.questions.all():
