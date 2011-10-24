@@ -76,23 +76,23 @@ class Vote(models.Model):
         vote_extended.send(sender=Vote, vote=self)
     
     @property
-    def positive(self):
+    def is_positive(self):
         return self.result in POSITIVE_VOTE_RESULTS
         
     @property
-    def negative(self):
+    def is_negative(self):
         return self.result in NEGATIVE_VOTE_RESULTS
         
     @property
-    def final(self):
+    def is_final(self):
         return self.result in FINAL_VOTE_RESULTS
         
     @property
-    def permanent(self):
+    def is_permanent(self):
         return self.result in PERMANENT_VOTE_RESULTS
         
     @property
-    def recessed(self):
+    def is_recessed(self):
         return self.result in ('3a', '3b')
         
     @property
@@ -100,7 +100,7 @@ class Vote(models.Model):
         return self.result == '1'
         
     @property
-    def valid(self):
+    def is_valid(self):
         return self.valid_until < datetime.now()
 
 

@@ -242,7 +242,7 @@ class Submission(models.Model):
                 except IndexError:
                     pass
                 else:
-                    if last_vote.recessed:
+                    if last_vote.is_recessed:
                         _schedule()
 
     class Meta:

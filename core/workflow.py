@@ -399,7 +399,7 @@ class VoteB2Review(Activity):
     def pre_perform(self, choice):
         sf = self.workflow.data.submission_form
         new_vote = Vote.objects.create(submission_form=sf, result=choice)
-        if new_vote.permanent:
+        if new_vote.is_permanent:
             # abort all tasks
             with sudo():
                 open_tasks = Task.objects.for_data(sf.submission).filter(deleted_at__isnull=True, closed_at=None)
