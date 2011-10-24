@@ -168,8 +168,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djcelery',
-    #'ghettoq', 
-
+    
     'ecs.utils.countries',
     'compressor',
     'dbtemplates',
@@ -426,6 +425,18 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only us
 # ### django_compressor ### 
 COMPRESS = True
 COMPRESS_JS_FILTERS = []
+
+sass_param = "{infile} {outfile}"
+gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems')
+if sys.platform == 'win32':
+    sass = 'set GEM_HOME="{0}"; set GEM_PATH=""; sass.bat'.format(gem_home.replace("\\", "/"))
+else:
+    sass = 'export GEM_HOME="{0}"; export GEM_PATH=""; sass'.format(gem_home) 
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-sass', '{0} {1}'.format(sass, sass_param)),
+    ('text/x-scss', '{0} --scss {1}'.format(sass, sass_param)),
+    )
 
 
 # ### django-sentry ###

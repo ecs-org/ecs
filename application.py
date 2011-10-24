@@ -48,6 +48,12 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
+# sass css preprocessor
+ruby:req:apt:apt-get:ruby
+rubygems:req:apt:apt-get:rubygems
+ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
+#sass:static:win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:func%sass_install,sass.bat
+#sass:static:!win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:func%sass_install,sass
 
 # unit testing
 nose:inst:all:pypi:nose
@@ -329,6 +335,22 @@ memcached:req:apt:apt-get:memcached
 """
 
 
+# custom static scripts
+def sass_install(resource):
+    if sys.platform == 'win32':
+        gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems').replace("\\", "/")
+        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
+        install = 'set GEM_HOME="{0}"; set GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
+            gem_home, bin_dir, resource)
+    else:
+        gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems')
+        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
+        install = 'export GEM_HOME="{0}"; export GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
+            gem_home, bin_dir, resource)
+  
+    return (install, 0) # returns commandline to run and expected returncode
+ 
+    
 
 # target bundles
 ################
