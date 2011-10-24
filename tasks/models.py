@@ -138,7 +138,7 @@ class Task(models.Model):
             return None
 
     @property
-    def locked(self):
+    def is_locked(self):
         if not self.workflow_token_id:
             return False
         return self.workflow_token.locked

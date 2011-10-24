@@ -57,7 +57,7 @@ class TaskManagementData(object):
     def process_response(self, response):
         task = self.task
         form = self.form
-        if form and self.method == 'POST' and self.submit and form.is_valid() and not task.locked:
+        if form and self.method == 'POST' and self.submit and form.is_valid() and not task.is_locked:
             action = form.cleaned_data['action']
             if action == 'complete':
                 task.done(user=self.request.user, choice=form.get_choice())

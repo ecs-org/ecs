@@ -3,7 +3,7 @@
 <div id="task_main">
 <form action="{{ request.path }}" method="post" id="task_form">
     <h4>{% trans 'Task' %}: {{ form.task }}</h4>
-    {% if form.task.locked %}
+    {% if form.task.is_locked %}
     <span class="lockInfo">Dieser Task kann noch nicht abgeschlossen werden.</span>
     {% endif %}
     {% if form.errors|contains:'action' %}
@@ -14,7 +14,7 @@
     <ul>
         {% if not form.task.choices %}
         <li>
-            <input type="radio" name="task_management-action" id="id_action_complete" value="complete"{% ifequal form|form_value:'action' 'complete' %} checked="checked"{% endifequal %} {% if form.task.locked %} disabled="disabled"{% endif %}/>
+            <input type="radio" name="task_management-action" id="id_action_complete" value="complete"{% if form|form_value:'action' == 'complete' %} checked="checked"{% endif %} {% if form.task.is_locked %} disabled="disabled"{% endif %}/>
             <label for="id_action_complete"><span class="task_complete"></span>{% trans 'Close' %}</label>
         </li>
         {% else %}
