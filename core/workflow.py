@@ -45,7 +45,7 @@ def is_retrospective_thesis(wf):
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return wf.data.expedited and wf.data.expedited_review_categories.exists()
+    return wf.data.is_expedited and wf.data.expedited_review_categories.exists()
 
 @guard(model=Submission)
 def is_localec(wf):

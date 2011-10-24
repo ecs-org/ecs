@@ -23,14 +23,14 @@ class VoteRemindersTest(CommunicationTestCase):
         
         # there has to be a test submission
         self.submission_form = create_submission_form()
-        self.submission_form.submission.thesis = False
+        self.submission_form.submission.is_thesis = False
         self.submission_form.submission.save()
         self.submission_form.project_type_education_context = None
         self.submission_form.submitter_email = self.alice.email
         self.submission_form.save()
 
         self.submission_form_thesis = create_submission_form()
-        self.submission_form_thesis.submission.thesis = True
+        self.submission_form_thesis.submission.is_thesis = True
         self.submission_form_thesis.submitter_email = self.alice.email
         self.submission_form_thesis.submission.save()
 

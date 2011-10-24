@@ -98,14 +98,14 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.thesis = True
+        self.sf.submission.is_thesis = True
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
 
         with sudo(self.expedited_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.expedited = True
+        self.sf.submission.is_expedited = True
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)

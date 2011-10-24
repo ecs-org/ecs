@@ -18,13 +18,13 @@ def _unpickle(f, args, kwargs):
 class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Submission
-        fields = ('thesis', 'retrospective', 'medical_categories', 'expedited', 'expedited_review_categories',
+        fields = ('is_thesis', 'is_retrospective', 'medical_categories', 'is_expedited', 'expedited_review_categories',
             'is_amg', 'is_mpg', 'sponsor_required_for_next_meeting', 'insurance_review_required', 'gcp_review_required', 'legal_and_patient_review_required',
             'statistical_review_required', 'remission', 'external_reviewers')
         widgets = {
-            'thesis': NullBooleanWidget,
-            'retrospective': NullBooleanWidget,
-            'expedited': NullBooleanWidget,
+            'is_thesis': NullBooleanWidget,
+            'is_retrospective': NullBooleanWidget,
+            'is_expedited': NullBooleanWidget,
             'is_amg': NullBooleanWidget,
             'is_mpg': NullBooleanWidget,
             'insurance_review_required': NullBooleanWidget,
@@ -34,10 +34,10 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'remission': NullBooleanWidget,
         }
         labels = {
-            'thesis': _('thesis'),
-            'retrospective': _('retrospective'),
+            'is_thesis': _('thesis'),
+            'is_retrospective': _('retrospective'),
             'medical_categories': _('medical_categories'),
-            'expedited': _('expedited'),
+            'is_expedited': _('expedited'),
             'expedited_review_categories': _('expedited_review_categories'),
             'is_amg': _('is_amg'),
             'is_mpg': _('is_mpg'),
@@ -68,14 +68,14 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
 
     def clean(self):
         cd = self.cleaned_data
-        if cd['expedited']:
+        if cd['is_expedited']:
             require_fields(self, ('expedited_review_categories',))
         return cd
 
 class RetrospectiveThesisReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
-        fields = ('thesis', 'retrospective',)
+        fields = ('is_thesis', 'is_retrospective',)
 
 
 class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):

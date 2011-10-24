@@ -478,19 +478,19 @@ class TimetableEntry(models.Model):
     def is_retrospective(self):
         if not self.submission_id:
             return False
-        return self.submission.retrospective
+        return self.submission.is_retrospective
     
     @cached_property
     def is_thesis(self):
         if not self.submission_id:
             return False
-        return self.submission.thesis
+        return self.submission.is_thesis
         
     @cached_property
     def is_expedited(self):
         if not self.submission_id:
             return False
-        return self.submission.expedited
+        return self.submission.is_expedited
     
     @property
     def is_batch_processed(self):

@@ -25,9 +25,9 @@ from ecs.core.signals import study_finished
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
-    thesis = models.NullBooleanField()
-    retrospective = models.NullBooleanField()
-    expedited = models.NullBooleanField()
+    is_thesis = models.NullBooleanField()
+    is_retrospective = models.NullBooleanField()
+    is_expedited = models.NullBooleanField()
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     remission = models.NullBooleanField()
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
@@ -39,9 +39,10 @@ class Submission(models.Model):
     gcp_review_required = models.NullBooleanField(default=False)
     legal_and_patient_review_required = models.NullBooleanField(default=True)
     statistical_review_required = models.NullBooleanField(default=True)
+
     is_transient = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
-    
+
     is_amg = models.NullBooleanField()   # Arzneimittelgesetz
     is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
     
@@ -213,7 +214,7 @@ class Submission(models.Model):
         from ecs.meetings.models import Meeting
         from ecs.core.models import Vote
 
-        expedited = self.expedited and self.expedited_review_categories.exists()
+        expedited = self.is_expedited and self.expedited_review_categories.exists()
         retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=self.pk).exists()
         localec = self.current_submission_form.is_categorized_multicentric_and_local
         visible = not expedited and not retrospective_thesis and not localec
@@ -568,9 +569,9 @@ class SubmissionForm(models.Model):
         return self.project_type_medical_device
 
     @property
-    def thesis(self):
-        if self.submission.thesis is not None:
-            return self.submission.thesis
+    def is_thesis(self):
+        if self.submission.is_thesis is not None:
+            return self.submission.is_thesis
         return self.project_type_education_context is not None
 
     @property
@@ -690,8 +691,8 @@ def _post_submission_form_save(**kwargs):
         'is_amg': new_sf.project_type_drug,
         'is_mpg': new_sf.project_type_medical_device_or_method,
         'insurance_review_required': bool(new_sf.insurance_name),
-        'thesis': new_sf.project_type_education_context is not None,
-        'retrospective': new_sf.project_type_retrospective,
+        'is_thesis': new_sf.project_type_education_context is not None,
+        'is_retrospective': new_sf.project_type_retrospective,
     }
 
     # set defaults

@@ -72,16 +72,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(meetings__isnull=True)
 
     def thesis(self):
-        return self.filter(Q(thesis=True)|(Q(thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
+        return self.filter(Q(is_thesis=True)|(Q(is_thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
 
     def retrospective(self):
-        return self.filter(Q(retrospective=True)|Q(retrospective=None, current_submission_form__project_type_retrospective=True))
+        return self.filter(Q(is_retrospective=True)|Q(is_retrospective=None, current_submission_form__project_type_retrospective=True))
 
     def retrospective_thesis(self):
         return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
 
     def expedited(self):
-        return self.filter(expedited=True)
+        return self.filter(is_expedited=True)
 
     def localec(self):
         return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
