@@ -24,7 +24,7 @@ class PriceManager(models.Manager):
     def get_for_submission(self, submission, review=False):
         if submission.remission:
             return self.get(category=STUDY_PRICING_REMISSION)
-        if submission.is_amg and submission.multicentric:
+        if submission.is_amg and submission.is_multicentric:
             main_ec = submission.main_ethics_commission
             if main_ec and main_ec.system:
                 return self.get(category=STUDY_PRICING_MULTICENTRIC_AMG_MAIN)

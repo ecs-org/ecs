@@ -123,10 +123,10 @@ class Submission(models.Model):
             return None
         
     @property
-    def multicentric(self):
+    def is_multicentric(self):
         if not self.current_submission_form:
             return None
-        return self.current_submission_form.multicentric
+        return self.current_submission_form.is_multicentric
         
     @property
     def is_active(self):
@@ -574,7 +574,7 @@ class SubmissionForm(models.Model):
         return self.project_type_education_context is not None
 
     @property
-    def multicentric(self):
+    def is_multicentric(self):
         return self.investigators.count() > 1
         
     @property

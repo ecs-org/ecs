@@ -232,7 +232,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('8.1.5', 'study_plan_single_blind', _(u'blind'), db_field=False), 
     FieldInfo('8.1.6', 'study_plan_controlled', _(u'controlled')),
     FieldInfo('8.1.7', 'study_plan_cross_over', _(u'cross-over')),
-    FieldInfo('8.1.8', 'multicentric', _(u'multicentric'), db_field=False), 
+    FieldInfo('8.1.8', 'is_multicentric', _(u'multicentric'), db_field=False), 
     FieldInfo('8.1.9', 'study_plan_double_blind', _(u'double-blind'), db_field=False), 
     FieldInfo('8.1.10', 'study_plan_placebo', _(u'placebo')),
     FieldInfo('8.1.11', 'study_plan_factorized', _(u'factorized')),

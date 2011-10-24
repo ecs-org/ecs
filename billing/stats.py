@@ -56,7 +56,7 @@ def collect_submission_billing_stats(submission_list):
     total = 0
     for submission in submission_list:
         if submission.is_amg:
-            key = AMG_KEYS[(submission.multicentric, getattr(submission.main_ethics_commission, 'system', False))]
+            key = AMG_KEYS[(submission.is_multicentric, getattr(submission.main_ethics_commission, 'system', False))]
         elif submission.is_mpg:
             key = 'mpg'
         else:
