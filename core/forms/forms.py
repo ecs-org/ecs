@@ -30,7 +30,7 @@ class ModelFormSetPickleMixin(object):
 ## notifications ##
 
 def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__finished=False).order_by('submission__ec_number')
+    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
@@ -45,7 +45,7 @@ class MultiNotificationForm(NotificationForm):
 class SusarNotificationForm(MultiNotificationForm):
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__finished=False).order_by('submission__ec_number')
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
 
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
