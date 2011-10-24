@@ -57,7 +57,7 @@ def upload_to(instance=None, filename=None):
 class Attachment(models.Model):
     file = models.FileField(upload_to=upload_to, storage=AttachmentFileStorage())
     mimetype = models.CharField(max_length=100)
-    screenshot = models.BooleanField(default=False)
+    is_screenshot = models.BooleanField(default=False)
     slug = models.CharField(max_length=100, unique=True, blank=True)
     view = models.ForeignKey(View, null=True, blank=True)
     page = models.ForeignKey(Page, null=True, blank=True)

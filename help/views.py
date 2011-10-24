@@ -312,7 +312,7 @@ def screenshot(request):
         tmp.write(data) 
         tmp.flush() 
         tmp.seek(0)
-        Attachment.objects.create(file=File(tmp), mimetype=mimetype, screenshot=True, slug=slug)
+        Attachment.objects.create(file=File(tmp), mimetype=mimetype, is_screenshot=True, slug=slug)
         tmp.close() 
 
     return HttpResponse('OK')
