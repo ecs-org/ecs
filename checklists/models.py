@@ -14,9 +14,6 @@ class ChecklistBlueprint(models.Model):
     multiple = models.BooleanField(default=False)
     billing_required = models.BooleanField(default=False)
 
-    class Meta:
-        app_label = 'core'
-
     def __unicode__(self):
         return _(self.name)
 
@@ -30,7 +27,6 @@ class ChecklistQuestion(models.Model):
     is_inverted = models.BooleanField(default=False)
 
     class Meta:
-        app_label = 'core'
         unique_together = (('blueprint', 'number'),)
         ordering = ('blueprint', 'index',)
 
@@ -54,9 +50,6 @@ class Checklist(models.Model):
     pdf_document = models.OneToOneField(Document, related_name="checklist", null=True)
 
     objects = AuthorizationManager()
-
-    class Meta:
-        app_label = 'core'
 
     def __unicode__(self):
         if self.blueprint.multiple:
@@ -102,7 +95,7 @@ class Checklist(models.Model):
         name = slugify(unicode(self))
         filename = '{0}.pdf'.format(name)
 
-        pdfdata = render_pdf_context('db/submissions/wkhtml2pdf/checklist.html', {
+        pdfdata = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
             'checklist': self,
         })
 
@@ -123,7 +116,6 @@ class ChecklistAnswer(models.Model):
     objects = AuthorizationManager()
 
     class Meta:
-        app_label = 'core'
         ordering = ('question__blueprint', 'question__index')
 
     def __unicode__(self):

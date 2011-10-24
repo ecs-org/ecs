@@ -11,7 +11,8 @@ from django.utils.translation import ugettext as _
 from django.db.models import Q
 
 from ecs.utils.decorators import developer
-from ecs.core.models import Submission, Checklist
+from ecs.core.models import Submission
+from ecs.checklists.models import Checklist
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.utils import deliver, whitewash

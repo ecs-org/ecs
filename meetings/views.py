@@ -15,7 +15,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory, Vote, Checklist, ChecklistBlueprint
+from ecs.core.models import Submission, MedicalCategory, Vote
+from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.core.forms.voting import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.tasks.models import Task

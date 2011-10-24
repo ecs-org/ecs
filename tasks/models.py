@@ -10,7 +10,8 @@ from django.utils.translation import ugettext as _
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission, Vote, Checklist
+from ecs.core.models import Submission, Vote
+from ecs.checklists.models import Checklist
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.authorization.managers import AuthorizationManager

@@ -15,17 +15,18 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.core.models import Submission, SubmissionForm, ChecklistBlueprint, Checklist, ChecklistAnswer
+from ecs.core.models import Submission, SubmissionForm
+from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 
 from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm
-from ecs.core.forms.checklist import make_checklist_form
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.core.forms.voting import VoteReviewForm
 from ecs.core.forms.utils import submission_form_to_dict
+from ecs.checklists.forms import make_checklist_form
 
 from ecs.core.workflow import (ChecklistReview,
     ThesisRecommendationReview,
@@ -278,14 +279,6 @@ def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     if not submission_form.submission == checklist.submission:
         raise Http404()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'active_checklist': checklist.pk})
-
-def checklist_pdf(request, submission_form_pk=None, checklist_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    checklist = get_object_or_404(Checklist, pk=checklist_pk)
-    url = checklist.pdf_document.get_downloadurl()
-    if not submission_form.submission == checklist.submission or not url:
-        raise Http404()
-    return HttpResponseRedirect(url)
 
 @user_flag_required('is_internal')
 def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):

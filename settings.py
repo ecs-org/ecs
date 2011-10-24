@@ -184,6 +184,7 @@ INSTALLED_APPS = (
     'django_concurrent_test_server',
 
     'ecs.core',
+    'ecs.checklists',
     'ecs.utils',
     'ecs.feedback',
     'ecs.docstash',

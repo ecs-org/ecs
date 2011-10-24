@@ -93,10 +93,10 @@
                 {% endif %}
                 {% if checklist %}
                   {% if checklist.has_positive_comments %}
-                    <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">copy positive</a>
+                    <a class="textblock" href="{% url ecs.checklists.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">copy positive</a>
                   {% endif %}
                   {% if checklist.has_negative_comments %}
-                    <a class="textblock" href="{% url ecs.core.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">copy negative</a>
+                    <a class="textblock" href="{% url ecs.checklists.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">copy negative</a>
                   {% endif %}
                 {% endif %}
               </li>

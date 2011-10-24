@@ -24,7 +24,6 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/(?P<blueprint_pk>\d+)/$', 'ecs.core.views.checklist_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/show/(?P<checklist_pk>\d+)/$', 'ecs.core.views.show_checklist_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/drop/(?P<checklist_pk>\d+)/$', 'ecs.core.views.drop_checklist_review'),
-    url(r'^submission_form/(?P<submission_form_pk>\d+)/review/checklist/pdf/(?P<checklist_pk>\d+)/$', 'ecs.core.views.checklist_pdf'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/categorization/$', 'ecs.core.views.categorization_review'),
     url(r'^submission_form/(?P<submission_pk>\d+)/review/initial/$', 'ecs.core.views.initial_review'),
     url(r'^submission_form/(?P<submission_pk>\d+)/review/paper_submission/$', 'ecs.core.views.paper_submission_review'),
@@ -49,8 +48,6 @@ urlpatterns = patterns(
     url(r'^vote/(?P<vote_pk>\d+)/sign$', 'ecs.core.views.vote_sign'),
     url(r'^vote/(?P<document_pk>\d+)/sign_finished/$', 'ecs.core.views.vote_sign_finished'),
     
-    url(r'^checklist/(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'ecs.core.views.checklist_comments'),
-
     # public
     url(r'^catalog/$', 'ecs.core.views.submissions.catalog'),
 

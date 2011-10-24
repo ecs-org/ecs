@@ -3,7 +3,7 @@
 There is an new external review for the study {{ ec_number }} available.
 Please click the following link to download the review as PDF file:
 {% endblocktrans %}
-{{ ABSOLUTE_URL_PREFIX }}{% url ecs.core.views.checklist_pdf submission_form_pk=submission.current_submission_form.pk checklist_pk=checklist.pk %}
+{{ ABSOLUTE_URL_PREFIX }}{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}
 
 {% blocktrans %}
 Sincerly yours,

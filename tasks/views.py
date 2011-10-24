@@ -11,10 +11,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission, Vote, Checklist
-from ecs.meetings.models import Meeting
-from ecs.notifications.models import Notification
-from ecs.communication.models import Thread
+from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined

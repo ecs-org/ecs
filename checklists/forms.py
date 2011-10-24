@@ -23,4 +23,3 @@ def make_checklist_form(checklist):
         fields['c%s' % i] = forms.CharField(initial=answer.comment, label=_('comment'), required=False, widget=forms.Textarea())
     form_class = type('Checklist%sForm' % blueprint.pk, (ReadonlyFormMixin, forms.BaseForm,), {'base_fields': fields})
     return form_class
-

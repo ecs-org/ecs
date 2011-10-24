@@ -3,11 +3,10 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
     vote_review, export_submission, import_submission_form, befangene_review, diff, submission_widget,
     submission_list, upload_document_for_submission, delete_document_from_submission,
     delete_docstash_entry, view_submission, all_submissions, my_submissions, assigned_submissions,
-    delete_task, show_checklist_review, drop_checklist_review, checklist_pdf, change_submission_presenter,
+    delete_task, show_checklist_review, drop_checklist_review, change_submission_presenter,
     change_submission_susar_presenter, paper_submission_review, initial_review,
 )
 from ecs.core.views.votes import show_html_vote, show_pdf_vote, download_signed_vote, vote_sign, vote_sign_finished
-from ecs.core.views.checklists import checklist_comments
 from ecs.core.views.autocomplete import autocomplete, internal_autocomplete
 from ecs.core.views.fieldhistory import field_history
 

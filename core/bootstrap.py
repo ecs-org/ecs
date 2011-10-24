@@ -8,7 +8,8 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 
 from ecs import bootstrap
-from ecs.core.models import ExpeditedReviewCategory, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion
+from ecs.core.models import ExpeditedReviewCategory, MedicalCategory, EthicsCommission
+from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
@@ -91,7 +92,7 @@ def templates():
                 tpl.save()
 
 
-@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.core.bootstrap.checklist_blueprints'))
+@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def submission_workflow():
     from ecs.core.models import Submission
     from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview,
@@ -496,4 +497,139 @@ def auth_ec_staff_users():
     try:
         from ecs.core.bootstrap_settings import staff_users
     except ImportError:
-        staff_users = ()
+        staff_users = ((u'Staff', u'User', u'staff@example.org', 'changeme', ('EC-Office',), {},'f'),)
+
+    for first, last, email, password, groups, flags, gender in staff_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        user.first_name = first
+        user.last_name = last
+        user.set_password(password)
+        user.is_staff = True
+        user.save()
+        for group in groups:
+            user.groups.add(_get_group(group))
+
+        profile = user.get_profile()
+        flags = flags.copy()
+        flags.update({
+            'is_internal': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'forward_messages_after_minutes': 360,
+            'gender': gender,
+        })
+        update_instance(profile, flags)
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_external_review_users():
+    try:
+        from ecs.core.bootstrap_settings import external_review_users
+    except ImportError:
+        other_users = ((u'External', u'Reviewer', u'otherexternal@example.org', 'changeme','f'),)
+
+    for first, last, email, password, gender in external_review_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+
+        profile = user.get_profile()
+        update_instance(profile, {
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+        })
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_ec_other_users():
+    try:
+        from ecs.core.bootstrap_settings import other_users
+    except ImportError:
+        other_users = ((u'Other', u'User', u'other@example.org', 'changeme', ('EC-Statistic Group',),'f'),)
+
+    for first, last, email, password, groups, gender in other_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+        for group in groups:
+            user.groups.add(_get_group(group))
+
+        profile = user.get_profile()
+        update_instance(profile, {
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+            #'forward_messages_after_minutes': 360,
+        })
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_ec_boardmember_users():
+    try:
+        from ecs.core.bootstrap_settings import board_members
+    except ImportError:
+        board_members = ((u'Board', u'Member', u'boardmember@example.org', 'changeme', ('Pharma',),'f'),)
+
+    board_member_group = _get_group('EC-Board Member')
+    for first, last, email, password, medcategories, gender in board_members:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+        user.groups.add(board_member_group)
+
+        profile = user.get_profile()
+
+        profile_data = {
+            'is_board_member': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+            #'forward_messages_after_minutes': 360,
+        }
+
+        for medcategory in medcategories:
+            m = _get_medical_category(medcategory)
+            m.users.add(user)
+            try:
+                e = _get_expedited_category(medcategory)
+                e.users.add(user)
+                profile_data['is_expedited_reviewer'] = True
+            except ObjectDoesNotExist:
+                pass
+
+        update_instance(profile, profile_data)
+
+@bootstrap.register()
+def ethics_commissions():
+    try:
+        from ecs.core.bootstrap_settings import commissions
+    except ImportError:
+        commissions = [{
+            'uuid': u'12345678909876543212345678909876',
+            'city': u'Neverland',
+            'fax': None,
+            'chairperson': None,
+            'name': u'Ethikkommission von Neverland',
+            'url': None,
+            'email': None,
+            'phone': None,
+            'address_1': u'Mainstreet 1',
+            'contactname': None,
+            'address_2': u'',
+            'zip_code': u'4223',
+        }]
+
+    for comm in commissions:
+        comm = comm.copy()
+        ec, created = EthicsCommission.objects.get_or_create(uuid=comm.pop('uuid'), defaults=comm)
+        update_instance(ec, comm)

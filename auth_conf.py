@@ -3,8 +3,9 @@
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
-from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee, Measure, 
-    ForeignParticipatingCenter, NonTestedUsedDrug, Vote, Checklist, ChecklistAnswer, ExpeditedReviewCategory)
+from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
+    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Vote, ExpeditedReviewCategory)
+from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.documents.models import Document
 from ecs.core.models.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash

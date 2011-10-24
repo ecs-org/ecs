@@ -4,7 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.template import Context, loader
 from django.http import HttpResponse
 
-from ecs.core.models import Submission, Checklist
+from ecs.core.models import Submission
+from ecs.checklists.models import Checklist
 from ecs.core import paper_forms
 from ecs.utils.viewutils import render, render_pdf_context, pdf_response
 from ecs.core import bootstrap
@@ -41,7 +42,7 @@ def test_checklist_pdf_html(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
     bootstrap.templates()
-    template = loader.get_template('db/submissions/wkhtml2pdf/checklist.html')
+    template = loader.get_template('db/checklists/wkhtml2pdf/checklist.html')
     html = template.render(Context({
         'checklist': checklist,
     }))
@@ -51,7 +52,7 @@ def test_render_checklist_pdf(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
     bootstrap.templates()
-    pdf = render_pdf_context('db/submissions/wkhtml2pdf/checklist.html', {
+    pdf = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
         'checklist': checklist,
     })
     return pdf_response(pdf, filename='test.pdf')
