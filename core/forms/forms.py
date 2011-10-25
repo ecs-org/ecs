@@ -7,10 +7,9 @@ from django.db.models import F
 from django.core.urlresolvers import reverse
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
-from ecs.utils.formutils import require_fields
-from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
+from ecs.utils.formutils import ModelFormPickleMixin, require_fields
+from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, SingleselectWidget
 from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
@@ -19,84 +18,10 @@ from ecs.users.utils import get_current_user
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
     
-class ModelFormPickleMixin(object):
-    def __reduce__(self):
-        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
-        
 class ModelFormSetPickleMixin(object):
     def __reduce__(self):
         return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
 
-## notifications ##
-
-def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
-
-class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
-    class Meta:
-        model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp')
-
-class MultiNotificationForm(NotificationForm):
-    def __init__(self, *args, **kwargs):
-        super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = get_usable_submission_forms()
-
-class SusarNotificationForm(MultiNotificationForm):
-    def __init__(self, *args, **kwargs):
-        super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
-
-class SingleStudyNotificationForm(NotificationForm):
-    submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
-    
-    def __init__(self, *args, **kwargs):
-        super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_form'].queryset = get_usable_submission_forms()
-
-    class Meta:
-        model = Notification
-        exclude = NotificationForm._meta.exclude + ('submission_forms',)
-        
-    def get_submission_form(self):
-        return self.cleaned_data['submission_form']
-    
-    def save(self, commit=True):
-        obj = super(SingleStudyNotificationForm, self).save(commit=commit)
-        if commit:
-            obj.submission_forms = [self.get_submission_form()]
-        else:
-            old_save_m2m = self.save_m2m
-            def _save_m2m():
-                old_save_m2m()
-                obj.submission_forms = [self.get_submission_form()]
-            self.save_m2m = _save_m2m
-        return obj
-
-class ProgressReportNotificationForm(SingleStudyNotificationForm):
-    runs_till = DateField(required=True)
-
-    class Meta:
-        model = ProgressReportNotification
-        exclude = SingleStudyNotificationForm._meta.exclude
-
-    def clean(self):
-        cleaned_data = super(ProgressReportNotificationForm, self).clean()
-        if not cleaned_data.get('study_started', False):
-            require_fields(self, ('reason_for_not_started',))
-        return cleaned_data
-
-class CompletionReportNotificationForm(SingleStudyNotificationForm):
-    completion_date = DateField(required=True)
-
-    class Meta:
-        model = CompletionReportNotification
-        exclude = SingleStudyNotificationForm._meta.exclude
-
-class AmendmentNotificationForm(NotificationForm):
-    class Meta:
-        model = AmendmentNotification
-        exclude = NotificationForm._meta.exclude + ('submission_forms', 'old_submission_form', 'new_submission_form', 'diff')
 
 ## submissions ##
 
@@ -466,4 +391,3 @@ class SubmissionImportForm(forms.Form):
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
         f.seek(0)
         return f
-

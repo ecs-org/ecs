@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import UploadedFile
 from django.conf import settings
 
-from ecs.core.forms.forms import ModelFormPickleMixin
+from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import pdf_isvalid, pdf2pdfa

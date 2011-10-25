@@ -15,7 +15,7 @@ def notification_types():
     types = (
         dict(
             name = u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", 
-            form = "ecs.core.forms.SusarNotificationForm",
+            form = "ecs.notifications.forms.SusarNotificationForm",
             default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
             includes_diff = False,
             grants_vote_extension = False,
@@ -24,7 +24,7 @@ def notification_types():
         ),
         dict(
             name = u"Zwischenbericht",
-            form = "ecs.core.forms.ProgressReportNotificationForm",
+            form = "ecs.notifications.forms.ProgressReportNotificationForm",
             default_response = u"",
             includes_diff = False,
             grants_vote_extension = True,
@@ -33,7 +33,7 @@ def notification_types():
         ),
         dict(
             name = u"Abschlussbericht",
-            form = "ecs.core.forms.CompletionReportNotificationForm",
+            form = "ecs.notifications.forms.CompletionReportNotificationForm",
             default_response = u"",
             includes_diff = False,
             grants_vote_extension = False,
@@ -42,7 +42,7 @@ def notification_types():
         ),
         dict(
             name = u"Amendment",
-            form = "ecs.core.forms.forms.AmendmentNotificationForm",
+            form = "ecs.notifications.forms.AmendmentNotificationForm",
             default_response = u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu.",
             includes_diff = True,
             grants_vote_extension = False,

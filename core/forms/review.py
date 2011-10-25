@@ -9,13 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget, NullBooleanWidget
+from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 
-from ecs.utils.formutils import TranslatedModelForm, require_fields
-
-def _unpickle(f, args, kwargs):
-    return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
-
-class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
+class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Submission
         fields = ('is_thesis', 'is_retrospective', 'medical_categories', 'is_expedited', 'expedited_review_categories',
@@ -49,9 +45,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'remission': _('remission'),
             'external_reviewers': _('external_reviewers'),
         }
-
-    def __reduce__(self):
-        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
 
     def __init__(self, *args, **kwargs):
         super(CategorizationReviewForm, self).__init__(*args, **kwargs)
