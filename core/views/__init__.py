@@ -6,7 +6,6 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
     delete_task, show_checklist_review, drop_checklist_review, change_submission_presenter,
     change_submission_susar_presenter, paper_submission_review, initial_review,
 )
-from ecs.core.views.votes import show_html_vote, show_pdf_vote, download_signed_vote, vote_sign, vote_sign_finished
 from ecs.core.views.autocomplete import autocomplete, internal_autocomplete
 from ecs.core.views.fieldhistory import field_history
 

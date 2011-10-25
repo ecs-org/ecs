@@ -15,9 +15,10 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory, Vote
+from ecs.core.models import Submission, MedicalCategory
 from ecs.checklists.models import Checklist, ChecklistBlueprint
-from ecs.core.forms.voting import VoteForm, SaveVoteForm
+from ecs.votes.models import Vote
+from ecs.votes.forms import VoteForm, SaveVoteForm
 from ecs.documents.models import Document
 from ecs.tasks.models import Task
 from ecs.ecsmail.utils import deliver
@@ -274,7 +275,7 @@ def meeting_assistant_comments(request, meeting_pk=None):
 
 @user_flag_required('is_internal')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
-    from ecs.core.models.constants import FINAL_VOTE_RESULTS
+    from ecs.votes.constants import FINAL_VOTE_RESULTS
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
     if form.is_valid():

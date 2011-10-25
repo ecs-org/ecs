@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
 from ecs.notifications.models import NotificationType, Notification, ProgressReportNotification
-from ecs.core.models import Vote
+from ecs.votes.models import Vote
 from ecs.core.tests.submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):

@@ -3,11 +3,8 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
 from ecs.authorization import AuthorizationManager
-from ecs.core.models.constants import (
-    VOTE_RESULTS, PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS,
-    SUBMISSION_TYPE_MULTICENTRIC_LOCAL, 
-)
-
+from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 
 def get_vote_filter_q(prefix, *args, **kwargs):
     accepted_votes = set()
@@ -196,29 +193,3 @@ class SubmissionFormManager(AuthorizationManager):
         
     def with_vote(self, *args, **kwargs):
         return self.all().with_vote(*args, **kwargs)
-
-
-class VoteQuerySet(models.query.QuerySet):
-    def positive(self):
-        return self.filter(result__in=POSITIVE_VOTE_RESULTS)
-        
-    def negative(self):
-        return self.filter(result__in=NEGATIVE_VOTE_RESULTS)
-        
-    def permanent(self):
-        return self.filter(result__in=PERMANENT_VOTE_RESULTS)
-
-
-class VoteManager(AuthorizationManager):
-    def get_base_query_set(self):
-        return VoteQuerySet(self.model)
-
-    def positive(self):
-        return self.all().positive()
-
-    def negative(self):
-        return self.all().negative()
-
-    def permanent(self):
-        return self.all().permanent()
-

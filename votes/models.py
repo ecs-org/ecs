@@ -6,9 +6,9 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
 from ecs import authorization
-from ecs.core.models.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
-from ecs.core.models.managers import VoteManager
-from ecs.core.signals import vote_extended, vote_published
+from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
+from ecs.votes.managers import VoteManager
+from ecs.votes.signals import vote_extended, vote_published
 
 
 class Vote(models.Model):
@@ -21,10 +21,7 @@ class Vote(models.Model):
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
     valid_until = models.DateTimeField(null=True)
-        
-    class Meta:
-        app_label = 'core'
-        
+    
     objects = VoteManager()
     
     def get_submission(self):

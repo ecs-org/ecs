@@ -24,7 +24,7 @@ from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFor
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.core.forms.voting import VoteReviewForm
+from ecs.votes.forms import VoteReviewForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
 
@@ -36,7 +36,7 @@ from ecs.core.workflow import (ChecklistReview,
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash, DocStashData
-from ecs.core.models import Vote
+from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required

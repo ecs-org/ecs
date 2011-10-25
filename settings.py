@@ -185,6 +185,7 @@ INSTALLED_APPS = (
 
     'ecs.core',
     'ecs.checklists',
+    'ecs.votes',
     'ecs.utils',
     'ecs.feedback',
     'ecs.docstash',

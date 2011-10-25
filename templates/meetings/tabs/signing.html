@@ -8,9 +8,9 @@
       {{ d.vote }}
         {% if user|is_member_of:"EC-Signing Group" %}
             {% if vote.signed_at %}
-                <a href="{% url ecs.core.views.download_signed_vote vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
+                <a href="{% url ecs.votes.views.download_signed_vote vote_pk=d.vote.pk %}" target="_blank">Ansehen</a>
             {% else %}
-                <a href="{% url ecs.core.views.vote_sign vote_pk=d.vote.pk %}" target="_blank">Signieren</a>
+                <a href="{% url ecs.votes.views.vote_sign vote_pk=d.vote.pk %}" target="_blank">Signieren</a>
             {% endif %}
         {% endif %}
     {% else %}

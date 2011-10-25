@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.contenttypes.models import ContentType
 
-from ecs.core.models import Vote
+from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import download_document
 from ecs.signature.views import sign
@@ -102,10 +102,10 @@ def vote_sign(request, vote_pk=None):
     
     sign_dict = {
         'success_tasktype_close': 'Vote Signing',
-        'success_redirect_view': 'ecs.core.views.votes.vote_sign_finished',
-        'error_redirect_view': 'ecs.core.views.votes.vote_sign_error',
-        'parent_name': 'ecs.core.models.Vote',
-        'parent_pk': vote_pk,    
+        'success_redirect_view': 'ecs.votes.views.vote_sign_finished',
+        'error_redirect_view': 'ecs.votes.views.vote_sign_error',
+        'parent_name': 'ecs.votes.models.Vote',
+        'parent_pk': vote_pk,
         'document_uuid': uuid4().get_hex(),
         'document_name': context['ec_number'],
         'document_identifier': "votes",

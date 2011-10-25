@@ -12,8 +12,8 @@ from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
     MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES,
     SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
-    PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS,
 )
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
 from ecs.documents.models import Document, DocumentType
@@ -101,7 +101,7 @@ class Submission(models.Model):
    
     @property
     def votes(self):
-        from ecs.core.models import Vote
+        from ecs.votes.models import Vote
         return Vote.objects.filter(submission_form__submission=self)
 
     @property
@@ -214,7 +214,7 @@ class Submission(models.Model):
 
     def schedule_to_meeting(self):
         from ecs.meetings.models import Meeting
-        from ecs.core.models import Vote
+        from ecs.votes.models import Vote
 
         expedited = self.is_expedited and self.expedited_review_categories.exists()
         retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=self.pk).exists()
@@ -269,8 +269,8 @@ class SubmissionForm(models.Model):
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
-    current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
-    current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
+    current_published_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_published_for')
+    current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     class Meta:
         app_label = 'core'

@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
-from ecs.core.models import Submission, Vote
+from ecs.core.models import Submission
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.meetings.models import Meeting
 from ecs.tasks.signals import task_accepted, task_declined
@@ -17,11 +17,7 @@ from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.utils import block_if_task_exists
 
-def vote_workflow_start_if(vote, created):
-    return vote.result and (not vote.top_id or vote.top.meeting.ended) and not vote.workflow
-
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
-register(Vote, autostart_if=vote_workflow_start_if)
 
 @guard(model=Submission)
 def is_acknowledged(wf):
@@ -64,23 +60,6 @@ def is_acknowledged_and_localec(wf):
 def is_acknowledged_and_not_localec(wf):
     # legacy: only for backwards compatibility
     return is_acknowledged(wf) and not is_localec(wf)
-
-@guard(model=Vote)
-def is_executive_vote_review_required(wf):
-    return wf.data.executive_review_required
-
-@guard(model=Vote)
-def is_final(wf):
-    return wf.data.is_final_version
-
-@guard(model=Vote)
-def is_b2(wf):
-    return wf.data.result == '2'
-
-@guard(model=Vote)
-def is_b2upgrade(wf):
-    previous_vote = wf.data.submission_form.votes.filter(pk__lt=wf.data.pk).order_by('-pk')[:1]
-    return wf.data.activates and previous_vote and previous_vote[0].result == '2'
 
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
@@ -337,66 +316,3 @@ class LocalEcRecommendationReview(NonRepeatableChecklistReview):
 def unlock_localec_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
 post_save.connect(unlock_localec_recommendation_review, sender=Checklist)
-
-class VoteFinalization(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
-
-
-class VoteReview(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
-
-
-class VoteSigning(Activity):
-    class Meta:
-        model = Vote
-
-    def pre_perform(self, choice):
-        vote = self.workflow.data
-        vote.publish()
-
-    def get_url(self):
-        return reverse('ecs.core.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})
-
-
-# legacy: to be removed
-class VotePublication(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self): # FIXME
-        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
-
-
-class VoteB2Review(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
-
-    def get_choices(self):
-        return (
-            ('1', _('B1')),
-            ('3b', _('B3')),
-        )
-
-    def pre_perform(self, choice):
-        sf = self.workflow.data.submission_form
-        new_vote = Vote.objects.create(submission_form=sf, result=choice)
-        if new_vote.is_permanent:
-            # abort all tasks
-            with sudo():
-                open_tasks = Task.objects.for_data(sf.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
-        if choice == '3b':
-            sf.submission.schedule_to_meeting()

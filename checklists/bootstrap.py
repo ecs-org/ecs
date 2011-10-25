@@ -7,6 +7,9 @@ from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.checklists.bootstrap_settings import checklist_questions
 from ecs.utils import Args
+from ecs.checklists.workflow import ExternalReview, ExternalReviewReview
+from ecs.checklists.workflow import is_external_review_checklist, checklist_review_review_failed
+
 
 # dummy gettext
 _ = lambda s: s
@@ -44,9 +47,6 @@ def checklist_blueprints():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def checklist_workflow():
-    from ecs.checklists.workflow import ExternalReview, ExternalReviewReview
-    from ecs.checklists.workflow import is_external_review_checklist, checklist_review_review_failed
-
     EXTERNAL_REVIEW_REVIEW_GROUP = 'External Review Review Group'
 
     setup_workflow_graph(Checklist,
