@@ -6,6 +6,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ('billing', '0002_auto__add_checklistbillingstate'),
+    )
+
     def forwards(self, orm):
         db.rename_table('core_checklistblueprint', 'checklists_checklistblueprint')
         db.rename_table('core_checklistquestion', 'checklists_checklistquestion')
