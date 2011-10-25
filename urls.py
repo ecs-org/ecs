@@ -87,6 +87,7 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
+    #url(r'^static/generated/(<?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.GENFILE_DIR}),
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

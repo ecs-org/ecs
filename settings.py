@@ -241,6 +241,11 @@ PDFAS_SERVICE = 'mock:'
 # directory where to store logfiles, used by every daemon and apache
 LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 
+# directory where generated files are stored, either on bootstrap or on demand, eg. django_compressor
+GENFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-generated"))
+# url where in the url tree the files under this directory are served
+GENFILE_URL = MEDIA_URL+ 'generated/'
+
 # directory where to store temporary files, used mostly with external utilities
 TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
 TEMPFILE_DIR_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
