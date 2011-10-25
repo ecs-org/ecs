@@ -43,17 +43,30 @@ django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
-django_compressor:inst:all:http://github.com/mintchaos/django_compressor/tarball/master
+# Todo: django-dbtemplates version 1.2.1 has many new features (reversion support, south support, better caching support)
 django-dbtemplates:inst:all:pypi:django-dbtemplates
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
-# sass css preprocessor
-ruby:req:apt:apt-get:ruby
-rubygems:req:apt:apt-get:rubygems
-ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
-#sass:static:win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:func%sass_install,sass.bat
-#sass:static:!win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:func%sass_install,sass
+# preprocessing, combining, compressing of js and css 
+#lxml could be used by django_compressor, but we use HtmlParser
+#lxml:req:apt:apt-get:libxslt1-dev,libxml2-dev
+#lxml:inst:!win:pypi:lxml\<2.3
+#lxml:instbin:win:http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8.win32-py2.6.exe
+cssmin:inst:all:pypi:cssmin
+django-appconf:inst:all:pypi:django-appconf\>=0.4.1
+versiontools:inst:all:pypi:versiontools
+django_compressor:inst:all:pypi:django_compressor\>=1.1
+# sass/scss css preprocessor
+pyscss:inst:all:pypi:pyScss\>=1.0.8
+
+
+# we use pyscss now,  but ruby may get resurrected once we use the ruby pdf security scanner
+#ruby:req:apt:apt-get:ruby
+#rubygems:req:apt:apt-get:rubygems
+#ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
+#sass:static:win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:custom:sass.bat
+#sass:static:!win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:custom:sass
 
 # unit testing
 nose:inst:all:pypi:nose
@@ -335,8 +348,8 @@ memcached:req:apt:apt-get:memcached
 """
 
 
-# custom static scripts
-def sass_install(resource):
+# custom static example script
+def custom_sass_install(resource):
     if sys.platform == 'win32':
         gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems').replace("\\", "/")
         bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
@@ -350,7 +363,7 @@ def sass_install(resource):
   
     return (install, 0) # returns commandline to run and expected returncode
  
-    
+
 
 # target bundles
 ################
