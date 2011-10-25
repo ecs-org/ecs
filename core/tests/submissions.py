@@ -7,7 +7,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
-from ecs.users.utils import create_user
+from ecs.users.utils import get_or_create_user, create_user
 
 def create_submission_form(ec_number=None, presenter=None):
     sub = Submission(ec_number=ec_number)
