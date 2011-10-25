@@ -511,6 +511,14 @@ try:
 except ImportError:
     ECS_VERSION = 'unknown'
 
+# django_wsgiserver activation
+try:
+    import django_wsgiserver
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ('django_wsgiserver',) # anywhere
+
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:
     INSTALLED_APPS +=('rosetta',) # anywhere

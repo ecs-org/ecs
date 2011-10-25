@@ -294,6 +294,9 @@ sqlparse:inst:all:pypi:sqlparse
 werkzeug:inst:all:pypi:werkzeug
 django-devserver:inst:all:https://github.com/dcramer/django-devserver/tarball/master
 
+# cherrypy running django (threaded wsgi server)
+django-wsgiserver:inst:all:pypi:django-wsgiserver
+
 # interactive python makes your life easier
 ipython:inst:win:pypi:pyreadline
 ipython:inst:all:pypi:ipython
