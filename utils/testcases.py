@@ -9,6 +9,7 @@ from ecs.integration import bootstrap as integration_bootstrap
 from ecs.core import bootstrap as core_bootstrap
 from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
+from ecs.checklists import bootstrap as checklists_bootstrap
 from ecs.users.utils import get_user, get_or_create_user
 
 
@@ -30,7 +31,7 @@ class EcsTestCase(TestCase):
 
         integration_bootstrap.workflow_sync()
         core_bootstrap.auth_groups()
-        core_bootstrap.checklist_blueprints()
+        checklists_bootstrap.checklist_blueprints()
         core_bootstrap.submission_workflow()
         
     @classmethod

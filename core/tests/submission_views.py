@@ -10,6 +10,7 @@ from ecs.utils.testcases import LoginTestCase
 from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import MedicalCategory
 from ecs.core import bootstrap
+from ecs.checklists import bootstrap as checklists_bootstrap
 from ecs.core.models import SubmissionForm
 from ecs.core.models import EthicsCommission
 from ecs.documents.models import DocumentType
@@ -86,7 +87,7 @@ class SubmissionViewsTestCase(LoginTestCase):
     
     def setUp(self):
         super(SubmissionViewsTestCase, self).setUp()
-        bootstrap.checklist_blueprints()
+        checklists_bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
         VALID_SUBMISSION_FORM_DATA[u'investigator-0-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
         VALID_SUBMISSION_FORM_DATA[u'investigator-1-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
