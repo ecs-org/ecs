@@ -28,6 +28,7 @@ from ecs.votes.models import Vote
 from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
 from ecs.tasks.utils import get_obj_tasks
+from ecs.tasks.models import Task
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
