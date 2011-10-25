@@ -310,33 +310,3 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         shutil.rmtree(tmp_dir)
 
     return ret
-
-
-"""
-DO NOT DELETE, THIS MAYBE GET RESURECTED
-def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
-    takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
-    raises IOError(descriptive text, returncode, stderr) in case of failure
-    outputnameing follows ghostscript conventions. The general form supported is:
-    "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
-    For more information, please refer to documentation on the C printf format specifications.
-
-    cmd = [ GHOSTSCRIPT_PATH, '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
-        '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
-    cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
-    
-    if pixelwidth:
-        dpix = pixelwidth / (din_a4_x / cm_per_inch)
-        cmd += ['-r%.5f' % (dpix)]
-    if first_page:
-        cmd += ['-dFirstPage=%s' % first_page]
-    if last_page:
-        cmd += ['-dLastPage=%s' % last_page]
-    cmd += ['-sOutputFile='+ namingtemplate, sourcefile]
-
-    popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = popen.communicate()
-    if popen.returncode != 0:
-        raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
-"""
-
