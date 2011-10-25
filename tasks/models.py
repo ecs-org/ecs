@@ -11,10 +11,6 @@ from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
 from ecs.core.models import Submission
-from ecs.votes.models import Vote
-from ecs.checklists.models import Checklist
-from ecs.meetings.models import Meeting
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -59,6 +55,12 @@ class TaskQuerySet(models.query.QuerySet):
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=managed_transparently)
 
     def for_submission(self, submission, related=True):
+        # local import to prevent circular import
+        from ecs.votes.models import Vote
+        from ecs.meetings.models import Meeting
+        from ecs.checklists.models import Checklist
+        from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+
         tasks = self.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
         q = models.Q(content_type=submission_ct, data_id=submission.pk)

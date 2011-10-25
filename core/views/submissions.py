@@ -27,6 +27,7 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
+from ecs.notifications.models import NotificationType
 
 from ecs.core.workflow import (ChecklistReview,
     ThesisRecommendationReview,
@@ -47,6 +48,8 @@ from ecs.audit.utils import get_version_number
 
 from ecs.documents.views import upload_document, delete_document
 from ecs.communication.utils import send_system_message_template
+from ecs.core.workflow import CategorizationReview
+
 
 def get_submission_formsets(data=None, instance=None, readonly=False):
     formset_classes = [
@@ -80,7 +83,6 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
     return formsets
 
 def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
-    from ecs.notifications.models import NotificationType
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, presenter=request.user)
     if notification_type_pk:
         notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
@@ -173,7 +175,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
 
-    from ecs.notifications.models import NotificationType
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
@@ -202,8 +203,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
         if request.user.get_profile().is_executive_board_member:
-            from ecs.core.workflow import CategorizationReview
-
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
             if tasks and not [t for t in tasks if not t.closed_at]:
                 context['categorization_task'] = tasks[0]

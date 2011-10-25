@@ -4,9 +4,12 @@ from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.template.defaultfilters import slugify
 
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
+from ecs.utils.viewutils import render_pdf_context
+from ecs.documents.models import DocumentType
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
@@ -87,10 +90,6 @@ class Checklist(models.Model):
         return self.get_answers_with_comments(False).exists()
 
     def render_pdf(self):
-        from django.template.defaultfilters import slugify
-        from ecs.utils.viewutils import render_pdf_context
-        from ecs.documents.models import DocumentType
-
         doctype = DocumentType.objects.get(identifier='checklist')
         name = slugify(unicode(self))
         filename = '{0}.pdf'.format(name)

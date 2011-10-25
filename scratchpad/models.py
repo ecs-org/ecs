@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.core.models.submissions import Submission
 
+
 class ScratchPad(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

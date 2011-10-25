@@ -4,13 +4,15 @@ from functools import wraps
 from django.template import RequestContext, Context, loader, Template
 
 from ecs.communication.models import Thread
-from ecs.tasks.models import Task
-from ecs.core.models import Submission
 from ecs.users.utils import get_user
 
 def msg_fun(func):
     @wraps(func)
     def _inner(sender, receiver, *args, **kwargs):
+        # import here to prevent circular imports
+        from ecs.tasks.models import Task
+        from ecs.core.models import Submission
+
         submission = kwargs.get('submission', None)
         task = kwargs.get('task', None)
         if isinstance(sender, basestring):

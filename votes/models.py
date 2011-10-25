@@ -9,6 +9,7 @@ from ecs import authorization
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import vote_extended, vote_published
+from ecs.communication.utils import send_system_message_template
 
 
 class Vote(models.Model):
@@ -55,7 +56,6 @@ class Vote(models.Model):
         return super(Vote, self).save(**kwargs)
 
     def publish(self):
-        from ecs.communication.utils import send_system_message_template
         self.published_at = datetime.now()
         self.valid_until = self.published_at.replace(year=self.published_at.year + 1)
         self.save()

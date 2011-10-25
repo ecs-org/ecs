@@ -10,6 +10,8 @@ from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 from ecs.utils.viewutils import render_pdf
+from ecs.tasks.models import TaskType
+
 
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
@@ -217,8 +219,6 @@ class Meeting(models.Model):
         del self.users_with_constraints
 
     def create_boardmember_reviews(self):
-        from ecs.tasks.models import TaskType
-
         task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
         for amc in self.medical_categories.all():
             if not amc.board_member:

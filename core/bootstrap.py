@@ -2,19 +2,26 @@
 import os
 from datetime import datetime
 from copy import deepcopy
+from dbtemplates.models import Template
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 
 from ecs import bootstrap
-from ecs.core.models import ExpeditedReviewCategory, MedicalCategory, EthicsCommission
+from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission
 from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
 from ecs.bootstrap.utils import update_instance
+from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview,
+    ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
+    ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
+from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
+    needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
+    has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
 
 
 # We use this helper function for marking task names as translatable, they are
@@ -67,7 +74,6 @@ def sites():
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
-    from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
 
     sites = list(Site.objects.all())
@@ -94,14 +100,6 @@ def templates():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def submission_workflow():
-    from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview,
-        ChecklistReview, NonRepeatableChecklistReview, ThesisRecommendationReview, ThesisCategorizationReview,
-        ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
-    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
-        has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
-    
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
     localec_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='localec_review')

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import datetime
 from decimal import Decimal
 
@@ -7,14 +6,11 @@ from ecs import bootstrap
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
-from ecs.workflow.patterns import Generic
+from ecs.meetings.models import Meeting, AssignedMedicalCategory
 
 
 @bootstrap.register()
 def meetings_create():
-    from ecs.meetings.models import AssignedMedicalCategory
-    from ecs.meetings.models import Meeting
-
     meetings = (
         (u'August 2011 Sitzung',    (2011,  8,  2, 10, 0), (2011,  7,  6, 23, 59), (2011,  6, 30, 23, 59)),
         (u'September 2011 Sitzung', (2011,  9,  6, 10, 0), (2011,  8,  3, 23, 59), (2011,  7, 27, 23, 59)),

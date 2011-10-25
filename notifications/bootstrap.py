@@ -5,6 +5,10 @@ from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 from ecs.bootstrap.utils import update_instance
+from ecs.notifications.workflow import (
+    InitialNotificationReview, InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
+    SignNotificationAnswer, needs_executive_review, is_susar, is_report, is_amendment, needs_further_review
+)
 
 
 # for marking the task names translatable
@@ -58,9 +62,6 @@ def notification_types():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
-    from ecs.notifications.workflow import (InitialNotificationReview, InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SignNotificationAnswer, 
-        needs_executive_review, is_susar, is_report, is_amendment, needs_further_review)
-
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     NOTIFICATION_REVIEW_GROUP = 'EC-Notification Review Group'
