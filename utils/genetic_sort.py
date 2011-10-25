@@ -1,5 +1,4 @@
 import random, math, time
-from itertools import izip
 
 def order_crossover(perm_a, perm_b): # OX
     n = len(perm_a)

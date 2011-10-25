@@ -10,17 +10,15 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, tempfile, binascii, logging, copy, shutil
+import os, subprocess, tempfile, logging, copy, shutil
 from cStringIO import StringIO
 
 from django.conf import settings
 from django.template import Context, loader
-from django.utils.encoding import smart_str
 
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
-from ecs.utils import killableprocess
 from ecs.utils.pathutils import which
 
 MONTAGE_PATH = which('montage').next()

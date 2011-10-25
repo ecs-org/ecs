@@ -1,4 +1,4 @@
-import random, itertools, math, subprocess
+import random, itertools, math
 from celery.decorators import task
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation

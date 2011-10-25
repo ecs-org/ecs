@@ -1,5 +1,4 @@
 from django.conf.urls.defaults import *
-from django.conf import settings
 
 urlpatterns = patterns('ecs.documents.views',
     url(r'^document/(?P<document_pk>\d+)/download/$', 'download_document'),

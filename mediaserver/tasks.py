@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os.path, tempfile, shutil, logging, time
+import tempfile, shutil, logging
 
 from django.conf import settings
 from django.core.cache import cache

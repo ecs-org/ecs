@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import tempfile
 from cStringIO import StringIO
 import os
 

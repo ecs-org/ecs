@@ -4,11 +4,9 @@ from datetime import datetime
 from base64 import b64decode
 
 from django.shortcuts import get_object_or_404
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.core.files import File
-from django.db.models import Q
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from haystack.views import SearchView
@@ -25,7 +23,6 @@ from ecs.help.models import Page, Attachment
 from ecs.help.forms import HelpPageForm, AttachmentUploadForm, ImportForm
 from ecs.help.utils import publish_parts
 from ecs.help import serializer
-from ecs.utils.tracrpc import TracRpc
 
 
 def redirect_to_page(page):

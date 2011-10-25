@@ -2,7 +2,6 @@ import datetime
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
 from ecs.communication.models import Message
-from ecs.users.models import UserProfile
 
 register = Library()
 

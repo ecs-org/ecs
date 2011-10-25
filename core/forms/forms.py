@@ -3,7 +3,6 @@ from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.db.models import F
 from django.core.urlresolvers import reverse
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
@@ -11,7 +10,7 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, SingleselectWidget
-from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
+from ecs.core.forms.utils import NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
 

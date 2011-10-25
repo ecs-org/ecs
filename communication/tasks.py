@@ -2,12 +2,10 @@
 import os
 import traceback
 import hashlib
-import time
 from datetime import datetime, timedelta
 
 from celery.decorators import task, periodic_task
 from celery.task.sets import subtask
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.mail import make_msgid
 

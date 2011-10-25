@@ -1,11 +1,9 @@
-from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, NotificationAnswer
-from ecs.core.models import Submission
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 
 NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification)
 

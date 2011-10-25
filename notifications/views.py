@@ -6,18 +6,16 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
-from django.conf import settings
 
-from ecs.utils.viewutils import render, redirect_to_next_url, render_html
+from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
-from ecs.core.models import SubmissionForm, Investigator, Submission
+from ecs.core.models import SubmissionForm, Submission
 from ecs.core.parties import get_presenting_parties
 from ecs.documents.models import Document
-from ecs.ecsmail.utils import deliver, whitewash
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm

@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.contrib.auth.models import User
-
 from ecs.ecsmail.testcases import MailTestCase
-from ecs.communication.models import Message, Thread
-
+from ecs.communication.models import Thread
 from ecs.users.utils import get_user
 
 class CommunicationTestCase(MailTestCase):

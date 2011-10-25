@@ -2,13 +2,12 @@
 
 from django import forms
 from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget, NullBooleanWidget
+from ecs.core.forms.fields import MultiselectWidget, NullBooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 
 class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):

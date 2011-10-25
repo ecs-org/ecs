@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
-from django.db.models import Count
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
@@ -19,7 +18,6 @@ from ecs.core.models import Submission, MedicalCategory
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
-from ecs.documents.models import Document
 from ecs.tasks.models import Task
 from ecs.ecsmail.utils import deliver
 

@@ -1,8 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
-from django.template import Template, Context, RequestContext, loader
 
 from ecs.users.utils import sudo
 

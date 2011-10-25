@@ -3,7 +3,6 @@ from diff_match_patch import diff_match_patch
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
-from django.utils.translation import ugettext_lazy as _
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer

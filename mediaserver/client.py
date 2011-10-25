@@ -2,12 +2,9 @@
 from time import time
 import math
 from urllib2 import urlopen
-from urlparse import urlparse, parse_qs
-from urllib import urlencode
 
 from django.conf import settings
 
-from ecs.utils.django_signed.signed import base64_hmac
 from ecs.mediaserver.utils import AuthUrl, MediaProvider
 
 

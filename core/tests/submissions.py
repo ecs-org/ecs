@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
-import datetime
 
 from django.db.models import Q
-from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
-from ecs.core.views.submissions import diff
-from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document, DocumentType
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
-from ecs.users.utils import get_user, create_user, get_or_create_user
+from ecs.users.utils import create_user
 
 def create_submission_form(ec_number=None, presenter=None):
     sub = Submission(ec_number=ec_number)

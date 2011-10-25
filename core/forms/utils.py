@@ -1,5 +1,4 @@
 from django import forms
-from django.db.models import FieldDoesNotExist
 from django.forms.models import model_to_dict
 
 from ecs.core.forms.fields import ReadonlyTextInput, ReadonlyTextarea

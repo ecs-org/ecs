@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-
 import threading
 from datetime import datetime
 
 from django.contrib.sessions.models import Session
-
-from ecs.users.models import UserProfile
 
 
 class SingleLoginMiddleware(object):

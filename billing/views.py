@@ -3,7 +3,7 @@ import datetime
 import xlwt
 from StringIO import StringIO
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.contrib.auth.models import User

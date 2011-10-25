@@ -1,5 +1,4 @@
 from django.conf.urls.defaults import *
-from django.conf import settings
 
 urlpatterns = patterns('ecs.meetings.views',
     url(r'^users/by_medical_category/$', 'users_by_medical_category'),

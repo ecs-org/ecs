@@ -7,7 +7,6 @@ from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import smart_str
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.utils import cached_property

@@ -1,7 +1,3 @@
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext as _
-
 from ecs.communication.models import Thread
 from ecs.users.utils import get_user
 

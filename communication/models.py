@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-
 import datetime, uuid
-import logging
-import os
 
 from django.conf import settings
 from django.db import models

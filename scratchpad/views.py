@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
 from ecs.utils.viewutils import render
 from ecs.scratchpad.forms import ScratchPadForm

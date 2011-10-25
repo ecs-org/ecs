@@ -3,20 +3,18 @@
 import os, time, getpass, logging
 import subprocess
 import math
-
 from tempfile import NamedTemporaryFile
 from urllib import urlencode
 from urlparse import urlparse, parse_qs
 
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
 from ecs.utils.django_signed.signed import base64_hmac
 from ecs.utils.pathutils import tempfilecopy, which
 from ecs.utils.pdfutils import Page, pdf_barcodestamp
 
-from ecs.mediaserver.storagevault import getVault, VaultError
-from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError  
+from ecs.mediaserver.storagevault import getVault
+from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.tasks import do_rendering
 
 

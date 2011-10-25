@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.exceptions import ImproperlyConfigured
 from ecs.users.utils import get_current_user
 from ecs.authorization.base import get_q_factory
 

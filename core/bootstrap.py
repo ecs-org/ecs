@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from datetime import datetime
-from copy import deepcopy
 from dbtemplates.models import Template
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 

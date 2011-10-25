@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
-
-import os
 from datetime import datetime
 from tempfile import NamedTemporaryFile
 import urllib
 import urllib2
-import time
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404

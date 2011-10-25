@@ -2,13 +2,12 @@
 from datetime import datetime
 
 from django import forms
-from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
+from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
-from ecs.core.models import Submission
 
 from ecs.utils.formutils import TranslatedModelForm
 

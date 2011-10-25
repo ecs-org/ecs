@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from ecs.core.models import Submission
-from ecs.communication.models import Message, Thread
+from ecs.communication.models import Message
 from ecs.communication.testcases import CommunicationTestCase
 
 

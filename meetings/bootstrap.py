@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
-from decimal import Decimal
 
 from ecs import bootstrap
-from ecs.utils import Args
-from ecs.workflow.patterns import Generic
-from ecs.integration.utils import setup_workflow_graph
-from ecs.meetings.models import Meeting, AssignedMedicalCategory
+from ecs.meetings.models import Meeting
 
 
 @bootstrap.register()

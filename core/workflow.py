@@ -1,18 +1,13 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
 
-from django.conf import settings
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
-from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
-from ecs.meetings.models import Meeting
-from ecs.tasks.signals import task_accepted, task_declined
 from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.utils import block_if_task_exists

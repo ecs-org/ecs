@@ -8,7 +8,7 @@ from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
-from ecs.documents.models import Page, Document, C_BRANDING_CHOICES
+from ecs.documents.models import Page, Document
 from ecs.documents.forms import DocumentForm
 
 

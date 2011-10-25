@@ -1,6 +1,4 @@
 import zipfile
-import tempfile
-from uuid import uuid4
 
 from django.utils import simplejson
 from django.core.files.base import ContentFile

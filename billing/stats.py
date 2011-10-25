@@ -2,7 +2,7 @@
 from copy import deepcopy
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
-from ecs.billing.models import Price, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, STUDY_PRICING_REMISSION
+from ecs.billing.models import Price, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL
 
 SUBMISSION_STAT_TEMPLATE = SortedDict((
     ('local', {

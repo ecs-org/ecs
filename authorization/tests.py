@@ -1,6 +1,5 @@
 import datetime
 from contextlib import contextmanager
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import EcsTestCase

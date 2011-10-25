@@ -42,7 +42,6 @@ from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
 from ecs.utils import gpgutils
-from ecs.utils.decorators import singleton
 
 from ecs.mediaserver.diskbuckets import DiskBuckets
 

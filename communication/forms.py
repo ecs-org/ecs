@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from copy import deepcopy
 
 from django import forms
 from django.conf import settings
-from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode

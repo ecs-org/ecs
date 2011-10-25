@@ -29,7 +29,6 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required
 from ecs.users.forms import EmailLoginForm
 from ecs.users.utils import get_user, create_user
-from ecs.workflow.models import Graph
 from ecs.communication.utils import send_system_message_template
 
 

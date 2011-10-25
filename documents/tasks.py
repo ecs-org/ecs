@@ -5,7 +5,6 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
-from django.utils.encoding import smart_str
 from django.db.models import Q
 
 from celery.decorators import task, periodic_task

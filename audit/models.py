@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from uuid import uuid4
 from datetime import datetime
 import hmac
 import hashlib
@@ -8,7 +6,6 @@ import hashlib
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
 from django.db.models import Q
 
 class AuditTrailManager(models.Manager):

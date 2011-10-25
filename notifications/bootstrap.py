@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from ecs import bootstrap
-from ecs.notifications.models import NotificationType, Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.notifications.models import NotificationType, Notification
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 from ecs.bootstrap.utils import update_instance
 from ecs.notifications.workflow import (
-    InitialNotificationReview, InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
+    InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
     SignNotificationAnswer, needs_executive_review, is_susar, is_report, is_amendment, needs_further_review
 )
 

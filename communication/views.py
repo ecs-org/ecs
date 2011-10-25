@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import traceback
-import datetime
-import os
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -14,7 +10,7 @@ from django.utils.translation import ugettext as _
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
-from ecs.communication.models import Message, Thread
+from ecs.communication.models import Thread
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
