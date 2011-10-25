@@ -160,7 +160,7 @@ class NotificationFormTest(LoginTestCase):
         call_command('bootstrap')
         
         now = datetime.datetime.now()
-        nt = NotificationType.objects.get(form='ecs.core.forms.ProgressReportNotificationForm')
+        nt = NotificationType.objects.get(form='ecs.notifications.forms.ProgressReportNotificationForm')
 
         presenter = self.create_user('test_presenter')
         office = self.create_user('test_office', profile_extra={'is_internal': True})

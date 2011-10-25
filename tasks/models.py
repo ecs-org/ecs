@@ -10,7 +10,6 @@ from django.utils.translation import ugettext as _
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -56,6 +55,7 @@ class TaskQuerySet(models.query.QuerySet):
 
     def for_submission(self, submission, related=True):
         # local import to prevent circular import
+        from ecs.core.models import Submission
         from ecs.votes.models import Vote
         from ecs.meetings.models import Meeting
         from ecs.checklists.models import Checklist
@@ -131,6 +131,9 @@ class Task(models.Model):
         return rval
 
     def get_preview_url(self):
+        from ecs.core.models import Submission
+        from ecs.votes.models import Vote
+
         submission_form = None
         if self.content_type == ContentType.objects.get_for_model(Submission):
             submission_form = self.data.current_submission_form

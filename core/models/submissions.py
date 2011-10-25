@@ -20,7 +20,15 @@ from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
 from ecs.core.signals import study_finished
-
+from ecs.votes.models import Vote
+from ecs.notifications.models import Notification
+from ecs.users.utils import get_current_user
+from ecs.docstash.models import DocStash
+from ecs.meetings.models import Meeting
+from ecs.votes.models import Vote
+from ecs.communication.utils import send_system_message_template
+from ecs.utils.viewutils import render_pdf_context
+from ecs.tasks.utils import get_obj_tasks
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -74,21 +82,18 @@ class Submission(models.Model):
         return list(User.objects.filter(email__in=emails))
 
     def resubmission_task_for(self, user):
-        from ecs.tasks.models import Task
         try:
             return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission', closed_at=None)[0]
         except IndexError:
             return None
     
     def external_review_task_for(self, user):
-        from ecs.tasks.models import Task
         try:
             return Task.objects.for_submission(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
             return None
     
     def paper_submission_review_task_for(self, user):
-        from ecs.tasks.models import Task
         try:
             return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at__isnull=True)[0]
         except IndexError:
@@ -96,12 +101,10 @@ class Submission(models.Model):
 
     @property
     def notifications(self):
-        from ecs.notifications.models import Notification
         return Notification.objects.filter(submission_forms__submission=self)
    
     @property
     def votes(self):
-        from ecs.votes.models import Vote
         return Vote.objects.filter(submission_form__submission=self)
 
     @property
@@ -203,8 +206,6 @@ class Submission(models.Model):
             self.save()
 
     def get_current_docstash(self):
-        from ecs.users.utils import get_current_user
-        from ecs.docstash.models import DocStash
         return DocStash.objects.get(
             group='ecs.core.views.submissions.create_submission_form',
             owner=get_current_user,
@@ -213,9 +214,6 @@ class Submission(models.Model):
         )
 
     def schedule_to_meeting(self):
-        from ecs.meetings.models import Meeting
-        from ecs.votes.models import Vote
-
         expedited = self.is_expedited and self.expedited_review_categories.exists()
         retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=self.pk).exists()
         localec = self.current_submission_form.is_categorized_multicentric_and_local
@@ -486,7 +484,6 @@ class SubmissionForm(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
 
     def save(self, **kwargs):
-        from ecs.users.utils import get_current_user
         if not self.presenter_id:
             self.presenter = get_current_user()
         if not self.susar_presenter_id:
@@ -512,7 +509,6 @@ class SubmissionForm(models.Model):
         return super(SubmissionForm, self).save(**kwargs)
 
     def render_pdf(self):
-        from ecs.utils.viewutils import render_pdf_context
         from ecs.core import paper_forms
 
         doctype = DocumentType.objects.get(identifier='submissionform')
@@ -681,10 +677,10 @@ def attach_to_submissions(user):
         inv.save()
 
 def _post_submission_form_save(**kwargs):
-    from ecs.communication.utils import send_system_message_template
+    from ecs.core.workflow import InitialReview
 
     new_sf = kwargs['instance']
-    
+
     if not kwargs['created'] or new_sf.is_transient:
         return
 
@@ -715,8 +711,6 @@ def _post_submission_form_save(**kwargs):
             send_system_message_template(u, _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
                 'submissions/creation_message.txt', None, submission=submission)
     else:
-        from ecs.core.workflow import InitialReview
-        from ecs.tasks.utils import get_obj_tasks
         with sudo():
             try:
                 initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]

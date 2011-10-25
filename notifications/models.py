@@ -9,13 +9,12 @@ from django.utils.translation import ugettext as _
 from ecs.documents.models import Document
 from ecs.authorization.managers import AuthorizationManager
 from ecs.core.parties import get_presenting_parties
-from ecs.core.models.submissions import Submission
 from ecs.communication.utils import send_system_message_template
 
 
 class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
-    form = models.CharField(max_length=80, default='ecs.core.forms.NotificationForm')
+    form = models.CharField(max_length=80, default='ecs.notifications.forms.NotificationForm')
     default_response = models.TextField(blank=True)
 
     includes_diff = models.BooleanField(default=False)
@@ -132,6 +131,8 @@ class NotificationAnswer(models.Model):
         return not self.is_valid or self.review_count == 0 or self.review_count % 2 != 0
     
     def distribute(self):
+        from ecs.core.models.submissions import Submission
+
         if not self.is_rejected and self.notification.type.includes_diff:
             try:
                 notification = AmendmentNotification.objects.get(pk=self.notification.pk)

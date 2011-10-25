@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
 import types
+import traceback
 from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.db import models
+from django.db.models import Manager
 from django.http import HttpRequest
 from django.contrib.auth.models import User
 
@@ -16,6 +18,7 @@ from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
 from ecs.utils.countries.models import Country
+from ecs.users.utils import get_full_name
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -87,7 +90,6 @@ class ModelDiffNode(DiffNode):
                 result = '<span class="title">%s</span>\n%s' % (self.identity, result)
             return result
         except Exception, e:
-            import traceback
             traceback.print_exc()
 
 
@@ -189,8 +191,6 @@ class ModelDiffer(object):
         return names.union(self.follow)
 
     def diff_field(self, name, old, new, **kwargs):
-        from django.db.models import Manager
-
         old_val = getattr(old, name, None)
         new_val = getattr(new, name, None)
         
@@ -271,7 +271,6 @@ class UserDiffer(AtomicModelDiffer):
     model = User
 
     def format(self, user):
-        from ecs.users.utils import get_full_name
         return u'{0} <{1}>'.format(get_full_name(user), user.email)
 
 

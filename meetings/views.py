@@ -27,7 +27,7 @@ from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
-
+from ecs.votes.constants import FINAL_VOTE_RESULTS
 
 
 def create_meeting(request):
@@ -275,7 +275,6 @@ def meeting_assistant_comments(request, meeting_pk=None):
 
 @user_flag_required('is_internal')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
-    from ecs.votes.constants import FINAL_VOTE_RESULTS
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
     if form.is_valid():

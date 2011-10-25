@@ -207,5 +207,3 @@ try:
             ], ["^django_extensions\.db\.fields\.json\.JSONField"])
 except ImportError:
     pass
-
-
