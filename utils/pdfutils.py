@@ -292,10 +292,8 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     cmd += [pdf_file.name]
     
     try:
-        print "start wkhtml2pdf"
         popen = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate() 
-        print "stop wkhtml2pdf"
         if popen.returncode != 0: 
             raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
 

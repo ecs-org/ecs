@@ -100,5 +100,5 @@ def send_reminder_messages(today=None):
 
 @periodic_task(run_every=timedelta(seconds=10))
 def expire_votes():
-    for submission in Submission.objects.filter(is_finished=False).with_vote(positive=True, permanent=True, published=True, valid_until__lte=datetime.now()):
+    for submission in Submission.objects.filter(is_finished=False).with_vote(positive=True, permanent=True, published=True, valid=None, valid_until__lte=datetime.now()):
         on_vote_expiry.send(Vote, submission=submission)

@@ -33,7 +33,7 @@ from ecs.core.workflow import (ChecklistReview,
     ExpeditedRecommendation, ExpeditedRecommendationReview,
     LocalEcRecommendationReview, BoardMemberReview)
 
-from ecs.core.signals import on_study_submit
+from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -505,7 +505,7 @@ def change_submission_presenter(request, submission_pk=None):
         new_presenter = form.cleaned_data['presenter']
         submission_form.presenter = new_presenter
         submission_form.save()
-        post_presenter_change.send(Submission, 
+        on_presenter_change.send(Submission, 
             submission=submission_form.submission, 
             form=submission_form, 
             old_presenter=previous_presenter, 
@@ -533,7 +533,7 @@ def change_submission_susar_presenter(request, submission_pk=None):
         new_susar_presenter = form.cleaned_data['susar_presenter']
         submission_form.susar_presenter = new_susar_presenter
         submission_form.save()
-        post_susar_presenter_change.send(
+        on_susar_presenter_change.send(Submission, 
             submission=submission_form.submission, 
             form=submission_form, 
             old_susar_presenter=previous_susar_presenter, 

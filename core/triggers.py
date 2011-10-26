@@ -2,9 +2,10 @@ from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
 from ecs.core.workflow import InitialReview
+from ecs.core import signals
+from ecs.core.models import Submission
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo
-from ecs.core import signals
 from ecs.utils import connect
 from ecs.checklists.utils import get_checklist_answer
 
@@ -48,7 +49,7 @@ def on_study_submit(sender, **kwargs):
 
 @connect(signals.on_presenter_change)
 def on_presenter_change(sender, **kwargs):
-    submissiom, submission_form = kwargs['submission'], kwargs['form']
+    submission, submission_form = kwargs['submission'], kwargs['form']
     user = kwargs['user']
     old_presenter, new_presenter = kwargs['old_presenter'], kwargs['new_presenter']
     
@@ -59,9 +60,9 @@ def on_presenter_change(sender, **kwargs):
 
 @connect(signals.on_susar_presenter_change)
 def on_susar_presenter_change(sender, **kwargs):
-    submissiom, submission_form = kwargs['submission'], kwargs['form']
+    submission, submission_form = kwargs['submission'], kwargs['form']
     user = kwargs['user']
-    old_susar_presenter, new_susar_presenter = kwargs['old_presenter'], kwargs['new_presenter']
+    old_susar_presenter, new_susar_presenter = kwargs['old_susar_presenter'], kwargs['new_susar_presenter']
 
     send_submission_message(submission, new_susar_presenter, 'Studie {ec_number}', 'submissions/susar_presenter_change_new.txt')
     if user != old_susar_presenter:
