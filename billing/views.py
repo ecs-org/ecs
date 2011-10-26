@@ -66,7 +66,7 @@ def reset_submissions(request):
     return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
 
 def submission_billing(request):
-    unbilled_submissions = list(Submission.objects.filter(billed_at=None, current_submission_form__acknowledged=True))
+    unbilled_submissions = list(Submission.objects.filter(billed_at=None, current_submission_form__is_acknowledged=True))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 

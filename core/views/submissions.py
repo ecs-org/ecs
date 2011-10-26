@@ -613,6 +613,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     filterform = filter_form(request.POST or getattr(usersettings, filtername))
     submissions = filterform.filter_submissions(submissions, request.user)
     submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by(*order_by)
+    submissions = submissions.select_related('current_submission_form')
 
     if stashed_submission_forms:
         submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)

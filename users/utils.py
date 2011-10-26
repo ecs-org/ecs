@@ -62,7 +62,7 @@ def get_current_user():
         return None
 
 def get_full_name(user):
-    profile = user.get_profile()
+    profile = user.ecs_profile
     if user.first_name or user.last_name:
         nameparts = [user.first_name, user.last_name]
         if profile.title:
