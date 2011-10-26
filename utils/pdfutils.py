@@ -275,7 +275,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         header_html_file.write(header_html)
         header_html_file.close()
         cmd += ['--header-html', header_html_file.name]
-    if footer_html:
+    if footer_html and not getattr(settings, 'DISABLE_WKHTML2PDF_FOOTERS', False):
         footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
         footer_html_file.write(footer_html)
         footer_html_file.close()
