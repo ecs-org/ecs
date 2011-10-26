@@ -104,6 +104,10 @@ def is_docstash(obj):
     return isinstance(obj, DocStash)
 
 @register.filter
+def paper_submission_review(submission, user):
+    return submission.paper_submission_review_task_for(user)
+
+@register.filter
 def get_field(form, fname):
     return form[fname]
 
