@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 from functools import wraps
 
 from django.http import Http404
@@ -37,3 +37,26 @@ def singleton(cls):
     cls.__init__ = object.__init__
 
     return cls
+
+
+class print_duration(object):
+    def __init__(self, name=None):
+        self.name = name
+        self.args = ()
+
+    def __enter__(self):
+        self.t1 = datetime.now()
+
+    def __exit__(self, *exc):
+        self.t2 = datetime.now()
+        print '{0} with arguments {1} duration: {2}'.format(self.name or '<anonymous>', self.args, self.t2-self.t1)
+
+    def __call__(self, func):
+        if self.name is None:
+            self.name = '{0}.{1}'.format(func.__module__, func.__name__)
+        @wraps(func)
+        def _inner(*args, **kwargs):
+            self.args = args
+            with self:
+                return func(*args, **kwargs)
+        return _inner
