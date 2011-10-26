@@ -255,8 +255,6 @@ def details(request, user_pk=None):
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
-    print usersettings.useradministration_filter
-
     filter_defaults = {
         'page': '1',
         'groups': '',
@@ -301,8 +299,9 @@ def administration(request, limit=20):
             keyword_q |= Q(last_name__icontains=keyword)
         users = users.filter(keyword_q)
 
+    users = users.select_related('ecs_profile').order_by('last_name', 'first_name', 'email')
 
-    paginator = Paginator(users.order_by('last_name', 'first_name', 'email'), limit, allow_empty_first_page=True)
+    paginator = Paginator(users, limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
     except EmptyPage, InvalidPage:

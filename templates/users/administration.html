@@ -47,7 +47,7 @@
             <td>
                 <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
                     {{ profile_user|formal_name }}
-                    {% if profile_user.get_profile.is_phantom %}
+                    {% if profile_user.ecs_profile.is_phantom %}
                         ({% trans "phantom" %})
                     {% endif %}
                 </a>
