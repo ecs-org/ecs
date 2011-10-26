@@ -39,8 +39,16 @@ def render_pdf(request, template, context):
     return wkhtml2pdf(html, footer_html=footer_html)
 
 def render_pdf_context(template, context):
+    print "render_pdf_context", template, context
     template = loader.get_template(template)
-    html = template.render(Context(context))
+    print "rendering"
+    try:
+        html = template.render(Context(context))
+    except Exception as e:
+        print e
+    print "..."
     footer_template = loader.get_template('wkhtml2pdf/footer.html')
+    print "footer rendering"
     footer_html = footer_template.render(Context(context))
+    print "wkhtml2pdf"
     return wkhtml2pdf(html, footer_html=footer_html)

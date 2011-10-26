@@ -77,3 +77,9 @@ class Args(object):
         
     def __nonzero__(self):
         return bool(self.args or self.kwargs)
+
+def connect(signal, *args, **kwargs):
+    def signal_connector(func):
+        signal.connect(func, *args, **kwargs)
+        return func
+    return signal_connector

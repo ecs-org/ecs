@@ -401,7 +401,6 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
-    'ecs.core.tasks',
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',

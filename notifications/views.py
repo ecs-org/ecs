@@ -214,23 +214,6 @@ def view_notification_answer(request, notification_pk=None):
     })
     
 
-def distribute_notification_answer(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
-    if request.method == 'POST':
-        for submission in Submission.objects.filter(forms__in=notification.submission_forms.values('pk').query):
-            for party in get_presenting_parties(submission.current_submission_form):
-                send_system_message_template(party.user, _('New Notification Answer'), 'notifications/answers/new_message.txt', context={
-                    'notification': notification,
-                    'answer': notification.answer,
-                    'recipient': party,
-                }, request=request, submission=submission)
-
-    return render(request, 'notifications/answers/distribute.html', {
-        'notification': notification,
-        'answer': notification.answer,
-    })
-
-
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     submission_forms = notification.submission_forms.select_related('submission').all()

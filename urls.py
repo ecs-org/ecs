@@ -11,6 +11,8 @@ from ecs import workflow
 admin.autodiscover()    # discover admin view enabled models
 workflow.autodiscover() # discover workflow items
 
+import ecs.core.triggers
+import ecs.votes.triggers
 
 # configure logging
 import logging
