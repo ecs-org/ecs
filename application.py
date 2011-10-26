@@ -12,7 +12,7 @@ main_packages = """
 
 # postgresql database bindings
 psycopg2:req:apt:apt-get:libpq-dev
-#psycopg2:req:mac:homebrew:postgresql
+psycopg2:req:mac:homebrew:postgresql
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:req:openbsd:pkg:postgresql-server
@@ -22,7 +22,7 @@ psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psyc
 
 # sqlite database bindings
 pysqlite:req:apt:apt-get:libsqlite3-dev
-#pysqlite:req:mac:homebrew:sqlite
+pysqlite:req:mac:homebrew:sqlite
 pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:req:openbsd:pkg:sqlite3
@@ -74,17 +74,16 @@ django-nose:inst:all:pypi:django-nose
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 # for manage.py test_windmill we need windmill
-#windmill:inst:all:pypi:windmill\>=1.6
+windmill:inst:all:pypi:windmill\>=1.6
 # for random text generation in windmill tests
-#cicero:inst:all:pypi:cicero
+cicero:inst:all:pypi:cicero
 """
 
 # importlib is a dependency of celery, but importlib is included in
 # Python 2.7 and newer for 2.x
 v = platform.python_version_tuple()
 if not (int(v[0]) == 2 and int(v[1]) >= 7):
-    pass
-    #main_packages += "importlib:inst:all:pypi:importlib\n"
+    main_packages += "importlib:inst:all:pypi:importlib\n"
 
 main_packages += """
 # queuing: celery 
@@ -120,7 +119,7 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # ecs/mediaserver: file encryption, used for storage vault 
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
-#gnupg:req:mac:homebrew:gnupg
+gnupg:req:mac:homebrew:gnupg
 gnupg:req:suse:zypper:gpg2
 gnupg:req:openbsd:pkg:gnupg
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
@@ -151,7 +150,7 @@ xlwt:inst:all:pypi:xlwt
 # webkit html to pdf
 wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-amd64.tar.bz2:tar:wkhtmltopdf-amd64
 wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.10.0_rc2-static-i386.tar.bz2:tar:wkhtmltopdf-i386
-#wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tar:wkhtmltopdf
+wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tar:wkhtmltopdf
 wkhtmltopdf:req:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.10.0_rc2-installer.exe:exec:wkhtmltopdf.exe
 
 # (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
@@ -187,7 +186,7 @@ mupdf:static32:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-i386.tar.gz:ta
 mupdf:static64:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-amd64.tar.gz:tarflat:pdfdraw
 mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdraw
 #mupdf 0.8.165 if currently not available for mac, last available is 0.7
-#mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
+mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
@@ -215,7 +214,7 @@ python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.e
 
 # deployment: manage.py massimport
 antiword:req:apt:apt-get:antiword
-#antiword:req:mac:homebrew:antiword
+antiword:req:mac:homebrew:antiword
 antiword:req:mac:macports:antiword
 # antiword has to be built by hand for opensuse
 #antiword:req:suse:zypper:antiword
