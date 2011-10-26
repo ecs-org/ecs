@@ -56,7 +56,7 @@
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}<span class="submission_inprogress"></span>{% endif %}
 
-        {% with submission|external_review:user as external_review_task %}
+        {% with submission.external_review_task as external_review_task %}
             {% if external_review_task %}
                 <a href="{{ external_review_task.url }}"><span class="submission_review"></span>{{ submission|ec_number }}</a>
             {% else %}
@@ -82,7 +82,7 @@
                     | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">{% trans "Vote Review" %}</a>
                 {% endif %}
              {% endwith %}
-            {% with submission|paper_submission_review:user as paper_submission_review_task %}
+            {% with submission.paper_submission_review_task as paper_submission_review_task %}
                 {% if paper_submission_review_task %}
                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
                 {% endif %}
@@ -109,7 +109,7 @@
                 <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
             </div>
         {% endif %}
-        {% if submission|resubmission:user %}
+        {% if submission.resubmission_task %}
             <div>
                 <span class="submission_resubmission"></span>
                 {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
@@ -119,10 +119,9 @@
         {% endwith %}
     {% endif %}
     </li>
-{% endfor %}
-{% if not submissions.object_list|length %}
+{% empty %}
     <li><em>{% trans "No Submissions." %}</em></li>
-{% endif %}
+{% endfor %}
 
 </ol>
 

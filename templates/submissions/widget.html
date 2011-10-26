@@ -26,7 +26,7 @@
         {% endwith %}
 
         {% with submission.current_submission_form as submission_form %}
-        {% with submission|external_review:user as external_review_task %}
+        {% with submission.external_review_task as external_review_task %}
             {% if external_review_task %}
                 <a href="{{ external_review_task.url }}"><span class="submission_review"></span>{{ submission|ec_number }}</a>
             {% else %}
@@ -45,7 +45,7 @@
             {% endif %}
         {% endwith %}
         <div class="actions">
-            {% if submission|resubmission:user %}<span class="submission_resubmission"></span>{% endif %}
+            {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
         </div>
         {% endwith %}
     {% endif %}

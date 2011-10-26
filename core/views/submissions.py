@@ -582,14 +582,6 @@ def import_submission_form(request):
         'form': form,
     })
 
-    """
-    if 'file' in request.FILES:
-        serializer = Serializer()
-        submission_form = serializer.read(request.FILES['file'])
-        return copy_submission_form(request, submission_form_pk=submission_form.pk, delete=True)
-    return render(request, 'submissions/import.html', {})
-    """
-
 
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
@@ -601,6 +593,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
         'submission': new_submission_form.submission,
         'diff': diff,
     })
+
 
 def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
     if not title:
@@ -626,6 +619,38 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         filterform.cleaned_data['page'] = 1
         filterform = filter_form(filterform.cleaned_data)
         filterform.is_valid()
+
+    visible_submission_pks = [s.pk for s in submissions.object_list if not isinstance(s, DocStash)]
+
+    tasks = Task.objects.filter(closed_at=None, deleted_at=None)
+
+    # get related tasks for every submission
+    submission_ct = ContentType.objects.get_for_model(Submission)
+    resubmission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
+        task_type__workflow_node__uid='resubmission')
+    paper_submission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
+        task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'])
+    for s in submissions.object_list:
+        if isinstance(s, DocStash):
+            continue
+        for task in resubmission_tasks:
+            if task.data == s:
+                s.resubmission_task = task
+        for task in paper_submission_tasks:
+            if task.data == s:
+                s.paper_submission_review_task = task
+
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
+    external_review_tasks = tasks.filter(content_type=checklist_ct,
+        data_id__in=Checklist.objects.filter(submission__in=visible_submission_pks).values('pk').query,
+        task_type__workflow_node__uid='external_review')
+    for s in submissions.object_list:
+        if isinstance(s, DocStash):
+            continue
+        for task in external_review_tasks:
+            if task.data.submission == s:
+                s.external_review_task = task
+
 
     # save the filter in the user settings
     setattr(usersettings, filtername, filterform.cleaned_data)
