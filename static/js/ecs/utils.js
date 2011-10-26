@@ -1,39 +1,3 @@
-ecs.setupRichTextEditor = function(textArea, readonly){
-    var display = new Element('div', {'class': 'rte_display', html: textArea.value});
-    textArea.hide();
-    display.inject(textArea, 'after');
-    if(readonly){
-        return;
-    }
-    display.addEvent('click', function(e){
-        if(textArea.disabled){
-            return;
-        }
-        textArea.show();
-        var editable = textArea.retrieve('MooEditable');
-        if(editable){
-            editable.attach();
-        }
-        else{
-            editable = new MooEditable(textArea, {
-                actions: 'bold italic underline strikethrough | indent outdent | undo redo',
-                extraCSS: '*{font-size: 9pt;}'
-            });
-        }
-        display.hide();
-        editable.focus();
-        e.stop();
-    });
-    document.body.addEvent('click', function(e){
-        var editable = textArea.retrieve('MooEditable');
-        if(editable && !editable.container.hasChild(e.target)){
-            editable.detach();
-            textArea.hide();
-            display.innerHTML = textArea.value;
-            display.show();
-        }
-    });
-};
 
 ecs.clearFormFields = function(context){
     context = $(context || document.body);

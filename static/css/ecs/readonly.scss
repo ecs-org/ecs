@@ -1,0 +1,222 @@
+.readonly{
+    input[disabled], textarea[disabled], select[disabled] {
+        color: #333;
+        background: #e4e4e4;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    textarea {
+        margin-left: 240px;
+    }
+    
+    .tab_header_groups li a {
+        text-decoration: none;
+        padding: 4px 7px;
+        color: #cfcfcf;
+        background: #666;
+        margin-right: 3px;
+        border-radius: 5px 5px 0 0;
+        -webkit-border-radius: 5px 5px 0 0;
+        -moz-border-radius: 5px 5px 0 0;
+        text-shadow: 0 1px 2px #333;
+        
+        &.active {
+          background: #C7C5BB;
+          color: #333;
+          text-shadow: 0 1px 2px #fff;
+        }
+    }
+    
+    .tab_headers {
+        position: absolute;
+        left: 0;
+        line-height: 30px;
+        background: #C7C5BB;
+        width: 86%;
+        padding: 2px 5px;
+        border-radius: 0 5px 5px 5px;
+        -moz-border-radius: 0 5px 5px 5px;
+        -webkit-border-radius: 0 5px 5px 5px;
+        
+        li a {
+            text-decoration: none;
+            padding: 3px 5px;
+            border: 1px solid #bbb;
+            background: #dddac8;
+            color: #333;
+            border-radius: 3px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            text-shadow: 0 0 0 #fff;
+        }
+        
+        li.active a {
+            border: 1px solid #bbb;
+            background: #f2f0e5;
+            color: #333;
+        }
+    }
+}
+
+
+#checklist_summary_tab {
+    .checklist {
+        font-size: 120%;
+        margin-bottom: 5px;
+    }
+
+    ol > li > ol {
+        margin-left: 10px;
+    }
+    
+    & > ol > li {
+        padding-bottom: 15px;
+    }
+    
+    .answer{
+        & > .positive{
+            color: #00ff00;
+        }
+        & > .negative{
+            color: #ff0000;
+        }
+        & > .unanswered{
+            color: #333333;
+        }
+    }
+    
+    .comment{
+        margin-left: 10px;
+        color: #000000;
+        background-color: #ffffff;
+        font-family: monospace;
+        font-size: 110%;
+    }
+}
+
+
+/*  Readonly Forms  */
+
+.form_main.readonly{
+    ol li {
+        display: block;
+        float: left;
+        margin-bottom: 10px;
+
+        label {
+            padding: 0;
+            padding-left: 0;
+        }
+    }
+
+    ol li label,
+    .field li label{
+        text-align: left;
+        vertical-align: baseline;
+        width: 260px;
+        float: left;
+        clear: none;
+    }
+    
+    .review ol li label,
+    .checklist_review_tab ol li label{
+        width: 240px;
+    }
+    
+    ol li.BooleanField {
+        padding-left: 0;
+    }
+    
+    pre{
+        border: 1px solid #999999;
+        background-color: #ffffff;
+        font-style: normal;
+        line-height: 1.5;
+        
+        table &{
+            margin-left: 0;
+        }
+        
+        &.empty {
+          background-color: #dddddd;
+        }
+        
+        li &.oneline, td &{
+            float: left;
+            padding: 4px;
+            display: block;
+            margin-bottom: 4px;
+            position: relative;
+            top: -4px;
+            white-space: pre-wrap;
+        }
+        
+        &.multiline {
+          padding: 5px;
+          display: block;
+          float: left;
+          white-space: pre-wrap;
+          width: auto;
+          max-width: 700px;
+          margin: 0 0 20px 0;
+        }
+        
+        em {
+            color: #333333;
+        }
+    }
+    
+    .icon_comment {
+        cursor: pointer;
+    }
+    
+    .version{
+        td{
+            vertical-align: middle;
+        }
+        a{
+            vertical-align: top;
+        }
+    }
+}
+
+
+/* Readonly Checklist Review Forms */
+
+.form_main.readonly .checklist_review_tab{
+    ol li label {
+        width: auto;
+        clear: both;
+        padding: 0;
+        text-indent: -20px;
+        margin-left: 20px;
+    }
+
+    ol li select {
+        clear: both;
+    }
+    
+    span.NullBooleanField, span.CharField{
+        float: left;
+    }
+    
+    span.NullBooleanField {
+        clear: left;
+        margin: 0 10px 0 20px; 
+    }
+    
+    span.CharField label {
+        margin-right: 5px;
+    }
+    
+    textarea {
+        clear: both;
+        display: inline-block;
+        margin-left: 0;
+    }
+}
+
+/* FIXME: why is this here? should it be prefixed with .readonly ? */
+.checklist_review_tab input {
+  display: none;
+}

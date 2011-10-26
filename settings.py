@@ -438,8 +438,9 @@ COMPRESS_JS_FILTERS = []
 pyscss = 'pyscss.exe' if sys.platform == 'win32' else 'pyscss'
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', '{0} {1}'.format(pyscss, "-o {outfile} {infile}")),
-    )
+)
 
+COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True

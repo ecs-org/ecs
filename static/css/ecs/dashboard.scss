@@ -1,0 +1,101 @@
+
+#dashboard {
+    display: block;
+    float: left;
+    margin: -11px 0 0 -11px;
+    width: 103%;
+    background: #fff;
+
+    .left_column, .right_column{
+        display: inline-block;
+        float: left;
+        width: 50%;
+    }
+
+    h3 {
+        display: inline-block;
+        line-height: 20px;
+    }
+}
+
+.dashboard_widget {
+    display: block;
+    float: left;
+    border: 1px solid #ebdfc3;
+    padding: 10px;
+    background: #f8f8ef;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    margin: 0 10px 10px 0;
+    width: 92%;
+    min-width: 340px;
+
+    td {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    
+    .messages, .submission_widget_list{
+        list-style: none;
+        & > li{
+            clear: both;
+            position: relative;
+        }
+    }
+    
+    .messages{
+        & > li{
+            height: auto;
+            padding: 5px 30px;
+            overflow: hidden;
+
+            .head {
+                display: block;
+                padding-bottom: 5px;
+                margin-left: -27px;
+            }
+
+            .title {
+                font-weight: bold;
+            }
+        }
+    }
+    
+    .submission_widget_list{
+        padding: 5px 10px;
+    }
+    
+    .messages_header {
+        display: inline-block;
+        background: #EFEFDD;
+        border-radius: 3px;
+        padding: 3px 5px !important;
+        margin-bottom: 5px;
+    }
+    
+    .unread {
+        display: inline-block;
+        background: url(/static/images/icons.png) -160px -32px no-repeat;
+        width: 16px;
+        height: 16px;
+        margin-left: -20px;
+    }
+
+    .actions {
+        display: block;
+        position: absolute;
+        right: 0px;
+        top: 10px;
+        
+        a {
+            display: inline-block;
+            margin: 0px 5px;
+        }
+    }
+    
+    img {
+        vertical-align: middle;
+    }
+}
+
