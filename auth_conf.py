@@ -68,7 +68,16 @@ authorization.register(InvestigatorEmployee, lookup='investigator__submission_fo
 authorization.register(Measure, lookup='submission_form__submission')
 authorization.register(NonTestedUsedDrug, lookup='submission_form__submission')
 authorization.register(ForeignParticipatingCenter, lookup='submission_form__submission')
-authorization.register(Vote, lookup='submission_form__submission')
+
+class VoteQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        q = self.make_q(submission_form__submission__pk__in=Submission.objects.values('pk').query)
+        if not profile.is_internal:
+            q &= self.make_q(published_at__isnull=False)
+        return q
+
+authorization.register(Vote, factory=VoteQFactory)
 
 class DocumentQFactory(authorization.QFactory):
     def get_q(self, user):

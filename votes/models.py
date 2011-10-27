@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
-from ecs import authorization
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import on_vote_extension, on_vote_publication
