@@ -9,7 +9,7 @@ from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.votes.constants import FINAL_VOTE_RESULTS
-from ecs.docstash.models import DocStash
+from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.pdfviewer.models import DocumentAnnotation
@@ -96,6 +96,7 @@ class DocstashQFactory(authorization.QFactory):
         return self.make_q(owner=user)
 
 authorization.register(DocStash, factory=DocstashQFactory)
+authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
