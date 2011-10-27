@@ -7,7 +7,7 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
     Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash
 from ecs.tasks.models import Task
@@ -87,6 +87,8 @@ class DocumentQFactory(authorization.QFactory):
         return q
 
 authorization.register(Document, factory=DocumentQFactory)
+authorization.register(DocumentPersonalization, lookup='document')
+authorization.register(Page, lookup='doc')
 
 class DocstashQFactory(authorization.QFactory):
     def get_q(self, user):

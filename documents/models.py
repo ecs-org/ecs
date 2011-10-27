@@ -32,7 +32,9 @@ class DocumentPersonalization(models.Model):
     id = models.SlugField(max_length=36, primary_key=True, default=lambda: uuid4().get_hex())
     document = models.ForeignKey('Document', db_index=True)
     user = models.ForeignKey(User, db_index=True)
-    
+
+    objects = AuthorizationManager()
+
     def __unicode__(self):
         return "%s - %s - %s - %s" % (self.id, str(self.document), self.document.get_filename(), self.user.get_full_name())
 
@@ -226,7 +228,9 @@ class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
     text = models.TextField()        
-        
+
+    objects = AuthorizationManager()
+
 def _post_page_delete(sender, **kwargs):
     from haystack import site
     site.get_index(Page).remove_object(kwargs['instance'])
