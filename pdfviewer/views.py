@@ -11,11 +11,13 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.documents.models import Document
 from ecs.core.models import SubmissionForm
 from ecs.communication.utils import send_system_message
+from ecs.utils.security import readonly
 
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.pdfviewer.forms import DocumentAnnotationForm, AnnotationSharingForm
 
 
+@readonly()
 def show(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     annotations = list(document.annotations.filter(user=request.user).order_by('page_number', 'y').values('pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))

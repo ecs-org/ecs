@@ -7,7 +7,10 @@ from ecs.utils.viewutils import render
 from ecs.users.utils import user_flag_required
 from ecs.boilerplate.models import Text
 from ecs.boilerplate.forms import TextForm
+from ecs.utils.security import readonly
 
+
+@readonly()
 @user_flag_required('is_internal')
 def list_boilerplate(request):
     return render(request, 'boilerplate/list.html', {
@@ -42,6 +45,7 @@ def delete_boilerplate(request, text_pk=None):
     return HttpResponseRedirect(reverse('ecs.boilerplate.views.list_boilerplate'))
     
 
+@readonly()
 @user_flag_required('is_internal')
 def select_boilerplate(request):
     texts = Text.objects.all()

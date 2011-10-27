@@ -16,6 +16,7 @@ from ecs.users.utils import user_group_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render, pdf_response
+from ecs.utils.security import readonly
 
 
 def _vote_filename(vote):
@@ -57,6 +58,7 @@ def vote_context(vote):
     return context
 
 
+@readonly()
 def show_html_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'db/meetings/wkhtml2pdf/vote.html'
@@ -64,6 +66,7 @@ def show_html_vote(request, vote_pk=None):
     return render(request, template, context)
 
 
+@readonly()
 def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'db/meetings/wkhtml2pdf/vote.html'
@@ -72,6 +75,8 @@ def show_pdf_vote(request, vote_pk=None):
     pdf_data = wkhtml2pdf(render(request, template, context).content )
     return pdf_response(pdf_data, filename=pdf_name)
 
+
+@readonly()
 def download_signed_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk, signed_at__isnull=False)
 
@@ -90,6 +95,7 @@ def vote_sign_finished(request, document_pk=None):
 
     return HttpResponseRedirect(reverse(
         'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+
 
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
