@@ -149,15 +149,20 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
     Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
     if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
     '''
-    cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-q"]
+    cmd = ["pdftotext", "-raw", "-enc", "UTF-8", "-eol", "unix", "-q"]
     if pagenr:
-        cmd += ["-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
+        cmd += ["-nopgbrk", "-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
     cmd += [pdffilename, "-"]
     popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = popen.communicate()
     if popen.returncode != 0:
         raise IOError('pdftotext pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-    return stdout
+    if pagenr:
+        return stdout
+    else:
+        # pdftotext inserts form feeds between pages,
+        # but there is an extra form feed at the end of the stream
+        return stdout.split('\f')[:-1]
 
 
 def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):

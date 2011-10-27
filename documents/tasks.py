@@ -143,8 +143,9 @@ def index_pdf(document_pk=None, **kwargs):
         try:
             doc.pages = pdf_page_count(doc.file) # calculate number of pages
     
-            for p in xrange(1, doc.pages + 1):
-                text = pdf2text(doc.file.path, p)
+            text_list = pdf2text(doc.file.path)
+            assert(len(text_list), doc.pages)
+            for p, text in enumerate(text_list, 1):
                 doc.page_set.create(num=p, text=text)
             
             index = site.get_index(Page)
