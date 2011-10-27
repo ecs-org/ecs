@@ -96,6 +96,7 @@ def get_meeting_parties(sf):
 
     return parties
 
+@sudo()
 def get_involved_parties(sf):
     all_parties_f = (get_presenting_parties, get_reviewing_parties, get_meeting_parties)
     all_parties = [f(sf) for f in all_parties_f]
