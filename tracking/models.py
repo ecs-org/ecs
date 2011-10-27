@@ -1,12 +1,15 @@
 import datetime
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, Resolver404
 
 
 class ViewManager(models.Manager):
     def get_or_create_for_url(self, url):
-        func, args, kwargs = resolve(url)
+        try:
+            func, args, kwargs = resolve(url)
+        except Resolver404:
+            return None, False
         vary_on = []
         if hasattr(func, 'tracking_hints'):
              for name in func.tracking_hints.get('vary_on'):
