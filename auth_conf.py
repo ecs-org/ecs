@@ -16,6 +16,7 @@ from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.audit.models import AuditTrail
 from ecs.billing.models import ChecklistBillingState
+from ecs.scratchpad.models import ScratchPad
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -155,3 +156,9 @@ class ChecklistBillingStateQFactory(authorization.QFactory):
             return self.make_deny_q()
 
 authorization.register(ChecklistBillingState, factory=ChecklistBillingStateQFactory)
+
+class ScratchPadQFactory(authorization.QFactory):
+    def get_q(self, user):
+        return self.make_q(owner=user)
+
+authorization.register(ScratchPad, factory=ScratchPadQFactory)
