@@ -40,9 +40,10 @@ from ecs.docstash.models import DocStash
 from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
+from ecs.utils.security import readonly
 from ecs.users.utils import sudo, user_flag_required
 from ecs.tasks.models import Task
-from ecs.tasks.utils import get_obj_tasks
+from ecs.tasks.utils import get_obj_tasks, task_required
 from ecs.users.utils import user_flag_required, user_group_required
 from ecs.audit.utils import get_version_number
 
@@ -80,6 +81,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
         kwargs['extra'] = 0
     formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or [], **kwargs)
     return formsets
+
 
 def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, presenter=request.user)
@@ -120,6 +122,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
     return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
 
 
+@readonly()
 def copy_latest_submission_form(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.newest_submission_form
@@ -128,6 +131,7 @@ def copy_latest_submission_form(request, submission_pk=None):
     }))
 
 
+@readonly()
 def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
@@ -135,6 +139,8 @@ def view_submission(request, submission_pk=None):
 CHECKLIST_ACTIVITIES = (ChecklistReview, ThesisRecommendationReview,
     ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
 
+
+@readonly()
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -213,6 +219,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
 
+
 @user_flag_required('is_internal')
 def delete_task(request, submission_form_pk=None, task_pk=None):
     with sudo():
@@ -222,6 +229,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
+@user_flag_required('is_internal')
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -249,6 +257,7 @@ def categorization_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
+@user_flag_required('is_internal')
 def initial_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
@@ -272,12 +281,15 @@ def befangene_review(request, submission_form_pk=None):
         form.save()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
+
+@readonly()
 def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     checklist = get_object_or_404(Checklist, pk=checklist_pk)
     if not submission_form.submission == checklist.submission:
         raise Http404()
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'active_checklist': checklist.pk})
+
 
 @user_flag_required('is_internal')
 def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
@@ -292,16 +304,12 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
             task.save()
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
+
+@task_required
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
-
-    user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True, assigned_to=request.user, deleted_at=None)
-    related_tasks = [t for t in user_tasks if request.path in t.get_final_urls()]
-    if not related_tasks:
-        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
-    # XXX: there really should not be another task for this url
-    related_task = related_tasks[0]
+    related_task = request.related_tasks[0]
 
     lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
     if blueprint.multiple:

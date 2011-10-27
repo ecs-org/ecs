@@ -144,8 +144,9 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.forceauth.ForceAuth',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLoginMiddleware',  # deactivate previous users sessions on login
-    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
+    #'ecs.TestMiddleware',
+    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
