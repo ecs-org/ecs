@@ -9,6 +9,7 @@ from django.db import models
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
@@ -21,7 +22,7 @@ from ecs.notifications.models import Notification, NotificationType, Notificatio
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
-from ecs.utils.security import readonly
+from ecs.users.utils import user_flag_required
 
 
 def _get_notification_template(notification, pattern):
@@ -186,6 +187,7 @@ def create_notification(request, notification_type_pk=None):
     })
 
 
+@user_flag_required('is_internal')
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     kwargs = {}
