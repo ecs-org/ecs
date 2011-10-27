@@ -16,6 +16,7 @@ from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
 from ecs.utils.security import readonly
+from ecs.users.utils import user_flag_required
 
 
 @readonly(methods=['GET'])
@@ -136,6 +137,7 @@ def outgoing_message_widget(request):
 
 @readonly()
 @tracking_hint(exclude=True)
+@user_flag_required('is_internal')
 def communication_overview_widget(request, submission_pk=None):
     return render(request, 'communication/widgets/overview.inc', {
         'threads': Thread.objects.filter(submission__pk=submission_pk),

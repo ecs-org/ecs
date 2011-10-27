@@ -18,6 +18,7 @@ from ecs.audit.models import AuditTrail
 from ecs.billing.models import ChecklistBillingState
 from ecs.scratchpad.models import ScratchPad
 from ecs.boilerplate.models import Text
+from ecs.communication.models import Thread, Message
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -185,3 +186,14 @@ class TextQFactory(authorization.QFactory):
             return self.make_deny_q()
 
 authorization.register(Text, factory=TextQFactory)
+
+class ThreadQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        if profile.is_internal:
+            return self.make_q()
+
+        return self.make_q(sender=user) | self.make_q(receiver=user)
+
+authorization.register(Thread, factory=ThreadQFactory)
+authorization.register(Message, lookup='thread')

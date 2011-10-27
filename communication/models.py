@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from ecs.authorization import AuthorizationManager
 
 MESSAGE_ORIGIN_ALICE = 1
 MESSAGE_ORIGIN_BOB = 2
@@ -39,7 +40,7 @@ class ThreadQuerySet(models.query.QuerySet):
         return self.filter(models.Q(closed_by_receiver=False, receiver=user) | models.Q(closed_by_sender=False, sender=user))
 
 
-class ThreadManager(models.Manager):
+class ThreadManager(AuthorizationManager):
     def get_query_set(self):
         return ThreadQuerySet(self.model)
 
@@ -77,7 +78,7 @@ class MessageQuerySet(models.query.QuerySet):
         return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
   
 
-class MessageManager(models.Manager):
+class MessageManager(AuthorizationManager):
     def get_query_set(self):
         return MessageQuerySet(self.model)
 
