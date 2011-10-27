@@ -17,6 +17,7 @@ from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry
 from ecs.audit.models import AuditTrail
 from ecs.billing.models import ChecklistBillingState
 from ecs.scratchpad.models import ScratchPad
+from ecs.boilerplate.models import Text
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -161,7 +162,7 @@ authorization.register(AuditTrail, factory=AuditTrailQFactory)
 class ChecklistBillingStateQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        if profile.is_executive_board_member:
+        if profile.is_internal:
             return self.make_q()
         else:
             return self.make_deny_q()
@@ -173,3 +174,13 @@ class ScratchPadQFactory(authorization.QFactory):
         return self.make_q(owner=user)
 
 authorization.register(ScratchPad, factory=ScratchPadQFactory)
+
+class TextQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        if profile.is_internal:
+            return self.make_q()
+        else:
+            return self.make_deny_q()
+
+authorization.register(Text, factory=TextQFactory)
