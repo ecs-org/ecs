@@ -175,12 +175,14 @@ class ThesisCategorizationReview(_CategorizationReviewBase):
         super(ThesisCategorizationReview, self).pre_perform(choice)
         # stub
 
+
 class PaperSubmissionReview(Activity):
     class Meta:
         model = Submission
 
     def get_url(self):
         return reverse('ecs.core.views.paper_submission_review', kwargs={'submission_pk': self.workflow.data_id})
+
 
 class ChecklistReview(Activity):
     class Meta:
