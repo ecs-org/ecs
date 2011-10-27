@@ -150,6 +150,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'ecs.utils.security.SecurityReviewMiddleware',
 )   
 
 INSTALLED_APPS = (
