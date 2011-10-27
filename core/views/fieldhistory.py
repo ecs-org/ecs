@@ -7,6 +7,7 @@ from django.utils import simplejson
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils.viewutils import render
+from ecs.utils.security import readonly
 from ecs.audit.utils import get_versions
 from ecs.users.utils import sudo
 
@@ -17,6 +18,7 @@ ALLOWED_MODEL_FIELDS = {
 }
 
 
+@readonly()
 def field_history(request, model_name=None, pk=None):
     try:
         model, fieldname = ALLOWED_MODEL_FIELDS[model_name]

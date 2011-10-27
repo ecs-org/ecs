@@ -500,6 +500,7 @@ def create_submission_form(request):
         context['%s_formset' % prefix] = formset
     return render(request, 'submissions/form.html', context)
 
+
 def change_submission_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
     if profile.is_executive_board_member:
@@ -527,6 +528,7 @@ def change_submission_presenter(request, submission_pk=None):
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission_form.submission})
+
 
 def change_submission_susar_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
@@ -556,11 +558,14 @@ def change_submission_susar_presenter(request, submission_pk=None):
 
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission_form.submission})
 
+
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def delete_docstash_entry(request):
     request.docstash.delete()
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
+
+@readonly()
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     url = submission_form.pdf_document.get_downloadurl()
@@ -569,6 +574,8 @@ def submission_pdf(request, submission_form_pk=None):
     else:
         return HttpResponseForbidden()
 
+
+@readonly()
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     submission_form = submission.current_submission_form
@@ -594,6 +601,7 @@ def import_submission_form(request):
     })
 
 
+@readonly()
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
     new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
@@ -606,6 +614,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     })
 
 
+@readonly()
 def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
     if not title:
         title = _('Submissions')
@@ -678,6 +687,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     return render(request, template, data)
 
 
+@readonly()
 def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
@@ -696,6 +706,8 @@ def submission_widget(request, template='submissions/widget.html'):
 
     return submission_list(request, **data)
 
+
+@readonly()
 def all_submissions(request):
     keyword = request.GET.get('keyword', None)
 
@@ -735,10 +747,14 @@ def all_submissions(request):
 
     return submission_list(request, submissions, keyword=keyword, filtername=filtername, filter_form=filter_form, extra_context=extra_context, title=title)
 
+
+@readonly()
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
     return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=AssignedSubmissionsFilterForm, title=_('Assigned Studies'))
 
+
+@readonly()
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
 
@@ -747,6 +763,8 @@ def my_submissions(request):
 
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=MySubmissionsFilterForm, title=_('My Studies'))
 
+
+@readonly()
 @forceauth.exempt
 def catalog(request):
     with sudo():
