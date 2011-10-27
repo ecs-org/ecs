@@ -97,8 +97,18 @@ urlpatterns = patterns('',
     
     #url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
-    url(r'^trigger500/$', lambda request: 1/0), 
+    
 )
+
+if settings.DEBUG:
+    from django.http import HttpResponse
+    def __trigger_log(request):
+        logger.warn('foo')
+        return HttpResponse()
+    urlpatterns += patterns('', 
+        url(r'^trigger500/$', lambda request: 1/0), 
+        url(r'^trigger-warning-log/$', __trigger_log)
+    )
 
 if 'sentry' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
