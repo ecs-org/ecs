@@ -8,7 +8,10 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
-class AuditTrailManager(models.Manager):
+from ecs.authorization import AuthorizationManager
+
+
+class AuditTrailManager(AuthorizationManager):
     def get_last_change(self):
         try:
             return self.order_by('-created_at')[0]

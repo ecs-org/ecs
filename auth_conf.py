@@ -14,6 +14,7 @@ from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
+from ecs.audit.models import AuditTrail
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -133,3 +134,13 @@ authorization.register(AssignedMedicalCategory, lookup='meeting')
 authorization.register(TimetableEntry, lookup='meeting')
 authorization.register(Participation, lookup='entry__meeting')
 authorization.register(Constraint, lookup='meeting')
+
+class AuditTrailQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        if profile.is_executive_board_member:
+            return self.make_q()
+        else:
+            return self.make_deny_q()
+
+authorization.register(AuditTrail, factory=AuditTrailQFactory)

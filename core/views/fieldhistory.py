@@ -8,6 +8,7 @@ from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils.viewutils import render
 from ecs.audit.utils import get_versions
+from ecs.users.utils import sudo
 
 
 ALLOWED_MODEL_FIELDS = {
@@ -28,7 +29,9 @@ def field_history(request, model_name=None, pk=None):
     history = []
     last_value = u""
     i = 0
-    for change in get_versions(obj).order_by('created_at'):
+    with sudo():
+        versions = list(get_versions(obj).order_by('created_at'))
+    for change in versions:
         i += 1
         value = simplejson.loads(change.data)[0]['fields'][fieldname]
         diff = dmp.diff_main(last_value, value)
