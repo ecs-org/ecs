@@ -150,6 +150,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'ecs.utils.security.SecurityReviewMiddleware',
 )   
 
 INSTALLED_APPS = (
@@ -401,7 +402,6 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
-    'ecs.core.tasks',
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',

@@ -136,7 +136,7 @@ ordereddict:inst:all:pypi:ordereddict
 django-haystack:inst:all:pypi:django-haystack\>=1.2.5
 # pdf text extract
 pdftotext:req:apt:apt-get:poppler-utils
-pdftotext:req:mac:homebrew:poppler
+#pdftotext:req:mac:homebrew:poppler
 pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
 pdftotext:req:openbsd:pkg:poppler
@@ -190,7 +190,7 @@ mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:
 
 # mediaserver: image magick is used for rendering tasks as well
 imagemagick:req:apt:apt-get:imagemagick
-imagemagick:req:mac:homebrew:imagemagick
+#imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:openbsd:pkg:ImageMagick--

@@ -11,7 +11,11 @@ from django.conf import settings
 
 from ecs.votes.models import Vote
 from ecs.meetings.models import Meeting
+from ecs.core.models import Submission
 from ecs.utils.common_messages import send_submission_message
+from ecs.votes.signals import on_vote_expiry
+
+
 
 def send_vote_expired(vote):
     recipients_q = Q(email=settings.ECSMAIL['postmaster'])
@@ -93,3 +97,8 @@ def send_reminder_messages(today=None):
             send_vote_expired(vote)
         else:
             continue
+
+@periodic_task(run_every=timedelta(seconds=10))
+def expire_votes():
+    for submission in Submission.objects.filter(is_finished=False).with_vote(positive=True, permanent=True, published=True, valid=None, valid_until__lte=datetime.now()):
+        on_vote_expiry.send(Vote, submission=submission)

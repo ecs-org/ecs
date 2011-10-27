@@ -255,7 +255,6 @@ def pdf2pdfa(real_infile, real_outfile):
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
-    
     if isinstance(html, unicode): 
         html = html.encode('utf-8') 
     if isinstance(header_html, unicode):
@@ -271,7 +270,6 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         '--page-size', 'A4',
         '--zoom', '1',
     ]
-
     tmp_dir = tempfile.mkdtemp(dir=settings.TEMPFILE_DIR)
     shutil.copytree(os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'), os.path.join(tmp_dir, 'media'))
 
@@ -280,7 +278,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         header_html_file.write(header_html)
         header_html_file.close()
         cmd += ['--header-html', header_html_file.name]
-    if footer_html:
+    if footer_html and not getattr(settings, 'DISABLE_WKHTML2PDF_FOOTERS', False):
         footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
         footer_html_file.write(footer_html)
         footer_html_file.close()
@@ -297,7 +295,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=tmp_dir, delete=False)
     pdf_file.close()
     cmd += [pdf_file.name]
-
+    
     try:
         popen = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate() 

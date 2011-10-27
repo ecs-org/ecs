@@ -7,7 +7,9 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
+from ecs.core.signals import on_initial_review, on_categorization_review, on_thesis_recommendation_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
+from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.utils import block_if_task_exists
@@ -58,13 +60,11 @@ def is_acknowledged_and_not_localec(wf):
 
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
-    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='expedited_review', question__number='1')
-    return bool(answer.answer)
+    return bool(get_checklist_answer(wf.data, 'expedited_review', 1))
 
 @guard(model=Submission)
 def has_thesis_recommendation(wf):
-    answer = ChecklistAnswer.objects.get(checklist__submission=wf.data, question__blueprint__slug='thesis_review', question__number='1')
-    return bool(answer.answer)
+    return bool(get_checklist_answer(wf.data, 'thesis_review', 1))
 
 @guard(model=Submission)
 @block_if_task_exists('insurance_review')
@@ -112,17 +112,7 @@ class InitialReview(Activity):
         sf = s.newest_submission_form
         sf.is_acknowledged = choice
         sf.save()
-
-        if sf.is_acknowledged:
-            send_system_message_template(sf.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt', None, submission=s)
-            if not s.current_submission_form == sf:
-                sf.mark_current()
-                involved_users = set([p.user for p in sf.get_involved_parties() if p.user and not p.user == sf.presenter])
-                for u in involved_users:
-                    send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(s.get_ec_number_display()),
-                        'submissions/change_message.txt', None, submission=s)
-        else:
-            send_system_message_template(sf.presenter, _('Submission not accepted'), 'submissions/decline_message.txt', None, submission=s)
+        on_initial_review.send(Submission, submission=s, form=sf)
 
 class Resubmission(Activity):
     class Meta:
@@ -174,10 +164,8 @@ class CategorizationReview(_CategorizationReviewBase):
 
     def pre_perform(self, choice):
         super(CategorizationReview, self).pre_perform(choice)
-        s = self.workflow.data
-        is_special = is_expedited(self.workflow) or is_retrospective_thesis(self.workflow) or is_localec(self.workflow)
-        if is_acknowledged(self.workflow) and (not is_special or s.meetings.filter(started=None).exists()):
-            s.schedule_to_meeting()
+        on_categorization_review.send(Submission, submission=self.workflow.data)
+
 
 class ThesisCategorizationReview(_CategorizationReviewBase):
     class Meta:
@@ -265,9 +253,7 @@ class ThesisRecommendationReview(NonRepeatableChecklistReview):
 
     def pre_perform(self, choice):
         super(ThesisRecommendationReview, self).pre_perform(choice)
-        s = self.workflow.data
-        if has_thesis_recommendation(self.workflow):
-            s.schedule_to_meeting()
+        on_thesis_recommendation_review.send(Submission, submission=self.workflow.data)
 
 def unlock_thesis_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
@@ -290,9 +276,8 @@ class ExpeditedRecommendationReview(NonRepeatableChecklistReview):
 
     def pre_perform(self, choice):
         super(ExpeditedRecommendationReview, self).pre_perform(choice)
-        s = self.workflow.data
-        if has_expedited_recommendation(self.workflow):
-            s.schedule_to_meeting()
+        on_expedited_recommendation_review.send(Submission, submission=self.workflow.data)
+            
 
 def unlock_expedited_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
@@ -305,8 +290,7 @@ class LocalEcRecommendationReview(NonRepeatableChecklistReview):
 
     def pre_perform(self, choice):
         super(LocalEcRecommendationReview, self).pre_perform(choice)
-        s = self.workflow.data
-        s.schedule_to_meeting()
+        on_local_ec_recommendation_review.send(Submission, submission=self.workflow.data)
 
 def unlock_localec_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)

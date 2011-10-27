@@ -15,7 +15,10 @@ from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
+from ecs.utils.security import readonly
 
+
+@readonly(methods=['GET'])
 def new_thread(request, submission_pk=None, to_user_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
 
@@ -45,6 +48,8 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
         'thread': thread,
     })
 
+
+@readonly(methods=['GET'])
 def read_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     msg = thread.last_message 
@@ -76,11 +81,14 @@ def read_thread(request, thread_pk=None):
         'form': form,
     })
 
+
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
     return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
-    
+
+
+@readonly()
 @tracking_hint(exclude=True)
 def incoming_message_widget(request):
     qs = Thread.objects.incoming(request.user).open(request.user)
@@ -102,6 +110,8 @@ def incoming_message_widget(request):
         }
     )
 
+
+@readonly()
 @tracking_hint(exclude=True)
 def outgoing_message_widget(request):
     qs = Thread.objects.outgoing(request.user).open(request.user)
@@ -123,12 +133,16 @@ def outgoing_message_widget(request):
         }
     )
 
+
+@readonly()
 @tracking_hint(exclude=True)
 def communication_overview_widget(request, submission_pk=None):
     return render(request, 'communication/widgets/overview.inc', {
         'threads': Thread.objects.filter(submission__pk=submission_pk),
     })
 
+
+@readonly()
 def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
     sort_session_key = '%s:sort' % session_prefix
     raw_sort = request.GET.get('sort', request.session.get(sort_session_key, '-last_message__timestamp'))
@@ -170,6 +184,8 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
         context.update(extra_context)
     return render(request, template, context)
 
+
+@readonly()
 def list_threads(request):
     usersettings = request.user.ecs_settings
 

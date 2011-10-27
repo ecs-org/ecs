@@ -6,6 +6,7 @@ from ecs.utils.countries.models import Country
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.users.utils import user_flag_required
 from ecs.tasks.models import TaskType
+from ecs.utils.security import readonly
 
 def _get_task_types():
     uids = TaskType.objects.values_list('workflow_node__uid', flat=True).distinct()
@@ -27,6 +28,8 @@ INTERNAL_AUTOCOMPLETE_QUERYSETS = {
     'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
 }
 
+
+@readonly()
 def autocomplete(request, queryset_name=None):
     try:
         result = AUTOCOMPLETE_QUERYSETS[queryset_name]()
@@ -34,6 +37,8 @@ def autocomplete(request, queryset_name=None):
         raise Http404
     return HttpResponse(simplejson.dumps(result), content_type='application/json')
 
+
+@readonly()
 @user_flag_required('is_internal')
 def internal_autocomplete(request, queryset_name=None):
     try:

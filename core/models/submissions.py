@@ -18,17 +18,16 @@ from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_pr
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
-from ecs.core.signals import study_finished
+from ecs.core.signals import on_study_finish, on_study_change
 from ecs.votes.models import Vote
 from ecs.notifications.models import Notification
 from ecs.users.utils import get_current_user
 from ecs.docstash.models import DocStash
 from ecs.meetings.models import Meeting
 from ecs.votes.models import Vote
-from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
-from ecs.tasks.utils import get_obj_tasks
 from ecs.tasks.models import Task
+
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
@@ -187,7 +186,7 @@ class Submission(models.Model):
     def finish(self, expired=False):
         self.is_finished = True
         self.save()
-        study_finished.send(sender=Submission, submission=self, expired=expired)
+        on_study_finish.send(sender=Submission, submission=self, expired=expired)
         
     def update_next_meeting(self):
         next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
@@ -504,7 +503,6 @@ class SubmissionForm(models.Model):
 
     def render_pdf(self):
         from ecs.core import paper_forms
-
         doctype = DocumentType.objects.get(identifier='submissionform')
         name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
         filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
@@ -670,20 +668,19 @@ def attach_to_submissions(user):
         inv.user = user
         inv.save()
 
-def _post_submission_form_save(**kwargs):
-    from ecs.core.workflow import InitialReview
 
+def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
 
     if not kwargs['created'] or new_sf.is_transient:
         return
 
     submission = new_sf.submission
-    initial = not submission.current_submission_form
-
     old_sf = submission.current_submission_form
-    if initial:
+    
+    if not old_sf:
         submission.current_submission_form = new_sf
+        submission.save()
 
     defaults = {
         'is_amg': new_sf.project_type_drug,
@@ -693,27 +690,12 @@ def _post_submission_form_save(**kwargs):
         'is_retrospective': new_sf.project_type_retrospective,
     }
 
-    # set defaults
     for k, v in defaults.iteritems():
         if getattr(submission, k) is None:
             setattr(submission, k, v)
     submission.save(force_update=True)
 
-    involved_users = set([p.user for p in new_sf.get_involved_parties() if p.user and not p.user == new_sf.presenter])
-    if old_sf == None:   # first version of the submission
-        for u in involved_users:
-            send_system_message_template(u, _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/creation_message.txt', None, submission=submission)
-    else:
-        with sudo():
-            try:
-                initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]
-            except IndexError:
-                pass
-            else:
-                initial_review_task.reopen()
-                send_system_message_template(initial_review_task.assigned_to, _('New version of study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                    'submissions/new_version_message.txt', None, submission=submission)
+    on_study_change.send(Submission, submission=submission, old_form=old_sf, new_form=new_sf)
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 

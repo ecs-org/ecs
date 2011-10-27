@@ -33,6 +33,7 @@ from ecs.core.workflow import (ChecklistReview,
     ExpeditedRecommendation, ExpeditedRecommendationReview,
     LocalEcRecommendationReview, BoardMemberReview)
 
+from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -46,7 +47,6 @@ from ecs.users.utils import user_flag_required, user_group_required
 from ecs.audit.utils import get_version_number
 
 from ecs.documents.views import upload_document, delete_document
-from ecs.communication.utils import send_system_message_template
 from ecs.core.workflow import CategorizationReview
 
 
@@ -468,18 +468,14 @@ def create_submission_form(request):
                     instance.submission_form = submission_form
                     instance.save()
             request.docstash.delete()
-
-            submission_form.render_pdf()
+            
+            on_study_submit.send(Submission, submission=submission, form=submission_form, user=request.user)
 
             if notification_type:
                 return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
                     'submission_form_pk': submission_form.pk,
                     'notification_type_pk': notification_type.pk,
                 }))
-
-            resubmission_task = submission.resubmission_task_for(request.user)
-            if resubmission_task:
-                resubmission_task.done(request.user)
 
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
@@ -509,13 +505,16 @@ def change_submission_presenter(request, submission_pk=None):
         new_presenter = form.cleaned_data['presenter']
         submission_form.presenter = new_presenter
         submission_form.save()
-        send_system_message_template(new_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
-            'submissions/presenter_change_new.txt', None, submission=submission_form.submission)
+        on_presenter_change.send(Submission, 
+            submission=submission_form.submission, 
+            form=submission_form, 
+            old_presenter=previous_presenter, 
+            new_presenter=new_presenter, 
+            user=request.user,
+        )
         if request.user == previous_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            send_system_message_template(previous_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
-                'submissions/presenter_change_previous.txt', None, submission=submission_form.submission)
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission_form.submission})
@@ -534,13 +533,16 @@ def change_submission_susar_presenter(request, submission_pk=None):
         new_susar_presenter = form.cleaned_data['susar_presenter']
         submission_form.susar_presenter = new_susar_presenter
         submission_form.save()
-        send_system_message_template(new_susar_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
-            'submissions/susar_presenter_change_new.txt', None, submission=submission_form.submission)
+        on_susar_presenter_change.send(Submission, 
+            submission=submission_form.submission, 
+            form=submission_form, 
+            old_susar_presenter=previous_susar_presenter, 
+            new_susar_presenter=new_susar_presenter, 
+            user=request.user,
+        )
         if request.user == previous_susar_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            send_system_message_template(previous_susar_presenter, _('Studie {0}'.format(submission_form.submission.get_ec_number_display())),
-                'submissions/susar_presenter_change_previous.txt', None, submission=submission_form.submission)
             return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission_form.submission})
