@@ -161,14 +161,14 @@ class Document(models.Model):
             brand = False
         else:
             personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-            brand = self.branding == 'p' or self.branding == 'b'
+            brand = self.branding in ('p', 'b')
 
         return generate_media_url(self.uuid, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
         ''' load actual data from mediaserver including optional branding ; you rarely use this. '''
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-        brand = self.branding == 'p' or self.branding == 'b'
+        brand = self.branding in ('p', 'b')
         return download_from_mediaserver(self.uuid, self.get_filename(), personalization=personalization, brand=brand)
 
     def get_pages_list(self): 

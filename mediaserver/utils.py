@@ -291,7 +291,7 @@ class AuthUrl:
     def parse(self, urlstring):
         parsedurl = urlparse(urlstring)
         query_dict = parse_qs(parsedurl.query)
-        tail, sep ,head = parsedurl.path.rpartition("/")
+        tail, sep, head = parsedurl.path.rpartition("/")
         bucket = tail + sep
         objectid = head
         keyId = query_dict["AWSAccessKeyId"].pop() if "AWSAccessKeyId" in query_dict else None
