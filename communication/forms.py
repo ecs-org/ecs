@@ -40,8 +40,7 @@ class BaseMessageForm(forms.ModelForm):
                 ('involved', _('Involved Party')),
             ]
             receiver_type_initial = 'involved'
-            with sudo():
-                involved_parties = list(submission.current_submission_form.get_involved_parties())
+            involved_parties = list(submission.current_submission_form.get_involved_parties())
             involved_parties = User.objects.filter(pk__in=[p.user.pk for p in involved_parties if p.user])
             self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
 
