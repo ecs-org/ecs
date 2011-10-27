@@ -31,7 +31,7 @@ def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, br
         objid_parts = ['prepare', uuid, mimetype]
         objid = '/'.join(objid_parts) + '/'
     
-        key_id = settings.MS_CLIENT ["key_id"]
+        key_id = settings.MS_CLIENT["key_id"]
         expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
     
         authurl = AuthUrl(key_id, settings.MS_CLIENT['key_secret'])
@@ -71,7 +71,7 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
 
     objid = '/'.join(objid_parts) + '/'
 
-    key_id = settings.MS_CLIENT ["key_id"]
+    key_id = settings.MS_CLIENT["key_id"]
     expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
 
     authurl = AuthUrl(key_id, settings.MS_CLIENT['key_secret'])
@@ -83,15 +83,15 @@ def generate_pages_urllist(uuid, pages):
     
     for every supported rendersize options for every page of the document with uuid
     '''
-    tiles = settings.MS_SHARED ["tiles"]
-    width = settings.MS_SHARED ["resolutions"]
-    aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
-    expiration_sec = settings.MS_SHARED ["url_expiration_sec"]
+    tiles = settings.MS_SHARED["tiles"]
+    width = settings.MS_SHARED["resolutions"]
+    aspect_ratio = settings.MS_SHARED["aspect_ratio"]
+    expiration_sec = settings.MS_SHARED["url_expiration_sec"]
     
-    baseurl = settings.MS_CLIENT ["server"]
-    bucket = settings.MS_CLIENT ["bucket"]
-    key_id = settings.MS_CLIENT ["key_id"]
-    key_secret = settings.MS_CLIENT ["key_secret"]
+    baseurl = settings.MS_CLIENT["server"]
+    bucket = settings.MS_CLIENT["bucket"]
+    key_id = settings.MS_CLIENT["key_id"]
+    key_secret = settings.MS_CLIENT["key_secret"]
     docshotData = [];
     
     for tx, ty in tiles:

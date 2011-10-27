@@ -54,9 +54,9 @@ def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None)
     mediaprovider = MediaProvider()
     try:    
         try:
-            if branding is not None:                
+            if branding is not None:
                 f = mediaprovider.get_branded(uuid, mimetype, True)
-            else:        
+            else:
                 f = mediaprovider.get_blob(uuid)
         except KeyError:
             return HttpResponseNotFound()
@@ -67,5 +67,5 @@ def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None)
         if hasattr(f, "close"):
             f.close()
     
-    return response  
+    return response
 
