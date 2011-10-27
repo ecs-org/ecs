@@ -11,6 +11,8 @@ from django.utils.translation import ugettext as _
 from django.db.models import Q
 
 from ecs.utils.decorators import developer
+from ecs.users.utils import user_flag_required
+from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document, DocumentType
@@ -65,6 +67,8 @@ def reset_submissions(request):
     Submission.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
 
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
 def submission_billing(request):
     unbilled_submissions = list(Submission.objects.filter(billed_at=None, current_submission_form__is_acknowledged=True))
     for submission in unbilled_submissions:
@@ -131,6 +135,8 @@ def reset_external_review_payment(request):
     ChecklistBillingState.objects.update(billed_at=None)
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
 
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
 def external_review_payment(request):
     checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status='new').filter(
         Q(billing_state__isnull=True)|Q(billing_state__isnull=False, billing_state__billed_at=None))

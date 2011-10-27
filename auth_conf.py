@@ -15,6 +15,7 @@ from ecs.notifications.models import Notification, CompletionReportNotification,
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.audit.models import AuditTrail
+from ecs.billing.models import ChecklistBillingState
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
@@ -144,3 +145,13 @@ class AuditTrailQFactory(authorization.QFactory):
             return self.make_deny_q()
 
 authorization.register(AuditTrail, factory=AuditTrailQFactory)
+
+class ChecklistBillingStateQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        if profile.is_executive_board_member:
+            return self.make_q()
+        else:
+            return self.make_deny_q()
+
+authorization.register(ChecklistBillingState, factory=ChecklistBillingStateQFactory)

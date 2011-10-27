@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode as fu
 
+from ecs.authorization import AuthorizationManager
+
 STUDY_PRICING_OTHER = 1
 STUDY_PRICING_MULTICENTRIC_AMG_MAIN = 2
 STUDY_PRICING_MULTICENTRIC_AMG_LOCAL = 3
@@ -50,3 +52,5 @@ class Price(models.Model):
 class ChecklistBillingState(models.Model):
     checklist = models.OneToOneField('checklists.Checklist', null=True, related_name='billing_state')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
+
+    objects = AuthorizationManager()
