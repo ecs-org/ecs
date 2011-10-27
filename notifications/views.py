@@ -21,6 +21,7 @@ from ecs.notifications.models import Notification, NotificationType, Notificatio
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
+from ecs.utils.security import readonly
 
 
 def _get_notification_template(notification, pattern):
@@ -61,12 +62,18 @@ def _notification_list(request, answered=None, stashed=False):
         context['stashed_notifications'] = DocStash.objects.filter(group='ecs.notifications.views.create_notification')
     return render(request, 'notifications/list.html', context)
 
+
+@readonly()
 def open_notifications(request):
     return _notification_list(request, answered=False, stashed=True)
 
+
+@readonly()
 def answered_notifications(request):
     return _notification_list(request, answered=True)
 
+
+@readonly()
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
@@ -76,6 +83,7 @@ def view_notification(request, notification_pk=None):
     })
 
 
+@readonly()
 def submission_data_for_notification(request):
     pks = [pk for pk in request.GET.getlist('submission_form') if pk]
     submission_forms = list(SubmissionForm.objects.filter(pk__in=pks))
@@ -84,11 +92,13 @@ def submission_data_for_notification(request):
     })
 
 
+@readonly()
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
         'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('name')
     })
-    
+
+
 def create_diff_notification(request, submission_form_pk=None, notification_type_pk=None):
     new_submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, is_notification_update=True)
     old_submission_form = new_submission_form.submission.current_submission_form
@@ -206,6 +216,7 @@ def edit_notification_answer(request, notification_pk=None):
     })
 
 
+@readonly()
 def view_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
     return render(request, 'notifications/answers/view.html', {
@@ -214,6 +225,7 @@ def view_notification_answer(request, notification_pk=None):
     })
     
 
+@readonly()
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     submission_forms = notification.submission_forms.select_related('submission').all()
@@ -228,6 +240,7 @@ def notification_pdf(request, notification_pk=None):
     })
 
 
+@readonly()
 def notification_answer_pdf(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
     return _notification_pdf_response(answer.notification, 'db/notifications/answers/wkhtml2pdf/%s.html', suffix='-answer.pdf', context={

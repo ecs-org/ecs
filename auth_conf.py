@@ -96,6 +96,7 @@ class NotificationQFactory(authorization.QFactory):
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
     authorization.register(cls, factory=NotificationQFactory)
 
+#authorization.register(NotificationAnswer, lookup='notification')
 
 class ChecklistQFactory(authorization.QFactory):
     def get_q(self, user):
