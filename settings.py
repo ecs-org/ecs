@@ -438,7 +438,7 @@ COMPRESS_JS_FILTERS = []
 #COMPRESS_OUTPUT_DIR = "django_compressor"
 pyscss = 'pyscss.exe' if sys.platform == 'win32' else 'pyscss'
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', '{0} {1}'.format(pyscss, "-o {outfile} {infile}")),
+    ('text/x-scss', '{0} -I {1} {2}'.format(pyscss, os.path.join(MEDIA_ROOT, 'css'), "-o {outfile} {infile}")),
 )
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
