@@ -21,6 +21,7 @@ from ecs.votes.forms import VoteForm, SaveVoteForm
 from ecs.tasks.models import Task
 from ecs.ecsmail.utils import deliver
 
+from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
@@ -28,6 +29,7 @@ from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEn
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 
 
+@user_flag_required('is_internal')
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
     if form.is_valid():
@@ -36,7 +38,9 @@ def create_meeting(request):
     return render(request, 'meetings/form.html', {
         'form': form,
     })
-    
+
+@readonly()
+@user_flag_required('is_internal')
 def meeting_list(request, meetings, title=None):
     if not title:
         title = _('Meetings')
@@ -44,10 +48,14 @@ def meeting_list(request, meetings, title=None):
         'meetings': meetings.order_by('start'),
         'title': title,
     })
-    
+
+@readonly()
+@user_flag_required('is_internal')
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()), title=_('Upcoming Meetings'))
 
+@readonly()
+@user_flag_required('is_internal')
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()), title=_('Past Meetings'))
 
@@ -69,7 +77,8 @@ def reschedule_submission(request, submission_pk=None):
         'submission': submission,
         'form': form,
     })
-    
+
+@user_flag_required('is_internal')
 def add_free_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     form = FreeTimetableEntryForm(request.POST or None)
@@ -80,8 +89,8 @@ def add_free_timetable_entry(request, meeting_pk=None):
         'form': form,
         'meeting': meeting,
     })
-    
 
+@user_flag_required('is_internal')
 def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     is_break = request.GET.get('break', False)
@@ -93,7 +102,8 @@ def add_timetable_entry(request, meeting_pk=None):
         for user in User.objects.order_by('?')[:random.randint(1, 4)]:
             Participation.objects.create(entry=entry, user=user)
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    
+
+@user_flag_required('is_internal')
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
@@ -101,7 +111,8 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
         raise Http404(_("only tops without associated submission can be deleted"))
     entry.delete()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    
+
+@user_flag_required('is_internal')
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     entry = get_object_or_404(TimetableEntry, pk=entry_pk)
@@ -111,19 +122,16 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    
+
+@user_flag_required('is_internal')
 def move_timetable_entry(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
     from_index = int(request.GET.get('from_index'))
     to_index = int(request.GET.get('to_index'))
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
     meeting[from_index].index = to_index
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    
-def users_by_medical_category(request):
-    category = get_object_or_404(MedicalCategory, pk=request.POST.get('category'))
-    users = list(User.objects.filter(medical_categories=category, ecs_profile__is_board_member=True).values('pk', 'username'))
-    return HttpResponse(simplejson.dumps(users), content_type='text/json')
 
+@readonly()
 @user_flag_required('is_internal')
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -168,6 +176,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'constraint_formset': constraint_formset,
     })
 
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -175,7 +184,7 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
     q = request.REQUEST.get('q', '').upper()
     explict_top = 'TOP' in q
     q = q.replace('TOP', '').strip()
-    
+
     # if we don't explicitly look for a TOP, try an exact ec_number lookup
     if not explict_top:
         tops = meeting.timetable_entries.filter(submission__ec_number__endswith=q).order_by('timetable_index')
@@ -194,12 +203,13 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
             top = tops[0]
     if top:
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
-    
+
     return render(request, 'meetings/assistant/quickjump_error.html', {
         'meeting': meeting,
         'tops': tops,
     })
 
+@readonly()
 @user_flag_required('is_internal')
 def meeting_assistant(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -289,6 +299,7 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
         'form': form,
     })
 
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -296,7 +307,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     simple_save = request.POST.get('simple_save', False)
     autosave = request.POST.get('autosave', False)
     vote, form = None, None
-    
+
     def next_top_redirect():
         if top.next_open:
             next_top = top.next_open
@@ -306,7 +317,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             except IndexError:
                 return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
-    
+
     if top.submission:
         try:
             vote = top.vote
@@ -367,6 +378,8 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         'checklist_review_states': checklist_review_states.items(),
     })
 
+@readonly()
+@user_flag_required('is_internal')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -375,6 +388,7 @@ def agenda_pdf(request, meeting_pk=None):
     pdf = meeting.get_agenda_pdf(request)
     return pdf_response(pdf, filename=filename)
 
+@readonly()
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -395,6 +409,8 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
+@readonly()
+@user_flag_required('is_internal')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -433,16 +449,18 @@ def protocol_pdf(request, meeting_pk=None):
     })
     return pdf_response(pdf, filename=filename)
 
-
+@readonly()
+@user_flag_required('is_internal')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-
     filename = '%s-%s-%s.pdf' % (
         slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
     )
     pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
 
+@readonly()
+@user_flag_required('is_internal')
 def timetable_htmlemailpart(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     response = render(request, 'meetings/email/timetable.html', {
@@ -450,6 +468,8 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
+@readonly()
+@user_flag_required('is_internal')
 def next(request):
     try:
         meeting = Meeting.objects.next()
@@ -458,6 +478,7 @@ def next(request):
     else:
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -549,7 +570,6 @@ def meeting_details(request, meeting_pk=None, active=None):
         'active': active,
     })
 
-
 @user_flag_required('is_internal')
 def edit_meeting(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -562,5 +582,6 @@ def edit_meeting(request, meeting_pk=None):
         'meeting': meeting,
     })
 
+@user_flag_required('is_internal')
 def votes_signing(request, meeting_pk=None):
     return meeting_details(request, meeting_pk=meeting_pk, active='signing')

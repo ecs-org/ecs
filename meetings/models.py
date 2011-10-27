@@ -6,6 +6,7 @@ from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
@@ -106,13 +107,15 @@ class AssignedMedicalCategory(models.Model):
     board_member = models.ForeignKey(User, null=True, blank=True, related_name='assigned_medical_categories')
     meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
+    objects = AuthorizationManager()
+
     class Meta:
         unique_together = (('category', 'meeting'),)
 
     def __unicode__(self):
         return '%s - %s' % (self.meeting.title, self.category.name)
 
-class MeetingManager(models.Manager):
+class MeetingManager(AuthorizationManager):
     def next(self):
         now = datetime.now()
         dday = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=1)
@@ -390,7 +393,9 @@ class TimetableEntry(models.Model):
     is_sponsor_invited = models.BooleanField(default=False)
     optimal_start = models.TimeField(null=True)
     is_open = models.BooleanField(default=True)
-    
+
+    objects = AuthorizationManager()
+
     def __unicode__(self):
         if self.index is not None:
             return u"TOP %s" % (self.index + 1)
@@ -463,16 +468,6 @@ class TimetableEntry(models.Model):
         if not self.submission:
             return MedicalCategory.objects.none()
         return MedicalCategory.objects.filter(submissions__timetable_entries=self)
-        
-    @cached_property
-    def users_by_medical_category(self):
-        users_by_category = {}
-        for cat in self.medical_categories:
-            users_by_category.setdefault(cat, [])
-        for p in self.participations.select_related('user', 'medical_category'):
-            users_by_category.setdefault(p.medical_category, []).append(p.user)
-            p.user.participation = p
-        return users_by_category
 
     @cached_property
     def is_retrospective(self):
@@ -594,7 +589,8 @@ class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')
     user = models.ForeignKey(User, related_name='meeting_participations')
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
-    
+
+    objects = AuthorizationManager()
 
 WEIGHT_CHOICES = (
     (0.5, _('unfavorable')),
@@ -608,6 +604,8 @@ class Constraint(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     weight = models.FloatField(default=0.5, choices=WEIGHT_CHOICES)
 
+    objects = AuthorizationManager()
+
     @property
     def duration(self):
         d = datetime.now().date()
@@ -616,5 +614,3 @@ class Constraint(models.Model):
     @cached_property
     def duration_in_seconds(self):
         return timedelta_to_seconds(self.duration)
-   
-

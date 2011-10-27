@@ -1,16 +1,13 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('ecs.meetings.views',
-    url(r'^users/by_medical_category/$', 'users_by_medical_category'),
     url(r'^submission/(?P<submission_pk>\d+)/reschedule/', 'reschedule_submission'),
 
     url(r'^meeting/next/$', 'next'),
     url(r'^meeting/new/$', 'create_meeting'),
-    #url(r'^meeting/(?P<meeting_pk>\d+)/$', 'view_meeting'),
     url(r'^meetings/upcoming/$', 'upcoming_meetings'),
     url(r'^meetings/past/$', 'past_meetings'),
     url(r'^meeting/(?P<meeting_pk>\d+)/$', 'meeting_details'),
-    #url(r'^meeting/(?P<meeting_pk>\d+)/medical_categories/(?P<category_pk>\d+)/$', 'medical_categories'),
     url(r'^meeting/(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', 'edit_user_constraints'),
     url(r'^meeting/(?P<meeting_pk>\d+)/edit/$', 'edit_meeting'),
 
@@ -36,6 +33,6 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable_pdf/$', 'timetable_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'timetable_htmlemailpart'),
     url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'protocol_pdf'),
-    
+
     url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'votes_signing'),
 )
