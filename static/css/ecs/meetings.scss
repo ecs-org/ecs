@@ -231,7 +231,7 @@
         .user_list > span {
             margin-right: 0.5em;
             padding: 2px;
-            border: 1px solid $cold-greycff;
+            border: 1px solid $cold-grey;
             background-color: #eeeeff;
         }
     }
@@ -406,19 +406,29 @@
             margin-top: 10px;
             vertical-align: top;
             max-width: 250px;
-            min-width: 160px;
+            min-width: 140px;
         }
         
         .column_main {
             display: table-cell;
             min-width: 350px;
-            width: 450px;
+            max-width: 500px;
             padding-right: 5px;
-            border-right: 1px solid $cold-grey
+            border-right: 1px solid $cold-grey;
+            
+            .ecs-TextAreaToolbar {
+                margin-left: 20px;
+            }
+            .boilerplate_selector {
+                left: 20px;
+            }
         }
         
         .reviews, .column_main form {
-          display: inline-block;
+            display: inline-block;
+        }
+        .column_main form {
+            padding: 5px;
         }
     }
     
@@ -509,18 +519,22 @@
     margin: 0 0 10px 10px;
 }
 
-#content .meeting_assistant_block ul {
-    display: block;
-    margin: 0 0 20px 10px;
-    
-    .block_left, .block_right{
-        display: block;
-        float: left;
-    }
-    .block_left{
-        margin-right: 10px;
-    }
-} 
+#content .meeting_assistant_block {
+    float: left;
+    width: 100%;
+  
+        ul {
+          display: block;
+          margin: 0 0 20px 10px;
+        }
+        .block_left, .block_right {
+            display: block;
+            float: left;
+        }
+        .block_left {
+            margin-right: 10px;
+        }
+}
 
 #meeting_assistant .button a, 
 #meeting_assistant .navigation a {
@@ -572,7 +586,7 @@
     
         li {
             display: block;
-            padding: 5px 8px;
+            padding: 3px;
             margin-bottom: 5px;
             border-radius: 3px;
             font-weight: bolder;

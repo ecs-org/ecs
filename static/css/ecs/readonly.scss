@@ -214,9 +214,8 @@
         display: inline-block;
         margin-left: 0;
     }
-}
-
-/* FIXME: why is this here? should it be prefixed with .readonly ? */
-.checklist_review_tab input {
-  display: none;
+    
+    input {
+        display: none;
+    }
 }

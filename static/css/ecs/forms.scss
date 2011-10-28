@@ -2,9 +2,9 @@
 
 @mixin field-list{
     display: inline-block;
-    width: 100%;
     margin-bottom: 10px;
     list-style: none;
+    width: 100%;
 }
 
 .errorlist {
@@ -17,7 +17,7 @@
   background: #FAE5E3;
   border: 1px solid #F4CECB;
   border-radius: 3px;
-  max-width: 400px;
+  max-width: 500px;
 }
 
 .form_main {
@@ -89,7 +89,7 @@
                 display: block;
                 margin-bottom: 10px;
             }
-
+            
             textarea {
                 height: 40px;
             }
@@ -179,6 +179,7 @@
     }
     input[type=submit] {
       margin: 10px 10px 10px 240px;
+      display: block;
     }
     input[type=submit].hidden {
       display: none;
@@ -193,7 +194,7 @@
     }
     
     ul.errorlist li {
-      margin-left: 210px;
+      margin-left: 220px;
       margin-bottom: 5px;
       color: red;
     }
@@ -277,7 +278,7 @@ table.inline_formset td {
 
 .form {
     ol {
-      margin: 10px;
+      margin-bottom: 10px;
       list-style-type: none;
     }
     .form .notes {
@@ -286,6 +287,10 @@ table.inline_formset td {
 }
 tr.form td {
   vertical-align: top;
+}
+
+.change_presenter #id_presenter {
+  width: 300px;
 }
 
 fieldset.disabled {

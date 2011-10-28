@@ -58,7 +58,11 @@
     }
 
     .lockInfo {
+        display: inline-block;
         background-color: #ffff00;
+        padding: 3px 5px;
+        border-radius: 3px;
+        margin-bottom: 5px;
     }
     label, input[type=radio], textarea, select {
         float: left;
@@ -121,6 +125,11 @@
 
 .task_list {
     margin: 20px 0 10px 0;
+    
+      .task_item ul form,
+      .task_item ul a.preview {
+        display: inline-block;  
+      }
 }
 #task_list_filter {
     margin-bottom: 10px;
