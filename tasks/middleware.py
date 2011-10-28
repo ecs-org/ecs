@@ -13,7 +13,8 @@ class TaskManagementData(object):
         self.submit = self.POST.get('task_management-submit')
         self.save = self.POST.get('task_management-save')
         try:
-            self.task_pk = request.related_tasks[0].pk
+            first = request.related_tasks[0]
+            self.task_pk = first.pk if not first.managed_transparently else None
         except IndexError:
             self.task_pk = None
         self._form = None
@@ -77,7 +78,7 @@ class RelatedTasksMiddleware(object):
         if not request.user.is_authenticated():
             return
 
-        user_tasks = Task.objects.for_management(request.user).filter(closed_at__isnull=True).select_related('task_type')
+        user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True).select_related('task_type')
         accepted_tasks = user_tasks.filter(assigned_to=request.user, accepted=True, deleted_at=None)
         request.related_tasks =  [t for t in accepted_tasks if request.path in t.get_final_urls()]
 

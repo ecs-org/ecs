@@ -49,10 +49,6 @@ class TaskQuerySet(models.query.QuerySet):
         not_for_widget = ['resubmission', 'external_review', 'paper_submission_review', 'thesis_paper_submission_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
-    def for_management(self, user):
-        managed_transparently = ['resubmission', 'external_review']
-        return self.for_user(user).exclude(task_type__workflow_node__uid__in=managed_transparently)
-
     def for_submission(self, submission, related=True):
         # local import to prevent circular import
         from ecs.core.models import Submission
@@ -95,9 +91,6 @@ class TaskManager(AuthorizationManager):
 
     def for_widget(self, user):
         return self.all().for_widget(user)
-
-    def for_management(self, user):
-        return self.all().for_management(user)
 
     def for_submission(self, submission, related=True):
         return self.all().for_submission(submission, related=related)
@@ -143,6 +136,10 @@ class Task(models.Model):
             return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
         else:
             return None
+
+    @property
+    def managed_transparently(self):
+        return self.task_type.workflow_node.uid in ['resubmission', 'external_review']
 
     @property
     def is_locked(self):
