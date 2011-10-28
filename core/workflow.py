@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
-from ecs.core.signals import on_initial_review, on_categorization_review, on_thesis_recommendation_review
+from ecs.core.signals import on_initial_review, on_categorization_review, on_thesis_recommendation_review, on_expedited_recommendation_review, on_local_ec_recommendation_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
