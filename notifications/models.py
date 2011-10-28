@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from django.conf import settings
 from django.db import models
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
@@ -166,6 +167,7 @@ class NotificationAnswer(models.Model):
                     'notification': self.notification,
                     'answer': self,
                     'recipient': party,
+                    'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
                 }, submission=submission)
 
     
