@@ -61,18 +61,14 @@
                 {% endif %}
             </td>
             <td>
-                {% if profile_user|has_flag:"is_indisposed" %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Unmark Indisposed" %}</a>
-                {% else %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Mark Indisposed" %}</a>
-                {% endif %}
+                <form action="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}" method="post">
+                    <a href="" class="submit_parent">{% if profile_user|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}</a>                
+                </form>
             </td>
             <td>
-                {% if profile_user.is_active %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Deactivate" %}</a>
-                {% else %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Activate" %}</a>
-                {% endif %}
+                <form action="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}" method="post">
+                    <a href="" class="submit_parent">{% if profile_user.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>
+                </form>
             </td>
         </tr>
     {% empty %}
@@ -105,6 +101,15 @@
             var page_input = form.getElement('input[name="page"]');
 
             ecs.setupAutocomplete(form);
+            
+            function submitParentForm(e){
+                $(e.target).getParent('form').submit();
+                return false;
+            }
+            
+            $$('a.submit_parent').each(function(a){
+                a.addEvent('click', submitParentForm);
+            });
 
             form.getElements('input').each(function(input){
                 input.addEvent('change', function(){

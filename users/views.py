@@ -16,11 +16,13 @@ from django import forms
 from django.contrib import auth
 from django.contrib.auth import views as auth_views
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
+from ecs.utils.security import readonly
 from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
@@ -59,10 +61,14 @@ def login(request, *args, **kwargs):
     kwargs['authentication_form'] = EmailLoginForm
     return auth_views.login(request, *args, **kwargs)
 
+
+@readonly()
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
     return auth_views.logout(request, *args, **kwargs)
 
+
+@readonly(methods=['GET'])
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
@@ -76,6 +82,7 @@ def change_password(request):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
+@readonly(methods=['GET'])
 def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
@@ -95,6 +102,7 @@ def register(request):
 
 
 @forceauth.exempt
+@readonly(methods=['GET'])
 def activate(request, token=None):
     try:
         data, timestamp = _registration_token_factory.parse_token(token)
@@ -132,6 +140,7 @@ def activate(request, token=None):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
+@readonly(methods=['GET'])
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
@@ -151,6 +160,7 @@ def request_password_reset(request):
 
 
 @forceauth.exempt
+@readonly(methods=['GET'])
 def do_password_reset(request, token=None):
     try:
         email, timestamp = _password_reset_token_factory.parse_token(token)
@@ -172,12 +182,15 @@ def do_password_reset(request, token=None):
         'user': user,
         'form': form,
     })
-    
+
+
+@readonly()
 def profile(request):
     return render(request, 'users/profile.html', {
         'profile_user': request.user,
     })
-    
+
+@readonly(methods=['GET'])
 def edit_profile(request):
     form = ProfileForm(request.POST or None, instance=request.user.get_profile())
     
@@ -200,6 +213,8 @@ def notify_return(request):
     profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.profile'))
 
+
+@require_POST
 @user_flag_required('is_internal')
 def toggle_indisposed(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -212,6 +227,8 @@ def toggle_indisposed(request, user_pk=None):
     profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
+
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -224,6 +241,8 @@ def approve(request, user_pk=None):
         'profile_user': user,
     })
 
+
+@require_POST
 @user_flag_required('is_internal')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -235,6 +254,8 @@ def toggle_active(request, user_pk=None):
     user.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
+
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -323,6 +344,8 @@ def administration(request, limit=20):
         'active': 'user_administration',
     })
 
+
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def invite(request):
     form = InvitationForm(request.POST or None)
